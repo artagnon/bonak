@@ -64,23 +64,22 @@ End Functor.
 (** Monoids                                             **)
 (*********************************************************)
 Section Monoid.
-  Reserved Notation "x ⋅ y" (at level 55).
+  Context (C: Category).
+  Reserved Notation "x × y" (at level 55).
+
   Record Monoid :=
     mkMonoid
-      { monoid_carrier :> Type
-      ; monoid_unit : monoid_carrier
-      ; monoid_mult : monoid_carrier -> monoid_carrier -> monoid_carrier
-        where "x ⋅ y" := (monoid_mult x y)
-      ; monoid_law1 : forall m, monoid_unit ⋅ m = m
-      ; monoid_law2 : forall m, m ⋅ monoid_unit = m
+      { e : Obj C
+      ; monoid_mult : Obj C -> Obj C -> Obj C
+        where "x × y" := (monoid_mult x y)
+      ; monoid_law1 : forall m, e × m = m
+      ; monoid_law2 : forall m, m × e = m
       ; monoid_law3 : forall m1 m2 m3,
-          (m1 ⋅ m2) ⋅ m3 = m1 ⋅ (m2 ⋅ m3)
+          (m1 × m2) × m3 = m1 × (m2 × m3)
       }.
-
-  Definition e := monoid_unit.
 End Monoid.
 
-Notation "x ⋅ y" := (monoid_mult x y) (at level 55).
+Notation "x × y" := (monoid_mult x y) (at level 55).
 
 (*********************************************************)
 (** Monads, in Kleisli triple form                      **)
@@ -92,19 +91,17 @@ Section Monad.
 
   Record Monad : Type :=
     mkMonad
-      { monad_ty :> Type -> Type
-        ; ret  : forall {A : Type}, A -> monad_ty A
-        ; bind : forall {A B},
-            monad_ty A -> (A -> monad_ty B) -> monad_ty B
+      { M :> Type -> Type
+        ; η : forall {A : Type}, A -> M A
+        ; bind : forall {A B}, M A -> (A -> M B) -> M B
           where "A >>= f" := (bind A f)
-        ; join : forall {A},
-            monad_ty (monad_ty A) -> monad_ty A
-        ; monad_law1 : forall {A B} a (f : A -> monad_ty B), (ret a) >>= f = f a
-        ; monad_law2 : forall {A} c, c >>= (@ret A) = c
-        ; monad_law3 : forall {A B C} c (f : A -> monad_ty B) (g : B -> monad_ty C),
+        ; μ : forall {A}, M (M A) -> M A
+        ; monad_law1 : forall {A B} a (f : A -> M B), (η a) >>= f = f a
+        ; monad_law2 : forall {A} c, c >>= (@η A) = c
+        ; monad_law3 : forall {A B C} c (f : A -> M B) (g : B -> M C),
             c >>= f >>= g = c >>= (fun a => (f a) >>= g)
       }.
 End Monad.
 
 Notation "A >>= f" := (bind A f) (at level 65).
-Notation "f >=> g" := join ∙ fmap g ∙ f (at level 65).
+Notation "f >=> g" := μ ∙ fmap g ∙ f (at level 65).
