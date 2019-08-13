@@ -41,26 +41,6 @@ Notation "f ∼ g" := (sim _ f g) (at level 65).
 Arguments Id {_} _.
 
 (*********************************************************)
-(**       Functor, identity, composition                **)
-(*********************************************************)
-
-Section Functor.
-  Context (C D : Category).
-
-  Record Functor : Type :=
-    mkFunctor
-      { F :> Obj C -> Obj D
-        ; fmap : forall {A B}, C⦅A;B⦆ -> D⦅F A;F B⦆
-        ; fmap_proper : forall {A B}, Proper (@sim C A B ==> @sim D _ _) fmap
-        ; functor_law1 : forall {A}, fmap (Id A) ∼ Id _
-        ; functor_law2 : forall {X Y Z: Obj C} (g : C⦅X;Y⦆) (f:C⦅Y;Z⦆),
-            fmap (f ∙ g) ∼ (fmap f) ∙ (fmap g)
-      }.
-
-  Global Existing Instance fmap_proper.
-End Functor.
-
-(*********************************************************)
 (** Monoids                                             **)
 (*********************************************************)
 Section Monoid.
@@ -82,19 +62,38 @@ End Monoid.
 Notation "x × y" := (monoid_mult x y) (at level 55).
 
 (*********************************************************)
+(**       Functor, identity, composition                **)
+(*********************************************************)
+
+Section Functor.
+  Context (C D : Category).
+
+  Record Functor : Type :=
+      { F : Obj C -> Obj D
+        ; fmap : forall {A B}, C⦅A;B⦆ -> D⦅F A;F B⦆
+        ; fmap_proper : forall {A B}, Proper (@sim C A B ==> @sim D _ _) fmap
+        ; functor_law1 : forall {A}, fmap (Id A) ∼ Id _
+        ; functor_law2 : forall {X Y Z: Obj C} (g : C⦅X;Y⦆) (f:C⦅Y;Z⦆),
+            fmap (f ∙ g) ∼ (fmap f) ∙ (fmap g)
+      }.
+
+  Global Existing Instance fmap_proper.
+End Functor.
+
+(*********************************************************)
 (** Monads, in Kleisli triple form                      **)
 (*********************************************************)
 
 Section Monad.
   Context (C: Category).
-  Reserved Notation "A >>= f" (at level 65).
+  Reserved Notation "c >>= f" (at level 65).
 
   Record Monad : Type :=
     mkMonad
-      { M :> Type -> Type
-        ; η : forall {A : Type}, A -> M A
+      { M : Type -> Type
+        ; η : forall {A}, A -> M A
         ; bind : forall {A B}, M A -> (A -> M B) -> M B
-          where "A >>= f" := (bind A f)
+          where "c >>= f" := (bind c f)
         ; μ : forall {A}, M (M A) -> M A
         ; monad_law1 : forall {A B} a (f : A -> M B), (η a) >>= f = f a
         ; monad_law2 : forall {A} c, c >>= (@η A) = c
@@ -103,5 +102,5 @@ Section Monad.
       }.
 End Monad.
 
-Notation "A >>= f" := (bind A f) (at level 65).
+Notation "c >>= f" := (bind c f) (at level 65).
 Notation "f >=> g" := μ ∙ fmap g ∙ f (at level 65).
