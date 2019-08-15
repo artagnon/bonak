@@ -15,16 +15,16 @@ Section Category.
 
   Record Category : Type :=
     mkCategory
-      { Obj : Type
+      { Obj :> Type
         ; Hom : Obj -> Obj -> Type
         ; sim : forall {A B}, relation (Hom A B)
           where "f ∼ g" := (sim f g)
         ; sim_equiv : forall A B, Equivalence (@sim A B)
         ; Id : forall {A}, Hom A A
-        ; Comp : forall {A B C}, Hom B C -> Hom A B -> Hom A C
-          where "f ∙ g" := (Comp f g)
-        ; Comp_proper : forall {A B C},
-            Proper (@sim B C ==> @sim A B ==> @sim A C) Comp
+        ; composite : forall {A B C}, Hom B C -> Hom A B -> Hom A C
+          where "f ∙ g" := (composite f g)
+        ; composite_proper : forall {A B C},
+            Proper (@sim B C ==> @sim A B ==> @sim A C) composite
         ; cat_law1 : forall {A B} (f : Hom A B), Id ∙ f ∼ f
         ; cat_law2 : forall {A B} (f : Hom A B), f ∙ Id ∼ f
         ; cat_law3 : forall {A B C D} (f : Hom A B) (g : Hom B C) (h : Hom C D),
@@ -32,11 +32,11 @@ Section Category.
       }.
 
   Global Existing Instance sim_equiv.
-  Global Existing Instance Comp_proper.
+  Global Existing Instance composite_proper.
 End Category.
 
 Notation "C ⦅ A ; B ⦆" := (Hom C A B) (at level 60).
-Notation "f ∙ g" := (Comp _ f g) (at level 55).
+Notation "f ∙ g" := (composite _ f g) (at level 55).
 Notation "f ∼ g" := (sim _ f g) (at level 65).
 Arguments Id {_} _.
 
@@ -49,8 +49,9 @@ Section Monoid.
 
   Record Monoid :=
     mkMonoid
-      { e : Obj C
-      ; monoid_mult : Obj C -> Obj C -> Obj C
+      { e :> C
+        (* Bifunctor needed to define monoidal categories *)
+      ; monoid_mult : C -> C -> C
         where "x × y" := (monoid_mult x y)
       ; monoid_law1 : forall m, e × m = m
       ; monoid_law2 : forall m, m × e = m
@@ -69,11 +70,11 @@ Section Functor.
   Context (C D : Category).
 
   Record Functor : Type :=
-      { F : Obj C -> Obj D
+      { F : C -> D
         ; fmap : forall {A B}, C⦅A;B⦆ -> D⦅F A;F B⦆
         ; fmap_proper : forall {A B}, Proper (@sim C A B ==> @sim D _ _) fmap
         ; functor_law1 : forall {A}, fmap (Id A) ∼ Id _
-        ; functor_law2 : forall {X Y Z: Obj C} (g : C⦅X;Y⦆) (f:C⦅Y;Z⦆),
+        ; functor_law2 : forall {X Y Z} (g : C⦅X;Y⦆) (f:C⦅Y;Z⦆),
             fmap (f ∙ g) ∼ (fmap f) ∙ (fmap g)
       }.
 
@@ -85,22 +86,21 @@ End Functor.
 (*********************************************************)
 
 Section Monad.
-  Context (C: Category).
   Reserved Notation "c >>= f" (at level 65).
 
   Record Monad : Type :=
     mkMonad
-      { M : Type -> Type
+      { M :> Type -> Type
         ; η : forall {A}, A -> M A
         ; bind : forall {A B}, M A -> (A -> M B) -> M B
           where "c >>= f" := (bind c f)
         ; μ : forall {A}, M (M A) -> M A
         ; monad_law1 : forall {A B} a (f : A -> M B), (η a) >>= f = f a
         ; monad_law2 : forall {A} c, c >>= (@η A) = c
-        ; monad_law3 : forall {A B C} c (f : A -> M B) (g : B -> M C),
+        ; monad_law3 : forall {A B D} c (f : A -> M B) (g : B -> M D),
             c >>= f >>= g = c >>= (fun a => (f a) >>= g)
       }.
 End Monad.
 
 Notation "c >>= f" := (bind c f) (at level 65).
-Notation "f >=> g" := μ ∙ fmap g ∙ f (at level 65).
+Notation "f >=> g" := (composite _ (composite _ μ (fmap g)) f) (at level 65).
