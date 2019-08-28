@@ -10,6 +10,7 @@ Set Universe Polymorphism.
 (*********************************************************)
 
 Section Category.
+  Reserved Notation "A ~> B" (at level 60).
   Reserved Notation "f ∼ g" (at level 65).
   Reserved Notation "f ∙ g" (at level 55).
 
@@ -17,27 +18,25 @@ Section Category.
     mkCategory
       { Obj :> Type
         ; Hom : Obj -> Obj -> Type
-        ; sim : forall {A B}, relation (Hom A B)
+          where "A ~> B" := (Hom A B)
+        ; Id : forall A, A ~> A
+        ; sim : forall {A B}, (A ~> B) -> (A ~> B) -> Prop
           where "f ∼ g" := (sim f g)
-        ; sim_equiv : forall A B, Equivalence (@sim A B)
-        ; Id : forall {A}, Hom A A
-        ; composite : forall {A B C}, Hom B C -> Hom A B -> Hom A C
+        ; sim_equiv : forall {A B}, Equivalence (@sim A B)
+        ; composite : forall {A B C}, (A ~> B) -> (B ~> C) -> A ~> C
           where "f ∙ g" := (composite f g)
-        ; composite_proper : forall {A B C},
-            Proper (@sim B C ==> @sim A B ==> @sim A C) composite
-        ; cat_law1 : forall {A B} (f : Hom A B), Id ∙ f ∼ f
-        ; cat_law2 : forall {A B} (f : Hom A B), f ∙ Id ∼ f
-        ; cat_law3 : forall {A B C D} (f : Hom A B) (g : Hom B C) (h : Hom C D),
-            h ∙ (g ∙ f) ∼ (h ∙ g) ∙ f
+        ; composite_prop : forall {A B C},
+            Proper (@sim A B ==> @sim B C ==> @sim A C) composite
+        ; id_left : forall {A B} (f : A ~> B), Id A ∙ f ∼ f
+        ; id_right : forall {A B} (f : A ~> B), f ∙ Id B ∼ f
+        ; associativity : forall {A B C D} (f : A ~> B) (g : B ~> C) (h : C ~> D),
+            f ∙ (g ∙ h) ∼ (f ∙ g) ∙ h
       }.
-
-  Global Existing Instance sim_equiv.
-  Global Existing Instance composite_proper.
 End Category.
 
-Notation "C ⦅ A ; B ⦆" := (Hom C A B) (at level 60).
-Notation "f ∙ g" := (composite _ f g) (at level 55).
+Notation "A ~> B" := (Hom _ A B) (at level 60).
 Notation "f ∼ g" := (sim _ f g) (at level 65).
+Notation "f ∙ g" := (composite _ f g) (at level 55).
 Arguments Id {_} _.
 
 (*********************************************************)
@@ -71,14 +70,12 @@ Section Functor.
 
   Record Functor : Type :=
       { F : C -> D
-        ; fmap : forall {A B}, C⦅A;B⦆ -> D⦅F A;F B⦆
+        ; fmap : forall {A B}, A ~> B -> F A ~> F B
         ; fmap_proper : forall {A B}, Proper (@sim C A B ==> @sim D _ _) fmap
-        ; functor_law1 : forall {A}, fmap (Id A) ∼ Id _
-        ; functor_law2 : forall {X Y Z} (g : C⦅X;Y⦆) (f:C⦅Y;Z⦆),
-            fmap (f ∙ g) ∼ (fmap f) ∙ (fmap g)
+        ; fmap_id : forall {A}, fmap (Id A) ∼ Id _
+        ; fmap_composition : forall {X Y Z} (g : X ~> Y) (f: Y ~> Z),
+            fmap (g ∙ f) ∼ fmap g ∙ fmap f
       }.
-
-  Global Existing Instance fmap_proper.
 End Functor.
 
 (*********************************************************)
