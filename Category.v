@@ -24,13 +24,13 @@ Section Category.
           where "f ∼ g" := (sim f g)
         ; sim_equiv : forall {A B}, Equivalence (@sim A B)
         ; composite : forall {A B C}, (A ~> B) -> (B ~> C) -> A ~> C
-          where "f ∙ g" := (composite f g)
+          where "g ∙ f" := (composite f g)
         ; composite_prop : forall {A B C},
             Proper (@sim A B ==> @sim B C ==> @sim A C) composite
-        ; id_left : forall {A B} (f : A ~> B), Id A ∙ f ∼ f
-        ; id_right : forall {A B} (f : A ~> B), f ∙ Id B ∼ f
+        ; id_left : forall {A B} (f : A ~> B), Id B ∙ f ∼ f
+        ; id_right : forall {A B} (f : A ~> B), f ∙ Id A ∼ f
         ; associativity : forall {A B C D} (f : A ~> B) (g : B ~> C) (h : C ~> D),
-            f ∙ (g ∙ h) ∼ (f ∙ g) ∙ h
+            h ∙ (g ∙ f) ∼ (h ∙ g) ∙ f
       }.
 End Category.
 
@@ -39,9 +39,6 @@ Notation "f ∼ g" := (sim _ f g) (at level 65).
 Notation "f ∙ g" := (composite _ f g) (at level 55).
 Arguments Id {_} _.
 
-(*********************************************************)
-(** Monoids                                             **)
-(*********************************************************)
 Section Monoid.
   Context (C: Category).
   Reserved Notation "x × y" (at level 55).
@@ -61,14 +58,11 @@ End Monoid.
 
 Notation "x × y" := (monoid_mult x y) (at level 55).
 
-(*********************************************************)
-(**       Functor, identity, composition                **)
-(*********************************************************)
-
 Section Functor.
   Context (C D : Category).
 
   Record Functor : Type :=
+    mkFunctor
       { F : C -> D
         ; fmap : forall {A B}, A ~> B -> F A ~> F B
         ; fmap_proper : forall {A B}, Proper (@sim C A B ==> @sim D _ _) fmap
@@ -78,9 +72,17 @@ Section Functor.
       }.
 End Functor.
 
-(*********************************************************)
-(** Monads, in Kleisli triple form                      **)
-(*********************************************************)
+Section NaturalTransformation.
+  Context (C D : Category).
+  Context (FObj1 FObj2 : C -> D).
+  Context (S : Functor C D).
+  Context (T : Functor C D).
+
+  Record NaturalTransformation : Type :=
+    { NT: C -> D
+      ; nt_component : forall {c : C}, FObj1 c ~> FObj2 c
+    }.
+End NaturalTransformation.
 
 Section Monad.
   Reserved Notation "c >>= f" (at level 65).
