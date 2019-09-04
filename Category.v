@@ -39,20 +39,19 @@ Notation "f ∼ g" := (sim _ f g) (at level 65).
 Notation "f ∙ g" := (composite _ f g) (at level 55).
 Arguments Id {_} _.
 
+(* TODO? Bifunctor needed to define monoidal categories *)
 Section Monoid.
-  Context (C: Category).
   Reserved Notation "x × y" (at level 55).
 
   Record Monoid :=
     mkMonoid
-      { e :> C
-        (* Bifunctor needed to define monoidal categories *)
-      ; monoid_mult : C -> C -> C
-        where "x × y" := (monoid_mult x y)
-      ; monoid_law1 : forall m, e × m = m
-      ; monoid_law2 : forall m, m × e = m
-      ; monoid_law3 : forall m1 m2 m3,
-          (m1 × m2) × m3 = m1 × (m2 × m3)
+      { monoid_carrier :> Type
+        ; monoid_unit : monoid_carrier
+        ; monoid_mult : monoid_carrier -> monoid_carrier -> monoid_carrier
+          where "x × y" := (monoid_mult x y)
+        ; monoid_law1 : forall m, monoid_unit × m = m
+        ; monoid_law2 : forall m, m × monoid_unit = m
+        ; monoid_law3 : forall m1 m2 m3, (m1 × m2) × m3 = m1 × (m2 × m3)
       }.
 End Monoid.
 
@@ -63,7 +62,7 @@ Section Functor.
 
   Record Functor : Type :=
     mkFunctor
-      { F : C -> D
+      { F :> C -> D
         ; fmap : forall {A B}, A ~> B -> F A ~> F B
         ; fmap_proper : forall {A B}, Proper (@sim C A B ==> @sim D _ _) fmap
         ; fmap_id : forall {A}, fmap (Id A) ∼ Id _
@@ -72,11 +71,9 @@ Section Functor.
       }.
 End Functor.
 
+(* TODO *)
 Section NaturalTransformation.
-  Context (C D : Category).
-  Context (FObj1 FObj2 : C -> D).
-  Context (S : Functor C D).
-  Context (T : Functor C D).
+  Context {C D : Category} {FObj1 FObj2 : C -> D} {S T : Functor C D}.
 
   Record NaturalTransformation : Type :=
     { NT: C -> D
@@ -85,8 +82,10 @@ Section NaturalTransformation.
 End NaturalTransformation.
 
 Section Monad.
+  Context {C : Category} {J : Functor C C}.
   Reserved Notation "c >>= f" (at level 65).
 
+  (* A monad over the category of Types and functions *)
   Record Monad : Type :=
     mkMonad
       { M :> Type -> Type
@@ -94,12 +93,46 @@ Section Monad.
         ; bind : forall {A B}, M A -> (A -> M B) -> M B
           where "c >>= f" := (bind c f)
         ; μ : forall {A}, M (M A) -> M A
-        ; monad_law1 : forall {A B} a (f : A -> M B), (η a) >>= f = f a
-        ; monad_law2 : forall {A} c, c >>= (@η A) = c
-        ; monad_law3 : forall {A B D} c (f : A -> M B) (g : B -> M D),
+        ; mon_law1 : forall {A B} a (f : A -> M B), (η a) >>= f = f a
+        ; mon_law2 : forall {A} c, c >>= (@η A) = c
+        ; mon_law3 : forall {A B D} c (f : A -> M B) (g : B -> M D),
             c >>= f >>= g = c >>= (fun a => (f a) >>= g)
+      }.
+
+  (* A more general monad *)
+  Record CMonad :=
+    mkCMonad
+      { CM :> C -> C
+        ; cmon_unit : forall A, J A ~> CM A
+        ; cmon_bind : forall {A B}, J A ~> CM B -> CM A ~> CM B
+        ; cmon_bind_proper : forall A B,
+            Proper (@sim C (J A) (CM B) ==> sim C) cmon_bind
+        ; cmon_law1 : forall A, cmon_bind (cmon_unit A) ∼ Id _
+        ; cmon_law2 : forall A B (f : J A ~> CM B),
+            cmon_unit A ∙ cmon_bind f ∼ f
+        ; cmon_law3 : forall A B C (f : J B ~> CM C) (g: J A ~> CM B),
+            cmon_bind (g ∙ cmon_bind f) ∼ cmon_bind g ∙ cmon_bind f
       }.
 End Monad.
 
 Notation "c >>= f" := (bind c f) (at level 65).
 Notation "f >=> g" := (composite _ (composite _ μ (fmap g)) f) (at level 65).
+
+(* ref: Monads Need Not Be Endofunctors *)
+Section RelativeMonad.
+  Context {C D : Category} {J : Functor C D}.
+
+  Record RelativeMonad :=
+    mkRelativeMonad
+      { RM :> C -> D
+        ; relmon_unit : forall A, J A ~> RM A
+        ; relmon_bind : forall {A B}, J A ~> RM B -> RM A ~> RM B
+        ; relmon_bind_proper : forall A B,
+            Proper (@sim D (J A) (RM B) ==> sim D) relmon_bind
+        ; relmon_law1 : forall A, relmon_bind (relmon_unit A) ∼ Id _
+        ; relmon_law2 : forall A B (f : J A ~> RM B),
+            relmon_unit A ∙ relmon_bind f ∼ f
+        ; relmon_law3 : forall A B C (f : J B ~> RM C) (g: J A ~> RM B),
+            relmon_bind (g ∙ relmon_bind f) ∼ relmon_bind g ∙ relmon_bind f
+      }.
+End RelativeMonad.
