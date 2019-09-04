@@ -1,13 +1,10 @@
-From Coq Require FunctionalExtensionality.
 From Coq.Relations Require Import Relation_Definitions.
 From Coq.Classes Require Import RelationClasses Morphisms.
+From Coq Require Import Setoid.
+From Coq Require Import ssreflect.
 
 Set Primitive Projections.
 Set Universe Polymorphism.
-
-(*********************************************************)
-(**       Category (using setoids on hom-sets)          **)
-(*********************************************************)
 
 Section Category.
   Reserved Notation "A ~> B" (at level 60).
@@ -39,24 +36,6 @@ Notation "f ∼ g" := (sim _ f g) (at level 65).
 Notation "f ∙ g" := (composite _ f g) (at level 55).
 Arguments Id {_} _.
 
-(* TODO? Bifunctor needed to define monoidal categories *)
-Section Monoid.
-  Reserved Notation "x × y" (at level 55).
-
-  Record Monoid :=
-    mkMonoid
-      { monoid_carrier :> Type
-        ; monoid_unit : monoid_carrier
-        ; monoid_mult : monoid_carrier -> monoid_carrier -> monoid_carrier
-          where "x × y" := (monoid_mult x y)
-        ; monoid_law1 : forall m, monoid_unit × m = m
-        ; monoid_law2 : forall m, m × monoid_unit = m
-        ; monoid_law3 : forall m1 m2 m3, (m1 × m2) × m3 = m1 × (m2 × m3)
-      }.
-End Monoid.
-
-Notation "x × y" := (monoid_mult x y) (at level 55).
-
 Section Functor.
   Context (C D : Category).
 
@@ -71,52 +50,8 @@ Section Functor.
       }.
 End Functor.
 
-(* TODO *)
-Section NaturalTransformation.
-  Context {C D : Category} {FObj1 FObj2 : C -> D} {S T : Functor C D}.
-
-  Record NaturalTransformation : Type :=
-    { NT: C -> D
-      ; nt_component : forall {c : C}, FObj1 c ~> FObj2 c
-    }.
-End NaturalTransformation.
-
-Section Monad.
-  Context {C : Category} {J : Functor C C}.
-  Reserved Notation "c >>= f" (at level 65).
-
-  (* A monad over the category of Types and functions *)
-  Record Monad : Type :=
-    mkMonad
-      { M :> Type -> Type
-        ; η : forall {A}, A -> M A
-        ; bind : forall {A B}, M A -> (A -> M B) -> M B
-          where "c >>= f" := (bind c f)
-        ; μ : forall {A}, M (M A) -> M A
-        ; mon_law1 : forall {A B} a (f : A -> M B), (η a) >>= f = f a
-        ; mon_law2 : forall {A} c, c >>= (@η A) = c
-        ; mon_law3 : forall {A B D} c (f : A -> M B) (g : B -> M D),
-            c >>= f >>= g = c >>= (fun a => (f a) >>= g)
-      }.
-
-  (* A more general monad *)
-  Record CMonad :=
-    mkCMonad
-      { CM :> C -> C
-        ; cmon_unit : forall A, J A ~> CM A
-        ; cmon_bind : forall {A B}, J A ~> CM B -> CM A ~> CM B
-        ; cmon_bind_proper : forall A B,
-            Proper (@sim C (J A) (CM B) ==> sim C) cmon_bind
-        ; cmon_law1 : forall A, cmon_bind (cmon_unit A) ∼ Id _
-        ; cmon_law2 : forall A B (f : J A ~> CM B),
-            cmon_unit A ∙ cmon_bind f ∼ f
-        ; cmon_law3 : forall A B C (f : J B ~> CM C) (g: J A ~> CM B),
-            cmon_bind (g ∙ cmon_bind f) ∼ cmon_bind g ∙ cmon_bind f
-      }.
-End Monad.
-
-Notation "c >>= f" := (bind c f) (at level 65).
-Notation "f >=> g" := (composite _ (composite _ μ (fmap g)) f) (at level 65).
+Arguments mkFunctor {_ _} _ _ _ _ _.
+Arguments fmap {_ _} _ {_ _} _.
 
 (* ref: Monads Need Not Be Endofunctors *)
 Section RelativeMonad.
@@ -125,14 +60,57 @@ Section RelativeMonad.
   Record RelativeMonad :=
     mkRelativeMonad
       { RM :> C -> D
-        ; relmon_unit : forall A, J A ~> RM A
+        ; η : forall A, J A ~> RM A
         ; relmon_bind : forall {A B}, J A ~> RM B -> RM A ~> RM B
         ; relmon_bind_proper : forall A B,
             Proper (@sim D (J A) (RM B) ==> sim D) relmon_bind
-        ; relmon_law1 : forall A, relmon_bind (relmon_unit A) ∼ Id _
+        ; relmon_law1 : forall A, relmon_bind (η A) ∼ Id _
         ; relmon_law2 : forall A B (f : J A ~> RM B),
-            relmon_unit A ∙ relmon_bind f ∼ f
+            η A ∙ relmon_bind f ∼ f
         ; relmon_law3 : forall A B C (f : J B ~> RM C) (g: J A ~> RM B),
             relmon_bind (g ∙ relmon_bind f) ∼ relmon_bind g ∙ relmon_bind f
       }.
 End RelativeMonad.
+
+Arguments RelativeMonad {_ _} J.
+
+Section NaturalIsomorphism.
+  Context {C D : Category} (F G : Functor C D).
+
+  Record NatIso :=
+    mkNatIso
+      { ni_map :> forall {A}, F A ~> G A
+      ; ni_inv : forall {A}, G A ~> F A
+      ; ni_natural : forall {A B} (f : A ~> B), fmap F f ∙ ni_map ∼ ni_map ∙ fmap G f
+      ; ni_rightinv : forall {A}, ni_inv ∙ ni_map ∼ Id (G A)
+      ; ni_leftinv : forall {A}, ni_map ∙ ni_inv ∼ Id (F A)
+      }.
+End NaturalIsomorphism.
+
+Arguments ni_inv {_ _ _ _} _ _.
+
+Section FunctorComposition.
+  Context {C D E : Category} (F : Functor C D) (G : Functor D E).
+  Program Definition functor_comp : Functor C E :=
+    mkFunctor (fun A => G (F A)) (fun A B f => fmap G (fmap F f)) _ _ _.
+  Next Obligation. cbv; intuition; do 2 apply fmap_proper => //. Qed.
+  Next Obligation. Admitted.
+  Next Obligation. Admitted.
+End FunctorComposition.
+
+Section RelativeMonadMorphism.
+  Context {C D1 D2 : Category} {J1 : Functor C D1} (J12 : Functor D1 D2)
+          {J2 : Functor C D2} (ϕ : NatIso J2 (functor_comp J1 J12))
+          (ψ := ni_inv ϕ) (M1 : RelativeMonad J1) (M2: RelativeMonad J2).
+
+  Notation rbind := relmon_bind.
+
+  Record RelativeMonadMorphism :=
+    mkRelMonMorph
+      { rmm_map :> forall {A}, J12 (M1 A) ~> M2 A
+        ; rmm_law1 : forall A, fmap J12 (η M1 A) ∙ rmm_map ∼ ψ _ ∙ η M2 A
+        ; rmm_law2 : forall A B (f : J1 A ~> M1 B),
+            fmap J12 (rbind M1 f) ∙ rmm_map ∼
+                    rmm_map ∙ rbind M2 (ϕ _ ∙ fmap J12 f ∙ rmm_map)
+      }.
+End RelativeMonadMorphism.
