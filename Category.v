@@ -29,6 +29,9 @@ Section Category.
         ; associativity : forall {A B C D} (f : A ~> B) (g : B ~> C) (h : C ~> D),
             h ∙ (g ∙ f) ∼ (h ∙ g) ∙ f
       }.
+
+  Global Existing Instance sim_equiv.
+  Global Existing Instance composite_prop.
 End Category.
 
 Notation "A ~> B" := (Hom _ A B) (at level 60).
@@ -48,10 +51,21 @@ Section Functor.
         ; fmap_composition : forall {X Y Z} (g : X ~> Y) (f: Y ~> Z),
             fmap (g ∙ f) ∼ fmap g ∙ fmap f
       }.
+
+  Global Existing Instance fmap_proper.
 End Functor.
 
 Arguments mkFunctor {_ _} _ _ _ _ _.
 Arguments fmap {_ _} _ {_ _} _.
+
+Section FunctorComposition.
+  Context {C D E : Category} (F : Functor C D) (G : Functor D E).
+  Program Definition functor_comp : Functor C E :=
+    mkFunctor (fun A => G (F A)) (fun A B f => fmap G (fmap F f)) _ _ _.
+  Next Obligation. solve_proper. Qed.
+  Next Obligation. do 2 setoid_rewrite fmap_id; reflexivity. Qed.
+  Next Obligation. do 2 setoid_rewrite fmap_composition; reflexivity. Qed.
+End FunctorComposition.
 
 (* ref: Monads Need Not Be Endofunctors *)
 Section RelativeMonad.
@@ -88,15 +102,6 @@ Section NaturalIsomorphism.
 End NaturalIsomorphism.
 
 Arguments ni_inv {_ _ _ _} _ _.
-
-Section FunctorComposition.
-  Context {C D E : Category} (F : Functor C D) (G : Functor D E).
-  Program Definition functor_comp : Functor C E :=
-    mkFunctor (fun A => G (F A)) (fun A B f => fmap G (fmap F f)) _ _ _.
-  Next Obligation. cbv; intuition; do 2 apply fmap_proper => //. Qed.
-  Next Obligation. Admitted.
-  Next Obligation. Admitted.
-End FunctorComposition.
 
 Section RelativeMonadMorphism.
   Context {C D1 D2 : Category} {J1 : Functor C D1} (J12 : Functor D1 D2)
