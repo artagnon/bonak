@@ -46,13 +46,13 @@ Section Functor.
     mkFunctor
       { F :> C -> D
         ; fmap : forall {A B}, A ~> B -> F A ~> F B
-        ; fmap_proper : forall {A B}, Proper (@sim C A B ==> @sim D _ _) fmap
+        ; fmap_prop : forall {A B}, Proper (@sim C A B ==> @sim D _ _) fmap
         ; fmap_id : forall {A}, fmap (Id A) ∼ Id _
-        ; fmap_composition : forall {X Y Z} (g : X ~> Y) (f: Y ~> Z),
+        ; fmap_composite : forall {X Y Z} (g : X ~> Y) (f: Y ~> Z),
             fmap (g ∙ f) ∼ fmap g ∙ fmap f
       }.
 
-  Global Existing Instance fmap_proper.
+  Global Existing Instance fmap_prop.
 End Functor.
 
 Arguments mkFunctor {_ _} _ _ _ _ _.
@@ -60,12 +60,14 @@ Arguments fmap {_ _} _ {_ _} _.
 
 Section FunctorComposition.
   Context {C D E : Category} (F : Functor C D) (G : Functor D E).
-  Program Definition functor_comp : Functor C E :=
+  Program Definition functor_composite : Functor C E :=
     mkFunctor (fun A => G (F A)) (fun A B f => fmap G (fmap F f)) _ _ _.
   Next Obligation. solve_proper. Qed.
   Next Obligation. do 2 setoid_rewrite fmap_id; reflexivity. Qed.
-  Next Obligation. do 2 setoid_rewrite fmap_composition; reflexivity. Qed.
+  Next Obligation. do 2 setoid_rewrite fmap_composite; reflexivity. Qed.
 End FunctorComposition.
+
+Notation "f ∘ g" := (functor_composite f g) (at level 55).
 
 (* ref: Monads Need Not Be Endofunctors *)
 Section RelativeMonad.
@@ -76,22 +78,22 @@ Section RelativeMonad.
       { RM :> C -> D
         ; η : forall A, J A ~> RM A
         ; relmon_bind : forall {A B}, J A ~> RM B -> RM A ~> RM B
-        ; relmon_bind_proper : forall A B,
+        ; relmon_bind_proper : forall {A B},
             Proper (@sim D (J A) (RM B) ==> sim D) relmon_bind
-        ; relmon_law1 : forall A, relmon_bind (η A) ∼ Id _
-        ; relmon_law2 : forall A B (f : J A ~> RM B),
-            η A ∙ relmon_bind f ∼ f
-        ; relmon_law3 : forall A B C (f : J B ~> RM C) (g: J A ~> RM B),
+        ; relmon_law1 : forall {A}, relmon_bind (η A) ∼ Id _
+        ; relmon_law2 : forall {A B} (f : J A ~> RM B),
+            (η A) ∙ relmon_bind f ∼ f
+        ; relmon_law3 : forall {A B C} (f : J B ~> RM C) (g: J A ~> RM B),
             relmon_bind (g ∙ relmon_bind f) ∼ relmon_bind g ∙ relmon_bind f
       }.
 End RelativeMonad.
 
-Arguments RelativeMonad {_ _} J.
+Arguments RelativeMonad {_ _} _.
 
 Section NaturalIsomorphism.
   Context {C D : Category} (F G : Functor C D).
 
-  Record NatIso :=
+  Record NaturalIsomorphism :=
     mkNatIso
       { ni_map :> forall {A}, F A ~> G A
       ; ni_inv : forall {A}, G A ~> F A
@@ -104,18 +106,19 @@ End NaturalIsomorphism.
 Arguments ni_inv {_ _ _ _} _ _.
 
 Section RelativeMonadMorphism.
-  Context {C D1 D2 : Category} {J1 : Functor C D1} (J12 : Functor D1 D2)
-          {J2 : Functor C D2} (ϕ : NatIso J2 (functor_comp J1 J12))
-          (ψ := ni_inv ϕ) (M1 : RelativeMonad J1) (M2: RelativeMonad J2).
+  Context {C D1 D2 : Category} {J1 : Functor C D1} {J2 : Functor C D2}
+          (J12 : Functor D1 D2) (ϕ : NaturalIsomorphism J2 (J1 ∘ J12))
+          (ψ := ni_inv ϕ).
 
   Notation rbind := relmon_bind.
 
   Record RelativeMonadMorphism :=
     mkRelMonMorph
-      { rmm_map :> forall {A}, J12 (M1 A) ~> M2 A
-        ; rmm_law1 : forall A, fmap J12 (η M1 A) ∙ rmm_map ∼ ψ _ ∙ η M2 A
-        ; rmm_law2 : forall A B (f : J1 A ~> M1 B),
-            fmap J12 (rbind M1 f) ∙ rmm_map ∼
-                    rmm_map ∙ rbind M2 (ϕ _ ∙ fmap J12 f ∙ rmm_map)
+      { RMM :> forall {M1 M2 A}, J12 (M1 A) ~> (M2 A)
+        ; rmm_law1 : forall {M1 M2 A}, fmap J12 (η M1 A) ∙ RMM ∼ ψ _ ∙ η M2 A
+        ; rmm_law2 : forall {M1 : RelativeMonad J1} {M2 : RelativeMonad J2} {A B}
+                       (f : J1 A ~> M1 B),
+            fmap J12 (rbind M1 f) ∙ RMM ∼
+                    RMM ∙ rbind M2 (ϕ _ ∙ fmap J12 f ∙ RMM)
       }.
 End RelativeMonadMorphism.

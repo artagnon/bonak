@@ -1,0 +1,47 @@
+\pdfoutput=1
+\documentclass[10pt,twoside]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{lipsum}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{bookmark}
+\usepackage{hyperref}
+\usepackage{tikz-cd}
+\usepackage{mathpartir}
+\begin{document}
+
+\title{Notes on relational program verification}
+\date{Compiled with \LaTeX{} on \today}
+\author{Ramkumar Ramachandra}
+\maketitle
+
+\newcommand{\bindSymbol}{\texttt{>>=}}
+\newcommand{\ret}{\texttt{ret}}
+\newcommand{\bind}{\texttt{bind}}
+
+\newcommand{\kwd}[1]{\texttt{#1}}
+\newcommand{\Ifte}[3]{\kwd{if}\> #1 \>\kwd{then}\> #2 \>\kwd{else}\> #3}
+\newcommand{\srelsyn}[3]{\vdash #1 \sim #2 ~\left\{\>#3\>\right\}}
+\newcommand\M{\mathrm{M}}
+\newcommand{\Mone}{{\M_1}}
+\newcommand{\Mtwo}{{\M_2}}
+\newcommand\W{\mathrm{W}}
+\newcommand{\relobj}{\text{rel}}
+\newcommand{\relmarker}[0]{\scalebox{0.5}{$\relobj$}}
+\newcommand\Wrel[1]{{\W^{#1}_{\!\relmarker}}}
+
+\section{Generic rules in the simple setting}
+\begin{mathpar}
+  \inferrule*[left=Ret]{ a_1: A_1\\ a_2 : A_2 }{\srelsyn{\ret^\Mone\,a_1}{\ret^\Mtwo\,a_2}{\ret^\W\,(a_1,a_2)}}
+  \and
+  \inferrule*[left=Weaken] {\srelsyn{c_1}{c_2}{w}\\ w\leq w'}
+             {\srelsyn{c_1}{c_2}{w'}}
+             \and
+             \inferrule*[left=Bind]{\srelsyn{m_1}{m_2}{w^m}\\
+               \forall a_1,a_2
+               \srelsyn{f_1\,a_1}{f_2\,a_2}{w^f\,(a_1,a_2)}}
+                        {\srelsyn{\bind^\Mone\,m_1\,f_1}{\bind^\Mtwo\,m_2\,f_2}{\bind^\Wrel{}\,w^m\,w^f}}
+\end{mathpar}
+\end{document}
