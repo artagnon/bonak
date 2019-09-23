@@ -29,6 +29,8 @@
 \newcommand{\Inr}{\texttt{Inr}\,}
 \newcommand{\pred}{\texttt{pred}}
 \newcommand{\bind}{\texttt{bind}}
+\newcommand{\throw}{\texttt{throw}\,}
+\newcommand{\catch}{\texttt{catch}\,}
 
 \newcommand{\kwd}[1]{\texttt{#1}}
 \newcommand{\Ifte}[3]{\kwd{if}\> #1 \>\kwd{then}\> #2 \>\kwd{else}\> #3}
@@ -36,6 +38,7 @@
 \newcommand{\crelsyn}[6]{#1 \vdash #2~\{#3\} \sim #4~\{#5\}~|~#6}
 \newcommand{\crelsynL}[6]{#1 \vdash \left.{\begin{array}{cc} #2& \{#3\} \\[-0.8ex] \sim& \\[-0.8ex] #4 & \{#5\} \end{array}} ~\right |~#6}
 \newcommand\M{\mathrm{M}}
+\newcommand\Exc{\mathrm{Exc}}
 \newcommand{\Mone}{{\M_1}}
 \newcommand{\Mtwo}{{\M_2}}
 \newcommand\W{\mathrm{W}}
@@ -45,6 +48,7 @@
 \newcommand{\relmarker}[0]{\scalebox{0.5}{$\relobj$}}
 \newcommand\Wrel[1]{{\W^{#1}_{\!\relmarker}}}
 \newcommand{\br}[1]{{#1}^{\boldsymbol{r}}}
+\newcommand\abs[2]{\lambda#1.~#2}
 
 \section{Generic rules in the simple setting}
 \begin{mathpar}
@@ -77,6 +81,20 @@
   }{\crelsynL{\br\Gamma}{\bind^\Mone{}\;m_1\;f_1}{\bind^\Wone{}\;w^m_1\;w^f_1}{\bind^\Mtwo{}\;m_2\;f_2}{\bind^\Wtwo{}\;w^m_2\;w^f_2}{\bind^\Wrel{}\;\boldsymbol{w^m}\;\boldsymbol{w^f}}}
 \end{mathpar}
 
+\section{Rules for exceptions}
+\begin{mathpar}
+  \inferrule*[left=]{
+  }{\crelsyn{\br\Gamma}{\throw e_1}{\abs{\varphi_1}{\varphi_1\,(\Inr e_1)}}{\ret^\Exc\,a_2}{\ret^{\Wtwo{\Exc}}a_2}{\abs{\varphi}{\varphi\,(\Inr e_1,\Inl a_2)}}}
+  \and
+  \inferrule*[left=]{ }{\crelsyn{\br\Gamma}{\ret^\Exc\,a_1}{\ret^{\Wone{\Exc}}a_1}{\throw e_2}{\abs{\varphi_2}{\varphi_2\,(\Inr e_2)}}{\abs{\varphi}{\varphi\,(\Inl a_1,\Inr e_2)}}}
+  \and
+  \inferrule*[left=]{
+    \crelsyn{\br\Gamma}{c_1}{w_1}{c_2}{w_2}{w_{\relmarker{}}}\\
+    \crelsyn{\br\Gamma}{c^{err}_1}{w^{err}_1}{c^{err}_2}{w^{err}_2}{w^{err}_{\relmarker{}}}
+  }{\crelsyn{\br\Gamma}{\catch c_1\,c^{err}_1}{w^\catch w_1\,w^{err}_1}{\catch c_2\,c^{err}_2}{w^\catch w_2\,w^{err}_2}{w^\catch_{\relmarker{}}\,
+ w_{\relmarker{}}\,\boldsymbol{w^{err}}}}
+\end{mathpar}
+
 
 \section{Pure versus Exc}
 \begin{mathpar}
@@ -85,9 +103,11 @@
   {\crelsyn{}{\aux l_1; \ret^\Mone \false}{?w_1}{\aux l_2}{?w_2}{?w'}} \\
   \inferrule*{\lambda \varphi . \varphi(\Inl \false, b_2) \leq w_0}{?w' \leq w_0}}
   {\crelsyn{}{\aux l_1; \ret^\Mone false}{?w_1}{\aux l_2}{?w_2}{w_0}}}
-  {\crelsyn{}{p_1 l_1 \pred_1}{w_1}{p_2 l_2 \pred_2}{w_2}{?w}} \\ ?w \leq \lambda \varphi . \forall b . \varphi(\Inl b, b)}
+  {\crelsyn{}{p_1 l_1 \pred_1}{w_1}{p_2 l_2 \pred_2}{w_2}{?w}} \\
+  \inferrule*{\inferrule*{\top}{w_0 \leq \lambda \varphi . \forall b . \varphi(\Inl b, b)}}{?w \leq \lambda \varphi . \forall b . \varphi(\Inl b, b)}}
   {\crelsyn{}{p_1 l_1 \pred_1}{w_1}{p_2 l_2 \pred_2}{w_2}{\lambda \varphi . \forall b . \varphi(\Inl b, b)}}
 \end{mathpar}
+
 
 where:
 
