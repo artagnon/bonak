@@ -5,7 +5,7 @@
 \usepackage{amssymb}
 \usepackage{listings}
 \usepackage{lipsum}
-\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[usenames, dvipsnames]{xcolor}
 \usepackage{bookmark}
 \usepackage[landscape, a1paper]{geometry}
 \usepackage{hyperref}
@@ -80,12 +80,20 @@
 
 \section{Pure versus Exc}
 \begin{mathpar}
-  
-  \inferrule*[left=Weaken]{\inferrule*[Left=Catch]{\inferrule*[Left=Bind]{\crelsyn{}{\ret^\Mone \false}{?w_1}{\aux l_2}{?w_2}{}}
-  {\crelsyn{}{\aux l_1; \ret^\Mone false}{?w_1}{\aux l_2}{?w_2}
-  {\lambda \varphi . (\varphi(\None, \true) \wedge \varphi(\Some (), \false))(\lambda | (\Inl b_1, b_2) \rightarrow \varphi(\Inl b_1, b_2)
-  | (\Inr _, b_2) \rightarrow b_2 = \true \wedge \varphi(\Inl \true, \true))}}}
+  \inferrule*[left=Weaken]{\inferrule*[Left=Catch]{\inferrule*[Left=Weaken]{
+  \inferrule*[Left=Bind]{\crelsyn{}{\ret^\Mone \false}{?w_1}{\aux l_2}{?w_2}{\lambda \varphi . \varphi(\Inl \false, b_2)}}
+  {\crelsyn{}{\aux l_1; \ret^\Mone \false}{?w_1}{\aux l_2}{?w_2}{?w'}} \\
+  \inferrule*{\lambda \varphi . \varphi(\Inl \false, b_2) \leq w_0}{?w' \leq w_0}}
+  {\crelsyn{}{\aux l_1; \ret^\Mone false}{?w_1}{\aux l_2}{?w_2}{w_0}}}
   {\crelsyn{}{p_1 l_1 \pred_1}{w_1}{p_2 l_2 \pred_2}{w_2}{?w}} \\ ?w \leq \lambda \varphi . \forall b . \varphi(\Inl b, b)}
   {\crelsyn{}{p_1 l_1 \pred_1}{w_1}{p_2 l_2 \pred_2}{w_2}{\lambda \varphi . \forall b . \varphi(\Inl b, b)}}
 \end{mathpar}
+
+where:
+
+\begin{align*}
+w_0 & = \lambda \varphi . (\varphi(\None, \true) \wedge \varphi(\Some (), \false))(\lambda \\
+    & | (\Inl b_1, b_2) \rightarrow \varphi(\Inl b_1, b_2) \, \\
+    & | (\Inr _, b_2) \rightarrow b_2 = \true \wedge \varphi(\Inl \true, \true))
+\end{align*}
 \end{document}
