@@ -1,5 +1,5 @@
 \pdfoutput=1
-\documentclass[10pt,twoside]{article}
+\documentclass[10pt]{article}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -7,6 +7,7 @@
 \usepackage{lipsum}
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{bookmark}
+\usepackage[landscape, a1paper]{geometry}
 \usepackage{hyperref}
 \usepackage{tikz-cd}
 \usepackage{mathpartir}
@@ -24,24 +25,55 @@
 \newcommand{\kwd}[1]{\texttt{#1}}
 \newcommand{\Ifte}[3]{\kwd{if}\> #1 \>\kwd{then}\> #2 \>\kwd{else}\> #3}
 \newcommand{\srelsyn}[3]{\vdash #1 \sim #2 ~\left\{\>#3\>\right\}}
+\newcommand{\crelsyn}[6]{#1 \vdash #2~\{#3\} \sim #4~\{#5\}~|~#6}
+\newcommand{\crelsynL}[6]{#1 \vdash \left.{\begin{array}{cc} #2& \{#3\} \\[-0.8ex] \sim& \\[-0.8ex] #4 & \{#5\} \end{array}} ~\right |~#6}
 \newcommand\M{\mathrm{M}}
 \newcommand{\Mone}{{\M_1}}
 \newcommand{\Mtwo}{{\M_2}}
 \newcommand\W{\mathrm{W}}
+\newcommand\Inl{\mathrm{Inl}}
+\newcommand\Wone[1]{{\W^{#1}_1}}
+\newcommand\Wtwo[1]{{\W^{#1}_2}}
 \newcommand{\relobj}{\text{rel}}
 \newcommand{\relmarker}[0]{\scalebox{0.5}{$\relobj$}}
 \newcommand\Wrel[1]{{\W^{#1}_{\!\relmarker}}}
+\newcommand{\br}[1]{{#1}^{\boldsymbol{r}}}
 
 \section{Generic rules in the simple setting}
 \begin{mathpar}
-  \inferrule*[left=Ret]{ a_1: A_1\\ a_2 : A_2 }{\srelsyn{\ret^\Mone\,a_1}{\ret^\Mtwo\,a_2}{\ret^\W\,(a_1,a_2)}}
+  \inferrule*[left=Ret]{a_1: A_1\\ a_2 : A_2}
+             {\srelsyn{\ret^\Mone\,a_1}{\ret^\Mtwo\,a_2}{\ret^\W\,(a_1,a_2)}}
   \and
   \inferrule*[left=Weaken] {\srelsyn{c_1}{c_2}{w}\\ w\leq w'}
              {\srelsyn{c_1}{c_2}{w'}}
-             \and
-             \inferrule*[left=Bind]{\srelsyn{m_1}{m_2}{w^m}\\
-               \forall a_1,a_2
-               \srelsyn{f_1\,a_1}{f_2\,a_2}{w^f\,(a_1,a_2)}}
-                        {\srelsyn{\bind^\Mone\,m_1\,f_1}{\bind^\Mtwo\,m_2\,f_2}{\bind^\Wrel{}\,w^m\,w^f}}
+  \and
+  \inferrule*[left=Bind]{\srelsyn{m_1}{m_2}{w^m}\\
+  \forall a_1,a_2
+  \srelsyn{f_1\,a_1}{f_2\,a_2}{w^f\,(a_1,a_2)}}
+  {\srelsyn{\bind^\Mone\,m_1\,f_1}{\bind^\Mtwo\,m_2\,f_2}
+  {\bind^\Wrel{}\,w^m\,w^f}}
+\end{mathpar}
+
+\section{Generic rules in the complex setting}
+\begin{mathpar}
+    \inferrule*[left=Ret]{\Gamma_1 \vdash a_1:A_1\\ \Gamma_2 \vdash a_2:A_2}
+    {\crelsyn{\br\Gamma}{\ret^\Mone{}a_1}{\ret^\Wone{}a_1}{\ret^\Mtwo{}a_2}{\ret^\Wtwo{}a_2}{\ret^\Wrel{}(a_1,a_2)}}
+    \and
+    \inferrule*[left=Weaken]{\crelsyn{\br\Gamma}{c_1}{w_1}{c_2}{w_2}{w_{\relmarker{}}}\\
+    w_1 \leq^\Wone{} w'_1 \\
+    w_2 \leq^\Wtwo{} w'_2 \\
+    w_{\relmarker{}} \leq^\Wrel{} w'_{\relmarker{}}}
+    {\crelsyn{\br\Gamma}{c_1}{w'_1}{c_2}{w'_2}{w'_{\relmarker{}}}}
+    \and
+    \inferrule*[left=Bind]{\crelsyn{\br\Gamma}{m_1}{w^m_1}{m_2}{w^m_2}{w^m}\\
+      \crelsyn{\br\Gamma, \boldsymbol{a} : \br{A}}{f_1\;a_1}{w^f_1\;a_1}{f_2\;a_2}{w^m_2\;a_2}{w^f\;\boldsymbol{a}}
+    }{\crelsynL{\br\Gamma}{\bind^\Mone{}\;m_1\;f_1}{\bind^\Wone{}\;w^m_1\;w^f_1}{\bind^\Mtwo{}\;m_2\;f_2}{\bind^\Wtwo{}\;w^m_2\;w^f_2}{\bind^\Wrel{}\;\boldsymbol{w^m}\;\boldsymbol{w^f}}}
+\end{mathpar}
+
+
+\section{Pure versus Exc}
+\begin{mathpar}
+    \inferrule*[left=Weaken]{\crelsyn{}{p_1 l_1 pred_1}{w_1}{p_2 l_2 pred_2}{w_2}{?w} \\ ?w \leq \lambda \phi . \forall b(\Inl b, b)}
+    {\crelsyn{}{p_1 l_1 pred_1}{w_1}{p_2 l_2 pred_2}{w_2}{\lambda \phi . \forall b(\Inl b, b)}}
 \end{mathpar}
 \end{document}
