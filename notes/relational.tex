@@ -7,7 +7,7 @@
 \usepackage{lipsum}
 \usepackage[usenames, dvipsnames]{xcolor}
 \usepackage{bookmark}
-\usepackage[landscape, a1paper]{geometry}
+\usepackage[landscape, a2paper]{geometry}
 \usepackage{hyperref}
 \usepackage{tikz-cd}
 \usepackage{mathpartir}
@@ -20,7 +20,7 @@
 
 \newcommand{\bindSymbol}{\texttt{>>=}}
 \newcommand{\ret}{\texttt{ret}}
-\newcommand{\aux}{\texttt{aux}}
+\newcommand{\aux}{\texttt{aux}\,}
 \newcommand{\true}{\texttt{true}}
 \newcommand{\false}{\texttt{false}}
 \newcommand{\Some}{\texttt{Some}\,}
@@ -102,7 +102,8 @@
   \inferrule*[Left=Bind]{\crelsyn{}{\ret^\Mone \false}{?w_1}{\aux l_2}{?w_2}{\lambda \varphi . \varphi(\Inl \false, b_2)}}
   {\crelsyn{}{\aux l_1; \ret^\Mone \false}{?w_1}{\aux l_2}{?w_2}{?w'}} \\
   \inferrule*{\lambda \varphi . \varphi(\Inl \false, b_2) \leq w_0}{?w' \leq w_0}}
-  {\crelsyn{}{\aux l_1; \ret^\Mone false}{?w_1}{\aux l_2}{?w_2}{w_0}}}
+  {\crelsyn{}{\aux l_1; \ret^\Mone false}{?w_1}{\aux l_2}{?w_2}{w_0}} \\
+  \crelsyn{}{\ret^\Mone \true}{?w_1}{\ret^\Mtwo b_2}{?w_2}{\lambda \varphi . \varphi(\Inl true, b_2)}}
   {\crelsyn{}{p_1 l_1 \pred_1}{w_1}{p_2 l_2 \pred_2}{w_2}{?w}} \\
   \inferrule*{\inferrule*{\top}{w_0 \leq \lambda \varphi . \forall b . \varphi(\Inl b, b)}}{?w \leq \lambda \varphi . \forall b . \varphi(\Inl b, b)}}
   {\crelsyn{}{p_1 l_1 \pred_1}{w_1}{p_2 l_2 \pred_2}{w_2}{\lambda \varphi . \forall b . \varphi(\Inl b, b)}}
