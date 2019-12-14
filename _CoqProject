@@ -1,4 +1,4 @@
--Q . Bonak
+-Q category Cat
 
-Category.v
-Relational.v
+category/cat.v
+category/ncat.v
