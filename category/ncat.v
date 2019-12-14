@@ -1,4 +1,4 @@
-(* Category Theory in valis:
+(* n-categories:
    \approx : Equality, up to weak homotopy equivalence
    ~> : Morphism always takes ∞-categories as objects
    \bullet : Composition of ∞-categories
@@ -20,29 +20,35 @@ Notation "( a ; b )" := (existT _ a b) (at level 0).
 
 Fixpoint Arity n : Type :=
   match n with
-  | 0 => Type
-  | S n' => { A : Arity n' & Mor n' A 0 tt }
+  | O => Type
+  | S n' => { A : Arity n' & Mor n' tt }
   end
 
-with Sign n (A:Arity n) : Type :=
-  match n, S with
-  | 0, tt => Type
-  | S n', (A;P) => { s : Sign n' A & app n A P s }
+(* Two n-functions. The first creates an n-morphism along with arity info;
+   The second creates an (n - 1)-morphism along with arity info *)
+with make_arity {n} (A : Arity n) (M : Mor n _) : Type := { A & M }
+with arity_down {n} '(A ; M) : Type := { A & M }
+
+(* This n-function packages an (n - 1)-signature along with app info *)
+with Sign {n} (A : Arity n) : Type :=
+  match n, A with
+  | O, tt => Type
+  | S n', (A ; M) => { s : Sign n' A & app M s }
   end
 
-with app n (A:Arity n) (P:Mor n S 0) (s:Sign n A) : Type :=
-  match n, S with
-  | 0, tt => Type
-  | S n', (A;P) =>
+(* Given the dpair version, this function creates a curried version *)
+with app {n} {A : Arity n} (M : Mor n s) (s : Sign n A) : Type :=
+  match n, s with
+  | O, tt => Type
+  | _, (A ; M') => M' -> M
   end
 
-with Mor n (A:Arity n) p (s:Sign p (down n p A)): Type :=
-  match n, S with
-  | 0, CNil => Type
-  | S n', CAppend T S' => forall A:T, make_arity n' S'
+(* An n-Morphism is a collection of n morphisms, all the way down to tt *)
+with Mor n {A : Arity n} (s : Sign n (arity_down A)) : Type :=
+  match n, s with
+  | O, tt => Type
+  | _, (T ; M) => forall A : T, make_arity A M
   end.
-
-
 
 Reserved Notation "f ∙ g" (at level 55).
 
