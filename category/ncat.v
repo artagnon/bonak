@@ -17,24 +17,27 @@ Inductive Morphism : forall {n : nat}, Carrier n -> Carrier n -> Type :=
 where "a ~> b" := (Morphism a b).
 
 Notation "( a ; b )" := (existT _ a b) (at level 0).
+Notation "'dfst' a" := (projT1 a) (at level 10).
+Notation "'dsnd' a" := (projT2 a) (at level 10).
 
-Fixpoint Arity n : Type :=
+Record NCat :=
+  mkNCat {
+      A : Type
+      ; M : A -> Type
+    }.
+
+Fixpoint ArityAndSign n : { A : Type & A -> Type }  :=
   match n with
-  | O => Type
-  | S n' => { A : Arity n' & Mor n' tt }
-  end
+  | O => (existT (fun A => A -> Type) unit (fun _ => unit))
+  | S n' => existT (fun A => A -> Type) ({A: dfst (ArityAndSign n') &
+                                         (dsnd (ArityAndSign n')) A -> Type})
+                                     (fun '(A ; M) => {s: (dsnd (ArityAndSign n')) A & (M s * M s)%type})
+  end.
 
 (* Two n-functions. The first creates an n-morphism along with arity info;
    The second creates an (n - 1)-morphism along with arity info *)
 with make_arity {n} (A : Arity n) (M : Mor n _) : Type := { A & M }
-with arity_down {n} '(A ; M) : Type := { A & M }
-
-(* This n-function packages an (n - 1)-signature along with app info *)
-with Sign {n} (A : Arity n) : Type :=
-  match n, A with
-  | O, tt => Type
-  | S n', (A ; M) => { s : Sign n' A & app M s }
-  end
+with arity_down {n} '(A ; M) : Type := A
 
 (* Given the dpair version, this function creates a curried version *)
 with app {n} {A : Arity n} (M : Mor n s) (s : Sign n A) : Type :=
