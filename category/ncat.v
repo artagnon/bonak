@@ -22,16 +22,17 @@ Notation "'dsnd' a" := (projT2 a) (at level 10).
 
 Record NCat :=
   mkNCat {
-      A : Type
-      ; M : A -> Type
+      Arity : Type
+      ; Sign : Arity -> Type
     }.
 
-Fixpoint ArityAndSign n : { A : Type & A -> Type }  :=
+Fixpoint CatOp n : NCat  :=
   match n with
-  | O => (existT (fun A => A -> Type) unit (fun _ => unit))
-  | S n' => existT (fun A => A -> Type) ({A: dfst (ArityAndSign n') &
-                                         (dsnd (ArityAndSign n')) A -> Type})
-                                     (fun '(A ; M) => {s: (dsnd (ArityAndSign n')) A & (M s * M s)%type})
+  | O => {| Arity := unit ; Sign := (fun _ => unit) |}
+  | S n' => {| Arity := { A: (CatOp n').(Arity) &
+                            (CatOp n').(Sign) A -> Type };
+              Sign := (fun '(A ; M) =>
+                         { s: (CatOp n').(Sign) A & (M s * M s)%type }) |}
   end.
 
 (* Two n-functions. The first creates an n-morphism along with arity info;
