@@ -3,3 +3,4 @@
 *.aux
 .coqdeps.d
 Makefile.coq*
+TAGS

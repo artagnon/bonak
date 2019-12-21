@@ -1,2 +1,3 @@
 # bonak
-Research notes and Coq code.
+
+Coq formalization and notes related to research.
