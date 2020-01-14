@@ -10,6 +10,7 @@ Section Category.
   Reserved Notation "A ~> B" (at level 60).
   Reserved Notation "f ∼ g" (at level 65).
   Reserved Notation "f ∙ g" (at level 55).
+  Reserved Notation "f × g" (at level 52).
 
   Record Category : Type :=
     mkCategory
@@ -32,6 +33,30 @@ Section Category.
 
   Global Existing Instance sim_equiv.
   Global Existing Instance composite_prop.
+
+  Definition Monoid := { C : Category | exists A : Obj C, forall B : Obj C, A = B }.
+
+    Record Monoid' :=
+    { dom : Type;
+      Unit : dom;
+      Multiplication : dom -> dom -> dom
+      where "A × B" := (Multiplication A B);
+      MunitL : forall x, Unit × x = x;
+      MunitR : forall x, x × Unit = x;
+      Massoc : forall x y z, x × (y × z) = (x × y) × z }.
+
+  Record Equivalence A B := {
+     f : A -> B;
+     g : B -> A;
+     Idgf : forall x, g (f x) = x;
+     Idfg : forall y, f (g y) = y;
+     Coh : forall x, Idfg (f x) = f_equal f (Idgf x)
+  }.
+
+  Lemma equiv_monoid : Equivalence Monoid Monoid'.
+  Proof.
+  rewrite /Monoid.
+  Abort.
 End Category.
 
 Notation "A ~> B" := (Hom _ A B) (at level 60).
@@ -68,27 +93,7 @@ Section FunctorComposition.
 End FunctorComposition.
 
 Notation "f ∘ g" := (functor_composite f g) (at level 55).
-
-(* ref: Monads Need Not Be Endofunctors *)
-Section RelativeMonad.
-  Context {C D : Category} {J : Functor C D}.
-
-  Record RelativeMonad :=
-    mkRelativeMonad
-      { RM :> C -> D
-        ; η : forall A, J A ~> RM A
-        ; relmon_bind : forall {A B}, J A ~> RM B -> RM A ~> RM B
-        ; relmon_bind_proper : forall {A B},
-            Proper (@sim D (J A) (RM B) ==> sim D) relmon_bind
-        ; relmon_law1 : forall {A}, relmon_bind (η A) ∼ Id _
-        ; relmon_law2 : forall {A B} (f : J A ~> RM B),
-            (η A) ∙ relmon_bind f ∼ f
-        ; relmon_law3 : forall {A B C} (f : J B ~> RM C) (g: J A ~> RM B),
-            relmon_bind (g ∙ relmon_bind f) ∼ relmon_bind g ∙ relmon_bind f
-      }.
-End RelativeMonad.
-
-Arguments RelativeMonad {_ _} _.
+Reserved Notation "f × g" (at level 52).
 
 Section NaturalIsomorphism.
   Context {C D : Category} (F G : Functor C D).
@@ -104,21 +109,3 @@ Section NaturalIsomorphism.
 End NaturalIsomorphism.
 
 Arguments ni_inv {_ _ _ _} _ _.
-
-Section RelativeMonadMorphism.
-  Context {C D1 D2 : Category} {J1 : Functor C D1} {J2 : Functor C D2}
-          (J12 : Functor D1 D2) (ϕ : NaturalIsomorphism J2 (J1 ∘ J12))
-          (ψ := ni_inv ϕ).
-
-  Notation rbind := relmon_bind.
-
-  Record RelativeMonadMorphism :=
-    mkRelMonMorph
-      { RMM :> forall {M1 M2 A}, J12 (M1 A) ~> (M2 A)
-        ; rmm_law1 : forall {M1 M2 A}, fmap J12 (η M1 A) ∙ RMM ∼ ψ _ ∙ η M2 A
-        ; rmm_law2 : forall {M1 : RelativeMonad J1} {M2 : RelativeMonad J2} {A B}
-                       (f : J1 A ~> M1 B),
-            fmap J12 (rbind M1 f) ∙ RMM ∼
-                    RMM ∙ rbind M2 (ϕ _ ∙ fmap J12 f ∙ RMM)
-      }.
-End RelativeMonadMorphism.
