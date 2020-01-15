@@ -12,50 +12,48 @@ Section Category.
   Reserved Notation "f ∙ g" (at level 55).
   Reserved Notation "f × g" (at level 52).
 
-  Record Category : Type :=
-    mkCategory
-      { Obj :> Type
-        ; Hom : Obj -> Obj -> Type
-          where "A ~> B" := (Hom A B)
-        ; Id : forall A, A ~> A
-        ; sim : forall {A B}, (A ~> B) -> (A ~> B) -> Prop
-          where "f ∼ g" := (sim f g)
-        ; sim_equiv : forall {A B}, Equivalence (@sim A B)
-        ; composite : forall {A B C}, (A ~> B) -> (B ~> C) -> A ~> C
-          where "g ∙ f" := (composite f g)
-        ; composite_prop : forall {A B C},
-            Proper (@sim A B ==> @sim B C ==> @sim A C) composite
-        ; id_left : forall {A B} (f : A ~> B), Id B ∙ f ∼ f
-        ; id_right : forall {A B} (f : A ~> B), f ∙ Id A ∼ f
-        ; associativity : forall {A B C D} (f : A ~> B) (g : B ~> C) (h : C ~> D),
-            h ∙ (g ∙ f) ∼ (h ∙ g) ∙ f
-      }.
+  Record Category : Type := {
+    Obj :> Type;
+    Hom : Obj -> Obj -> Type
+    where "A ~> B" := (Hom A B);
+    Id : forall A, A ~> A;
+    sim : forall {A B}, (A ~> B) -> (A ~> B) -> Prop
+    where "f ∼ g" := (sim f g);
+    sim_equiv : forall {A B}, Equivalence (@sim A B);
+    composite : forall {A B C}, (A ~> B) -> (B ~> C) -> A ~> C
+    where "g ∙ f" := (composite f g);
+    composite_prop : forall {A B C}, Proper (@sim A B ==> @sim B C ==> @sim A C) composite;
+    id_left : forall {A B} (f : A ~> B), Id B ∙ f ∼ f;
+    id_right : forall {A B} (f : A ~> B), f ∙ Id A ∼ f;
+    associativity : forall {A B C D} (f : A ~> B) (g : B ~> C) (h : C ~> D), h ∙ (g ∙ f) ∼ (h ∙ g) ∙ f
+  }.
 
   Global Existing Instance sim_equiv.
   Global Existing Instance composite_prop.
 
   Definition Monoid := { C : Category | exists A : Obj C, forall B : Obj C, A = B }.
 
-    Record Monoid' :=
-    { dom : Type;
-      Unit : dom;
-      Multiplication : dom -> dom -> dom
-      where "A × B" := (Multiplication A B);
-      MunitL : forall x, Unit × x = x;
-      MunitR : forall x, x × Unit = x;
-      Massoc : forall x y z, x × (y × z) = (x × y) × z }.
+  Record Monoid' := {
+    dom : Type;
+    Unit : dom;
+    Multiplication : dom -> dom -> dom
+    where "A × B" := (Multiplication A B);
+    MunitL : forall x, Unit × x = x;
+    MunitR : forall x, x × Unit = x;
+    Massoc : forall x y z, x × (y × z) = (x × y) × z }.
 
   Record Equivalence A B := {
-     f : A -> B;
-     g : B -> A;
-     Idgf : forall x, g (f x) = x;
-     Idfg : forall y, f (g y) = y;
-     Coh : forall x, Idfg (f x) = f_equal f (Idgf x)
+    f : A -> B;
+    g : B -> A;
+    Idgf : forall x, g (f x) = x;
+    Idfg : forall y, f (g y) = y;
+    Coh : forall x, Idfg (f x) = f_equal f (Idgf x)
   }.
 
   Lemma equiv_monoid : Equivalence Monoid Monoid'.
   Proof.
   rewrite /Monoid.
+  econstructor. move => x. Unshelve.
   Abort.
 End Category.
 
