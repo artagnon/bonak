@@ -33,7 +33,7 @@ Section Category.
 
   Definition Monoid := { C : Category | exists A : Obj C, forall B : Obj C, A = B }.
 
-  Record Monoid' := {
+  Record Monoid' := mkMonoid' {
     dom : Type;
     Unit : dom;
     Multiplication : dom -> dom -> dom
@@ -42,18 +42,17 @@ Section Category.
     MunitR : forall x, x × Unit = x;
     Massoc : forall x y z, x × (y × z) = (x × y) × z }.
 
-  Record Equivalence A B := {
+  Record Equivalence A B := mkEquiv {
     f : A -> B;
     g : B -> A;
-    Idgf : forall x, g (f x) = x;
     Idfg : forall y, f (g y) = y;
+    Idgf : forall x, g (f x) = x;
     Coh : forall x, Idfg (f x) = f_equal f (Idgf x)
   }.
 
   Lemma equiv_monoid : Equivalence Monoid Monoid'.
   Proof.
-  rewrite /Monoid.
-  econstructor. move => x. Unshelve.
+  simple refine (mkEquiv _ _ _ _ _ _ _).
   Abort.
 End Category.
 
