@@ -12,7 +12,7 @@ Section Category.
   Reserved Notation "f ∙ g" (at level 55).
   Reserved Notation "f × g" (at level 52).
 
-  Record Category : Type := {
+  Record Category : Type := mkCat {
     Obj :> Type;
     Hom : Obj -> Obj -> Type
     where "A ~> B" := (Hom A B);
@@ -31,10 +31,10 @@ Section Category.
   Global Existing Instance sim_equiv.
   Global Existing Instance composite_prop.
 
-  Definition Monoid := { C : Category | exists A : Obj C, forall B : Obj C, A = B }.
+  Definition Monoid := { C : Category & { A : Obj C & forall B : Obj C, A = B } }.
 
   Record Monoid' := mkMonoid' {
-    dom : Type;
+    dom :> Type;
     Unit : dom;
     Multiplication : dom -> dom -> dom
     where "A × B" := (Multiplication A B);
@@ -53,6 +53,11 @@ Section Category.
   Lemma equiv_monoid : Equivalence Monoid Monoid'.
   Proof.
   simple refine (mkEquiv _ _ _ _ _ _ _).
+  simple refine (fun m => mkMonoid' (Hom _ _ _) _ _ _ _ _).
+  all: try destruct m.
+  exact x.
+  destruct e.
+  simple refine (((fun _ _ => _)) _ _).
   Abort.
 End Category.
 
