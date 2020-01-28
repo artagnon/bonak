@@ -11,11 +11,16 @@ Notation "x ∈ A" := (In x A) (at level 0).
 Notation "x ∉ A" := (~(In x A)) (at level 0).
 Notation "A ∪ B" := (Union A B) (at level 0).
 Notation "A ∩ B" := (Intersect A B) (at level 0).
+Notation "A ≠ B" := (~(A = B)) (at level 0).
 Axiom LEM : forall (P : Prop), P \/ ~P.
 Axiom eq : forall (A B : Obj), (A = B) <-> (forall x, x ∈ A <-> x ∈ B).
 Axiom phi : forall x : Obj, x ∉ φ.
 Axiom union : forall A B x : Obj, x ∈ (A ∪ B) <-> x ∈ A \/ x ∈ B.
 Axiom intersect : forall A B x : Obj, x ∈ (A ∩ B) <-> x ∈ A /\ x ∈ B.
+
+Lemma neq : forall (A B : Obj), ~(A = B) <-> exists x, (x ∈ A /\ x ∉ B) \/ (x ∉ A /\ x ∈ B).
+Proof.
+Admitted.
 
 Section Exercise1.
   Theorem eq_reflexive : forall (A : Obj), A = A.
