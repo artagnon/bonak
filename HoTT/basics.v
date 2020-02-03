@@ -19,4 +19,5 @@ Section Basics.
   Qed.
 
   Definition f' : nat -> unit := fun _ => tt.
-End Basics.
+  Definition trivial : ~True -> False := fun (k : ~True) => k I.
+  End Basics.
