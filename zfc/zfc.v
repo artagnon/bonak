@@ -3,7 +3,7 @@ From Coq.Classes Require Import RelationClasses.
 From Coq Require Import Setoid.
 
 Parameter Obj : Set.
-Parameter φ : Obj.
+Parameter ∅ : Obj.
 Parameter In : Obj -> Obj -> Prop.
 Parameter Union : Obj -> Obj -> Obj.
 Parameter Intersect : Obj -> Obj -> Obj.
@@ -17,6 +17,23 @@ Axiom eq : forall (A B : Obj), (A = B) <-> (forall x, x ∈ A <-> x ∈ B).
 Axiom phi : forall x : Obj, x ∉ φ.
 Axiom union : forall A B x : Obj, x ∈ (A ∪ B) <-> x ∈ A \/ x ∈ B.
 Axiom intersect : forall A B x : Obj, x ∈ (A ∩ B) <-> x ∈ A /\ x ∈ B.
+Axiom subset : forall A B : Obj,
+
+Require Import NArith.
+
+
+
+Compute 2+2.
+Nat.add (S (S O)) (S (S O)).
+Nat.add (S (S (S O))) (S O).
+Nat.add (S (S (S (S O)))) O.
+Nat.add A (S B) := S (Nat.add A B).
+
+A ∩ B ∩ C ≠ D.
+apply 
+
+Goal 2+2=4.
+reflexivity.
 
 Lemma neq : forall (A B : Obj), ~(A = B) <-> exists x, (x ∈ A /\ x ∉ B) \/ (x ∉ A /\ x ∈ B).
 Proof.
@@ -30,13 +47,15 @@ Section Exercise1.
 
   Theorem eq_symmetric : forall (A B : Obj), A = B <-> B = A.
   Proof.
-    move => A B; rewrite eq.
-  Abort.
+    move => A B; rewrite !eq.
+    firstorder.
+  Qed.
 
   Theorem eq_transitive : forall (A B C : Obj), A = B /\ B = C -> A = C.
   Proof.
-    move => A B C; rewrite eq.
-  Abort.
+    move => A B C; rewrite !eq.
+    firstorder.
+  Qed.
 End Exercise1.
 
 Section Exercise2.
