@@ -29,5 +29,18 @@ End Logic.
 
 Section Inductives.
   (* Peano naturals *)
+  (* How computations on Peano naturals actually works:
+   * Compute 2+2.
+   * Nat.add (S (S O)) (S (S O)).
+   * Nat.add (S (S (S O))) (S O).
+   * Nat.add (S (S (S (S O)))) O.
+   * Nat.add A (S B) := S (Nat.add A B).
+   *)
+
+  (* How proof obligations related to Peano naturals works: *)
+  Goal 2+2=4.
+  reflexivity.
+  Qed.
+
   Inductive nat : Set := O : nat | S : nat -> nat.
 End Inductives.

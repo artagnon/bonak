@@ -18,20 +18,6 @@ Axiom phi : forall x : Obj, x ∉ φ.
 Axiom union : forall A B x : Obj, x ∈ (A ∪ B) <-> x ∈ A \/ x ∈ B.
 Axiom intersect : forall A B x : Obj, x ∈ (A ∩ B) <-> x ∈ A /\ x ∈ B.
 
-(*
-Require Import NArith.
-
-Compute 2+2.
-Nat.add (S (S O)) (S (S O)).
-Nat.add (S (S (S O))) (S O).
-Nat.add (S (S (S (S O)))) O.
-Nat.add A (S B) := S (Nat.add A B).
-*)
-
-Goal 2+2=4.
-reflexivity.
-Qed.
-
 Lemma neq : forall (A B : Obj), ~(A = B) <-> exists x, (x ∈ A /\ x ∉ B) \/ (x ∉ A /\ x ∈ B).
 Proof.
 Admitted.
