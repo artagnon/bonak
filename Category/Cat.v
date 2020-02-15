@@ -28,9 +28,6 @@ Section Category.
     associativity : forall {A B C D} (f : A ~> B) (g : B ~> C) (h : C ~> D), h ∙ (g ∙ f) ∼ (h ∙ g) ∙ f
   }.
 
-  Global Existing Instance sim_equiv.
-  Global Existing Instance composite_prop.
-
   Definition Monoid := { C : Category & { A : Obj C & forall B : Obj C, A = B } }.
 
   Record Monoid' := mkMonoid' {
@@ -56,9 +53,10 @@ Section Category.
   simple refine (fun m => mkMonoid' (Hom _ _ _) _ _ _ _ _).
   all: try destruct m.
   exact x.
-  destruct e.
-  simple refine (((fun _ _ => _)) _ _).
   Abort.
+
+  Global Existing Instance sim_equiv.
+  Global Existing Instance composite_prop.
 End Category.
 
 Notation "A ~> B" := (Hom _ A B) (at level 60).

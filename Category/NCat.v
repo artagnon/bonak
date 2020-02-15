@@ -23,10 +23,10 @@ Fixpoint CatOp n : NCat :=
                          { s: (CatOp n').(Sign) A & (M s * M s)%type }) |}
   end.
 
-(* Inductive Monoid isa Category 1 [rename ~> to \times] := *)
+Inductive Monoid isa Category 1 [rename ~> to ×] :=
   { Unit : Set -> Monoid;
     Multiplication : forall {M : Monoid}, M × M -> M;
-    Munit : forall {M : Monoid}, (Unit × M -> M) and (M x Unit -> M).
+    Munit : forall {M : Monoid}, (Unit × M -> M) and (M × Unit -> M).
 
 Inductive Group isa Monoid := forall A, A -> A. (* Inverse *)
 Inductive AbelianGroup isa Group := forall {F G}, F + G = G + F.
