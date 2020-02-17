@@ -1,12 +1,19 @@
-From Coq Require Export Logic.StrictProp.
-From Coq Require Import ssreflect.
-
-Set Allow StrictProp.
+From Coq Require Import Logic.StrictProp ssreflect.
 
 Section ProofRelevance.
   (* Inhabitants of Prop are proof-relevant propositions. *)
   Theorem PropRel (P : Prop) (x y : P): x = y.
+  Proof.
   Abort.
+
+  Theorem PropRefl (P : Prop) (x : P): x = x.
+    exact eq_refl.
+  Qed.
+
+  Inductive eq (A : Type) (x : A) : A -> Prop :=
+    eq_refl : eq A x x.
+
+  Set Allow StrictProp.
 
   Theorem SPropToProp : SProp -> Prop.
   Proof.

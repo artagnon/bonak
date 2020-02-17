@@ -20,6 +20,7 @@ Axiom intersect : forall A B x : Obj, x ∈ (A ∩ B) <-> x ∈ A /\ x ∈ B.
 
 Lemma neq : forall (A B : Obj), ~(A = B) <-> exists x, (x ∈ A /\ x ∉ B) \/ (x ∉ A /\ x ∈ B).
 Proof.
+  firstorder.
 Admitted.
 
 Section Exercise1.
