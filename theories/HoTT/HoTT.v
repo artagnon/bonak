@@ -1,10 +1,10 @@
 Require Import HoTT.
 
-Axiom PropositionalEquality : forall (P : Prop) (a b : P), a = b.
+Axiom PropositionalProofIrrelevance : forall (P : Prop) (a b : P), a = b.
 
 Theorem PropEquality (P : Prop) (a b : P) : a = b.
 Proof.
-  by apply PropositionalEquality.
+  by apply PropositionalProofIrrelevance.
 Qed.
 
 Theorem hPropEquality (P : hProp) (a b : P) : a = b.

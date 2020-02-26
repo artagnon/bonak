@@ -1,7 +1,7 @@
 From HoTT Require Import HoTT.
 
-(* Checks that U and Q can simultanously be inhabited by P. *)
-Definition check U V := forall X : U, V.
+(* Checks that all inhabitants of U are of type V. *)
+Definition check U V := (forall X : U, X) : V.
 
 (* Prop is impredicative. *)
 Definition PropImpr := check Prop Prop.
@@ -10,7 +10,7 @@ Definition PropImpr := check Prop Prop.
 Fail Definition SetPred := (forall X : Set, X) : Set.
 
 (* Is Type impredicative? This is misleading. *)
-Definition TypeNaive := check Type Type.
+Definition TypeNaive := (forall X : Type, X) : Type.
 
 (* In the previous definition, Type is really Type@{i},
  * and the following definition fails with: Universe {Predicativity.153} is unbound. *)
