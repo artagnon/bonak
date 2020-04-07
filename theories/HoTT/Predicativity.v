@@ -1,7 +1,5 @@
-From HoTT Require Import HoTT.
-
 (* Checks that all inhabitants of U are of type V. *)
-Definition check U V := (forall X : U, X) : V.
+Notation "'check' U V" := ((forall X : U, X) : V) (at level 0, U, V at level 0).
 
 (* Prop is impredicative. *)
 Definition PropImpr := check Prop Prop.
@@ -17,4 +15,6 @@ Definition TypeNaive := (forall X : Type, X) : Type.
 Fail Definition TypePred@{i} := check Type@{i} Type@{i}.
 
 (* Fails due to a bug in Coq: Unable to handle arbitrary u+k <= v constraints? *)
-Fail Definition TypePred'@{i} := check Type@{i + 1} Type@{i}.
+Definition TypePred'@{i} := ((forall X : Type@{i}, X) : Type@{i+1}).
+
+Definition TypePred'@{i j} := check Type@{i} Type@{i+1}.
