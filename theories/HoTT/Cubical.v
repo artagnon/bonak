@@ -6,9 +6,9 @@ Universe l.
 Record Cubical@{l} n :=
 {
   csp : n <= m -> Type@{l + 1} ;
-  box : forall p, p <= n -> (D : csp) -> Type@{l} ;
-  cube : forall p, p <= n -> (D : csp) -> Type@{l} ;
-  subbox : forall p, p <= n -> (D : csp) -> Type@{l} ;
+  box : forall p, p <= n -> csp -> Type@{l} ;
+  cube : forall p, p <= n -> csp -> Type@{l} ;
+  subbox : forall p, p <= n -> csp -> Type@{l} ;
   cohbox :
 }.
 
