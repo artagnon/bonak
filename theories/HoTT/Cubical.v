@@ -5,9 +5,10 @@ Universe l.
 
 Record Cubical@{l} n :=
 {
-  csp : n <= m -> Type@{l + 1} ;
+  csp : Type@{l + 1} ;
   box : forall p, p <= n -> csp -> Type@{l} ;
-  cube : forall p, p <= n -> csp -> Type@{l} ;
+  cube : forall p, p <= n -> csp -> (box D -> Type@{l}) -> box D -> Type@{l} ;
+  layer : csp -> box D -> Type@{l} ;
   subbox : forall p, p <= n -> csp -> Type@{l} ;
   cohbox :
 }.
