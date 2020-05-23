@@ -4,3 +4,4 @@
 .coqdeps.d
 Makefile.coq*
 TAGS
+.DS_Store
