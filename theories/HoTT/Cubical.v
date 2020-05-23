@@ -1,12 +1,12 @@
 From HoTT Require Import HoTT.
 
+Section Cubical.
 Universe l.
 
 Definition cubsetprefix (n : nat) : Type@{l + 1} :=
 match (S n) with
-  S O => unit
-  n => { D : cubsetprefix (S n) & (mkBox n n D) -> Type@{l} }.
-  D
+  | S O => unit
+  | n => { D : cubsetprefix (S n) & (mkBox n n D) -> Type@{l} }
 end
 
 with Box := mkBox {
@@ -19,7 +19,6 @@ mkBox n p (p <= n) (D : cubsetprefix n) : Type@{l}.
 mkBox n D : unit.
 mkBox {n + 1, p + 1} D
 
-Section Cubical.
 Argument {n : nat} {p : nat} {q : nat} {r : nat}.
 
 Record Cubical m :=
