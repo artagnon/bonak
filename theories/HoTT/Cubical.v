@@ -3,12 +3,12 @@ From HoTT Require Import HoTT.
 Section Cubical.
 Universe l.
 
-Record Cubical n :=
+Record Cubical@{l} n :=
 {
   csp : n <= m -> Type@{l + 1} ;
-  box : forall p, p <= n -> (D : cubsetprefix (n + 1)) -> Type@{l} ;
-  cube : n < m, forall p, p <= n -> (D : cubsetprefix (n + 1)) -> Type@{l} ;
-  subbox : n < m, forall p, p <= n -> (D : cubsetprefix (n + 1)) -> Type@{l} ;
+  box : forall p, p <= n -> (D : csp) -> Type@{l} ;
+  cube : forall p, p <= n -> (D : csp) -> Type@{l} ;
+  subbox : forall p, p <= n -> (D : csp) -> Type@{l} ;
   cohbox :
 }.
 
