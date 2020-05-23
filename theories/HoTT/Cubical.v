@@ -1,11 +1,12 @@
 From HoTT Require Import HoTT.
+From HoTT Require Import peano_naturals.
 
 Section Cubical.
 Universe l.
 
-Record Cubical@{l} (n : nat) :=
+Record Cubical (n : nat) :=
 {
-  csp : Type@{l + 1} ;
+  csp : Type@{l} ;
   box : forall p, p <= n -> csp -> Type@{l} ;
   cube : forall p (Hp : p <= n), forall D, (box p Hp D -> Type@{l}) -> box p Hp D -> Type@{l} ;
   layer : forall p (Hp : p <= n), forall D, box p Hp D -> Type@{l} ;
