@@ -3,7 +3,16 @@ From HoTT Require Import HoTT.
 Section Cubical.
 Universe l.
 
-Definition cubsetprefix (n : nat) : Type@{l + 1} :=
+Record Cubical m :=
+{
+  csp : forall n, n <= m -> Type@{l + 1} ;
+  box : forall n, (n <= m), forall p, p <= n -> (D : cubsetprefix (n + 1)) -> Type@{l} ;
+  cube : forall n, n < m, forall p, p <= n -> (D : cubsetprefix (n + 1)) -> Type@{l} ;
+  subbox : forall n, n < m, forall p, p <= n -> (D : cubsetprefix (n + 1)) -> Type@{l} ;
+  cohbox :
+}.
+
+Fixpoint cubsetprefix (n : nat) : Type@{l + 1} :=
 match (S n) with
   | S O => unit
   | n => { D : cubsetprefix (S n) & (mkBox n n D) -> Type@{l} }
@@ -21,13 +30,7 @@ mkBox {n + 1, p + 1} D
 
 Argument {n : nat} {p : nat} {q : nat} {r : nat}.
 
-Record Cubical m :=
-{
-  csp : forall n, n <= m -> Type@{l + 1} ;
-  box : forall n, (n <= m), forall p, p <= n -> (D : cubsetprefix (n + 1)) -> Type@{l} ;
-  cube : forall n, n < m, forall p, p <= n -> (D : cubsetprefix (n + 1)) -> Type@{l} ;
-  subbox : forall n, n < m, forall p, p <= n -> (D : cubsetprefix (n + 1)) -> Type@{l} ;
-}.
+
 
 Definition layer (n + 1) p : Type@{l} := c.(cube) (n + 1) p D
 
