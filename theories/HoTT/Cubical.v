@@ -10,10 +10,10 @@ Record Cubical@{l} n :=
   cube : forall p (Hp : p <= n), forall D, (box p Hp D -> Type@{l}) -> box p Hp D -> Type@{l} ;
   layer : forall p (Hp : p <= n), forall D, box p Hp D -> Type@{l} ;
   subbox : forall p, p <= n -> csp -> Type@{l} ;
-  sublayer : csp -> box p Hp D -> layer
-  subcube : forall p (Hp : p <= n), forall D, D -> (box p Hp D -> Type@{l}) -> box p Hp D
-  cohbox : forall p (Hp : p <= n), forall D, D -> box p Hp D
-  cohlayer : forall p (Hp : p <= n), forall D, box p Hp D -> layer D d
+  sublayer : forall p (Hp : p <= n), forall D, csp -> box p Hp D -> Type@{l} ;
+  subcube : forall p (Hp : p <= n), forall D, csp -> (box p Hp D -> Type@{l}) -> box p Hp D ;
+  cohbox : forall p (Hp : p <= n), forall D, D -> box p Hp D ;
+  cohlayer : forall p (Hp : p <= n), forall D, box p Hp D -> layer D d ;
   cohcube : forall p (Hp : p <= n), forall D, (box p Hp D -> Type@{l}) -> Type@{l}
 }.
 
