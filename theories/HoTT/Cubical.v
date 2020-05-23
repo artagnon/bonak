@@ -7,14 +7,14 @@ Record Cubical@{l} n :=
 {
   csp : Type@{l + 1} ;
   box : forall p, p <= n -> csp -> Type@{l} ;
-  cube : forall p, p <= n -> csp -> forall D, (box D -> Type@{l}) -> box D -> Type@{l} ;
-  layer : forall D, box D -> Type@{l} ;
+  cube : forall p (Hp : p <= n), forall D, (box p Hp D -> Type@{l}) -> box p Hp D -> Type@{l} ;
+  layer : forall p (Hp : p <= n), forall D, box p Hp D -> Type@{l} ;
   subbox : forall p, p <= n -> csp -> Type@{l} ;
-  sublayer : csp -> box -> layer
-  subcube : forall D, D -> (box D -> Type@{l}) -> box D
-  cohbox : forall D, D -> box D
-  cohlayer : forall D, box D -> layer D d
-  cohcube : forall D, (box -> Type@{l}) -> box D
+  sublayer : csp -> box p Hp D -> layer
+  subcube : forall p (Hp : p <= n), forall D, D -> (box p Hp D -> Type@{l}) -> box p Hp D
+  cohbox : forall p (Hp : p <= n), forall D, D -> box p Hp D
+  cohlayer : forall p (Hp : p <= n), forall D, box p Hp D -> layer D d
+  cohcube : forall p (Hp : p <= n), forall D, (box p Hp D -> Type@{l}) -> Type@{l}
 }.
 
 Fixpoint cubsetprefix (n : nat) : Cubical n :=
