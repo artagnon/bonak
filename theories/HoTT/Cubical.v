@@ -3,7 +3,7 @@ From HoTT Require Import HoTT.
 Section Cubical.
 Universe l.
 
-Record Cubical@{l} n :=
+Record Cubical@{l} (n : nat) :=
 {
   csp : Type@{l + 1} ;
   box : forall p, p <= n -> csp -> Type@{l} ;
@@ -12,8 +12,8 @@ Record Cubical@{l} n :=
   subbox : forall p, p <= n -> csp -> Type@{l} ;
   sublayer : forall p (Hp : p <= n), forall D, csp -> box p Hp D -> Type@{l} ;
   subcube : forall p (Hp : p <= n), forall D, csp -> (box p Hp D -> Type@{l}) -> box p Hp D ;
-  cohbox : forall p (Hp : p <= n), forall D, D -> box p Hp D ;
-  cohlayer : forall p (Hp : p <= n), forall D, box p Hp D -> layer D d ;
+  cohbox : forall p (Hp : p <= n), forall D, csp -> box p Hp D ;
+  cohlayer : forall p (Hp : p <= n), forall D, box p Hp D -> Type@{l} ;
   cohcube : forall p (Hp : p <= n), forall D, (box p Hp D -> Type@{l}) -> Type@{l}
 }.
 
