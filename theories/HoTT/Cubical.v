@@ -3,19 +3,19 @@ From HoTT Require Import HoTT.
 Section Cubical.
 Universe l.
 
-Record Cubical m :=
+Record Cubical n :=
 {
-  csp : forall n, n <= m -> Type@{l + 1} ;
-  box : forall n, (n <= m), forall p, p <= n -> (D : cubsetprefix (n + 1)) -> Type@{l} ;
-  cube : forall n, n < m, forall p, p <= n -> (D : cubsetprefix (n + 1)) -> Type@{l} ;
-  subbox : forall n, n < m, forall p, p <= n -> (D : cubsetprefix (n + 1)) -> Type@{l} ;
+  csp : n <= m -> Type@{l + 1} ;
+  box : forall p, p <= n -> (D : cubsetprefix (n + 1)) -> Type@{l} ;
+  cube : n < m, forall p, p <= n -> (D : cubsetprefix (n + 1)) -> Type@{l} ;
+  subbox : n < m, forall p, p <= n -> (D : cubsetprefix (n + 1)) -> Type@{l} ;
   cohbox :
 }.
 
-Fixpoint cubsetprefix (n : nat) : Type@{l + 1} :=
-match (S n) with
-  | S O => unit
-  | n => { D : cubsetprefix (S n) & (mkBox n n D) -> Type@{l} }
+Fixpoint cubsetprefix (n : nat) : Cubical n :=
+match n with
+  | O => {| csp := unit; box := ; cube := fun ...; subbox := ; cohbox := |}
+  | S n => { D : cubsetprefix (S n) & (mkBox n n D) -> Type@{l} }
 end
 
 with Box := mkBox {
