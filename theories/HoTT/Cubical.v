@@ -6,11 +6,10 @@ Universe l'.
 Universe l.
 
 Theorem less_refl (n : nat): n <= n.
-Admitted.
+  apply Peano.le_n.
+Qed.
 Theorem less_pred (n : nat): pred n <= n.
 Admitted.
-
-Notation "( x ; y )" := (exist _ x y) (at level 0).
 
 Record Cubical (n : nat) :=
 {
@@ -18,7 +17,7 @@ Record Cubical (n : nat) :=
   box : forall p, p <= n -> csp -> Type@{l} ;
   cube : forall p (Hp : p <= n), forall D, (box p Hp D -> Type@{l}) -> box p Hp D -> Type@{l} ;
   layer : forall p (Hp : p <= n), forall D, box p Hp D -> Type@{l} ;
-  subbox : forall q (Hq : q < n), forall p (Hp : p <= q), csp -> box p hd(D) -> box (n - 1) p ;
+  subbox : forall q (Hq : q < n), forall p (Hp : p <= q), forall D, csp -> box p D.1 -> box (n - 1) p ;
   sublayer : forall p (Hp : p <= n), forall D, csp -> box p Hp D -> Type@{l} ;
   subcube : forall p (Hp : p <= n), forall D, csp -> (box p Hp D -> Type@{l}) -> box p Hp D ;
   cohbox : forall p (Hp : p <= n), forall D, csp -> box p Hp D ;
