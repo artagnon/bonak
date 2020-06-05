@@ -15,7 +15,7 @@ Record Cubical (n : nat) :=
   box {n' p} {Hn' : n' <= n} (Hp : p <= n) : csp Hn' -> Type@{l} ;
   layer {n' p} {Hn' : n' <= n} (Hp : p < n) : forall D, box Hp D -> Type@{l} ;
   cube {n' p} {Hn' : n' <= n} (Hp : p <= n) : forall D, box Hp D -> Type@{l} -> box Hp D -> Type@{l} ;
-  subbox {n' p q} {Hn' : n' <= n} (Hq : q < n) (Hp : p <= q) : forall (D : csp Hn'), box Hp (hd D) -> box Hp D ;
+  subbox {n' p q} {Hn' : n' <= n} (Hq : q < n) (Hp : p <= q) : forall (D : csp Hn'), box Hp D -> box Hp (hd D) ;
   sublayer {n' p} {Hn' : n' <= n} (Hp : p <= n) : forall (D : csp Hn'), box Hp D -> Type@{l} ;
   subcube {n' p} {Hn' : n' <= n} (Hp : p <= n) : forall (D : csp Hn'), (box Hp D -> Type@{l}) -> box Hp D ;
   cohbox {n' p} {Hn' : n' <= n} (Hp : p <= n) : forall (D : csp Hn'), box Hp D ;
