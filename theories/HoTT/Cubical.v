@@ -9,20 +9,20 @@ Theorem less_refl (n : nat): n <= n.
   apply Peano.le_n.
 Qed.
 Theorem less_pred (n : nat): pred n <= n.
-Admitted.
+Abort.
 
 Record Cubical (n : nat) :=
 {
-  csp : Type@{l'} ;
-  box : forall p, p <= n -> csp -> Type@{l} ;
-  cube : forall p (Hp : p <= n), forall D, (box p Hp D -> Type@{l}) -> box p Hp D -> Type@{l} ;
-  layer : forall p (Hp : p <= n), forall D, box p Hp D -> Type@{l} ;
-  subbox : forall q (Hq : q < n), forall p (Hp : p <= q), forall D, csp -> box p D.1 -> box (n - 1) p ;
-  sublayer : forall p (Hp : p <= n), forall D, csp -> box p Hp D -> Type@{l} ;
-  subcube : forall p (Hp : p <= n), forall D, csp -> (box p Hp D -> Type@{l}) -> box p Hp D ;
-  cohbox : forall p (Hp : p <= n), forall D, csp -> box p Hp D ;
-  cohlayer : forall p (Hp : p <= n), forall D, box p Hp D -> Type@{l} ;
-  cohcube : forall p (Hp : p <= n), forall D, (box p Hp D -> Type@{l}) -> Type@{l}
+  csp : forall n', n' <= n, Type@{l'} ;
+  box : forall n', n' <= n,forall p, p <= n -> csp -> Type@{l} ;
+  cube : forall n', n' <= n, forall p (Hp : p <= n), forall D, (box p Hp D -> Type@{l}) -> box p Hp D -> Type@{l} ;
+  layer : forall n', n' <= n, forall p (Hp : p <= n), forall D, box p Hp D -> Type@{l} ;
+  subbox : forall n', n' <= n, forall q (Hq : q < n), forall p (Hp : p <= q), forall D, csp -> box p D.1 -> box (n - 1) p ;
+  sublayer : forall n', n' <= n, forall p (Hp : p <= n), forall D, csp -> box p Hp D -> Type@{l} ;
+  subcube : forall n', n' <= n, forall p (Hp : p <= n), forall D, csp -> (box p Hp D -> Type@{l}) -> box p Hp D ;
+  cohbox : forall n', n' <= n, forall p (Hp : p <= n), forall D, csp -> box p Hp D ;
+  cohlayer : forall n', n' <= n, forall p (Hp : p <= n), forall D, box p Hp D -> Type@{l} ;
+  cohcube : forall n', n' <= n, forall p (Hp : p <= n), forall D, (box p Hp D -> Type@{l}) -> Type@{l}
 }.
 
 Fixpoint cubsetprefix (n : nat) : Cubical n :=
@@ -42,8 +42,6 @@ mkBox n D : unit.
 mkBox {n + 1, p + 1} D
 
 Argument {n : nat} {p : nat} {q : nat} {r : nat}.
-
-
 
 Definition layer (n + 1) p : Type@{l} := c.(cube) (n + 1) p D
 
