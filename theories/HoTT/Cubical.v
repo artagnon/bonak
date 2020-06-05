@@ -13,16 +13,16 @@ Abort.
 
 Record Cubical (n : nat) :=
 {
-  csp : forall n', n' <= n, Type@{l'} ;
-  box : forall n', n' <= n,forall p, p <= n -> csp -> Type@{l} ;
-  cube : forall n', n' <= n, forall p (Hp : p <= n), forall D, (box p Hp D -> Type@{l}) -> box p Hp D -> Type@{l} ;
-  layer : forall n', n' <= n, forall p (Hp : p <= n), forall D, box p Hp D -> Type@{l} ;
-  subbox : forall n', n' <= n, forall q (Hq : q < n), forall p (Hp : p <= q), forall D, csp -> box p D.1 -> box (n - 1) p ;
-  sublayer : forall n', n' <= n, forall p (Hp : p <= n), forall D, csp -> box p Hp D -> Type@{l} ;
-  subcube : forall n', n' <= n, forall p (Hp : p <= n), forall D, csp -> (box p Hp D -> Type@{l}) -> box p Hp D ;
-  cohbox : forall n', n' <= n, forall p (Hp : p <= n), forall D, csp -> box p Hp D ;
-  cohlayer : forall n', n' <= n, forall p (Hp : p <= n), forall D, box p Hp D -> Type@{l} ;
-  cohcube : forall n', n' <= n, forall p (Hp : p <= n), forall D, (box p Hp D -> Type@{l}) -> Type@{l}
+  csp {n'} (Hn' : n' <= n) : Type@{l'} ;
+  box {n' p} (Hn' : n' <= n) (Hp : p <= n) : csp -> Type@{l} ;
+  cube {n' p} (Hn' : n' <= n) (Hp : p <= n) : forall D, box p Hp D -> Type@{l} -> box p Hp D -> Type@{l} ;
+  layer {n' p} (Hn' : n' <= n) : forall D, (D : box p Hp D) -> Type@{l} ;
+  subbox {n' p q} (Hn' : n' <= n) (Hq : q < n) (Hp : p <= q) : forall D, csp -> box p D.1 -> box (n - 1) p ;
+  sublayer {n' p} (Hn' : n' <= n) (Hp : p <= n) : forall D, csp -> box p Hp D -> Type@{l} ;
+  subcube {n' p} (Hn' : n' <= n) (Hp : p <= n) : forall D, csp -> (box p Hp D -> Type@{l}) -> box p Hp D ;
+  cohbox {n' p} (Hn' : n' <= n) (Hp : p <= n) : forall D, csp -> box p Hp D ;
+  cohlayer {n' p}(Hn' : n' <= n) (Hp : p <= n) : forall D, box p Hp D -> Type@{l} ;
+  cohcube {n' p} (Hn' : n' <= n) (Hp : p <= n) : forall D, (box p Hp D -> Type@{l}) -> Type@{l}
 }.
 
 Fixpoint cubsetprefix (n : nat) : Cubical n :=
