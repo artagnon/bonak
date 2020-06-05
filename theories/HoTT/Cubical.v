@@ -5,24 +5,22 @@ Section Cubical.
 Universe l'.
 Universe l.
 
-Theorem less_refl (n : nat): n <= n.
-  apply Peano.le_n.
-Qed.
-Theorem less_pred (n : nat): pred n <= n.
-Abort.
+Theorem LP {n n' : nat} : n' <= n -> pred n' <= n.
+Admitted.
 
 Record Cubical (n : nat) :=
 {
   csp {n'} (Hn' : n' <= n) : Type@{l'} ;
-  box {n' p} (Hn' : n' <= n) (Hp : p <= n) : csp Hn' -> Type@{l} ;
-  layer {n' p} (Hn' : n' <= n) (Hp : p < n) : forall D, box Hn' Hp D -> Type@{l} ;
-  cube {n' p} (Hn' : n' <= n) (Hp : p <= n) : forall D, box Hn' Hp D -> Type@{l} -> box Hn' Hp D -> Type@{l} ;
-  subbox {n' p q} (Hn' : n' <= n) (Hq : q < n) (Hp : p <= q) : forall (D : csp Hn'), box Hn' Hp D.1 -> box Hn' Hp D ;
-  sublayer {n' p} (Hn' : n' <= n) (Hp : p <= n) : forall (D : csp Hn'), box Hn' Hp D -> Type@{l} ;
-  subcube {n' p} (Hn' : n' <= n) (Hp : p <= n) : forall (D : csp Hn'), (box Hn' Hp D -> Type@{l}) -> box Hn' Hp D ;
-  cohbox {n' p} (Hn' : n' <= n) (Hp : p <= n) : forall (D : csp Hn'), box Hn' Hp D ;
-  cohlayer {n' p} (Hn' : n' <= n) (Hp : p <= n) : forall (D : csp Hn'), box Hn' Hp D -> Type@{l} ;
-  cohcube {n' p} (Hn' : n' <= n) (Hp : p <= n) : forall (D : csp Hn'), (box Hn' Hp D -> Type@{l}) -> Type@{l}
+  hd {n'} {Hn' : n' <= n} : csp Hn' -> csp (LP Hn') ;
+  box {n' p} {Hn' : n' <= n} (Hp : p <= n) : csp Hn' -> Type@{l} ;
+  layer {n' p} {Hn' : n' <= n} (Hp : p < n) : forall D, box Hp D -> Type@{l} ;
+  cube {n' p} {Hn' : n' <= n} (Hp : p <= n) : forall D, box Hp D -> Type@{l} -> box Hp D -> Type@{l} ;
+  subbox {n' p q} {Hn' : n' <= n} (Hq : q < n) (Hp : p <= q) : forall (D : csp Hn'), box Hp (hd D) -> box Hp D ;
+  sublayer {n' p} {Hn' : n' <= n} (Hp : p <= n) : forall (D : csp Hn'), box Hp D -> Type@{l} ;
+  subcube {n' p} {Hn' : n' <= n} (Hp : p <= n) : forall (D : csp Hn'), (box Hp D -> Type@{l}) -> box Hp D ;
+  cohbox {n' p} {Hn' : n' <= n} (Hp : p <= n) : forall (D : csp Hn'), box Hp D ;
+  cohlayer {n' p} {Hn' : n' <= n} (Hp : p <= n) : forall (D : csp Hn'), box Hp D -> Type@{l} ;
+  cohcube {n' p} {Hn' : n' <= n} (Hp : p <= n) : forall (D : csp Hn'), (box Hp D -> Type@{l}) -> Type@{l}
 }.
 
 Fixpoint cubsetprefix (n : nat) : Cubical n :=
