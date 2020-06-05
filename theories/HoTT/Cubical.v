@@ -15,13 +15,13 @@ Record Cubical (n : nat) :=
 {
   csp {n'} (Hn' : n' <= n) : Type@{l'} ;
   box {n' p} (Hn' : n' <= n) (Hp : p <= n) : csp Hn' -> Type@{l} ;
-  cube {n' p} (Hn' : n' <= n) (Hp : p <= n) : forall D, box Hn' Hp D -> Type@{l} -> box Hn' Hp D -> Type@{l} ;
   layer {n' p} (Hn' : n' <= n) (Hp : p < n) : forall D, box Hn' Hp D -> Type@{l} ;
+  cube {n' p} (Hn' : n' <= n) (Hp : p <= n) : forall D, box Hn' Hp D -> Type@{l} -> box Hn' Hp D -> Type@{l} ;
   subbox {n' p q} (Hn' : n' <= n) (Hq : q < n) (Hp : p <= q) : forall D, csp Hn' -> box Hn' Hp D.1 -> box Hn' Hp D ;
   sublayer {n' p} (Hn' : n' <= n) (Hp : p <= n) : forall D, csp -> box Hn' Hp D -> Type@{l} ;
   subcube {n' p} (Hn' : n' <= n) (Hp : p <= n) : forall D, csp -> (box Hn' Hp D -> Type@{l}) -> box Hn' Hp D ;
   cohbox {n' p} (Hn' : n' <= n) (Hp : p <= n) : forall D, csp -> box Hn' Hp D ;
-  cohlayer {n' p}(Hn' : n' <= n) (Hp : p <= n) : forall D, box Hn' Hp D -> Type@{l} ;
+  cohlayer {n' p} (Hn' : n' <= n) (Hp : p <= n) : forall D, box Hn' Hp D -> Type@{l} ;
   cohcube {n' p} (Hn' : n' <= n) (Hp : p <= n) : forall D, (box Hn' Hp D -> Type@{l}) -> Type@{l}
 }.
 
