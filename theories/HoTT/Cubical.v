@@ -18,9 +18,9 @@ Record Cubical (n : nat) :=
   subbox {n' p q} {Hn' : n' <= n} (Hp : p <= n) (Hq : q < n) : forall (D : csp Hn'), box Hp D -> box Hp (hd D) ;
   sublayer {n' p q} {Hn' : n' <= n} (Hp : p < n) (Hq : q < n) (Hqn : q < n) : forall (D : csp Hn'), box Hp D -> Type@{l} ;
   subcube {n' p q} {Hn' : n' <= n} (Hp : p <= n) (Hq : q < n) : forall (D : csp Hn'), (box Hp D -> Type@{l}) -> box Hp D ;
-  cohbox {n' p q r} {Hn' : n' <= n} (Hp : p <= n) (Hq : q < n) : forall (D : csp Hn'), box Hp D ;
-  cohlayer {n' p q r} {Hn' : n' <= n} (Hp : p < n) (Hq : q < n) : forall (D : csp Hn'), box Hp D -> Type@{l} ;
-  cohcube {n' p q r} {Hn' : n' <= n} (Hp : p <= n) (Hq : q < n) : forall (D : csp Hn'), (box Hp D -> Type@{l}) -> Type@{l}
+  cohbox {n' p q r} {Hn' : n' <= n} (Hp : p <= n) (Hq : q < n) (Hr : r < n) : forall (D : csp Hn'), box Hp D ;
+  cohlayer {n' p q r} {Hn' : n' <= n} (Hp : p < n) (Hq : q < n) (Hr : r < n) : forall (D : csp Hn'), box Hp D -> Type@{l} ;
+  cohcube {n' p q r} {Hn' : n' <= n} (Hp : p <= n) (Hq : q < n) (Hr : r < n) : forall (D : csp Hn'), (box Hp D -> Type@{l}) -> Type@{l}
 }.
 
 Fixpoint cubsetprefix (n : nat) : Cubical n :=
