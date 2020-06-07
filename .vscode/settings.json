@@ -1,3 +1,4 @@
 {
-  "coqtop.binPath": "/Users/artagnon/bin"
+  "coqtop.binPath": "/Users/artagnon/bin",
+  "editor.wordWrapColumn": 60
 }
