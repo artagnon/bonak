@@ -20,8 +20,9 @@ Admitted.
 Theorem lt_weak {p n} : p < n -> p <= n.
 Admitted.
 
-Theorem le_pqrn_trans {p q r n} : p <= r -> q < n -> r < q -> p <= n.
-Admitted.
+(* p <= r -> r < q -> q < n -> p <= n *)
+Definition le_pqrn_trans Hp Hr Hq :=
+  le_pqn_trans_weak (le_pqn_trans_weak Hp Hr) Hq.
 
 Record Cubical (n : nat) :=
 {
@@ -50,15 +51,15 @@ Record Cubical (n : nat) :=
           cube (tl D) (subbox Hq d);
   cohbox {n' p q r} {Hn' : n' <= n} {Hp : p <= r}
          (Hq : q < n') (Hr : r < q) :
-         forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hq Hr) D),
+         forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D),
          subbox _ (subbox _ d) = subbox _ (subbox _ d);
   cohlayer {n' p q r} {Hn' : n' <= n} {Hp : p < r}
            (Hq : q < n') (Hr : r < q) :
-           forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hq Hr) D),
+           forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D),
            Type@{l} ;
   cohcube {n' p q r} {Hn' : n' <= n} {Hp : p <= r}
           (Hq : q < n') (Hr : r < q) :
-          forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hq Hr) D),
+          forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D),
           Type@{l}
 }.
 
