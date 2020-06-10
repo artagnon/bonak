@@ -32,7 +32,7 @@ Record Cubical (n : nat) :=
            layer d -> layer (subbox Hq d) ;
   subcube {n' p q} {Hn' : n' <= n} {Hp : p <= n'}
           (Hq : q < n') :
-          forall {D : csp Hn'} (E : box Hp D -> Type@{l})
+          forall {D : csp Hn'} (E : box (le_n n') D -> Type@{l})
           (d : box Hp D) (b : cube E d),
           @cube (pred n') p (LP Hn') _ (hd D)
                 (tl D) (subbox Hq d);
