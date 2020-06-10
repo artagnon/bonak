@@ -20,6 +20,9 @@ Admitted.
 Theorem lt_weak {p n} : p < n -> p <= n.
 Admitted.
 
+Theorem le_pqrn_trans {p q r n} : p <= r -> q < n -> r < q -> p <= n.
+Admitted.
+
 Record Cubical (n : nat) :=
 {
   csp {n'} (Hn' : n' <= n) : Type@{l'} ;
@@ -47,13 +50,15 @@ Record Cubical (n : nat) :=
           cube (tl D) (subbox Hq d);
   cohbox {n' p q r} {Hn' : n' <= n} {Hp : p <= r}
          (Hq : q < n') (Hr : r < q) :
-         forall {D : csp Hn'}, box Hp D ;
+         forall {D : csp Hn'}, box (le_pqrn_trans Hp Hq Hr) D ;
   cohlayer {n' p q r} {Hn' : n' <= n} {Hp : p < r}
            (Hq : q < n') (Hr : r < q) :
-           forall {D : csp Hn'}, box Hp D -> Type@{l} ;
+           forall {D : csp Hn'},
+           box (le_pqrn_trans Hp Hq Hr) D -> Type@{l} ;
   cohcube {n' p q r} {Hn' : n' <= n} {Hp : p <= r}
           (Hq : q < n') (Hr : r < q) :
-          forall {D : csp Hn'}, (box Hp D -> Type@{l}) -> Type@{l}
+          forall {D : csp Hn'},
+          (box (le_pqrn_trans Hp Hq Hr) D -> Type@{l}) -> Type@{l}
 }.
 
 Fixpoint cubsetprefix (n : nat) : Cubical n :=
