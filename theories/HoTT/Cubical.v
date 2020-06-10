@@ -17,7 +17,7 @@ Admitted.
 Theorem le_pqn_trans_weak {p q n} : p <= q -> q < n -> p <= n.
 Admitted.
 
-Theorem le_pqn_trans_weak' {p q n} : p < q -> q < n -> p <= n.
+Theorem lt_weak {p n} : p < n -> p <= n.
 Admitted.
 
 Record Cubical (n : nat) :=
@@ -38,7 +38,7 @@ Record Cubical (n : nat) :=
          @box (pred n') p (LP Hn') (le_pqn_trans Hp Hq) (hd D) ;
   sublayer {n' p q} {Hn' : n' <= n} {Hp : p < q} (Hq : q < n') :
            forall {D : csp Hn'}
-           (d : box (le_pqn_trans_weak' Hp Hq) D),
+           (d : box (le_pqn_trans_weak (lt_weak Hp) Hq) D),
            layer d -> layer (subbox Hq d) ;
   subcube {n' p q} {Hn' : n' <= n} {Hp : p <= n'}
           (Hq : q < n') :
