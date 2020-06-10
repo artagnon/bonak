@@ -11,6 +11,9 @@ Admitted.
 Theorem le_n: forall n, n <= n.
 Admitted.
 
+Theorem le_pqn p q n : p <= q /\ q < n -> p <= pred n.
+Admitted.
+
 Record Cubical (n : nat) :=
 {
   csp {n'} (Hn' : n' <= n) : Type@{l'} ;
@@ -24,9 +27,9 @@ Record Cubical (n : nat) :=
   cube {n' p} {Hn' : n' <= n} {Hp : p <= n'} :
        forall {D : csp Hn'},
        (box (le_n n') D -> Type@{l}) -> box Hp D -> Type@{l} ;
-  subbox {n' p q} {Hn' : n' <= n} {Hp : p <= n'} (Hq : q < n') :
+  subbox {n' p q} {Hn' : n' <= n} {Hp : p <= q} (Hq : q < n') :
          forall {D : csp Hn'}, box Hp D ->
-         @box (pred n') p (LP Hn') _ (hd D) ;
+         @box (pred n') p (LP Hn') (le_pqn Hp Hq) (hd D) ;
   sublayer {n' p q} {Hn' : n' <= n} {Hp : p <= n'} (Hq : q < n') :
            forall {D : csp Hn'} (d : box Hp D),
            layer d -> layer (subbox Hq d) ;
@@ -34,8 +37,7 @@ Record Cubical (n : nat) :=
           (Hq : q < n') :
           forall {D : csp Hn'} (E : box (le_n n') D -> Type@{l})
           (d : box Hp D) (b : cube E d),
-          @cube (pred n') p (LP Hn') _ (hd D)
-                (tl D) (subbox Hq d);
+          cube (tl D) (subbox Hq d);
   cohbox {n' p q r} {Hn' : n' <= n} {Hp : p <= n'}
          (Hq : q < n') (Hr : r < n') :
          forall {D : csp Hn'}, box Hp D ;
