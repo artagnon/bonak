@@ -11,7 +11,7 @@ Admitted.
 Theorem le_n: forall n, n <= n.
 Admitted.
 
-Theorem le_pqn p q n : p <= q /\ q < n -> p <= pred n.
+Theorem le_pqn {p q n} : p <= q /\ q < n -> p <= pred n.
 Admitted.
 
 Record Cubical (n : nat) :=
