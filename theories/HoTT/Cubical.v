@@ -11,11 +11,14 @@ Admitted.
 Theorem le_n: forall n, n <= n.
 Admitted.
 
+Theorem le_pred_weak {p n} : p <= pred n -> p <= n.
+Admitted.
+
 Theorem le_pqn_trans {p q n} : p <= q -> q < n -> p <= pred n.
 Admitted.
 
-Theorem le_pqn_trans_weak {p q n} : p <= q -> q < n -> p <= n.
-Admitted.
+Definition le_pqn_trans_weak {p q n} (Hp : p <= q) (Hq : q < n) :=
+  le_pred_weak (le_pqn_trans Hp Hq).
 
 Theorem lt_weak {p n} : p < n -> p <= n.
 Admitted.
