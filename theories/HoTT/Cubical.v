@@ -11,10 +11,10 @@ Admitted.
 Theorem le_n: forall n, n <= n.
 Admitted.
 
-Theorem le_pqn_trans {p q n} : p <= q /\ q < n -> p <= pred n.
+Theorem le_pqn_trans {p q n} : p <= q -> q < n -> p <= pred n.
 Admitted.
 
-Theorem le_pqn_trans_weak {p q n} : p <= q /\ q < n -> p <= n.
+Theorem le_pqn_trans_weak {p q n} : p <= q -> q < n -> p <= n.
 Admitted.
 
 Record Cubical (n : nat) :=
