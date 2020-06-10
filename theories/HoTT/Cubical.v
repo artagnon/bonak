@@ -11,7 +11,10 @@ Admitted.
 Theorem le_n: forall n, n <= n.
 Admitted.
 
-Theorem le_pqn {p q n} : p <= q /\ q < n -> p <= pred n.
+Theorem le_pqn_trans {p q n} : p <= q /\ q < n -> p <= pred n.
+Admitted.
+
+Theorem le_pqn_trans_weak {p q n} : p <= q /\ q < n -> p <= n.
 Admitted.
 
 Record Cubical (n : nat) :=
@@ -28,8 +31,8 @@ Record Cubical (n : nat) :=
        forall {D : csp Hn'},
        (box (le_n n') D -> Type@{l}) -> box Hp D -> Type@{l} ;
   subbox {n' p q} {Hn' : n' <= n} {Hp : p <= q} (Hq : q < n') :
-         forall {D : csp Hn'}, box Hp D ->
-         @box (pred n') p (LP Hn') (le_pqn Hp Hq) (hd D) ;
+         forall {D : csp Hn'}, box (le_pqn_trans_weak Hp Hq) D ->
+         @box (pred n') p (LP Hn') (le_pqn_trans Hp Hq) (hd D) ;
   sublayer {n' p q} {Hn' : n' <= n} {Hp : p <= n'} (Hq : q < n') :
            forall {D : csp Hn'} (d : box Hp D),
            layer d -> layer (subbox Hq d) ;
