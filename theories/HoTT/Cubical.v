@@ -23,7 +23,7 @@ Record Cubical (n : nat) :=
         forall {D : csp Hn'}, box Hp D -> Type@{l} ;
   cube {n' p} {Hn' : n' <= n} {Hp : p <= n'} :
        forall {D : csp Hn'},
-       (box Hp D -> Type@{l}) -> box Hp D -> Type@{l} ;
+       (box (le_n n') D -> Type@{l}) -> box Hp D -> Type@{l} ;
   subbox {n' p q} {Hn' : n' <= n} {Hp : p <= n'} (Hq : q < n') :
          forall {D : csp Hn'}, box Hp D ->
          @box (pred n') p (LP Hn') _ (hd D) ;
