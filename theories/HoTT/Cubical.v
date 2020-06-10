@@ -50,15 +50,16 @@ Record Cubical (n : nat) :=
           cube (tl D) (subbox Hq d);
   cohbox {n' p q r} {Hn' : n' <= n} {Hp : p <= r}
          (Hq : q < n') (Hr : r < q) :
-         forall {D : csp Hn'}, box (le_pqrn_trans Hp Hq Hr) D ;
+         forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hq Hr) D),
+         subbox _ (subbox _ d) = subbox _ (subbox _ d);
   cohlayer {n' p q r} {Hn' : n' <= n} {Hp : p < r}
            (Hq : q < n') (Hr : r < q) :
-           forall {D : csp Hn'},
-           box (le_pqrn_trans Hp Hq Hr) D -> Type@{l} ;
+           forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hq Hr) D),
+           Type@{l} ;
   cohcube {n' p q r} {Hn' : n' <= n} {Hp : p <= r}
           (Hq : q < n') (Hr : r < q) :
-          forall {D : csp Hn'},
-          (box (le_pqrn_trans Hp Hq Hr) D -> Type@{l}) -> Type@{l}
+          forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hq Hr) D),
+          Type@{l}
 }.
 
 Fixpoint cubsetprefix (n : nat) : Cubical n :=
