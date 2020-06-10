@@ -8,14 +8,17 @@ Universe l.
 Theorem LP {n n' : nat} : n' <= n -> pred n' <= n.
 Admitted.
 
+Theorem le_n: forall n, n <= n.
+Admitted.
+
 Record Cubical (n : nat) :=
 {
   csp {n'} (Hn' : n' <= n) : Type@{l'} ;
   hd {n'} {Hn' : n' <= n} : csp Hn' -> csp (LP Hn') ;
   box {n' p} {Hn' : n' <= n} (Hp : p <= n') :
       csp Hn' -> Type@{l} ;
-  tl {n' p} {Hn' : n' <= n} {Hp : p <= n'} :
-     forall (D : csp Hn'), box Hp D -> Type@{l} ;
+  tl {n'} {Hn' : n' <= n} : forall {D : csp Hn'},
+     box (le_n (pred n')) (hd D) -> Type@{l} ;
   layer {n' p} {Hn' : n' <= n} {Hp : p < n'} :
         forall {D : csp Hn'}, box Hp D -> Type@{l} ;
   cube {n' p} {Hn' : n' <= n} {Hp : p <= n'} :
@@ -32,7 +35,7 @@ Record Cubical (n : nat) :=
           forall {D : csp Hn'} (E : box Hp D -> Type@{l})
           (d : box Hp D) (b : cube E d),
           @cube (pred n') p (LP Hn') _ (hd D)
-                (tl D) (subbox Hq d);
+                (tl d) (subbox Hq d);
   cohbox {n' p q r} {Hn' : n' <= n} {Hp : p <= n'}
          (Hq : q < n') (Hr : r < n') :
          forall {D : csp Hn'}, box Hp D ;
