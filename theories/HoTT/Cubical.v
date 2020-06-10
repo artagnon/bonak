@@ -20,8 +20,8 @@ Admitted.
 Theorem lt_weak {p n} : p < n -> p <= n.
 Admitted.
 
-(* p <= r -> r < q -> q < n -> p <= n *)
-Definition le_pqrn_trans Hp Hr Hq :=
+Definition le_pqrn_trans {p q r n} (Hp : p <= r)
+  (Hr : r < q) (Hq : q < n) :=
   le_pqn_trans_weak (le_pqn_trans_weak Hp Hr) Hq.
 
 Record Cubical (n : nat) :=
