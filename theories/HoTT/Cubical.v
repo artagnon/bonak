@@ -27,9 +27,17 @@ Definition le_pqn_trans_weak {p q n} (Hp : p <= q) (Hq : q <= n) :
 Theorem lt_weak {p n} : p < n -> p <= n.
 Admitted.
 
-Theorem le_pqrn_trans {p q r n} (Hp : p <= r)
-  (Hr : r < q) (Hq : q <= n) : p < n.
+Theorem le_trans_weak_right {p q r} : p <= r -> r < q -> p <= q.
 Admitted.
+
+Theorem le_pqrn_trans {p q r n} (Hp : p <= r)
+  (Hr : r < q) (Hq : q <= n) : p <= S n.
+  eapply le_pqn_trans_weak.
+  2: exact Hq.
+  eapply le_trans_weak_right.
+  - exact Hp.
+  - exact Hr.
+Qed.
 
 Record Cubical (n : nat) :=
 {
