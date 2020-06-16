@@ -33,11 +33,11 @@ Definition le_pqrn_trans {p q r n} (Hp : p <= r)
 Record Cubical (n : nat) :=
 {
   csp {n'} (Hn' : n' <= n) : Type@{l'} ;
-  hd {n'} {Hn' : n' <= n} : csp Hn' -> csp (LP Hn') ;
+  hd {n'} {Hn' : n'.+1 <= n} : csp Hn' -> csp (LP Hn') ;
   box {n' p} {Hn' : n' <= n} (Hp : p <= n') :
       csp Hn' -> Type@{l} ;
-  tl {n'} {Hn' : n' <= n} : forall (D : csp Hn'),
-     box (le_n (pred n')) (hd D) -> Type@{l} ;
+  tl {n'} {Hn' : n'.+1 <= n} : forall (D : csp Hn'),
+     box (le_n n') (hd D) -> Type@{l} ;
   layer {n' p} {Hn' : n' <= n} {Hp : p < n'} :
         forall {D : csp Hn'}, box Hp D -> Type@{l} ;
   cube {n' p} {Hn' : n' <= n} {Hp : p <= n'} :
