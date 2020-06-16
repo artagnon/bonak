@@ -37,15 +37,15 @@ Record Cubical (n : nat) :=
   box {n' p} {Hn' : n' <= n} (Hp : p <= n') :
       csp Hn' -> Type@{l} ;
   tl {n'} {Hn' : n' < n} : forall (D : csp (lt_weak Hn')),
-      box (le_n n') (hd D) -> Type@{l} ;
+     box _ (hd D) -> Type@{l} ;
   layer {n' p} {Hn' : n' <= n} {Hp : p < n'} :
         forall {D : csp Hn'}, box Hp D -> Type@{l} ;
   cube {n' p} {Hn' : n' <= n} {Hp : p <= n'} :
        forall {D : csp Hn'},
        (box (le_n n') D -> Type@{l}) -> box Hp D -> Type@{l} ;
-  subbox {n' p q} {Hn' : n' <= n} {Hp : p <= q} (Hq : q < n') :
+  subbox {n' p q} {Hn' : n' < n} {Hp : p <= q} (Hq : q < n') :
          forall {D : csp Hn'}, box (le_pqn_trans_weak Hp Hq) D ->
-         @box (pred n') p (LP Hn') (le_pqn_trans Hp Hq) (hd D) ;
+         @box n' p (lt_weak Hn') (le_pqn_trans Hp Hq) (hd D) ;
   sublayer {n' p q} {Hn' : n' <= n} {Hp : p < q} (Hq : q < n') :
            forall {D : csp Hn'}
            (d : box (le_pqn_trans_weak (lt_weak Hp) Hq) D),
