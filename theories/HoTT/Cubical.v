@@ -14,20 +14,20 @@ Admitted.
 Theorem le_pred_weak {p n} : p <= pred n -> p <= n.
 Admitted.
 
-Lemma lt_succ {q n} : q < n -> q < S n.
+Lemma lt_succ {q n} : q <= n -> q <= S n.
 Admitted.
 
-Theorem le_pqn_trans {p q n} : p <= q -> q < n -> p <= pred n.
+Theorem le_pqn_trans {p q n} : p <= q -> q <= n -> p <= n.
 Admitted.
 
-Definition le_pqn_trans_weak {p q n} (Hp : p <= q) (Hq : q < n) :=
+Definition le_pqn_trans_weak {p q n} (Hp : p <= q) (Hq : q <= n) :=
   le_pqn_trans Hp (lt_succ Hq).
 
 Theorem lt_weak {p n} : p < n -> p <= n.
 Admitted.
 
 Definition le_pqrn_trans {p q r n} (Hp : p <= r)
-  (Hr : r < q) (Hq : q < n) :=
+  (Hr : r < q) (Hq : q <= n) :=
   le_pqn_trans_weak (le_pqn_trans_weak Hp Hr) Hq.
 
 Record Cubical (n : nat) :=
