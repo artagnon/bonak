@@ -56,8 +56,8 @@ Record Cubical (n : nat) :=
           forall {D : csp Hn'} (E : box (le_n (S n')) D -> Type@{l})
           (d : box (le_pqn_trans_weak Hp Hq) D) (b : cube E d),
           cube (tl D) (subbox Hq d);
-  cohbox {n' p q r} {Hn' : n' <= n} {Hp : p <= r}
-         (Hr : r < q) (Hq : q < n') :
+  cohbox {n' p q r} {Hn' : S n' <= n} {Hp : p <= r}
+         (Hr : r < q) (Hq : q <= n') :
          forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D),
          subbox _ (subbox _ d) = subbox _ (subbox _ d);
   cohlayer {n' p q r} {Hn' : n' <= n} {Hp : p < r}
