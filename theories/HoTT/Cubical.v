@@ -21,8 +21,7 @@ Theorem le_pqn_trans {p q n} : p <= q -> q <= n -> p <= n.
   intros G H.
   induction H as [|r].
   - exact G.
-  - apply lt_succ.
-    exact IHle.
+  - apply lt_succ; exact IHle.
 Defined.
 
 Definition le_pqn_trans_weak {p q n} (Hp : p <= q) (Hq : q <= n) :
@@ -33,7 +32,11 @@ Theorem lt_weak {p n} : p < n -> p <= n.
 Admitted.
 
 Theorem le_trans_weak_right {p q r} : p <= r -> r < q -> p <= q.
-Admitted.
+  intros G H.
+  induction H as [|s].
+  - apply lt_succ; exact G.
+  - apply lt_succ; exact IHle.
+Defined.
 
 Theorem le_pqrn_trans {p q r n} (Hp : p <= r)
   (Hr : r < q) (Hq : q <= n) : p <= S n.
