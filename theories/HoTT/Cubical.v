@@ -5,13 +5,10 @@ Section Cubical.
 Universe l'.
 Universe l.
 
-Theorem LP {n n' : nat} : n' <= n -> pred n' <= n.
-Admitted.
-
 Theorem le_n: forall n, n <= n.
 Admitted.
 
-Theorem le_pred_weak {p n} : p <= pred n -> p <= n.
+Theorem le_n_weak {n n' : nat} : n' <= n -> pred n' <= n.
 Admitted.
 
 Lemma lt_succ {q n} : q <= n -> q <= S n.
@@ -32,7 +29,7 @@ Definition le_pqn_trans_weak {p q n} (Hp : p <= q) (Hq : q <= n) :
 Theorem lt_weak {p n} : p < n -> p <= n.
 Admitted.
 
-Theorem le_trans_weak_right {p q r} : p <= r -> r < q -> p <= q.
+Theorem le_pqn_trans_weak_right {p q n} : p <= n -> n < q -> p <= q.
   intros G H.
   induction H as [|s].
   - apply lt_succ; exact G.
@@ -43,7 +40,7 @@ Theorem le_pqrn_trans {p q r n} (Hp : p <= r)
   (Hr : r < q) (Hq : q <= n) : p <= S n.
   eapply le_pqn_trans_weak.
   2: exact Hq.
-  eapply le_trans_weak_right.
+  eapply le_pqn_trans_weak_right.
   - exact Hp.
   - exact Hr.
 Defined.
@@ -51,7 +48,7 @@ Defined.
 Record Cubical (n : nat) :=
 {
   csp {n'} (Hn' : n' <= n) : Type@{l'} ;
-  hd {n'} {Hn' : S n' <= n} : csp Hn' -> csp (LP Hn') ;
+  hd {n'} {Hn' : S n' <= n} : csp Hn' -> csp (le_n_weak Hn') ;
   box {n' p} {Hn' : n' <= n} (Hp : p <= n') :
       csp Hn' -> Type@{l} ;
   tl {n'} {Hn' : S n' <= n} : forall (D : csp Hn'),
@@ -63,7 +60,7 @@ Record Cubical (n : nat) :=
        (box (le_n n') D -> Type@{l}) -> box Hp D -> Type@{l} ;
   subbox {n' p q} {Hn' : S n' <= n} {Hp : p <= q} (Hq : q <= n') :
          forall {D : csp Hn'}, box (le_pqn_trans_weak Hp Hq) D ->
-         @box n' p (LP Hn') (le_pqn_trans Hp Hq) (hd D) ;
+         @box n' p (le_n_weak Hn') (le_pqn_trans Hp Hq) (hd D) ;
   sublayer {n' p q} {Hn' : S n' <= n} {Hp : p < q} (Hq : q <= n') :
            forall {D : csp Hn'}
            (d : box (le_pqn_trans_weak (lt_weak Hp) Hq) D),
