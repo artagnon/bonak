@@ -18,6 +18,10 @@ Lemma lt_succ {q n} : q <= n -> q <= S n.
 Admitted.
 
 Theorem le_pqn_trans {p q n} : p <= q -> q <= n -> p <= n.
+  intros H G.
+  induction G.
+  - exact H.
+  - admit.
 Admitted.
 
 Definition le_pqn_trans_weak {p q n} (Hp : p <= q) (Hq : q <= n) :
@@ -37,7 +41,7 @@ Theorem le_pqrn_trans {p q r n} (Hp : p <= r)
   eapply le_trans_weak_right.
   - exact Hp.
   - exact Hr.
-Qed.
+Defined.
 
 Record Cubical (n : nat) :=
 {
@@ -64,8 +68,8 @@ Record Cubical (n : nat) :=
           forall {D : csp Hn'} (E : box (le_n (S n')) D -> Type@{l})
           (d : box (le_pqn_trans_weak Hp Hq) D) (b : cube E d),
           cube (tl D) (subbox Hq d);
-  cohbox {n' p q r} {Hn' : S n' <= n} {Hp : p <= r}
-         (Hr : r < q) (Hq : q <= n') :
+  cohbox {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
+         (Hr : r < q) (Hq : q <= S n') :
          forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D),
          subbox _ (subbox _ d) = subbox _ (subbox _ d);
   cohlayer {n' p q r} {Hn' : n' <= n} {Hp : p < r}

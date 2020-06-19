@@ -1,4 +1,6 @@
 {
   "coqtop.binPath": "/Users/artagnon/bin",
+  "coqtop.coqtopExe": "hoqtop",
+  "coqtop.coqidetopExe": "hoqidetop",
   "editor.wordWrapColumn": 80
 }
