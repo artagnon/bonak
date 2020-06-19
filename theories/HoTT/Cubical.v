@@ -18,11 +18,12 @@ Lemma lt_succ {q n} : q <= n -> q <= S n.
 Admitted.
 
 Theorem le_pqn_trans {p q n} : p <= q -> q <= n -> p <= n.
-  intros H G.
-  induction G.
-  - exact H.
-  - admit.
-Admitted.
+  intros G H.
+  induction H as [|r].
+  - exact G.
+  - apply lt_succ.
+    exact IHle.
+Defined.
 
 Definition le_pqn_trans_weak {p q n} (Hp : p <= q) (Hq : q <= n) :
   p <= S n :=
