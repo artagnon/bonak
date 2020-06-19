@@ -1,5 +1,4 @@
-From HoTT Require Import HoTT.
-From HoTT Require Import peano_naturals.
+From Coq Require Import Init.Logic.
 
 Section Cubical.
 Universe l'.
