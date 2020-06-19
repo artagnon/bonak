@@ -15,7 +15,8 @@ Theorem le_pred_weak {p n} : p <= pred n -> p <= n.
 Admitted.
 
 Lemma lt_succ {q n} : q <= n -> q <= S n.
-Admitted.
+  apply le_S.
+Defined.
 
 Theorem le_pqn_trans {p q n} : p <= q -> q <= n -> p <= n.
   intros G H.
