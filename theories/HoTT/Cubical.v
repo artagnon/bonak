@@ -8,32 +8,28 @@ Universe l.
 Theorem le_n: forall n, n <= n.
 Admitted.
 
-Theorem le_n_weak {n n' : nat} : n' <= n -> pred n' <= n.
-Admitted.
+Definition le_weaken {p n} : p <= n -> p <= S n := le_S p n.
+Definition le_adjust {p n} : S p <= S n -> p <= n := le_S_n p n.
 
-Lemma lt_succ {q n} : q <= n -> q <= S n.
-  apply le_S.
-Defined.
-
+(* No loss of information: primitive *)
 Theorem le_pqn_trans {p q n} : p <= q -> q <= n -> p <= n.
   intros G H.
   induction H as [|r].
   - exact G.
-  - apply lt_succ; exact IHle.
+  - apply le_weaken; exact IHle.
 Defined.
 
 Definition le_pqn_trans_weak {p q n} (Hp : p <= q) (Hq : q <= n) :
   p <= S n :=
-  le_pqn_trans Hp (lt_succ Hq).
+  le_weaken (le_pqn_trans Hp Hq).
 
-Theorem lt_weak {p n} : p < n -> p <= n.
-Admitted.
+Definition lt_weak {p n} (Hp : p < n) : p <= n := le_adjust (le_weaken Hp).
 
 Theorem le_pqn_trans_weak_right {p q n} : p <= n -> n < q -> p <= q.
   intros G H.
   induction H as [|s].
-  - apply lt_succ; exact G.
-  - apply lt_succ; exact IHle.
+  - apply le_weaken; exact G.
+  - apply le_weaken; exact IHle.
 Defined.
 
 Theorem le_pqrn_trans {p q r n} (Hp : p <= r)
@@ -48,19 +44,19 @@ Defined.
 Theorem trans_weak_composite {p q r n} (Hp : p <= q) (Hr: q < r)
   (Hq : r <= S n) (Hp' : p <= r)
   Hq' : le_pqn_trans (le_pqn_trans_weak_right Hp Hr) Hq =
-  le_pqn_trans Hp' (lt_succ Hq').
+  le_pqn_trans Hp' (le_weaken Hq').
 Admitted.
 
 Record Cubical (n : nat) :=
 {
   csp {n'} (Hn' : n' <= n) : Type@{l'} ;
-  hd {n'} {Hn' : S n' <= n} : csp Hn' -> csp (le_n_weak Hn') ;
+  hd {n'} {Hn' : S n' <= n} : csp Hn' -> csp (lt_weak Hn') ;
   box {n' p} {Hn' : n' <= n} (Hp : p <= n') :
       csp Hn' -> Type@{l} ;
   tl {n'} {Hn' : S n' <= n} : forall (D : csp Hn'),
      box (le_n n') (hd D) -> Type@{l} ;
   layer {n' p} {Hn' : n' <= n} {Hp : p < n'} :
-        forall {D : csp Hn'}, box Hp D -> Type@{l} ;
+        forall {D : csp Hn'}, box (lt_weak Hp) D -> Type@{l} ;
   cube {n' p} {Hn' : n' <= n} {Hp : p <= n'} :
        forall {D : csp Hn'},
        (box (le_n n') D -> Type@{l}) -> box Hp D -> Type@{l} ;
