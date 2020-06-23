@@ -11,8 +11,16 @@ Admitted.
 (* Constructor *)
 Definition le_weaken {p n} : p <= n -> p <= S n := le_S p n.
 
-(* By induction *)
-Definition le_adjust {p n} : S p <= S n -> p <= n := le_S_n p n.
+(* Re-prove le_S_n *)
+Theorem le_adjust {p n} : S p <= S n -> p <= n.
+  intros G.
+  change n with (pred (S n)).
+  induction G.
+  - apply le_n.
+  - destruct m.
+    * assumption.
+    * apply (le_weaken IHG).
+Defined.
 
 (* No loss of information: primitive *)
 Theorem trans {p q n} : p <= q -> q <= n -> p <= n.
