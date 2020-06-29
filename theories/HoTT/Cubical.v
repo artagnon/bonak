@@ -27,6 +27,13 @@ Theorem le_adjust {p n} : S p <= S n -> p <= n.
     * apply (le_weaken IHG).
 Defined.
 
+Lemma lt_weaken {p q : nat}: p < q -> p <= q.
+  intros.
+  apply le_adjust.
+  apply le_weaken.
+  assumption.
+Defined.
+
 (* Eval cbn in fun p n (H : p < S n) => (le_adjust (le_weaken H)). *)
 
 (* No loss of information: primitive *)
@@ -59,6 +66,13 @@ Theorem le_pqrn_trans {p q r n} (Hp : p <= r)
   - exact Hr.
 Defined.
 
+Lemma unif_error {p q n'} {Hp : p < q} {Hq : q <= n'}
+{box : forall {n' p} (Hp : p <= n'), Prop}
+{subbox : forall {n' p q} {Hp : p <= q} {Hq : q <= n'}, box (weaken_trans Hp Hq) -> Prop}
+{d : box (adjust_weaken (weaken_trans Hp Hq))} : subbox d.
+auto.
+Qed.
+
 Record Cubical (n : nat) :=
 {
   csp {n'} (Hn' : n' <= n) : Type@{l'} ;
@@ -78,7 +92,7 @@ Record Cubical (n : nat) :=
   sublayer {n' p q} {Hn' : S n' <= n} {Hp : p < q} (Hq : q <= n') :
            forall {D : csp Hn'}
            (d : box (adjust_weaken (weaken_trans Hp Hq)) D),
-           layer d -> layer (subbox Hq d) ;
+           layer d -> layer (@subbox n' p q Hn' (lt_weaken Hp) Hq D d) ;
   subcube {n' p q} {Hn' : S n' <= n} {Hp : p <= q}
           (Hq : q <= n') :
           forall {D : csp Hn'} (E : box (le_n (S n')) D -> Type@{l})
