@@ -13,6 +13,9 @@ Inductive le (n:nat) : nat -> SProp :=
 Definition lt (n m:nat) := S n <= m.
 Infix "<" := lt.
 
+Theorem le_n_S : forall n m, n <= m -> S n <= S m.
+Admitted.
+
 (* Constructor *)
 Definition le_weaken {p n} : p <= n -> p <= S n := le_S p n.
 
@@ -58,20 +61,23 @@ Theorem le_pqn_trans_weak_right {p q n} : p <= n -> n < q -> p <= q.
 Defined.
 
 Theorem le_pqrn_trans {p q r n} (Hp : p <= r)
-  (Hr : r < q) (Hq : q <= n) : p <= S n.
+  (Hr : r <= q) (Hq : q <= n) : p <= S (S n).
+  apply le_weaken.
   eapply weaken_trans.
-  2: exact Hq.
-  eapply le_pqn_trans_weak_right.
+  2: apply Hq.
+  eapply trans.
   - exact Hp.
   - exact Hr.
 Defined.
 
+(*
 Lemma unif_error {p q n'} {Hp : p < q} {Hq : q <= n'}
 {box : forall {n' p} (Hp : p <= n'), Prop}
 {subbox : forall {n' p q} {Hp : p <= q} {Hq : q <= n'}, box (weaken_trans Hp Hq) -> Prop}
 {d : box (adjust_weaken (weaken_trans Hp Hq))} : subbox d.
 auto.
 Qed.
+*)
 
 Record Cubical (n : nat) :=
 {
@@ -92,22 +98,24 @@ Record Cubical (n : nat) :=
   sublayer {n' p q} {Hn' : S n' <= n} {Hp : p < q} (Hq : q <= n') :
            forall {D : csp Hn'}
            (d : box (adjust_weaken (weaken_trans Hp Hq)) D),
-           layer d -> layer (@subbox n' p q Hn' (lt_weaken Hp) Hq D d) ;
+           layer d -> layer (Hp := trans Hp Hq)
+           (subbox (Hp := (lt_weaken Hp)) Hq d) ;
   subcube {n' p q} {Hn' : S n' <= n} {Hp : p <= q}
           (Hq : q <= n') :
           forall {D : csp Hn'} (E : box (le_n (S n')) D -> Type@{l})
           (d : box (weaken_trans Hp Hq) D) (b : cube E d),
           cube (tl D) (subbox Hq d);
   cohbox {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
-         (Hr : r < q) (Hq : q <= S n') :
+         (Hr : r <= q) (Hq : q <= n') :
          forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D),
-         subbox _ (subbox _ d) = subbox _ (subbox _ d);
-  cohlayer {n' p q r} {Hn' : n' <= n} {Hp : p < r}
-           (Hr : r < q) (Hq : q < n') :
+         subbox (Hp := Hp) Hq (subbox (Hp := Hp) (le_weaken (trans Hr Hq)) d) =
+         subbox _ (subbox _ d);
+  cohlayer {n' p q r} {Hn' : S (S n') <= n} {Hp : p < r}
+           (Hr : r <= q) (Hq : q <= n') :
            forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D),
            Type@{l} ;
-  cohcube {n' p q r} {Hn' : n' <= n} {Hp : p <= r}
-          (Hr : r < q) (Hq : q < n') :
+  cohcube {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
+          (Hr : r <= q) (Hq : q <= n') :
           forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D),
           Type@{l}
 }.
