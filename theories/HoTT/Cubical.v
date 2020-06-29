@@ -5,8 +5,13 @@ Section Cubical.
 Universe l'.
 Universe l.
 
-Theorem le_n: forall n, n <= n.
-Admitted.
+Inductive le (n:nat) : nat -> SProp :=
+  | le_n : n <= n
+  | le_S : forall m:nat, n <= m -> n <= S m
+  where "n <= m" := (le n m).
+
+Definition lt (n m:nat) := S n <= m.
+Infix "<" := lt : nat_scope.
 
 (* Constructor *)
 Definition le_weaken {p n} : p <= n -> p <= S n := le_S p n.
@@ -21,6 +26,8 @@ Theorem le_adjust {p n} : S p <= S n -> p <= n.
     * assumption.
     * apply (le_weaken IHG).
 Defined.
+
+(* Eval cbn in fun p n (H : p < S n) => (le_adjust (le_weaken H)). *)
 
 (* No loss of information: primitive *)
 Theorem trans {p q n} : p <= q -> q <= n -> p <= n.
