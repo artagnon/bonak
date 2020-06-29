@@ -59,12 +59,6 @@ Theorem le_pqrn_trans {p q r n} (Hp : p <= r)
   - exact Hr.
 Defined.
 
-Theorem trans_weak_composite {p q r n} (Hp : p <= q) (Hr: q < r)
-  (Hq : r <= S n) (Hp' : p <= r)
-  Hq' : trans (le_pqn_trans_weak_right Hp Hr) Hq =
-  trans Hp' (le_weaken Hq').
-Admitted.
-
 Record Cubical (n : nat) :=
 {
   csp {n'} (Hn' : n' <= n) : Type@{l'} ;
