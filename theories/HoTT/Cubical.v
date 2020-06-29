@@ -11,7 +11,7 @@ Inductive le (n:nat) : nat -> SProp :=
   where "n <= m" := (le n m).
 
 Definition lt (n m:nat) := S n <= m.
-Infix "<" := lt : nat_scope.
+Infix "<" := lt.
 
 (* Constructor *)
 Definition le_weaken {p n} : p <= n -> p <= S n := le_S p n.
