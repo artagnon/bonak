@@ -112,8 +112,9 @@ Record Cubical (n : nat) :=
          subbox _ (subbox (Hp := trans Hp Hr) (le_weaken Hq) d);
   cohlayer {n' p q r} {Hn' : S (S n') <= n} {Hp : p < r}
            (Hr : r <= q) (Hq : q <= n') :
-           forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D),
-           Type@{l} ;
+           forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D)
+           (b : layer (n' := S (S n')) (Hp := trans Hp (trans Hr Hq)) d),
+           Type@{l};
   cohcube {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
           (Hr : r <= q) (Hq : q <= n') :
           forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D),
