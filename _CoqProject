@@ -1,5 +1,5 @@
 -Q bonak Bonak
 
-# bonak/category/Cat.v
-# bonak/category/NCat.v
+bonak/Category/Cat.v
+bonak/Category/NCat.v
 bonak/HoTT/HoTT.v
