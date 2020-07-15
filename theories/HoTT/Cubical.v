@@ -53,13 +53,6 @@ Definition weaken_trans {p q n} (Hp : p <= q) (Hq : q <= n) :
 
 Definition adjust_weaken {p n} (Hp : p < n) : p <= n := le_adjust (le_weaken Hp).
 
-Theorem le_pqn_trans_weak_right {p q n} : p <= n -> n < q -> p <= q.
-  intros G H.
-  induction H as [|s].
-  - apply le_weaken; exact G.
-  - apply le_weaken; exact IHle.
-Defined.
-
 Theorem le_pqrn_trans {p q r n} (Hp : p <= r)
   (Hr : r <= q) (Hq : q <= n) : p <= S (S n).
   apply le_weaken.
@@ -112,7 +105,7 @@ Record Cubical (n : nat) :=
          subbox _ (subbox (Hp := trans Hp Hr) (le_weaken Hq) d);
   cohlayer {n' p q r} {Hn' : S (S n') <= n} {Hp : p < r}
            (Hr : r <= q) (Hq : q <= n') :
-           forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D)
+           forall {D : csp Hn'} (d : box (p := p) (le_pqrn_trans Hp Hr Hq) D)
            (b : layer (n' := (S (S n'))) (Hp := le_pqrn_trans Hp Hr Hq) d),
            Type@{l};
   cohcube {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
