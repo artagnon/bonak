@@ -102,14 +102,17 @@ Record Cubical (n : nat) :=
          (Hr : r <= q) (Hq : q <= n') :
          forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D),
          subbox (Hn' := adjust_weaken Hn') (Hp := trans Hp Hr) Hq
-         (subbox (n' := S n') (q := r) (Hn' := Hn') (Hp := Hp) (le_weaken (trans Hr Hq)) d) =
+         (subbox (n' := S n') (q := r) (Hp := Hp)
+         (le_weaken (trans Hr Hq)) d) =
          subbox _ (subbox (Hp := trans Hp Hr) (le_weaken Hq) d);
   cohlayer {n' p q r} {Hn' : S (S n') <= n} {Hp : p < r}
            (Hr : r <= q) (Hq : q <= n') :
            forall {D : csp Hn'} (d : box (le_pqrn_trans (adjust_weaken Hp)
            Hr Hq) D)
            (b : layer (n' := (S (S n'))) (Hp := le_pqrn_trans Hp Hr Hq) d),
-           Type@{l};
+           sublayer (Hn' := Hn') (Hp := trans Hp Hr)
+           (sublayer (n' := S n') (q := r) (le_weaken (trans Hr Hq)) d) =
+           sublayer (n' := S n') (q := r) (le_weaken (trans Hr Hq) d);
   cohcube {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
           (Hr : r <= q) (Hq : q <= n') :
           forall {D : csp Hn'} (E : box (le_n (S (S n'))) D -> Type@{l})
