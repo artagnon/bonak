@@ -1,14 +1,25 @@
 From HoTT Require Import HoTT.
 From HoTT Require Import peano_naturals.
 
+Module EqNotations.
+  Notation "'rew' H 'in' H'" := (H' # H)
+    (at level 10, H' at level 10,
+     format "'[' 'rew' H in '/' H' ']'").
+  Notation "'rew' [ P ] H 'in' H'" := (transport P H H')
+    (at level 10, H' at level 10,
+     format "'[' 'rew' [ P ] '/ ' H in '/' H' ']'").
+End EqNotations.
+
 Section Cubical.
 Universe l'.
 Universe l.
 
 Inductive le (n:nat) : nat -> SProp :=
   | le_n : n <= n
-  | le_S : forall m:nat, n <= m -> n <= S m
+  | le_S : forall {m:nat}, n <= m -> n <= S m
   where "n <= m" := (le n m).
+
+Arguments le_S {n m}.
 
 Definition lt (n m:nat) := S n <= m.
 Infix "<" := lt.
@@ -17,7 +28,7 @@ Theorem le_n_S : forall n m, n <= m -> S n <= S m.
 Admitted.
 
 (* Constructor *)
-Definition le_weaken {p n} : p <= n -> p <= S n := le_S p n.
+Definition le_weaken {p n} : p <= n -> p <= S n := le_S.
 
 (* Re-prove le_S_n *)
 Theorem le_adjust {p n} : S p <= S n -> p <= n.
@@ -90,7 +101,7 @@ Record Cubical (n : nat) :=
          box (trans Hp Hq) (hd D) ;
   sublayer {n' p q} {Hn' : S n' <= n} {Hp : p < q} (Hq : q <= n') :
            forall {D : csp Hn'}
-           (d : box (adjust_weaken (weaken_trans Hp Hq)) D),
+           {d : box (adjust_weaken (weaken_trans Hp Hq)) D},
            layer d -> layer (Hp := trans Hp Hq)
            (subbox (Hp := (lt_weaken Hp)) Hq d) ;
   subcube {n' p q} {Hn' : S n' <= n} {Hp : p <= q}
@@ -104,15 +115,19 @@ Record Cubical (n : nat) :=
          subbox (Hn' := adjust_weaken Hn') (Hp := trans Hp Hr) Hq
          (subbox (n' := S n') (q := r) (Hp := Hp)
          (le_weaken (trans Hr Hq)) d) =
-         subbox _ (subbox (Hp := trans Hp Hr) (le_weaken Hq) d);
+         subbox (Hp := Hp) (trans Hr Hq)
+         (subbox (Hp := trans Hp Hr) (le_weaken Hq) d);
   cohlayer {n' p q r} {Hn' : S (S n') <= n} {Hp : p < r}
            (Hr : r <= q) (Hq : q <= n') :
            forall {D : csp Hn'} (d : box (le_pqrn_trans (adjust_weaken Hp)
            Hr Hq) D)
            (b : layer (n' := (S (S n'))) (Hp := le_pqrn_trans Hp Hr Hq) d),
-           sublayer (Hn' := Hn') (Hp := trans Hp Hr)
-           (sublayer (le_weaken (trans Hr Hq)) d) =
-           sublayer (le_weaken (trans Hr Hq) d);
+           sublayer (Hp := Hp) (trans Hr Hq) (sublayer (le_weaken Hq) b) = transport (@layer n' p (adjust_weaken (adjust_weaken Hn'))
+           (trans (trans Hp Hr) Hq) (@hd n' (adjust_weaken Hn')
+           (@hd (n'.+1)%nat Hn' D)))
+           (cohbox Hr Hq d) (sublayer (Hn' := adjust_weaken Hn')
+           (Hp := trans Hp Hr) Hq
+           (sublayer (Hp := Hp) (n' := S n') (le_weaken (trans Hr Hq)) b));
   cohcube {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
           (Hr : r <= q) (Hq : q <= n') :
           forall {D : csp Hn'} (E : box (le_n (S (S n'))) D -> Type@{l})
