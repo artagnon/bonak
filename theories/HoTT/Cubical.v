@@ -106,8 +106,8 @@ Record Cubical (n : nat) :=
            (subbox (Hp := (lt_weaken Hp)) Hq d) ;
   subcube {n' p q} {Hn' : S n' <= n} {Hp : p <= q}
           (Hq : q <= n') :
-          forall {D : csp Hn'} (E : box (le_n (S n')) D -> Type@{l})
-          (d : box (weaken_trans Hp Hq) D) (b : cube E d),
+          forall {D : csp Hn'} {E : box (le_n (S n')) D -> Type@{l}}
+          {d : box (weaken_trans Hp Hq) D} (b : cube E d),
           cube (tl D) (subbox Hq d);
   cohbox {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
          (Hr : r <= q) (Hq : q <= n') :
@@ -124,7 +124,7 @@ Record Cubical (n : nat) :=
            (b : layer (n' := (S (S n'))) (Hp := le_pqrn_trans Hp Hr Hq) d),
            sublayer (Hp := Hp) (trans Hr Hq) (sublayer (le_weaken Hq) b) = transport (@layer n' p (adjust_weaken (adjust_weaken Hn'))
            (trans (trans Hp Hr) Hq) (@hd n' (adjust_weaken Hn')
-           (@hd (n'.+1)%nat Hn' D)))
+           (@hd (S n') Hn' D)))
            (cohbox Hr Hq d) (sublayer (Hn' := adjust_weaken Hn')
            (Hp := trans Hp Hr) Hq
            (sublayer (Hp := Hp) (n' := S n') (le_weaken (trans Hr Hq)) b));
@@ -133,7 +133,9 @@ Record Cubical (n : nat) :=
           forall {D : csp Hn'} (E : box (le_n (S (S n'))) D -> Type@{l})
           (d : box (le_pqrn_trans Hp Hr Hq) D)
           (b : cube E d),
-          Type@{l}
+          subcube (Hp := Hp) Hq (subcube (Hp := Hp)
+          (le_weaken (trans Hr Hq)) b) =
+          subcube (trans Hr Hq) (subcube (le_weaken Hq) b)
 }.
 
 Fixpoint cubsetprefix (n : nat) : Cubical n :=
