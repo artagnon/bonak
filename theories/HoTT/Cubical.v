@@ -74,15 +74,6 @@ Theorem le_pqrn_trans {p q r n} (Hp : p <= r)
   - exact Hr.
 Defined.
 
-(*
-Lemma unif_error {p q n'} {Hp : p < q} {Hq : q <= n'}
-{box : forall {n' p} (Hp : p <= n'), Prop}
-{subbox : forall {n' p q} {Hp : p <= q} {Hq : q <= n'}, box (weaken_trans Hp Hq) -> Prop}
-{d : box (adjust_weaken (weaken_trans Hp Hq))} : subbox d.
-auto.
-Qed.
-*)
-
 Record Cubical (n : nat) :=
 {
   csp {n'} (Hn' : n' <= n) : Type@{l'} ;
