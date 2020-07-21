@@ -49,9 +49,11 @@ Theorem trans {p q n} : p <= q -> q <= n -> p <= n.
   - apply le_S; exact IHle.
 Defined.
 
+Infix "↕" := trans (at level 30).
+
 Definition weaken_trans {p q n} (Hp : p <= q) (Hq : q <= n) :
   p <= S n :=
-  ↑ (trans Hp Hq).
+  ↑ (Hp ↕ Hq).
 
 Definition adjust_weaken {p n} (Hp : p < n) : p <= n := le_adjust (↑ Hp).
 
@@ -80,11 +82,11 @@ Record Cubical (n : nat) :=
        (box (le_n n') D -> Type@{l}) -> box Hp D -> Type@{l} ;
   subbox {n' p q} {Hn' : S n' <= n} {Hp : p <= q} (Hq : q <= n') :
          forall {D : csp Hn'}, box (weaken_trans Hp Hq) D ->
-         box (trans Hp Hq) (hd D) ;
+         box (Hp ↕ Hq) (hd D) ;
   sublayer {n' p q} {Hn' : S n' <= n} {Hp : p < q} (Hq : q <= n') :
            forall {D : csp Hn'}
            {d : box (adjust_weaken (weaken_trans Hp Hq)) D},
-           layer d -> layer (Hp := trans Hp Hq)
+           layer d -> layer (Hp := Hp ↕ Hq)
            (subbox (Hp := (lt_weaken Hp)) Hq d) ;
   subcube {n' p q} {Hn' : S n' <= n} {Hp : p <= q}
           (Hq : q <= n') :
@@ -94,27 +96,27 @@ Record Cubical (n : nat) :=
   cohbox {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
          (Hr : r <= q) (Hq : q <= n') :
          forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D),
-         subbox (Hn' := adjust_weaken Hn') (Hp := trans Hp Hr) Hq
+         subbox (Hn' := adjust_weaken Hn') (Hp := Hp ↕ Hr) Hq
          (subbox (n' := S n') (q := r) (Hp := Hp)
-         (↑ (trans Hr Hq)) d) =
-         subbox (Hp := Hp) (trans Hr Hq)
-         (subbox (Hp := trans Hp Hr) (↑ Hq) d);
+         (↑ (Hr ↕ Hq)) d) =
+         subbox (Hp := Hp) (Hr ↕ Hq)
+         (subbox (Hp := Hp ↕ Hr) (↑ Hq) d);
   cohlayer {n' p q r} {Hn' : S (S n') <= n} {Hp : p < r}
            (Hr : r <= q) (Hq : q <= n') :
            forall {D : csp Hn'} (d : box (le_pqrn_trans (adjust_weaken Hp)
            Hr Hq) D)
            (b : layer (n' := (S (S n'))) (Hp := le_pqrn_trans Hp Hr Hq) d),
            (cohbox Hr Hq d) # (sublayer (Hn' := adjust_weaken Hn')
-           (Hp := trans Hp Hr) Hq
-           (sublayer (Hp := Hp) (n' := S n') (↑ (trans Hr Hq)) b)) = sublayer (Hp := Hp) (trans Hr Hq) (sublayer (↑ Hq) b);
+           (Hp := Hp ↕ Hr) Hq
+           (sublayer (Hp := Hp) (n' := S n') (↑ (Hr ↕ Hq)) b)) = sublayer (Hp := Hp) (Hr ↕ Hq) (sublayer (↑ Hq) b);
   cohcube {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
           (Hr : r <= q) (Hq : q <= n') :
           forall {D : csp Hn'} (E : box (le_n (S (S n'))) D -> Type@{l})
           (d : box (le_pqrn_trans Hp Hr Hq) D)
           (b : cube E d),
-          (cohbox Hr Hq d) # (subcube (Hp := trans Hp Hr) Hq (subcube (Hp := Hp)
-          (↑ (trans Hr Hq)) b)) =
-          (subcube (Hp := Hp) (trans Hr Hq) (subcube (↑ Hq) b))
+          (cohbox Hr Hq d) # (subcube (Hp := Hp ↕ Hr) Hq (subcube (Hp := Hp)
+          (↑ (Hr ↕ Hq)) b)) =
+          (subcube (Hp := Hp) (Hr ↕ Hq) (subcube (↑ Hq) b))
 }.
 
 Fixpoint cubical (n : nat) : Cubical n :=
