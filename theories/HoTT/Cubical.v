@@ -87,7 +87,7 @@ Record Cubical (n : nat) :=
     (Hr : r <= q) (Hq : q <= n')
     {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D) :
     subbox (Hp := Hp ↕ Hr) Hq
-    (subbox (q := r) (Hp := Hp)
+    (subbox (Hp := Hp)
     (↑ (Hr ↕ Hq)) d) =
     subbox (Hp := Hp) (Hr ↕ Hq)
     (subbox (Hp := Hp ↕ Hr) (↑ Hq) d);
