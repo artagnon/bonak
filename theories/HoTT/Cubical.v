@@ -95,7 +95,7 @@ Record Cubical (n : nat) :=
     (Hr : r <= q) (Hq : q <= n')
     {D : csp Hn'} (d : box (le_pqrn_trans (adjust_weaken Hp)
     Hr Hq) D)
-    (b : layer (n' := (S (S n'))) (Hp := le_pqrn_trans Hp Hr Hq) d) :
+    (b : layer (Hp := le_pqrn_trans Hp Hr Hq) d) :
     (cohbox Hr Hq d) # (sublayer
     (Hp := Hp ↕ Hr) Hq
     (sublayer (Hp := Hp) (n' := S n') (↑ (Hr ↕ Hq)) b)) = sublayer (Hp := Hp) (Hr ↕ Hq) (sublayer (↑ Hq) b);
