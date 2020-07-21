@@ -98,14 +98,15 @@ Record Cubical (n : nat) :=
     (b : layer (Hp := le_pqrn_trans Hp Hr Hq) d) :
     (cohbox Hr Hq d) # (sublayer
     (Hp := Hp ↕ Hr) Hq
-    (sublayer (Hp := Hp) (n' := S n') (↑ (Hr ↕ Hq)) b)) = sublayer (Hp := Hp) (Hr ↕ Hq) (sublayer (↑ Hq) b);
+    (sublayer (Hp := Hp) (↑ (Hr ↕ Hq)) b)) = sublayer (Hp := Hp)
+    (Hr ↕ Hq) (sublayer (↑ Hq) b);
   cohcube {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
     (Hr : r <= q) (Hq : q <= n')
     {D : csp Hn'} (E : box (le_n (S (S n'))) D -> Type@{l})
     (d : box (le_pqrn_trans Hp Hr Hq) D)
     (b : cube E d) :
-    (cohbox Hr Hq d) # (subcube (Hp := Hp ↕ Hr) Hq (subcube (Hp := Hp)
-    (↑ (Hr ↕ Hq)) b)) =
+    (cohbox Hr Hq d) # (subcube (Hp := Hp ↕ Hr) Hq (subcube
+    (Hp := Hp) (↑ (Hr ↕ Hq)) b)) =
     (subcube (Hp := Hp) (Hr ↕ Hq) (subcube (↑ Hq) b))
 }.
 
