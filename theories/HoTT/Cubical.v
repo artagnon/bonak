@@ -32,15 +32,6 @@ Theorem le_adjust {p n} : S p <= S n -> p <= n.
     * apply (↑ IHG).
 Defined.
 
-Lemma lt_weaken {p q : nat}: p < q -> p <= q.
-  intros.
-  apply le_adjust.
-  apply le_S.
-  assumption.
-Defined.
-
-(* Eval cbn in fun p n (H : p < S n) => (le_adjust (↑ H)). *)
-
 (* No loss of information: primitive *)
 Theorem trans {p q n} : p <= q -> q <= n -> p <= n.
   intros G H.
@@ -86,7 +77,7 @@ Record Cubical (n : nat) :=
     {D : csp Hn'}
     {d : box (adjust_weaken (↑ (Hp ↕ Hq))) D} :
     layer d -> layer (Hp := Hp ↕ Hq)
-    (subbox (Hp := (lt_weaken Hp)) Hq d) ;
+    (subbox (Hp := (adjust_weaken Hp)) Hq d) ;
   subcube {n' p q} {Hn' : S n' <= n} {Hp : p <= q}
     (Hq : q <= n') {D : csp Hn'}
     {E : box (le_n (S n')) D -> Type@{l}}
