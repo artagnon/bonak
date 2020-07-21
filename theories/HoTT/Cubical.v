@@ -1,15 +1,6 @@
 From HoTT Require Import HoTT.
 From HoTT Require Import peano_naturals.
 
-Module EqNotations.
-  Notation "'rew' H 'in' H'" := (H' # H)
-    (at level 10, H' at level 10,
-     format "'[' 'rew' H in '/' H' ']'").
-  Notation "'rew' [ P ] H 'in' H'" := (transport P H H')
-    (at level 10, H' at level 10,
-     format "'[' 'rew' [ P ] '/ ' H in '/' H' ']'").
-End EqNotations.
-
 Section Cubical.
 Universe l'.
 Universe l.
@@ -28,7 +19,7 @@ Theorem le_n_S : forall n m, n <= m -> S n <= S m.
 Admitted.
 
 (* Constructor *)
-Definition le_weaken {p n} : p <= n -> p <= S n := le_S.
+Notation "↑ h" := (le_S h) (at level 0).
 
 (* Re-prove le_S_n *)
 Theorem le_adjust {p n} : S p <= S n -> p <= n.
@@ -38,35 +29,35 @@ Theorem le_adjust {p n} : S p <= S n -> p <= n.
   - apply le_n.
   - destruct m.
     * assumption.
-    * apply (le_weaken IHG).
+    * apply (↑ IHG).
 Defined.
 
 Lemma lt_weaken {p q : nat}: p < q -> p <= q.
   intros.
   apply le_adjust.
-  apply le_weaken.
+  apply le_S.
   assumption.
 Defined.
 
-(* Eval cbn in fun p n (H : p < S n) => (le_adjust (le_weaken H)). *)
+(* Eval cbn in fun p n (H : p < S n) => (le_adjust (↑ H)). *)
 
 (* No loss of information: primitive *)
 Theorem trans {p q n} : p <= q -> q <= n -> p <= n.
   intros G H.
   induction H as [|r].
   - exact G.
-  - apply le_weaken; exact IHle.
+  - apply le_S; exact IHle.
 Defined.
 
 Definition weaken_trans {p q n} (Hp : p <= q) (Hq : q <= n) :
   p <= S n :=
-  le_weaken (trans Hp Hq).
+  ↑ (trans Hp Hq).
 
-Definition adjust_weaken {p n} (Hp : p < n) : p <= n := le_adjust (le_weaken Hp).
+Definition adjust_weaken {p n} (Hp : p < n) : p <= n := le_adjust (↑ Hp).
 
 Theorem le_pqrn_trans {p q r n} (Hp : p <= r)
   (Hr : r <= q) (Hq : q <= n) : p <= S (S n).
-  apply le_weaken.
+  apply le_S.
   eapply weaken_trans.
   2: apply Hq.
   eapply trans.
@@ -105,9 +96,9 @@ Record Cubical (n : nat) :=
          forall {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D),
          subbox (Hn' := adjust_weaken Hn') (Hp := trans Hp Hr) Hq
          (subbox (n' := S n') (q := r) (Hp := Hp)
-         (le_weaken (trans Hr Hq)) d) =
+         (↑ (trans Hr Hq)) d) =
          subbox (Hp := Hp) (trans Hr Hq)
-         (subbox (Hp := trans Hp Hr) (le_weaken Hq) d);
+         (subbox (Hp := trans Hp Hr) (↑ Hq) d);
   cohlayer {n' p q r} {Hn' : S (S n') <= n} {Hp : p < r}
            (Hr : r <= q) (Hq : q <= n') :
            forall {D : csp Hn'} (d : box (le_pqrn_trans (adjust_weaken Hp)
@@ -115,15 +106,15 @@ Record Cubical (n : nat) :=
            (b : layer (n' := (S (S n'))) (Hp := le_pqrn_trans Hp Hr Hq) d),
            (cohbox Hr Hq d) # (sublayer (Hn' := adjust_weaken Hn')
            (Hp := trans Hp Hr) Hq
-           (sublayer (Hp := Hp) (n' := S n') (le_weaken (trans Hr Hq)) b)) = sublayer (Hp := Hp) (trans Hr Hq) (sublayer (le_weaken Hq) b);
+           (sublayer (Hp := Hp) (n' := S n') (↑ (trans Hr Hq)) b)) = sublayer (Hp := Hp) (trans Hr Hq) (sublayer (↑ Hq) b);
   cohcube {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
           (Hr : r <= q) (Hq : q <= n') :
           forall {D : csp Hn'} (E : box (le_n (S (S n'))) D -> Type@{l})
           (d : box (le_pqrn_trans Hp Hr Hq) D)
           (b : cube E d),
           (cohbox Hr Hq d) # (subcube (Hp := trans Hp Hr) Hq (subcube (Hp := Hp)
-          (le_weaken (trans Hr Hq)) b)) =
-          (subcube (Hp := Hp) (trans Hr Hq) (subcube (le_weaken Hq) b))
+          (↑ (trans Hr Hq)) b)) =
+          (subcube (Hp := Hp) (trans Hr Hq) (subcube (↑ Hq) b))
 }.
 
 Fixpoint cubical (n : nat) : Cubical n :=
