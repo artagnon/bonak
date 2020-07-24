@@ -19,7 +19,7 @@ Theorem le_n_S : forall n m, n <= m -> S n <= S m.
 Admitted.
 
 (* Constructor *)
-Notation "↑ h" := (le_S h) (at level 0).
+Notation "↑ h" := (le_S h) (at level 40).
 
 (* Re-prove le_S_n *)
 Theorem le_adjust {p n} : S p <= S n -> p <= n.
@@ -83,22 +83,22 @@ Record Cubical (n : nat) :=
     {d : box (↑ (Hp ↕ Hq)) D} (b : cube E d) :
     cube (tl D) (subbox Hq d);
   cohbox {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
-    (Hr : r <= q) (Hq : q <= n') {D : csp Hn'}
+    {Hr : r <= q} {Hq : q <= n'} {D : csp Hn'}
     (d : box (le_pqrn_trans Hp Hr Hq) D) :
     subbox (Hp := Hp ↕ Hr) Hq (subbox (Hp := Hp) (↑ (Hr ↕ Hq)) d) =
     subbox (Hp := Hp) (Hr ↕ Hq) (subbox (Hp := Hp ↕ Hr) (↑ Hq) d);
   cohlayer {n' p q r} {Hn' : S (S n') <= n} {Hp : S p <= r}
-    (Hr : r <= q) (Hq : q <= n') {D : csp Hn'}
+    {Hr : r <= q} {Hq : q <= n'} {D : csp Hn'}
     (d : box (le_pqrn_trans (⇓ Hp) Hr Hq) D)
     (b : layer (Hp := le_pqrn_trans Hp Hr Hq) d) :
-    (cohbox Hr Hq d) # (sublayer (Hp := Hp ↕ Hr) Hq
+    (cohbox d) # (sublayer (Hp := Hp ↕ Hr) Hq
     (sublayer (Hp := Hp) (↑ (Hr ↕ Hq)) b)) =
     sublayer (Hp := Hp) (Hr ↕ Hq) (sublayer (↑ Hq) b);
   cohcube {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
-    (Hr : r <= q) (Hq : q <= n')
+    {Hr : r <= q} {Hq : q <= n'}
     {D : csp Hn'} (E : box (le_n (S (S n'))) D -> Type@{l})
     (d : box (le_pqrn_trans Hp Hr Hq) D) (b : cube E d) :
-    (cohbox Hr Hq d) # (subcube (Hp := Hp ↕ Hr) Hq (subcube
+    (cohbox d) # (subcube (Hp := Hp ↕ Hr) Hq (subcube
     (Hp := Hp) (↑ (Hr ↕ Hq)) b)) = (subcube (Hp := Hp) (Hr ↕ Hq)
     (subcube (↑ Hq) b))
 }.
