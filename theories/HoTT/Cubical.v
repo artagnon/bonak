@@ -112,17 +112,17 @@ Record Cubical (n : nat) :=
 Fixpoint cubical (n : nat) : Cubical n :=
 match n with
   | O => {| csp _ _ := unit;
-    hd _ Hn' _ := (ltac:inversion Hn');
-    box _ _ _ _ _ := unit;
-    tl _ Hn' _ _ := (ltac:inversion Hn');
-    layer _ _ _ Hp _ _ := (ltac:inversion Hp);
+    hd _ Hn' _ := ltac:(inversion Hn');
+    box _ _ _ _ _ := Unit;
+    tl _ Hn' _ _ := ltac:(inversion Hn');
+    layer _ _ _ Hp _ _ := ltac:(inversion Hp);
     cube _ _ _ _ _ _ E d := E(d);
-    subbox _ _ _ _ _ _ _ _ := tt;
-    sublayer _ _ _ _ Hp _ _ _ _ := (ltac:inversion Hp);
-    subcube _ _ _ _ _ _ _ _ _ _ :=
-    cohbox := ;
-    cohlayer := ;
-    cohcube := ;
+    subbox _ _ _ _ _ _ _ _ _ := tt;
+    sublayer _ _ _ _ Hp _ _ _ _ _ := ltac:(inversion Hp);
+    subcube _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(inversion Hn');
+    cohbox _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(inversion Hn');
+    cohlayer _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(inversion Hn');
+    cohcube _ _ _ _ Hn' _ _ _ _ _ _ _ _ _ := ltac:(inversion Hn');
     |}
   | S n => { D : cubsetprefix (S n) & (mkBox n n D) -> Type@{l} }
 end.
