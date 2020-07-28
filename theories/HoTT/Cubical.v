@@ -1,5 +1,6 @@
 From HoTT Require Import HoTT.
 From HoTT Require Import peano_naturals.
+From HoTT Require Import Spaces.Nat.
 
 Section Cubical.
 Universe l'.
@@ -62,7 +63,7 @@ Defined.
 
 Inductive side := L | R.
 
-Record Cubical (n : nat) :=
+Record Cubical {n : nat} :=
 {
   csp {n'} (Hn' : n' <= n) : Type@{l'} ;
   hd {n'} {Hn' : S n' <= n} : csp Hn' -> csp (⇓ Hn') ;
@@ -109,22 +110,24 @@ Record Cubical (n : nat) :=
     (subcube (Hp := Hp) (Hr ↕ Hq) ε' (subcube (↑ Hq) ε b))
 }.
 
-Fixpoint cubical (n : nat) : Cubical n :=
+Axiom foo : forall {n}, S n <= 0 -> False.
+Fixpoint cubical {n : nat} : Cubical :=
 match n with
-  | O => {| csp _ _ := unit;
-    hd _ Hn' _ := ltac:(inversion Hn');
+  | O => {| csp _ _ := Unit;
+    hd _ Hn' _ := ltac:(destruct (foo Hn'));
     box _ _ _ _ _ := Unit;
-    tl _ Hn' _ _ := ltac:(inversion Hn');
-    layer _ _ _ Hp _ _ := ltac:(inversion Hp);
-    cube _ _ _ _ _ _ E d := E(d);
+    tl _ Hn' _ _ := ltac:(destruct (foo Hn'));
+    layer _ _ Hn' Hp _ _ := ltac:(destruct (foo (trans Hp Hn')));
+    cube _ _ _ _ _ E d := E d;
     subbox _ _ _ _ _ _ _ _ _ := tt;
-    sublayer _ _ _ _ Hp _ _ _ _ _ := ltac:(inversion Hp);
-    subcube _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(inversion Hn');
-    cohbox _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(inversion Hn');
-    cohlayer _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(inversion Hn');
-    cohcube _ _ _ _ Hn' _ _ _ _ _ _ _ _ _ := ltac:(inversion Hn');
+    sublayer _ _ _ Hn' Hp _ _ _ _ _ := ltac:(destruct (foo Hp Hn'));
+    subcube _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(destruct (foo Hn'));
+    cohbox _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(destruct (foo Hn'));
+    cohlayer _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(destruct (foo Hn'));
+    cohcube _ _ _ _ Hn' _ _ _ _ _ _ _ _ _ := ltac:(destruct (foo Hn'));
     |}
-  | S n => { D : cubsetprefix (S n) & (mkBox n n D) -> Type@{l} }
+  | S n => {| csp n' Hn' := { D : csp _ _ & box (cubical n) Hn' D -> Type@{l} }
+    |}
 end.
 
 End Section Cubical.
