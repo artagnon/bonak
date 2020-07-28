@@ -120,13 +120,16 @@ match n with
     layer _ _ Hn' Hp _ _ := ltac:(destruct (foo (trans Hp Hn')));
     cube _ _ _ _ _ E d := E d;
     subbox _ _ _ _ _ _ _ _ _ := tt;
-    sublayer _ _ _ Hn' Hp _ _ _ _ _ := ltac:(destruct (foo Hp Hn'));
+    sublayer _ _ _ Hn' Hp _ _ _ _  := ltac:(destruct (foo Hn'));
     subcube _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(destruct (foo Hn'));
     cohbox _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(destruct (foo Hn'));
     cohlayer _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(destruct (foo Hn'));
     cohcube _ _ _ _ Hn' _ _ _ _ _ _ _ _ _ := ltac:(destruct (foo Hn'));
     |}
-  | S n => {| csp n' Hn' := { D : csp _ _ & box (cubical n) Hn' D -> Type@{l} }
+  | S n => {| csp n' Hn' := { D : csp _ _ & box (cubical (n := n)) Hn' D -> Type@{l} };
+    layer n' p Hn' Hp D box := (cube (cubical (n := n))
+    (tl (cubical (n := n)) (Hn' := Hn') D)
+    (subbox L Hp box) * cube (cubical (n := n)) (tl D) (subbox L Hp box))%type
     |}
 end.
 
