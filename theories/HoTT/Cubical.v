@@ -141,24 +141,15 @@ match n with
     | inr Hn' => cn.(csp) Hn'
     end in
     let hd {n'} (Hn':S n' <= S n) := match le_dec Hn' as x return match x return Type with
-    | inl _ => { D : cn.(csp) _ & box cn Hn' D -> Type@{l} }
+    | inl _ => { D : cn.(csp) (le_n n) & cn.(box) (le_n n) D -> Type@{l} }
     | inr Hn' => cn.(csp) Hn'
-    end -> match x return Type with
-    | inl _ => cn.(csp) _
-    | inr Hn' => cn.(csp) (⇓Hn')
-    end with
+    end -> (*match x return Type with
+    | inl _ => cn.(csp) (le_n n)
+    | inr Hn' => *)cn.(csp) _
+    (*end *)with
     | inl _ => fun D => D.1
     | inr Hn' => fun D => cn.(hd) D
     end in
-(*
-    let cspn {n'} (Hn':leT n' (S n)) := match Hn' in leT _ q return q = S n -> Type with
-    | leT_n => fun _ => { D : cn.(csp) _ & box cn (leT_le Hn') D -> Type@{l} }
-    | leT_S n Hn' => fun eq => cn.(csp) (eq # Hn')
-    end idpath in
-let hd {n'} (Hn':leT (S n') (S n)) := match Hn' in leT _ q return forall eq:q = S n, cspn Hn' -> cspn (⇓ (eq # Hn')) with
-| leT_n => fun _ D => D.1
-| leT_S n Hn' => fun eq D => cn.(hd) (eq # Hn')
-end idpath in*)
     {| csp n' Hn' := cspn Hn';
     hd n' Hn' := hd Hn';
     tl {n'} Hn' := match Hn' with
