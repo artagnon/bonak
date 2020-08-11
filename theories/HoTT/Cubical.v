@@ -110,6 +110,8 @@ Record Cubical {n : nat} :=
     (subcube (Hp := Hp) (Hr ↕ Hq) ε' (subcube (↑ Hq) ε b))
 }.
 
+Set Printing All.
+
 Axiom foo : forall {n}, S n <= 0 -> False.
 Fixpoint cubical {n : nat} : Cubical :=
 match n with
@@ -127,11 +129,20 @@ match n with
     cohcube _ _ _ _ Hn' _ _ _ _ _ _ _ _ _ := ltac:(destruct (foo Hn'));
     |}
   | S n => let cn := cubical (n := n) in
-    {| csp n' Hn' := match n' with
-    | O => Unit
-    { D : csp _ _ & box cn Hn' D -> Type@{l} };
-    hd _ _ D := D.1;
-    tl _ _ D := D.2;
+    let cspn {n'} (Hn':n'<=S n) := match Hn' in _ <= q return q = S n -> Type with
+    | le_n => fun _ => { D : cn.(csp) _ & box cn Hn' D -> Type@{l} }
+    | le_S n Hn' => fun Hn' => cn.(csp) Hn'
+    end Hn' in
+
+    {| csp := @cspn;
+    hd n' := match n' with
+    | O => fun _ D => tt
+    | S n' => fun _ D => D.1
+    end;
+    tl n' := match n' with
+    | O => fun _ D => tt
+    | S n' => fun _ D => D.2
+    end;
     layer n' p Hn' Hp D d := (cn.(cube) (tl D)
     (cn.(subbox) L Hp d) * cube cn (cn.(tl) D) (cn.(subbox) R Hp d))%type
     |}
