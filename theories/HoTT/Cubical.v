@@ -126,10 +126,14 @@ match n with
     cohlayer _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(destruct (foo Hn'));
     cohcube _ _ _ _ Hn' _ _ _ _ _ _ _ _ _ := ltac:(destruct (foo Hn'));
     |}
-  | S n => {| csp n' Hn' := { D : csp _ _ & box (cubical (n := n)) Hn' D -> Type@{l} };
-    layer n' p Hn' Hp D box := (cube (cubical (n := n))
-    (tl (cubical (n := n)) (Hn' := Hn') D)
-    (subbox L Hp box) * cube (cubical (n := n)) (tl D) (subbox L Hp box))%type
+  | S n => let cn := cubical (n := n) in
+    {| csp n' Hn' := match n' with
+    | O => Unit
+    { D : csp _ _ & box cn Hn' D -> Type@{l} };
+    hd _ _ D := D.1;
+    tl _ _ D := D.2;
+    layer n' p Hn' Hp D d := (cn.(cube) (tl D)
+    (cn.(subbox) L Hp d) * cube cn (cn.(tl) D) (cn.(subbox) R Hp d))%type
     |}
 end.
 
