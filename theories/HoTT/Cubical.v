@@ -11,6 +11,12 @@ Inductive le (n:nat) : nat -> SProp :=
   | le_S : forall {m:nat}, n <= m -> n <= S m
   where "n <= m" := (le n m).
 
+  Inductive leT (n:nat) : nat -> Type :=
+  | leT_n : leT n n
+  | leT_S : forall {m:nat}, leT n m -> leT n (S m).
+
+  Axiom le_leT : forall {n m}, n <= m -> leT n m.
+
 Arguments le_S {n m}.
 
 Definition lt (n m:nat) := S n <= m.
@@ -129,19 +135,19 @@ match n with
     cohcube _ _ _ _ Hn' _ _ _ _ _ _ _ _ _ := ltac:(destruct (foo Hn'));
     |}
   | S n => let cn := cubical (n := n) in
-    let cspn {n'} (Hn':n'<=S n) := match Hn' in _ <= q return q = S n -> Type with
-    | le_n => fun _ => { D : cn.(csp) _ & box cn Hn' D -> Type@{l} }
-    | le_S n Hn' => fun Hn' => cn.(csp) Hn'
-    end Hn' in
+    let cspn {n'} (Hn':n'<=S n) := match le_leT Hn' in leT _ q return q = S n -> Type with
+    | leT_n => fun _ => { D : cn.(csp) _ & box cn Hn' D -> Type@{l} }
+    | leT_S n Hn' => fun eq => cn.(csp) (eq # Hn')
+    end idpath in
 
     {| csp := @cspn;
-    hd n' := match n' with
-    | O => fun _ D => tt
-    | S n' => fun _ D => D.1
+    hd {n'} (Hn':S n'<=S n) := match Hn' return cspn Hn' -> cspn (⇓ Hn') with
+    | le_n => fun D => D.1
+    | le_S n Hn' => fun D => cn.(hd) Hn'
     end;
-    tl n' := match n' with
-    | O => fun _ D => tt
-    | S n' => fun _ D => D.2
+    tl {n'} Hn' := match Hn' with
+    | le_n => fun D => D.2
+    | le_S n' Hn' => fun D => cn.(tl) Hn'
     end;
     layer n' p Hn' Hp D d := (cn.(cube) (tl D)
     (cn.(subbox) L Hp d) * cube cn (cn.(tl) D) (cn.(subbox) R Hp d))%type
