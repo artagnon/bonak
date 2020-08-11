@@ -16,6 +16,7 @@ Inductive le (n:nat) : nat -> SProp :=
   | leT_S : forall {m:nat}, leT n m -> leT n (S m).
 
   Axiom le_leT : forall {n m}, n <= m -> leT n m.
+  Axiom leT_le : forall {n m}, leT n m -> n <= m.
 
 Arguments le_S {n m}.
 
@@ -115,8 +116,8 @@ Record Cubical {n : nat} :=
     (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
     (subcube (Hp := Hp) (Hr ↕ Hq) ε' (subcube (↑ Hq) ε b))
 }.
-
-Set Printing All.
+Inductive mysum (A:Type) (B:SProp) := inl : A -> mysum A B | inr : B -> mysum A B.
+Axiom le_dec : forall {n m}, n <= S m -> mysum (n = S m) (n <= m).
 
 Axiom foo : forall {n}, S n <= 0 -> False.
 Fixpoint cubical {n : nat} : Cubical :=
@@ -135,16 +136,31 @@ match n with
     cohcube _ _ _ _ Hn' _ _ _ _ _ _ _ _ _ := ltac:(destruct (foo Hn'));
     |}
   | S n => let cn := cubical (n := n) in
-    let cspn {n'} (Hn':n'<=S n) := match le_leT Hn' in leT _ q return q = S n -> Type with
-    | leT_n => fun _ => { D : cn.(csp) _ & box cn Hn' D -> Type@{l} }
+  let cspn {n'} (Hn':n' <= S n) := match le_dec Hn' return Type with
+    | inl _ => { D : cn.(csp) _ & box cn Hn' D -> Type@{l} }
+    | inr Hn' => cn.(csp) Hn'
+    end in
+    let hd {n'} (Hn':S n' <= S n) := match le_dec Hn' as x return match x return Type with
+    | inl _ => { D : cn.(csp) _ & box cn Hn' D -> Type@{l} }
+    | inr Hn' => cn.(csp) Hn'
+    end -> match x return Type with
+    | inl _ => cn.(csp) _
+    | inr Hn' => cn.(csp) (⇓Hn')
+    end with
+    | inl _ => fun D => D.1
+    | inr Hn' => fun D => cn.(hd) D
+    end in
+(*
+    let cspn {n'} (Hn':leT n' (S n)) := match Hn' in leT _ q return q = S n -> Type with
+    | leT_n => fun _ => { D : cn.(csp) _ & box cn (leT_le Hn') D -> Type@{l} }
     | leT_S n Hn' => fun eq => cn.(csp) (eq # Hn')
     end idpath in
-
-    {| csp := @cspn;
-    hd {n'} (Hn':S n'<=S n) := match le_leT Hn' in leT _ q return forall eq:q = S n, cspn Hn' -> cspn (⇓ (eq # Hn')) with
-    | leT_n => fun _ D => D.1
-    | leT_S n Hn' => fun eq D => cn.(hd) (eq # Hn')
-    end idpath;
+let hd {n'} (Hn':leT (S n') (S n)) := match Hn' in leT _ q return forall eq:q = S n, cspn Hn' -> cspn (⇓ (eq # Hn')) with
+| leT_n => fun _ D => D.1
+| leT_S n Hn' => fun eq D => cn.(hd) (eq # Hn')
+end idpath in*)
+    {| csp n' Hn' := cspn Hn';
+    hd n' Hn' := hd Hn';
     tl {n'} Hn' := match Hn' with
     | le_n => fun D => D.2
     | le_S n' Hn' => fun D => cn.(tl) Hn'
