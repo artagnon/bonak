@@ -141,10 +141,10 @@ match n with
     end idpath in
 
     {| csp := @cspn;
-    hd {n'} (Hn':S n'<=S n) := match Hn' return cspn Hn' -> cspn (⇓ Hn') with
-    | le_n => fun D => D.1
-    | le_S n Hn' => fun D => cn.(hd) Hn'
-    end;
+    hd {n'} (Hn':S n'<=S n) := match le_leT Hn' in leT _ q return forall eq:q = S n, cspn Hn' -> cspn (⇓ (eq # Hn')) with
+    | leT_n => fun _ D => D.1
+    | leT_S n Hn' => fun eq D => cn.(hd) (eq # Hn')
+    end idpath;
     tl {n'} Hn' := match Hn' with
     | le_n => fun D => D.2
     | le_S n' Hn' => fun D => cn.(tl) Hn'
