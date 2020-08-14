@@ -1,6 +1,5 @@
-From HoTT Require Import HoTT.
-From HoTT Require Import peano_naturals.
-From HoTT Require Import Spaces.Nat.
+From Coq Require Import Arith.
+Import Logic.EqNotations.
 
 Section Cubical.
 Universe l'.
@@ -104,7 +103,7 @@ Record Cubical {n : nat} :=
     {Hr : r <= q} {Hq : q <= n'} (ε : side) (ε' : side)
     {D : csp Hn'} (d : box (le_pqrn_trans (⇓ Hp) Hr Hq) D)
     (b : layer (Hp := le_pqrn_trans Hp Hr Hq) d) :
-    (cohbox d) # (sublayer (Hp := Hp ↕ Hr) Hq ε
+    rew (cohbox d) (sublayer (Hp := Hp ↕ Hr) Hq ε
     (sublayer (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
     sublayer (Hp := Hp) (Hr ↕ Hq) ε' (sublayer (↑ Hq) ε b);
   cohcube {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
@@ -112,7 +111,7 @@ Record Cubical {n : nat} :=
     (ε : side) (ε' : side) {D : csp Hn'}
     (E : box (le_n (S (S n'))) D -> Type@{l})
     (d : box (le_pqrn_trans Hp Hr Hq) D) (b : cube E d) :
-    (cohbox d) # (subcube (Hp := Hp ↕ Hr) Hq ε (subcube
+    rew (cohbox d) (subcube (Hp := Hp ↕ Hr) Hq ε (subcube
     (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
     (subcube (Hp := Hp) (Hr ↕ Hq) ε' (subcube (↑ Hq) ε b))
 }.
