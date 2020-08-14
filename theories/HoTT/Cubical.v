@@ -5,7 +5,7 @@ Section Cubical.
 Universe l'.
 Universe l.
 
-Inductive le (n:nat) : nat -> SProp :=
+Inductive le (n:nat) : nat -> Type :=
   | le_n : n <= n
   | le_S : forall {m:nat}, n <= m -> n <= S m
   where "n <= m" := (le n m).
@@ -84,7 +84,8 @@ Record Cubical {n : nat} :=
     (ε : side) {D : csp Hn'} :
     box (↑ (Hp ↕ Hq)) D -> box (Hp ↕ Hq) (hd D) ;
   sublayer {n' p q} {Hn' : S n' <= n} {Hp : p < q} (Hq : q <= n')
-    (ε : side) {D : csp Hn'} {d : box (⇓ (↑ (Hp ↕ Hq))) D} :
+    (ε : side) {D : csp Hn'} {d : box (⇓ (↑ (Hp ↕ Hq)))
+    layer (rew le_unique _ _ _ _ in D)} :
     layer d -> layer (Hp := Hp ↕ Hq)
     (subbox (Hp := (⇓ Hp)) Hq ε d) ;
   subcube {n' p q} {Hn' : S n' <= n} {Hp : p <= q}
@@ -103,7 +104,7 @@ Record Cubical {n : nat} :=
     {Hr : r <= q} {Hq : q <= n'} (ε : side) (ε' : side)
     {D : csp Hn'} (d : box (le_pqrn_trans (⇓ Hp) Hr Hq) D)
     (b : layer (Hp := le_pqrn_trans Hp Hr Hq) d) :
-    rew (cohbox d) (sublayer (Hp := Hp ↕ Hr) Hq ε
+    rew (cohbox d) in (sublayer (Hp := Hp ↕ Hr) Hq ε
     (sublayer (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
     sublayer (Hp := Hp) (Hr ↕ Hq) ε' (sublayer (↑ Hq) ε b);
   cohcube {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
@@ -111,7 +112,7 @@ Record Cubical {n : nat} :=
     (ε : side) (ε' : side) {D : csp Hn'}
     (E : box (le_n (S (S n'))) D -> Type@{l})
     (d : box (le_pqrn_trans Hp Hr Hq) D) (b : cube E d) :
-    rew (cohbox d) (subcube (Hp := Hp ↕ Hr) Hq ε (subcube
+    rew (cohbox d) in (subcube (Hp := Hp ↕ Hr) Hq ε (subcube
     (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
     (subcube (Hp := Hp) (Hr ↕ Hq) ε' (subcube (↑ Hq) ε b))
 }.
