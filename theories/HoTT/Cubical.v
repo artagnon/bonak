@@ -85,7 +85,7 @@ Record Cubical {n : nat} :=
   subbox {n' p q} {Hn' : S n' <= n} {Hp : p <= q} (Hq : q <= n')
     (ε : side) {D : csp Hn'} :
     box (↑ (Hp ↕ Hq)) D -> box (Hp ↕ Hq) (hd D) ;
-    sublayer {n' p q} {Hn' : S n' <= n} {Hp : p < q} (Hq : q <= n')
+  sublayer {n' p q} {Hn' : S n' <= n} {Hp : p < q} (Hq : q <= n')
     (ε : side) {D : csp Hn'} {d : box (⇓ (↑ (Hp ↕ Hq))) D} :
     layer (rew uniq in d) -> layer (Hp := Hp ↕ Hq)
     (rew uniq in (subbox (Hp := (⇓ Hp)) Hq ε
