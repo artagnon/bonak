@@ -121,21 +121,20 @@ Record Cubical {n : nat} :=
 Inductive mysum (A:Type) (B:SProp) := inl : A -> mysum A B | inr : B -> mysum A B.
 Axiom le_dec : forall {n m}, n <= S m -> mysum (n = S m) (n <= m).
 
-Axiom foo : forall {n}, S n <= 0 -> False.
 Fixpoint cubical {n : nat} : Cubical :=
 match n with
   | O => {| csp _ _ := Unit;
-    hd _ Hn' _ := ltac:(destruct (foo Hn'));
+    hd _ Hn' _ := ltac:(inversion Hn');
     box _ _ _ _ _ := Unit;
-    tl _ Hn' _ _ := ltac:(destruct (foo Hn'));
-    layer _ _ Hn' Hp _ _ := ltac:(destruct (foo (trans Hp Hn')));
+    tl _ Hn' _ _ := ltac:(inversion Hn');
+    layer _ _ Hn' Hp _ _ := ltac:(inversion (trans Hp Hn'));
     cube _ _ _ _ _ E d := E d;
     subbox _ _ _ _ _ _ _ _ _ := tt;
-    sublayer _ _ _ Hn' Hp _ _ _ _  := ltac:(destruct (foo Hn'));
-    subcube _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(destruct (foo Hn'));
-    cohbox _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(destruct (foo Hn'));
-    cohlayer _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(destruct (foo Hn'));
-    cohcube _ _ _ _ Hn' _ _ _ _ _ _ _ _ _ := ltac:(destruct (foo Hn'));
+    sublayer _ _ _ Hn' Hp _ _ _ _  := ltac:(inversion Hn');
+    subcube _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(inversion Hn');
+    cohbox _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(inversion Hn');
+    cohlayer _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(inversion Hn');
+    cohcube _ _ _ _ Hn' _ _ _ _ _ _ _ _ _ := ltac:(inversion Hn');
     |}
   | S n => let cn := cubical (n := n) in
   let cspn {n'} (Hn':n' <= S n) := match le_dec Hn' return Type with
