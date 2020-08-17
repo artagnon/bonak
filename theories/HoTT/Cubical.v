@@ -99,7 +99,7 @@ Record Cubical {n : nat} :=
     {Hr : r <= q} {Hq : q <= n'} {ε : side} {ε' : side}
     {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D) :
     subbox (Hp := Hp ↕ Hr) Hq ε
-    (subbox (Hp := Hp) (↑ (Hr ↕ Hq)) ε' d) =
+    (rew uniq in subbox (Hp := Hp) (↑ (Hr ↕ Hq)) ε' (rew uniq in d)) =
     (rew uniq in subbox (Hp := Hp) (Hr ↕ Hq) ε'
     (rew uniq in subbox (Hp := Hp ↕ Hr) (↑ Hq) ε (rew uniq in d)));
   cohlayer {n' p q r} {Hn' : S (S n') <= n} {Hp : S p <= r}
@@ -114,9 +114,9 @@ Record Cubical {n : nat} :=
     (ε : side) (ε' : side) {D : csp Hn'}
     (E : box (le_n (S (S n'))) D -> Type@{l})
     (d : box (le_pqrn_trans Hp Hr Hq) D) (b : cube E d) :
-    rew (cohbox d) in (subcube (Hp := Hp ↕ Hr) Hq ε (subcube
-    (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
-    (subcube (Hp := Hp) (Hr ↕ Hq) ε' (subcube (↑ Hq) ε b))
+    rew (cohbox d) in (rew uniq in subcube (Hp := Hp ↕ Hr) Hq ε
+    (rew uniq in subcube (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
+    (rew uniq in subcube (Hp := Hp) (Hr ↕ Hq) ε' (subcube (↑ Hq) ε b))
 }.
 Inductive mysum (A:Type) (B:SProp) := inl : A -> mysum A B | inr : B -> mysum A B.
 Axiom le_dec : forall {n m}, n <= S m -> mysum (n = S m) (n <= m).
