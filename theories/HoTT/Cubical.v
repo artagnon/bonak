@@ -83,11 +83,11 @@ Record Cubical {n : nat} :=
   subbox {n' p q} {Hn' : S n' <= n} {Hp : p <= q} (Hq : q <= n')
     (ε : side) {D : csp Hn'} :
     box (↑ (Hp ↕ Hq)) D -> box (Hp ↕ Hq) (hd D) ;
-  sublayer {n' p q} {Hn' : S n' <= n} {Hp : p < q} (Hq : q <= n')
-    (ε : side) {D : csp Hn'} {d : box (⇓ (↑ (Hp ↕ Hq)))
-    layer (rew le_unique _ _ _ _ in D)} :
-    layer d -> layer (Hp := Hp ↕ Hq)
-    (subbox (Hp := (⇓ Hp)) Hq ε d) ;
+    sublayer {n' p q} {Hn' : S n' <= n} {Hp : p < q} (Hq : q <= n')
+    (ε : side) {D : csp Hn'} {d : box (⇓ (↑ (Hp ↕ Hq))) D} :
+    layer (rew le_unique _ _ _ _ in d) -> layer (Hp := Hp ↕ Hq)
+    (rew le_unique _ _ _ _ in (subbox (Hp := (⇓ Hp)) Hq ε
+    (rew le_unique _ _ _ _ in d))) ;
   subcube {n' p q} {Hn' : S n' <= n} {Hp : p <= q}
     (Hq : q <= n') (ε : side) {D : csp Hn'}
     {E : box (le_n (S n')) D -> Type@{l}}
@@ -98,8 +98,8 @@ Record Cubical {n : nat} :=
     {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D) :
     subbox (Hp := Hp ↕ Hr) Hq ε
     (subbox (Hp := Hp) (↑ (Hr ↕ Hq)) ε' d) =
-    subbox (Hp := Hp) (Hr ↕ Hq) ε'
-    (subbox (Hp := Hp ↕ Hr) (↑ Hq) ε d);
+    (rew le_unique _ _ _ _ in (subbox (Hp := Hp))) (Hr ↕ Hq) ε'
+    (subbox (Hp := Hp ↕ Hr) (↑ Hq) ε (rew le_unique _ _ _ _ in d));
   cohlayer {n' p q r} {Hn' : S (S n') <= n} {Hp : S p <= r}
     {Hr : r <= q} {Hq : q <= n'} (ε : side) (ε' : side)
     {D : csp Hn'} (d : box (le_pqrn_trans (⇓ Hp) Hr Hq) D)
