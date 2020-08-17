@@ -107,7 +107,7 @@ Record Cubical {n : nat} :=
     {D : csp Hn'} (d : box (le_pqrn_trans (⇓ Hp) Hr Hq) D)
     (* Due to a bug in Coq, we need to make all the arguments of
     layer explicit, to sidestep a stack-overflow. *)
-    (b : @layer n' p (⇓⇓ Hn') (le_pqrn_trans (↑ Hp) Hr Hq) D
+    (b : @layer n'.+2 p Hn' (le_pqrn_trans Hp Hr Hq) D
     (le_pqrn_trans Hp Hr Hq D (rew uniq in d))) :
     rew (cohbox d) in (rew uniq in sublayer (Hp := Hp ↕ Hr) Hq ε
     (rew uniq in sublayer (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
