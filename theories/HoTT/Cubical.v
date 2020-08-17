@@ -100,8 +100,8 @@ Record Cubical {n : nat} :=
     {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D) :
     subbox (Hp := Hp ↕ Hr) Hq ε
     (subbox (Hp := Hp) (↑ (Hr ↕ Hq)) ε' d) =
-    (rew uniq in (subbox (Hp := Hp))) (Hr ↕ Hq) ε'
-    (subbox (Hp := Hp ↕ Hr) (↑ Hq) ε (rew uniq in d));
+    (rew uniq in subbox (Hp := Hp) (Hr ↕ Hq) ε'
+    (rew uniq in subbox (Hp := Hp ↕ Hr) (↑ Hq) ε (rew uniq in d)));
   cohlayer {n' p q r} {Hn' : S (S n') <= n} {Hp : S p <= r}
     {Hr : r <= q} {Hq : q <= n'} (ε : side) (ε' : side)
     {D : csp Hn'} (d : box (le_pqrn_trans (⇓ Hp) Hr Hq) D)
