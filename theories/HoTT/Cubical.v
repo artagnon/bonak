@@ -10,20 +10,7 @@ Inductive le (n:nat) : nat -> Type :=
   | le_S : forall {m:nat}, n <= m -> n <= S m
   where "n <= m" := (le n m).
 
-  Inductive leT (n:nat) : nat -> Type :=
-  | leT_n : leT n n
-  | leT_S : forall {m:nat}, leT n m -> leT n (S m).
-
-  Axiom le_leT : forall {n m}, n <= m -> leT n m.
-  Axiom leT_le : forall {n m}, leT n m -> n <= m.
-
 Arguments le_S {n m}.
-
-Definition lt (n m:nat) := S n <= m.
-Infix "<" := lt.
-
-Theorem le_n_S : forall n m, n <= m -> S n <= S m.
-Admitted.
 
 (* Constructor *)
 Notation "↑ h" := (le_S h) (at level 40).
@@ -49,23 +36,9 @@ Defined.
 
 Infix "↕" := trans (at level 30).
 
-Definition weaken_trans {p q n} (Hp : p <= q) (Hq : q <= n) :
-  p <= S n :=
-  ↑ (Hp ↕ Hq).
-
-Definition adjust_weaken {p n} (Hp : p < n) : p <= n := le_adjust (↑ Hp).
+Definition adjust_weaken {p n} (Hp : S p <= n) : p <= n := le_adjust (↑ Hp).
 
 Notation "⇓ p" := (adjust_weaken p) (at level 40).
-
-Theorem le_pqrn_trans {p q r n} (Hp : p <= r)
-  (Hr : r <= q) (Hq : q <= n) : p <= S (S n).
-  apply le_S.
-  eapply weaken_trans.
-  2: apply Hq.
-  eapply trans.
-  - exact Hp.
-  - exact Hr.
-Defined.
 
 Inductive side := L | R.
 
@@ -78,47 +51,46 @@ Record Cubical {n : nat} :=
   box {n' p} {Hn' : n' <= n} (Hp : p <= n') : csp Hn' -> Type@{l} ;
   tl {n'} {Hn' : S n' <= n} (D : csp Hn') :
     box (le_n n') (hd D) -> Type@{l} ;
-  layer {n' p} {Hn' : n' <= n} {Hp : p < n'} {D : csp Hn'} :
-    box (⇓ Hp) D -> Type@{l} ;
+  layer {n' p} {Hn' : n' <= n} {Hp : p <= n'} {D : csp Hn'} :
+    box Hp D -> Type@{l} ;
   cube {n' p} {Hn' : n' <= n} {Hp : p <= n'} {D : csp Hn'} :
     (box (le_n n') D -> Type@{l}) -> box Hp D -> Type@{l} ;
   subbox {n' p q} {Hn' : S n' <= n} {Hp : p <= q} (Hq : q <= n')
     (ε : side) {D : csp Hn'} :
-    box (↑ (Hp ↕ Hq)) D -> box (Hp ↕ Hq) (hd D) ;
-  sublayer {n' p q} {Hn' : S n' <= n} {Hp : p < q} (Hq : q <= n')
-    (ε : side) {D : csp Hn'} {d : box (⇓ (↑ (Hp ↕ Hq))) D} :
+    box (Hp ↕ ↑ Hq) D -> box (Hp ↕ Hq) (hd D) ;
+  sublayer {n' p q} {Hn' : S n' <= n} {Hp : p <= q} (Hq : q <= n')
+    (ε : side) {D : csp Hn'} {d : box (↑ (Hp ↕ Hq)) D} :
     layer (rew uniq in d) -> layer (Hp := Hp ↕ Hq)
-    (rew uniq in (subbox (Hp := (⇓ Hp)) Hq ε
-    (rew uniq in d))) ;
+    (rew uniq in subbox Hq ε (rew uniq in d)) ;
   subcube {n' p q} {Hn' : S n' <= n} {Hp : p <= q}
     (Hq : q <= n') (ε : side) {D : csp Hn'}
     {E : box (le_n (S n')) D -> Type@{l}}
-    {d : box (↑ (Hp ↕ Hq)) D} (b : cube E d) :
+    {d : box (Hp ↕ ↑ Hq) D} (b : cube E d) :
     cube (tl D) (subbox Hq ε d);
   cohbox {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
     {Hr : r <= q} {Hq : q <= n'} {ε : side} {ε' : side}
-    {D : csp Hn'} (d : box (le_pqrn_trans Hp Hr Hq) D) :
+    {D : csp Hn'} (d : box (Hp ↕ (Hr ↕ ↑ ↑ Hq)) D) :
     subbox (Hp := Hp ↕ Hr) Hq ε
     (rew uniq in subbox (Hp := Hp) (↑ (Hr ↕ Hq)) ε' (rew uniq in d)) =
     (rew uniq in subbox (Hp := Hp) (Hr ↕ Hq) ε'
     (rew uniq in subbox (Hp := Hp ↕ Hr) (↑ Hq) ε (rew uniq in d)));
   cohlayer {n' p q r} {Hn' : S (S n') <= n} {Hp : S p <= r}
     {Hr : r <= q} {Hq : q <= n'} (ε : side) (ε' : side)
-    {D : csp Hn'} (d : box (le_pqrn_trans (⇓ Hp) Hr Hq) D)
-    (* Due to a bug in Coq, we need to make all the arguments of
-    layer explicit, to sidestep a stack-overflow. *)
-    (b : layer (Hp := le_pqrn_trans Hp Hr Hq) (rew uniq in d)) :
+    {D : csp Hn'} (d : box (Hp ↕ (Hr ↕ ↑ ↑ Hq)) D)
+    (b : layer (rew uniq in d)) :
     rew (cohbox d) in (rew uniq in sublayer (Hp := Hp ↕ Hr) Hq ε
     (rew uniq in sublayer (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
-    rew uniq in sublayer (Hp := Hp) (Hr ↕ Hq) ε' (sublayer (↑ Hq) ε b);
+    rew uniq in sublayer (Hp := Hp) (Hr ↕ Hq) ε'
+    (sublayer (Hp := Hp ↕ Hr) (↑ Hq) ε b);
   cohcube {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
     {Hr : r <= q} {Hq : q <= n'}
     (ε : side) (ε' : side) {D : csp Hn'}
     (E : box (le_n (S (S n'))) D -> Type@{l})
-    (d : box (le_pqrn_trans Hp Hr Hq) D) (b : cube E d) :
+    (d : box (Hp ↕ (Hr ↕ ↑ ↑ Hq)) D) (b : cube E d) :
     rew (cohbox d) in (rew uniq in subcube (Hp := Hp ↕ Hr) Hq ε
     (rew uniq in subcube (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
-    (rew uniq in subcube (Hp := Hp) (Hr ↕ Hq) ε' (subcube (↑ Hq) ε b))
+    (rew uniq in subcube (Hp := Hp) (Hr ↕ Hq) ε'
+    (subcube (Hp := Hp ↕ Hr) (↑ Hq) ε b))
 }.
 Inductive mysum (A:Type) (B:SProp) := inl : A -> mysum A B | inr : B -> mysum A B.
 Axiom le_dec : forall {n m}, n <= S m -> mysum (n = S m) (n <= m).
