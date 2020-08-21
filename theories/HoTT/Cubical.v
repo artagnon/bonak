@@ -60,8 +60,8 @@ Record Cubical {n : nat} :=
     box (Hp ↕ ↑ Hq) D -> box (Hp ↕ Hq) (hd D) ;
   sublayer {n' p q} {Hn' : S n' <= n} {Hp : p <= q} (Hq : q <= n')
     (ε : side) {D : csp Hn'} {d : box (↑ (Hp ↕ Hq)) D} :
-    layer d -> layer (Hp := Hp ↕ Hq)
-    (subbox Hq ε d) ;
+    layer (rew uniq in d) -> layer (Hp := Hp ↕ Hq)
+    (rew uniq in subbox Hq ε (rew uniq in d)) ;
   subcube {n' p q} {Hn' : S n' <= n} {Hp : p <= q}
     (Hq : q <= n') (ε : side) {D : csp Hn'}
     {E : box (le_n (S n')) D -> Type@{l}}
@@ -71,15 +71,15 @@ Record Cubical {n : nat} :=
     {Hr : r <= q} {Hq : q <= n'} {ε : side} {ε' : side}
     {D : csp Hn'} (d : box (Hp ↕ (Hr ↕ ↑ ↑ Hq)) D) :
     subbox (Hp := Hp ↕ Hr) Hq ε
-    (rew uniq in subbox (Hp := Hp) (↑ (Hr ↕ Hq)) ε' d) =
-    (subbox (Hp := Hp) (Hr ↕ Hq) ε'
-    (subbox (Hp := Hp ↕ Hr) (↑ Hq) ε d));
+    (rew uniq in subbox (Hp := Hp) (↑ (Hr ↕ Hq)) ε' (rew uniq in d)) =
+    (rew uniq in subbox (Hp := Hp) (Hr ↕ Hq) ε'
+    (rew uniq in subbox (Hp := Hp ↕ Hr) (↑ Hq) ε (rew uniq in d)));
   cohlayer {n' p q r} {Hn' : S (S n') <= n} {Hp : S p <= r}
     {Hr : r <= q} {Hq : q <= n'} (ε : side) (ε' : side)
-    {D : csp Hn'} (d : box (Hp ↕ (Hr ↕ ↑ ↑ Hq) D))
-    (b : layer d) : rew (cohbox d) in
+    {D : csp Hn'} (d : box (Hp ↕ (Hr ↕ ↑ ↑ Hq)) D)
+    (b : layer (rew uniq in d)) : rew (cohbox d) in
     (sublayer (Hp := Hp ↕ Hr) Hq ε
-    (sublayer (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
+    (rew uniq in sublayer (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
     sublayer (Hp := Hp) (Hr ↕ Hq) ε'
     (sublayer (Hp := Hp ↕ Hr) (↑ Hq) ε b);
   cohcube {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
@@ -87,9 +87,9 @@ Record Cubical {n : nat} :=
     (ε : side) (ε' : side) {D : csp Hn'}
     (E : box (le_n (S (S n'))) D -> Type@{l})
     (d : box (Hp ↕ (Hr ↕ ↑ ↑ Hq)) D) (b : cube E d) :
-    rew (cohbox d) in (subcube (Hp := Hp ↕ Hr) Hq ε
-    (subcube (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
-    (subcube (Hp := Hp) (Hr ↕ Hq) ε'
+    rew (cohbox d) in (rew uniq in subcube (Hp := Hp ↕ Hr) Hq ε
+    (rew uniq in subcube (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
+    (rew uniq in subcube (Hp := Hp) (Hr ↕ Hq) ε'
     (subcube (Hp := Hp ↕ Hr) (↑ Hq) ε b))
 }.
 
