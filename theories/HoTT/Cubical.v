@@ -81,7 +81,7 @@ Record Cubical {n : nat} :=
     (sublayer (Hp := Hp ↕ Hr) Hq ε
     (rew uniq in sublayer (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
     sublayer (Hp := Hp) (Hr ↕ Hq) ε'
-    (sublayer (Hp := Hp ↕ Hr) (↑ Hq) ε b);
+    (sublayer (Hp := Hp ↕ Hr) (↑ Hq) ε (rew uniq in b));
   cohcube {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
     {Hr : r <= q} {Hq : q <= n'}
     (ε : side) (ε' : side) {D : csp Hn'}
