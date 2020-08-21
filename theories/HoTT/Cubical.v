@@ -87,9 +87,9 @@ Record Cubical {n : nat} :=
     (ε : side) (ε' : side) {D : csp Hn'}
     (E : box (le_n (S (S n'))) D -> Type@{l})
     (d : box (Hp ↕ (Hr ↕ ↑ ↑ Hq)) D) (b : cube E d) :
-    rew (cohbox d) in (rew uniq in subcube (Hp := Hp ↕ Hr) Hq ε
-    (rew uniq in subcube (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
-    (rew uniq in subcube (Hp := Hp) (Hr ↕ Hq) ε'
+    rew (cohbox d) in (subcube (Hp := Hp ↕ Hr) Hq ε
+    (subcube (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
+    (subcube (Hp := Hp) (Hr ↕ Hq) ε'
     (subcube (Hp := Hp ↕ Hr) (↑ Hq) ε b))
 }.
 
