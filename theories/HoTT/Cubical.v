@@ -5,12 +5,19 @@ Section Cubical.
 Universe l'.
 Universe l.
 
-Inductive le (n:nat) : nat -> Type :=
-  | le_n : n <= n
-  | le_S : forall {m:nat}, n <= m -> n <= S m
-  where "n <= m" := (le n m).
+Definition less n m := forall {p}, p <= n -> p <= m.
 
-Arguments le_S {n m}.
+Definition trans {n m p} (Hnm:less n m) (Hmp:less m p) :=
+fun p (Hpn:p<=n) => Hmp _ (Hnm _ Hpn).
+
+Goal forall n m p q (Hnm:less n m) (Hmp:less m p) (Hpq:less p q),
+trans Hnm (trans Hmp Hpq) = trans (trans Hnm Hmp) Hpq.
+reflexivity.
+Qed.
+
+Infix "<=" := less.
+
+Axiom le_S : forall {n m : nat}, n <= m -> n <= S m.
 
 (* Constructor *)
 Notation "↑ h" := (le_S h) (at level 40).
@@ -71,7 +78,7 @@ Record Cubical {n : nat} :=
     {Hr : r <= q} {Hq : q <= n'} {ε : side} {ε' : side}
     {D : csp Hn'} (d : box (Hp ↕ (Hr ↕ ↑ ↑ Hq)) D) :
     subbox (Hp := Hp ↕ Hr) Hq ε
-    (rew uniq in subbox (Hp := Hp) (↑ (Hr ↕ Hq)) ε' d) =
+    (subbox (Hp := Hp) (↑ (Hr ↕ Hq)) ε' d) =
     (rew uniq in subbox (Hp := Hp) (Hr ↕ Hq) ε'
     (rew uniq in subbox (Hp := Hp ↕ Hr) (↑ Hq) ε (rew uniq in d)));
   cohlayer {n' p q r} {Hn' : S (S n') <= n} {Hp : S p <= r}
