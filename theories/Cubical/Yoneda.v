@@ -46,6 +46,6 @@ reflexivity.
 Defined.
 
 Theorem le_dec {n m} : n <= S m -> {n = m} + {n <= S m}.
-
+Admitted.
 
 End LeYoneda.
