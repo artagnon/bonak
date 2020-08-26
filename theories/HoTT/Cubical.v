@@ -1,51 +1,121 @@
 From Coq Require Import Arith.
 Import Logic.EqNotations.
 
-Section Cubical.
-Universe l'.
-Universe l.
+Module Type Le.
 
-Definition less n m := forall {p}, p <= n -> p <= m.
+Axiom le : nat -> nat -> Type.
+Infix "<=" := le.
+Axiom le_refl : forall {n}, n <= n.
+Axiom le_trans : forall {n m p}, n <= m -> m <= p -> n <= p.
+Infix "↕" := le_trans (at level 30).
+Axiom le_S_up : forall {n m}, n <= m -> n <= S m.
+Notation "↑ h" := (le_S_up h) (at level 40).
+Axiom le_S_down : forall {n m}, S n <= m -> n <= m.
+Notation "⇓ p" := (le_S_down p) (at level 40).
 
-Definition trans {n m p} (Hnm:less n m) (Hmp:less m p) :=
-fun p (Hpn:p<=n) => Hmp _ (Hnm _ Hpn).
+Axiom le_trans_assoc : forall {n m p q} (Hnm : n <= m) (Hmp : m <= p) (Hpq : p <= q),
+  Hnm ↕ (Hmp ↕ Hpq) = (Hnm ↕ Hmp) ↕ Hpq.
 
-Goal forall n m p q (Hnm:less n m) (Hmp:less m p) (Hpq:less p q),
-trans Hnm (trans Hmp Hpq) = trans (trans Hnm Hmp) Hpq.
+End Le.
+
+Module LeYoneda <: Le.
+
+Definition le n m := forall p, p <= n -> p <= m.
+Infix "<=" := le : nat_scope.
+
+Definition le_trans {n m p} (Hnm : n <= m) (Hmp : m <= p) : n <= p :=
+  fun q (Hqn : Peano.le q n) => Hmp _ (Hnm _ Hqn).
+
+Infix "↕" := le_trans (at level 30).
+
+Theorem le_trans_assoc {n m p q} (Hnm : n <= m) (Hmp : m <= p) (Hpq : p <= q) :
+  Hnm ↕ (Hmp ↕ Hpq) = (Hnm ↕ Hmp) ↕ Hpq.
+Proof.
 reflexivity.
 Qed.
 
-Infix "<=" := less.
+End LeYoneda.
 
-Axiom le_S : forall {n m : nat}, n <= m -> n <= S m.
+Module LeSPropInd <: Le.
 
-(* Constructor *)
-Notation "↑ h" := (le_S h) (at level 40).
+Inductive le' (n:nat) : nat -> SProp :=
+  | le_refl : n <= n
+  | le_S_up : forall {m:nat}, n <= m -> n <= S m
+  where "n <= m" := (le' n m) : nat_scope.
+
+Definition le := le'.
+
+Arguments le_S_up {n m}.
+
+Notation "↑ h" := (le_S_up h) (at level 40).
+
+(* No loss of information: primitive *)
+Theorem le_trans {p q n} : p <= q -> q <= n -> p <= n.
+  intros G H.
+  induction H as [|r].
+  - exact G.
+  - apply le_S_up; exact IHle'.
+Defined.
+
+Infix "↕" := le_trans (at level 30).
 
 (* Re-prove le_S_n *)
+
 Theorem le_adjust {p n} : S p <= S n -> p <= n.
   intros G.
   change n with (pred (S n)).
   induction G.
-  - apply le_n.
+  - apply le_refl.
   - destruct m.
     * assumption.
     * apply (↑ IHG).
 Defined.
 
-(* No loss of information: primitive *)
-Theorem trans {p q n} : p <= q -> q <= n -> p <= n.
-  intros G H.
-  induction H as [|r].
-  - exact G.
-  - apply le_S; exact IHle.
-Defined.
+Definition le_S_down {p n} (Hp : S p <= n) : p <= n := le_adjust (↑ Hp).
 
-Infix "↕" := trans (at level 30).
+Notation "⇓ p" := (le_S_down p) (at level 40).
 
-Definition adjust_weaken {p n} (Hp : S p <= n) : p <= n := le_adjust (↑ Hp).
+End LeSPropInd.
 
-Notation "⇓ p" := (adjust_weaken p) (at level 40).
+
+Module LeSPropRec <: Le.
+
+Inductive sFalse : SProp :=.
+Inductive sTrue : SProp := sI.
+
+Fixpoint le m n : SProp :=
+  match m with
+  | 0 => sTrue
+  | S m =>
+    match n with
+    | 0 => sFalse
+    | S n => le m n
+    end
+  end.
+
+Definition le0 n : le 0 n := sI.
+Definition leS m n l : le m n := l.
+
+Fixpoint le_rect
+  (P : forall m n : nat, (le m n) -> Type)
+  (f0 : forall n : nat, P 0 n (le0 n))
+  (fS : forall (m n : nat) (l : le m n),
+           (P m n l) -> P (S m) (S n) (leS m n l))
+  (m n : nat) : forall (l : le m n), P m n l :=
+  match m with
+  | 0 => fun _ => f0 n
+  | S m =>
+    match n with
+    | 0 => sFalse_rect _
+    | S n => fun l => fS m n l (le_rect P f0 fS m n l)
+    end
+  end.
+
+End LeSPropRec.
+
+Section Cubical.
+Universe l'.
+Universe l.
 
 Inductive side := L | R.
 
@@ -68,7 +138,7 @@ Record Cubical {n : nat} :=
   sublayer {n' p q} {Hn' : S n' <= n} {Hp : p <= q} (Hq : q <= n')
     (ε : side) {D : csp Hn'} {d : box (↑ (Hp ↕ Hq)) D} :
     layer (rew uniq in d) -> layer (Hp := Hp ↕ Hq)
-    (subbox Hq ε d) ;
+    (rew uniq in subbox Hq ε (rew uniq in d)) ;
   subcube {n' p q} {Hn' : S n' <= n} {Hp : p <= q}
     (Hq : q <= n') (ε : side) {D : csp Hn'}
     {E : box (le_n (S n')) D -> Type@{l}}
@@ -84,7 +154,7 @@ Record Cubical {n : nat} :=
   cohlayer {n' p q r} {Hn' : S (S n') <= n} {Hp : S p <= r}
     {Hr : r <= q} {Hq : q <= n'} (ε : side) (ε' : side)
     {D : csp Hn'} (d : box (Hp ↕ (Hr ↕ ↑ ↑ Hq)) D)
-    (b : layer d) : rew (cohbox d) in
+    (b : layer (rew uniq in d)) : rew (cohbox d) in
     (sublayer (Hp := Hp ↕ Hr) Hq ε
     (rew uniq in sublayer (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
     sublayer (Hp := Hp) (Hr ↕ Hq) ε'
