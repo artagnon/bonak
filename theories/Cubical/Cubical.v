@@ -17,11 +17,11 @@ Record Cubical {n : nat} :=
   hd {n'} {Hn' : S n' <= n} : csp Hn' -> csp (⇓ Hn') ;
   box {n' p} {Hn' : n' <= n} (Hp : p <= n') : csp Hn' -> Type@{l} ;
   tl {n'} {Hn' : S n' <= n} (D : csp Hn') :
-    box (le_n n') (hd D) -> Type@{l} ;
+    box (le_refl n') (hd D) -> Type@{l} ;
   layer {n' p} {Hn' : n' <= n} {Hp : p <= n'} {D : csp Hn'} :
     box Hp D -> Type@{l} ;
   cube {n' p} {Hn' : n' <= n} {Hp : p <= n'} {D : csp Hn'} :
-    (box (le_n n') D -> Type@{l}) -> box Hp D -> Type@{l} ;
+    (box (le_refl n') D -> Type@{l}) -> box Hp D -> Type@{l} ;
   subbox {n' p q} {Hn' : S n' <= n} {Hp : p <= q} (Hq : q <= n')
     (ε : side) {D : csp Hn'} :
     box (Hp ↕ ↑ Hq) D -> box (Hp ↕ Hq) (hd D) ;
@@ -31,7 +31,7 @@ Record Cubical {n : nat} :=
     (rew uniq in subbox Hq ε (rew uniq in d)) ;
   subcube {n' p q} {Hn' : S n' <= n} {Hp : p <= q}
     (Hq : q <= n') (ε : side) {D : csp Hn'}
-    {E : box (le_n (S n')) D -> Type@{l}}
+    {E : box (le_refl (S n')) D -> Type@{l}}
     {d : box (Hp ↕ ↑ Hq) D} (b : cube E d) :
     cube (tl D) (subbox Hq ε d);
   cohbox {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
@@ -52,7 +52,7 @@ Record Cubical {n : nat} :=
   cohcube {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
     {Hr : r <= q} {Hq : q <= n'}
     (ε : side) (ε' : side) {D : csp Hn'}
-    (E : box (le_n (S (S n'))) D -> Type@{l})
+    (E : box (le_refl (S (S n'))) D -> Type@{l})
     (d : box (Hp ↕ (Hr ↕ ↑ ↑ Hq)) D) (b : cube E d) :
     rew (cohbox d) in (subcube (Hp := Hp ↕ Hr) Hq ε
     (subcube (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
@@ -84,10 +84,10 @@ match n with
     | inr Hn' => cn.(csp) Hn'
     end in
     let hd {n'} (Hn':S n' <= S n) := match le_dec Hn' as x return match x return Type with
-    | inl _ => { D : cn.(csp) (le_n n) & cn.(box) (le_n n) D -> Type@{l} }
+    | inl _ => { D : cn.(csp) (le_refl n) & cn.(box) (le_refl n) D -> Type@{l} }
     | inr Hn' => cn.(csp) Hn'
     end -> (*match x return Type with
-    | inl _ => cn.(csp) (le_n n)
+    | inl _ => cn.(csp) (le_refl n)
     | inr Hn' => *)cn.(csp) _
     (*end *)with
     | inl _ => fun D => D.1
@@ -96,7 +96,7 @@ match n with
     {| csp n' Hn' := cspn Hn';
     hd n' Hn' := hd Hn';
     tl {n'} Hn' := match Hn' with
-    | le_n => fun D => D.2
+    | le_refl => fun D => D.2
     | le_S n' Hn' => fun D => cn.(tl) Hn'
     end;
     layer n' p Hn' Hp D d := (cn.(cube) (tl D)
