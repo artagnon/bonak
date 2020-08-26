@@ -61,12 +61,14 @@ Record Cubical {n : nat} :=
 }.
 
 Axiom le_dec : forall {n m}, n <= S m -> {n = S m} + {n <= m}.
+Notation "l '.1'" := (projT1 l) (at level 40).
+Notation "l '.2'" := (projT2 l) (at level 40).
 
 Fixpoint cubical {n : nat} : Cubical :=
 match n with
-  | O => {| csp _ _ := Unit;
+  | O => {| csp _ _ := tt;
     hd _ Hn' _ := ltac:(inversion Hn');
-    box _ _ _ _ _ := Unit;
+    box _ _ _ _ _ := tt;
     tl _ Hn' _ _ := ltac:(inversion Hn');
     layer _ _ Hn' Hp _ _ := ltac:(pose (l := Hp ↕ Hn'); inversion l);
     cube _ _ _ _ _ E d := E d;
@@ -85,10 +87,8 @@ match n with
     let hd {n'} (Hn':S n' <= S n) := match le_dec Hn' as x return match x return Type with
     | inl _ => { D : cn.(csp) (le_refl n) & cn.(box) (le_refl n) D -> Type@{l} }
     | inr Hn' => cn.(csp) Hn'
-    end -> (*match x return Type with
-    | inl _ => cn.(csp) (le_refl n)
-    | inr Hn' => *)cn.(csp) _
-    (*end *)with
+    end -> cn.(csp) _
+    with
     | inl _ => fun D => D.1
     | inr Hn' => fun D => cn.(hd) D
     end in
