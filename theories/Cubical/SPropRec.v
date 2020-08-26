@@ -1,3 +1,5 @@
+Require Import Interface.
+
 Module LeSPropRec <: Le.
 
 Inductive sFalse : SProp :=.
@@ -32,4 +34,3 @@ Fixpoint le_rect
   end.
 
 End LeSPropRec.
-

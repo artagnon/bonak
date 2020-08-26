@@ -1,5 +1,4 @@
 From Coq Require Import Arith.
-Import Logic.EqNotations.
 
 Module Type Le.
 

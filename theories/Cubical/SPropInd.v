@@ -1,8 +1,10 @@
+Require Import Interface.
+
 Module LeSPropInd <: Le.
 
-Inductive le' (n:nat) : nat -> SProp :=
+Inductive le' (n : nat) : nat -> SProp :=
   | le_refl : n <= n
-  | le_S_up : forall {m:nat}, n <= m -> n <= S m
+  | le_S_up : forall {m : nat}, n <= m -> n <= S m
   where "n <= m" := (le' n m) : nat_scope.
 
 Definition le := le'.
@@ -11,7 +13,6 @@ Arguments le_S_up {n m}.
 
 Notation "↑ h" := (le_S_up h) (at level 40).
 
-(* No loss of information: primitive *)
 Theorem le_trans {p q n} : p <= q -> q <= n -> p <= n.
   intros G H.
   induction H as [|r].
@@ -20,8 +21,6 @@ Theorem le_trans {p q n} : p <= q -> q <= n -> p <= n.
 Defined.
 
 Infix "↕" := le_trans (at level 30).
-
-(* Re-prove le_S_n *)
 
 Theorem le_adjust {p n} : S p <= S n -> p <= n.
   intros G.
