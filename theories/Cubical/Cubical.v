@@ -60,8 +60,7 @@ Record Cubical {n : nat} :=
     (subcube (Hp := Hp ↕ Hr) (↑ Hq) ε b))
 }.
 
-Inductive mysum (A:Type) (B:SProp) := inl : A -> mysum A B | inr : B -> mysum A B.
-Axiom le_dec : forall {n m}, n <= S m -> mysum (n = S m) (n <= m).
+Axiom le_dec : forall {n m}, n <= S m -> {n = S m} + {n <= m}.
 
 Fixpoint cubical {n : nat} : Cubical :=
 match n with
