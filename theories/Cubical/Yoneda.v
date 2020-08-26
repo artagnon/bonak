@@ -6,22 +6,21 @@ Definition le n m := forall p, p <= n -> p <= m.
 Infix "<=" := le : nat_scope.
 
 Definition le_refl {n} : n <= n :=
-  identity.
-Defined.
+  fun _ => id.
 
 Definition le_trans {n m p} (Hnm : n <= m) (Hmp : m <= p) : n <= p :=
   fun q (Hqn : Peano.le q n) => Hmp _ (Hnm _ Hqn).
 
 Infix "↕" := le_trans (at level 30).
 
-Definition le_S_up : forall {n m} (Hnm : n <= m) : n <= S m :=
-  admit.
+Definition le_S_up {n m} (Hnm : n <= m) : n <= S m :=
+  fun Hnm => Hnm.
 Defined.
 
 Notation "↑ h" := (le_S_up h) (at level 40).
 
-Definition le_S_down : forall {n m} (Hnm : S n <= m) : n <= m :=
-  admit.
+Definition le_S_down {n m} (Hnm : S n <= m) : n <= m :=
+  fun Hnm => Hnm.
 Defined.
 
 Notation "⇓ p" := (le_S_down p) (at level 40).
