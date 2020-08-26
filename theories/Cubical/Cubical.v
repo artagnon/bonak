@@ -9,8 +9,6 @@ Universe l.
 
 Inductive side := L | R.
 
-Notation "'uniq'" := (le_unique _ _ _ _) (at level 80).
-
 Record Cubical {n : nat} :=
 {
   csp {n'} (Hn' : n' <= n) : Type@{l'} ;
@@ -84,7 +82,8 @@ match n with
     | right Hn' => cn.(csp) Hn'
     end in
     let hd {n'} (Hn' : S n' <= S n) := match le_dec Hn' as x return match x with
-    | left _ => { D : cn.(csp) (le_refl n) & cn.(box) (le_refl n) D -> Type@{l} }
+    | left _ => { D : cn.(csp) (le_refl n) &
+      cn.(box) (le_refl n) D -> Type@{l} }
     | right Hn' => cn.(csp) Hn'
     end -> cn.(csp) _
     with
