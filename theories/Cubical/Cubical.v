@@ -62,7 +62,7 @@ Notation "l '.1'" := (projT1 l) (at level 40).
 Notation "l '.2'" := (projT2 l) (at level 40).
 
 Fixpoint cubical {n : nat} : Cubical :=
-match n with
+  match n with
   | O => {| csp _ _ := unit;
     hd _ Hn' _ := ltac:(apply (le_discr Hn'));
     box _ _ _ _ _ := unit;
@@ -78,27 +78,26 @@ match n with
     |}
   | S n => let cn := cubical (n := n) in
   let cspn {n'} (Hn' : n' <= S n) := match le_dec Hn' with
-    | left _ => { D : cn.(csp) _ & box cn Hn' D -> Type@{l} }
-    | right Hn' => cn.(csp) Hn'
-    end in
-    let hd {n'} (Hn' : S n' <= S n) := match le_dec Hn' as x return match x with
-    | left _ => { D : cn.(csp) (le_refl n) &
-      cn.(box) (le_refl n) D -> Type@{l} }
-    | right Hn' => cn.(csp) Hn'
-    end -> cn.(csp) _
-    with
-    | left _ => fun D => D.1
-    | right Hn' => fun D => cn.(hd) D
-    end in
-    {| csp n' Hn' := cspn Hn';
-    hd n' Hn' := hd Hn';
-    tl {n'} Hn' := match le_dec Hn' with
-    | left _ => fun D => D.2
-    | right Hn' => fun D => cn.(tl) Hn'
-    end;
-    layer n' p Hn' Hp D d := (cn.(cube) (tl D)
-    (cn.(subbox) L Hp d) * cube cn (cn.(tl) D) (cn.(subbox) R Hp d))%type
-    |}
+  | left _ => { D : cn.(csp) _ & box cn Hn' D -> Type@{l} }
+  | right Hn' => cn.(csp) Hn'
+  end in
+  let hd {n'} (Hn' : S n' <= S n) := match le_dec Hn' as x return match x with
+  | left _ => { D : cn.(csp) (le_refl n) &
+    cn.(box) (le_refl n) D -> Type@{l} }
+  | right Hn' => cn.(csp) Hn'
+  end -> cn.(csp) _ with
+  | left _ => fun D => D.1
+  | right Hn' => fun D => cn.(hd) D
+  end in
+  {| csp n' Hn' := cspn Hn';
+  hd n' Hn' := hd Hn';
+  tl {n'} Hn' := match le_dec Hn' with
+  | left _ => fun D => D.2
+  | right Hn' => fun D => cn.(tl) Hn'
+  end;
+  layer n' p Hn' Hp D d := (cn.(cube) (tl D)
+  (cn.(subbox) L Hp d) * cube cn (cn.(tl) D) (cn.(subbox) R Hp d))%type
+  |}
 end.
 
 End Section Cubical.
