@@ -79,11 +79,11 @@ match n with
     cohcube _ _ _ _ Hn' _ _ _ _ _ _ _ _ _ := ltac:(inversion Hn');
     |}
   | S n => let cn := cubical (n := n) in
-  let cspn {n'} (Hn':n' <= S n) := match le_dec Hn' return Type with
+  let cspn {n'} (Hn' : n' <= S n) := match le_dec Hn' with
     | inl _ => { D : cn.(csp) _ & box cn Hn' D -> Type@{l} }
     | inr Hn' => cn.(csp) Hn'
     end in
-    let hd {n'} (Hn':S n' <= S n) := match le_dec Hn' as x return match x return Type with
+    let hd {n'} (Hn' : S n' <= S n) := match le_dec Hn' as x return match x with
     | inl _ => { D : cn.(csp) (le_refl n) & cn.(box) (le_refl n) D -> Type@{l} }
     | inr Hn' => cn.(csp) Hn'
     end -> cn.(csp) _
