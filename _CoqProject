@@ -1,4 +1,4 @@
--Q theories/Cubical Cubical
+-R theories/Cubical Cubical
 
 theories/Cubical/Interface.v
 theories/Cubical/Yoneda.v
