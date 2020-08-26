@@ -60,7 +60,6 @@ Record Cubical {n : nat} :=
     (subcube (Hp := Hp ↕ Hr) (↑ Hq) ε b))
 }.
 
-Axiom le_dec : forall {n m}, n <= S m -> {n = S m} + {n <= m}.
 Notation "l '.1'" := (projT1 l) (at level 40).
 Notation "l '.2'" := (projT2 l) (at level 40).
 
