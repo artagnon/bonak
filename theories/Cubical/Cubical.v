@@ -68,7 +68,7 @@ match n with
     hd _ Hn' _ := ltac:(inversion Hn');
     box _ _ _ _ _ := Unit;
     tl _ Hn' _ _ := ltac:(inversion Hn');
-    layer _ _ Hn' Hp _ _ := ltac:(inversion (trans Hp Hn'));
+    layer _ _ Hn' Hp _ _ := ltac:(pose (l := Hp ↕ Hn'); inversion l);
     cube _ _ _ _ _ E d := E d;
     subbox _ _ _ _ _ _ _ _ _ := tt;
     sublayer _ _ _ Hn' Hp _ _ _ _  := ltac:(inversion Hn');
