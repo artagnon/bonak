@@ -69,9 +69,9 @@ match n with
     hd _ Hn' _ := ltac:(apply (le_discr Hn'));
     box _ _ _ _ _ := unit;
     tl _ Hn' _ _ := ltac:(apply (le_discr Hn'));
-    layer _ _ Hn' Hp _ _ := ltac:(apply (le_discr (Hp ↕ Hn')));
+    layer _ _ Hn' Hp _ _ := unit;
     cube _ _ _ _ _ E d := E d;
-    subbox _ _ _ _ _ _ _ _ _ := unit;
+    subbox _ _ _ Hn' _ _ _ _ _ := ltac:(apply (le_discr Hn'));
     sublayer _ _ _ Hn' Hp _ _ _ _  := ltac:(apply (le_discr Hn'));
     subcube _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(apply (le_discr Hn'));
     cohbox _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(apply (le_discr Hn'));
