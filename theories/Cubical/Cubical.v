@@ -26,9 +26,9 @@ Record Cubical {n : nat} :=
     (ε : side) {D : csp Hn'} :
     box (Hp ↕ ↑ Hq) D -> box (Hp ↕ Hq) (hd D) ;
   sublayer {n' p q} {Hn' : S n' <= n} {Hp : p <= q} (Hq : q <= n')
-    (ε : side) {D : csp Hn'} {d : box (↑ (Hp ↕ Hq)) D} :
+    (ε : side) {D : csp Hn'} {d : box (Hp ↕ ↑ Hq) D} :
     layer d -> layer (Hp := Hp ↕ Hq)
-    (subbox Hq ε d) ;
+    (subbox (Hp := Hp) Hq ε d) ;
   subcube {n' p q} {Hn' : S n' <= n} {Hp : p <= q}
     (Hq : q <= n') (ε : side) {D : csp Hn'}
     {E : box (le_refl (S n')) D -> Type@{l}}
@@ -38,7 +38,7 @@ Record Cubical {n : nat} :=
     {Hr : r <= q} {Hq : q <= n'} {ε : side} {ε' : side}
     {D : csp Hn'} (d : box (Hp ↕ (Hr ↕ ↑ ↑ Hq)) D) :
     subbox (Hp := Hp ↕ Hr) Hq ε
-    (subbox (Hp := Hp) (↑ (Hr ↕ Hq)) ε' d) =
+    (subbox (Hp := Hp) (Hr ↕ ↑ Hq) ε' d) =
     (subbox (Hp := Hp) (Hr ↕ Hq) ε'
     (subbox (Hp := Hp ↕ Hr) (↑ Hq) ε d));
   cohlayer {n' p q r} {Hn' : S (S n') <= n} {Hp : S p <= r}

@@ -5,7 +5,7 @@ Module LeYoneda <: Le.
 Definition le n m := forall p, p <= n -> p <= m.
 Infix "<=" := le : nat_scope.
 
-Definition le_refl n : n <= n :=
+Definition le_refl {n} : n <= n :=
   fun _ => id.
 
 Definition le_trans {n m p} (Hnm : n <= m) (Hmp : m <= p) : n <= p :=
@@ -16,10 +16,9 @@ Infix "↕" := le_trans (at level 30).
 Theorem le_S_up {n m} (Hnm : n <= m) : n <= S m.
   unfold le.
   intros p Hpn.
-  rewrite Hpn.
-  apply (Peano.le_S n m).
+  apply (Peano.le_S p m).
   apply Hnm.
-  reflexivity.
+  auto.
 Defined.
 
 Notation "↑ h" := (le_S_up h) (at level 40).
@@ -39,5 +38,14 @@ Theorem le_trans_assoc {n m p q} (Hnm : n <= m) (Hmp : m <= p) (Hpq : p <= q) :
 Proof.
 reflexivity.
 Qed.
+
+Theorem le_trans_comm {n m p} (Hnm : n <= m) (Hmp : m <= p) :
+  (Hnm ↕ ↑ Hmp) = ↑ (Hnm ↕ Hmp).
+Proof.
+reflexivity.
+Defined.
+
+Theorem le_dec {n m} : n <= S m -> {n = m} + {n <= S m}.
+
 
 End LeYoneda.
