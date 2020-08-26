@@ -1,3 +1,5 @@
+Require Import Interface.
+
 Module LeYoneda <: Le.
 
 Definition le n m := forall p, p <= n -> p <= m.

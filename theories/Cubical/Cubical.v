@@ -1,5 +1,6 @@
 From Coq Require Import Arith.
 Import Logic.EqNotations.
+Require Import Yoneda.
 
 Section Cubical.
 Universe l'.

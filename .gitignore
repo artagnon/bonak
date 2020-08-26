@@ -1,7 +1,11 @@
 *.vo
+*.vos
+*.vok
 *.glob
 *.aux
 .coqdeps.d
+.Makefile.d
 Makefile.coq*
+Makefile.conf
 TAGS
 .DS_Store
