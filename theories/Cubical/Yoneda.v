@@ -66,4 +66,11 @@ right; apply le_S_n in l. apply (le1 l).
 left; apply e.
 Defined.
 
+Theorem le_discr {n} : S n <= 0 -> forall {A}, A.
+Proof.
+intros H%le2.
+exfalso.
+eapply Nat.nle_succ_0. eauto.
+Defined.
+
 End LeYoneda.
