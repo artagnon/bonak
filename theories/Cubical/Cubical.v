@@ -66,13 +66,13 @@ Notation "l '.2'" := (projT2 l) (at level 40).
 
 Fixpoint cubical {n : nat} : Cubical :=
 match n with
-  | O => {| csp _ _ := tt;
+  | O => {| csp _ _ := unit;
     hd _ Hn' _ := ltac:(inversion Hn');
-    box _ _ _ _ _ := tt;
+    box _ _ _ _ _ := unit;
     tl _ Hn' _ _ := ltac:(inversion Hn');
     layer _ _ Hn' Hp _ _ := ltac:(pose (l := Hp ↕ Hn'); inversion l);
     cube _ _ _ _ _ E d := E d;
-    subbox _ _ _ _ _ _ _ _ _ := tt;
+    subbox _ _ _ _ _ _ _ _ _ := unit;
     sublayer _ _ _ Hn' Hp _ _ _ _  := ltac:(inversion Hn');
     subcube _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(inversion Hn');
     cohbox _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(inversion Hn');
@@ -94,9 +94,9 @@ match n with
     end in
     {| csp n' Hn' := cspn Hn';
     hd n' Hn' := hd Hn';
-    tl {n'} Hn' := match Hn' with
-    | le_refl => fun D => D.2
-    | le_S n' Hn' => fun D => cn.(tl) Hn'
+    tl {n'} Hn' := match le_dec Hn' with
+    | inl _ => fun D => D.2
+    | inr Hn' => fun D => cn.(tl) Hn'
     end;
     layer n' p Hn' Hp D d := (cn.(cube) (tl D)
     (cn.(subbox) L Hp d) * cube cn (cn.(tl) D) (cn.(subbox) R Hp d))%type
