@@ -1,4 +1,5 @@
 Require Import Interface.
+Require Import Arith.
 
 Module LeYoneda <: Le.
 
@@ -45,7 +46,24 @@ Proof.
 reflexivity.
 Defined.
 
-Theorem le_dec {n m} : n <= S m -> {n = m} + {n <= S m}.
-Admitted.
+Theorem le1 {n m} : Peano.le n m -> n <= m.
+Proof.
+intros H p Hp.
+eapply PeanoNat.Nat.le_trans; eassumption.
+Defined.
+
+Theorem le2 {n m} : n <= m -> Peano.le n m.
+Proof.
+intros H; apply H, Peano.le_n.
+Defined.
+
+Theorem le_dec {n m} : n <= S m -> {n = S m} + {n <= m}.
+Proof.
+intros.
+destruct (le_lt_eq_dec n (S m)).
+apply le2, H.
+right; apply le_S_n in l. apply (le1 l).
+left; apply e.
+Defined.
 
 End LeYoneda.
