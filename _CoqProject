@@ -1,5 +1,5 @@
--Q bonak Bonak
+-Q theories/Cubical Cubical
 
-bonak/Category/Cat.v
-bonak/Category/NCat.v
-bonak/HoTT/HoTT.v
+theories/Cubical/Interface.v
+theories/Cubical/Yoneda.v
+theories/Cubical/Cubical.v

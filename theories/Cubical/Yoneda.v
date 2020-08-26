@@ -5,6 +5,10 @@ Module LeYoneda <: Le.
 Definition le n m := forall p, p <= n -> p <= m.
 Infix "<=" := le : nat_scope.
 
+Definition le_refl {n} : n <= n :=
+  identity.
+Defined.
+
 Definition le_trans {n m p} (Hnm : n <= m) (Hmp : m <= p) : n <= p :=
   fun q (Hqn : Peano.le q n) => Hmp _ (Hnm _ Hqn).
 
