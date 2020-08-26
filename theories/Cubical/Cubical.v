@@ -66,17 +66,17 @@ Notation "l '.2'" := (projT2 l) (at level 40).
 Fixpoint cubical {n : nat} : Cubical :=
 match n with
   | O => {| csp _ _ := unit;
-    hd _ Hn' _ := ltac:(inversion Hn');
+    hd _ Hn' _ := ltac:(apply (le_discr Hn'));
     box _ _ _ _ _ := unit;
-    tl _ Hn' _ _ := ltac:(inversion Hn');
-    layer _ _ Hn' Hp _ _ := ltac:(pose (l := Hp ↕ Hn'); inversion l);
+    tl _ Hn' _ _ := ltac:(apply (le_discr Hn'));
+    layer _ _ Hn' Hp _ _ := ltac:(apply (le_discr (Hp ↕ Hn')));
     cube _ _ _ _ _ E d := E d;
     subbox _ _ _ _ _ _ _ _ _ := unit;
-    sublayer _ _ _ Hn' Hp _ _ _ _  := ltac:(inversion Hn');
-    subcube _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(inversion Hn');
-    cohbox _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(inversion Hn');
-    cohlayer _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(inversion Hn');
-    cohcube _ _ _ _ Hn' _ _ _ _ _ _ _ _ _ := ltac:(inversion Hn');
+    sublayer _ _ _ Hn' Hp _ _ _ _  := ltac:(apply (le_discr Hn'));
+    subcube _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(apply (le_discr Hn'));
+    cohbox _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(apply (le_discr Hn'));
+    cohlayer _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(apply (le_discr Hn'));
+    cohcube _ _ _ _ Hn' _ _ _ _ _ _ _ _ _ := ltac:(apply (le_discr Hn'));
     |}
   | S n => let cn := cubical (n := n) in
   let cspn {n'} (Hn' : n' <= S n) := match le_dec Hn' with
