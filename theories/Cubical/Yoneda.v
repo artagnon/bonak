@@ -13,15 +13,22 @@ Definition le_trans {n m p} (Hnm : n <= m) (Hmp : m <= p) : n <= p :=
 
 Infix "↕" := le_trans (at level 30).
 
-Definition le_S_up {n m} (Hnm : n <= m) : n <= S m :=
-  fun Hnm => Hnm.
-Defined.
+Theorem le_S_up {n m} (Hnm : n <= m) : n <= S m.
+  unfold le.
+  intros p Hpn.
+  rewrite Hpn.
+  apply (Peano.le_S n m).
+  admit.
+Admitted.
 
 Notation "↑ h" := (le_S_up h) (at level 40).
 
-Definition le_S_down {n m} (Hnm : S n <= m) : n <= m :=
-  fun Hnm => Hnm.
-Defined.
+Theorem le_S_down {n m} (Hnm : S n <= m) : n <= m.
+  unfold le.
+  intros p Hpn.
+  rewrite Hpn.
+  admit.
+Admitted.
 
 Notation "⇓ p" := (le_S_down p) (at level 40).
 
