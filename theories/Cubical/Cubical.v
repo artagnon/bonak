@@ -82,7 +82,7 @@ Fixpoint cubical {n : nat} : Cubical :=
   | right Hn' => cn.(csp) Hn'
   end in let cspn {n'} (Hn' : n' <= S n) := aux (le_dec Hn') in
   let hd {n'} (Hn' : S n' <= S n) := match le_dec Hn' as x
-  return aux (le_dec Hn') -> cspn _ with
+  return aux x -> cspn _ with
   | left _ => fun D => D.1 (* D.1 : csp (_ : n <= n) *)
   | right Hn' => fun D => cn.(hd) D
   (* D : csp (_ : n <= n); hd : csp (_ : n' <= n) *)
