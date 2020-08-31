@@ -77,15 +77,12 @@ Fixpoint cubical {n : nat} : Cubical :=
     cohcube _ _ _ _ Hn' _ _ _ _ _ _ _ _ _ := ltac:(apply (le_discr Hn'));
     |}
   | S n => let cn := cubical (n := n) in
-  let cspn_aux {n'} (H : {n' = S n} + {n' <= n}) := match H with
+  let aux {n'} (H : {n' = S n} + {n' <= n}) := match H with
   | left _ => { D : cn.(csp) _ & box cn _ D -> Type@{l} }
   | right Hn' => cn.(csp) Hn'
-  end in let cspn {n'} (Hn' : n' <= S n) := cspn_aux (le_dec Hn') in
-  let hd {n'} (Hn' : S n' <= S n) := match le_dec Hn' as x return match x with
-  | left _ => { D : cn.(csp) _ & cn.(box) _ D -> Type@{l} }
-    (* n' <= n where n' = n -> n <= n *)
-  | right Hn' => cn.(csp) Hn' (* Hn' : S n' <= n; ⇓ Hn' : n' <= n *)
-  end -> cspn _ with
+  end in let cspn {n'} (Hn' : n' <= S n) := aux (le_dec Hn') in
+  let hd {n'} (Hn' : S n' <= S n) := match le_dec Hn' as x
+  return aux (le_dec Hn') -> cspn _ with
   | left _ => fun D => D.1 (* D.1 : csp (_ : n <= n) *)
   | right Hn' => fun D => cn.(hd) D
   (* D : csp (_ : n <= n); hd : csp (_ : n' <= n) *)
