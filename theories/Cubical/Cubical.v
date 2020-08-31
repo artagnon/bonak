@@ -85,7 +85,7 @@ Fixpoint cubical {n : nat} : Cubical :=
   | left _ => { D : cn.(csp) _ & cn.(box) _ D -> Type@{l} }
     (* n' <= n where n' = n -> n <= n *)
   | right Hn' => cn.(csp) Hn' (* Hn' : S n' <= n; ⇓ Hn' : n' <= n *)
-  end -> cn.(csp) _ with
+  end -> cspn Hn' with
   | left _ => fun D => D.1 (* D.1 : csp (_ : n <= n) *)
   | right Hn' => fun D => cn.(hd) D
   (* D : csp (_ : n <= n); hd : csp (_ : n' <= n) *)
