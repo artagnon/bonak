@@ -81,19 +81,20 @@ Fixpoint cubical {n : nat} : Cubical :=
   | left _ => { D : cn.(csp) _ & box cn _ D -> Type@{l} }
   | right Hn' => cn.(csp) Hn'
   end in
-  {| csp n' Hn' := aux (le_dec Hn');
-  hd n' Hn' := match le_dec Hn' as x return aux x -> csp _ _ with
-  (* D : csp (_ : n <= n); hd : csp (_ : n' <= n) *)
-  | left _ => fun D => D.1 (* D.1 : csp (_ : n <= n) *)
-  | right Hn' => fun D => cn.(hd) D
-  end;
-  tl {n'} Hn' := match le_dec Hn' as x return aux x -> csp _ _ with
-  | left _ => fun D => D.2
-  | right Hn' => fun D => cn.(tl) Hn'
-  end;
-  layer n' p Hn' Hp D d := (cn.(cube) (tl D)
-  (cn.(subbox) L Hp d) * cube cn (cn.(tl) D) (cn.(subbox) R Hp d))%type
+  {|
+    csp n' Hn' := aux (le_dec Hn');
+    hd n' Hn' := match le_dec Hn' as x return aux x -> csp _ _ with
+    (* D : csp (_ : n <= n); hd : csp (_ : n' <= n) *)
+    | left _ => fun D => D.1 (* D.1 : csp (_ : n <= n) *)
+    | right Hn' => fun D => cn.(hd) D
+    end;
+    tl {n'} Hn' := match le_dec Hn' as x return aux x -> box cn _ _ with
+    | left _ => fun D => D.2
+    | right Hn' => fun D => cn.(tl) D
+    end;
+    layer n' p Hn' Hp D d := (cn.(cube) (tl D)
+      (cn.(subbox) L Hp d) * cube cn (cn.(tl) D) (cn.(subbox) R Hp d))%type
   |}
 end.
 
-End Section Cubical.
+End Cubical.
