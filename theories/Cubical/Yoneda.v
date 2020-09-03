@@ -73,8 +73,8 @@ exfalso.
 eapply Nat.nle_succ_0. eauto.
 Defined.
 
-Theorem le_dec_prop : forall m n (P:S n <= S m) Q, ((le_dec (⇓ P)) : {n = S m} + {n <= m}) = right (Q : n <= m).
-intros.
+Theorem le_dec_prop : forall m n (H : S m <= S n) G, le_dec (⇓ H) = right (G : m <= n).
+  intros.
 Admitted.
 
 End LeYoneda.
