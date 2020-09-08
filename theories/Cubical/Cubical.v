@@ -82,16 +82,16 @@ Fixpoint cubical {n : nat} : Cubical :=
   | right _ => cn.(csp) _
   end in
   {|
-    csp n' Hn' := aux (le_dec Hn');
-    hd n' Hn' := match le_dec Hn' as x return aux x -> csp _ _ with
-    | left _ => fun D => D.1 (* D.1 : csp (_ : n <= n) *)
-    | right _ => fun D => cn.(hd) D (* hd D : csp (_ : n' <= n) *)
+    csp _ Hn' := aux (le_dec Hn');
+    hd _ Hn' := match le_dec Hn' as x return aux x -> cn.(csp) _ with
+    | left _ => fun D => D.1
+    | right _ => fun D => cn.(hd) D
     end;
     tl {n'} Hn' := match le_dec Hn' as x return aux x -> cn.(box) _ _ with
     | left _ => fun D => D.2
     | right _ => fun D => cn.(tl) D
     end;
-    layer n' p Hn' Hp D d := (cn.(cube) (tl D)
+    layer _ p Hn' Hp D d := (cn.(cube) (tl D)
       (cn.(subbox) L Hp d) * cube cn (cn.(tl) D) (cn.(subbox) R Hp d))%type
   |}
 end.
