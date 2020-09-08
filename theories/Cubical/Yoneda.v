@@ -66,6 +66,15 @@ right; apply le_S_n in l. apply (le1 l).
 left; apply e.
 Defined.
 
+Theorem le_dec_inv {n m} : {n = S m} + {n <= m} -> n <= S m.
+Proof.
+  intros.
+Admitted.
+
+Theorem le_dec_id {n m H} : @le_dec_inv n m (@le_dec n m H) = H.
+Proof.
+Admitted.
+
 Theorem le_discr {n} : S n <= 0 -> forall {A}, A.
 Proof.
 intros H%le2.
