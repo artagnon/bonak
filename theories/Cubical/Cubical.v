@@ -85,16 +85,25 @@ Fixpoint cubical {n : nat} : Cubical :=
   end in
   let hdn {n} Hn' := match n with
   | O => cn.(hd) _
-  | S O => cn.(hd) _ (* unfortunate special-case *)
+  | S O => cn.(hd) _
   | _ =>
     match le_dec Hn' return cspn Hn' -> cspn (⇓ Hn') with
     | left _ => fun D => D.1
     | right _ => fun D => cn.(hd) D
     end
   end in
-  let boxn {n p} Hp := match le_dec Hp with
+  let boxn {n p Hn'} Hp := match le_dec Hp return cspn Hn' -> Type@{l} with
   | left _ => fun D => cn.(box) _ D
   | right _ => fun D => cn.(box) _ D
+  end in
+  let tln {n} Hn' := match n with
+  | O => cn.(tl) _
+  | S O => cn.(tl) _
+  | _ =>
+    match le_dec Hn' return boxn _ -> Type@{l} with
+    | left _ => fun D => D.2
+    | right _ => fun D => cn.(tl) D
+    end
   end in
 
   (* Build the nth record *)
@@ -102,10 +111,7 @@ Fixpoint cubical {n : nat} : Cubical :=
     csp _ Hn' := cspn Hn';
     hd _ Hn' := hdn Hn';
     box _ _ _ Hp := boxn Hp;
-    tl _ Hn' := match le_dec Hn' return boxn _ _ -> Type@{l} with
-    | left _ => fun D => D.2
-    | right _ => fun D => cn.(tl) D
-    end;
+    tl _ Hn' := tln Hn';
   |}
 end.
 
