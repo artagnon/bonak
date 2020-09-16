@@ -96,9 +96,9 @@ Fixpoint cubical {n : nat} : Cubical :=
     end;
     box _ _ Hn' Hp D := boxn Hp D;
     tl _ Hn' := match le_dec Hn' as x return match x with
-    | left _ => { D : cspn _ _ & boxn _ _ D -> Type@{l} }
-    | right _ => cspn _ _
-    end -> boxn _ _ _ with
+    | left _ => { D : cspn _ _ & boxn _ D -> Type@{l} }
+    | right _ => cspn _
+    end -> boxn _ _ with
     | left _ => fun D => D.2
     | right _ => fun D => cn.(tl) D
     end;
