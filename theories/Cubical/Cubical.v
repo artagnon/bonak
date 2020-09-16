@@ -77,22 +77,28 @@ Fixpoint cubical {n : nat} : Cubical :=
     cohcube _ _ _ _ Hn' _ _ _ _ _ _ _ _ _ := ltac:(apply (le_discr Hn'));
     |}
   | S n => let cn := cubical (n := n) in
+  let cspn {_} Hn' := match le_dec Hn' with
+  | left _ => { D : cn.(csp) _ & cn.(box) _ D -> Type@{l} }
+  | right _ => cn.(csp) _
+  end in
+  let boxn Hp D := match le_dec Hp with
+  | left _ => Type@{l}
+  | right _ => Type@{l}
+  end in
   {|
-    csp _ Hn' := match le_dec Hn' with
-    | left _ => { D : cn.(csp) _ & cn.(box) _ D -> Type@{l} }
-    | right _ => cn.(csp) _
-    end;
+    csp _ _ := cspn _;
     hd _ Hn' := match le_dec Hn' as x return match x with
-    | left _ => { D : csp _ _ & cn.(box) _ D -> Type@{l} }
-    | right _ => csp _ _
-    end -> csp _ Hn' with
+    | left _ => { D : cspn _ & boxn _ D -> Type@{l} }
+    | right _ => cspn _
+    end -> cspn _ with
     | left _ => fun D => D.1
     | right _ => fun D => cn.(hd) D
     end;
-    tl {n'} Hn' := match le_dec Hn' as x return match x with
-    | left _ => { D : csp _ _ & box _ _ D -> Type@{l} }
-    | right _ => csp _ _
-    end -> box _ _ _ with
+    box _ _ Hn' Hp D := boxn Hp D;
+    tl _ Hn' := match le_dec Hn' as x return match x with
+    | left _ => { D : cspn _ _ & boxn _ _ D -> Type@{l} }
+    | right _ => cspn _ _
+    end -> boxn _ _ _ with
     | left _ => fun D => D.2
     | right _ => fun D => cn.(tl) D
     end;
