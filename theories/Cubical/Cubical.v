@@ -77,33 +77,43 @@ Fixpoint cubical {n : nat} : Cubical :=
     cohcube _ _ _ _ Hn' _ _ _ _ _ _ _ _ _ := ltac:(apply (le_discr Hn'));
     |}
   | S n => let cn := cubical (n := n) in
-  let cspn {_} Hn' := match le_dec Hn' with
-  | left _ => { D : cn.(csp) _ & cn.(box) _ D -> Type@{l} }
-  | right _ => cn.(csp) _
+
+  (* Factor out the 0th and nth cases for reuse *)
+  let cspn {n} Hn' := match n with
+  | O => cn.(csp) _
+  | S _ =>
+    match le_dec Hn' with
+    | left _ => { D : cn.(csp) _ & cn.(box) _ D -> Type@{l} }
+    | right _ => cn.(csp) _
+    end
   end in
-  let boxn Hp D := match le_dec Hp with
-  | left _ => Type@{l}
-  | right _ => Type@{l}
-  end in
-  {|
-    csp _ _ := cspn _;
-    hd _ Hn' := match le_dec Hn' as x return match x with
-    | left _ => { D : cspn _ & boxn _ D -> Type@{l} }
-    | right _ => cspn _
-    end -> cspn _ with
+  let hdn {n} Hn' := match n with
+  | O => cn.(hd) _
+  | S O => cn.(hd) _ (* unfortunate special-case *)
+  | _ =>
+    match le_dec Hn' return cspn Hn' -> cspn (⇓ Hn') with
     | left _ => fun D => D.1
     | right _ => fun D => cn.(hd) D
-    end;
+    end
+  end in
+  let boxn {n} Hp := match n with
+  | O => cn.(box) _ _
+  | S _ =>
+    match le_dec Hp with
+    | left _ => fun D => Type@{l}
+    | right _ => fun D => cn.(box) _ _
+    end
+  end in
+
+  (* Build the nth record *)
+  {|
+    csp _ _ := cspn _;
+    hd _ Hn' := hdn Hn';
     box _ _ Hn' Hp D := boxn Hp D;
-    tl _ Hn' := match le_dec Hn' as x return match x with
-    | left _ => { D : cspn _ _ & boxn _ D -> Type@{l} }
-    | right _ => cspn _
-    end -> boxn _ _ with
+    tl _ Hn' := match le_dec Hn' return boxn _ _ -> boxn _ _ with
     | left _ => fun D => D.2
     | right _ => fun D => cn.(tl) D
     end;
-    layer _ p Hn' Hp D d := (cn.(cube) (tl D)
-      (cn.(subbox) L Hp d) * cube cn (cn.(tl) D) (cn.(subbox) R Hp d))%type
   |}
 end.
 
