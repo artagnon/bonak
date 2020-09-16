@@ -76,24 +76,24 @@ Fixpoint cubical {n : nat} : Cubical :=
     cohlayer _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(apply (le_discr Hn'));
     cohcube _ _ _ _ Hn' _ _ _ _ _ _ _ _ _ := ltac:(apply (le_discr Hn'));
     |}
-  | S n => let cn := cubical (n := n) : Cubical (n:=n) in
+  | S n => let cn := cubical (n := n) in
   let aux {n'} (H : {n' = S n} + {n' <= n}) := match H with
   | left _ => { D : cn.(csp) _ & cn.(box) _ D -> Type@{l} }
   | right _ => cn.(csp) _
   end in
   {|
-    csp _ Hn' := aux (le_dec Hn');
-    hd n1 Hn' := match le_dec Hn' as x return aux x ->
-    aux (le_dec (⇓ (le_dec_inv x))) with
-    | left Heq => fun D : { D : cn.(csp) (le_refl n) & cn.(box) _ D -> Type@{l} } => D.1 : aux (le_dec (⇓ Hn'))
-    | right Hn' => fun D : cn.(csp) Hn' => cn.(hd) D : cn.(csp) (⇓ Hn')
+    csp _ Hn' := aux (le_dec _);
+    hd _ Hn' := match le_dec Hn' as x return aux x ->
+    cn.(csp) (⇓ (le_dec_inv x)) with
+    | left _ => fun D => D.1
+    | right _ => fun D => cn.(hd) D
     end;
- (*   tl {n'} Hn' := match le_dec Hn' as x return aux x -> cn.(box) _ _ with
+    tl {n'} Hn' := match le_dec Hn' as x return aux x -> cn.(box) _ _ with
     | left _ => fun D => D.2
     | right _ => fun D => cn.(tl) D
     end;
     layer _ p Hn' Hp D d := (cn.(cube) (tl D)
-      (cn.(subbox) L Hp d) * cube cn (cn.(tl) D) (cn.(subbox) R Hp d))%type*)
+      (cn.(subbox) L Hp d) * cube cn (cn.(tl) D) (cn.(subbox) R Hp d))%type
   |}
 end.
 
