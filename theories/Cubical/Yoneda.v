@@ -37,7 +37,7 @@ Notation "⇓ p" := (le_S_down p) (at level 40).
 Theorem le_trans_assoc {n m p q} (Hnm : n <= m) (Hmp : m <= p) (Hpq : p <= q) :
   Hnm ↕ (Hmp ↕ Hpq) = (Hnm ↕ Hmp) ↕ Hpq.
 Proof.
-reflexivity.
+  reflexivity.
 Qed.
 
 Theorem le_trans_comm {n m p} (Hnm : n <= m) (Hmp : m <= p) :
@@ -48,38 +48,35 @@ Defined.
 
 Theorem le1 {n m} : Peano.le n m -> n <= m.
 Proof.
-intros H p Hp.
-eapply PeanoNat.Nat.le_trans; eassumption.
+  intros H p Hp.
+  eapply PeanoNat.Nat.le_trans; eassumption.
 Defined.
 
 Theorem le2 {n m} : n <= m -> Peano.le n m.
 Proof.
-intros H; apply H, Peano.le_n.
+  intros H; apply H, Peano.le_n.
 Defined.
 
 Theorem le_dec {n m} : n <= S m -> {n = S m} + {n <= m}.
 Proof.
-intros.
-destruct (le_lt_eq_dec n (S m)).
-apply le2, H.
-right; apply le_S_n in l. apply (le1 l).
-left; apply e.
+  intros.
+  destruct (le_lt_eq_dec n (S m)).
+  apply le2, H.
+  right; apply le_S_n in l. apply (le1 l).
+  left; apply e.
 Defined.
 
 Theorem le_dec_inv {n m} : {n = S m} + {n <= m} -> n <= S m.
-Proof.
-  intros.
 Admitted.
 
 Theorem le_dec_id {n m H} : @le_dec_inv n m (@le_dec n m H) = H.
-Proof.
 Admitted.
 
 Theorem le_discr {n} : S n <= 0 -> forall {A}, A.
 Proof.
-intros H%le2.
-exfalso.
-eapply Nat.nle_succ_0. eauto.
+  intros H%le2.
+  exfalso.
+  eapply Nat.nle_succ_0. eauto.
 Defined.
 
 End LeYoneda.
