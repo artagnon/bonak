@@ -72,7 +72,7 @@ Admitted.
 Theorem scratch {p n} : p = S n -> p <= n.
 Admitted.
 
-Theorem lower_left {m n} : m <= n -> pred m <= n.
+Theorem lower_left {m n} : m <= S n -> m <= n.
 Admitted.
 
 Theorem lower_both {m n} : S m <= S n -> m <= n.
@@ -82,6 +82,9 @@ Theorem le_dec_inv {n m} : {n = S m} + {n <= m} -> n <= S m.
 Admitted.
 
 Theorem le_dec_id {n m H} : @le_dec_inv n m (@le_dec n m H) = H.
+Admitted.
+
+Theorem propagate_eq {m n} : m <= S n -> m = S n -> n <= n.
 Admitted.
 
 Theorem le_discr {n} : S n <= 0 -> forall {A}, A.
