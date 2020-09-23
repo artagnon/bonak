@@ -79,16 +79,19 @@ Fixpoint cubical {n : nat} : Cubical :=
   | S n => let cn := cubical (n := n) in
 
   (* Factor out the 0th and nth cases for reuse *)
-  let cspn {_} {p q} (Hn' : p <= S q) := match le_dec Hn' with
-  | left _ => { D : cn.(csp) _ & cn.(box) _ D -> Type@{l} }
-  | right _ => cn.(csp) _
+  let cspn {p} (Hn' : p <= S n) := match le_dec Hn' with
+  | left _ (* p = S n *) => let Hn'' := match p with
+    | S _ => scratch Hn'
+    | _ => Hn' end in
+      { D : cn.(csp) Hn'' & cn.(box) _ D -> Type@{l} }
+  | right _ (* p <= n *) => cn.(csp) _
   end in
-  let hdn {n'} Hn' := match (S n) with
+  let hdn {n'} (Hn' : S n' <= S n) := match (S n) with
   | S O => cn.(hd) _
   | _ =>
-    match le_dec Hn' return cspn Hn' -> cspn (⇓ Hn') with
-    | left _ => fun D => D.1
-    | right _ => fun D => cn.(hd) D
+    match le_dec Hn' return cspn Hn' -> cspn (⇓ Hn') (* n' <= S n *) with
+    | left _ (* S n' = S n *) => fun D => D.1 (* n' = S n *)
+    | right _ (* S n' <= n *) => fun D => cn.(hd) D (* n' <= n *)
     end
   end in
   let boxn {_ _ Hn'} Hp := match le_dec Hp return cspn Hn' -> Type@{l} with
