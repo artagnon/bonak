@@ -80,10 +80,8 @@ Fixpoint cubical {n : nat} : Cubical :=
 
   (* Factor out the 0th and nth cases for reuse *)
   let cspn {p} (Hn' : p <= S n) := match le_dec Hn' with
-  | left _ (* p = S n *) => let Hn'' := match p with
-    | S _ => fun Hn' => scratch Hn'
-    | O => fun Hn' => Hn' end in
-      { D : cn.(csp) Hn'' & cn.(box) Hn'' D -> Type@{l} }
+  | left Heq (* p = S n *) => let Heq' := scratch Heq in
+    { D : cn.(csp) Heq & cn.(box) Heq D -> Type@{l} }
   | right _ (* p <= n *) => cn.(csp) _
   end in
   let hdn {n'} (Hn' : S n' <= S n) := match (S n) with
