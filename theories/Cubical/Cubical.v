@@ -83,8 +83,7 @@ Fixpoint cubical {n : nat} : Cubical :=
   | left _ => { D : cn.(csp) _ & cn.(box) _ D -> Type@{l} }
   | right _ => cn.(csp) _
   end in
-  let hdn {n} Hn' := match n with
-  | O => cn.(hd) _ (* unreachable *)
+  let hdn {n'} Hn' := match (S n) with
   | S O => cn.(hd) _
   | _ =>
     match le_dec Hn' return cspn Hn' -> cspn (⇓ Hn') with
@@ -96,8 +95,7 @@ Fixpoint cubical {n : nat} : Cubical :=
   | left _ => fun D => cn.(box) _ D
   | right _ => fun D => cn.(box) _ D
   end in
-  let tln {n} Hn' := match n with
-  | O => cn.(tl) _ (* unreachable *)
+  let tln {n'} Hn' := match (S n) with
   | S O => cn.(tl) _
   | _ =>
     match le_dec Hn' return boxn _ -> Type@{l} with
