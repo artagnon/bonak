@@ -66,7 +66,16 @@ Proof.
   left; apply e.
 Defined.
 
+Theorem le_dec' {n m} : n <= m -> {n = m} + {n <= pred m} + {m = O}.
+Admitted.
+
 Theorem scratch {p n} : p = S n -> p <= n.
+Admitted.
+
+Theorem lower_left {m n} : m <= n -> pred m <= n.
+Admitted.
+
+Theorem lower_both {m n} : S m <= S n -> m <= n.
 Admitted.
 
 Theorem le_dec_inv {n m} : {n = S m} + {n <= m} -> n <= S m.

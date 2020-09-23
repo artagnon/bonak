@@ -79,20 +79,26 @@ Fixpoint cubical {n : nat} : Cubical :=
   | S n => let cn := cubical (n := n) in
 
   (* Factor out the 0th and nth cases for reuse *)
-  let cspn {n'} (Hn' : n' <= S n) := match le_dec Hn' with
-  | left Heq (* n' = S n *) =>
-    { D : cn.(csp) (scratch Heq) (* n' <= n *) & cn.(box) _ D -> Type@{l} }
-  | right _ (* n' <= n *) => cn.(csp) _
-  end in
-  let hdn {n'} (Hn' : S n' <= S n) := match (S n) with
-  | S O => cn.(hd) _ (* absurd *)
-  | _ =>
-    match le_dec Hn' return cspn Hn' (* S n' <= S n *) ->
-                            cspn (⇓ Hn') (* n' <= S n *) with
-    | left _ (* S n' = S n *) => fun D => D.1 (* n' = S n *)
-    | right _ (* S n' <= n *) => fun D => cn.(hd) D (* n' <= n *)
+  let cspn {n'} (Hn' : n' <= n) :=
+  match le_dec' Hn' with
+  | inleft Hcmp =>
+    match Hcmp with
+    | left _ (* n' = n *) => { D : cn.(csp) Hn' &
+                                   cn.(box) _ D -> Type@{l} }
+    | right _ (* n' <= pred n *) => cn.(csp) _
     end
+  | inright _ (* n = O *) => cn.(csp) _
   end in
+  let hdn {n'} (Hn' : S n' <= S n) := let Hn' := lower_both Hn' in
+    match le_dec' Hn' return cspn Hn' (* n' <= n *) ->
+                             cspn (lower_left Hn') (* pred n' <= n *) with
+    | inleft Hcmp =>
+      match Hcmp with
+      | left _ (* n' = n *) => fun D => D.1 (* pred n' = n *)
+      | right _ (* n' <= pred n *) => fun D => cn.(hd) D (* n' <= n *)
+      end
+    | inright _ (* n = O *) => cn.(hd) _ (* absurd *)
+    end in
   let boxn {_ _ Hn'} Hp := match le_dec Hp return cspn Hn' -> Type@{l} with
   | left _ => fun D => cn.(box) _ D
   | right _ => fun D => cn.(box) _ D
