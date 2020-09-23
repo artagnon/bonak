@@ -66,7 +66,7 @@ Proof.
   left; apply e.
 Defined.
 
-Theorem scratch {p n} : S p = n -> pred p <= n.
+Theorem scratch {p n} : p = S n -> p <= n.
 Admitted.
 
 Theorem le_dec_inv {n m} : {n = S m} + {n <= m} -> n <= S m.
