@@ -95,14 +95,14 @@ destruct n.
   + apply (le_discr Hn'). (* hd *)
   + exact unit. (* box *)
   + apply (le_discr Hn'). (* tl *)
-  + admit.
-  + admit.
-  + admit.
-  + admit.
-  + admit.
-  + admit.
-  + admit.
-  + admit.
+  + exact unit. (* layer *)
+  + admit. (* cube *)
+  + apply (le_discr Hn'). (* subbox *)
+  + apply (le_discr Hn'). (* sublayer *)
+  + apply (le_discr Hn'). (* subcube *)
+  + apply (le_discr Hn'). (* cohbox *)
+  + apply (le_discr Hn'). (* cohlayer *)
+  + apply (le_discr Hn'). (* cohcube *)
 - set (cn := cubical n).
 unshelve econstructor.
   + intros n' Hn'.
@@ -120,7 +120,12 @@ unshelve econstructor.
   + intros n' Hn' D. simpl in *.
     admit.
   + intros n' Hn' D. simpl in *.
-    destruct (le_dec Hn') as [->|Hineq].
+    destruct (le_dec Hn') as [Heq|Hineq].
+    * injection Heq as ->.
+    rewrite (thm1 (⇓ Hn')).
+    exact (D.2). (* tl *)
+  * rewrite (thm2 (⇓ Hn') (le_trans (le_S_up (le_refl _)) Hineq)).
+    now apply cn.(tl).
 
 
 End Cubical.
