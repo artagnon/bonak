@@ -97,68 +97,12 @@ unshelve econstructor.
               cn.(box) (le_refl n) D -> Type@{l} }.
     * exact (cn.(csp) Hn'').
   + intros n' Hn' D. simpl in *.
-    destruct (le_dec Hn') as [Heq|Hn''].
+    destruct (le_dec Hn') as [Heq|Hineq].
     * injection Heq as ->.
       rewrite (thm1 (⇓ Hn')).
       exact (D.1). (* hd *)
-      Show Proof.
-    * 
-    
-      
- :=
-  match n with
-  | O => {| csp _ _ := unit;
-    hd _ Hn' _ := ltac:(apply (le_discr Hn'));
-    box _ _ _ _ _ := unit;
-    tl _ Hn' _ _ := ltac:(apply (le_discr Hn'));
-    layer _ _ Hn' Hp _ _ := unit;
-    cube _ _ _ _ _ E d := E d;
-    subbox _ _ _ Hn' _ _ _ _ _ := ltac:(apply (le_discr Hn'));
-    sublayer _ _ _ Hn' Hp _ _ _ _  := ltac:(apply (le_discr Hn'));
-    subcube _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(apply (le_discr Hn'));
-    cohbox _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(apply (le_discr Hn'));
-    cohlayer _ _ _ _ Hn' _ _ _ _ _ _ _ := ltac:(apply (le_discr Hn'));
-    cohcube _ _ _ _ Hn' _ _ _ _ _ _ _ _ _ := ltac:(apply (le_discr Hn'));
-    |}
-  | S n => let cn := cubical (n := n) in
-
-  (* Factor out the 0th and nth cases for reuse *)
-  let cspn {n'} (Hn' : n' <= S n) :=
-  match le_dec Hn' with
-  | left Heq (* n' = S n *) => { D : cn.(csp) (propagate_eq Hn' Heq) &
-                                     cn.(box) _ D -> Type@{l} }
-  | right Hineq (* n' <= n *) => cn.(csp) Hineq
-  end in
-  let hdn {n'} (Hn' : S n' <= S n) :=
-  match le_dec' (lower_both Hn') return cspn Hn' (* S n' <= S n *) ->
-                                        cspn (⇓ Hn') (* n' <= S n *) with
-  | inleft Hcmp =>
-    match Hcmp with
-    | left _ (* n' = n *) => fun D => D.1 (* n' = S n *)
-    | right _ (* n' <= pred n *) => fun D => cn.(hd) D (* n' <= n *)
-    end
-  | inright _ (* n = O *) => fun D => cn.(hd) D
-  end in
-  let boxn {_ _ Hn'} Hp := match le_dec Hp return cspn Hn' -> Type@{l} with
-  | left _ => fun D => cn.(box) _ D
-  | right _ => fun D => cn.(box) _ D
-  end in
-  let tln {n'} Hn' := match (S n) with
-  | S O => cn.(tl) _
-  | _ =>
-    match le_dec Hn' return boxn _ -> Type@{l} with
-    | left _ => fun D => D.2
-    | right _ => fun D => cn.(tl) D
-    end
-  end in
-
-  (* Build the nth record *)
-  {|
-    csp _ Hn' := cspn Hn';
-    hd _ Hn' := hdn Hn';
-    box _ _ _ Hp := boxn Hp;
-    tl _ Hn' := tln Hn';
-  |}
+    *
+Defined.
 end.
 
 End Cubical.
