@@ -61,10 +61,10 @@ Record Cubical {n : nat} :=
 Notation "l '.1'" := (projT1 l) (at level 40).
 Notation "l '.2'" := (projT2 l) (at level 40).
 
-Theorem le_irrelevance : forall {n m} (H H':n<=m), H = H'.
+Theorem le_irrelevance : forall {n m} (H H' : n <= m), H = H'.
 Admitted.
 
-Theorem thm1 : forall {n} (H:n <= S n), le_dec H = right (le_refl n).
+Theorem thm1 : forall {n} (H : n <= S n), le_dec H = right (le_refl n).
 Proof.
 intros.
 destruct (le_dec H) as [Heq|].
@@ -104,22 +104,24 @@ destruct n.
   + apply (le_discr Hn'). (* cohlayer *)
   + apply (le_discr Hn'). (* cohcube *)
 - set (cn := cubical n).
-unshelve econstructor.
-  + intros n' Hn'.
-    destruct (le_dec Hn') as [|Hn'']. (* csp *)
-    * exact { D : cn.(csp) (le_refl n) &
-              cn.(box) (le_refl n) D -> Type@{l} }.
-    * exact (cn.(csp) Hn'').
-  + intros n' Hn' D. simpl in *.
+  unshelve econstructor.
+  + intros n' Hn'. (* csp *)
+    destruct (le_dec Hn') as [|Hineq].
+    * exact ({ D : cn.(csp) (le_refl n) &
+              cn.(box) (le_refl n) D -> Type@{l} }).
+    * exact (cn.(csp) Hineq).
+  + intros n' Hn' D; simpl in *. (* hd *)
     destruct (le_dec Hn') as [Heq|Hineq].
     * injection Heq as ->.
       rewrite (thm1 (⇓ Hn')).
-      exact (D.1). (* hd *)
+      exact (D.1).
     * rewrite (thm2 (⇓ Hn') (le_trans (le_S_up (le_refl _)) Hineq)).
       now apply cn.(hd).
-  + intros n' Hn' D. simpl in *.
+  + intros n' p Hn' Hp D; simpl in *. (* box *)
     admit.
-  + intros n' Hn' D. simpl in *.
+  + intros n' Hn' D; simpl in *. (* tl *)
     destruct (le_dec Hn') as [Heq|Hineq].
-
+    * admit.
+    * admit.
+Admitted.
 End Cubical.
