@@ -61,7 +61,51 @@ Record Cubical {n : nat} :=
 Notation "l '.1'" := (projT1 l) (at level 40).
 Notation "l '.2'" := (projT2 l) (at level 40).
 
-Fixpoint cubical {n : nat} : Cubical :=
+Theorem le_refl_irrelevance : forall n (H:n<=n), H = le_refl n.
+Admitted.
+
+Theorem thm1 : forall {n} (H:n <= S n), le_dec H = right (le_refl n).
+Proof.
+intros.
+destruct (le_dec H) as [Heq|].
+- exfalso. apply n_Sn in Heq as [].
+- f_equal.
+  apply le_refl_irrelevance.
+Defined.
+
+Fixpoint cubical {n : nat} : Cubical (n:=n).
+Proof.
+destruct n.
+- unshelve econstructor; intros.
+  + exact unit. (* csp *)
+  + apply (le_discr Hn'). (* hd *)
+  + exact unit. (* box *)
+  + apply (le_discr Hn'). (* tl *)
+  + admit.
+  + admit.
+  + admit.
+  + admit.
+  + admit.
+  + admit.
+  + admit.
+  + admit.
+- set (cn := cubical n).
+unshelve econstructor.
+  + intros n' Hn'.
+    destruct (le_dec Hn') as [|Hn'']. (* csp *)
+    * exact { D : cn.(csp) (le_refl n) &
+              cn.(box) (le_refl n) D -> Type@{l} }.
+    * exact (cn.(csp) Hn'').
+  + intros n' Hn' D. simpl in *.
+    destruct (le_dec Hn') as [Heq|Hn''].
+    * injection Heq as ->.
+      rewrite (thm1 (⇓ Hn')).
+      exact (D.1). (* hd *)
+      Show Proof.
+    * 
+    
+      
+ :=
   match n with
   | O => {| csp _ _ := unit;
     hd _ Hn' _ := ltac:(apply (le_discr Hn'));
