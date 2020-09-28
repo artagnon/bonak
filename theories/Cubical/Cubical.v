@@ -118,6 +118,9 @@ unshelve econstructor.
     * rewrite (thm2 (⇓ Hn') (le_trans (le_S_up (le_refl _)) Hineq)).
       now apply cn.(hd).
   + intros n' Hn' D. simpl in *.
-  
+    admit.
+  + intros n' Hn' D. simpl in *.
+    destruct (le_dec Hn') as [->|Hineq].
+
 
 End Cubical.
