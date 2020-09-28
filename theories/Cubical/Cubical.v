@@ -121,7 +121,7 @@ unshelve econstructor.
     admit.
   + intros n' Hn' D. simpl in *.
     destruct (le_dec Hn') as [Heq|Hineq].
-    * injection Heq as ->.
+    * rewrite Heq.
     rewrite (thm1 (⇓ Hn')).
     exact (D.2). (* tl *)
   * rewrite (thm2 (⇓ Hn') (le_trans (le_S_up (le_refl _)) Hineq)).
