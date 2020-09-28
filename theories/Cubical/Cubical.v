@@ -123,26 +123,22 @@ unshelve econstructor.
   | S n => let cn := cubical (n := n) in
 
   (* Factor out the 0th and nth cases for reuse *)
-  let cspn {n' m} (Hn' : n' <= m) :=
-  match le_dec' Hn' with
+  let cspn {n'} (Hn' : n' <= S n) :=
+  match le_dec Hn' with
+  | left Heq (* n' = S n *) => { D : cn.(csp) (propagate_eq Hn' Heq) &
+                                     cn.(box) _ D -> Type@{l} }
+  | right Hineq (* n' <= n *) => cn.(csp) Hineq
+  end in
+  let hdn {n'} (Hn' : S n' <= S n) :=
+  match le_dec' (lower_both Hn') return cspn Hn' (* S n' <= S n *) ->
+                                        cspn (⇓ Hn') (* n' <= S n *) with
   | inleft Hcmp =>
     match Hcmp with
-    | left _ (* n' = m *) => { D : cn.(csp) (le_refl n) &
-                                   cn.(box) _ D -> Type@{l} }
-    | right Hineq (* n' <= pred m *) => cn.(csp) _
+    | left _ (* n' = n *) => fun D => D.1 (* n' = S n *)
+    | right _ (* n' <= pred n *) => fun D => cn.(hd) D (* n' <= n *)
     end
-  | inright _ => cn.(csp) _ (* unreachable *)
+  | inright _ (* n = O *) => fun D => cn.(hd) D
   end in
-  let hdn {n'} (Hn' : S n' <= S n) := let lHn' := lower_both Hn' in
-    match le_dec' lHn' return cspn lHn' (* n' <= n *) ->
-                              cspn (⇓ Hn') (* n' <= S n *) with
-    | inleft Hcmp =>
-      match Hcmp with
-      | left _ (* n' = n *) => fun D => D.1 (* n' = S n *)
-      | right _ (* n' <= pred n *) => fun D => cn.(hd) D (* n' <= n *)
-      end
-    | inright _ (* n = O *) => cn.(hd) _ (* absurd *)
-    end in
   let boxn {_ _ Hn'} Hp := match le_dec Hp return cspn Hn' -> Type@{l} with
   | left _ => fun D => cn.(box) _ D
   | right _ => fun D => cn.(box) _ D
