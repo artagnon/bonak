@@ -93,7 +93,7 @@ Fixpoint cubical {n : nat} : Cubical :=
     | left _ (* n' = n *) => fun D => D.1 (* n' = S n *)
     | right _ (* n' <= pred n *) => fun D => cn.(hd) D (* n' <= n *)
     end
-  | inright _ (* n = O *) => fun D => cn.(hd) _ (* absurd *)
+  | inright _ (* n = O *) => fun D => cn.(hd) D
   end in
   let boxn {_ _ Hn'} Hp := match le_dec Hp return cspn Hn' -> Type@{l} with
   | left _ => fun D => cn.(box) _ D
