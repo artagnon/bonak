@@ -107,8 +107,8 @@ destruct n.
   unshelve econstructor.
   + intros n' Hn'. (* csp *)
     destruct (le_dec Hn') as [|Hineq].
-    * exact ({ D : cn.(csp) (le_refl n) &
-              cn.(box) (le_refl n) D -> Type@{l} }).
+    * exact { D : cn.(csp) (le_refl n) &
+              cn.(box) (le_refl n) D -> Type@{l} }.
     * exact (cn.(csp) Hineq).
   + intros n' Hn' D; simpl in *. (* hd *)
     destruct (le_dec Hn') as [Heq|Hineq].
@@ -118,7 +118,11 @@ destruct n.
     * rewrite (thm2 (⇓ Hn') (le_trans (le_S_up (le_refl _)) Hineq)).
       now apply cn.(hd).
   + intros n' p Hn' Hp D; simpl in *. (* box *)
-    admit.
+    induction p as [|p box_p].
+    * exact unit.
+    * destruct (le_dec Hn') as [Heq|Hineq].
+      -- exact { d : cn.(box) (le_refl n) _ & cn.(layer) d }.
+      -- exact { d : box_p _ & cn.(layer) d }.
   + intros n' Hn' D; simpl in *. (* tl *)
     destruct (le_dec Hn') as [Heq|Hineq].
     * admit.
