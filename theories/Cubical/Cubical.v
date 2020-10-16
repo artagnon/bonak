@@ -104,25 +104,53 @@ destruct n.
   + apply (le_discr Hn'). (* cohlayer *)
   + apply (le_discr Hn'). (* cohcube *)
 - set (cn := cubical n).
-  unshelve econstructor.
-  + intros n' Hn'. (* csp *)
+  Print Build_Cubical.
+   (refine (
+    let csp := ?[csp] in
+    let hd := ?[hd] in
+    let box := ?[box] in
+    let tl := ?[tl] in
+    Build_Cubical _ csp hd box tl _ _ _ _ _ _ _ _)).
+    Unshelve.
+  [csp]: { intros n' Hn'. (* csp *)
     destruct (le_dec Hn') as [|Hineq].
     * exact { D : cn.(csp) (le_refl n) &
               cn.(box) (le_refl n) D -> Type@{l} }.
-    * exact (cn.(csp) Hineq).
-  + intros n' Hn' D; simpl in *. (* hd *)
-    destruct (le_dec Hn') as [Heq|Hineq].
-    * injection Heq as ->.
+    * exact (cn.(csp) Hineq). }
+  [hd]: { intros n' Hn' D; simpl in *. (* hd *)
+    unfold csp in *.
+     destruct (le_dec Hn') as [Heq|Hineq].
+    * injection Heq as ->. 
       rewrite (thm1 (⇓ Hn')).
       exact (D.1).
     * rewrite (thm2 (⇓ Hn') (le_trans (le_S_up (le_refl _)) Hineq)).
-      now apply cn.(hd).
-  + intros n' p Hn' Hp D; simpl in *. (* box *)
-    induction p as [|p box_p].
+      now apply cn.(hd). }
+  [box]: { simpl.
+    eassert (forall {n' p : nat}, {box_n': (forall {Hn' : n' <= S n},
+    p <= n' -> csp n' Hn' -> Type) &
+      forall (q : nat) 
+         (Hn' : S n' <= S n) (Hp : p <= q) (Hq : q <= n'),
+       side ->
+       forall D,
+       box_n' _ (Hp ↕ (↑Hq)) D -> cn.(box) (Hp ↕ Hq) (hd _ _ D) }).
+    intros n' p. simpl in *.
+    induction p as [|p box_n'_p].
+    * unshelve esplit. (* S n ; p = 0 *)
+      -- intros Hn' Hp D. exact unit.
+      -- intros q Hn' Hp Hq s D d. simpl in *. exact tt. (cn.(subbox) d).
+      -- intros Hn' Hp D.
+
+
+
+    intros n' p Hn' Hp D; simpl in *. (* box *)
+    induction p as [|p box_n'_p].
     * exact unit.
     * destruct (le_dec Hn') as [Heq|Hineq].
-      -- exact { d : cn.(box) (le_refl n) _ & cn.(layer) d }.
-      -- exact { d : box_p _ & cn.(layer) d }.
+      destruct D as (D,E). (* n' = S n *) (*box^{n',p}*)
+      -- exact { d : box_p (⇓ Hp) & (* cn.subbox : *)
+         (cn.(cube) E (cn.(subbox) _ L d) *
+          cn.(cube) E (cn.(subbox) _ R d)) }.
+      -- exact { d : box_n'_p _ & cn.(layer) d }.
   + intros n' Hn' D; simpl in *. (* tl *)
     destruct (le_dec Hn') as [Heq|Hineq].
     * admit.
