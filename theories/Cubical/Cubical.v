@@ -16,13 +16,13 @@ Record Cubical {n : nat} :=
   box {n' p} {Hn' : n' <= n} (Hp : p <= n') : csp Hn' -> Type@{l} ;
   tl {n'} {Hn' : S n' <= n} (D : csp Hn') :
     box (le_refl n') (hd D) -> Type@{l} ;
+  layer {n' p} {Hn' : n' <= n} {Hp : p <= n'} {D : csp Hn'} :
+    box Hp D -> Type@{l} ;
+  cube {n' p} {Hn' : n' <= n} {Hp : p <= n'} {D : csp Hn'} :
+    (box (le_refl n') D -> Type@{l}) -> box Hp D -> Type@{l} ;
   subbox {n' p q} {Hn' : S n' <= n} {Hp : p <= q} (Hq : q <= n')
     (ε : side) {D : csp Hn'} :
     box (Hp ↕ ↑ Hq) D -> box (Hp ↕ Hq) (hd D) ;
-  cube {n' p} {Hn' : S n' <= n} {Hp : p <= n'} {D : csp Hn'} :
-    (box (le_refl n') D -> Type@{l}) -> box Hp D -> Type@{l} ;
-  layer {n' p} {Hn' : S n' <= n} {Hp : p <= n'} {D : csp Hn'} :
-    box (↑ Hp) D -> Type@{l} ;
   sublayer {n' p q} {Hn' : S n' <= n} {Hp : p <= q} (Hq : q <= n')
     (ε : side) {D : csp Hn'} {d : box (Hp ↕ ↑ Hq) D} :
     layer d -> layer (Hp := Hp ↕ Hq)
