@@ -52,6 +52,26 @@ Record PartialCube (n p : nat)
     (subcube (Hp := Hp ↕ Hr) (↑ Hq) ε b))
 }.
 
+Record PartialLayer (n : nat)
+  (csp : forall {n'} (Hn' : n' <= n), Type@{l'})
+  (hd : forall {n'} {Hn' : S n' <= n}, csp Hn' -> csp (⇓ Hn'))
+  (Box : forall {p}, PartialBox n p (@csp) (@hd)) := {
+  layer {n' p} {Hn' : n' <= n} {Hp : p <= n'} {D : csp Hn'} :
+    Box.(box) Hp D -> Type@{l} ;
+  sublayer {n' p q} {Hn' : S n' <= n} {Hp : p <= q} (Hq : q <= n')
+    (ε : side) {D : csp Hn'} {d : Box.(box) (Hp ↕ ↑ Hq) D} :
+    layer d -> layer (Hp := Hp ↕ Hq)
+    (Box.(subbox) (Hp := Hp) Hq ε d) ;
+  cohlayer {n' p q r} {Hn' : S (S n') <= n} {Hp : S p <= r}
+    {Hr : r <= q} {Hq : q <= n'} (ε : side) (ε' : side)
+    {D : csp Hn'} (d : Box.(box) (Hp ↕ (Hr ↕ ↑ ↑ Hq)) D)
+    (b : layer d) : rew (Box.(cohbox) d) in
+    (sublayer (Hp := Hp ↕ Hr) Hq ε
+    (sublayer (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
+    sublayer (Hp := Hp) (Hr ↕ Hq) ε'
+    (sublayer (Hp := Hp ↕ Hr) (↑ Hq) ε b);
+}.
+
 Record Cubical (n : nat) := {
   csp {n'} (Hn' : n' <= n) : Type@{l'} ;
   hd {n'} {Hn' : S n' <= n} : csp Hn' -> csp (⇓ Hn') ;
@@ -59,55 +79,6 @@ Record Cubical (n : nat) := {
   tl {n'} {Hn' : S n' <= n} (D : csp Hn') :
     Box.(box) (le_refl n') (hd D) -> Type@{l} ;
   Cube {p : nat} : PartialCube n p (@csp) (@hd) (@Box) (@tl);
-}.
-
-Record Cubical' {n : nat} :=
-{
-  csp {n'} (Hn' : n' <= n) : Type@{l'} ;
-  hd {n'} {Hn' : S n' <= n} : csp Hn' -> csp (⇓ Hn') ;
-  box {n' p} {Hn' : n' <= n} (Hp : p <= n') : csp Hn' -> Type@{l} ;
-  tl {n'} {Hn' : S n' <= n} (D : csp Hn') :
-    box (le_refl n') (hd D) -> Type@{l} ;
-  layer {n' p} {Hn' : n' <= n} {Hp : p <= n'} {D : csp Hn'} :
-    box Hp D -> Type@{l} ;
-  cube {n' p} {Hn' : n' <= n} {Hp : p <= n'} {D : csp Hn'} :
-    (box (le_refl n') D -> Type@{l}) -> box Hp D -> Type@{l} ;
-  subbox {n' p q} {Hn' : S n' <= n} {Hp : p <= q} (Hq : q <= n')
-    (ε : side) {D : csp Hn'} :
-    box (Hp ↕ ↑ Hq) D -> box (Hp ↕ Hq) (hd D) ;
-  sublayer {n' p q} {Hn' : S n' <= n} {Hp : p <= q} (Hq : q <= n')
-    (ε : side) {D : csp Hn'} {d : box (Hp ↕ ↑ Hq) D} :
-    layer d -> layer (Hp := Hp ↕ Hq)
-    (subbox (Hp := Hp) Hq ε d) ;
-  subcube {n' p q} {Hn' : S n' <= n} {Hp : p <= q}
-    (Hq : q <= n') (ε : side) {D : csp Hn'}
-    {E : box (le_refl (S n')) D -> Type@{l}}
-    {d : box (Hp ↕ ↑ Hq) D} (b : cube E d) :
-    cube (tl D) (subbox Hq ε d);
-  cohbox {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
-    {Hr : r <= q} {Hq : q <= n'} {ε : side} {ε' : side}
-    {D : csp Hn'} (d : box (Hp ↕ (Hr ↕ ↑ ↑ Hq)) D) :
-    subbox (Hp := Hp ↕ Hr) Hq ε
-    (subbox (Hp := Hp) (Hr ↕ ↑ Hq) ε' d) =
-    (subbox (Hp := Hp) (Hr ↕ Hq) ε'
-    (subbox (Hp := Hp ↕ Hr) (↑ Hq) ε d));
-  cohlayer {n' p q r} {Hn' : S (S n') <= n} {Hp : S p <= r}
-    {Hr : r <= q} {Hq : q <= n'} (ε : side) (ε' : side)
-    {D : csp Hn'} (d : box (Hp ↕ (Hr ↕ ↑ ↑ Hq)) D)
-    (b : layer d) : rew (cohbox d) in
-    (sublayer (Hp := Hp ↕ Hr) Hq ε
-    (sublayer (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
-    sublayer (Hp := Hp) (Hr ↕ Hq) ε'
-    (sublayer (Hp := Hp ↕ Hr) (↑ Hq) ε b);
-  cohcube {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
-    {Hr : r <= q} {Hq : q <= n'}
-    (ε : side) (ε' : side) {D : csp Hn'}
-    (E : box (le_refl (S (S n'))) D -> Type@{l})
-    (d : box (Hp ↕ (Hr ↕ ↑ ↑ Hq)) D) (b : cube E d) :
-    rew (cohbox d) in (subcube (Hp := Hp ↕ Hr) Hq ε
-    (subcube (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
-    (subcube (Hp := Hp) (Hr ↕ Hq) ε'
-    (subcube (Hp := Hp ↕ Hr) (↑ Hq) ε b))
 }.
 
 Notation "l '.1'" := (projT1 l) (at level 40).
@@ -138,8 +109,7 @@ destruct (le_dec H) as [->|].
   apply le_irrelevance.
 Defined.
 
-
-Fixpoint cubical {n : nat} : Cubical (n:=n).
+Fixpoint cubical {n : nat} : Cubical (n := n).
 Proof.
 destruct n.
 - unshelve econstructor; intros.
