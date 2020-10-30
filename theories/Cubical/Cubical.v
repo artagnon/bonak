@@ -95,8 +95,8 @@ Definition mkcsp {n n' : nat} {C : Cubical n} (Hn' : n' <= S n) : Type@{l'}.
   * exact (C.(csp) Hineq).
 Defined.
 
-Definition mkhd {n n'} {C : Cubical n} (Hn' : S n' <= S n)
-  {D : mkcsp Hn'} : mkcsp (⇓ Hn').
+Definition mkhd {n n'} {C : Cubical n} {Hn' : S n' <= S n}
+  (D : mkcsp Hn') : mkcsp (⇓ Hn').
   simpl in *. (* hd *)
   unfold mkcsp in *.
     destruct (le_dec Hn') as [Heq|Hineq].
@@ -107,11 +107,11 @@ Definition mkhd {n n'} {C : Cubical n} (Hn' : S n' <= S n)
     now apply C.(hd).
 Defined.
 
-Definition mkBox {n n' p} {C : Cubical n} {Hn' : S n' <= S n}
-  {D : mkcsp Hn'} : PartialBox n p (@mkcsp) (@mkhd).
+Definition mkBox {n p} : PartialBox n p (fun _ Hn' => mkcsp (↑ Hn'))
+  (fun _ _ D => mkhd D).
 Admitted.
 
-Definition mkbox {n p} {P : PartialBox n p mkcsp mkhd} : Type@{l}.
+Definition mkbox {n p} {B : mkBox n p} : Type@{l}.
 Admitted.
 
 Definition mktl {n n'} {C : Cubical n} {Hn' : S n' <= n} (D : mkcsp Hn')
