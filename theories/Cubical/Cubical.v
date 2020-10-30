@@ -2,6 +2,7 @@ From Coq Require Import Arith.
 Import Logic.EqNotations.
 Require Import Yoneda.
 Import LeYoneda.
+Require Import Aux.
 
 Section Cubical.
 Universe l'.
@@ -72,7 +73,7 @@ Record PartialLayer (n : nat)
     (sublayer (Hp := Hp ↕ Hr) (↑ Hq) ε b);
 }.
 
-Record Cubical (n : nat) := {
+Class Cubical (n : nat) := {
   csp {n'} (Hn' : n' <= n) : Type@{l'} ;
   hd {n'} {Hn' : S n' <= n} : csp Hn' -> csp (⇓ Hn') ;
   Box {p} : PartialBox n p (@csp) (@hd) ;
@@ -81,33 +82,41 @@ Record Cubical (n : nat) := {
   Cube {p : nat} : PartialCube n p (@csp) (@hd) (@Box) (@tl);
 }.
 
-Notation "l '.1'" := (projT1 l) (at level 40).
-Notation "l '.2'" := (projT2 l) (at level 40).
+Arguments csp {n} _ {n'} Hn'.
+Arguments hd {n} _ {n'}.
+Arguments Box {n} _ {p}.
+Arguments tl {n} _ {n' Hn'}.
+Arguments Cube {n} _ {p}.
 
-Theorem le_irrelevance : forall {n m} (H H' : n <= m), H = H'.
-Admitted.
-
-Theorem thm1 : forall {n} (H : n <= S n), le_dec H = right (le_refl n).
-Proof.
-intros.
-destruct (le_dec H) as [Heq|].
-- exfalso. apply n_Sn in Heq as [].
-- f_equal.
-  apply le_irrelevance.
+Definition mkcsp {n n' : nat} {C : Cubical n} (Hn' : n' <= S n) : Type@{l'}.
+  destruct (le_dec Hn') as [|Hineq].
+  * exact { D : C.(csp) (le_refl n) &
+            C.(Box).(box) (le_refl n) D -> Type@{l} }.
+  * exact (C.(csp) Hineq).
 Defined.
 
-Theorem le_disjoint : forall n m, S n <= m -> m <= n -> False.
+Definition mkhd {n n'} {C : Cubical n} (Hn' : S n' <= S n)
+  {D : mkcsp Hn'} : mkcsp (⇓ Hn').
+  simpl in *. (* hd *)
+  unfold mkcsp in *.
+    destruct (le_dec Hn') as [Heq|Hineq].
+  * injection Heq as ->.
+    rewrite (thm1 (⇓ Hn')).
+    exact (D.1).
+  * rewrite (thm2 (⇓ Hn') (le_trans (le_S_up (le_refl _)) Hineq)).
+    now apply C.(hd).
+Defined.
+
+Definition mkBox {n n' p} {C : Cubical n} {Hn' : S n' <= S n}
+  {D : mkcsp Hn'} : PartialBox n p (@mkcsp) (@mkhd).
 Admitted.
 
-Theorem thm2 : forall {n n'} (H:n' <= S n) (H':n' <= n), le_dec H = right H'.
-Proof.
-intros.
-destruct (le_dec H) as [->|].
-- exfalso.
-  now apply le_disjoint in H'.
-- f_equal.
-  apply le_irrelevance.
-Defined.
+Definition mkbox {n p} {P : PartialBox n p mkcsp mkhd} : Type@{l}.
+Admitted.
+
+Definition mktl {n n'} {C : Cubical n} {Hn' : S n' <= n} (D : mkcsp Hn')
+  (b : mkbox (le_refl n') (mkhd D)) : Type@{l}.
+Admitted.
 
 Fixpoint cubical {n : nat} : Cubical (n := n).
 Proof.
