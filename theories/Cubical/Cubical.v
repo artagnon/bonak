@@ -9,7 +9,59 @@ Universe l.
 
 Inductive side := L | R.
 
-Record Cubical {n : nat} :=
+Record PartialBox (n p : nat) (csp : forall {n'} (Hn' : n' <= n), Type@{l'})
+  (hd : forall {n'} {Hn' : S n' <= n}, csp Hn' -> csp (⇓ Hn')) := {
+  box {n'} {Hn' : n' <= n} (Hp : p <= n') : csp Hn' -> Type@{l} ;
+  subbox {n' q} {Hn' : S n' <= n} {Hp : p <= q} (Hq : q <= n')
+    (ε : side) {D : csp Hn'} :
+    box (Hp ↕ ↑ Hq) D -> box (Hp ↕ Hq) (hd D) ;
+  cohbox {n' q r} {Hn' : S (S n') <= n} {Hp : p <= r}
+    {Hr : r <= q} {Hq : q <= n'} {ε : side} {ε' : side}
+    {D : csp Hn'} (d : box (Hp ↕ (Hr ↕ ↑ ↑ Hq)) D) :
+    subbox (Hp := Hp ↕ Hr) Hq ε
+    (subbox (Hp := Hp) (Hr ↕ ↑ Hq) ε' d) =
+    (subbox (Hp := Hp) (Hr ↕ Hq) ε'
+    (subbox (Hp := Hp ↕ Hr) (↑ Hq) ε d));
+}.
+
+Arguments box {n p csp hd} _ {n' Hn'}.
+Arguments subbox {n p csp hd} _ {n' q Hn' Hp} Hq ε {D}.
+Arguments cohbox {n p csp hd} _ {n' q r Hn' Hp Hr Hq ε ε' D}.
+
+Record PartialCube (n p : nat)
+  (csp : forall {n'} (Hn' : n' <= n), Type@{l'})
+  (hd : forall {n'} {Hn' : S n' <= n}, csp Hn' -> csp (⇓ Hn'))
+  (Box : forall {p}, PartialBox n p (@csp) (@hd))
+  (tl : forall {n'} {Hn' : S n' <= n} (D : csp Hn'),
+    Box.(box) (le_refl n') (hd D) -> Type@{l}) := {
+  cube {n' p} {Hn' : n' <= n} {Hp : p <= n'} {D : csp Hn'} :
+    (Box.(box) (le_refl n') D -> Type@{l}) -> Box.(box) Hp D -> Type@{l} ;
+  subcube {n' p q} {Hn' : S n' <= n} {Hp : p <= q}
+    (Hq : q <= n') (ε : side) {D : csp Hn'}
+    {E : Box.(box) (le_refl (S n')) D -> Type@{l}}
+    {d : Box.(box) (Hp ↕ ↑ Hq) D} (b : cube E d) :
+    cube (tl D) (Box.(subbox) Hq ε d);
+  cohcube {n' p q r} {Hn' : S (S n') <= n} {Hp : p <= r}
+    {Hr : r <= q} {Hq : q <= n'}
+    (ε : side) (ε' : side) {D : csp Hn'}
+    (E : Box.(box) (le_refl (S (S n'))) D -> Type@{l})
+    (d : Box.(box) (Hp ↕ (Hr ↕ ↑ ↑ Hq)) D) (b : cube E d) :
+    rew (Box.(cohbox) d) in (subcube (Hp := Hp ↕ Hr) Hq ε
+    (subcube (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
+    (subcube (Hp := Hp) (Hr ↕ Hq) ε'
+    (subcube (Hp := Hp ↕ Hr) (↑ Hq) ε b))
+}.
+
+Record Cubical (n : nat) := {
+  csp {n'} (Hn' : n' <= n) : Type@{l'} ;
+  hd {n'} {Hn' : S n' <= n} : csp Hn' -> csp (⇓ Hn') ;
+  Box {p} : PartialBox n p (@csp) (@hd) ;
+  tl {n'} {Hn' : S n' <= n} (D : csp Hn') :
+    Box.(box) (le_refl n') (hd D) -> Type@{l} ;
+  Cube {p : nat} : PartialCube n p (@csp) (@hd) (@Box) (@tl);
+}.
+
+Record Cubical' {n : nat} :=
 {
   csp {n'} (Hn' : n' <= n) : Type@{l'} ;
   hd {n'} {Hn' : S n' <= n} : csp Hn' -> csp (⇓ Hn') ;
@@ -120,7 +172,7 @@ destruct n.
   [hd]: { intros n' Hn' D; simpl in *. (* hd *)
     unfold csp in *.
      destruct (le_dec Hn') as [Heq|Hineq].
-    * injection Heq as ->. 
+    * injection Heq as ->.
       rewrite (thm1 (⇓ Hn')).
       exact (D.1).
     * rewrite (thm2 (⇓ Hn') (le_trans (le_S_up (le_refl _)) Hineq)).
@@ -128,7 +180,7 @@ destruct n.
   [box]: { simpl.
     eassert (forall {n' p : nat}, {box_n': (forall {Hn' : n' <= S n},
     p <= n' -> csp n' Hn' -> Type) &
-      forall (q : nat) 
+      forall (q : nat)
          (Hn' : S n' <= S n) (Hp : p <= q) (Hq : q <= n'),
        side ->
        forall D,
