@@ -88,12 +88,16 @@ Arguments Box {n} _ {p}.
 Arguments tl {n} _ {n' Hn'}.
 Arguments Cube {n} _ {p}.
 
-Definition mkcsp {n n' : nat} {C : Cubical n} (Hn' : n' <= S n) : Type@{l'}.
-  destruct (le_dec Hn') as [|Hineq].
+Definition mkcsp_aux {n n' : nat} {C : Cubical n}
+  (Hdec : {n' = S n} + {n' <= n}) : Type@{l'}.
+  destruct Hdec as [|Hineq].
   * exact { D : C.(csp) (le_refl n) &
             C.(Box).(box) (le_refl n) D -> Type@{l} }.
   * exact (C.(csp) Hineq).
 Defined.
+
+Definition mkcsp {n n' : nat} {C : Cubical n} (Hn' : n' <= S n) : Type@{l'} :=
+  mkcsp_aux (le_dec Hn').
 
 Definition mkhd {n n'} {C : Cubical n} {Hn' : S n' <= S n}
   (D : mkcsp Hn') : mkcsp (⇓ Hn').
@@ -107,8 +111,24 @@ Definition mkhd {n n'} {C : Cubical n} {Hn' : S n' <= S n}
     now apply C.(hd).
 Defined.
 
-Definition mkBox {n p} : PartialBox n p (fun _ Hn' => mkcsp (↑ Hn'))
-  (fun _ _ D => mkhd D).
+Definition mkBox {n p} {C : Cubical n} : PartialBox (S n) p
+(fun _ Hn' => mkcsp (C := C) Hn') (fun _ _ D => mkhd (C := C) D).
+  induction p as [|p Box_n'_p].
+  * unshelve esplit. (* S n ; p = 0 *)
+    - intros n' Hn' Hp D. exact unit.
+    - intros n' q Hn' Hp Hq s D d. simpl in *. exact tt.
+    - intros n' q r Hn' Hp Hr Hq ε ε' D. simpl. reflexivity.
+  * unshelve esplit. (* p = S _ *)
+    - intros n' Hn' Hp D; unfold mkcsp in D.
+      destruct (le_dec Hn') as [Heq|Hineq].
+      + subst n'. destruct (D) as (D', E). revert D' E.
+        change (csp C (le_refl n)) with (mkcsp_aux (right (le_refl n))).
+        rewrite <- (thm1 (⇓ Hn')).
+        intros D' E.
+        exact { d : Box_n'_p.(box) (⇓ Hp) D' &
+        (C.(cube) E (Box_n'_p.(subbox) _ L d) *
+         C.(cube) E (Box_n'_p.(subbox) _ R d)) }.
+
 Admitted.
 
 Definition mkbox {n p} {B : mkBox n p} : Type@{l}.
