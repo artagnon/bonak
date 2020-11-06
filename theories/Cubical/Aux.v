@@ -16,6 +16,22 @@ destruct (le_dec H) as [Heq|].
   apply le_irrelevance.
 Defined.
 
+Theorem thm1_symm : forall {n} (H : n <= S n), right (le_refl n) = le_dec H.
+Proof.
+intros.
+symmetry.
+apply thm1.
+Defined.
+
+Theorem thm1_thm1_symm_id : forall {n} (H : n <= S n),
+  eq_trans (thm1_symm H) (thm1 H) = eq_refl.
+Proof.
+  intros.
+  unfold thm1_symm.
+  destruct (thm1 H).
+  trivial.
+Defined.
+
 Theorem le_disjoint : forall n m, S n <= m -> m <= n -> False.
 Admitted.
 

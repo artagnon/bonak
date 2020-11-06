@@ -121,11 +121,14 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox (S n) p
   * unshelve esplit. (* p = S _ *)
     - intros n' Hn' Hp D; unfold mkcsp in D.
       destruct (le_dec Hn') as [Heq|Hineq].
-      + subst n'. destruct (D) as (D', E). revert D' E.
-        change (csp C (le_refl n)) with (mkcsp_aux (right (le_refl n))).
-        rewrite <- (thm1 (⇓ Hn')).
-        intros D' E.
-        exact { d : Box_n'_p.(box) (⇓ Hp) D' &
+      + subst n'. destruct D as (D, E).
+        change (csp C (le_refl n)) with (mkcsp_aux (right (le_refl n))) in D.
+        change D with (rew eq_refl in D) in E.
+        rewrite <- (thm1_thm1_symm_id (↑ (le_refl n))) in E.
+        revert D E.
+        rewrite (thm1_symm (⇓ Hn')).
+        intros D E.
+        exact { d : Box_n'_p.(box) (⇓ Hp) D &
         (C.(cube) E (Box_n'_p.(subbox) _ L d) *
          C.(cube) E (Box_n'_p.(subbox) _ R d)) }.
 
