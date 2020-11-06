@@ -1,3 +1,4 @@
+Import Logic.EqNotations.
 Require Import Yoneda.
 Import LeYoneda.
 
@@ -30,6 +31,14 @@ Proof.
   unfold thm1_symm.
   destruct (thm1 H).
   trivial.
+Defined.
+
+Theorem proxy {A B} {P : B -> Type} (f : A -> B)
+(Q : forall a, P (f a) -> Type) {x y} (e : f x = y)
+(H : forall D : P y, Q x (rew <- e in D)) : (forall D : P (f x), Q x D).
+Proof.
+  destruct e.
+  assumption.
 Defined.
 
 Theorem le_disjoint : forall n m, S n <= m -> m <= n -> False.
