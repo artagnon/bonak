@@ -87,6 +87,7 @@ Arguments hd {n} _ {n'}.
 Arguments Box {n} _ {p}.
 Arguments tl {n} _ {n' Hn'}.
 Arguments Cube {n} _ {p}.
+Arguments cube {n p csp hd Box tl} _ {n'} _ {Hn'}.
 
 Definition mkcsp_aux {n n' : nat} {C : Cubical n}
   (Hdec : {n' = S n} + {n' <= n}) : Type@{l'}.
@@ -113,24 +114,26 @@ Defined.
 
 Definition mkBox {n p} {C : Cubical n} : PartialBox (S n) p
 (fun _ Hn' => mkcsp (C := C) Hn') (fun _ _ D => mkhd (C := C) D).
-  induction p as [|p Box_n'_p].
+  induction p as [|p (boxn, subboxn, _)].
   * unshelve esplit. (* S n ; p = 0 *)
     - intros n' Hn' Hp D. exact unit.
     - intros n' q Hn' Hp Hq s D d. simpl in *. exact tt.
     - intros n' q r Hn' Hp Hr Hq ε ε' D. simpl. reflexivity.
   * unshelve esplit. (* p = S _ *)
     - intros n' Hn' Hp D; unfold mkcsp in D.
-      destruct (le_dec Hn') as [Heq|Hineq].
-      + subst n'. destruct D as (D, E).
-        change (csp C (le_refl n)) with (mkcsp_aux (right (le_refl n))) in D.
-        revert D E.
+      pose proof (boxn _ Hn') as boxn'.
+      unfold mkcsp in *.
+      destruct (le_dec Hn') as [Heq|Hineq] eqn:Heq'.
+      + subst n'. destruct (D) as (D', E).
+        change (csp C (le_refl n)) with (mkcsp_aux (right (le_refl n))) in D'.
+        revert D' E.
         refine (proxy right (fun x z => (box (Box C) x z -> Type) -> Type)
         (thm1_symm (⇓ Hn')) _).
-        intros D E.
-        change (mkcsp (⇓ Hn')) in D.
-        eexact { d : Box_n'_p.(box) (⇓ Hp) D &
-        (C.(cube) _ (Box_n'_p.(subbox) _ L d) *
-         C.(cube) _ (Box_n'_p.(subbox) _ R d)) }.
+        intros D' E.
+        change (mkcsp (⇓ Hn')) in D'.
+        eexact { d : boxn' (⇓ Hp) D &
+        (C.(Cube).(cube) _ (subboxn _ _ _ _ _ L _ d) *
+         C.(Cube).(cube) _ (subboxn _ _ _ _ _ R _ d)) }.
 
 Admitted.
 
