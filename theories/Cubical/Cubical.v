@@ -53,6 +53,8 @@ Record PartialCube (n p : nat)
     (subcube (Hp := Hp ↕ Hr) (↑ Hq) ε b))
 }.
 
+Arguments cube {n p csp hd Box tl} _ {n' p Hn' Hp D}.
+
 Record PartialLayer (n : nat)
   (csp : forall {n'} (Hn' : n' <= n), Type@{l'})
   (hd : forall {n'} {Hn' : S n' <= n}, csp Hn' -> csp (⇓ Hn'))
@@ -87,7 +89,6 @@ Arguments hd {n} _ {n'}.
 Arguments Box {n} _ {p}.
 Arguments tl {n} _ {n' Hn'}.
 Arguments Cube {n} _ {p}.
-Arguments cube {n p csp hd Box tl} _ {n'} _ {Hn'}.
 
 Definition mkcsp_aux {n n' : nat} {C : Cubical n}
   (Hdec : {n' = S n} + {n' <= n}) : Type@{l'}.
@@ -121,20 +122,19 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox (S n) p
     - intros n' q r Hn' Hp Hr Hq ε ε' D. simpl. reflexivity.
   * unshelve esplit. (* p = S _ *)
     - intros n' Hn' Hp D; unfold mkcsp in D.
-      pose proof (boxn _ Hn') as boxn'.
-      unfold mkcsp in *.
-      destruct (le_dec Hn') as [Heq|Hineq] eqn:Heq'.
-      + subst n'. destruct (D) as (D', E).
-        change (csp C (le_refl n)) with (mkcsp_aux (right (le_refl n))) in D'.
-        revert D' E.
-        refine (proxy right (fun x z => (box (Box C) x z -> Type) -> Type)
-        (thm1_symm (⇓ Hn')) _).
-        intros D' E.
-        change (mkcsp (⇓ Hn')) in D'.
-        eexact { d : boxn' (⇓ Hp) D &
-        (C.(Cube).(cube) _ (subboxn _ _ _ _ _ L _ d) *
-         C.(Cube).(cube) _ (subboxn _ _ _ _ _ R _ d)) }.
-
+    unfold mkcsp in *.
+    destruct (le_dec Hn') as [Heq|Hineq] eqn:Heq'.
+    + subst n'. destruct (D) as (D', E).
+      pose proof (subboxn _ p Hn' (le_refl p)) as subboxn'.
+      change (csp C (le_refl n)) with (mkcsp_aux (right (le_refl n))) in D'.
+      revert D' E.
+      refine (proxy right (fun x z => (box (Box C) x z -> Type) -> Type)
+      (thm1_symm (⇓ Hn')) _).
+      intros D' E.
+      rewrite <- Heq' in D.
+      exact { d : boxn _ Hn' ((le_refl p) ↕ (↑ _)) D &
+        (C.(Cube).(cube) E (subboxn' _ L _ d) *
+         C.(Cube).(cube) E (subboxn' _ R _ d)) }.
 Admitted.
 
 Definition mkbox {n p} {B : mkBox n p} : Type@{l}.
