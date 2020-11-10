@@ -103,7 +103,7 @@ Definition mkcsp {n n' : nat} {C : Cubical n} (Hn' : n' <= S n) : Type@{l'} :=
 
 Definition mkhd {n n'} {C : Cubical n} {Hn' : S n' <= S n}
   (D : mkcsp Hn') : mkcsp (⇓ Hn').
-  simpl in *. (* hd *)
+  simpl in *.
   unfold mkcsp in *.
     destruct (le_dec Hn') as [Heq|Hineq].
   * injection Heq as ->.
@@ -116,7 +116,7 @@ Defined.
 Definition mkBox {n p} {C : Cubical n} : PartialBox (S n) p
 (fun _ Hn' => mkcsp (C := C) Hn') (fun _ _ D => mkhd (C := C) D).
   induction p as [|p (boxn, subboxn, _)].
-  * unshelve esplit. (* S n ; p = 0 *)
+  * unshelve esplit. (* p = O *)
     - intros n' Hn' Hp D. exact unit.
     - intros n' q Hn' Hp Hq s D d. simpl in *. exact tt.
     - intros n' q r Hn' Hp Hr Hq ε ε' D. simpl. reflexivity.
@@ -127,10 +127,6 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox (S n) p
     + subst n'. destruct (D) as (D', E).
       pose proof (subboxn _ p Hn' (le_refl p)) as subboxn'.
       change (csp C (le_refl n)) with (mkcsp_aux (right (le_refl n))) in D'.
-      revert D' E.
-      refine (proxy right (fun x z => (box (Box C) x z -> Type) -> Type)
-      (thm1_symm (⇓ Hn')) _).
-      intros D' E.
       rewrite <- Heq' in D.
       exact { d : boxn _ Hn' ((le_refl p) ↕ (↑ _)) D &
         (C.(Cube).(cube) E (subboxn' _ L _ d) *
