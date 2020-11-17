@@ -113,24 +113,46 @@ Definition mkhd {n n'} {C : Cubical n} {Hn' : S n' <= S n}
     now apply C.(hd).
 Defined.
 
-Definition mkBox {n p} {C : Cubical n} : PartialBox (S n) p
-(fun _ Hn' => mkcsp (C := C) Hn') (fun _ _ D => mkhd (C := C) D).
-  induction p as [|p (boxn, subboxn, _)].
-  * unshelve esplit. (* p = O *)
-    - intros n' Hn' Hp D. exact unit.
-    - intros n' q Hn' Hp Hq s D d. simpl in *. exact tt.
-    - intros n' q r Hn' Hp Hr Hq ε ε' D. simpl. reflexivity.
-  * unshelve esplit. (* p = S _ *)
-    - intros n' Hn' Hp D; unfold mkcsp in D.
-    unfold mkcsp in *.
-    destruct (le_dec Hn') as [Heq|Hineq] eqn:Heq'.
-    + subst n'. destruct (D) as (D', E).
-      pose proof (subboxn _ p Hn' (le_refl p)) as subboxn'.
-      change (csp C (le_refl n)) with (mkcsp_aux (right (le_refl n))) in D'.
-      rewrite <- Heq' in D.
-      exact { d : boxn _ Hn' ((le_refl p) ↕ (↑ _)) D &
-        (C.(Cube).(cube) E (subboxn' _ L _ d) *
-         C.(Cube).(cube) E (subboxn' _ R _ d)) }.
+Theorem mkcsp_inh {n n'} (Hn' : n' <= n) {C : Cubical n} : mkcsp (↑ Hn') = C.(csp) Hn'.
+Proof.
+  unfold mkcsp. unfold mkcsp_aux.
+  (* rewrite thm1. *)
+Admitted.
+
+Definition mkBox {n p} {C : Cubical n} :
+{B:PartialBox (S n) p
+(fun _ Hn' => mkcsp Hn')
+(fun _ _ D => mkhd D)
+& forall n' (Hn' : n' <= n) (Hp : p <= n) D, C.(Box).(box) Hn' D = B.(box) Hp (rew <- [id] mkcsp_inh (C:=C) (le_refl n) in D)}.
+  induction p as [|p ((boxSn, subboxSn, cohboxSn),Heq)].
+  + unshelve esplit. (* p = O *)
+    * unshelve esplit.
+      - intros n' Hn' Hp D. exact unit.
+      - intros n' q Hn' Hp Hq s D d. simpl in *. exact tt.
+      - intros n' q r Hn' Hp Hr Hq ε ε' D. simpl. reflexivity.
+    * intros n' Hn' Hp D. simpl.
+      admit.
+  + unshelve esplit. (* p = S _ *)
+    * unshelve esplit.
+      - intros n' Hn' Hp D; unfold mkcsp in D.
+      unfold mkcsp in *.
+      destruct (le_dec Hn') as [Heqbox|Hineq] eqn:Heqbox'.
+      ++ subst n'. destruct (D) as (D', E).
+        change (csp C (le_refl n)) with (mkcsp_aux (right (le_refl n))) in D'.
+        revert D' E.
+        refine (proxy right (fun x z => (box (Box C) x z -> Type) -> Type)
+        (thm1_symm (⇓ Hn')) _).
+        intros D' E.
+        change (mkcsp (⇓ Hn')) in D'.
+        rewrite <- Heqbox' in D.
+        assert (Hpn : p <= n). { admit. }
+        eexact { d : boxSn _ _ _ D &
+                (C.(Cube).(cube) _ _ _ _ (subboxSn _ p _ (le_refl _) Hpn L D d) *
+                C.(Cube).(cube) _ _ _ _ (subboxSn _ p _ (le_refl _) Hpn R D d)) }.
+        ++ admit.
+      - admit.
+      - admit.
+    * admit.
 Admitted.
 
 Definition mkbox {n p} {B : mkBox n p} : Type@{l}.
