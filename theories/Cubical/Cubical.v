@@ -130,11 +130,12 @@ Defined.
 
 Notation "( a ; b )" := (existT _ a b).
 
-Theorem deprew {A} (Q:A->Type) (P:forall a:A, Q a -> Type)
-{x y} (H : x = y) : (forall b:Q y, P y (rew <- H in b)) ->
-forall a:Q x, P x a.
+Theorem deprew {A} (Q:A->Type)
+{x} {y} (P:Q x -> Type) (H : x = y) :
+(forall b:Q y, P (rew <- H in b))
+-> forall a:Q x, P a.
 Proof.
-  now destruct H.
+now destruct H.
 Qed.
 
 Definition mkBox {n p} {C : Cubical n} :
@@ -157,7 +158,10 @@ Definition mkBox {n p} {C : Cubical n} :
         destruct (le_dec Hn') as [|] eqn:Heqbox.
         ++ subst n'. destruct (D) as (D', E) eqn:HD.
           revert HD.
-          symmetry in Heqbox; refine (deprew _ _ Heqbox _ E).
+          symmetry in Heqbox; refine (deprew mkcsp_aux (fun D => D = (D';E) -> Type) Heqbox _ D (x := left eq_refl)).
+          clear D.
+          intro D.
+          intro HD.
           assert (Hpn : p <= n). { admit. }
           pose (hdD := rew [id] (mkcsp_inh (le_refl n)) in
             (rew (le_irrelevance (⇓ Hn') (↑ (le_refl n))) in (mkhd D))).
