@@ -113,8 +113,8 @@ Definition mkhd {n n'} {C : Cubical n} {Hn' : S n' <= S n}
     now apply C.(hd).
 Defined.
 
-Theorem mkcsp_inh {n n'} (Hn' : n' <= n) {C : Cubical n} : mkcsp (↑ Hn') = C.(csp) Hn'.
-Proof.
+Lemma mkcsp_inh {n n'} (Hn' : n' <= n) {C : Cubical n} :
+  mkcsp (↑ Hn') = C.(csp) Hn'.
   unfold mkcsp; rewrite (thm2 (↑ Hn') Hn'); reflexivity.
 Defined.
 
@@ -125,9 +125,17 @@ Defined.
 
 Lemma rew_context {A} {x y : A} (eq : x = y) {P} {a : P x}
   {Q : forall a, P a -> Type} : Q y (rew eq in a) = Q x a.
-Proof.
   destruct eq; reflexivity.
 Defined.
+
+Notation "( a ; b )" := (existT _ a b).
+
+Theorem deprew {A} (Q:A->Type) (P:forall a:A, Q a -> Type)
+{x y} (H : x = y) : (forall b:Q y, P y (rew <- H in b)) ->
+forall a:Q x, P x a.
+Proof.
+  now destruct H.
+Qed.
 
 Definition mkBox {n p} {C : Cubical n} :
   {B : PartialBox (S n) p
@@ -147,16 +155,17 @@ Definition mkBox {n p} {C : Cubical n} :
     * unshelve esplit.
       - intros n' Hn' Hp D; simpl in *; unfold mkcsp in *.
         destruct (le_dec Hn') as [|] eqn:Heqbox.
-        ++ subst n'. destruct (D) as (D', E).
-          rewrite <- Heqbox in D.
+        ++ subst n'. destruct (D) as (D', E) eqn:HD.
+          revert HD.
+          symmetry in Heqbox; refine (deprew _ _ Heqbox _ E).
           assert (Hpn : p <= n). { admit. }
           pose (hdD := rew [id] (mkcsp_inh (le_refl n)) in
-          (rew (le_irrelevance (⇓ Hn') (↑ (le_refl n))) in (mkhd D))).
+            (rew (le_irrelevance (⇓ Hn') (↑ (le_refl n))) in (mkhd D))).
           specialize Heq with (Hn' := (le_refl n)) (Hp := Hpn) (D := hdD).
           unfold hdD in Heq at 2.
           rewrite rew_rew in Heq.
           rewrite (rew_context (Q := fun a1 a2 => boxSn n a1 Hpn a2)
-          (le_irrelevance (⇓ Hn') (↑ (le_refl n)))) in Heq.
+            (le_irrelevance (⇓ Hn') (↑ (le_refl n)))) in Heq.
           pose (sbn := fun side => subboxSn _ p _ (le_refl _) Hpn side D).
           pose (sbn' := rew <- [fun x => side -> _ -> x] Heq in sbn).
           eexact { d : boxSn _ _ _ D &
