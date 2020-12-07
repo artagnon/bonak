@@ -141,29 +141,28 @@ Definition mkBox {n p} {C : Cubical n} :
       - intros n' Hn' Hp D. exact unit.
       - intros n' q Hn' Hp Hq s D d. simpl in *. exact tt.
       - intros n' q r Hn' Hp Hr Hq ε ε' D. simpl. reflexivity.
-    * intros n' Hn' Hp D. simpl.
+    * intros n' Hn' Hp D; simpl.
       admit.
   + unshelve esplit. (* p = S _ *)
     * unshelve esplit.
-      - intros n' Hn' Hp D; unfold mkcsp in D.
-      unfold mkcsp in *.
-      destruct (le_dec Hn') as [|] eqn:Heqbox.
-      ++ subst n'. destruct (D) as (D', E).
-        change (csp C (le_refl n)) with (mkcsp_aux (right (le_refl n))) in D'.
-        rewrite <- Heqbox in D.
-        assert (Hpn : p <= n). { admit. }
-        simpl in Heq.
-        pose (hdD := rew [id] (mkcsp_inh (le_refl n)) in (rew (le_irrelevance (⇓ Hn') (↑ (le_refl n))) in (mkhd D))).
-        specialize Heq with (Hn' := (le_refl n)) (Hp := Hpn) (D := hdD).
-        unfold hdD in Heq at 2.
-        rewrite rew_rew in Heq.
-        rewrite (rew_context (le_irrelevance (⇓ Hn') (↑ (le_refl n)))) in Heq.
-        pose (sbn := fun side => subboxSn _ p _ (le_refl _) Hpn side D).
-        pose (sbn' := rew <- [fun x => side -> _ -> x] Heq in sbn).
-        eexact { d : boxSn _ _ _ D &
-                (C.(Cube).(cube) _ () *
-                C.(Cube).(cube) _ (subboxSn _ p _ (le_refl _) Hpn R D d)) }.
-        ++ admit.
+      - intros n' Hn' Hp D; simpl in *; unfold mkcsp in *.
+        destruct (le_dec Hn') as [|] eqn:Heqbox.
+        ++ subst n'. destruct (D) as (D', E).
+          change (csp C (le_refl n)) with (mkcsp_aux (right (le_refl n))) in D'.
+          rewrite <- Heqbox in D.
+          assert (Hpn : p <= n). { admit. }
+          pose (hdD := rew [id] (mkcsp_inh (le_refl n)) in
+          (rew (le_irrelevance (⇓ Hn') (↑ (le_refl n))) in (mkhd D))).
+          specialize Heq with (Hn' := (le_refl n)) (Hp := Hpn) (D := hdD).
+          unfold hdD in Heq at 2.
+          rewrite rew_rew in Heq.
+          rewrite (rew_context (le_irrelevance (⇓ Hn') (↑ (le_refl n)))) in Heq.
+          pose (sbn := fun side => subboxSn _ p _ (le_refl _) Hpn side D).
+          pose (sbn' := rew <- [fun x => side -> _ -> x] Heq in sbn).
+          eexact { d : boxSn _ _ _ D &
+                  (C.(Cube).(cube) _ () *
+                  C.(Cube).(cube) _ (subboxSn _ p _ (le_refl _) Hpn R D d)) }.
+          ++ admit.
       - admit.
       - admit.
     * admit.
