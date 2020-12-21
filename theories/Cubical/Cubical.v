@@ -169,7 +169,8 @@ Definition mkBox {n p} {C : Cubical n} :
           eexact { d : boxSn _ _ _ D1 &
                   (C.(Cube).(cube) (p := p) E (sbn' L d) *
                   C.(Cube).(cube) (p := p) E (sbn' R d))%type }.
-          ++ .
+          ++ pose (D1 := rew <- Heqbox in D). (* n' <= S n *)
+
       - admit.
       - admit.
     * admit.
