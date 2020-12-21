@@ -43,3 +43,5 @@ Proof.
   - exfalso; now apply le_disjoint in H'.
   - f_equal; apply le_irrelevance.
 Defined.
+
+Axiom UIP : forall A, forall {a : A} {b : A} (p : a = b) (q : a = b), p = q.

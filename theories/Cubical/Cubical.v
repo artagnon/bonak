@@ -114,16 +114,10 @@ Definition mkhd {n n'} {C : Cubical n} {Hn' : S n' <= S n}
     now apply C.(hd).
 Defined.
 
-Print mkhd.
-
 Lemma mkcsp_inh {n n'} (Hn' : n' <= n) {C : Cubical n} :
   mkcsp (↑ Hn') = C.(csp) Hn'.
   unfold mkcsp; rewrite (thm2 (↑ Hn') Hn'); reflexivity.
 Defined.
-
-Notation "( a ; b )" := (existT _ a b).
-
-Axiom UIP : forall A, forall {a : A} {b : A} (p : a = b) (q : a = b), p = q.
 
 Definition mkBox {n p} {C : Cubical n} :
   {B : PartialBox (S n) p
