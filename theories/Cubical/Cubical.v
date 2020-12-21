@@ -138,34 +138,37 @@ Definition mkBox {n p} {C : Cubical n} :
       - intros n' Hn' Hp D; simpl in *; unfold mkcsp in *.
         destruct (le_dec Hn') as [|] eqn:Heqbox.
         ++ subst n'. (* n' = S n *)
-          pose (D1 := rew <- Heqbox in D).
           assert (Hpn : p <= n). { admit. }
-          pose (hdD := rew [id] (mkcsp_inh (le_refl n)) in
-            (rew (le_irrelevance (⇓ Hn') (↑ (le_refl n))) in (mkhd D1))).
-          destruct (D) as (D', E).
-          specialize Heq with (Hn' := (le_refl n)) (Hp := Hpn) (D := hdD).
-          unfold hdD in Heq at 2.
+          pose (D' := rew <- Heqbox in D).
+          pose (hdD' := rew (le_irrelevance (⇓ Hn') (↑ (le_refl n))) in (mkhd D')).
+          pose (hdD'' := rew [id] (mkcsp_inh (le_refl n)) in hdD').
+          destruct D as (hdD, E).
+          specialize Heq with (Hn' := (le_refl n)) (Hp := Hpn) (D := hdD'').
+          unfold hdD'' in Heq at 2.
           rewrite rew_rew in Heq.
+          unfold hdD' in Heq.
           rewrite (rew_context (Q := fun a1 a2 => boxSn n a1 Hpn a2)
             (le_irrelevance (⇓ Hn') (↑ (le_refl n)))) in Heq.
-          pose (sbn := fun side => subboxSn _ p _ (le_refl _) Hpn side D1).
+          pose (sbn := fun side => subboxSn _ p _ (le_refl _) Hpn side D').
           pose (sbn' := rew <- [fun x => side -> _ -> x] Heq in sbn).
-          assert (D' = hdD).
-          unfold hdD.
-          unfold D1; unfold mkhd.
-          rewrite Heqbox. simpl. cbn.
-          clear.
-          rewrite rew_map_top with (P := mkcsp).
-          unfold id. rewrite rew_compose.
-          rewrite rew_map_opp_top. rewrite rew_opp_extrude. rewrite rew_compose.
-          set (P := eq_trans _ _).
-          simpl in P.
-          clearbody P.
-          assert (P = eq_refl) by apply UIP.
-          rewrite H.
-          simpl. reflexivity.
+          assert (HeqhdD : hdD = hdD'').
+          { clear.
+            unfold hdD'', hdD', D', mkhd.
+            rewrite Heqbox. cbn.
+            rewrite rew_map_top with (P := mkcsp).
+            unfold id.
+            rewrite rew_compose.
+            rewrite rew_map_opp_top.
+            rewrite rew_opp_extrude.
+            rewrite rew_compose.
+            set (P := eq_trans _ _).
+            simpl in P.
+            clearbody P.
+            assert (P = eq_refl) by apply UIP.
+            rewrite H.
+            reflexivity. }
           clearbody D1.
-          rewrite H in E.
+          rewrite HeqhdD in E.
           eexact { d : boxSn _ _ _ D1 &
                   (C.(Cube).(cube) (p := p) E (sbn' L d) *
                   C.(Cube).(cube) (p := p) E (sbn' R d))%type }.
