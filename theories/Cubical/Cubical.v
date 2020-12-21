@@ -3,6 +3,7 @@ Import Logic.EqNotations.
 Require Import Yoneda.
 Import LeYoneda.
 Require Import Aux.
+Require Import RewLemmas.
 
 Section Cubical.
 Universe l'.
@@ -120,35 +121,7 @@ Lemma mkcsp_inh {n n'} (Hn' : n' <= n) {C : Cubical n} :
   unfold mkcsp; rewrite (thm2 (↑ Hn') Hn'); reflexivity.
 Defined.
 
-Lemma rew_rew A (x y : A) (H : x = y) P (a : P x) :
-  rew <- [P] H in rew [P] H in a = a.
-  destruct H; reflexivity.
-Defined.
-
-Lemma rew_context {A} {x y : A} (eq : x = y) {P} {a : P x}
-  {Q : forall a, P a -> Type} : Q y (rew eq in a) = Q x a.
-  destruct eq; reflexivity.
-Defined.
-
 Notation "( a ; b )" := (existT _ a b).
-
-Theorem rew_map_top A (P:A->Type) x1 x2 (H:x1=x2) (y:P x1) :
-rew [P] H in y = rew [fun x => x] f_equal P H in y.
-Proof.
-destruct H; reflexivity.
-Defined.
-
-Theorem rew_map_opp_top A (P:A->Type) x1 x2 (H:x2=x1) (y:P x1) :
-rew <- [P] H in y = rew <- [fun x => x] f_equal P H in y.
-Proof.
-destruct H; reflexivity.
-Defined.
-
-Lemma rew_opp_extrude A (P:A->Type) x1 x2 (H:x2=x1) (y:P x1) :
-rew <- [P] H in y = rew [P] (eq_sym H) in y.
-Proof.
-destruct H. reflexivity.
-Defined.
 
 Axiom UIP : forall A, forall {a : A} {b : A} (p : a = b) (q : a = b), p = q.
 
@@ -170,7 +143,7 @@ Definition mkBox {n p} {C : Cubical n} :
     * unshelve esplit.
       - intros n' Hn' Hp D; simpl in *; unfold mkcsp in *.
         destruct (le_dec Hn') as [|] eqn:Heqbox.
-        ++ subst n'.
+        ++ subst n'. (* n' = S n *)
           pose (D1 := rew <- Heqbox in D).
           assert (Hpn : p <= n). { admit. }
           pose (hdD := rew [id] (mkcsp_inh (le_refl n)) in
@@ -202,7 +175,7 @@ Definition mkBox {n p} {C : Cubical n} :
           eexact { d : boxSn _ _ _ D1 &
                   (C.(Cube).(cube) (p := p) E (sbn' L d) *
                   C.(Cube).(cube) (p := p) E (sbn' R d))%type }.
-          ++ admit.
+          ++ .
       - admit.
       - admit.
     * admit.

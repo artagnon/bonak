@@ -3,4 +3,5 @@
 theories/Cubical/Interface.v
 theories/Cubical/Yoneda.v
 theories/Cubical/Aux.v
+theories/Cubical/RewLemmas.v
 theories/Cubical/Cubical.v
