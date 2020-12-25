@@ -29,4 +29,12 @@ Section RewLemmas.
   Proof.
   destruct H. reflexivity.
   Defined.
+
+  Ltac rew_triple :=
+    match goal with
+    | |- True => idtac
+    | [ |- rew [ id ] ?mkcsp_inh ?refln) in _] => idtac
+    | [ |- rew [id] f_equal mkcsp (le_irrelevance ?Hn' ?refln) _ in _ ] => idtac
+    | [ |- rew <- [fun s : sumbool => ?mkcsp_aux _] _ ?Hn' hdD in _ ] => rewrite rew_compose; rewrite rew_map_opp_top; rewrite rew_opp_extrude; rewrite rew_compose.
+    end.
 End RewLemmas.

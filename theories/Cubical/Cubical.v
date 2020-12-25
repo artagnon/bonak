@@ -11,6 +11,8 @@ Universe l.
 
 Inductive side := L | R.
 
+(* PartialBox consists of an 0-cells, and fillers which are the 1-cells,
+2-cells, and 3-cells relating the different 0-cells on the cube  *)
 Record PartialBox (n p : nat) (csp : forall {n'} (Hn' : n' <= n), Type@{l'})
   (hd : forall {n'} {Hn' : S n' <= n}, csp Hn' -> csp (⇓ Hn')) := {
   box {n'} {Hn' : n' <= n} (Hp : p <= n') : csp Hn' -> Type@{l} ;
@@ -18,7 +20,7 @@ Record PartialBox (n p : nat) (csp : forall {n'} (Hn' : n' <= n), Type@{l'})
     (ε : side) {D : csp Hn'} :
     box (Hp ↕ ↑ Hq) D -> box (Hp ↕ Hq) (hd D) ;
   cohbox {n' q r} {Hn' : S (S n') <= n} {Hp : p <= r}
-    {Hr : r <= q} {Hq : q <= n'} {ε : side} {ε' : side}
+    {Hr : r <= q} {Hq : q <= n'} {ε : side} {ε' : side} (* ε : face index *)
     {D : csp Hn'} (d : box (Hp ↕ (Hr ↕ ↑ ↑ Hq)) D) :
     subbox (Hp := Hp ↕ Hr) Hq ε
     (subbox (Hp := Hp) (Hr ↕ ↑ Hq) ε' d) =
@@ -30,6 +32,7 @@ Arguments box {n p csp hd} _ {n' Hn'}.
 Arguments subbox {n p csp hd} _ {n' q Hn' Hp} Hq ε {D}.
 Arguments cohbox {n p csp hd} _ {n' q r Hn' Hp Hr Hq ε ε' D}.
 
+(* Cube consists of cube, subcube, and coherence conditions between then *)
 Record PartialCube (n p : nat)
   (csp : forall {n'} (Hn' : n' <= n), Type@{l'})
   (hd : forall {n'} {Hn' : S n' <= n}, csp Hn' -> csp (⇓ Hn'))
@@ -56,26 +59,8 @@ Record PartialCube (n p : nat)
 
 Arguments cube {n p csp hd Box tl} _ {n' p Hn' Hp D}.
 
-Record PartialLayer (n : nat)
-  (csp : forall {n'} (Hn' : n' <= n), Type@{l'})
-  (hd : forall {n'} {Hn' : S n' <= n}, csp Hn' -> csp (⇓ Hn'))
-  (Box : forall {p}, PartialBox n p (@csp) (@hd)) := {
-  layer {n' p} {Hn' : n' <= n} {Hp : p <= n'} {D : csp Hn'} :
-    Box.(box) Hp D -> Type@{l} ;
-  sublayer {n' p q} {Hn' : S n' <= n} {Hp : p <= q} (Hq : q <= n')
-    (ε : side) {D : csp Hn'} {d : Box.(box) (Hp ↕ ↑ Hq) D} :
-    layer d -> layer (Hp := Hp ↕ Hq)
-    (Box.(subbox) (Hp := Hp) Hq ε d) ;
-  cohlayer {n' p q r} {Hn' : S (S n') <= n} {Hp : S p <= r}
-    {Hr : r <= q} {Hq : q <= n'} (ε : side) (ε' : side)
-    {D : csp Hn'} (d : Box.(box) (Hp ↕ (Hr ↕ ↑ ↑ Hq)) D)
-    (b : layer d) : rew (Box.(cohbox) d) in
-    (sublayer (Hp := Hp ↕ Hr) Hq ε
-    (sublayer (Hp := Hp) (↑ (Hr ↕ Hq)) ε' b)) =
-    sublayer (Hp := Hp) (Hr ↕ Hq) ε'
-    (sublayer (Hp := Hp ↕ Hr) (↑ Hq) ε b);
-}.
-
+(* Cubce consists of cubesetprefix, a box built out of partial boxes,
+  a cube built out of partial cubes, a couple of helpers (hd and tl) *)
 Class Cubical (n : nat) := {
   csp {n'} (Hn' : n' <= n) : Type@{l'} ;
   hd {n'} {Hn' : S n' <= n} : csp Hn' -> csp (⇓ Hn') ;
@@ -175,12 +160,12 @@ Definition mkBox {n p} {C : Cubical n} :
             assert (P = eq_refl) by apply UIP.
             rewrite H.
             reflexivity. }
-          clearbody D1.
+          clearbody D'.
           rewrite HeqhdD in E.
-          eexact { d : boxSn _ _ _ D1 &
+          eexact { d : boxSn _ _ _ D' &
                   (C.(Cube).(cube) (p := p) E (sbn' L d) *
                   C.(Cube).(cube) (p := p) E (sbn' R d))%type }.
-          ++ .
+          ++ exact (C.(Box).(box) Hp D).
       - admit.
       - admit.
     * admit.
