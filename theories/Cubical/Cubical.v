@@ -76,8 +76,8 @@ Arguments cube {n p csp Box} _ {Hp D}.
   a cube built out of partial cubes *)
 Class Cubical (n : nat) := {
   csp : Type@{l'} ;
-  Box {p} : PartialBox n p (@csp);
-  Cube {p} : PartialCube n p (@csp) (@Box);
+  Box {p} : PartialBox n p csp;
+  Cube {p} : PartialCube n p csp (@Box);
 }.
 
 Arguments csp {n} _.
