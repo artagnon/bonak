@@ -70,7 +70,9 @@ Record PartialCube (n p : nat)
     (subcube (Hp := Hp ↕ Hr) Hq ε b))
 }.
 
-Arguments cube {n p csp Box} _ {Hp D}.
+Arguments cube {n p csp Box} _ {Hp D} E.
+Arguments cube' {n p csp Box} _ {Hp D}.
+Arguments cube'' {n p csp Box} _ {Hp D}.
 
 (* Cube consists of cubesetprefix, a box built out of partial boxes,
   a cube built out of partial cubes *)
@@ -84,97 +86,43 @@ Arguments csp {n} _.
 Arguments Box {n} _ {p}.
 Arguments Cube {n} _ {p}.
 
-Definition mkcsp_aux {n n : nat} {C : Cubical n}
-  (Hdec : {n = S n} + {n <= n}) : Type@{l'}.
-  destruct Hdec as [|Hineq].
-  * exact {: C.(csp) (le_refl n) &
-            C.(Box).(box) (le_refl n)-> Type@{l} }.
-  * exact (C.(csp) Hineq).
-Defined.
-
-Definition mkcsp {n n : nat} {C : Cubical n}  : n <= S n) : Type@{l'} :=
-  mkcsp_aux (le_dec).
-
-Definition mkhd {n n} {C : Cubical n}  : S n <= S n}
-  (D : mkcsp) : mkcsp (⇓).
-  simpl in *.
-  unfold mkcsp in *.
-    destruct (le_dec) as [Heq|Hineq].
-  * injection Heq as ->.
-    rewrite (thm1 (⇓)).
-    exact (D.1).
-  * rewrite (thm2 (⇓) (le_trans (le_S_up (le_refl _)) Hineq)).
-    now apply C.(hd).
-Defined.
-
-Print mkhd.
-
-Lemma mkcsp_inh {n n}  : n <= n) {C : Cubical n} :
-  mkcsp (↑) = C.(csp).
-  unfold mkcsp; rewrite (thm2 (↑)); reflexivity.
-Defined.
+Definition mkcsp {n : nat} {C : Cubical n} : Type@{l'} :=
+  { D : C.(csp) & C.(Box).(box) (le_refl n) D -> Type@{l} }.
 
 Notation "( a ; b )" := (existT _ a b).
 
 Axiom UIP : forall A, forall {a : A} {b : A} (p : a = b) (q : a = b), p = q.
 
-Definition mkBox {C : Cubical n} :
-  {B : PartialBox (S n) p
-  (fun _ => mkcsp)
-  (fun _ _=> mkhd D)
-  & forall n  : n <= n) (Hp : p <= n) D, C.(Box).(box)= B.(box) Hp
-  (rew <- [id] mkcsp_inh (C := C) (le_refl n) in D) }.
-  induction p as [|p ((boxSn, subboxSn, cohboxSn), Heq)].
+Definition mkBox {n p} {C : Cubical n} : PartialBox (S n) p mkcsp.
+  induction p as [|p (boxSn, boxSn', boxSn'', subboxSn, subboxSn', cohboxSn)].
   + unshelve esplit. (* p = O *)
-    * unshelve esplit.
-      - intros n Hp D; exact unit.
-      - intros n q Hp Hq sd; simpl in *; exact tt.
-      - intros n q r Hp Hr Hq ε ε' D; simpl; reflexivity.
-    * intros n Hp D; simpl.
-      admit.
+    * intros Hp D. exact unit.
+    * intros Hp D. exact unit.
+    * intros Hp D. exact unit.
+    * simpl. intros q Hp Hq ε D _. exact tt.
+    * simpl. intros q Hp Hq ε D _. exact tt.
+    * simpl. intros q Hp Hr Hq ε ε' D d _. reflexivity.
   + unshelve esplit. (* p = S _ *)
-    simpl in Heq.
-    * unshelve esplit. (* PartialBox *)
-      clear cohboxSn.
-      - intros n Hp D; simpl in *; unfold mkcsp in *.
-        destruct (le_dec) as [|] eqn:Heqbox.
-        ++ subst n. (* n = S n *)
-          assert (Hpn : p <= n). { admit. }
-          pose (D' := rew <- Heqbox in D).
-          destructas (hdD, E).
-          pose (sbn := fun side => subboxSn _ p _ (le_refl _) Hpn side D').
-          pose (hdD' := rew (le_irrelevance (⇓) (↑ (le_refl n))) in (mkhd D')).
-          pose (hdD'' := rew [id] (mkcsp_inh (le_refl n)) in hdD').
-          specialize Heq with  := (le_refl n)) (Hp := Hpn) (D := hdD'').
-          unfold hdD'' in Heq at 2.
-          rewrite rew_rew in Heq.
-          unfold hdD' in Heq.
-          rewrite (rew_context (Q := fun a1 a2 => boxSn n a1 Hpn a2)
-            (le_irrelevance (⇓) (↑ (le_refl n)))) in Heq.
-          pose (sbn := rew <- [fun x => side -> _ -> x] Heq in sbn).
-          assert (HeqhdD : hdD = hdD'').
-          { clear.
-            unfold hdD'', hdD', D', mkhd.
-            rewrite Heqbox. cbn.
-            rewrite rew_map_top with (P := mkcsp).
-            unfold id.
-            rewrite rew_compose.
-            rewrite rew_map_opp_top.
-            rewrite rew_opp_extrude.
-            rewrite rew_compose.
-            set (P := eq_trans _ _).
-            simpl in P.
-            clearbody P.
-            assert (P = eq_refl) by apply UIP.
-            rewrite H.
-            reflexivity. }
-          clearbody D'.
-          rewrite HeqhdD in E.
-          eexact {: boxSn _ _ _ D' &
-                  (C.(Cube).(cube) (p := p) E (sbn L d) *
-                  C.(Cube).(cube) (p := p) E (sbn R d))%type }.
-          ++ exact (C.(Box).(box) Hp D).
-      - admit.
+    * intros Hp D. (* Box *)
+      assert (Hpn : p <= S n). { admit. }
+       destruct (D) as (hdD, E).
+      (* pose (sbn := fun side => subboxSn _ p _ (le_refl _) Hpn side D').
+      pose (hdD' := rew (le_irrelevance (⇓) (↑ (le_refl n))) in (mkhd D')).
+      pose (hdD'' := rew [id] (mkcsp_inh (le_refl n)) in hdD').
+      specialize Heq with  := (le_refl n)) (Hp := Hpn) (D := hdD'').
+      unfold hdD'' in Heq at 2.
+      rewrite rew_rew in Heq.
+      unfold hdD' in Heq.
+      rewrite (rew_context (Q := fun a1 a2 => boxSn n a1 Hpn a2)
+        (le_irrelevance (⇓) (↑ (le_refl n)))) in Heq.
+      pose (sbn := rew <- [fun x => side -> _ -> x] Heq in sbn).
+      assert (HeqhdD : hdD = hdD'').
+      rewrite HeqhdD in E. *)
+      eexact {d : boxSn Hpn D &
+              (C.(Cube).(cube') (subboxSn _ (le_refl p) Hpn L D d) *
+              C.(Cube).(cube') (subboxSn _ (le_refl p) Hpn R D d))%type }.
+      ++ exact (C.(Box).(box) Hp D).
+  - admit.
       - admit.
     * admit.
 Admitted.
