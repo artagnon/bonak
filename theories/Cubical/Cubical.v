@@ -33,9 +33,9 @@ Record PartialBox (n p : nat) (csp : Type@{l'}) := {
     (subbox (Hp := Hp ↕ Hr) Hq ε d));
 }.
 
-Arguments box {n p csp} _ _.
-Arguments box' {n p csp} _ _.
-Arguments box'' {n p csp} _ _.
+Arguments box {n p csp} _ Hp.
+Arguments box' {n p csp} _ Hp.
+Arguments box'' {n p csp} _ Hp.
 Arguments subbox {n p csp} _ {q Hp} Hq ε {D}.
 Arguments subbox' {n p csp} _ {q Hp} Hq ε {D}.
 Arguments cohbox {n p csp} _ {q r Hp Hr Hq ε ε' D} d.
@@ -125,13 +125,6 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox (S n) p mkcsp.
   - admit.
       - admit.
     * admit.
-Admitted.
-
-Definition mkbox {B : mkBox n p} : Type@{l}.
-Admitted.
-
-Definition mktl {n n} {C : Cubical n}  : S n <= n} (D : mkcsp)
-  (b : mkbox (le_refl n) (mkhd D)) : Type@{l}.
 Admitted.
 
 Fixpoint cubical {n : nat} : Cubical (n := n).
