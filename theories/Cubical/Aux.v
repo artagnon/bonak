@@ -2,8 +2,9 @@ Import Logic.EqNotations.
 Require Import Yoneda.
 Import LeYoneda.
 
-Notation "l '.1'" := (projT1 l) (at level 40).
-Notation "l '.2'" := (projT2 l) (at level 40).
+Notation "( a ; b )" := (existT _ a b).
+Notation "x .1" := (projT1 x) (at level 1, left associativity, format "x .1").
+Notation "x .2" := (projT2 x) (at level 1, left associativity, format "x .2").
 
 Theorem le_irrelevance : forall {n m} (H H' : n <= m), H = H'.
 Admitted.

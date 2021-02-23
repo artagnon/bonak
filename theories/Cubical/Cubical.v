@@ -74,12 +74,19 @@ Arguments cube {n p csp Box} _ {Hp D} E.
 Arguments cube' {n p csp Box} _ {Hp D}.
 Arguments cube'' {n p csp Box} _ {Hp D}.
 
+Axiom n0 : forall {n : nat}, 0 <= n.
+Axiom np : forall {n : nat} p, p <= n.
+
 (* Cube consists of cubesetprefix, a box built out of partial boxes,
   a cube built out of partial cubes *)
 Class Cubical (n : nat) := {
   csp : Type@{l'} ;
-  Box {p} : PartialBox n p csp;
-  Cube {p} : PartialCube n p csp (@Box);
+  Box {p} : PartialBox n p csp ;
+  Cube {p} : PartialCube n p csp (@Box) ;
+  box0 {D : csp}: Box.(box) n0 D = unit ;
+  boxSp {D : csp} {p} : Box.(box) (np (S p)) D = {d : Box.(box) (np p) D &
+  (Cube.(cube') (Box.(subbox) _ L d) *
+  Cube.(cube') (Box.(subbox) _ R d))%type } ;
 }.
 
 Arguments csp {n} _.
@@ -89,19 +96,23 @@ Arguments Cube {n} _ {p}.
 Definition mkcsp {n : nat} {C : Cubical n} : Type@{l'} :=
   { D : C.(csp) & C.(Box).(box) (le_refl n) D -> Type@{l} }.
 
-Notation "( a ; b )" := (existT _ a b).
-
 Axiom UIP : forall A, forall {a : A} {b : A} (p : a = b) (q : a = b), p = q.
 
-Definition mkBox {n p} {C : Cubical n} : PartialBox (S n) p mkcsp.
-  induction p as [|p (boxSn, boxSn', boxSn'', subboxSn, subboxSn', cohboxSn)].
+Definition mkBox {n p} {C : Cubical n} : {d : PartialBox (S n) p mkcsp &
+forall {Hp : p <= n} {D : mkcsp}, d.(box') (↑ Hp) D = C.(Box).(box) Hp D.1 }.
+  induction p as [|p
+    ((boxSn, boxSn', boxSn'', subboxSn, subboxSn', cohboxSn), eqBox)].
   + unshelve esplit. (* p = O *)
-    * intros Hp D. exact unit.
-    * intros Hp D. exact unit.
-    * intros Hp D. exact unit.
-    * simpl. intros q Hp Hq ε D _. exact tt.
-    * simpl. intros q Hp Hq ε D _. exact tt.
-    * simpl. intros q Hp Hr Hq ε ε' D d _. reflexivity.
+    * assert (Hpn : 0 <= n). { admit. }
+      unshelve esplit. (* the six first goals *)
+      - intros Hp D; exact unit.
+      - intros Hp D; exact (C.(Box).(box) Hpn D.1).
+      - intros Hp D; exact (C.(Box).(box') Hpn D.1).
+      - simpl; intros q Hp Hq ε D _. exact (C.(Box).(subbox) Hpn ε tt).
+      - simpl; intros q Hp Hq ε D _. exact (C.(Box).(subbox') Hpn ε _).
+      - simpl; intros q Hp Hr Hq ε ε' D d _; reflexivity.
+    * simpl. (* the eqBox *)
+      intros Hp D.
   + unshelve esplit. (* p = S _ *)
     * intros Hp D. (* Box *)
       assert (Hpn : p <= S n). { admit. }
@@ -119,8 +130,8 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox (S n) p mkcsp.
       assert (HeqhdD : hdD = hdD'').
       rewrite HeqhdD in E. *)
       eexact {d : boxSn Hpn D &
-              (C.(Cube).(cube') (subboxSn _ (le_refl p) Hpn L D d) *
-              C.(Cube).(cube') (subboxSn _ (le_refl p) Hpn R D d))%type }.
+              (C.(Cube).(cube) (subboxSn _ (le_refl p) Hpn L D d) *
+              C.(Cube).(cube) (subboxSn _ (le_refl p) Hpn R D d))%type }.
       ++ exact (C.(Box).(box) Hp D).
   - admit.
       - admit.
