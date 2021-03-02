@@ -73,6 +73,8 @@ Record PartialCube (n p : nat)
 Arguments cube {n p csp Box} _ {Hp D} E.
 Arguments cube' {n p csp Box} _ {Hp D}.
 Arguments cube'' {n p csp Box} _ {Hp D}.
+Arguments subcube {n p csp Box} _ {q Hp} Hq ε {D} E {d} b.
+Arguments subcube' {n p csp Box} _ {q Hp} Hq ε {D d} b.
 
 Axiom n0 : forall {n : nat}, 0 <= n.
 Axiom np : forall {n : nat} p, p <= n.
@@ -84,6 +86,7 @@ Class Cubical (n : nat) := {
   Box {p} : PartialBox n p csp ;
   Cube {p} : PartialCube n p csp (@Box) ;
   box0 {D : csp}: Box.(box) n0 D = unit ;
+  box0' {D : csp}: Box.(box') n0 D = unit ;
   boxSp {D : csp} {p} : Box.(box) (np (S p)) D = {d : Box.(box) (np p) D &
   (Cube.(cube') (Box.(subbox) _ L d) *
   Cube.(cube') (Box.(subbox) _ R d))%type } ;
@@ -103,36 +106,35 @@ forall {Hp : p <= n} {D : mkcsp}, d.(box') (↑ Hp) D = C.(Box).(box) Hp D.1 }.
   induction p as [|p
     ((boxSn, boxSn', boxSn'', subboxSn, subboxSn', cohboxSn), eqBox)].
   + unshelve esplit. (* p = O *)
-    * assert (Hpn : 0 <= n). { admit. }
-      unshelve esplit. (* the six first goals *)
+    * unshelve esplit. (* the six first goals *)
       - intros Hp D; exact unit.
-      - intros Hp D; exact (C.(Box).(box) Hpn D.1).
-      - intros Hp D; exact (C.(Box).(box') Hpn D.1).
-      - simpl; intros q Hp Hq ε D _. exact (C.(Box).(subbox) Hpn ε tt).
-      - simpl; intros q Hp Hq ε D _. exact (C.(Box).(subbox') Hpn ε _).
+      - intros Hp D; exact (C.(Box).(box) n0 D.1).
+      - intros Hp D; exact (C.(Box).(box') n0 D.1).
+      - simpl; intros q Hp Hq ε D _. rewrite C.(@box0 _). exact tt.
+      - simpl; intros q Hp Hq ε D _. rewrite C.(@box0' _). exact tt.
       - simpl; intros q Hp Hr Hq ε ε' D d _; reflexivity.
     * simpl. (* the eqBox *)
-      intros Hp D.
+      intros Hp D. f_equal. apply le_irrelevance.
   + unshelve esplit. (* p = S _ *)
-    * intros Hp D. (* Box *)
+    * simpl in eqBox.
       assert (Hpn : p <= S n). { admit. }
-       destruct (D) as (hdD, E).
-      (* pose (sbn := fun side => subboxSn _ p _ (le_refl _) Hpn side D').
-      pose (hdD' := rew (le_irrelevance (⇓) (↑ (le_refl n))) in (mkhd D')).
-      pose (hdD'' := rew [id] (mkcsp_inh (le_refl n)) in hdD').
-      specialize Heq with  := (le_refl n)) (Hp := Hpn) (D := hdD'').
-      unfold hdD'' in Heq at 2.
-      rewrite rew_rew in Heq.
-      unfold hdD' in Heq.
-      rewrite (rew_context (Q := fun a1 a2 => boxSn n a1 Hpn a2)
-        (le_irrelevance (⇓) (↑ (le_refl n)))) in Heq.
-      pose (sbn := rew <- [fun x => side -> _ -> x] Heq in sbn).
-      assert (HeqhdD : hdD = hdD'').
-      rewrite HeqhdD in E. *)
-      eexact {d : boxSn Hpn D &
-              (C.(Cube).(cube) (subboxSn _ (le_refl p) Hpn L D d) *
-              C.(Cube).(cube) (subboxSn _ (le_refl p) Hpn R D d))%type }.
-      ++ exact (C.(Box).(box) Hp D).
+      pose (Sub side := (subboxSn _ (le_refl p) Hpn side)).
+      assert (↑ (np p) = le_refl p ↕ Hpn) by apply le_irrelevance.
+      specialize eqBox with (Hp := (np p)).
+      rewrite H in eqBox.
+      unshelve esplit. (* the first six goals *)
+      - intros Hp D.
+        pose (Sub' side d := rew [fun X => X] (eqBox D) in Sub side D d).
+        exact {d : boxSn Hpn D &
+               (C.(Cube).(cube) D.2 (Sub' L d) *
+               C.(Cube).(cube) D.2 (Sub' R d))%type }.
+      - intros Hp D. exact (C.(Box).(box) (np (S p)) D.1).
+      - intros Hp D. exact (C.(Box).(box') (np (S p)) D.1).
+      - simpl. intros. destruct X as (d, (CL, CR)).
+        rewrite C.(@boxSp _). unshelve esplit.
+        ++ exact (rew [fun X : Type => X] eqBox D in Sub ε D d).
+        ++ split.
+          ** apply (C.(Cube).(subcube) _ ε D.2 CL).
   - admit.
       - admit.
     * admit.
