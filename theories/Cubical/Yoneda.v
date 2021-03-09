@@ -73,4 +73,10 @@ Proof.
   eapply Nat.nle_succ_0. eauto.
 Defined.
 
+Lemma le0 : forall {n : nat}, 0 <= n.
+  intros n p H.
+  inversion H.
+  apply le_O_n.
+Defined.
+
 End LeYoneda.

@@ -76,20 +76,23 @@ Arguments cube'' {n p csp Box} _ {Hp D}.
 Arguments subcube {n p csp Box} _ {q Hp} Hq ε {D} E {d} b.
 Arguments subcube' {n p csp Box} _ {q Hp} Hq ε {D d} b.
 
-Axiom n0 : forall {n : nat}, 0 <= n.
-Axiom np : forall {n : nat} p, p <= n.
-
 (* Cube consists of cubesetprefix, a box built out of partial boxes,
   a cube built out of partial cubes *)
 Class Cubical (n : nat) := {
   csp : Type@{l'} ;
   Box {p} : PartialBox n p csp ;
   Cube {p} : PartialCube n p csp (@Box) ;
-  box0 {D : csp}: Box.(box) n0 D = unit ;
-  box0' {D : csp}: Box.(box') n0 D = unit ;
-  boxSp {D : csp} {p} : Box.(box) (np (S p)) D = {d : Box.(box) (np p) D &
+  eqbox0 {D : csp} : Box.(box) le0 D = unit ;
+  eqbox0' {D : csp} : Box.(box') le0 D = unit ;
+  eqboxSp {D : csp} {p} {Hp : p <= n} :
+  Box.(box) Hp D = {d : Box.(box) Hp D &
   (Cube.(cube') (Box.(subbox) _ L d) *
   Cube.(cube') (Box.(subbox) _ R d))%type } ;
+  eqsubbox0 {q} {Hq : q <= n} {ε : side} :
+  Box.(subbox) (Hp := le0) Hq ε
+  =_{f_equal2 (fun T1 T2 => T1 -> T2)
+    (rew [fun e => Box.(box) e _] le_irrelevance le0 _ in eqbox0)
+    (rew [fun e => Box.(box') e _] le_irrelevance le0 _ in eqbox0')} (fun _ => tt);
 }.
 
 Arguments csp {n} _.
@@ -99,22 +102,29 @@ Arguments Cube {n} _ {p}.
 Definition mkcsp {n : nat} {C : Cubical n} : Type@{l'} :=
   { D : C.(csp) & C.(Box).(box) (le_refl n) D -> Type@{l} }.
 
-Axiom UIP : forall A, forall {a : A} {b : A} (p : a = b) (q : a = b), p = q.
-
-Definition mkBox {n p} {C : Cubical n} : {d : PartialBox (S n) p mkcsp &
-forall {Hp : p <= n} {D : mkcsp}, d.(box') (↑ Hp) D = C.(Box).(box) Hp D.1 }.
+Definition mkBox {n p} {C : Cubical n} : {dp : PartialBox (S n) p mkcsp &
+{eqbox' :
+forall {Hp : p <= n} {D : mkcsp}, dp.(box') (↑ Hp) D = C.(Box).(box) Hp D.1 &
+{eqbox'' :
+forall {Hp : p <= n} {D : mkcsp}, dp.(box'') (↑ Hp) D = C.(Box).(box') Hp D.1 &
+forall {ε q} {D : mkcsp} {Hp : p <= q} {Hq : q <= n}, dp.(subbox') (↑ Hq) ε
+=_{f_equal2 (fun T1 T2 => T1 -> T2) (eqbox' (Hp ↕ Hq) D) (eqbox'' (Hp ↕ Hq) D)}
+C.(Box).(subbox) Hq ε}}}.
   induction p as [|p
     ((boxSn, boxSn', boxSn'', subboxSn, subboxSn', cohboxSn), eqBox)].
   + unshelve esplit. (* p = O *)
     * unshelve esplit. (* the six first goals *)
       - intros Hp D; exact unit.
-      - intros Hp D; exact (C.(Box).(box) n0 D.1).
-      - intros Hp D; exact (C.(Box).(box') n0 D.1).
+      - intros Hp D; exact (C.(Box).(box) le0 D.1).
+      - intros Hp D; exact (C.(Box).(box') le0 D.1).
       - simpl; intros q Hp Hq ε D _. rewrite C.(@box0 _). exact tt.
       - simpl; intros q Hp Hq ε D _. rewrite C.(@box0' _). exact tt.
       - simpl; intros q Hp Hr Hq ε ε' D d _; reflexivity.
-    * simpl. (* the eqBox *)
-      intros Hp D. f_equal. apply le_irrelevance.
+    * unshelve esplit; simpl. (* the eqBox *)
+      - intros Hp D. f_equal. apply le_irrelevance.
+      - unshelve esplit; simpl.
+        ++ intros Hp D. f_equal. apply le_irrelevance.
+        ++ intros ε q D Hp Hq. simpl. destruct le_irrelevance.
   + unshelve esplit. (* p = S _ *)
     * simpl in eqBox.
       assert (Hpn : p <= S n). { admit. }
@@ -137,76 +147,6 @@ forall {Hp : p <= n} {D : mkcsp}, d.(box') (↑ Hp) D = C.(Box).(box) Hp D.1 }.
           ** apply (C.(Cube).(subcube) _ ε D.2 CL).
   - admit.
       - admit.
-    * admit.
-Admitted.
-
-Fixpoint cubical {n : nat} : Cubical (n := n).
-Proof.
-destruct n.
-- unshelve econstructor; intros.
-  + exact unit. (* csp *)
-  + apply (le_discr). (* hd *)
-  + exact unit. (* box *)
-  + apply (le_discr). (* tl *)
-  + exact unit. (* layer *)
-  + admit. (* cube *)
-  + apply (le_discr). (* subbox *)
-  + apply (le_discr). (* sublayer *)
-  + apply (le_discr). (* subcube *)
-  + apply (le_discr). (* cohbox *)
-  + apply (le_discr). (* cohlayer *)
-  + apply (le_discr). (* cohcube *)
-- set (cn := cubical n).
-  Print Build_Cubical.
-   (refine (
-    let csp := ?[csp] in
-    let hd := ?[hd] in
-    let box := ?[box] in
-    let tl := ?[tl] in
-    Build_Cubical _ csp hd box tl _ _ _ _ _ _ _ _)).
-    Unshelve.
-  [csp]: { intros n. (* csp *)
-    destruct (le_dec) as [|Hineq].
-    * exact {: cn.(csp) (le_refl n) &
-              cn.(box) (le_refl n)-> Type@{l} }.
-    * exact (cn.(csp) Hineq). }
-  [hd]: { intros n D; simpl in *. (* hd *)
-    unfold csp in *.
-     destruct (le_dec) as [Heq|Hineq].
-    * injection Heq as ->.
-      rewrite (thm1 (⇓)).
-      exact (D.1).
-    * rewrite (thm2 (⇓) (le_trans (le_S_up (le_refl _)) Hineq)).
-      now apply cn.(hd). }
-  [box]: { simpl.
-    eassert (forall {n p : nat}, {box_n: (forall  : n <= S n},
-    p <= n -> csp n -> Type) &
-      forall (q : nat)
-          : S n <= S n) (Hp : p <= q) (Hq : q <= n),
-       side ->
-       forall D,
-       box_n _ (Hp ↕ (↑Hq))-> cn.(box) (Hp ↕ Hq) (hd _ _ D) }).
-    intros n p. simpl in *.
-    induction p as [|p box_n_p].
-    * unshelve esplit. (* S n ; p = 0 *)
-      -- intros Hp D. exact unit.
-      -- intros q Hp Hq sd. simpl in *. exact tt. (cn.(subbox) d).
-      -- intros Hp D.
-
-
-
-    intros n p Hp D; simpl in *. (* box *)
-    induction p as [|p box_n_p].
-    * exact unit.
-    * destruct (le_dec) as [Heq|Hineq].
-      destructas (D,E). (* n = S n *) (*box^{n,p}*)
-      -- exact {: box_p (⇓ Hp) & (* cn.subbox : *)
-         (cn.(cube) E (cn.(subbox) _ L d) *
-          cn.(cube) E (cn.(subbox) _ R d)) }.
-      -- exact {: box_n_p _ & cn.(layer)}.
-  + intros n D; simpl in *. (* tl *)
-    destruct (le_dec) as [Heq|Hineq].
-    * admit.
     * admit.
 Admitted.
 End Cubical.
