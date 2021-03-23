@@ -84,15 +84,15 @@ Class Cubical (n : nat) := {
   Cube {p} : PartialCube n p csp (@Box) ;
   eqbox0 {D : csp} : Box.(box) le0 D = unit ;
   eqbox0' {D : csp} : Box.(box') le0 D = unit ;
-  eqboxSp {D : csp} {p} {Hp : p <= n} :
+  eqboxSp {D : csp} {p} (Hp : p <= n) :
   Box.(box) Hp D = {d : Box.(box) Hp D &
   (Cube.(cube') (Box.(subbox) _ L d) *
   Cube.(cube') (Box.(subbox) _ R d))%type } ;
-  eqsubbox0 {q} {Hq : q <= n} {ε : side} :
+  eqsubbox0 {q} (Hq : q <= n) (ε : side) (D : csp) :
   Box.(subbox) (Hp := le0) Hq ε
   =_{f_equal2 (fun T1 T2 => T1 -> T2)
-    (rew [fun e => Box.(box) e _] le_irrelevance le0 _ in eqbox0)
-    (rew [fun e => Box.(box') e _] le_irrelevance le0 _ in eqbox0')} (fun _ => tt);
+    (rew [fun e => Box.(box) e D = unit] le_irrelevance le0 _ in eqbox0)
+    (rew [fun e => Box.(box') e D = unit] le_irrelevance le0 _ in eqbox0')} (fun _ => tt);
 }.
 
 Arguments csp {n} _.
@@ -117,14 +117,18 @@ C.(Box).(subbox) Hq ε}}}.
       - intros Hp D; exact unit.
       - intros Hp D; exact (C.(Box).(box) le0 D.1).
       - intros Hp D; exact (C.(Box).(box') le0 D.1).
-      - simpl; intros q Hp Hq ε D _. rewrite C.(@box0 _). exact tt.
-      - simpl; intros q Hp Hq ε D _. rewrite C.(@box0' _). exact tt.
+      - simpl; intros q Hp Hq ε D _. rewrite C.(@eqbox0 _). exact tt.
+      - simpl; intros q Hp Hq ε D _. rewrite C.(@eqbox0' _). exact tt.
       - simpl; intros q Hp Hr Hq ε ε' D d _; reflexivity.
-    * unshelve esplit; simpl. (* the eqBox *)
-      - intros Hp D. f_equal. apply le_irrelevance.
-      - unshelve esplit; simpl.
-        ++ intros Hp D. f_equal. apply le_irrelevance.
-        ++ intros ε q D Hp Hq. simpl. destruct le_irrelevance.
+    * unshelve esplit; simpl. intros Hp D. (* the eqBox' and eqbox'' *)
+      rewrite <- (le_irrelevance le0 Hp).
+      - reflexivity. (* the eqBox' *)
+      - unshelve esplit; simpl. intros Hp.
+        rewrite <- (le_irrelevance le0 Hp).
+        ++ reflexivity. (* the eqBox'' *)
+        ++ intros ε q D Hp Hq. simpl. (* the last field of the sigma type *)
+           rewrite <- (le_irrelevance le0 Hp).
+           rewrite <- C.(@eqsubbox0 _).
   + unshelve esplit. (* p = S _ *)
     * simpl in eqBox.
       assert (Hpn : p <= S n). { admit. }
