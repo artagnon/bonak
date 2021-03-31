@@ -84,7 +84,7 @@ Class Cubical (n : nat) := {
   Cube {p} : PartialCube n p csp (@Box) ;
   eqbox0 {D : csp} : Box.(box) le0 D = unit ;
   eqbox0' {D : csp} : Box.(box') le0 D = unit ;
-  eqboxSp {D : csp} {p} (Hp : p <= n) :
+  eqBoxSp {D : csp} {p} (Hp : p <= n) :
   Box.(box) Hp D = {d : Box.(box) Hp D &
   (Cube.(cube') (Box.(subbox) _ L d) *
   Cube.(cube') (Box.(subbox) _ R d))%type } ;
@@ -107,11 +107,12 @@ Definition mkBox {n p} {C : Cubical n} : {dp : PartialBox (S n) p mkcsp &
 forall {Hp : p <= n} {D : mkcsp}, dp.(box') (↑ Hp) D = C.(Box).(box) Hp D.1 &
 {eqbox'' :
 forall {Hp : p <= n} {D : mkcsp}, dp.(box'') (↑ Hp) D = C.(Box).(box') Hp D.1 &
-forall {ε q} {D : mkcsp} {Hp : p <= q} {Hq : q <= n}, dp.(subbox') (↑ Hq) ε
-=_{f_equal2 (fun T1 T2 => T1 -> T2) (eqbox' (Hp ↕ Hq) D) (eqbox'' (Hp ↕ Hq) D)}
+forall {ε q} {D : mkcsp} {Hpq : p <= q} {Hq : q <= n}, dp.(subbox') (↑ Hq) ε
+=_{f_equal2 (fun T1 T2 => T1 -> T2)
+  (eqbox' (Hpq ↕ Hq) D) (eqbox'' (Hpq ↕ Hq) D)}
 C.(Box).(subbox) Hq ε}}}.
   induction p as [|p
-    ((boxSn, boxSn', boxSn'', subboxSn, subboxSn', cohboxSn), eqBox)].
+    ((boxSn, boxSn', boxSn'', subboxSn, subboxSn', cohboxSn), (eqBox', (eqBox'', eqBox''')))].
   + unshelve esplit. (* p = O *)
     * unshelve esplit. (* the six first goals *)
       - intros Hp D; exact unit.
@@ -120,37 +121,47 @@ C.(Box).(subbox) Hq ε}}}.
       - simpl; intros q Hp Hq ε D _. rewrite C.(@eqbox0 _). exact tt.
       - simpl; intros q Hp Hq ε D _. rewrite C.(@eqbox0' _). exact tt.
       - simpl; intros q Hp Hr Hq ε ε' D d _; reflexivity.
-    * unshelve esplit; simpl. intros Hp D. (* the eqBox' and eqbox'' *)
+    * unshelve esplit; simpl. intros Hp D. (* eqBox' and eqbox'' *)
       rewrite <- (le_irrelevance le0 Hp).
-      - reflexivity. (* the eqBox' *)
+      - reflexivity. (* eqBox' *)
       - unshelve esplit; simpl. intros Hp.
         rewrite <- (le_irrelevance le0 Hp).
-        ++ reflexivity. (* the eqBox'' *)
-        ++ intros ε q D Hp Hq. simpl. (* the last field of the sigma type *)
+        ++ reflexivity. (* eqBox'' *)
+        ++ intros ε q D Hp Hq. simpl. (* eqBox''' *)
            rewrite <- (le_irrelevance le0 Hp).
-           rewrite <- C.(@eqsubbox0 _).
+           admit.
   + unshelve esplit. (* p = S _ *)
-    * simpl in eqBox.
-      assert (Hpn : p <= S n). { admit. }
-      pose (Sub side := (subboxSn _ (le_refl p) Hpn side)).
-      assert (↑ (np p) = le_refl p ↕ Hpn) by apply le_irrelevance.
-      specialize eqBox with (Hp := (np p)).
-      rewrite H in eqBox.
-      unshelve esplit. (* the first six goals *)
-      - intros Hp D.
-        pose (Sub' side d := rew [fun X => X] (eqBox D) in Sub side D d).
-        exact {d : boxSn Hpn D &
+    * simpl in eqBox', eqBox'', eqBox'''. (* the six first goals *)
+      unshelve esplit.
+      - intros Hp D. (* boxSn *)
+        pose (Sub side := (subboxSn _ (le_refl p) (↓ Hp) side)).
+        clear eqBox''' eqBox''.
+        specialize eqBox' with (Hp := (⇓ Hp)).
+        assert (↑ (⇓ Hp) = le_refl p ↕ (↓ Hp)) by apply le_irrelevance.
+        rewrite H in eqBox'.
+        pose (Sub' side d := rew [fun X => X] (eqBox' D) in Sub side D d).
+        exact {d : boxSn (↑ (⇓ Hp)) D &
                (C.(Cube).(cube) D.2 (Sub' L d) *
                C.(Cube).(cube) D.2 (Sub' R d))%type }.
-      - intros Hp D. exact (C.(Box).(box) (np (S p)) D.1).
-      - intros Hp D. exact (C.(Box).(box') (np (S p)) D.1).
-      - simpl. intros. destruct X as (d, (CL, CR)).
-        rewrite C.(@boxSp _). unshelve esplit.
-        ++ exact (rew [fun X : Type => X] eqBox D in Sub ε D d).
-        ++ split.
-          ** apply (C.(Cube).(subcube) _ ε D.2 CL).
-  - admit.
-      - admit.
-    * admit.
-Admitted.
+      - intros Hp D. exact (C.(Box).(box) (⇓ Hp) D.1). (* boxSn' *)
+      - intros Hp D. exact (C.(Box).(box') (⇓ Hp) D.1). (* boxSn '' *)
+      - simpl. intros. destruct X as (d, (CL, CR)). (* subboxSn *)
+        rewrite C.(@eqBoxSp _). unshelve esplit.
+        ++ exact (rew [fun X : Type => X] eqBox' (⇓ Hp) D in Sub ε D d).
+        ++ split. (* Sides L and R *)
+           assert ((le_refl p ↕ ((↓ Hp) ↕ Hq)) = (↑ (⇓ Hp))) by
+           (apply le_irrelevance).
+           specialize cohboxSn with (r := p) (q := q) (Hp := le_refl p)
+           (Hr := (↓ Hp)) (Hq := Hq) (ε := ε) (D := D)
+           (d:= rew <- [fun X => boxSn X D] H in d).
+           specialize eqBox''' with (ε := ε) (q := q) (D := D).
+          ** specialize cohboxSn with (ε' := L). (* The side L *)
+             apply (C.(Cube).(subcube) _ ε D.2 CL).
+          ** specialize cohboxSn with (ε' := R). (* The side R *)
+             admit.
+             (* apply (C.(Cube).(subcube) _ ε D.2 CR). *)
+      - simpl. admit. (* subboxSn' *)
+      - simpl. admit. (* cohboxSn *)
+   * simpl. admit. (* eqBox, eqBox', eqBox''' *)
+Defined.
 End Cubical.

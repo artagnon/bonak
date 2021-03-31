@@ -34,7 +34,7 @@ Defined.
 
 Definition le_S_down {p n} (Hp : S p <= n) : p <= n := le_adjust (↑ Hp).
 
-Notation "⇓ p" := (le_S_down p) (at level 40).
+Notation "↓ p" := (le_S_down p) (at level 40).
 
 Theorem le_trans_assoc {n m p q} (Hnm : n <= m) (Hmp : m <= p) (Hpq : p <= q) :
   Hnm ↕ (Hmp ↕ Hpq) = (Hnm ↕ Hmp) ↕ Hpq.
