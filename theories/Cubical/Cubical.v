@@ -15,22 +15,18 @@ Inductive side := L | R.
 2-cells, and 3-cells relating the different 0-cells on the cube  *)
 Record PartialBox (n p : nat) (csp : Type@{l'}) := {
   box (Hp : p <= n) : csp -> Type@{l} ;
-  box' (Hp : p <= n) : csp -> Type@{l} ;
-  box'' (Hp : p <= n) : csp -> Type@{l} ;
-  subbox {q} {Hp : p <= q} (Hq : q <= n)
-    (ε : side) {D : csp} :
-    box (Hp ↕ Hq) D -> box' (Hp ↕ Hq) D;
-  subbox' {q} {Hp : p <= q} (Hq : q <= n)
-    (ε : side) {D : csp} :
-    box' (Hp ↕ Hq) D -> box'' (Hp ↕ Hq) D;
-  cohbox {q r} {Hp : p <= r}
-    {Hr : r <= q} {Hq : q <= n}
-    {ε : side} {ε' : side} {D: csp} (* ε : face index *)
-  (d : box (Hp ↕ (Hr ↕ Hq)) D) :
-    subbox' (Hp := Hp ↕ Hr) Hq ε
-    (subbox (Hp := Hp) (Hr ↕ Hq) ε' d) =
-    (subbox' (Hp := Hp) (Hr ↕ Hq) ε'
-    (subbox (Hp := Hp ↕ Hr) Hq ε d));
+  box' (Hp : p.+1 <= n) : csp -> Type@{l} ; (* [box' n D] is [box (n-1) D.1] *)
+  box'' (Hp : p.+2 <= n) : csp -> Type@{l} ;
+  (* [box'' n D] is [box (n-2) D.1.1] *)
+  subbox {q} {Hp : p.+1 <= q.+1} (Hq : q.+1 <= n) (ε : side) {D : csp} :
+  box (↓ (Hp ↕ Hq)) D -> box' (Hp ↕ Hq) D;
+  subbox' {q} {Hp : p.+2 <= q.+2} (Hq : q.+2 <= n) (ε : side) {D : csp} :
+  box' (↓ (Hp ↕ Hq)) D -> box'' (Hp ↕ Hq) D;
+  cohbox {q r} {Hp : p.+2 <= r.+2}
+  {Hr : r.+2 <= q.+1} {Hq : q.+1 <= n}
+  {ε : side} {ε' : side} {D: csp} (* ε : face index *)
+  (d : box (↓ ↓ (Hp ↕ (Hr ↕ Hq))) D) :
+  subbox' _ ε (subbox _ ε' d) = (subbox' _ ε' (subbox _ ε d));
 }.
 
 Arguments box {n p csp} _ Hp.
@@ -46,28 +42,26 @@ Record PartialCube (n p : nat)
   (Box : forall {p}, PartialBox n p (@csp)) := {
   cube {Hp : p <= n} {D : csp} :
     (Box.(box) (le_refl n) D -> Type@{l}) -> Box.(box) Hp D -> Type@{l} ;
-  cube' {Hp : p <= n} {D : csp} :
+  cube' {Hp : p.+1 <= n} {D : csp} :
     Box.(box') Hp D -> Type@{l} ;
-  cube'' {Hp : p <= n} {D : csp} :
+  cube'' {Hp : p.+2 <= n} {D : csp} :
     Box.(box'') Hp D -> Type@{l} ;
-  subcube {q} {Hp : p <= q}
-    (Hq : q <= n) (ε : side) {D : csp}
+  subcube {q} {Hp : p.+1 <= q.+1}
+    (Hq : q.+1 <= n) (ε : side) {D : csp}
     {E : Box.(box) (le_refl n) D -> Type@{l}}
-    {d : Box.(box) (Hp ↕ Hq) D} (b : cube E d) :
+    {d : Box.(box) (↓ (Hp ↕ Hq)) D} (b : cube E d) :
     cube' (Box.(subbox) Hq ε d) ;
-  subcube' {q} {Hp : p <= q}
-    (Hq : q <= n) (ε : side) {D : csp}
-    {d : Box.(box') (Hp ↕ Hq) D} (b : cube' d) :
+  subcube' {q} {Hp : p.+2 <= q.+2}
+    (Hq : q.+2 <= n) (ε : side) {D : csp}
+    {d : Box.(box') (↓ (Hp ↕ Hq)) D} (b : cube' d) :
     cube'' (Box.(subbox') Hq ε d) ;
-  cohcube {q r} {Hp : p <= r}
-    {Hr : r <= q} {Hq : q <= n}
+  cohcube {q r} {Hp : p.+2 <= r.+2}
+    {Hr : r.+2 <= q.+1} {Hq : q.+1 <= n}
     (ε : side) (ε' : side) {D : csp}
     (E : Box.(box) (le_refl n) D -> Type@{l})
-    (d : Box.(box) (Hp ↕ (Hr ↕ Hq)) D) (b : cube E d) :
-    rew (Box.(cohbox) d) in (subcube' (Hp := Hp ↕ Hr) Hq ε
-    (subcube (Hp := Hp) (Hr ↕ Hq) ε' b)) =
-    (subcube' (Hp := Hp) (Hr ↕ Hq) ε'
-    (subcube (Hp := Hp ↕ Hr) Hq ε b))
+    (d : Box.(box) (↓ ↓ (Hp ↕ (Hr ↕ Hq))) D) (b : cube E d) :
+    rew (Box.(cohbox) d) in
+    (subcube' _ ε (subcube _ ε' b)) = (subcube' _ ε' (subcube _ ε b))
 }.
 
 Arguments cube {n p csp Box} _ {Hp D} E.
@@ -82,17 +76,18 @@ Class Cubical (n : nat) := {
   csp : Type@{l'} ;
   Box {p} : PartialBox n p csp ;
   Cube {p} : PartialCube n p csp (@Box) ;
-  eqbox0 {D : csp} : Box.(box) le0 D = unit ;
-  eqbox0' {D : csp} : Box.(box') le0 D = unit ;
-  eqBoxSp {D : csp} {p} (Hp : p <= n) :
-  Box.(box) Hp D = {d : Box.(box) Hp D &
+  eqBox {D : csp} : Box.(box) le0 D = unit ;
+  eqBox' {len1: 1 <= n} {D : csp} : Box.(box') len1 D = unit ;
+  eqBoxSp {D : csp} {p} (Hp : S p <= n) :
+  Box.(box) Hp D = {d : Box.(box) (↓ Hp) D &
   (Cube.(cube') (Box.(subbox) _ L d) *
   Cube.(cube') (Box.(subbox) _ R d))%type } ;
-  eqsubbox0 {q} (Hq : q <= n) (ε : side) (D : csp) :
-  Box.(subbox) (Hp := le0) Hq ε
+  eqSubox0 {q} {len1: 1 <= n} (Hq : q.+1 <= n)
+    (ε : side) (D : csp) :
+  Box.(subbox) (Hp := (raise_S_both le0)) Hq ε
   =_{f_equal2 (fun T1 T2 => T1 -> T2)
-    (rew [fun e => Box.(box) e D = unit] le_irrelevance le0 _ in eqbox0)
-    (rew [fun e => Box.(box') e D = unit] le_irrelevance le0 _ in eqbox0')} (fun _ => tt);
+    (rew [fun e => Box.(box) e D = unit] le_irrelevance le0 _ in eqBox)
+    (rew [fun e => Box.(box') e D = unit] le_irrelevance len1 _ in eqBox')} (fun _ => tt);
 }.
 
 Arguments csp {n} _.
@@ -104,10 +99,10 @@ Definition mkcsp {n : nat} {C : Cubical n} : Type@{l'} :=
 
 Definition mkBox {n p} {C : Cubical n} : {dp : PartialBox (S n) p mkcsp &
 {eqbox' :
-forall {Hp : p <= n} {D : mkcsp}, dp.(box') (↑ Hp) D = C.(Box).(box) Hp D.1 &
+forall {Hp : p <= n} {D : mkcsp}, dp.(box') (raise_S_both Hp) D = C.(Box).(box) Hp D.1 &
 {eqbox'' :
-forall {Hp : p <= n} {D : mkcsp}, dp.(box'') (↑ Hp) D = C.(Box).(box') Hp D.1 &
-forall {ε q} {D : mkcsp} {Hpq : p <= q} {Hq : q <= n}, dp.(subbox') (↑ Hq) ε
+forall {Hp : p.+1 <= n} {D : mkcsp}, dp.(box'') (raise_S_both Hp) D = C.(Box).(box') Hp D.1 &
+forall {ε q} {D : mkcsp} {Hpq : p.+1 <= q.+2} {Hq : q.+2 <= n}, dp.(subbox') (↑ Hq) ε
 =_{f_equal2 (fun T1 T2 => T1 -> T2)
   (eqbox' (Hpq ↕ Hq) D) (eqbox'' (Hpq ↕ Hq) D)}
 C.(Box).(subbox) Hq ε}}}.
@@ -118,8 +113,8 @@ C.(Box).(subbox) Hq ε}}}.
       - intros Hp D; exact unit.
       - intros Hp D; exact (C.(Box).(box) le0 D.1).
       - intros Hp D; exact (C.(Box).(box') le0 D.1).
-      - simpl; intros q Hp Hq ε D _. rewrite C.(@eqbox0 _). exact tt.
-      - simpl; intros q Hp Hq ε D _. rewrite C.(@eqbox0' _). exact tt.
+      - simpl; intros q Hp Hq ε D _. rewrite C.(@eqBox _). exact tt.
+      - simpl; intros q Hp Hq ε D _. rewrite C.(@eqBox' _). exact tt.
       - simpl; intros q Hp Hr Hq ε ε' D d _; reflexivity.
     * unshelve esplit; simpl. intros Hp D. (* eqBox' and eqbox'' *)
       rewrite <- (le_irrelevance le0 Hp).
@@ -132,28 +127,29 @@ C.(Box).(subbox) Hq ε}}}.
            admit.
   + unshelve esplit. (* p = S _ *)
     * simpl in eqBox', eqBox'', eqBox'''. (* the six first goals *)
-      unshelve esplit.
+      unshelve esplit;
+      pose (Sub Hp side := (subboxSn _ (le_refl p) (↓ Hp) side)).
       - intros Hp D. (* boxSn *)
-        pose (Sub side := (subboxSn _ (le_refl p) (↓ Hp) side)).
         clear eqBox''' eqBox''.
-        specialize eqBox' with (Hp := (⇓ Hp)).
-        assert (↑ (⇓ Hp) = le_refl p ↕ (↓ Hp)) by apply le_irrelevance.
+        specialize eqBox' with (Hp := (⇓ Hp)) (D := D).
+        assert (↑ (⇓ Hp) = ↓ Hp) by apply le_irrelevance.
         rewrite H in eqBox'.
-        pose (Sub' side d := rew [fun X => X] (eqBox' D) in Sub side D d).
-        exact {d : boxSn (↑ (⇓ Hp)) D &
+        pose (Sub' side d := rew [fun X => X] eqBox' in Sub Hp side D d).
+        exact {d : boxSn (↓ Hp) D &
                (C.(Cube).(cube) D.2 (Sub' L d) *
                C.(Cube).(cube) D.2 (Sub' R d))%type }.
       - intros Hp D. exact (C.(Box).(box) (⇓ Hp) D.1). (* boxSn' *)
       - intros Hp D. exact (C.(Box).(box') (⇓ Hp) D.1). (* boxSn '' *)
       - simpl. intros. destruct X as (d, (CL, CR)). (* subboxSn *)
         rewrite C.(@eqBoxSp _). unshelve esplit.
-        ++ exact (rew [fun X : Type => X] eqBox' (⇓ Hp) D in Sub ε D d).
+        ++ clear eqBox''' eqBox'' CL CR.
+          specialize eqBox' with (Hp := (⇓ (Hp ↕ Hq))) (D := D).
+          assert (↑ (⇓ (Hp ↕ Hq)) = ↓ (Hp ↕ Hq)) by apply le_irrelevance.
+          rewrite H in eqBox'.
+          exact (rew [fun X : Type => X] eqBox' in Sub (Hp ↕ Hq) ε D d).
         ++ split. (* Sides L and R *)
-           assert ((le_refl p ↕ ((↓ Hp) ↕ Hq)) = (↑ (⇓ Hp))) by
-           (apply le_irrelevance).
            specialize cohboxSn with (r := p) (q := q) (Hp := le_refl p)
-           (Hr := (↓ Hp)) (Hq := Hq) (ε := ε) (D := D)
-           (d:= rew <- [fun X => boxSn X D] H in d).
+           (Hr := (↓ Hp)) (Hq := Hq) (ε := ε) (D := D).
            specialize eqBox''' with (ε := ε) (q := q) (D := D).
           ** specialize cohboxSn with (ε' := L). (* The side L *)
              apply (C.(Cube).(subcube) _ ε D.2 CL).

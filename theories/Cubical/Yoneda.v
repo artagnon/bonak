@@ -49,6 +49,12 @@ Defined.
 
 Notation "⇓ p" := (le_S_both p) (at level 40).
 
+Theorem raise_S_both {n m} (Hmn : n <= m) : S n <= S m.
+  unfold le.
+  intros p Hpn.
+Admitted.
+
+
 Theorem le_trans_assoc {n m p q} (Hnm : n <= m) (Hmp : m <= p) (Hpq : p <= q) :
   Hnm ↕ (Hmp ↕ Hpq) = (Hnm ↕ Hmp) ↕ Hpq.
 Proof.
