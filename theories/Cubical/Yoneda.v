@@ -54,6 +54,7 @@ Theorem raise_S_both {n m} (Hmn : n <= m) : S n <= S m.
   intros p Hpn.
 Admitted.
 
+Notation "⇑ p" := (raise_S_both p) (at level 40).
 
 Theorem le_trans_assoc {n m p q} (Hnm : n <= m) (Hmp : m <= p) (Hpq : p <= q) :
   Hnm ↕ (Hmp ↕ Hpq) = (Hnm ↕ Hmp) ↕ Hpq.
@@ -69,6 +70,11 @@ Defined.
 
 Theorem le_trans_comm2 {m p} (Hmm : m <= m) (Hmp : S m <= S p) :
   (Hmm ↕ ↓ Hmp) = ↑ (⇓ Hmp).
+Proof.
+  now apply le_irrelevance.
+Defined.
+
+Theorem le_trans_comm3 {n m} (Hmn : S (S n) <= S m) : ⇓ (↓ Hmn) = ↓ (⇓ Hmn).
 Proof.
   now apply le_irrelevance.
 Defined.
@@ -89,12 +95,6 @@ Proof.
   intros H%le2.
   exfalso.
   eapply Nat.nle_succ_0. eauto.
-Defined.
-
-Lemma le0 : forall {n : nat}, 0 <= n.
-  intros n p H.
-  inversion H.
-  apply le_O_n.
 Defined.
 
 End LeYoneda.
