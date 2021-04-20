@@ -36,7 +36,7 @@ Arguments subbox {n p csp} _ {q Hp} Hq ε {D}.
 Arguments subbox' {n p csp} _ {q Hp} Hq ε {D}.
 Arguments cohbox {n p csp} _ {q r Hp Hr Hq ε ε' D} d.
 
-(* Cube consists of cube, subcube, and coherence conditions between then *)
+(* Cube consists of cube, subcube, and coherence conditions between them *)
 Record PartialCube (n p : nat)
   (csp : Type@{l'})
   (Box : forall {p}, PartialBox n p (@csp)) := {
@@ -85,7 +85,7 @@ Class Cubical (n : nat) := {
   eqSubox0 {q} {len0: 0 <= q} {len1: 1 <= n} (Hq : q.+1 <= n)
     (ε : side) (D : csp) :
   Box.(subbox) (Hp := (⇑ len0)) Hq ε
-  =_{f_equal2 (fun T1 T2 => T1 -> T2) (eqBox (D := D)) (eqBox' (D := D))}
+    =_{f_equal2 (fun T1 T2 => T1 -> T2) (eqBox (D := D)) (eqBox' (D := D))}
     (fun _ => tt);
 }.
 
@@ -99,23 +99,23 @@ Definition mkcsp {n : nat} {C : Cubical n} : Type@{l'} :=
 Definition mkBox {n p} {C : Cubical n} : {dp : PartialBox n.+1 p mkcsp &
 {eqbox' :
 forall {Hp : p <= n} {HpS: p.+1 <= n.+1} {D : mkcsp},
-dp.(box') HpS D = C.(Box).(box) Hp D.1 &
-{eqbox'' :
-forall {Hp: p.+1 <= n} {HpS : p.+2 <= n.+1} {D : mkcsp},
-dp.(box'') HpS D = C.(Box).(box') Hp D.1 &
-forall {ε q} {D : mkcsp} {Hpq : p.+2 <= q.+2} {Hq : q.+2 <= n},
-dp.(subbox') (Hp := Hpq) (↑ Hq) ε
-=_{f_equal2 (fun T1 T2 => T1 -> T2) (eqbox' _ _ D) (eqbox'' _ _ D)}
-  C.(Box).(subbox) (Hp := ↓ Hpq) Hq ε}}}.
-  induction p as [|p
-    ((boxSn, boxSn', boxSn'', subboxSn, subboxSn', cohboxSn), (eqBox', (eqBox'', eqBox''')))].
+  dp.(box') HpS D = C.(Box).(box) Hp D.1 &
+  {eqbox'' :
+  forall {Hp: p.+1 <= n} {HpS : p.+2 <= n.+1} {D : mkcsp},
+    dp.(box'') HpS D = C.(Box).(box') Hp D.1 &
+      forall {ε q} {D : mkcsp} {Hpq : p.+2 <= q.+2} {Hq : q.+2 <= n},
+        dp.(subbox') (Hp := Hpq) (↑ Hq) ε
+        =_{f_equal2 (fun T1 T2 => T1 -> T2) (eqbox' _ _ D) (eqbox'' _ _ D)}
+        C.(Box).(subbox) (Hp := ↓ Hpq) Hq ε}}}.
+  induction p as [|p ((boxSn, boxSn', boxSn'', subboxSn, subboxSn', cohboxSn),
+                      (eqBox', (eqBox'', eqBox''')))].
   + unshelve esplit. (* p = O *)
     * unshelve esplit. (* the six first goals *)
       - intros Hp D; exact unit.
       - intros Hp D. exact (C.(Box).(box) (⇓ Hp) D.1).
       - intros Hp D; exact (C.(Box).(box') (⇓ Hp) D.1).
-      - simpl; intros q Hp Hq ε D _. rewrite C.(@eqBox _). exact tt.
-      - simpl; intros q Hp Hq ε D _. rewrite C.(@eqBox' _). exact tt.
+      - simpl; intros q Hp Hq ε D _; rewrite C.(@eqBox _); exact tt.
+      - simpl; intros q Hp Hq ε D _; rewrite C.(@eqBox' _); exact tt.
       - simpl; intros q Hp Hr Hq ε ε' D d _; reflexivity.
     * unshelve esplit; simpl. intros Hp HpS D. (* eqBox' and eqbox'' *)
       rewrite <- (le_irrelevance (⇓ HpS) Hp).
@@ -123,10 +123,10 @@ dp.(subbox') (Hp := Hpq) (↑ Hq) ε
       - unshelve esplit; simpl. intros Hp HpS.
         rewrite <- (le_irrelevance (⇓ HpS) Hp).
         ++ reflexivity. (* eqBox'' *)
-        ++ intros ε q D Hpq Hq. simpl. (* eqBox''' *)
+        ++ intros ε q D Hpq H; simpl. (* eqBox''' *)
            admit.
   + unshelve esplit. (* p = S _ *)
-    * simpl in eqBox', eqBox'', eqBox'''. (* the six first goals *)
+    * simpl in eqBox', eqBox'', eqBox'''; (* the six first goals *)
       unshelve esplit;
       pose (Sub Hp side := (subboxSn p (le_refl p.+1) Hp side)).
       - intros Hp D. (* boxSn *)
@@ -143,20 +143,19 @@ dp.(subbox') (Hp := Hpq) (↑ Hq) ε
         ++ clear eqBox''' eqBox'' CL CR.
            specialize Sub with (Hp := (↓ (Hp ↕ Hq))) (D := D).
            specialize eqBox' with (Hp := (⇓ ↓ (Hp ↕ Hq)))
-              (HpS := (↓ (Hp ↕ Hq))) (D := D).
+                                  (HpS := (↓ (Hp ↕ Hq))) (D := D).
            rewrite <- (le_trans_comm3 (Hp ↕ Hq)).
            exact (rew [fun X : Type => X] eqBox' in Sub ε d).
         ++ split. (* Sides L and R *)
            specialize cohboxSn with (r := p) (q := q) (Hp := le_refl p.+2)
-           (Hr := Hp) (Hq := Hq) (ε := ε) (D := D).
-           specialize eqBox''' with (ε := ε) (q := q) (D := D).
-          ** specialize cohboxSn with (ε' := L). (* The side L *)
-             cbv zeta; apply C.(Cube).(subcube) with (E := D.2).
-             apply (C.(Cube).(subcube) _ ε D.2 CL).
-          ** specialize cohboxSn with (ε' := R). (* The side R *)
-             apply (C.(Cube).(subcube) _ ε D.2 CR).
+                                    (Hr := Hp) (Hq := Hq) (ε := ε) (D := D).
+           apply C.(Cube).(subcube) with (E := D.2); cbv zeta; unfold Sub.
+           ** specialize cohboxSn with (ε' := L) (d := d). (* The side L *)
+              admit.
+           ** specialize cohboxSn with (ε' := R) (d := d). (* The side R *)
+              admit.
       - simpl. admit. (* subboxSn' *)
-      - simpl. admit. (* cohboxSn *)
-   * simpl. admit. (* eqBox, eqBox', eqBox''' *)
+      - admit.
+   * admit. (* eqBox, eqBox', eqBox''' *)
 Defined.
 End Cubical.
