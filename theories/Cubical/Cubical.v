@@ -117,10 +117,10 @@ forall {Hp : p <= n} {HpS: p.+1 <= n.+1} {D : mkcsp},
       - simpl; intros q Hp Hq ε D _; rewrite C.(@eqBox _); exact tt.
       - simpl; intros q Hp Hq ε D _; rewrite C.(@eqBox' _); exact tt.
       - simpl; intros q Hp Hr Hq ε ε' D d _; reflexivity.
-    * unshelve esplit; simpl. intros Hp HpS D. (* eqBox' and eqbox'' *)
-      rewrite <- (le_irrelevance (⇓ HpS) Hp).
-      - reflexivity. (* eqBox' *)
-      - unshelve esplit; simpl. intros Hp HpS.
+    * unshelve esplit; simpl. (* eqBox' and eqbox'' *)
+      - intros Hp HpS D; rewrite <- (le_irrelevance (⇓ HpS) Hp). (* eqBox' *)
+        reflexivity.
+      - unshelve esplit; simpl. intros Hp HpS;
         rewrite <- (le_irrelevance (⇓ HpS) Hp).
         ++ reflexivity. (* eqBox'' *)
         ++ intros ε q D Hpq H; simpl. (* eqBox''' *)
