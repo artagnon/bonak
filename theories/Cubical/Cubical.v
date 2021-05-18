@@ -148,37 +148,55 @@ forall {Hp : p <= n} {HpS: p.+1 <= n.+1} {D : mkcsp},
                                   (HpS := (↓ (Hp ↕ Hq))) (D := D).
            rewrite <- (le_trans_comm3 (Hp ↕ Hq)).
            exact (rew [fun X : Type => X] eqBox' in Sub ε d).
-        ++ split. (* Sides L and R *)
-           cbv zeta; unfold Sub.
+        ++ split; (* Sides L and R *)
+           cbv zeta; unfold Sub;
            specialize cohboxSn with (Hpr := le_refl p.+2) (Hr := Hp) (Hq := Hq)
-                                    (ε := ε) (D := D).
+                                    (ε := ε) (D := D);
            (* eqBox''': subboxSn' = subbox : Prop proving equality of terms *)
            (* The Prop is inhabited by eqBox'' *)
            (* rewrite tactic only works with eq_refl *)
-           ** set (F := fun (p0 : nat) (Hpn : Peano.le p0 (p.+1)) =>
-                le_S p0 p.+1 Hpn) in *.
-              change (le_refl p.+2 ↕ (Hp ↕ Hq)) with (Hp ↕ Hq) in cohboxSn.
-              specialize cohboxSn with (ε' := L) (d := d). (* The side L *)
+           set (F := fun (p0 : nat) (Hpn : Peano.le p0 (p.+1)) =>
+                le_S p0 p.+1 Hpn) in *;
+              change (le_refl p.+2 ↕ (Hp ↕ Hq)) with (Hp ↕ Hq) in cohboxSn;
+          pose (Q := fun (u : box' (Box C) (⇓ (Hp ↕ Hq)) D.1) =>
+            cube' (Cube C) u);
+          pose (P := fun (u : boxSn'' (Hp ↕ Hq) D) =>
+            cube' (Cube C)
+            (rew [fun X => X] (eqBox'' (⇓ (Hp ↕ Hq)) (Hp ↕ Hq) D) in u)).
+           ** specialize cohboxSn with (ε' := L) (d := d). (* The side L *)
               set (r := rew _ in _).
+              rewrite (le_trans_comm3 (Hp ↕ Hq)) in CL.
+              set (r' := rew _ in _) in CL.
               assert (eqBox_copy''' := eqBox''').
               specialize eqBox''' with (ε := L) (HpS := le_refl p.+2)
-                (HqS := Hp ↕ Hq) (d := r) (d' := subboxSn p.+1 F (Hp ↕ Hq) ε D d).
-              pose (Q := fun (u : box' (Box C) (⇓ (Hp ↕ Hq)) D.1) =>
-                cube' (Cube C) u).
-              pose (P := fun (u : boxSn'' (Hp ↕ Hq) D) =>
-                cube' (Cube C)
-                (rew [fun X => X] (eqBox'' (⇓ (Hp ↕ Hq)) (Hp ↕ Hq) D) in u)).
+                (HqS := Hp ↕ Hq) (d := r) (d' :=
+                subboxSn p.+1 F (Hp ↕ Hq) ε D d).
               apply (rew_over_lr' Q eqBox''').
               rewrite <- cohboxSn.
               specialize eqBox_copy''' with (ε := ε) (HpS := le_refl p.+2)
-                (HqS := Hp ↕ Hq) (d := r) (d' := subboxSn p.+1 F (Hp ↕ Hq) L D d).
+                (HqS := Hp ↕ Hq) (d := r')
+                (d' := subboxSn p.+1 F (Hp ↕ Hq) L D d).
               apply (rew_over_rl' Q eqBox_copy''').
               unfold Q.
               eapply C.(Cube).(subcube) with (Hq0 := (⇓ Hp ↕ Hq)) (E := D.2).
-              apply CL.
-              admit.
+              exact CL.
            ** specialize cohboxSn with (ε' := R) (d := d). (* The side R *)
-              admit.
+              set (r := rew _ in _).
+              rewrite (le_trans_comm3 (Hp ↕ Hq)) in CR.
+              set (r' := rew _ in _) in CR.
+              assert (eqBox_copy''' := eqBox''').
+              specialize eqBox''' with (ε := R) (HpS := le_refl p.+2)
+                (HqS := Hp ↕ Hq) (d := r) (d' :=
+                subboxSn p.+1 F (Hp ↕ Hq) ε D d).
+              apply (rew_over_lr' Q eqBox''').
+              rewrite <- cohboxSn.
+              specialize eqBox_copy''' with (ε := ε) (HpS := le_refl p.+2)
+                (HqS := Hp ↕ Hq) (d := r')
+                (d' := subboxSn p.+1 F (Hp ↕ Hq) R D d).
+              apply (rew_over_rl' Q eqBox_copy''').
+              unfold Q.
+              eapply C.(Cube).(subcube) with (Hq0 := (⇓ Hp ↕ Hq)) (E := D.2).
+              exact CR.
       - simpl. admit. (* subboxSn' *)
       - admit.
    * admit. (* eqBox, eqBox', eqBox''' *)
