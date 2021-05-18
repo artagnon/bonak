@@ -112,12 +112,14 @@ forall {Hp : p <= n} {HpS: p.+1 <= n.+1} {D : mkcsp},
   + unshelve esplit. (* p = O *)
     * unshelve esplit. (* the six first goals *)
       - intros Hp D; exact unit.
-      - intros Hp D. exact (C.(Box).(box) (⇓ Hp) D.1).
-      - intros Hp D; exact (C.(Box).(box') (⇓ Hp) D.1).
+      - intros Hp D. exact (C.(Box).(box) (⇓ Hp) D.1). (* boxSn' *)
+      - intros Hp D; exact (C.(Box).(box') (⇓ Hp) D.1). (* boxSn'' *)
       - simpl; intros q Hp Hq ε D _; rewrite C.(@eqBox _); exact tt.
+        (* subboxSn *)
       - simpl; intros q Hp Hq ε D _; rewrite C.(@eqBox' _); exact tt.
-      - simpl; intros q Hp Hr Hq ε ε' D d _; reflexivity.
-    * unshelve esplit; simpl. (* eqBox' and eqbox'' *)
+        (* subboxSn' *)
+      - simpl; intros q Hp Hr Hq ε ε' D d _; reflexivity. (* cohboxSn *)
+    * unshelve esplit; simpl. (* eqBox', eqbox'', and eqBox''' *)
       - intros Hp HpS D; rewrite <- (le_irrelevance (⇓ HpS) Hp). (* eqBox' *)
         reflexivity.
       - unshelve esplit; simpl. intros Hp HpS;
@@ -127,12 +129,12 @@ forall {Hp : p <= n} {HpS: p.+1 <= n.+1} {D : mkcsp},
            admit.
   + unshelve esplit. (* p = S _ *)
     * simpl in eqBox', eqBox'', eqBox'''; (* the six first goals *)
-      unshelve esplit.
-      pose (Sub Hp side := (subboxSn p.+1 (↓ (le_refl p.+2)) Hp side)).
+      unshelve esplit;
+      pose (Sub Hp side := (subboxSn p (le_refl p.+1) Hp side)).
       - intros Hp D. (* boxSn *)
         clear eqBox''' eqBox''.
-        specialize eqBox' with (Hp := (⇓ Hp)) (D := D).
-        pose (Sub' side d := rew [fun X => X] (eqBox' Hp) in Sub Hp side D d).
+        specialize eqBox' with (HpS := Hp) (Hp := (⇓ Hp)) (D := D).
+        pose (Sub' side d := rew [fun X => X] eqBox' in Sub Hp side D d).
         exact {d : boxSn (↓ Hp) D &
                (C.(Cube).(cube) D.2 (Sub' L d) *
                C.(Cube).(cube) D.2 (Sub' R d))%type }.
