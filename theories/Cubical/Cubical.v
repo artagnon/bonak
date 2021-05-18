@@ -155,17 +155,27 @@ forall {Hp : p <= n} {HpS: p.+1 <= n.+1} {D : mkcsp},
            (* eqBox''': subboxSn' = subbox : Prop proving equality of terms *)
            (* The Prop is inhabited by eqBox'' *)
            (* rewrite tactic only works with eq_refl *)
-           ** specialize cohboxSn with (ε' := L) (d := d). (* The side L *)
+           ** set (F := fun (p0 : nat) (Hpn : Peano.le p0 (p.+1)) =>
+                le_S p0 p.+1 Hpn) in *.
+              change (le_refl p.+2 ↕ (Hp ↕ Hq)) with (Hp ↕ Hq) in cohboxSn.
+              specialize cohboxSn with (ε' := L) (d := d). (* The side L *)
               set (r := rew _ in _).
+              assert (eqBox_copy''' := eqBox''').
               specialize eqBox''' with (ε := L) (HpS := le_refl p.+2)
-                (HqS := Hp ↕ Hq) (d := r) (d' := subboxSn p (le_refl p.+1) (↓ Hp ↕ Hq) ε D d).
+                (HqS := Hp ↕ Hq) (d := r) (d' := subboxSn p.+1 F (Hp ↕ Hq) ε D d).
               pose (Q := fun (u : box' (Box C) (⇓ (Hp ↕ Hq)) D.1) =>
                 cube' (Cube C) u).
               pose (P := fun (u : boxSn'' (Hp ↕ Hq) D) =>
                 cube' (Cube C)
                 (rew [fun X => X] (eqBox'' (⇓ (Hp ↕ Hq)) (Hp ↕ Hq) D) in u)).
               apply (rew_over_lr' Q eqBox''').
-              rewrite cohboxSn.
+              rewrite <- cohboxSn.
+              specialize eqBox_copy''' with (ε := ε) (HpS := le_refl p.+2)
+                (HqS := Hp ↕ Hq) (d := r) (d' := subboxSn p.+1 F (Hp ↕ Hq) L D d).
+              apply (rew_over_rl' Q eqBox_copy''').
+              unfold Q.
+              eapply C.(Cube).(subcube) with (Hq0 := (⇓ Hp ↕ Hq)) (E := D.2).
+              apply CL.
               admit.
            ** specialize cohboxSn with (ε' := R) (d := d). (* The side R *)
               admit.
