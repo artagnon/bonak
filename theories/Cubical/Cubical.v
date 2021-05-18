@@ -22,10 +22,10 @@ Record PartialBox (n p : nat) (csp : Type@{l'}) := {
   box (↓ (Hp ↕ Hq)) D -> box' (Hp ↕ Hq) D;
   subbox' {q} {Hp : p.+2 <= q.+2} (Hq : q.+2 <= n) (ε : side) {D : csp} :
   box' (↓ (Hp ↕ Hq)) D -> box'' (Hp ↕ Hq) D;
-  cohbox {q r} {Hp : p.+2 <= r.+2}
+  cohbox {q r} {Hpr : p.+2 <= r.+2}
   {Hr : r.+2 <= q.+1} {Hq : q.+1 <= n}
   {ε : side} {ε' : side} {D: csp} (* ε : face index *)
-  (d : box (↓ ↓ (Hp ↕ (Hr ↕ Hq))) D) :
+  (d : box (↓ ↓ (Hpr ↕ (Hr ↕ Hq))) D) :
   subbox' _ ε (subbox _ ε' d) = (subbox' _ ε' (subbox _ ε d));
 }.
 
@@ -34,7 +34,7 @@ Arguments box' {n p csp} _ Hp.
 Arguments box'' {n p csp} _ Hp.
 Arguments subbox {n p csp} _ {q Hp} Hq ε {D}.
 Arguments subbox' {n p csp} _ {q Hp} Hq ε {D}.
-Arguments cohbox {n p csp} _ {q r Hp Hr Hq ε ε' D} d.
+Arguments cohbox {n p csp} _ {q r Hpr Hr Hq ε ε' D} d.
 
 (* Cube consists of cube, subcube, and coherence conditions between them *)
 Record PartialCube (n p : nat)
@@ -103,10 +103,10 @@ forall {Hp : p <= n} {HpS: p.+1 <= n.+1} {D : mkcsp},
   {eqbox'' :
   forall {Hp: p.+1 <= n} {HpS : p.+2 <= n.+1} {D : mkcsp},
     dp.(box'') HpS D = C.(Box).(box') Hp D.1 &
-      forall {ε q} {D : mkcsp} {Hpq : p.+2 <= q.+2} {Hq : q.+2 <= n},
-        dp.(subbox') (Hp := Hpq) (↑ Hq) ε
-        =_{f_equal2 (fun T1 T2 => T1 -> T2) (eqbox' _ _ D) (eqbox'' _ _ D)}
-        C.(Box).(subbox) (Hp := ↓ Hpq) Hq ε}}}.
+      forall {ε q} {D : mkcsp} {Hp : p.+1 <= q.+1} {HpS : p.+2 <= q.+2}
+        {Hq : q.+1 <= n} {HqS : q.+2 <= n.+1} {d d'},
+        dp.(subbox') (Hp := HpS) HqS ε d' =_{eqbox'' _ _ D}
+        C.(Box).(subbox) (Hp := Hp) Hq ε d}}}.
   induction p as [|p ((boxSn, boxSn', boxSn'', subboxSn, subboxSn', cohboxSn),
                       (eqBox', (eqBox'', eqBox''')))].
   + unshelve esplit. (* p = O *)
@@ -127,8 +127,8 @@ forall {Hp : p <= n} {HpS: p.+1 <= n.+1} {D : mkcsp},
            admit.
   + unshelve esplit. (* p = S _ *)
     * simpl in eqBox', eqBox'', eqBox'''; (* the six first goals *)
-      unshelve esplit;
-      pose (Sub Hp side := (subboxSn p (le_refl p.+1) Hp side)).
+      unshelve esplit.
+      pose (Sub Hp side := (subboxSn p.+1 (↓ (le_refl p.+2)) Hp side)).
       - intros Hp D. (* boxSn *)
         clear eqBox''' eqBox''.
         specialize eqBox' with (Hp := (⇓ Hp)) (D := D).
@@ -147,10 +147,23 @@ forall {Hp : p <= n} {HpS: p.+1 <= n.+1} {D : mkcsp},
            rewrite <- (le_trans_comm3 (Hp ↕ Hq)).
            exact (rew [fun X : Type => X] eqBox' in Sub ε d).
         ++ split. (* Sides L and R *)
-           specialize cohboxSn with (r := p) (q := q) (Hp := le_refl p.+2)
-                                    (Hr := Hp) (Hq := Hq) (ε := ε) (D := D).
-           apply C.(Cube).(subcube) with (E := D.2); cbv zeta; unfold Sub.
+           cbv zeta; unfold Sub.
+           specialize cohboxSn with (Hpr := le_refl p.+2) (Hr := Hp) (Hq := Hq)
+                                    (ε := ε) (D := D).
+           (* eqBox''': subboxSn' = subbox : Prop proving equality of terms *)
+           (* The Prop is inhabited by eqBox'' *)
+           (* rewrite tactic only works with eq_refl *)
            ** specialize cohboxSn with (ε' := L) (d := d). (* The side L *)
+              set (r := rew _ in _).
+              specialize eqBox''' with (ε := L) (HpS := le_refl p.+2)
+                (HqS := Hp ↕ Hq) (d := r) (d' := subboxSn p (le_refl p.+1) (↓ Hp ↕ Hq) ε D d).
+              pose (Q := fun (u : box' (Box C) (⇓ (Hp ↕ Hq)) D.1) =>
+                cube' (Cube C) u).
+              pose (P := fun (u : boxSn'' (Hp ↕ Hq) D) =>
+                cube' (Cube C)
+                (rew [fun X => X] (eqBox'' (⇓ (Hp ↕ Hq)) (Hp ↕ Hq) D) in u)).
+              apply (rew_over_lr' Q eqBox''').
+              rewrite cohboxSn.
               admit.
            ** specialize cohboxSn with (ε' := R) (d := d). (* The side R *)
               admit.
