@@ -4,6 +4,7 @@ Require Import Yoneda.
 Import LeYoneda.
 Require Import Aux.
 Require Import RewLemmas.
+Set Printing Projections.
 
 Section Cubical.
 Universe l'.
@@ -78,7 +79,7 @@ Class Cubical (n : nat) := {
   Cube {p} : PartialCube n p csp (@Box) ;
   eqBox {len0: 0 <= n} {D : csp} : Box.(box) len0 D = unit ;
   eqBox' {len1: 1 <= n} {D : csp} : Box.(box') len1 D = unit ;
-  eqBoxSp {D : csp} {p} (Hp : S p <= n) :
+  eqBoxSp {D : csp} {p} (Hp : p.+1 <= n) :
   Box.(box) Hp D = {d : Box.(box) (↓ Hp) D &
   (Cube.(cube') (Box.(subbox) _ L d) *
   Cube.(cube') (Box.(subbox) _ R d))%type } ;

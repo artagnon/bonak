@@ -15,7 +15,7 @@ Definition le_refl n : n <= n :=
 Definition le_trans {n m p} (Hnm : n <= m) (Hmp : m <= p) : n <= p :=
   fun q (Hqn : Peano.le q n) => Hmp _ (Hnm _ Hqn).
 
-Infix "↕" := le_trans (at level 30).
+Infix "↕" := le_trans (at level 45).
 
 Theorem le_S_up {n m} (Hnm : n <= m) : n <= S m.
   unfold le.

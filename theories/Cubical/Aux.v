@@ -9,7 +9,7 @@ Notation "x .+1" := (S x) (at level 1, left associativity, format "x .+1").
 Notation "x .+2" := (S (S x)) (at level 1, left associativity, format "x .+2").
 Notation "x .+3" := (S (S (S x))) (at level 1, left associativity, format "x .+3").
 
-Reserved Notation "x =_{ H } y" (at level 70).
+Reserved Notation "x =_{ H } y" (at level 70, format "'[' x  '/ ' =_{ H }  '/' y ']'").
 Inductive eq_over {A} (x : A) : forall {B} (y : B), A = B -> Prop :=
 eq_over_refl : x =_{eq_refl} x
 where "x =_{ H } y" := (eq_over x y H).
