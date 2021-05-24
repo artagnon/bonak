@@ -10,7 +10,7 @@ Theorem le_irrelevance : forall {n m} (H H' : n <= m), H = H'.
 Admitted.
 
 Definition le_refl n : n <= n :=
-  fun _ => id.
+  fun _ x => x.
 
 Definition le_trans {n m p} (Hnm : n <= m) (Hmp : m <= p) : n <= p :=
   fun q (Hqn : Peano.le q n) => Hmp _ (Hnm _ Hqn).
