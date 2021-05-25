@@ -14,15 +14,22 @@ Inductive side := L | R.
 
 (* PartialBox consists of an 0-cells, and fillers which are the 1-cells,
 2-cells, and 3-cells relating the different 0-cells on the cube  *)
-Record PartialBox (n p : nat) (csp : Type@{l'}) := {
-  box (Hp : p <= n) : csp -> Type@{l} ;
+Record PartialBoxBase (n p : nat) (csp : Type@{l'}) := {
   box' (Hp : p.+1 <= n) : csp -> Type@{l} ; (* [box' n D] is [box (n-1) D.1] *)
   box'' (Hp : p.+2 <= n) : csp -> Type@{l} ;
+}.
+
+Arguments box' {n p csp} _ Hp D.
+Arguments box'' {n p csp} _ Hp D.
+
+Record PartialBox (n p : nat) (csp : Type@{l'})
+  (PB : PartialBoxBase n p csp) := {
+  box (Hp : p <= n) : csp -> Type@{l} ;
   (* [box'' n D] is [box (n-2) D.1.1] *)
   subbox {q} {Hp : p.+1 <= q.+1} (Hq : q.+1 <= n) (ε : side) {D : csp} :
-  box (↓ (Hp ↕ Hq)) D -> box' (Hp ↕ Hq) D;
+  box (↓ (Hp ↕ Hq)) D -> PB.(box') (Hp ↕ Hq) D;
   subbox' {q} {Hp : p.+2 <= q.+2} (Hq : q.+2 <= n) (ε : side) {D : csp} :
-  box' (↓ (Hp ↕ Hq)) D -> box'' (Hp ↕ Hq) D;
+  PB.(box') (↓ (Hp ↕ Hq)) D -> PB.(box'') (Hp ↕ Hq) D;
   cohbox {q r} {Hpr : p.+2 <= r.+2}
   {Hr : r.+2 <= q.+1} {Hq : q.+1 <= n}
   {ε : side} {ε' : side} {D: csp} (* ε : face index *)
@@ -30,23 +37,22 @@ Record PartialBox (n p : nat) (csp : Type@{l'}) := {
   subbox' _ ε (subbox _ ε' d) = (subbox' _ ε' (subbox _ ε d));
 }.
 
-Arguments box {n p csp} _ Hp.
-Arguments box' {n p csp} _ Hp.
-Arguments box'' {n p csp} _ Hp.
-Arguments subbox {n p csp} _ {q Hp} Hq ε {D}.
-Arguments subbox' {n p csp} _ {q Hp} Hq ε {D}.
-Arguments cohbox {n p csp} _ {q r Hpr Hr Hq ε ε' D} d.
+Arguments box {n p csp PB} _ Hp D.
+Arguments subbox {n p csp PB} _ {q Hp} Hq ε {D}.
+Arguments subbox' {n p csp PB} _ {q Hp} Hq ε {D}.
+Arguments cohbox {n p csp PB} _ {q r Hpr Hr Hq ε ε' D} d.
 
 (* Cube consists of cube, subcube, and coherence conditions between them *)
 Record PartialCube (n p : nat)
   (csp : Type@{l'})
-  (Box : forall {p}, PartialBox n p (@csp)) := {
+  {PB : forall {p}, PartialBoxBase n p (@csp)}
+  (Box : forall {p}, PartialBox n p (@csp) PB) := {
   cube {Hp : p <= n} {D : csp} :
     (Box.(box) (le_refl n) D -> Type@{l}) -> Box.(box) Hp D -> Type@{l} ;
   cube' {Hp : p.+1 <= n} {D : csp} :
-    Box.(box') Hp D -> Type@{l} ;
+    PB.(box') Hp D -> Type@{l} ;
   cube'' {Hp : p.+2 <= n} {D : csp} :
-    Box.(box'') Hp D -> Type@{l} ;
+    PB.(box'') Hp D -> Type@{l} ;
   subcube {q} {Hp : p.+1 <= q.+1}
     (Hq : q.+1 <= n) (ε : side) {D : csp}
     {E : Box.(box) (le_refl n) D -> Type@{l}}
@@ -54,7 +60,7 @@ Record PartialCube (n p : nat)
     cube' (Box.(subbox) Hq ε d) ;
   subcube' {q} {Hp : p.+2 <= q.+2}
     (Hq : q.+2 <= n) (ε : side) {D : csp}
-    {d : Box.(box') (↓ (Hp ↕ Hq)) D} (b : cube' d) :
+    {d : PB.(box') (↓ (Hp ↕ Hq)) D} (b : cube' d) :
     cube'' (Box.(subbox') Hq ε d) ;
   cohcube {q r} {Hp : p.+2 <= r.+2}
     {Hr : r.+2 <= q.+1} {Hq : q.+1 <= n}
@@ -65,20 +71,21 @@ Record PartialCube (n p : nat)
     (subcube' _ ε (subcube _ ε' b)) = (subcube' _ ε' (subcube _ ε b))
 }.
 
-Arguments cube {n p csp Box} _ {Hp D} E.
-Arguments cube' {n p csp Box} _ {Hp D}.
-Arguments cube'' {n p csp Box} _ {Hp D}.
-Arguments subcube {n p csp Box} _ {q Hp} Hq ε {D} E {d} b.
-Arguments subcube' {n p csp Box} _ {q Hp} Hq ε {D d} b.
+Arguments cube {n p csp PB Box} _ {Hp D} E.
+Arguments cube' {n p csp PB Box} _ {Hp D}.
+Arguments cube'' {n p csp PB Box} _ {Hp D}.
+Arguments subcube {n p csp PB Box} _ {q Hp} Hq ε {D} E {d} b.
+Arguments subcube' {n p csp PB Box} _ {q Hp} Hq ε {D d} b.
 
 (* Cube consists of cubesetprefix, a box built out of partial boxes,
   a cube built out of partial cubes *)
 Class Cubical (n : nat) := {
   csp : Type@{l'} ;
-  Box {p} : PartialBox n p csp ;
+  PB {p} : PartialBoxBase n p csp ;
+  Box {p} : PartialBox n p csp PB ;
   Cube {p} : PartialCube n p csp (@Box) ;
   eqBox {len0: 0 <= n} {D : csp} : Box.(box) len0 D = unit ;
-  eqBox' {len1: 1 <= n} {D : csp} : Box.(box') len1 D = unit ;
+  eqBox' {len1: 1 <= n} {D : csp} : PB.(box') len1 D = unit ;
   eqBoxSp {D : csp} {p} (Hp : p.+1 <= n) :
   Box.(box) Hp D = {d : Box.(box) (↓ Hp) D &
   (Cube.(cube') (Box.(subbox) _ L d) *
@@ -91,23 +98,22 @@ Class Cubical (n : nat) := {
 }.
 
 Arguments csp {n} _.
+Arguments PB {n} _ {p}.
 Arguments Box {n} _ {p}.
 Arguments Cube {n} _ {p}.
 
 Definition mkcsp {n : nat} {C : Cubical n} : Type@{l'} :=
   { D : C.(csp) & C.(Box).(box) (le_refl n) D -> Type@{l} }.
 
-Definition mkBox {n p} {C : Cubical n} : {dp : PartialBox n.+1 p mkcsp &
-{eqbox' :
-forall {Hp : p <= n} {HpS: p.+1 <= n.+1} {D : mkcsp},
-  dp.(box') HpS D = C.(Box).(box) Hp D.1 &
-  {eqbox'' :
-  forall {Hp: p.+1 <= n} {HpS : p.+2 <= n.+1} {D : mkcsp},
-    dp.(box'') HpS D = C.(Box).(box') Hp D.1 &
-      forall {ε q} {D : mkcsp} {Hp : p.+1 <= q.+1} {HpS : p.+2 <= q.+2}
-        {Hq : q.+1 <= n} {HqS : q.+2 <= n.+1} {d d'},
-        dp.(subbox') (Hp := HpS) HqS ε d' =_{eqbox'' _ _ D}
-        C.(Box).(subbox) (Hp := Hp) Hq ε d}}}.
+Definition mkPB {n p} {C : Cubical n} :
+  PartialBoxBase n.+1 p mkcsp := {|
+  box' {Hp : p.+1 <= n.+1} {D : mkcsp} := C.(Box).(box) (⇓ Hp) D.1 ;
+  box'' {Hp : p.+2 <= n.+1} {D : mkcsp} := C.(PB).(box') (⇓ Hp) D.1 ;
+|}.
+
+Definition mkBox {n p} {C : Cubical n} : {DP : PartialBox n.+1 p mkcsp mkPB &
+forall {ε q} {D : mkcsp} {Hp : p.+1 <= q.+1} {Hq : q.+1 <= n} {d d'},
+    DP.(subbox') (Hp := ⇑ Hp) (⇑ Hq) ε d' = C.(Box).(subbox) (Hp := Hp) Hq ε d}.
   induction p as [|p ((boxSn, boxSn', boxSn'', subboxSn, subboxSn', cohboxSn),
                       (eqBox', (eqBox'', eqBox''')))].
   + unshelve esplit. (* p = O *)
@@ -198,8 +204,9 @@ forall {Hp : p <= n} {HpS: p.+1 <= n.+1} {D : mkcsp},
               unfold Q.
               eapply C.(Cube).(subcube) with (Hq0 := (⇓ Hp ↕ Hq)) (E := D.2).
               exact CR.
-      - simpl. admit. (* subboxSn' *)
-      - admit.
+      - intros. lazy zeta beta in X.  (* subboxSn' *)
+        exact (C.(Box).(subbox) (⇓ Hq) ε X).
+      - simpl. intros. lazy zeta. (* cohbox *)
    * admit. (* eqBox, eqBox', eqBox''' *)
 Defined.
 End Cubical.

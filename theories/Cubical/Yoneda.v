@@ -79,6 +79,9 @@ Proof.
   now apply le_irrelevance.
 Defined.
 
+Theorem le_trans_comm4 {n m p} (Hmn : S n <= S m) (Hmp : S m <= S p):
+  ⇓ (Hmn ↕ Hmp) = (⇓ Hmn) ↕ (⇓ Hmp).
+
 Theorem le1 {n m} : Peano.le n m -> n <= m.
 Proof.
   intros H p Hp.
