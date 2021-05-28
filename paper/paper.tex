@@ -1,0 +1,786 @@
+\documentclass[a4paper,english,cleveref,autoref,thm-restate]{article}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{t1enc}
+
+\usepackage{hyperref}
+%\usepackage{proof}
+\usepackage{fullpage}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+%\usepackage{txfonts}
+\usepackage{url}
+\usepackage{color}
+%\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{yfonts}
+\usepackage[all]{xy}
+\xyoption{2cell}
+\UseAllTwocells
+
+\makeatletter
+\newcommand{\Overrightarrow}[2]{\raisebox{#1}{$\ext@arrow 0359\Rightarrowfill@{\mbox{${#2}$}}{}$}}
+\newcommand{\Overleftarrow}[2]{\raisebox{#1}{$\ext@arrow 0359\Leftarrowfill@{\mbox{${#2}$}}{}$}}
+%\newcommand{\Overrightarrow}[1]{\raisebox{1.4ex}{$\ext@arrow 0359\Rightarrowfill@{\mbox{${#1}$}}{}$}}
+\makeatother
+
+\newcommand{\highlight}[1]{\emph{#1}}
+
+\include{macros}
+\newcommand{\Type}{\mathsf{Type}}
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\Prop}{\mathsf{Prop}}
+\newcommand{\refl}[1]{\mathsf{refl}\,{#1}}
+\newcommand{\mkmlidtype}[3]{{#1} =^{\mathrm{id}}_{#2} {#3}}
+\newcommand{\mkmleqdep}[3]{{#1} =^{\mathrm{dep}}_{#2} {#3}}
+\newcommand{\hrefl}[1]{\mathsf{refl^{\mathrm{dep}}}\,{#1}}
+\newcommand{\mluniv}{\mathsf{U}}
+\newcommand{\Jdep}[2]{\mathsf{J}\;{#1}\;{#2}}
+
+\newcommand{\nth}[1]{{#1}^{\mbox{\scriptsize th}}}
+\newcommand{\binomial}[2]{\left(\begin{array}{c}#1\\#2\end{array}\right)}
+
+\newcommand{\wfctx}[1]{{#1}~\mathsf{ok}}
+
+\newcommand{\mkover}[1]{\widetilde{#1}}
+\newcommand{\mkoverdim}[2]{\widetilde{#2}^{#1}}
+%\newcommand{\mkover}[1]{\dot{#1}}
+%\newcommand{\mkprod}[3]{\Pi {#1}\!:\!{#2}.\,{#3}}
+\newcommand{\mkprod}[3]{\Pi {#2}.\,{#3}}
+\newcommand{\mkprodovereq}[3]{\mkover{\Pi} {#1}\!:\!{#2}.\,{#3}}
+\newcommand{\mkprodovereqopp}[3]{\opp{\mkover{\Pi}} {#1}\!:\!{#2}.\,{#3}}
+\newcommand{\mkboundedprod}[4]{\Pi {#3}\!:\!{#1}\leq{#2}.\,{#4}}
+%\newcommand{\mklam}[3]{\lambda {#1}\!:\!{#2}.\,{#3}}
+\newcommand{\mklam}[3]{\lambda^{#2}.\,{#3}}
+\newcommand{\mkboundedlam}[4]{\lambda {#3}\!:\!{#1}\leq{#2}.\,{#4}}
+\newcommand{\mkapp}[2]{{#1}\,{#2}}
+\newcommand{\prodsort}[2]{\Pi ({#1},{#2})}
+
+% selecting kind of treatment of sorts
+\newcommand{\typeorsort}[2]{{#2}}
+
+%\newcommand{\mksigma}[3]{\Sigma {#1}\!:\!{#2}.\,{#3}}
+\newcommand{\mksigma}[3]{\Sigma {#2}.\,{#3}}
+\newcommand{\mksigmaovereq}[3]{\mkover{\Sigma} {#1}\!:\!{#2}.\,{#3}}
+\newcommand{\mksigmaovereqopp}[3]{\opp{\mkover{\Sigma}} {#1}\!:\!{#2}.\,{#3}}
+\newcommand{\mkpair}[2]{\langle{#1},{#2}\rangle}
+\newcommand{\mkfst}[1]{{#1}.1}
+\newcommand{\mksnd}[1]{{#1}.2}
+\newcommand{\sigsort}[2]{\Sigma ({#1},{#2})}
+
+\newcommand{\sortsort}[1]{{\mathcal S}_{#1}}
+
+\newcommand{\Sone}{\mathbb{S}^1}
+\newcommand{\casesone}[5]
+  {\mathsf{case}\;{#1}\;\mathsf{of}\;{#2}\;\Rightarrow\;{#3}\;|\;{#4}\;\Rightarrow\;{#5}\;\mathsf{end}}
+\newcommand{\base}{\mathsf{base}}
+\newcommand{\loopsone}{\mathsf{loop}}
+\newcommand{\Sonesort}{l_{\mathbb{S}^1}}
+
+\newcommand{\emptyctx}{\boxbox}
+
+\newcommand{\sort}[1]{\mathsf{U}_{#1}}
+\newcommand{\univ}{\boxempty}
+%\newcommand{\istype}{~:~S}
+\newcommand{\typeannot}{\mathsf{type}}
+\newcommand{\istype}{~\typeannot}
+
+\newcommand{\mkeq}[3]{{#1} =_{#2} {#3}}
+\newcommand{\mkhomeq}[3]{{#1} =_{#2} {#3}}
+\newcommand{\mkeqovereq}[3]{{#1} \,\mkover{=}_{#2}\, {#3}}
+\newcommand{\mkeqovereqdim}[4]{{#2} \,\mkoverdim{#1}{=}_{#3}\, {#4}}
+%\newcommand{\mkeqtype}[3]{{#1} =_{#2} {#3}} % case where we can write either s or refl{s}
+\newcommand{\mkeqtype}[3]{{#1} =_{\typeannot} {#3}}
+\newcommand{\mkeqtypeovereq}[3]{{#1} \,\mkover{=}_{#2}\, {#3}} % case where we can write either s or refl{s}
+\newcommand{\mkeqarray}[3]{\begin{array}{c}{#1}\\ =_{#2}\\ {#3}\end{array}}
+\newcommand{\mkfaces}[3]{\mkeq{#1}{#2}{#3}}
+\newcommand{\mkfacesarray}[3]{\mkeqarray{#1}{#2}{#3}}
+\newcommand{\mkfacesover}[3]{\mkeqovereq{#1}{#2}{#3}}
+\newcommand{\lameq}[2]{\lambda {#1}.{#2}}
+%\newcommand{\reflterm}[1]{\textsf{refl}{#1}}
+\newcommand{\reflterm}[1]{\widehat{#1}}
+\newcommand{\overreflterm}[1]{{\mkover{\reflterm{#1}}}}
+\newcommand{\refltermdim}[2]{{\widehat{#2}}^{#1}}
+%\newcommand{\reflterm}[1]{\lambda{#1}}
+%\newcommand{\refltype}[1]{\lambda{#1}}
+\newcommand{\refltype}[1]{\reflterm{#1}}
+\newcommand{\purerewlr}[1]{\overrightarrow{#1}}
+\newcommand{\purerewrl}[1]{\overleftarrow{#1}}
+%\newcommand{\rewlr}[2]{\mathsf{rew}^\rightarrow\;{#1}\;\mathsf{in}\;{#2}}
+%\newcommand{\rewrl}[2]{\mathsf{rew}^\leftarrow\;{#1}\;\mathsf{in}\;{#2}}
+\newcommand{\rewlr}[2]{\overrightarrow{#1}(#2)}
+\newcommand{\rewrl}[2]{\overleftarrow{#1}(#2)}
+\newcommand{\deprewlr}[1]{\raisebox{0em}{$\ulcorner$}\!#1}
+\newcommand{\deprewrl}[1]{{#1}\raisebox{-0.2em}{$\!\lrcorner$}}
+\newcommand{\rewlrspec}[2]{{#1}^{\rightarrow}(#2)}
+\newcommand{\rewrlspec}[2]{{#1}^{\leftarrow}(#2)}
+\newcommand{\rewlrrevspec}[2]{{#1}_-^{\rightarrow}(#2)}
+\newcommand{\rewrlrevspec}[2]{{#1}_-^{\leftarrow}(#2)}
+\newcommand{\rewlrrevspecin}[2]{{#1}_+^{\rightarrow}(#2)}
+\newcommand{\rewrlrevspecin}[2]{{#1}_+^{\leftarrow}(#2)}
+\newcommand{\doublerewlr}[2]{\Overrightarrow{1.4ex}{#1}({#2})}
+\newcommand{\doublerewrl}[2]{\Overleftarrow{1.4ex}{#1}({#2})}
+%\newcommand{\mktuple}[6]{\{#1\mapsto #3(#1); #2\mapsto #4(#2); #1\mapsto #5(#1); #2\mapsto #6(#2)\}}
+\newcommand{\mktuple}[6]{\{#3; #4; #5; #6\}_{#1,#2}}
+\newcommand{\mktupleshort}[6]{\{#3; #4; #5; #6\}}
+\newcommand{\opp}[1]{{#1}^{-1}}
+\newcommand{\oppi}[2]{\appi{#1}{(\opp{#2}/{#2})}}
+
+\newcommand{\weakensquarelr}[2]{{#1}_L(#2)}
+\newcommand{\weakensquarerl}[2]{{#1}_R(#2)}
+
+\newcommand{\rewlrmkeq}[4]{\mkeq{\rewlr{#1}{#2}}{#3}{#4}}
+
+% Version basse
+%% \newcommand{\appi}[2]{{#1}_{#2}}
+%% \newcommand{\appidep}[2]{{#1}_{({#2})}}
+%% \newcommand{\bp}[1]{{#1}_0}
+%% \newcommand{\ep}[1]{{#1}_1}
+%% \newcommand{\bpdep}[1]{{#1}_{(0)}}
+%% \newcommand{\epdep}[1]{{#1}_{(1}}}
+% Version haute
+% \newcommand{\metaappi}[2]{{#1}_{[{#2}]}}
+\newcommand{\appi}[2]{{#1}\;\!{#2}}
+\newcommand{\appidep}[2]{{#1}_{#2}}
+\newcommand{\bp}[1]{{#1}{\scriptstyle 0}}
+\newcommand{\ep}[1]{{#1}{\scriptstyle 1}}
+\newcommand{\bpoverdim}[2]{{#2}{\scriptstyle \mkoverdim{#1}{0}}}
+\newcommand{\epoverdim}[2]{{#2}{\scriptstyle \mkoverdim{#1}{1}}}
+\newcommand{\bpdep}[1]{{#1}_0}
+\newcommand{\epdep}[1]{{#1}_1}
+
+\newcommand{\bpsubstexpl}[2]{{#2}_{\{0/{#1}\}}}
+\newcommand{\epsubstexpl}[2]{{#2}_{\{1/{#1}\}}}
+\newcommand{\eqsubstexpl}[2]{{#2}_{\{\star/{#1}\}}}
+\newcommand{\bpsubstexplcons}[2]{{#2}\}\{0/{#1}}
+\newcommand{\epsubstexplcons}[2]{{#2}\}\{1/{#1}}
+\newcommand{\eqsubstexplcons}[2]{{#2}\}\{\star/{#1}}
+\newcommand{\bpsubst}[2]{{#2}{[0/{#1}]}}
+\newcommand{\epsubst}[2]{{#2}{[1/{#1}]}}
+\newcommand{\bpsubstctx}[3]{{#3}{[0/{#2}]}^{#1}}
+\newcommand{\epsubstctx}[3]{{#3}{[1/{#2}]}^{#1}}
+\newcommand{\takebpface}[2]{\partial^{#1}_0{#2}}
+\newcommand{\takeepface}[2]{\partial^{#1}_1{#2}}
+
+\newcommand{\dimvalid}[2]{{#1} \in {#2}}
+\newcommand{\dimdeclare}[1]{{#1}}
+\newcommand{\dimlength}[1]{|#1|_{\mathit{dim}}}
+\newcommand{\dimindex}[2]{\#_{#1}{#2}}
+
+\newcommand{\substminus}[2]{{#1}-{#2}}
+\newcommand{\substminusbernardymoulin}[2]{{#1}/{#2}}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\expand}[2]{\mathsf{expand}(#1,#2)}
+
+\newcommand{\defeq}{\triangleq}
+%\newcommand{\metaequiv}{=\!\!\!=}
+\newcommand{\metaequiv}{\cong}
+\newcommand{\metaletin}[3]{\mathit{let}\;{#1}\;\defeq\;{#2}\;\mathit{in}\;{#3}}
+\newcommand{\map}[2]{\mathsf{ap}\,{#1}\,{#2}}
+\newcommand{\depmap}[2]{\mathsf{apd}\,{#1}\,{#2}}
+\newcommand{\transport}[3]{\mathsf{transport}\,{#1}\,{#2}\,{#3}}
+\newcommand{\deptransport}[3]{\mathsf{transportd}\,{#1}\,{#2}\,{#3}}
+%\newcommand{\swap}[1]{\mathsf{swap}(#1)}
+%\newcommand{\swapbracket}[1]{\mathsf{swap}(#1)}
+%\newcommand{\swaptype}[1]{\mathsf{swap}(#1)}
+\newcommand{\swap}[1]{{#1}^{\circ}}
+\newcommand{\swapbracket}[1]{({#1})^{\circ}}
+\newcommand{\swaptype}[1]{{#1}^{\circ}}
+\newcommand{\swapoverdim}[2]{{#2}^{\mkoverdim{#1}{\circ}}}
+\newcommand{\homsquare}[1]{\mathsf{homsquare}(#1)}
+\newcommand{\permute}[2]{\mathsf{permute}_{#1}(#2)}
+\newcommand{\swapprodeq}[2]{\mathsf{swap}_{\Pi=}^{#1}(#2)}
+\newcommand{\swapeqprod}[2]{\mathsf{swap}_{=\Pi}^{#1}(#2)}
+\newcommand{\swapeqprodlr}[2]{\mathsf{swap}_{=\Pi}^{\rightarrow}({#1})(#2)}
+\newcommand{\swapeqprodrl}[2]{\mathsf{swap}_{=\Pi}^{\leftarrow}({#1})(#2)}
+\newcommand{\swapsigmaeq}[1]{\mathsf{swap}_{\Sigma=}(#1)}
+\newcommand{\swapeqsigma}[1]{\mathsf{swap}_{=\Sigma}(#1)}
+
+\newcommand{\bool}{\mathsf{bool}}
+\newcommand{\booldeux}{\bool^2}
+\newcommand{\boolexp}{\bool^{\bool}}
+
+\newcommand{\reduce}{\;\triangleright\;}
+
+\newcommand{\emptysubst}{\emptyctx}
+
+\newcommand{\sortrule}{\sort{}}
+\newcommand{\axrule}{\mathsf{Ax}}
+\newcommand{\ctxemptyrule}{\mathsf{Ctx}_{\emptyctx}}
+\newcommand{\ctxconsrule}{\mathsf{Ctx}_{\mathsf{cons}}}
+\newcommand{\convrule}{\mathsf{Conv}}
+\newcommand{\convconvrule}{\mathsf{Conv}-\mathsf{Conv}}
+\newcommand{\univrule}{\mathsf{\univ}}
+\newcommand{\convruleredright}{\reduce_R}
+\newcommand{\convruleredleft}{\reduce_L}
+\newcommand{\convrulerefl}{\equiv_{\mathsf{refl}}}
+\newcommand{\convruletrans}{\equiv_{\mathsf{trans}}}
+\newcommand{\convruleredtyperight}{\reduce_R^{\typeannot}}
+\newcommand{\convruleredtypeleft}{\reduce_L^{\typeannot}}
+\newcommand{\convruletyperefl}{\equiv_{\mathsf{refl}}^{\typeannot}}
+\newcommand{\convruletypetrans}{\equiv_{\mathsf{trans}}^{\typeannot}}
+
+\newcommand{\circovereq}{\;\mkover{\circ}\;}
+\newcommand{\circsigma}{\circ_{\Sigma}}
+
+\newcommand{\comprule}{R_{\mathsf{\circ}}}
+\newcommand{\opprule}{R_{\mathsf{\opp}}}
+
+\newcommand{\idleftredrule}{\mathsf{Id_L}}
+\newcommand{\idrightredrule}{\mathsf{Id_R}}
+\newcommand{\idoppredrule}{\mathsf{\opp{Id}}}
+\newcommand{\oppoppredrule}{\mathsf{\opp{(\opp{\_})}}}
+\newcommand{\assoccompredrule}{\mathsf{Assoc}}
+\newcommand{\distriboppcompredrule}{\mathsf{\opp{\circ}}}
+\newcommand{\squaredownredrule}{\circ_{=_{\mkover{=}}}}
+\newcommand{\exchangerule}{\mathsf{Exch}}
+\newcommand{\compeqovereqredrule}{\circ_{\mkover{=}}}
+\newcommand{\squareprodredrule}{\circ_{=_{\mkover{\Pi}}}}
+
+\newcommand{\depmapdef}{\mathsf{ApD}}
+\newcommand{\funextpuredef}{\mathsf{LiftDim}}
+\newcommand{\funextdeppuredef}{\mathsf{LiftDepDim}}
+\newcommand{\funextdepdeppuredef}{\mathsf{LiftDepDim}}
+\newcommand{\funextdef}{\mathsf{FunExt}}
+\newcommand{\funextdepdef}{\mathsf{FunDepExt}}
+\newcommand{\funext}[1]{\mathsf{funext}(#1)}
+\newcommand{\funextdep}[1]{\mathsf{fundepext}(#1)}
+\newcommand{\funextpure}[1]{\mathsf{liftdim}(#1)}
+\newcommand{\funextdeppure}[1]{\mathsf{liftdepdim}(#1)}
+
+\newcommand{\OMEGATT}{\omega\mathsf{TT}}
+
+\begin{document}
+
+\title{An indexed construction of semi-cubical types}
+
+\maketitle
+
+\newcommand{\emptysigma}{\bullet}
+\newcommand{\itsemterm}[4]{\llbracket #4 \rrbracket^{#2;#3}_{#1}}
+\newcommand{\itsemtype}[4]{\llbracket #4 \rrbracket^{#2;#3}_{#1}}
+\newcommand{\semterm}[3]{\llbracket #3 \rrbracket^{#1;#2}}
+\newcommand{\semtype}[3]{\llbracket #3 \rrbracket^{#1;#2}}
+\newcommand{\incrstep}[3]{\mathsf{split}_{#1}{#3}(#2)}
+\newcommand{\distrstep}[3]{\mathsf{distr}_{#1}{#3}(#2)}
+\newcommand{\applytype}[4]{\mathsf{apptype}_{#1}^{#2}(#3,#4)}
+\newcommand{\shrink}[3]{\mathsf{shrink}_{#1}\,{#2}\,#3}
+\newcommand{\under}[3]{\mathsf{under}_{#1}\,{#2}\,#3}
+\newcommand{\undertau}[3]{\mathsf{under}_{#1}^{#2}\,#3}
+\newcommand{\proj}[3]{\pi_{#1}^{#2}\,#3}
+\newcommand{\elt}[2]{\mathsf{El}_{#1}\,#2}
+\newcommand{\semtypenew}[2]{| #2 |_{#1}}
+\newcommand{\semnew}[2]{\llbracket #2 \rrbracket_{#1}}
+\newcommand{\semctx}[2]{\llbracket #2 \rrbracket_{#1}}
+\newcommand{\semlam}[5]{\mathsf{lam}_{#1}^{#2}\,#4\,(#3)\,#5}
+\newcommand{\semlambis}[5]{\mathsf{lam'}_{#1}^{#2}\,#4\,(#3)\,#5}
+\newcommand{\semapp}[3]{\mathsf{app}_{#1}#2\,#3}
+\newcommand{\semprod}[5]{\mathsf{prod}_{#1}^{#2}\,#4\,(#3)\,#5}
+\newcommand{\access}[2]{\mathsf{get}_{#1}(#2)}
+\newcommand{\accesstyped}[3]{\mathsf{get}_{#1}^{#2}(#3)}
+\newcommand{\lift}[1]{\mathsf{lift}\, {#1}}
+\newcommand{\liftlr}[1]{\mathsf{lift}^\rightarrow\, {#1}}
+\newcommand{\liftrl}[1]{\mathsf{lift}^\leftarrow\, {#1}}
+\newcommand{\diag}[2]{\mathsf{diag}_{#1}(#2)}
+\newcommand{\semsort}[1]{\mathsf{sort}_{#1}}
+\newcommand{\reflsort}[1]{\mathsf{refl}^{\sort{}}_{#1}}
+\newcommand{\mktuplenew}[6]{\{#4\,|\begin{array}{l} #5 \\ #6 \end{array}\}_{#1,#2,#3}}
+\newcommand{\mktuplein}[4]{{#1}; {#2}; {#3}; {#4}}
+\newcommand{\nwconn}[2]{\deprewlr{#2}_{#1}}
+\newcommand{\seconn}[2]{\deprewrl{#2}_{#1}}
+\newcommand{\refltermn}[3]{\mathsf{reflterm}_{#1}(#3)}
+\newcommand{\refltypen}[2]{\mathsf{refltype}_{#1}(#2)}
+
+\newcommand{\restrict}{\mathsf{restrict}}
+\newcommand{\MofL}{\mathsf{underlying}}
+\newcommand{\defequiv}{\mathsf{\simeq}}
+\newcommand{\isequivalence}{\mathsf{isequiv}}
+\newcommand{\gpdlevel}{\mathsf{gpdlevel}}
+\newcommand{\regrefl}{\mathsf{regrefl}}
+
+\newcommand{\homoname}{}
+\newcommand{\heteroname}{het}
+\newcommand{\mycubsetcomp}[2]{\mathsf{cubset}_{#1}^{=#2}}
+
+\newcommand{\informalcube}{\mathsf{cube}}
+\newcommand{\informalcubeover}{\mathsf{\cubeovername}}
+
+%\newcommand{\cubeovername}{cubeover}
+%\newcommand{\Cubeovername}{Cubeover}
+\newcommand{\cubeovername}{cube}
+\newcommand{\Cubeovername}{Cube}
+\newcommand{\pboxname}{box}
+\newcommand{\pBoxname}{Box}
+
+\newcommand{\mybox}[1]{\mathsf{{\homoname}box}_{#1}}
+\newcommand{\mylayer}[1]{\mathsf{{\homoname}layer}_{#1}}
+\newcommand{\mycube}[1]{\mathsf{{\homoname}\cubeovername}_{#1}}
+\newcommand{\downbox}[2]{\mathsf{sub{\homoname}box}_{#1}^{#2}}
+\newcommand{\downlayer}[2]{\mathsf{sub{\homoname}layer}_{#1}^{#2}}
+\newcommand{\downcube}[2]{\mathsf{sub{\homoname}cube}_{#1}^{#2}}
+\newcommand{\cohbox}[2]{\mathsf{coh{\homoname}box}_{#1}^{#2}}
+\newcommand{\cohlayer}[2]{\mathsf{coh{\homoname}layer}_{#1}^{#2}}
+\newcommand{\cohcube}[2]{\mathsf{coh{\homoname}\cubeovername}_{#1,#2}}
+\newcommand{\myfullbox}[1]{\mathsf{full{\homoname}box}_{#1}}
+\newcommand{\fulldownbox}[2]{\mathsf{subfull{\homoname}box}_{#1}^{#2}}
+\newcommand{\fulldowncube}[2]{\mathsf{subfull{\homoname}cube}_{#1}^{#2}}
+
+\newcommand{\myheterobox}[2]{\mathsf{{\heteroname}box}_{#1}^{#2}}
+\newcommand{\myheterolayer}[2]{\mathsf{{\heteroname}layer}_{#1}^{#2}}
+\newcommand{\myheterocube}[2]{\mathsf{{\heteroname}\cubeovername}_{#1}^{#2}}
+\newcommand{\myheteroboxtype}[2]{\mathsf{Box}_{#1}^{#2}}
+\newcommand{\myheterolayertype}[2]{\mathsf{Layer}_{#1}^{#2}}
+\newcommand{\myheterocubetype}[2]{\mathsf{\Cubeovername}_{#1}^{#2}}
+
+\newcommand{\myfulldepheterobox}[3]{\mathsf{fulldepBox}_{#1}^{#2,#3}}
+\newcommand{\mydepheterobox}[3]{\mathsf{depBox}_{#1}^{#2,#3}}
+\newcommand{\mydepheterolayer}[3]{\mathsf{depLayer}_{#1}^{#2,#3}}
+\newcommand{\mydepheterocube}[3]{\mathsf{dep\Cubeovername}_{#1}^{#2,#3}}
+\newcommand{\liftfulldepheterobox}[3]{\mathsf{liftfullBox}_{#1}^{#2,#3}}
+\newcommand{\liftdepheterobox}[3]{\mathsf{liftBox}_{#1}^{#2,#3}}
+\newcommand{\liftdepheterolayer}[3]{\mathsf{liftLayer}_{#1}^{#2,#3}}
+\newcommand{\liftdepheterocube}[3]{\mathsf{lift\Cubeovername}_{#1}^{#2,#3}}
+
+\newcommand{\expandheterocube}[2]{\mathsf{expand\Cubeovername}_{#1}^{#2}}
+\newcommand{\expandheterolayer}[2]{\mathsf{expandLayer}_{#1}^{#2}}
+\newcommand{\expanddownbox}[2]{\mathsf{expandsub{\homoname}box}_{#1}^{#2}}
+\newcommand{\expanddownlayer}[2]{\mathsf{expandsub{\homoname}layer}_{#1}^{#2}}
+\newcommand{\expanddowncube}[2]{\mathsf{expandsub{\homoname}cube}_{#1}^{#2}}
+
+%\newcommand{\heteroofliftbox}[3]{\mathsf{subliftBox}_{#1}^{#2,#3}}
+%\newcommand{\heteroofliftlayer}[3]{\mathsf{subliftLayer}_{#1}^{#2,#3}}
+%\newcommand{\heteroofliftcube}[3]{\mathsf{subliftCube}_{#1}^{#2,#3}}
+
+\newcommand{\depdownbox}[2]{\mathsf{depsub{\homoname}box}_{#1}^{#2}}
+\newcommand{\depdownlayer}[2]{\mathsf{depsub{\homoname}layer}_{#1}^{#2}}
+\newcommand{\depdowncube}[2]{\mathsf{depsub{\homoname}cube}_{#1}^{#2}}
+\newcommand{\depdownboxbis}[2]{\mathsf{depsublift{\homoname}box}_{#1}^{#2}}
+\newcommand{\depdownlayerbis}[2]{\mathsf{depsublift{\homoname}layer}_{#1}^{#2}}
+\newcommand{\depdowncubebis}[2]{\mathsf{depsublift{\homoname}cube}_{#1}^{#2}}
+\newcommand{\depdownboxter}[2]{\mathsf{depsublift{\homoname}box'}_{#1}^{#2}}
+\newcommand{\depdownlayerter}[2]{\mathsf{depsublift{\homoname}layer'}_{#1}^{#2}}
+\newcommand{\depdowncubeter}[2]{\mathsf{depsublift{\homoname}cube'}_{#1}^{#2}}
+
+\newcommand{\depcohbox}[2]{\mathsf{depcoh{\homoname}box}_{#1}^{#2}}
+\newcommand{\depcohlayer}[2]{\mathsf{depcoh{\homoname}layer}_{#1}^{#2}}
+\newcommand{\depcohcube}[2]{\mathsf{depcoh{\homoname}cube}_{#1}^{#2}}
+\newcommand{\depcohboxbis}[2]{\mathsf{depcohlift{\homoname}box}_{#1}^{#2}}
+\newcommand{\depcohlayerbis}[2]{\mathsf{depcohlift{\homoname}layer}_{#1}^{#2}}
+\newcommand{\depcohcubebis}[2]{\mathsf{depcohlift{\homoname}cube}_{#1}^{#2}}
+\newcommand{\depcohboxter}[2]{\mathsf{depcohlift{\homoname}box'}_{#1}^{#2}}
+\newcommand{\depcohlayerter}[2]{\mathsf{depcohlift{\homoname}layer'}_{#1}^{#2}}
+\newcommand{\depcohcubeter}[2]{\mathsf{depcohlift{\homoname}cube'}_{#1}^{#2}}
+
+\newcommand{\univfullcube}[2]{\mathsf{UnivfullCube}_{#1}^{#2}}
+\newcommand{\univfullbox}[2]{\mathsf{UnivfullBox}_{#1}^{#2}}
+\newcommand{\univbox}[2]{\mathsf{UnivBox}_{#1}^{#2}}
+\newcommand{\univlayer}[2]{\mathsf{UnivLayer}_{#1}^{#2}}
+\newcommand{\univcube}[2]{\mathsf{UnivCube}_{#1}^{#2}}
+\newcommand{\univfiller}[2]{\mathsf{UnivFiller}_{#1}^{#2}}
+\newcommand{\cubeofuniv}[2]{\mathsf{cubeofuniv}_{#1}^{#2}}
+\newcommand{\extend}[2]{\mathsf{extendcube}_{#1}^{#2}}
+
+\newcommand{\powersetfullcube}[2]{\mathsf{powersetfullCube}_{#1}^{#2}}
+
+%\newcommand{\downboxleft}{\mathsf{subbox}^L}
+%\newcommand{\downboxright}{\mathsf{subbox}^R}
+%\newcommand{\downlayerleft}{\mathsf{sublayer}^L}
+%\newcommand{\downlayerright}{\mathsf{sublayer}^R}
+%\newcommand{\downcubeleft}{\mathsf{sub\cubeovername}^L}
+%\newcommand{\downcuberight}{\mathsf{sub\cubeovername}^R}
+%% \newcommand{\downboxleft}{\downarrow^{\mathsf{box},L}}
+%% \newcommand{\downboxright}{\downarrow^{\mathsf{box},R}}
+%% \newcommand{\downlayerleft}{\downarrow^{\mathsf{layer},L}}
+%% \newcommand{\downlayerright}{\downarrow^{\mathsf{layer},R}}
+%% \newcommand{\downcubeleft}{\downarrow^{\mathsf{cube},L}}
+%% \newcommand{\downcuberight}{\downarrow^{\mathsf{cube},R}}
+\newcommand{\heterodownbox}[2]{\mathsf{sub{\heteroname}box}_{#1}^{#2}}
+\newcommand{\heterodownlayer}[2]{\mathsf{sub{\heteroname}layer}_{#1}^{#2}}
+\newcommand{\heterodowncube}[2]{\mathsf{sub{\heteroname}\cubeovername}_{#1}^{#2}}
+\newcommand{\depdownboxtype}[2]{\mathsf{Subdep{\homoname}box}_{#1}^{#2}}
+\newcommand{\depdownlayertype}[2]{\mathsf{Subdep{\homoname}layer}_{#1}^{#2}}
+\newcommand{\depdowncubetype}[2]{\mathsf{Subdep{\homoname}\cubeovername}_{#1}^{#2}}
+\newcommand{\downboxtype}[2]{\mathsf{Subbox}_{#1}^{#2}}
+%\newcommand{\downboxtypelarge}[1]{\mathsf{Subbox'}_{#1}}
+\newcommand{\downlayertype}[2]{\mathsf{Sublayer}_{#1}^{#2}}
+\newcommand{\downcubetype}[2]{\mathsf{Sub\cubeovername}_{#1}^{#2}}
+\newcommand{\cohreflbox}[1]{\mathsf{cohreflbox}_{#1}}
+\newcommand{\cohrefllayer}[1]{\mathsf{cohrefllayer}_{#1}}
+\newcommand{\cohreflcube}[1]{\mathsf{cohreflcube}_{#1}}
+\newcommand{\cohrefleqbox}[1]{\mathsf{cohrefleqbox}_{#1}}
+\newcommand{\cohrefleqlayer}[1]{\mathsf{cohrefleqlayer}_{#1}}
+\newcommand{\cohrefleqcube}[1]{\mathsf{cohrefleqcube}_{#1}}
+\newcommand{\cohboxtype}[2]{\mathsf{Cohbox}_{#1}^{#2}}
+%\newcommand{\cohboxtypelarge}[1]{\mathsf{Cohbox'}_{#1}}
+\newcommand{\cohlayertype}[2]{\mathsf{Cohlayer}_{#1}^{#2}}
+\newcommand{\cohcubetype}[2]{\mathsf{Coh\cubeovername}_{#1}^{#2}}
+\newcommand{\heterocohbox}[2]{\mathsf{coh{\heteroname}box}_{#1}^{#2}}
+\newcommand{\heterocohlayer}[2]{\mathsf{coh{\heteroname}layer}_{#1}^{#2}}
+\newcommand{\heterocohcube}[2]{\mathsf{coh{\heteroname}\cubeovername}_{#1}^{#2}}
+\newcommand{\myappdepbox}[1]{\mathsf{homoappbox}_{#1}}
+\newcommand{\myappdeplayer}[1]{\mathsf{homoapplayer}_{#1}}
+\newcommand{\myappdepcube}[1]{\mathsf{homoapp\cubeovername}_{#1}}
+\newcommand{\myappdepfullcube}[1]{\mathsf{homoappfullcube}_{#1}}
+\newcommand{\myappdepboxtype}[1]{\mathsf{homoappbox}_{#1}}
+\newcommand{\myappdepfullboxtype}[1]{\mathsf{homoappfullbox}_{#1}}
+\newcommand{\myappdeplayertype}[1]{\mathsf{homoapplayer}_{#1}}
+\newcommand{\myappdepcubetype}[1]{\mathsf{homoapp\cubeovername}_{#1}}
+\newcommand{\myappdepfullcubetype}[1]{\mathsf{homoappfullcube}_{#1}}
+\newcommand{\myfullcube}[1]{\mathsf{full{\homoname}cube}_{#1}}
+\newcommand{\myfullheteroboxtype}[2]{\mathsf{fullBox}_{#1}^{#2}}
+\newcommand{\myfullheterobox}[2]{\mathsf{full{\heteroname}box}_{#1}^{#2}}
+\newcommand{\reflfullcube}[1]{\mathsf{reflfullcube}_{#1}}
+\newcommand{\unitpoint}{\star}
+\newcommand{\unittype}{\mathsf{unit}}
+\newcommand{\eqett}{\equiv_{\mathit{ETT}}}
+\newcommand{\reflett}{\mathsf{refl}_{\mathit{ETT}}}
+\newcommand{\mygpd}{\mathsf{gpd}}
+
+\newcommand{\mycubset}[1]{\mathsf{cubset}_{#1}}
+\newcommand{\mycubsetfrom}[2]{\mathsf{cubset}_{#1}^{\geq#2}}
+\newcommand{\partialcubset}[2]{\mathsf{cubset}_{#1}^{<#2}}
+\newcommand{\mydepcubset}[1]{\mathsf{dephomocubset}_{#1}}
+\newcommand{\mydepcubsetfrom}[2]{\mathsf{dephomocubset}_{#1}^{\geq#2}}
+\newcommand{\mydepcubsetcomp}[2]{\mathsf{dephomocubset}_{#1}^{=#2}}
+\newcommand{\deppartialcubset}[2]{\mathsf{dephomocubset}_{#1}^{<#2}}
+\newcommand{\properheterocubetype}[2]{\mathsf{Filler}_{#1}^{#2}}
+
+\newcommand{\mydepheterocubset}[2]{\mathsf{depcubset}_{#1}^{#2}}
+\newcommand{\mydepheterocubsetfrom}[3]{\mathsf{depcubset}_{#1}^{#2,\geq#3}}
+\newcommand{\mydepheterocubsetcomp}[3]{\mathsf{depcubset}_{#1}^{#2,=#3}}
+\newcommand{\deppartialheterocubset}[3]{\mathsf{depcubset}_{#1}^{#2,<#3}}
+\newcommand{\myappheterodepbox}[1]{\mathsf{appbox}_{#1}}
+\newcommand{\myappheterodeplayer}[1]{\mathsf{applayer}_{#1}}
+\newcommand{\myappheterodepcube}[1]{\mathsf{app\cubeovername}_{#1}}
+\newcommand{\myappheterodepfullcube}[1]{\mathsf{appfullcube}_{#1}}
+\newcommand{\myappheterodepboxtype}[1]{\mathsf{appbox}_{#1}}
+\newcommand{\myappheterodepfullboxtype}[3]{\mathsf{appfullbox}_{#1}^{#2,#3}}
+\newcommand{\myappheterodeplayertype}[1]{\mathsf{applayer}_{#1}}
+\newcommand{\myappheterodepcubetype}[1]{\mathsf{app\cubeovername}_{#1}}
+\newcommand{\myappheterodepfullcubetype}[1]{\mathsf{appfullcube}_{#1}}
+
+\newcommand{\typecubset}{\mathsf{typecubset}}
+\newcommand{\mysymcubset}{\mathsf{symcubset}}
+\newcommand{\issymcubset}{\mathsf{issymcubset}}
+\newcommand{\partialsymcubset}{\mathsf{symcubset}}
+\newcommand{\mypermute}{\mathsf{permute}}
+\newcommand{\partialhascomp}{\mathsf{partialhascomp}}
+\newcommand{\hascomp}{\mathsf{hascomp}}
+\newcommand{\tube}[1]{\mathsf{{\homoname}tube}_{#1}}
+\newcommand{\propercube}[1]{\mathsf{proper{\homoname}filler}_{#1}}
+\newcommand{\properheterocube}[2]{\mathsf{{\heteroname}filler}_{#1}^{#2}}
+\newcommand{\border}[1]{\mathsf{{\homoname}border}_{#1}}
+\newcommand{\bordertype}[1]{\mathsf{Boxofcube}_{#1}}
+\newcommand{\cohbordertype}[1]{\mathsf{Cohboxofcube}_{#1}}
+\newcommand{\myheteroborder}[1]{\mathsf{{\heteroname}border}_{#1}}
+\newcommand{\fullheterocubetype}[2]{\mathsf{fullCube}_{#1}^{#2}}
+\newcommand{\fullheterocube}[1]{\mathsf{full{\heteroname}cube}_{#1}}
+\newcommand{\heterotubetype}[1]{\mathsf{Tube}_{#1}}
+\newcommand{\heterotube}[1]{\mathsf{{\heteroname}tube}_{#1}}
+\newcommand{\mygroundedcube}[1]{\mathsf{grounded{\homoname}cube}_{#1}}
+\newcommand{\mygroundedheterocubetype}[1]{\mathsf{groundedCube}_{#1}}
+\newcommand{\mygroundedheterocube}[1]{\mathsf{grounded{\heteroname}cube}_{#1}}
+\newcommand{\reflexive}[1]{\mathsf{reflexive}_{#1}}
+\newcommand{\permutation}{\mathsf{permutation}}
+\newcommand{\diagonal}{\mathsf{diagonal}}
+\newcommand{\connection}{\mathsf{connection}}
+\newcommand{\diagprop}{\mathsf{diag}}
+\newcommand{\reglr}{\rightarrow-\mathsf{reg}}
+\newcommand{\regrl}{\leftarrow-\mathsf{reg}}
+\newcommand{\coercivelr}{\rightarrow-\mathsf{def}}
+\newcommand{\coerciverl}{\leftarrow-\mathsf{def}}
+\newcommand{\regularitylr}{\rightarrow-\mathsf{regularity}}
+\newcommand{\regularityrl}{\leftarrow-\mathsf{regularity}}
+\newcommand{\Reglr}{\Rightarrow-\mathsf{reg}}
+\newcommand{\Regrl}{\Leftarrow-\mathsf{reg}}
+\newcommand{\Coercivelr}{\Rightarrow-\mathsf{def}}
+\newcommand{\Coerciverl}{\Leftarrow-\mathsf{def}}
+\newcommand{\Regularitylr}{\Rightarrow-\mathsf{regularity}}
+\newcommand{\Regularityrl}{\Leftarrow-\mathsf{regularity}}
+\newcommand{\coebacklr}{\overrightarrow{\mathsf{coe}}}
+\newcommand{\coebackrl}{\overleftarrow{\mathsf{coe}}}
+\newcommand{\backcoercivelr}{\overrightarrow{\mathsf{coe}}-\mathsf{def}}
+\newcommand{\backcoerciverl}{\overleftarrow{\mathsf{coe}}-\mathsf{def}}
+\newcommand{\regbacklr}{\overrightarrow{\mathsf{coe}}-\mathsf{reg}}
+\newcommand{\regbackrl}{\overleftarrow{\mathsf{coe}}-\mathsf{reg}}
+\newcommand{\regularitybacklr}{\overrightarrow{\mathsf{coe}}-\mathsf{regularity}}
+\newcommand{\regularitybackrl}{\overleftarrow{\mathsf{coe}}-\mathsf{regularity}}
+\newcommand{\Coebacklr}{\Overrightarrow{1ex}{\mathsf{coe}}}
+\newcommand{\Coebackrl}{\Overleftarrow{1ex}{\mathsf{coe}}}
+\newcommand{\Coercivebacklr}{\Overrightarrow{1ex}{\mathsf{coe}}-\mathsf{def}}
+\newcommand{\Coercivebackrl}{\Overleftarrow{1ex}{\mathsf{coe}}-\mathsf{def}}
+\newcommand{\Regbacklr}{\Overrightarrow{1ex}{\mathsf{coe}}-\mathsf{reg}}
+\newcommand{\Regbackrl}{\Overleftarrow{1ex}{\mathsf{coe}}-\mathsf{reg}}
+\newcommand{\Regularitybacklr}{\Overrightarrow{1ex}{\mathsf{coe}}-\mathsf{regularity}}
+\newcommand{\Regularitybackrl}{\Overleftarrow{1ex}{\mathsf{coe}}-\mathsf{regularity}}
+
+\newcommand{\reflbox}[1]{\mathsf{reflbox}_{#1}}
+\newcommand{\refllayer}[1]{\mathsf{refllayer}_{#1}}
+\newcommand{\reflcube}[1]{\mathsf{reflcube}_{#1}}
+\newcommand{\permutebox}{\mathsf{permutebox}}
+\newcommand{\diagbox}{\mathsf{diagbox}}
+\newcommand{\connbox}{\mathsf{connbox}}
+%% \newcommand{\cohbox}{\mathsf{coh}^{\mathsf{box}}}
+%% \newcommand{\cohlayer}{\mathsf{coh}^{\mathsf{layer}}}
+\newcommand{\hd}{\mathsf{hd}}
+\newcommand{\tl}{\mathsf{tl}}
+\newcommand{\first}{\mathsf{first}}
+\newcommand{\groupoid}{\mathsf{groupoid}}
+\newcommand{\groupoidn}{\mathsf{groupoidn}}
+\newcommand{\letinsplit}[3]{\!\!\begin{array}{l}\mathbf{let}~{#1}=#2\;\mathbf{in}~\\#3\end{array}}
+
+\newcommand{\UIP}{\mathsf{UIP}}
+
+\tableofcontents
+
+\section{Introduction}
+
+\section{Semi-cubical sets}
+\label{sec:truncated-cubical-sets}
+
+In this section, we give the core of the definition of semi-cubical
+sets as the coinductive limit (see Figure~\ref{fig:barecubicalset}) of a
+construction of truncated semi-cubical sets.
+
+\subsection{Truncated semi-cubical sets}
+
+The definition is dispatched over
+Figures~\ref{fig:barecubicalsetstructurecore},
+\ref{fig:barecubicalsetstructure}, \ref{fig:barecubicalsetfaces} and
+\ref{fig:barecubicalsetcoherences}. It describes the structure of the
+underlying higher-dimensional relations on which cubes and boxes are
+built, together with the definition of homogeneous $n$-boxes,
+homogeneous $n$-cubes, together with face operations on boxes and
+cubes, together with commutation properties of the face
+operations. All are mutually defined as types of the target language
+ETT. Note that such relational structure, cubes and boxes are relative
+to a universe.
+
+Note the presence of a coherence condition $\cohbox{l}{}$ to
+ensuring that both sides of the equality in $\downlayer{l}{}$ and $\downcube{l}{}$
+are in the same type. The proof of $\cohbox{l}{}$ itself requires
+an higher-dimensional coherence condition which we obtain by
+working here in ETT where all proofs of an
+equality are identified (principle of Unicity of Identity Proofs). Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many 
+higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a
+discussion on the de facto need for recursive higher-dimensional
+coherence conditions in formulating higher-dimensional structures in
+type theory). Note also that for a given
+$n$, the coherence conditions evaluate to a reflexivity proof, so that
+the construction evaluates to an effective sequence of types of
+iterated relations not mentioning $\downbox{l}{}$ nor $\cohbox{l}{}$ anymore.
+
+When reflexivities are excepted, we call the structure thus defined
+\emph{bare truncated cubical sets}: \emph{bare} because it can be seen
+as defining a cubical equivalent to semi-simplicial sets with only
+faces as part of the structure (otherwise said, another terminology
+could have been ``semi-cubical'' sets); \emph{truncated} because we
+consider only such cubical sets up to some fixed dimension.
+
+\begin{figure*}
+\centerline{ \framebox{$
+\begin{array}{llcl}
+\multicolumn{4}{c}{\mbox{\textit{Type of truncated cubical sets}}}\\
+\\
+\partialcubset{l}{n} && : & \sort{l+1}\\
+\partialcubset{l}{0} && \defeq & \unittype\\
+\partialcubset{l}{n'+1} && \defeq & \Sigma D:\partialcubset{l}{n'}.\,\mycubsetcomp{l}{n'}(D)\\
+\\
+\multicolumn{4}{c}{\mbox{\textit{Structure carried at each dimension}}}\\
+\\
+\mycubsetcomp{l}{n} & (D:\partialcubset{l}{n}) & : & \sort{l}\\
+\mycubsetcomp{l}{n} & D & \defeq & \myfullbox{l}^{n}(D)\imp \sort{l}\\
+\end{array}
+$
+}}
+\caption{Definition of a truncated cubical set (main part of the higher-dimensional relation structure)}
+\label{fig:barecubicalsetstructurecore}
+\end{figure*}
+
+\begin{figure*}
+\centerline{ \framebox{$
+\begin{array}{llcl}
+\multicolumn{4}{c}{\mbox{\textit{Full homogeneous $n$-boxes}}}\\
+\\
+\myfullbox{l}^{n} & (D:\partialcubset{l}{n}) & : & \sort{l}\\
+\myfullbox{l}^{n} & D & \defeq & \mybox{l}^{n,n}(D)\\
+\\
+\multicolumn{4}{c}{\mbox{\textit{Homogeneous partial $n$-boxes and homogeneous partial $n$-cubes}}}\\
+\\
+\mybox{l}^{n,p,[p \leq n]} & (D:\partialcubset{l}{n}) & : & \sort{l}\\
+\mybox{l}^{n,0} & D & \defeq & \unittype\\
+\mybox{l}^{n,p'+1} & D & \defeq & \Sigma d:\mybox{l}^{n,p'}(D).\,\mylayer{l}^{n,p'}(D)(d)\\
+\\
+\mylayer{l}^{n,p,[p < n]} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}^{n,p}(D))\end{array}& : & \sort{l}\\
+\mylayer{l}^{n,p} & D~d & \defeq & \!\!\begin{array}{l}\mycube{l}^{n-1,p}(\hd(D))(\tl(D))(\downbox{l,L,p}{n,p}(D)(d)) \\\times\; \mycube{l}^{n-1,p}(\hd(D))(\tl(D))(\downbox{l,R,p}{n,p}(D)(d))\end{array}\\
+\\
+\mycube{l}^{n,p,[p \leq n]} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(E:\mycubsetcomp{l}{n}(D))\\(d:\mybox{l}^{n,p}(D))\end{array} & : & \sort{l}\\
+\mycube{l}^{n,p,[p = n]} & D~E~d & \defeq & E.\mathsf{rel}(d)\\
+\mycube{l}^{n,p,[p < n]} & D~E~d & \defeq & \Sigma b:\mylayer{l}^{n,p}(D)(d).\,\mycube{l}^{n,p+1}(D)(E)(d,b)\\
+\end{array}
+$
+}}
+\caption{Definition of a truncated cubical set (boxes)}
+\label{fig:barecubicalsetstructure}
+\end{figure*}
+
+\begin{figure*}
+\centerline{ \framebox{$
+\begin{small}
+\begin{array}{llcl}
+\downbox{l,\epsilon,q}{n,p,[p \leq q < n]} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}^{n,p}(D))\end{array}& : & \mybox{l}^{n-1,p}(\hd(D))\\
+\downbox{l,\epsilon,q}{n,0} & D~\unitpoint & \defeq & \unitpoint\\
+\downbox{l,\epsilon,q}{n,p'+1} & D~(d,b) & \defeq & (\downbox{l,\epsilon,q}{n,p'}(D)(d),\downlayer{l,\epsilon,q}{n,p'}(D)(d)(b))\\
+\\
+\downlayer{l,\epsilon,q}{n,p,[p < q < n]} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}^{n,p}(D))\\(b:\mylayer{l}^{n,p}(D)(d))\end{array}& : & \mylayer{l}^{n-1,p}(\hd(D))(\downbox{l,\epsilon,q}{n,p}(D)(d))\\
+\downlayer{l,\epsilon,q}{n,p} & D~d~c & \defeq & \!\!\begin{array}{l}(\overrightarrow{\cohbox{l,\epsilon,L,q,p}{n,p}(D)(d)}(\downcube{l,\epsilon,q-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,L,p}{n,p}(D)(d))(c_L)),\\\;\overrightarrow{\cohbox{l,\epsilon,R,q,p}{n,p}(D)(d)}(\downcube{l,\epsilon,q-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,R,p}{n,p}(D)(d))(c_R)))\end{array}\\
+\\
+\downcube{l,\epsilon,q}{n,p,[p \leq q < n]} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(E:\mycubsetcomp{l}{n}(D))\\(d:\mybox{l}^{n,p}(D))\\(b:\mycube{l}^{n,p}(D)(E)(d))\end{array}& : & \mycube{l}^{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon,q}{n,p}(D)(d))\\
+\downcube{l,\epsilon,q}{n,p,[p=q]} & D~E~d~(b,\_) & \defeq & b_{\epsilon}\\
+\downcube{l,\epsilon,q}{n,p,[p<q]} & D~E~d~(b,c) & \defeq & (\downlayer{l,\epsilon,q}{n,p}(D)(d)(b),\downcube{l,\epsilon,q}{n,p+1}(D)(E)(d,b)(c))\\
+\\
+\end{array}
+\end{small}
+$
+}}
+\caption{Definition of a homogeneous bare cubical set ($q$-th projection)}
+\label{fig:barecubicalsetfaces}
+\end{figure*}
+
+\begin{figure*}
+\centerline{ \framebox{$
+\begin{small}
+\begin{array}{llcl}
+\cohbox{l,\epsilon,\epsilon',q,r}{\!\!\!\tiny\begin{array}{l}n,p\\\mbox{}[p \leq r < q < n]\end{array}} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}^{n,p}(D))\end{array}& : & \!\!\!\begin{array}{ll}\downbox{l,\epsilon,q-1}{n-1,p}(\hd(D))(\downbox{l,\epsilon',r}{n,p}(D)(d)) \\ \eqett \downbox{l,\epsilon',r-1}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q}{n,p}(D)(d))\end{array}\\
+\cohbox{l,\epsilon,\epsilon',q,r}{n,0} & D~\unitpoint & \defeq & \reflett(\unitpoint)\\
+\cohbox{l,\epsilon,\epsilon',q,r}{n,p'+1} & D~(d,b) & \defeq & (\cohbox{l,\epsilon,\epsilon',q,r}{n,p'}(D)(d),\cohlayer{l,\epsilon,\epsilon',q,r}{n,p'}(D)(d)(b))\\
+\\
+\cohlayer{l,\epsilon,\epsilon',q,r}{\!\!\!\tiny\begin{array}{l}n,p\\\mbox{}[p < r < q < n]\end{array}} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}^{n,p}(D))\\(b:\mylayer{l}^{n,p}(D)(d))\end{array}& : & \!\!\!\begin{array}{ll}\downlayer{l,\epsilon,q}{n-1,p}(\hd(D))(\downbox{l,\epsilon',r}{n,p}(D)(d))(\downlayer{l,\epsilon',r}{n,p}(D)(d)(b)) \\ \eqett \downlayer{l,\epsilon',r}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q}{n,p}(D)(d))(\downlayer{l,\epsilon,q}{n,p}(D)(d)(b))\end{array}\\
+\cohlayer{l,\epsilon,\epsilon',q,r}{n,p} & D~d~c & \defeq & \!\!\begin{array}{l}(\cohcube{l,\epsilon,\epsilon',q-1,r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,L,p}{n,p}(D)(d))(c_L),\\\;\cohcube{l,\epsilon,\epsilon',q-1,r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,R,p}{n,p}(D)(d))(c_R))\end{array}\\
+\\
+\cohcube{l,\epsilon,\epsilon',q,r}{\!\!\!\tiny\begin{array}{l}n,p\\\mbox{}[p \leq r < q < n]\end{array}} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(E:\mycubsetcomp{l}{n}(D))\\(d:\mybox{l}^{n,p}(D))\\(b:\mycube{l}^{n,p}(D)(E)(d))\end{array}& : & \!\!\!\begin{array}{ll}\downcube{l,\epsilon,q-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon',r}{n,p}(D)(d))(\downcube{l,\epsilon',r}{n,p}(D)(E)(d)(b)) \\ \eqett \downcube{l,\epsilon',r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon,q}{n,p}(D)(d))(\downcube{l,\epsilon,q}{n,p}(D)(E)(d)(b))\end{array}\\
+\cohcube{l,\epsilon,\epsilon',q,r}{n,p,[p=r]} & D~E~d~(b,\_) & \defeq & \reflett(\downcube{l,\epsilon,q-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon',p}{n,p}(D)(d))(b_{\epsilon}))\\
+\cohcube{l,\epsilon,\epsilon',q,r}{n,p,[p<r]} & D~E~d~(b,c) & \defeq & \!\!\begin{array}{l}(\cohlayer{l,\epsilon,\epsilon',q,r}{n,p}(D)(d)(b),\;\cohcube{l,\epsilon,\epsilon',q,r}{n,p+1}(D)(E)(d,b)(c))\end{array}\\
+\end{array}
+\end{small}
+$
+}}
+\caption{Definition of a homogeneous bare cubical set (commutation of $q$-th projection and $r$-th projection)}
+\label{fig:barecubicalsetcoherences}
+\end{figure*}
+
+\subsection{Derived notions}
+\label{sec:derived-notions}
+
+On top of the basic definitions on
+Figures~\ref{fig:barecubicalsetstructure},
+\ref{fig:barecubicalsetfaces} and \ref{fig:barecubicalsetcoherences},
+we can define on Figures~\ref{fig:macros} and~\ref{fig:macroscont} a few other concepts at a
+more standard level of abstraction. In particular, a homogeneous
+$n$-box in the above sense is defined to be an object of type
+$\myfullbox{l}^{n}(D_{n})$ for $D_{n} \defeq (A,=_A,...,=^n_A)$ the initial
+segment of $n$-th first iterated equalities over $A$ (by convention, a
+homogeneous $0$-box shall be the canonical singleton type). A $n$-tube
+is of type $\mybox{l}^{n+1,n}(D_{n+1})$. An homogeneous (proper) $n$-cube
+in some $n$-box $d$ is of type $\mycube{l}^{n+1,n}(\hd(D_{n+1}))(\tl(D_{n+1}))(d)$ and a
+full $n$-cube is of type $\mycube{l}^{n+1,0}(\hd(D_{n+1}))(\tl(D_{n+1})))(\star)$.
+
+Note that the components of an $n$-box or $n$-tube are tuples
+associated to the left. For cubes, the components can be associated to
+the left, and we call this a full $n$-cube or to the right, which we
+call grounded $n$-cube, and which corresponds to ``complete'' partial
+cubes, i.e. to partial cubes over the empty
+box. Figure~\ref{fig:macros} show how to compute the $n$-box
+surrounding a full $n$-cube over a prefix $D_{n+1}$ of iterated
+equalities (see $\border{}$).
+
+Figure~\ref{fig:macros} also shows how to compute the faces of a box or of a cube.
+
+\begin{figure*}
+\centerline{ \framebox{$
+\begin{array}{llcl}
+\multicolumn{4}{c}{\mbox{Full (non-truncated) cubical sets with degeneracies}}\\
+\\
+\mycubset{l} && : & \sort{l+1}\\
+\mycubset{l} && \defeq & \mycubsetfrom{l}{0}(\star)\\
+\\
+\mycubsetfrom{l}{n} & (D:\partialcubset{l}{n}) & : & \sort{l+1}\\
+\mycubsetfrom{l}{n} & D & \defeq & \Sigma R:\mycubsetcomp{l}{n}(D).\,\mycubsetfrom{l}{n+1}(D,R)
+\end{array}
+$
+}}
+\caption{Definition of a bare cubical set (coinductive structure)}
+\label{fig:barecubicalset}
+\end{figure*}
+
+\begin{figure*}
+\centerline{ \framebox{$
+\begin{array}{llcl}
+\multicolumn{4}{c}{\mbox{\textit{Type of full $n$-cubes}}}\\
+\\
+\myfullcube{l}^{n} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n+1})\end{array}& : & \sort{l}\\
+\myfullcube{l}^{n} & (D,E) & \defeq & \Sigma d:\myfullbox{l}^{n}(D).\, E.\mathsf{rel}(d)\\
+\\
+\multicolumn{4}{c}{\mbox{\textit{Type of $n$-tubes}}}\\
+\\
+\tube{l}^{n} & (D:\partialcubset{l}{n+1}) & : & \sort{l}\\
+\tube{l}^{n} & D & \defeq & \mybox{l}^{n+1,n}(D)\\
+\\
+\multicolumn{4}{c}{\mbox{\textit{Type of grounded $n$-cubes}}}\\
+\\
+\mygroundedcube{l}^{n} & (D:\partialcubset{l}{n+1}) & : & \sort{l}\\
+\mygroundedcube{l}^{n} & (D,E) & \defeq & \mycube{l}^{n,0}(D)(E)(\star)\\
+\\
+\multicolumn{4}{c}{\mbox{\textit{Type of fillers of some $n$-box}}}\\
+\\
+\propercube{l}^{n} & (D:\partialcubset{l}{n+1})~(d:\myfullbox{l}^{n}(\hd(D))) & : & \sort{l}\\
+\propercube{l}^{n} & (D,E)~d & \defeq & E.\mathsf{rel}(d)\\
+\\
+\multicolumn{4}{c}{\mbox{\textit{Border of a grounded $n$-cube}}}\\
+\\
+\border{l}^{n} & (D:\partialcubset{l}{n+1})~(c:\mygroundedcube{l}^{n}(D)) & : & \myfullbox{l}^{n}(\hd(D))\\
+\border{l}^{n} & D~c & \defeq & \border{l}^{n,0}(D)(\star)(c)\\
+\\
+\multicolumn{4}{c}{\mbox{\textit{where the border of partial cubes is defined by}}}\\
+\\
+\border{l}^{n,p} & (D:\partialcubset{l}{n+1})~(d:\mybox{l}^{n,p}(\hd(D)))~(c:\mycube{l}^{n,p}(\hd(D))(\tl(D))(d)) & : & \myfullbox{l}^{n}(\hd(D))\\
+\border{l}^{n,p,[p=n]} & D~d~c & \defeq & d\\
+\border{l}^{n,p,[p<n]} & D~d~(b,c) & \defeq & \border{l}^{n,p+1}(D)(d,b)(c)\\
+\end{array}
+$
+}}
+\caption{Standard derived notions}
+\label{fig:macros}
+\end{figure*}
+
+\begin{figure*}
+\centerline{ \framebox{$
+\begin{array}{llcl}
+\multicolumn{4}{c}{\mbox{$q$-th projection of an $n$-box}}\\
+\\
+\fulldownbox{l,\epsilon,q}{n,[q < n]} & (D:\partialcubset{l}{n})~(d:\myfullbox{l}^{n}(D)) &:& \myfullbox{l}^{n-1}(\hd(D))\\
+\fulldownbox{l,\epsilon,q}{n} & D~(d,\_) &\defeq& \downbox{l,\epsilon,q}{n,n-1}(D)(d)\\
+\\
+\multicolumn{4}{c}{\mbox{$q$-th face of an $n$-cube}}\\
+\\
+\fulldowncube{l,\epsilon,q}{n,[q < n]} & (D:\partialcubset{l}{n+1})~(c:\myfullcube{l}^{n}(D)) &:& \myfullcube{l}^{n-1}(\hd(D))\\
+\fulldowncube{l,\epsilon,q}{n} & (D,E)~c &\defeq& \downcube{l,\epsilon,q}{n,0}(D)(E)(\star)(c)\\
+\\
+\multicolumn{4}{c}{\mbox{\textit{where the extension of $\downbox{l}{}$ to $p>q$ is}}}\\
+\\
+\downbox{l,\epsilon,q}{n,p,[q < p < n]} & (D:\partialcubset{l}{n})~(d:\mybox{l}^{n,p}(D))& : & \myfullbox{l}^{n-1}(\hd(D))\\
+\downbox{l,\epsilon,q}{n,q+1} & D~(d,b) & \defeq & \border{l}^{n-1,q}(\hd(D))(\downbox{l,\epsilon,q}{n,q}(D)(d))(b_{\epsilon})\\
+\downbox{l,\epsilon,q}{n,p,[q < p-1]} & D~(d,b) & \defeq & \downbox{l,\epsilon,q}{n,p-1}(D)(d)
+\end{array}
+$
+}}
+\caption{Standard derived notions (continued)}
+\label{fig:macroscont}
+\end{figure*}
+
+
+\bibliographystyle{plain}
+\bibliography{biblio-en,extra}
+
+\end{document}
