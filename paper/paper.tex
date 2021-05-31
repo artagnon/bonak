@@ -1,27 +1,15 @@
-\documentclass[a4paper,english,cleveref,autoref,thm-restate]{article}
+\documentclass[a4paper]{article}
 
-\usepackage[utf8x]{inputenc}
-\usepackage{t1enc}
+\usepackage{hyperref, fullpage, amssymb, stmaryrd, url, color, amsmath}
+\usepackage{bookmark, fontspec}
+\usepackage[backend=biber, style=apa, natbib=true, sorting=nyt, url=false,isbn=false,doi=false]{biblatex}
 
-\usepackage{hyperref}
-%\usepackage{proof}
-\usepackage{fullpage}
-\usepackage{amssymb}
-\usepackage{stmaryrd}
-%\usepackage{txfonts}
-\usepackage{url}
-\usepackage{color}
-%\usepackage{textcomp}
-\usepackage{amsmath}
-\usepackage{yfonts}
-\usepackage[all]{xy}
-\xyoption{2cell}
-\UseAllTwocells
+% Add biblio-en.bib to the database
+\addbibresource{biblio-en.bib}
 
 \makeatletter
 \newcommand{\Overrightarrow}[2]{\raisebox{#1}{$\ext@arrow 0359\Rightarrowfill@{\mbox{${#2}$}}{}$}}
 \newcommand{\Overleftarrow}[2]{\raisebox{#1}{$\ext@arrow 0359\Leftarrowfill@{\mbox{${#2}$}}{}$}}
-%\newcommand{\Overrightarrow}[1]{\raisebox{1.4ex}{$\ext@arrow 0359\Rightarrowfill@{\mbox{${#1}$}}{}$}}
 \makeatother
 
 \newcommand{\highlight}[1]{\emph{#1}}
@@ -44,13 +32,10 @@
 
 \newcommand{\mkover}[1]{\widetilde{#1}}
 \newcommand{\mkoverdim}[2]{\widetilde{#2}^{#1}}
-%\newcommand{\mkover}[1]{\dot{#1}}
-%\newcommand{\mkprod}[3]{\Pi {#1}\!:\!{#2}.\,{#3}}
 \newcommand{\mkprod}[3]{\Pi {#2}.\,{#3}}
 \newcommand{\mkprodovereq}[3]{\mkover{\Pi} {#1}\!:\!{#2}.\,{#3}}
 \newcommand{\mkprodovereqopp}[3]{\opp{\mkover{\Pi}} {#1}\!:\!{#2}.\,{#3}}
 \newcommand{\mkboundedprod}[4]{\Pi {#3}\!:\!{#1}\leq{#2}.\,{#4}}
-%\newcommand{\mklam}[3]{\lambda {#1}\!:\!{#2}.\,{#3}}
 \newcommand{\mklam}[3]{\lambda^{#2}.\,{#3}}
 \newcommand{\mkboundedlam}[4]{\lambda {#3}\!:\!{#1}\leq{#2}.\,{#4}}
 \newcommand{\mkapp}[2]{{#1}\,{#2}}
@@ -59,7 +44,6 @@
 % selecting kind of treatment of sorts
 \newcommand{\typeorsort}[2]{{#2}}
 
-%\newcommand{\mksigma}[3]{\Sigma {#1}\!:\!{#2}.\,{#3}}
 \newcommand{\mksigma}[3]{\Sigma {#2}.\,{#3}}
 \newcommand{\mksigmaovereq}[3]{\mkover{\Sigma} {#1}\!:\!{#2}.\,{#3}}
 \newcommand{\mksigmaovereqopp}[3]{\opp{\mkover{\Sigma}} {#1}\!:\!{#2}.\,{#3}}
@@ -81,7 +65,6 @@
 
 \newcommand{\sort}[1]{\mathsf{U}_{#1}}
 \newcommand{\univ}{\boxempty}
-%\newcommand{\istype}{~:~S}
 \newcommand{\typeannot}{\mathsf{type}}
 \newcommand{\istype}{~\typeannot}
 
@@ -89,7 +72,6 @@
 \newcommand{\mkhomeq}[3]{{#1} =_{#2} {#3}}
 \newcommand{\mkeqovereq}[3]{{#1} \,\mkover{=}_{#2}\, {#3}}
 \newcommand{\mkeqovereqdim}[4]{{#2} \,\mkoverdim{#1}{=}_{#3}\, {#4}}
-%\newcommand{\mkeqtype}[3]{{#1} =_{#2} {#3}} % case where we can write either s or refl{s}
 \newcommand{\mkeqtype}[3]{{#1} =_{\typeannot} {#3}}
 \newcommand{\mkeqtypeovereq}[3]{{#1} \,\mkover{=}_{#2}\, {#3}} % case where we can write either s or refl{s}
 \newcommand{\mkeqarray}[3]{\begin{array}{c}{#1}\\ =_{#2}\\ {#3}\end{array}}
@@ -97,17 +79,12 @@
 \newcommand{\mkfacesarray}[3]{\mkeqarray{#1}{#2}{#3}}
 \newcommand{\mkfacesover}[3]{\mkeqovereq{#1}{#2}{#3}}
 \newcommand{\lameq}[2]{\lambda {#1}.{#2}}
-%\newcommand{\reflterm}[1]{\textsf{refl}{#1}}
 \newcommand{\reflterm}[1]{\widehat{#1}}
 \newcommand{\overreflterm}[1]{{\mkover{\reflterm{#1}}}}
 \newcommand{\refltermdim}[2]{{\widehat{#2}}^{#1}}
-%\newcommand{\reflterm}[1]{\lambda{#1}}
-%\newcommand{\refltype}[1]{\lambda{#1}}
 \newcommand{\refltype}[1]{\reflterm{#1}}
 \newcommand{\purerewlr}[1]{\overrightarrow{#1}}
 \newcommand{\purerewrl}[1]{\overleftarrow{#1}}
-%\newcommand{\rewlr}[2]{\mathsf{rew}^\rightarrow\;{#1}\;\mathsf{in}\;{#2}}
-%\newcommand{\rewrl}[2]{\mathsf{rew}^\leftarrow\;{#1}\;\mathsf{in}\;{#2}}
 \newcommand{\rewlr}[2]{\overrightarrow{#1}(#2)}
 \newcommand{\rewrl}[2]{\overleftarrow{#1}(#2)}
 \newcommand{\deprewlr}[1]{\raisebox{0em}{$\ulcorner$}\!#1}
@@ -120,7 +97,6 @@
 \newcommand{\rewrlrevspecin}[2]{{#1}_+^{\leftarrow}(#2)}
 \newcommand{\doublerewlr}[2]{\Overrightarrow{1.4ex}{#1}({#2})}
 \newcommand{\doublerewrl}[2]{\Overleftarrow{1.4ex}{#1}({#2})}
-%\newcommand{\mktuple}[6]{\{#1\mapsto #3(#1); #2\mapsto #4(#2); #1\mapsto #5(#1); #2\mapsto #6(#2)\}}
 \newcommand{\mktuple}[6]{\{#3; #4; #5; #6\}_{#1,#2}}
 \newcommand{\mktupleshort}[6]{\{#3; #4; #5; #6\}}
 \newcommand{\opp}[1]{{#1}^{-1}}
@@ -131,15 +107,6 @@
 
 \newcommand{\rewlrmkeq}[4]{\mkeq{\rewlr{#1}{#2}}{#3}{#4}}
 
-% Version basse
-%% \newcommand{\appi}[2]{{#1}_{#2}}
-%% \newcommand{\appidep}[2]{{#1}_{({#2})}}
-%% \newcommand{\bp}[1]{{#1}_0}
-%% \newcommand{\ep}[1]{{#1}_1}
-%% \newcommand{\bpdep}[1]{{#1}_{(0)}}
-%% \newcommand{\epdep}[1]{{#1}_{(1}}}
-% Version haute
-% \newcommand{\metaappi}[2]{{#1}_{[{#2}]}}
 \newcommand{\appi}[2]{{#1}\;\!{#2}}
 \newcommand{\appidep}[2]{{#1}_{#2}}
 \newcommand{\bp}[1]{{#1}{\scriptstyle 0}}
@@ -174,16 +141,12 @@
 \newcommand{\expand}[2]{\mathsf{expand}(#1,#2)}
 
 \newcommand{\defeq}{\triangleq}
-%\newcommand{\metaequiv}{=\!\!\!=}
 \newcommand{\metaequiv}{\cong}
 \newcommand{\metaletin}[3]{\mathit{let}\;{#1}\;\defeq\;{#2}\;\mathit{in}\;{#3}}
 \newcommand{\map}[2]{\mathsf{ap}\,{#1}\,{#2}}
 \newcommand{\depmap}[2]{\mathsf{apd}\,{#1}\,{#2}}
 \newcommand{\transport}[3]{\mathsf{transport}\,{#1}\,{#2}\,{#3}}
 \newcommand{\deptransport}[3]{\mathsf{transportd}\,{#1}\,{#2}\,{#3}}
-%\newcommand{\swap}[1]{\mathsf{swap}(#1)}
-%\newcommand{\swapbracket}[1]{\mathsf{swap}(#1)}
-%\newcommand{\swaptype}[1]{\mathsf{swap}(#1)}
 \newcommand{\swap}[1]{{#1}^{\circ}}
 \newcommand{\swapbracket}[1]{({#1})^{\circ}}
 \newcommand{\swaptype}[1]{{#1}^{\circ}}
@@ -251,12 +214,6 @@
 
 \newcommand{\OMEGATT}{\omega\mathsf{TT}}
 
-\begin{document}
-
-\title{An indexed construction of semi-cubical types}
-
-\maketitle
-
 \newcommand{\emptysigma}{\bullet}
 \newcommand{\itsemterm}[4]{\llbracket #4 \rrbracket^{#2;#3}_{#1}}
 \newcommand{\itsemtype}[4]{\llbracket #4 \rrbracket^{#2;#3}_{#1}}
@@ -306,8 +263,6 @@
 \newcommand{\informalcube}{\mathsf{cube}}
 \newcommand{\informalcubeover}{\mathsf{\cubeovername}}
 
-%\newcommand{\cubeovername}{cubeover}
-%\newcommand{\Cubeovername}{Cubeover}
 \newcommand{\cubeovername}{cube}
 \newcommand{\Cubeovername}{Cube}
 \newcommand{\pboxname}{box}
@@ -348,10 +303,6 @@
 \newcommand{\expanddownlayer}[2]{\mathsf{expandsub{\homoname}layer}_{#1}^{#2}}
 \newcommand{\expanddowncube}[2]{\mathsf{expandsub{\homoname}cube}_{#1}^{#2}}
 
-%\newcommand{\heteroofliftbox}[3]{\mathsf{subliftBox}_{#1}^{#2,#3}}
-%\newcommand{\heteroofliftlayer}[3]{\mathsf{subliftLayer}_{#1}^{#2,#3}}
-%\newcommand{\heteroofliftcube}[3]{\mathsf{subliftCube}_{#1}^{#2,#3}}
-
 \newcommand{\depdownbox}[2]{\mathsf{depsub{\homoname}box}_{#1}^{#2}}
 \newcommand{\depdownlayer}[2]{\mathsf{depsub{\homoname}layer}_{#1}^{#2}}
 \newcommand{\depdowncube}[2]{\mathsf{depsub{\homoname}cube}_{#1}^{#2}}
@@ -383,18 +334,6 @@
 
 \newcommand{\powersetfullcube}[2]{\mathsf{powersetfullCube}_{#1}^{#2}}
 
-%\newcommand{\downboxleft}{\mathsf{subbox}^L}
-%\newcommand{\downboxright}{\mathsf{subbox}^R}
-%\newcommand{\downlayerleft}{\mathsf{sublayer}^L}
-%\newcommand{\downlayerright}{\mathsf{sublayer}^R}
-%\newcommand{\downcubeleft}{\mathsf{sub\cubeovername}^L}
-%\newcommand{\downcuberight}{\mathsf{sub\cubeovername}^R}
-%% \newcommand{\downboxleft}{\downarrow^{\mathsf{box},L}}
-%% \newcommand{\downboxright}{\downarrow^{\mathsf{box},R}}
-%% \newcommand{\downlayerleft}{\downarrow^{\mathsf{layer},L}}
-%% \newcommand{\downlayerright}{\downarrow^{\mathsf{layer},R}}
-%% \newcommand{\downcubeleft}{\downarrow^{\mathsf{cube},L}}
-%% \newcommand{\downcuberight}{\downarrow^{\mathsf{cube},R}}
 \newcommand{\heterodownbox}[2]{\mathsf{sub{\heteroname}box}_{#1}^{#2}}
 \newcommand{\heterodownlayer}[2]{\mathsf{sub{\heteroname}layer}_{#1}^{#2}}
 \newcommand{\heterodowncube}[2]{\mathsf{sub{\heteroname}\cubeovername}_{#1}^{#2}}
@@ -402,7 +341,6 @@
 \newcommand{\depdownlayertype}[2]{\mathsf{Subdep{\homoname}layer}_{#1}^{#2}}
 \newcommand{\depdowncubetype}[2]{\mathsf{Subdep{\homoname}\cubeovername}_{#1}^{#2}}
 \newcommand{\downboxtype}[2]{\mathsf{Subbox}_{#1}^{#2}}
-%\newcommand{\downboxtypelarge}[1]{\mathsf{Subbox'}_{#1}}
 \newcommand{\downlayertype}[2]{\mathsf{Sublayer}_{#1}^{#2}}
 \newcommand{\downcubetype}[2]{\mathsf{Sub\cubeovername}_{#1}^{#2}}
 \newcommand{\cohreflbox}[1]{\mathsf{cohreflbox}_{#1}}
@@ -412,7 +350,6 @@
 \newcommand{\cohrefleqlayer}[1]{\mathsf{cohrefleqlayer}_{#1}}
 \newcommand{\cohrefleqcube}[1]{\mathsf{cohrefleqcube}_{#1}}
 \newcommand{\cohboxtype}[2]{\mathsf{Cohbox}_{#1}^{#2}}
-%\newcommand{\cohboxtypelarge}[1]{\mathsf{Cohbox'}_{#1}}
 \newcommand{\cohlayertype}[2]{\mathsf{Cohlayer}_{#1}^{#2}}
 \newcommand{\cohcubetype}[2]{\mathsf{Coh\cubeovername}_{#1}^{#2}}
 \newcommand{\heterocohbox}[2]{\mathsf{coh{\heteroname}box}_{#1}^{#2}}
@@ -521,8 +458,6 @@
 \newcommand{\permutebox}{\mathsf{permutebox}}
 \newcommand{\diagbox}{\mathsf{diagbox}}
 \newcommand{\connbox}{\mathsf{connbox}}
-%% \newcommand{\cohbox}{\mathsf{coh}^{\mathsf{box}}}
-%% \newcommand{\cohlayer}{\mathsf{coh}^{\mathsf{layer}}}
 \newcommand{\hd}{\mathsf{hd}}
 \newcommand{\tl}{\mathsf{tl}}
 \newcommand{\first}{\mathsf{first}}
@@ -532,10 +467,16 @@
 
 \newcommand{\UIP}{\mathsf{UIP}}
 
+\title{An indexed construction of semi-cubical types}
+\author{Hugo Herbelin}
+\author{Ramkumar Ramachandra}
+
+\begin{document}
+\maketitle
+
 \tableofcontents
 
 \section{Introduction}
-
 \section{Semi-cubical sets}
 \label{sec:truncated-cubical-sets}
 
@@ -545,242 +486,187 @@ construction of truncated semi-cubical sets.
 
 \subsection{Truncated semi-cubical sets}
 
-The definition is dispatched over
-Figures~\ref{fig:barecubicalsetstructurecore},
-\ref{fig:barecubicalsetstructure}, \ref{fig:barecubicalsetfaces} and
-\ref{fig:barecubicalsetcoherences}. It describes the structure of the
-underlying higher-dimensional relations on which cubes and boxes are
-built, together with the definition of homogeneous $n$-boxes,
-homogeneous $n$-cubes, together with face operations on boxes and
-cubes, together with commutation properties of the face
-operations. All are mutually defined as types of the target language
-ETT. Note that such relational structure, cubes and boxes are relative
-to a universe.
+The definition is dispatched over Figures~\ref{fig:barecubicalsetstructurecore}, \ref{fig:barecubicalsetstructure}, \ref{fig:barecubicalsetfaces} and \ref{fig:barecubicalsetcoherences}. It describes the structure of the underlying higher-dimensional relations on which cubes and boxes are built, together with the definition of homogeneous $n$-boxes, homogeneous $n$-cubes, together with face operations on boxes and cubes, together with commutation properties of the face operations. All are mutually defined as types of the target language ETT. Note that such relational structure, cubes and boxes are relative to a universe. Note the presence of a coherence condition $\cohbox{l}{}$ to ensuring that both sides of the equality in $\downlayer{l}{}$ and $\downcube{l}{}$ are in the same type. The proof of $\cohbox{l}{}$ itself requires an higher-dimensional coherence condition which we obtain by working here in ETT where all proofs of an equality are identified (principle of Unicity of Identity Proofs). Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory). Note also that for a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\downbox{l}{}$ nor $\cohbox{l}{}$ anymore.
 
-Note the presence of a coherence condition $\cohbox{l}{}$ to
-ensuring that both sides of the equality in $\downlayer{l}{}$ and $\downcube{l}{}$
-are in the same type. The proof of $\cohbox{l}{}$ itself requires
-an higher-dimensional coherence condition which we obtain by
-working here in ETT where all proofs of an
-equality are identified (principle of Unicity of Identity Proofs). Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many 
-higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a
-discussion on the de facto need for recursive higher-dimensional
-coherence conditions in formulating higher-dimensional structures in
-type theory). Note also that for a given
-$n$, the coherence conditions evaluate to a reflexivity proof, so that
-the construction evaluates to an effective sequence of types of
-iterated relations not mentioning $\downbox{l}{}$ nor $\cohbox{l}{}$ anymore.
-
-When reflexivities are excepted, we call the structure thus defined
-\emph{bare truncated cubical sets}: \emph{bare} because it can be seen
-as defining a cubical equivalent to semi-simplicial sets with only
-faces as part of the structure (otherwise said, another terminology
-could have been ``semi-cubical'' sets); \emph{truncated} because we
-consider only such cubical sets up to some fixed dimension.
+When reflexivities are excepted, we call the structure thus defined \emph{bare truncated cubical sets}: \emph{bare} because it can be seen as defining a cubical equivalent to semi-simplicial sets with only faces as part of the structure (otherwise said, another terminology could have been ``semi-cubical'' sets); \emph{truncated} because we consider only such cubical sets up to some fixed dimension.
 
 \begin{figure*}
-\centerline{ \framebox{$
-\begin{array}{llcl}
-\multicolumn{4}{c}{\mbox{\textit{Type of truncated cubical sets}}}\\
-\\
-\partialcubset{l}{n} && : & \sort{l+1}\\
-\partialcubset{l}{0} && \defeq & \unittype\\
-\partialcubset{l}{n'+1} && \defeq & \Sigma D:\partialcubset{l}{n'}.\,\mycubsetcomp{l}{n'}(D)\\
-\\
-\multicolumn{4}{c}{\mbox{\textit{Structure carried at each dimension}}}\\
-\\
-\mycubsetcomp{l}{n} & (D:\partialcubset{l}{n}) & : & \sort{l}\\
-\mycubsetcomp{l}{n} & D & \defeq & \myfullbox{l}^{n}(D)\imp \sort{l}\\
-\end{array}
-$
-}}
-\caption{Definition of a truncated cubical set (main part of the higher-dimensional relation structure)}
-\label{fig:barecubicalsetstructurecore}
+  \centerline{ \framebox{$
+        \begin{array}{llcl}
+          \multicolumn{4}{c}{\mbox{\textit{Type of truncated cubical sets}}}                                                     \\
+          \\
+          \partialcubset{l}{n}    &                          & :      & \sort{l+1}                                               \\
+          \partialcubset{l}{0}    &                          & \defeq & \unittype                                                \\
+          \partialcubset{l}{n'+1} &                          & \defeq & \Sigma D:\partialcubset{l}{n'}.\,\mycubsetcomp{l}{n'}(D) \\
+          \\
+          \multicolumn{4}{c}{\mbox{\textit{Structure carried at each dimension}}}                                                \\
+          \\
+          \mycubsetcomp{l}{n}     & (D:\partialcubset{l}{n}) & :      & \sort{l}                                                 \\
+          \mycubsetcomp{l}{n}     & D                        & \defeq & \myfullbox{l}^{n}(D)\imp \sort{l}                        \\
+        \end{array}
+      $
+    }}
+  \caption{Definition of a truncated cubical set (main part of the higher-dimensional relation structure)}
+  \label{fig:barecubicalsetstructurecore}
 \end{figure*}
 
 \begin{figure*}
-\centerline{ \framebox{$
-\begin{array}{llcl}
-\multicolumn{4}{c}{\mbox{\textit{Full homogeneous $n$-boxes}}}\\
-\\
-\myfullbox{l}^{n} & (D:\partialcubset{l}{n}) & : & \sort{l}\\
-\myfullbox{l}^{n} & D & \defeq & \mybox{l}^{n,n}(D)\\
-\\
-\multicolumn{4}{c}{\mbox{\textit{Homogeneous partial $n$-boxes and homogeneous partial $n$-cubes}}}\\
-\\
-\mybox{l}^{n,p,[p \leq n]} & (D:\partialcubset{l}{n}) & : & \sort{l}\\
-\mybox{l}^{n,0} & D & \defeq & \unittype\\
-\mybox{l}^{n,p'+1} & D & \defeq & \Sigma d:\mybox{l}^{n,p'}(D).\,\mylayer{l}^{n,p'}(D)(d)\\
-\\
-\mylayer{l}^{n,p,[p < n]} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}^{n,p}(D))\end{array}& : & \sort{l}\\
-\mylayer{l}^{n,p} & D~d & \defeq & \!\!\begin{array}{l}\mycube{l}^{n-1,p}(\hd(D))(\tl(D))(\downbox{l,L,p}{n,p}(D)(d)) \\\times\; \mycube{l}^{n-1,p}(\hd(D))(\tl(D))(\downbox{l,R,p}{n,p}(D)(d))\end{array}\\
-\\
-\mycube{l}^{n,p,[p \leq n]} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(E:\mycubsetcomp{l}{n}(D))\\(d:\mybox{l}^{n,p}(D))\end{array} & : & \sort{l}\\
-\mycube{l}^{n,p,[p = n]} & D~E~d & \defeq & E.\mathsf{rel}(d)\\
-\mycube{l}^{n,p,[p < n]} & D~E~d & \defeq & \Sigma b:\mylayer{l}^{n,p}(D)(d).\,\mycube{l}^{n,p+1}(D)(E)(d,b)\\
-\end{array}
-$
-}}
-\caption{Definition of a truncated cubical set (boxes)}
-\label{fig:barecubicalsetstructure}
+  \centerline{ \framebox{$
+        \begin{array}{llcl}
+          \multicolumn{4}{c}{\mbox{\textit{Full homogeneous $n$-boxes}}}                                                                            \\
+          \\
+          \myfullbox{l}^{n}           & (D:\partialcubset{l}{n})        & :      & \sort{l}                                                         \\
+          \myfullbox{l}^{n}           & D                               & \defeq & \mybox{l}^{n,n}(D)                                               \\
+          \\
+          \multicolumn{4}{c}{\mbox{\textit{Homogeneous partial $n$-boxes and homogeneous partial $n$-cubes}}}                                       \\
+          \\
+          \mybox{l}^{n,p,[p \leq n]}  & (D:\partialcubset{l}{n})        & :      & \sort{l}                                                         \\
+          \mybox{l}^{n,0}             & D                               & \defeq & \unittype                                                        \\
+          \mybox{l}^{n,p'+1}          & D                               & \defeq & \Sigma d:\mybox{l}^{n,p'}(D).\,\mylayer{l}^{n,p'}(D)(d)          \\
+          \\
+          \mylayer{l}^{n,p,[p < n]}   & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}^{n,p}(D))\end{array} & :      & \sort{l}                                                         \\
+          \mylayer{l}^{n,p}           & D~d                             & \defeq & \!\!\begin{array}{l}\mycube{l}^{n-1,p}(\hd(D))(\tl(D))(\downbox{l,L,p}{n,p}(D)(d)) \\\times\; \mycube{l}^{n-1,p}(\hd(D))(\tl(D))(\downbox{l,R,p}{n,p}(D)(d))\end{array}                                    \\
+          \\
+          \mycube{l}^{n,p,[p \leq n]} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(E:\mycubsetcomp{l}{n}(D))\\(d:\mybox{l}^{n,p}(D))\end{array} & :      & \sort{l}                                                         \\
+          \mycube{l}^{n,p,[p = n]}    & D~E~d                           & \defeq & E.\mathsf{rel}(d)                                                \\
+          \mycube{l}^{n,p,[p < n]}    & D~E~d                           & \defeq & \Sigma b:\mylayer{l}^{n,p}(D)(d).\,\mycube{l}^{n,p+1}(D)(E)(d,b) \\
+        \end{array}
+      $
+    }}
+  \caption{Definition of a truncated cubical set (boxes)}
+  \label{fig:barecubicalsetstructure}
 \end{figure*}
 
 \begin{figure*}
-\centerline{ \framebox{$
-\begin{small}
-\begin{array}{llcl}
-\downbox{l,\epsilon,q}{n,p,[p \leq q < n]} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}^{n,p}(D))\end{array}& : & \mybox{l}^{n-1,p}(\hd(D))\\
-\downbox{l,\epsilon,q}{n,0} & D~\unitpoint & \defeq & \unitpoint\\
-\downbox{l,\epsilon,q}{n,p'+1} & D~(d,b) & \defeq & (\downbox{l,\epsilon,q}{n,p'}(D)(d),\downlayer{l,\epsilon,q}{n,p'}(D)(d)(b))\\
-\\
-\downlayer{l,\epsilon,q}{n,p,[p < q < n]} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}^{n,p}(D))\\(b:\mylayer{l}^{n,p}(D)(d))\end{array}& : & \mylayer{l}^{n-1,p}(\hd(D))(\downbox{l,\epsilon,q}{n,p}(D)(d))\\
-\downlayer{l,\epsilon,q}{n,p} & D~d~c & \defeq & \!\!\begin{array}{l}(\overrightarrow{\cohbox{l,\epsilon,L,q,p}{n,p}(D)(d)}(\downcube{l,\epsilon,q-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,L,p}{n,p}(D)(d))(c_L)),\\\;\overrightarrow{\cohbox{l,\epsilon,R,q,p}{n,p}(D)(d)}(\downcube{l,\epsilon,q-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,R,p}{n,p}(D)(d))(c_R)))\end{array}\\
-\\
-\downcube{l,\epsilon,q}{n,p,[p \leq q < n]} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(E:\mycubsetcomp{l}{n}(D))\\(d:\mybox{l}^{n,p}(D))\\(b:\mycube{l}^{n,p}(D)(E)(d))\end{array}& : & \mycube{l}^{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon,q}{n,p}(D)(d))\\
-\downcube{l,\epsilon,q}{n,p,[p=q]} & D~E~d~(b,\_) & \defeq & b_{\epsilon}\\
-\downcube{l,\epsilon,q}{n,p,[p<q]} & D~E~d~(b,c) & \defeq & (\downlayer{l,\epsilon,q}{n,p}(D)(d)(b),\downcube{l,\epsilon,q}{n,p+1}(D)(E)(d,b)(c))\\
-\\
-\end{array}
-\end{small}
-$
-}}
-\caption{Definition of a homogeneous bare cubical set ($q$-th projection)}
-\label{fig:barecubicalsetfaces}
+  \centerline{ \framebox{$
+        \begin{array}{llcl}
+          \downbox{l,\epsilon,q}{n,p,[p \leq q < n]}  & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}^{n,p}(D))\end{array} & :      & \mybox{l}^{n-1,p}(\hd(D))                                                             \\
+          \downbox{l,\epsilon,q}{n,0}                 & D~\unitpoint                    & \defeq & \unitpoint                                                                            \\
+          \downbox{l,\epsilon,q}{n,p'+1}              & D~(d,b)                         & \defeq & (\downbox{l,\epsilon,q}{n,p'}(D)(d),\downlayer{l,\epsilon,q}{n,p'}(D)(d)(b))          \\
+          \\
+          \downlayer{l,\epsilon,q}{n,p,[p < q < n]}   & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}^{n,p}(D))\\(b:\mylayer{l}^{n,p}(D)(d))\end{array} & :      & \mylayer{l}^{n-1,p}(\hd(D))(\downbox{l,\epsilon,q}{n,p}(D)(d))                        \\
+          \downlayer{l,\epsilon,q}{n,p}               & D~d~c                           & \defeq & \!\!\begin{array}{l}(\overrightarrow{\cohbox{l,\epsilon,L,q,p}{n,p}(D)(d)}(\downcube{l,\epsilon,q-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,L,p}{n,p}(D)(d))(c_L)),\\\;\overrightarrow{\cohbox{l,\epsilon,R,q,p}{n,p}(D)(d)}(\downcube{l,\epsilon,q-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,R,p}{n,p}(D)(d))(c_R)))\end{array}                                                         \\
+          \\
+          \downcube{l,\epsilon,q}{n,p,[p \leq q < n]} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(E:\mycubsetcomp{l}{n}(D))\\(d:\mybox{l}^{n,p}(D))\\(b:\mycube{l}^{n,p}(D)(E)(d))\end{array} & :      & \mycube{l}^{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon,q}{n,p}(D)(d))                 \\
+          \downcube{l,\epsilon,q}{n,p,[p=q]}          & D~E~d~(b,\_)                    & \defeq & b_{\epsilon}                                                                          \\
+          \downcube{l,\epsilon,q}{n,p,[p<q]}          & D~E~d~(b,c)                     & \defeq & (\downlayer{l,\epsilon,q}{n,p}(D)(d)(b),\downcube{l,\epsilon,q}{n,p+1}(D)(E)(d,b)(c)) \\
+          \\
+        \end{array}
+      $}}
+  \caption{Definition of a homogeneous bare cubical set ($q$-th projection)}
+  \label{fig:barecubicalsetfaces}
 \end{figure*}
 
 \begin{figure*}
-\centerline{ \framebox{$
-\begin{small}
-\begin{array}{llcl}
-\cohbox{l,\epsilon,\epsilon',q,r}{\!\!\!\tiny\begin{array}{l}n,p\\\mbox{}[p \leq r < q < n]\end{array}} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}^{n,p}(D))\end{array}& : & \!\!\!\begin{array}{ll}\downbox{l,\epsilon,q-1}{n-1,p}(\hd(D))(\downbox{l,\epsilon',r}{n,p}(D)(d)) \\ \eqett \downbox{l,\epsilon',r-1}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q}{n,p}(D)(d))\end{array}\\
-\cohbox{l,\epsilon,\epsilon',q,r}{n,0} & D~\unitpoint & \defeq & \reflett(\unitpoint)\\
-\cohbox{l,\epsilon,\epsilon',q,r}{n,p'+1} & D~(d,b) & \defeq & (\cohbox{l,\epsilon,\epsilon',q,r}{n,p'}(D)(d),\cohlayer{l,\epsilon,\epsilon',q,r}{n,p'}(D)(d)(b))\\
-\\
-\cohlayer{l,\epsilon,\epsilon',q,r}{\!\!\!\tiny\begin{array}{l}n,p\\\mbox{}[p < r < q < n]\end{array}} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}^{n,p}(D))\\(b:\mylayer{l}^{n,p}(D)(d))\end{array}& : & \!\!\!\begin{array}{ll}\downlayer{l,\epsilon,q}{n-1,p}(\hd(D))(\downbox{l,\epsilon',r}{n,p}(D)(d))(\downlayer{l,\epsilon',r}{n,p}(D)(d)(b)) \\ \eqett \downlayer{l,\epsilon',r}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q}{n,p}(D)(d))(\downlayer{l,\epsilon,q}{n,p}(D)(d)(b))\end{array}\\
-\cohlayer{l,\epsilon,\epsilon',q,r}{n,p} & D~d~c & \defeq & \!\!\begin{array}{l}(\cohcube{l,\epsilon,\epsilon',q-1,r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,L,p}{n,p}(D)(d))(c_L),\\\;\cohcube{l,\epsilon,\epsilon',q-1,r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,R,p}{n,p}(D)(d))(c_R))\end{array}\\
-\\
-\cohcube{l,\epsilon,\epsilon',q,r}{\!\!\!\tiny\begin{array}{l}n,p\\\mbox{}[p \leq r < q < n]\end{array}} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(E:\mycubsetcomp{l}{n}(D))\\(d:\mybox{l}^{n,p}(D))\\(b:\mycube{l}^{n,p}(D)(E)(d))\end{array}& : & \!\!\!\begin{array}{ll}\downcube{l,\epsilon,q-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon',r}{n,p}(D)(d))(\downcube{l,\epsilon',r}{n,p}(D)(E)(d)(b)) \\ \eqett \downcube{l,\epsilon',r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon,q}{n,p}(D)(d))(\downcube{l,\epsilon,q}{n,p}(D)(E)(d)(b))\end{array}\\
-\cohcube{l,\epsilon,\epsilon',q,r}{n,p,[p=r]} & D~E~d~(b,\_) & \defeq & \reflett(\downcube{l,\epsilon,q-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon',p}{n,p}(D)(d))(b_{\epsilon}))\\
-\cohcube{l,\epsilon,\epsilon',q,r}{n,p,[p<r]} & D~E~d~(b,c) & \defeq & \!\!\begin{array}{l}(\cohlayer{l,\epsilon,\epsilon',q,r}{n,p}(D)(d)(b),\;\cohcube{l,\epsilon,\epsilon',q,r}{n,p+1}(D)(E)(d,b)(c))\end{array}\\
-\end{array}
-\end{small}
-$
-}}
-\caption{Definition of a homogeneous bare cubical set (commutation of $q$-th projection and $r$-th projection)}
-\label{fig:barecubicalsetcoherences}
+  \centerline{ \framebox{$
+        \begin{array}{llcl}
+          \cohbox{l,\epsilon,\epsilon',q,r}{\!\!\!\begin{array}{l}n,p\\\mbox{}[p \leq r < q < n]\end{array}}    & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}^{n,p}(D))\end{array} & :      & \!\!\!\begin{array}{ll}\downbox{l,\epsilon,q-1}{n-1,p}(\hd(D))(\downbox{l,\epsilon',r}{n,p}(D)(d)) \\ \eqett \downbox{l,\epsilon',r-1}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q}{n,p}(D)(d))\end{array}                                                                             \\
+          \cohbox{l,\epsilon,\epsilon',q,r}{n,0}                                & D~\unitpoint                     & \defeq & \reflett(\unitpoint)                                                                                         \\
+          \cohbox{l,\epsilon,\epsilon',q,r}{n,p'+1}                             & D~(d,b)                          & \defeq & (\cohbox{l,\epsilon,\epsilon',q,r}{n,p'}(D)(d),\cohlayer{l,\epsilon,\epsilon',q,r}{n,p'}(D)(d)(b))           \\
+          \\
+          \cohlayer{l,\epsilon,\epsilon',q,r}{\!\!\!\begin{array}{l}n,p\\\mbox{}[p < r < q < n]\end{array}} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}^{n,p}(D))\\(b:\mylayer{l}^{n,p}(D)(d))\end{array} & :      & \!\!\!\begin{array}{ll}\downlayer{l,\epsilon,q}{n-1,p}(\hd(D))(\downbox{l,\epsilon',r}{n,p}(D)(d))(\downlayer{l,\epsilon',r}{n,p}(D)(d)(b)) \\ \eqett \downlayer{l,\epsilon',r}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q}{n,p}(D)(d))(\downlayer{l,\epsilon,q}{n,p}(D)(d)(b))\end{array}                                                                             \\
+          \cohlayer{l,\epsilon,\epsilon',q,r}{n,p}                              & D~d~c                            & \defeq & \!\!\begin{array}{l}(\cohcube{l,\epsilon,\epsilon',q-1,r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,L,p}{n,p}(D)(d))(c_L),\\\;\cohcube{l,\epsilon,\epsilon',q-1,r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,R,p}{n,p}(D)(d))(c_R))\end{array}                                                                               \\
+          \\
+          \cohcube{l,\epsilon,\epsilon',q,r}{\!\!\!\begin{array}{l}n,p\\\mbox{}[p \leq r < q < n]\end{array}}  & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(E:\mycubsetcomp{l}{n}(D))\\(d:\mybox{l}^{n,p}(D))\\(b:\mycube{l}^{n,p}(D)(E)(d))\end{array} & :      & \!\!\!\begin{array}{ll}\downcube{l,\epsilon,q-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon',r}{n,p}(D)(d))(\downcube{l,\epsilon',r}{n,p}(D)(E)(d)(b)) \\ \eqett \downcube{l,\epsilon',r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon,q}{n,p}(D)(d))(\downcube{l,\epsilon,q}{n,p}(D)(E)(d)(b))\end{array}                                                                             \\
+          \cohcube{l,\epsilon,\epsilon',q,r}{n,p,[p=r]}                         & D~E~d~(b,\_)                     & \defeq & \reflett(\downcube{l,\epsilon,q-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon',p}{n,p}(D)(d))(b_{\epsilon})) \\
+          \cohcube{l,\epsilon,\epsilon',q,r}{n,p,[p<r]}                         & D~E~d~(b,c)                      & \defeq & \!\!\begin{array}{l}(\cohlayer{l,\epsilon,\epsilon',q,r}{n,p}(D)(d)(b),\;\cohcube{l,\epsilon,\epsilon',q,r}{n,p+1}(D)(E)(d,b)(c))\end{array}                                                                               \\
+        \end{array}
+      $}}
+  \caption{Definition of a homogeneous bare cubical set (commutation of $q$-th projection and $r$-th projection)}
+  \label{fig:barecubicalsetcoherences}
 \end{figure*}
 
 \subsection{Derived notions}
 \label{sec:derived-notions}
 
-On top of the basic definitions on
-Figures~\ref{fig:barecubicalsetstructure},
-\ref{fig:barecubicalsetfaces} and \ref{fig:barecubicalsetcoherences},
-we can define on Figures~\ref{fig:macros} and~\ref{fig:macroscont} a few other concepts at a
-more standard level of abstraction. In particular, a homogeneous
-$n$-box in the above sense is defined to be an object of type
-$\myfullbox{l}^{n}(D_{n})$ for $D_{n} \defeq (A,=_A,...,=^n_A)$ the initial
-segment of $n$-th first iterated equalities over $A$ (by convention, a
-homogeneous $0$-box shall be the canonical singleton type). A $n$-tube
-is of type $\mybox{l}^{n+1,n}(D_{n+1})$. An homogeneous (proper) $n$-cube
-in some $n$-box $d$ is of type $\mycube{l}^{n+1,n}(\hd(D_{n+1}))(\tl(D_{n+1}))(d)$ and a
-full $n$-cube is of type $\mycube{l}^{n+1,0}(\hd(D_{n+1}))(\tl(D_{n+1})))(\star)$.
+On top of the basic definitions on Figures~\ref{fig:barecubicalsetstructure}, \ref{fig:barecubicalsetfaces} and \ref{fig:barecubicalsetcoherences}, we can define on Figures~\ref{fig:macros} and~\ref{fig:macroscont} a few other concepts at a more standard level of abstraction. In particular, a homogeneous $n$-box in the above sense is defined to be an object of type $\myfullbox{l}^{n}(D_{n})$ for $D_{n} \defeq (A,=_A,...,=^n_A)$ the initial segment of $n$-th first iterated equalities over $A$ (by convention, a homogeneous $0$-box shall be the canonical singleton type). A $n$-tube is of type $\mybox{l}^{n+1,n}(D_{n+1})$. An homogeneous (proper) $n$-cube in some $n$-box $d$ is of type $\mycube{l}^{n+1,n}(\hd(D_{n+1}))(\tl(D_{n+1}))(d)$ and a full $n$-cube is of type $\mycube{l}^{n+1,0}(\hd(D_{n+1}))(\tl(D_{n+1})))(\star)$.
 
-Note that the components of an $n$-box or $n$-tube are tuples
-associated to the left. For cubes, the components can be associated to
-the left, and we call this a full $n$-cube or to the right, which we
-call grounded $n$-cube, and which corresponds to ``complete'' partial
-cubes, i.e. to partial cubes over the empty
-box. Figure~\ref{fig:macros} show how to compute the $n$-box
-surrounding a full $n$-cube over a prefix $D_{n+1}$ of iterated
-equalities (see $\border{}$).
+Note that the components of an $n$-box or $n$-tube are tuples associated to the left. For cubes, the components can be associated to the left, and we call this a full $n$-cube or to the right, which we call grounded $n$-cube, and which corresponds to ``complete'' partial cubes, i.e. to partial cubes over the empty box. Figure~\ref{fig:macros} show how to compute the $n$-box surrounding a full $n$-cube over a prefix $D_{n+1}$ of iterated equalities (see $\border{}$).
 
 Figure~\ref{fig:macros} also shows how to compute the faces of a box or of a cube.
 
 \begin{figure*}
-\centerline{ \framebox{$
-\begin{array}{llcl}
-\multicolumn{4}{c}{\mbox{Full (non-truncated) cubical sets with degeneracies}}\\
-\\
-\mycubset{l} && : & \sort{l+1}\\
-\mycubset{l} && \defeq & \mycubsetfrom{l}{0}(\star)\\
-\\
-\mycubsetfrom{l}{n} & (D:\partialcubset{l}{n}) & : & \sort{l+1}\\
-\mycubsetfrom{l}{n} & D & \defeq & \Sigma R:\mycubsetcomp{l}{n}(D).\,\mycubsetfrom{l}{n+1}(D,R)
-\end{array}
-$
-}}
-\caption{Definition of a bare cubical set (coinductive structure)}
-\label{fig:barecubicalset}
+  \centerline{ \framebox{$
+        \begin{array}{llcl}
+          \multicolumn{4}{c}{\mbox{Full (non-truncated) cubical sets with degeneracies}}                                         \\
+          \\
+          \mycubset{l}        &                          & :      & \sort{l+1}                                                   \\
+          \mycubset{l}        &                          & \defeq & \mycubsetfrom{l}{0}(\star)                                   \\
+          \\
+          \mycubsetfrom{l}{n} & (D:\partialcubset{l}{n}) & :      & \sort{l+1}                                                   \\
+          \mycubsetfrom{l}{n} & D                        & \defeq & \Sigma R:\mycubsetcomp{l}{n}(D).\,\mycubsetfrom{l}{n+1}(D,R)
+        \end{array}
+      $
+    }}
+  \caption{Definition of a bare cubical set (coinductive structure)}
+  \label{fig:barecubicalset}
 \end{figure*}
 
 \begin{figure*}
-\centerline{ \framebox{$
-\begin{array}{llcl}
-\multicolumn{4}{c}{\mbox{\textit{Type of full $n$-cubes}}}\\
-\\
-\myfullcube{l}^{n} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n+1})\end{array}& : & \sort{l}\\
-\myfullcube{l}^{n} & (D,E) & \defeq & \Sigma d:\myfullbox{l}^{n}(D).\, E.\mathsf{rel}(d)\\
-\\
-\multicolumn{4}{c}{\mbox{\textit{Type of $n$-tubes}}}\\
-\\
-\tube{l}^{n} & (D:\partialcubset{l}{n+1}) & : & \sort{l}\\
-\tube{l}^{n} & D & \defeq & \mybox{l}^{n+1,n}(D)\\
-\\
-\multicolumn{4}{c}{\mbox{\textit{Type of grounded $n$-cubes}}}\\
-\\
-\mygroundedcube{l}^{n} & (D:\partialcubset{l}{n+1}) & : & \sort{l}\\
-\mygroundedcube{l}^{n} & (D,E) & \defeq & \mycube{l}^{n,0}(D)(E)(\star)\\
-\\
-\multicolumn{4}{c}{\mbox{\textit{Type of fillers of some $n$-box}}}\\
-\\
-\propercube{l}^{n} & (D:\partialcubset{l}{n+1})~(d:\myfullbox{l}^{n}(\hd(D))) & : & \sort{l}\\
-\propercube{l}^{n} & (D,E)~d & \defeq & E.\mathsf{rel}(d)\\
-\\
-\multicolumn{4}{c}{\mbox{\textit{Border of a grounded $n$-cube}}}\\
-\\
-\border{l}^{n} & (D:\partialcubset{l}{n+1})~(c:\mygroundedcube{l}^{n}(D)) & : & \myfullbox{l}^{n}(\hd(D))\\
-\border{l}^{n} & D~c & \defeq & \border{l}^{n,0}(D)(\star)(c)\\
-\\
-\multicolumn{4}{c}{\mbox{\textit{where the border of partial cubes is defined by}}}\\
-\\
-\border{l}^{n,p} & (D:\partialcubset{l}{n+1})~(d:\mybox{l}^{n,p}(\hd(D)))~(c:\mycube{l}^{n,p}(\hd(D))(\tl(D))(d)) & : & \myfullbox{l}^{n}(\hd(D))\\
-\border{l}^{n,p,[p=n]} & D~d~c & \defeq & d\\
-\border{l}^{n,p,[p<n]} & D~d~(b,c) & \defeq & \border{l}^{n,p+1}(D)(d,b)(c)\\
-\end{array}
-$
-}}
-\caption{Standard derived notions}
-\label{fig:macros}
+  \centerline{ \framebox{$
+        \begin{array}{llcl}
+          \multicolumn{4}{c}{\mbox{\textit{Type of full $n$-cubes}}}                                                                                                                            \\
+          \\
+          \myfullcube{l}^{n}     & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n+1})\end{array}                                                               & :      & \sort{l}                                           \\
+          \myfullcube{l}^{n}     & (D,E)                                                                                          & \defeq & \Sigma d:\myfullbox{l}^{n}(D).\, E.\mathsf{rel}(d) \\
+          \\
+          \multicolumn{4}{c}{\mbox{\textit{Type of $n$-tubes}}}                                                                                                                                 \\
+          \\
+          \tube{l}^{n}           & (D:\partialcubset{l}{n+1})                                                                     & :      & \sort{l}                                           \\
+          \tube{l}^{n}           & D                                                                                              & \defeq & \mybox{l}^{n+1,n}(D)                               \\
+          \\
+          \multicolumn{4}{c}{\mbox{\textit{Type of grounded $n$-cubes}}}                                                                                                                        \\
+          \\
+          \mygroundedcube{l}^{n} & (D:\partialcubset{l}{n+1})                                                                     & :      & \sort{l}                                           \\
+          \mygroundedcube{l}^{n} & (D,E)                                                                                          & \defeq & \mycube{l}^{n,0}(D)(E)(\star)                      \\
+          \\
+          \multicolumn{4}{c}{\mbox{\textit{Type of fillers of some $n$-box}}}                                                                                                                   \\
+          \\
+          \propercube{l}^{n}     & (D:\partialcubset{l}{n+1})~(d:\myfullbox{l}^{n}(\hd(D)))                                       & :      & \sort{l}                                           \\
+          \propercube{l}^{n}     & (D,E)~d                                                                                        & \defeq & E.\mathsf{rel}(d)                                  \\
+          \\
+          \multicolumn{4}{c}{\mbox{\textit{Border of a grounded $n$-cube}}}                                                                                                                     \\
+          \\
+          \border{l}^{n}         & (D:\partialcubset{l}{n+1})~(c:\mygroundedcube{l}^{n}(D))                                       & :      & \myfullbox{l}^{n}(\hd(D))                          \\
+          \border{l}^{n}         & D~c                                                                                            & \defeq & \border{l}^{n,0}(D)(\star)(c)                      \\
+          \\
+          \multicolumn{4}{c}{\mbox{\textit{where the border of partial cubes is defined by}}}                                                                                                   \\
+          \\
+          \border{l}^{n,p}       & (D:\partialcubset{l}{n+1})~(d:\mybox{l}^{n,p}(\hd(D)))~(c:\mycube{l}^{n,p}(\hd(D))(\tl(D))(d)) & :      & \myfullbox{l}^{n}(\hd(D))                          \\
+          \border{l}^{n,p,[p=n]} & D~d~c                                                                                          & \defeq & d                                                  \\
+          \border{l}^{n,p,[p<n]} & D~d~(b,c)                                                                                      & \defeq & \border{l}^{n,p+1}(D)(d,b)(c)                      \\
+        \end{array}
+      $
+    }}
+  \caption{Standard derived notions}
+  \label{fig:macros}
 \end{figure*}
 
 \begin{figure*}
-\centerline{ \framebox{$
-\begin{array}{llcl}
-\multicolumn{4}{c}{\mbox{$q$-th projection of an $n$-box}}\\
-\\
-\fulldownbox{l,\epsilon,q}{n,[q < n]} & (D:\partialcubset{l}{n})~(d:\myfullbox{l}^{n}(D)) &:& \myfullbox{l}^{n-1}(\hd(D))\\
-\fulldownbox{l,\epsilon,q}{n} & D~(d,\_) &\defeq& \downbox{l,\epsilon,q}{n,n-1}(D)(d)\\
-\\
-\multicolumn{4}{c}{\mbox{$q$-th face of an $n$-cube}}\\
-\\
-\fulldowncube{l,\epsilon,q}{n,[q < n]} & (D:\partialcubset{l}{n+1})~(c:\myfullcube{l}^{n}(D)) &:& \myfullcube{l}^{n-1}(\hd(D))\\
-\fulldowncube{l,\epsilon,q}{n} & (D,E)~c &\defeq& \downcube{l,\epsilon,q}{n,0}(D)(E)(\star)(c)\\
-\\
-\multicolumn{4}{c}{\mbox{\textit{where the extension of $\downbox{l}{}$ to $p>q$ is}}}\\
-\\
-\downbox{l,\epsilon,q}{n,p,[q < p < n]} & (D:\partialcubset{l}{n})~(d:\mybox{l}^{n,p}(D))& : & \myfullbox{l}^{n-1}(\hd(D))\\
-\downbox{l,\epsilon,q}{n,q+1} & D~(d,b) & \defeq & \border{l}^{n-1,q}(\hd(D))(\downbox{l,\epsilon,q}{n,q}(D)(d))(b_{\epsilon})\\
-\downbox{l,\epsilon,q}{n,p,[q < p-1]} & D~(d,b) & \defeq & \downbox{l,\epsilon,q}{n,p-1}(D)(d)
-\end{array}
-$
-}}
-\caption{Standard derived notions (continued)}
-\label{fig:macroscont}
+  \centerline{ \framebox{$
+        \begin{array}{llcl}
+          \multicolumn{4}{c}{\mbox{$q$-th projection of an $n$-box}}                                                                                                                            \\
+          \\
+          \fulldownbox{l,\epsilon,q}{n,[q < n]}   & (D:\partialcubset{l}{n})~(d:\myfullbox{l}^{n}(D))    & :      & \myfullbox{l}^{n-1}(\hd(D))                                                 \\
+          \fulldownbox{l,\epsilon,q}{n}           & D~(d,\_)                                             & \defeq & \downbox{l,\epsilon,q}{n,n-1}(D)(d)                                         \\
+          \\
+          \multicolumn{4}{c}{\mbox{$q$-th face of an $n$-cube}}                                                                                                                                 \\
+          \\
+          \fulldowncube{l,\epsilon,q}{n,[q < n]}  & (D:\partialcubset{l}{n+1})~(c:\myfullcube{l}^{n}(D)) & :      & \myfullcube{l}^{n-1}(\hd(D))                                                \\
+          \fulldowncube{l,\epsilon,q}{n}          & (D,E)~c                                              & \defeq & \downcube{l,\epsilon,q}{n,0}(D)(E)(\star)(c)                                \\
+          \\
+          \multicolumn{4}{c}{\mbox{\textit{where the extension of $\downbox{l}{}$ to $p>q$ is}}}                                                                                                \\
+          \\
+          \downbox{l,\epsilon,q}{n,p,[q < p < n]} & (D:\partialcubset{l}{n})~(d:\mybox{l}^{n,p}(D))      & :      & \myfullbox{l}^{n-1}(\hd(D))                                                 \\
+          \downbox{l,\epsilon,q}{n,q+1}           & D~(d,b)                                              & \defeq & \border{l}^{n-1,q}(\hd(D))(\downbox{l,\epsilon,q}{n,q}(D)(d))(b_{\epsilon}) \\
+          \downbox{l,\epsilon,q}{n,p,[q < p-1]}   & D~(d,b)                                              & \defeq & \downbox{l,\epsilon,q}{n,p-1}(D)(d)
+        \end{array}
+      $
+    }}
+  \caption{Standard derived notions (continued)}
+  \label{fig:macroscont}
 \end{figure*}
 
-
-\bibliographystyle{plain}
-\bibliography{biblio-en,extra}
+\printbibliography
 
 \end{document}

@@ -3,6 +3,9 @@
 *.vok
 *.glob
 *.aux
+*.bbl
+*.bcf
+*.xml
 .coqdeps.d
 .Makefile.d
 Makefile.coq*
