@@ -68,7 +68,7 @@ Theorem le_trans_assoc {n m p q} (Hnm : n <= m) (Hmp : m <= p) (Hpq : p <= q) :
   Hnm ↕ (Hmp ↕ Hpq) =S (Hnm ↕ Hmp) ↕ Hpq.
 Proof.
   reflexivity.
-Qed.
+Defined.
 
 Theorem le_trans_comm {n m p} (Hnm : n <= m) (Hmp : m <= p) :
   (Hnm ↕ ↑ Hmp) =S ↑ (Hnm ↕ Hmp).
@@ -98,6 +98,11 @@ Theorem le_trans_comm5 {n m p} (Hmn : n <= m) (Hmp : m <= p) :
 Defined.
 
 Theorem le_trans_comm6 {n m} (Hmn : n <= m) : (⇓ ⇑ Hmn) =S Hmn.
+  reflexivity.
+Defined.
+
+Theorem le_trans_comm7 {n m p} (Hmn : S n <= S m) (Hmp : S m <= p) :
+  ↓ (Hmn ↕ Hmp) =S (⇓ Hmn) ↕ (↓ Hmp).
   reflexivity.
 Defined.
 
