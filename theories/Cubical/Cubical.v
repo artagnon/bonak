@@ -31,11 +31,11 @@ Record PartialBox (n p : nat) (csp : Type@{l'})
   subbox {q} {Hp : p.+1 <= q.+1} (Hq : q.+1 <= n) (ε : side) {D : csp} :
     box (↓ (Hp ↕ Hq)) D -> PB.(box') (Hp ↕ Hq) D;
   cohbox {q r} {Hpr : p.+2 <= r.+2} {Hr : r.+2 <= q.+2} {Hq : q.+2 <= n}
-    {ε : side} {ε' : side} {D: csp} (d : box (↓ ↓ (Hpr ↕ (Hr ↕ Hq))) D) :
-    PB.(subbox') Hq ε (subbox (Hr ↕ Hq) ε' d) =
-    (PB.(subbox') (Hp := Hpr) (Hr ↕ Hq) ε'
-    (subbox (Hp := ⇓ (Hpr ↕ Hr)) (↓ Hq) ε d));
+    {ε : side} {ε' : side} {D: csp} (d : box (↓ (⇓ Hpr ↕ (↓ (Hr ↕ Hq)))) D) :
+    PB.(subbox') Hq ε (subbox (↓ (Hr ↕ Hq)) ε' d) =
+    (PB.(subbox') (Hp := Hpr) (Hr ↕ Hq) ε' (subbox Hq ε d));
 }.
+
 
 Arguments box {n p csp PB} _ Hp D.
 Arguments subbox {n p csp PB} _ {q Hp} Hq ε {D}.
@@ -72,11 +72,10 @@ Record PartialCube (n p : nat) (csp : Type@{l'}) {PB : PartialBoxBase n (@csp)}
     {Hr : r.+2 <= q.+2} {Hq : q.+2 <= n}
     (ε : side) (ε' : side) {D : csp}
     (E : Box.(box) (le_refl n) D -> Type@{l})
-    (d : Box.(box) (↓ ↓ (Hpr ↕ (Hr ↕ Hq))) D) (b : cube E d) :
+    (d : Box.(box) (↓ (⇓ Hpr ↕ (↓ (Hr ↕ Hq)))) D) (b : cube E d) :
     rew (Box.(cohbox) d) in
-    (PC.(subcube') Hq ε (subcube (Hr ↕ Hq) ε' b)) =
-    (PC.(subcube') (Hp := Hpr) (Hr ↕ Hq) ε'
-    (subcube (Hp := ⇓ (Hpr ↕ Hr)) (↓ Hq) ε b))
+    (PC.(subcube') Hq ε (subcube (↓ (Hr ↕ Hq)) ε' b)) =
+    (PC.(subcube') (Hp := Hpr) (Hr ↕ Hq) ε' (subcube Hq ε b))
 }.
 
 Arguments cube {n p csp PB PC Box} _ {Hp D} E.
@@ -136,7 +135,7 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
     * simpl. intros. destruct X as (d, (CL, CR)). (* subboxSn *)
       rewrite C.(@eqBoxSp _). destruct q. admit. unshelve esplit.
       - clear CL CR.
-        exact (subboxSn q (⇓ Hp) (↓ Hq) ε _ d).
+        exact (subboxSn q.+1 (↓ Hp) Hq ε _ d).
       - split; simpl in *; (* Sides L and R *)
           cbv zeta; unfold Sub.
         specialize cohboxSn with (Hpr := le_refl p.+2) (Hr := Hp) (Hq := Hq)
@@ -145,6 +144,12 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
         (* The Prop is inhabited by eqBox'' *)
         (* rewrite tactic only works with eq_refl *)
         change (le_refl p.+2 ↕ (Hp ↕ Hq)) with (Hp ↕ Hq) in cohboxSn.
+        set (T := fun (q : nat) Hqn => _) in cohboxSn.
+        change T with (↓ Hp) in cohboxSn.
+        clear T.
+        set (T := fun (q0 : nat) Hqn => Hqn).
+        Set Printing Implicit.
+        assert (T = (⇓ le_refl p.+2)).
         pose (Q := fun (u : C.(PB).(box') (⇓ (Hp ↕ Hq)) D.1) =>
                         C.(PC).(cube') u).
         ++ specialize cohboxSn with (ε' := L) (d := d). (* The side L *)
