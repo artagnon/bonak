@@ -136,30 +136,24 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
       rewrite C.(@eqBoxSp _). destruct q. admit. unshelve esplit.
       - clear CL CR.
         exact (subboxSn q.+1 (↓ Hp) Hq ε _ d).
-      - split; simpl in *; (* Sides L and R *)
-          cbv zeta; unfold Sub.
+      - simpl in *; cbv zeta; unfold Sub. (* Sides L and R *)
         specialize cohboxSn with (Hpr := le_refl p.+2) (Hr := Hp) (Hq := Hq)
                                  (ε := ε) (D := D).
-        ++ change (le_refl p.+2 ↕ (Hp ↕ Hq)) with (Hp ↕ Hq) in cohboxSn.
-           set (T := fun (q : nat) Hqn => _) in cohboxSn.
-           change T with (↓ Hp) in cohboxSn.
-           clear T.
-           set (T := fun (q0 : nat) Hqn => Hqn).
-           (* SProp bug! *)
-           change T with (le_refl p.+1).
-           change (le_refl p.+1) with (⇓ le_refl p.+2).
-           specialize cohboxSn with (ε' := L) (d := d). (* The side L *)
+        change (le_refl p.+2 ↕ (Hp ↕ Hq)) with (Hp ↕ Hq) in cohboxSn.
+        set (T := fun (q : nat) Hqn => _) in cohboxSn.
+        change T with (↓ Hp) in cohboxSn; clear T.
+        set (T := fun (q0 : nat) Hqn => Hqn).
+        (* SProp bug! *)
+        change T with (le_refl p.+1); clear T.
+        change (le_refl p.+1) with (⇓ le_refl p.+2). split.
+        ++ specialize cohboxSn with (ε' := L) (d := d). (* The side L *)
            rewrite <- cohboxSn.
            eapply (C.(Cube).(subcube) (Hp := ⇓ Hp)) with (Hq := ⇓ Hq) in CL.
            exact CL.
-        ++ change (↓ (Hp ↕ Hq)) with (⇓ Hp ↕ (↓ Hq)) in d.
-           specialize cohboxSn with (ε' := R) (d := d). (* The side R *)
+        ++ specialize cohboxSn with (ε' := R) (d := d). (* The side R *)
            rewrite <- cohboxSn.
            eapply (C.(Cube).(subcube) (Hp := ⇓ Hp)) with (Hq := ⇓ Hq) in CR.
            exact CR.
-      - intros. lazy zeta beta in X.  (* subboxSn' *)
-        exact (C.(Box).(subbox) (⇓ Hq) ε X).
-      - simpl. intros. lazy zeta. (* cohbox *)
-        * admit. (* eqBox, eqBox', eqBox''' *)
-Defined.
+    * simpl; intros. admit. (* cohboxSn *)
+Admitted.
 End Cubical.
