@@ -2,16 +2,13 @@
 
 \def\proofskip{\vskip 5pt}
 \def\proofbox{\hfill\rule{6pt}{6pt}}
-%\newcommand{\TODO}[1]{TODO: #1}
 \newcommand{\TODO}[1]{}
 \newcommand{\omitnow}[1]{}
 \newcommand{\omitted}[1]{}
 \newcommand{\replaced}[2]{#1}
-%\newcommand{\omitnow}[1]{#1}
 \newcommand\postsoumission[1]{} %{#1}
 
 \newenvironment{preuve}{{\noindent \sc Preuve:\/}~}{\proofbox\proofskip}
-%\newenvironment{proof}{{\noindent \sc Proof:\/}~}{\proofbox\proofskip}
 \newenvironment{defi}{\medskip}{\proofskip}
 
 \newenvironment{petit}{\begin{footnotesize}}{\end{footnotesize}}
@@ -122,10 +119,6 @@
 \def\ARO{\;@\;}
 \def\BEC{:=}
 \def\LIFT{\!\uparrow}
-%\def\C{[}
-%\def\D{]}
-%\def\F{<\!}
-%\def\G{\!>}
 
 \def\CASE{\mbox{\it case}}
 \def\OF{\mbox{\it of}}
@@ -140,32 +133,24 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\Alt}{ \mid\!\!\mid  } % Alternative (lower and symmetric)
 \newcommand \seql[3]
-  {\raisebox{3ex}{$\mbox{$#1$}\;\;$} \; \shortstack{$#2$ \\ \mbox{}\\
-                   \mbox{}\hrulefill\mbox{}\\ \mbox{}\\ $#3$}}
+{\raisebox{3ex}{$\mbox{$#1$}\;\;$} \; \shortstack{$#2$ \\ \mbox{}\\
+    \mbox{}\hrulefill\mbox{}\\ \mbox{}\\ $#3$}}
 \newcommand \seqr[3]
-  {\shortstack{$#2$ \\ \mbox{}\\
-                   \mbox{}\hrulefill\mbox{}\\ \mbox{}\\ $#3$} \; \raisebox{3ex}{$\;\;\mbox{$#1$}$}}
+{\shortstack{$#2$ \\ \mbox{}\\
+    \mbox{}\hrulefill\mbox{}\\ \mbox{}\\ $#3$} \; \raisebox{3ex}{$\;\;\mbox{$#1$}$}}
 \newcommand \seqadmissibler[3]
-  {\shortstack{$#2$ \\ \mbox{}\\
-                   \mbox{}\hrulefill\mbox{}\\\hrulefill\mbox{}\\ \mbox{}\\ $#3$} \; \raisebox{3ex}{$\;\;\mbox{$#1$}$}}
+{\shortstack{$#2$ \\ \mbox{}\\
+    \mbox{}\hrulefill\mbox{}\\\hrulefill\mbox{}\\ \mbox{}\\ $#3$} \; \raisebox{3ex}{$\;\;\mbox{$#1$}$}}
 \newcommand \seq[2]{\shortstack{$#1$ \\ \mbox{}\\
-                    \mbox{}\hrulefill\mbox{}\\ \mbox{}\\ $#2$}}
+    \mbox{}\hrulefill\mbox{}\\ \mbox{}\\ $#2$}}
 \newcommand{\empht}[1]{{#1}}
 \newcommand \seqdots[2]{\shortstack{$#1$ \\ \mbox{}\\
-                    \mbox{}\vdots\mbox{}\\ \mbox{}\\ $#2$}}
+    \mbox{}\vdots\mbox{}\\ \mbox{}\\ $#2$}}
 \newcommand \seqdotsl[3]{\shortstack{$#2$ \\ \mbox{}\\
-                    \mbox{}\vdots\mbox{$#1$}\\ \mbox{}\\ $#3$}}
+    \mbox{}\vdots\mbox{$#1$}\\ \mbox{}\\ $#3$}}
 \newcommand\definis[1]{\textbf{#1}}
-%\newcommand{\defeq}{\triangleq}
 
 \newcommand{\cad}{{c'est-à-dire}}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Connecteurs
-
-%\newcommand{\implies}{\rightarrow}
-\newcommand{\imp}{\rightarrow}
-\newcommand{\revimp}{\leftarrow}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Noms de calcul
@@ -237,40 +222,34 @@
 \newcount\coupecolor
 \coupelevel=0
 \newcommand{\coupe}[2]{\black{
-  \ifnum \coupelevel>0 
-%    \overline{\langle \redcolor{#1} |\!| \blue{#2} \rangle}
-  \coupecolor=\coupelevel
-  \divide\coupecolor by 3\relax
-  \output{\coupecolor}
-  %\dashbox{$
-    {\mbox{\textlangle}} \overline{\gray{#1} \gray{\coupesep} \gray{#2}} \mbox{\textrangle}
-  %$}
-  \else
-    \advance\coupelevel by 1\relax\langle \redcolor{#1} \coupesep \blue{#2} \rangle
-    \output{\coupelevel}
-  \fi}}
+    \ifnum \coupelevel>0
+      %    \overline{\langle \redcolor{#1} |\!| \blue{#2} \rangle}
+      \coupecolor=\coupelevel
+      \divide\coupecolor by 3\relax
+      \output{\coupecolor}
+      {\mbox{\textlangle}} \overline{\gray{#1} \gray{\coupesep} \gray{#2}} \mbox{\textrangle}
+    \else
+      \advance\coupelevel by 1\relax\langle \redcolor{#1} \coupesep \blue{#2} \rangle
+      \output{\coupelevel}
+    \fi}}
 \newcommand{\cut}[2]{\coupe{#1}{#2}}
 \newcommand{\cons}[2]{{#1}\cdot{#2}}
 \newcommand{\consproj}[2]{{#1}[{#2}]}
 
 \newcommand{\tmu}{{\tilde\mu}}
-%\newcommand{\tmu}{{}}  % no sign
 \newcommand{\muof}[2]{{\mu #1.#2}}
-%\newcommand{\muof}[2]{{#2.#1}}
 \newcommand{\lbar}{{\overline{\lambda}}}
 \newcommand{\Sub}[3]{#1[{#3}/{#2}]}
 \newcommand{\DSub}[3]{#1[#2\hookleftarrow #3]}
 \newcommand{\CSub}[3]{#1[#2\leadsto #3]}
 \newcommand{\omu}{\bar{\mu}}
 \newcommand{\oalpha}{\star}
-\newcommand{\omualpha}{\omu\!\star} % macro spéciale qui supprime un espace 
+\newcommand{\omualpha}{\omu\!\star} % macro spéciale qui supprime un espace
 
 \renewcommand{\l}{\lambda}
 \newcommand{\lbd}{\lambda}
 \newcommand{\letin}[3]{\mathbf{let}~{#1}=#2\;\mathbf{in}~#3}
-%\newcommand{\rawletin}{\mathbf{let-in}}
 \newcommand{\rawletin}{\mbox{\tt let-in}}
-%\newcommand{\emptyctx}{\Box}
 
 % Calculs avec liaison dynamique
 \newcommand{\alphabf}{\hat{\alpha}}
@@ -284,22 +263,16 @@
 \newcommand{\annot}[2]{{#1}_{#2}}
 
 % Constructeur de la soustraction
-%\newcommand{\lbdminus}[2]{\backslash #1.#2}
-%\newcommand{\lbdminus}[2]{\bbslash #1.#2}
 \newcommand{\lbdminus}[2]{\tilde\lambda #1.#2}
 \newcommand{\lbdminusl}[2]{\l_1 #1.#2}
 \newcommand{\lbdminusr}[2]{\l_2 #1.#2}
-%\newcommand{\consminus}[2]{#1 \cdot #2}
-%\newcommand{\consminus}[2]{#2 \;{\tilde\cdot}\; #1}
 \newcommand{\consminus}[2]{#2 - #1}
 
 \newcommand{\tnu}{{\tilde\nu}}
 
 \newcommand{\pair}[2]{({#1},{#2})}
 \newcommand{\case}[2]{[{#1},{#2}]}
-%\newcommand{\unit}{\textsf{I}}
 \newcommand{\unit}{\ltimes}
-%\newcommand{\tp}{\textsf{tp}}
 \newcommand{\tp}{\rtimes}
 \newcommand{\notv}[1]{\neg(#1)}
 \newcommand{\note}[1]{\neg[#1]}
@@ -310,7 +283,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Control operators
 \newcommand{\A}{\mathcal{A}}
-%\newcommand{\C}{\mathcal{C}}
 \newcommand{\Shift}{\mathcal{S}}
 \renewcommand{\P}{\#}
 \newcommand{\F}{\mathcal{F}}
