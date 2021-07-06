@@ -5,6 +5,7 @@ Import LeYoneda.
 Require Import Aux.
 Require Import RewLemmas.
 Set Printing Projections.
+Set Primitive Projections.
 
 Section Cubical.
 Universe l'.
@@ -90,16 +91,15 @@ Class Cubical (n : nat) := {
   Box {p} : PartialBox n p csp PB ;
   PC : PartialCubeBase n csp PB ;
   Cube {p} : PartialCube n p csp PC (@Box) ;
-  eqBox {len0: 0 <= n} {D : csp} : Box.(box) len0 D = unit ;
-  eqBox' {len1: 1 <= n} {D : csp} : PB.(box') len1 D = unit ;
+  eqBox0 {len0: 0 <= n} {D : csp} : Box.(box) len0 D = unit ;
+  eqBox0' {len1: 1 <= n} {D : csp} : PB.(box') len1 D = unit ;
   eqBoxSp {D : csp} {p} (Hp : p.+1 <= n) :
     Box.(box) Hp D = {d : Box.(box) (↓ Hp) D &
                           (PC.(cube') (Box.(subbox) _ L d) *
                            PC.(cube') (Box.(subbox) _ R d))%type } ;
-  eqSubox0 {q} {len0: 0 <= q} (Hq : q.+1 <= n) (ε : side) (D : csp) :
-    Box.(subbox) (Hp := (⇑ len0)) Hq ε
-    =_{f_equal2 (fun T1 T2 => T1 -> T2) (eqBox (D := D)) (eqBox' (D := D))}
-      (fun _ => tt);
+  eqSubbox0 {q} {len0: 0 <= q} (Hq : q.+1 <= n) (ε : side) (D : csp) :
+    Box.(subbox) (Hp := (⇑ len0)) Hq ε (rew <- [id] eqBox0 (D := D) in tt) =
+      (rew <- [id] eqBox0' in tt);
 }.
 
 Arguments csp {n} _.
@@ -123,8 +123,10 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
   induction p as [|p (boxSn, subboxSn, cohboxSn)].
   + unshelve esplit. (* p = O *)
   * intros Hp D; exact unit.
-  * simpl; intros. rewrite C.(@eqBox _); exact tt. (* subboxSn *)
-  * simpl; intros. admit. (* cohboxSn *)
+  * simpl; intros. rewrite C.(@eqBox0 _); exact tt. (* subboxSn *)
+  * simpl; intros. (* cohboxSn *)
+    rewrite (eqSubbox0 (len0 := (⇓ ⇓ Hpr))).
+    rewrite (eqSubbox0 (len0 := (⇓ ⇓ (Hpr ↕ Hr)))); reflexivity.
   + unshelve esplit; (* p = S _ *)
     pose (Sub Hp side := (subboxSn p (le_refl p.+1) Hp side)).
     * intros Hp D. (* boxSn *)
@@ -154,6 +156,7 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
            rewrite <- cohboxSn.
            eapply (C.(Cube).(subcube) (Hp := ⇓ Hp)) with (Hq := ⇓ Hq) in CR.
            exact CR.
-    * simpl; intros. admit. (* cohboxSn *)
+    * simpl; intros. (* cohboxSn *)
+      set (T := match r with O => _ | _ => _ end).
 Admitted.
 End Cubical.
