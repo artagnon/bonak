@@ -106,4 +106,17 @@ Theorem le_trans_comm7 {n m p} (Hmn : S n <= S m) (Hmp : S m <= p) :
   reflexivity.
 Defined.
 
+Inductive SFalse : SProp :=.
+
+Lemma le'_1_O_contra: le' 1 O -> SFalse.
+  inversion 1.
+Defined.
+
+Theorem le_contra {n}: S n <= O -> False.
+  intros; elimtype SFalse; unfold le in H.
+  specialize H with (p := 1); apply le'_1_O_contra.
+  apply H; clear H; induction n. constructor. constructor.
+  assumption.
+Defined.
+
 End LeYoneda.

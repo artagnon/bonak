@@ -157,6 +157,6 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
            eapply (C.(Cube).(subcube) (Hp := ⇓ Hp)) with (Hq := ⇓ Hq) in CR.
            exact CR.
     * simpl; intros. (* cohboxSn *)
-      set (T := match r with O => _ | _ => _ end).
+      destruct d.
 Admitted.
 End Cubical.
