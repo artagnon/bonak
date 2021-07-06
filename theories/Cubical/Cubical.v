@@ -144,7 +144,7 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
         specialize cohboxSn with (Hpr := le_refl p.+2) (Hr := Hp) (Hq := Hq)
                                  (ε := ε) (D := D).
         change (le_refl p.+2 ↕ (Hp ↕ Hq)) with (Hp ↕ Hq) in cohboxSn.
-        set (T := fun (q : nat) Hqn => _) in cohboxSn.
+        set (T := fun (q : nat) Hqn => _) in cohboxSn at 3. (* Coq bug! *)
         change T with (↓ Hp) in cohboxSn; clear T.
         set (T := fun (q0 : nat) Hqn => Hqn).
         (* SProp bug! *)
@@ -159,6 +159,6 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
            eapply (C.(Cube).(subcube) (Hp := ⇓ Hp)) with (Hq := ⇓ Hq) in CR.
            exact CR.
     * simpl; intros. (* cohboxSn *)
-      destruct d.
+      destruct d as (d',(CL,CR)). destruct r.
 Admitted.
 End Cubical.
