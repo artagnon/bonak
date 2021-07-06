@@ -16,7 +16,8 @@ Inductive side := L | R.
 (* PartialBox consists of an 0-cells, and fillers which are the 1-cells,
 2-cells, and 3-cells relating the different 0-cells on the cube  *)
 Record PartialBoxBase (n : nat) (csp : Type@{l'}) := {
-  box' {p} (Hp : p.+1 <= n) : csp -> Type@{l} ; (* [box' n D] is [box (n-1) D.1] *)
+  box' {p} (Hp : p.+1 <= n) : csp -> Type@{l} ;
+  (* [box' n D] is [box (n-1) D.1] *)
   box'' {p} (Hp : p.+2 <= n) : csp -> Type@{l} ;
   subbox' {p q} {Hp : p.+2 <= q.+2} (Hq : q.+2 <= n) (ε : side) {D : csp} :
     box' (↓ (Hp ↕ Hq)) D -> box'' (Hp ↕ Hq) D;
@@ -159,6 +160,6 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
            eapply (C.(Cube).(subcube) (Hp := ⇓ Hp)) with (Hq := ⇓ Hq) in CR.
            exact CR.
     * simpl; intros. (* cohboxSn *)
-      destruct d as (d',(CL,CR)). destruct r.
+      destruct d as (d', (CL, CR)); destruct r.
 Admitted.
 End Cubical.

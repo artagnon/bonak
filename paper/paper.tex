@@ -11,15 +11,62 @@
 % Add biblio-en.bib to the database
 \addbibresource{biblio-en.bib}
 
-\makeatletter
-\newcommand{\Overrightarrow}[2]{\raisebox{#1}{$\ext@arrow 0359\Rightarrowfill@{\mbox{${#2}$}}{}$}}
-\newcommand{\Overleftarrow}[2]{\raisebox{#1}{$\ext@arrow 0359\Leftarrowfill@{\mbox{${#2}$}}{}$}}
-\makeatother
-
 \newcommand{\highlight}[1]{\emph{#1}}
 
 \include{macros}
+
+% Head and tail
+\newcommand{\hd}{\ensuremath{\mathsf{hd}}}
+\newcommand{\tl}{\ensuremath{\mathsf{tl}}}
+
+% Universes
+\newcommand{\sort}[1]{\ensuremath{\mathsf{U}_{#1}}}
+
+% The unit type
+\newcommand{\unittype}{\ensuremath{\mathsf{unit}}}
+
+% Definitional equality
+\newcommand{\defeq}{\ensuremath{\triangleq}}
+
+% Box, layer, and cube
+\newcommand{\mybox}[2]{\ensuremath{\mathsf{box}_{#1}^{#2}}}
+\newcommand{\mylayer}[2]{\ensuremath{\mathsf{layer}_{#1}^{#2}}}
+\newcommand{\mycube}[2]{\ensuremath{\mathsf{cube}_{#1}^{#2}}}
+
+% Subbox, sublayer, and subcube
+\newcommand{\downbox}[2]{\ensuremath{\mathsf{subbox}_{#1}^{#2}}}
+\newcommand{\downlayer}[2]{\ensuremath{\mathsf{sublayer}_{#1}^{#2}}}
+\newcommand{\downcube}[2]{\ensuremath{\mathsf{subcube}_{#1}^{#2}}}
+\newcommand{\myfullbox}[2]{\ensuremath{\mathsf{fullbox}_{#1}^{#2}}}
+
+% Coherence conditions
+\newcommand{\cohbox}[2]{\ensuremath{\mathsf{cohbox}_{{#1}}^{{#2}}}}
+\newcommand{\cohcube}[2]{\ensuremath{\mathsf{cohcube}_{#1,#2}}}
+\newcommand{\cohlayer}[2]{\ensuremath{\mathsf{cohlayer}_{#1}^{#2}}}
+
+\newcommand{\partialcubset}[2]{\ensuremath{\mathsf{cubset}_{#1}^{<#2}}}
+\newcommand{\mycubsetcomp}[2]{\ensuremath{\mathsf{cubset}_{#1}^{=#2}}}
+
+% Logical implication
 \newcommand{\imp}{\ensuremath{\rightarrow}}
+
+% Simplicial set macros
+\newcommand{\BDelta}{\ensuremath{\boldsymbol{\Delta}}}
+\newcommand{\Simplex}[1][n]{\ensuremath{\boldsymbol{\Delta^{#1}}}}
+\newcommand{\DeltaHat}{\ensuremath{\hat{\boldsymbol{\Delta}}}}
+\newcommand{\SSet}{\ensuremath{\text{Set}_{\boldsymbol{\Delta}}}}
+
+% The eqntable environment, displaying the various
+\NewDocumentEnvironment{eqntable}{m}{\table[h!]
+\tabularx{\textwidth}{@{} l X c X @{}}\toprule}
+{\endtabularx\hrule\caption{#1}\endtable}
+
+% A block in the eqntable environment
+\newcommand{\eqnline}[4]{#1 & #2 & #3 & #4 \\}
+\newcommand{\mc}[1]{\multicolumn{4}{c}{\textit{#1}} \\\\}
+
+% Junk follows
+
 \newcommand{\revimp}{\ensuremath{\leftarrow}}
 
 \newcommand{\Type}{\ensuremath{\mathsf{Type}}}
@@ -70,7 +117,6 @@
 
 \newcommand{\emptyctx}{\boxbox}
 
-\newcommand{\sort}[1]{\ensuremath{\mathsf{U}_{#1}}}
 \newcommand{\univ}{\boxempty}
 \newcommand{\typeannot}{\mathsf{type}}
 \newcommand{\istype}{~\typeannot}
@@ -147,7 +193,6 @@
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\expand}[2]{\mathsf{expand}(#1,#2)}
 
-\newcommand{\defeq}{\ensuremath{\triangleq}}
 \newcommand{\metaequiv}{\cong}
 \newcommand{\metaletin}[3]{\mathit{let}\;{#1}\;\defeq\;{#2}\;\mathit{in}\;{#3}}
 \newcommand{\map}[2]{\mathsf{ap}\,{#1}\,{#2}}
@@ -264,46 +309,33 @@
 \newcommand{\regrefl}{\mathsf{regrefl}}
 
 \newcommand{\heteroname}{het}
-\newcommand{\mycubsetcomp}[2]{\ensuremath{\mathsf{cubset}_{#1}^{=#2}}}
 
 \newcommand{\informalcube}{\mathsf{cube}}
-\newcommand{\informalcubeover}{\mathsf{\cubeovername}}
+\newcommand{\informalcubeover}{\mathsf{cube}}
 
-\newcommand{\cubeovername}{cube}
-\newcommand{\Cubeovername}{Cube}
 \newcommand{\pboxname}{box}
 \newcommand{\pBoxname}{Box}
 
-\newcommand{\mybox}[1]{\mathsf{box}_{#1}}
-\newcommand{\mylayer}[1]{\mathsf{layer}_{#1}}
-\newcommand{\mycube}[1]{\mathsf{\cubeovername}_{#1}}
-\newcommand{\downbox}[2]{\mathsf{subbox}_{#1}^{#2}}
-\newcommand{\downlayer}[2]{\mathsf{sublayer}_{#1}^{#2}}
-\newcommand{\downcube}[2]{\mathsf{subcube}_{#1}^{#2}}
-\newcommand{\cohbox}[2]{\mathsf{cohbox}_{{#1}}^{{#2}}}
-\newcommand{\cohlayer}[2]{\mathsf{cohlayer}_{#1}^{#2}}
-\newcommand{\cohcube}[2]{\mathsf{coh\cubeovername}_{#1,#2}}
-\newcommand{\myfullbox}[2]{\ensuremath{\mathsf{fullbox}_{#1}^{#2}}}
 \newcommand{\fulldownbox}[2]{\mathsf{subfullbox}_{#1}^{#2}}
 \newcommand{\fulldowncube}[2]{\mathsf{subfullcube}_{#1}^{#2}}
 
 \newcommand{\myheterobox}[2]{\mathsf{{\heteroname}box}_{#1}^{#2}}
 \newcommand{\myheterolayer}[2]{\mathsf{{\heteroname}layer}_{#1}^{#2}}
-\newcommand{\myheterocube}[2]{\mathsf{{\heteroname}\cubeovername}_{#1}^{#2}}
+\newcommand{\myheterocube}[2]{\mathsf{{\heteroname}cube}_{#1}^{#2}}
 \newcommand{\myheteroboxtype}[2]{\mathsf{Box}_{#1}^{#2}}
 \newcommand{\myheterolayertype}[2]{\mathsf{Layer}_{#1}^{#2}}
-\newcommand{\myheterocubetype}[2]{\mathsf{\Cubeovername}_{#1}^{#2}}
+\newcommand{\myheterocubetype}[2]{\mathsf{Cube}_{#1}^{#2}}
 
 \newcommand{\myfulldepheterobox}[3]{\mathsf{fulldepBox}_{#1}^{#2,#3}}
 \newcommand{\mydepheterobox}[3]{\mathsf{depBox}_{#1}^{#2,#3}}
 \newcommand{\mydepheterolayer}[3]{\mathsf{depLayer}_{#1}^{#2,#3}}
-\newcommand{\mydepheterocube}[3]{\mathsf{dep\Cubeovername}_{#1}^{#2,#3}}
+\newcommand{\mydepheterocube}[3]{\mathsf{depCube}_{#1}^{#2,#3}}
 \newcommand{\liftfulldepheterobox}[3]{\mathsf{liftfullBox}_{#1}^{#2,#3}}
 \newcommand{\liftdepheterobox}[3]{\mathsf{liftBox}_{#1}^{#2,#3}}
 \newcommand{\liftdepheterolayer}[3]{\mathsf{liftLayer}_{#1}^{#2,#3}}
-\newcommand{\liftdepheterocube}[3]{\mathsf{lift\Cubeovername}_{#1}^{#2,#3}}
+\newcommand{\liftdepheterocube}[3]{\mathsf{liftCube}_{#1}^{#2,#3}}
 
-\newcommand{\expandheterocube}[2]{\mathsf{expand\Cubeovername}_{#1}^{#2}}
+\newcommand{\expandheterocube}[2]{\mathsf{expandCube}_{#1}^{#2}}
 \newcommand{\expandheterolayer}[2]{\mathsf{expandLayer}_{#1}^{#2}}
 \newcommand{\expanddownbox}[2]{\mathsf{expandsubbox}_{#1}^{#2}}
 \newcommand{\expanddownlayer}[2]{\mathsf{expandsublayer}_{#1}^{#2}}
@@ -342,13 +374,13 @@
 
 \newcommand{\heterodownbox}[2]{\mathsf{sub{\heteroname}box}_{#1}^{#2}}
 \newcommand{\heterodownlayer}[2]{\mathsf{sub{\heteroname}layer}_{#1}^{#2}}
-\newcommand{\heterodowncube}[2]{\mathsf{sub{\heteroname}\cubeovername}_{#1}^{#2}}
+\newcommand{\heterodowncube}[2]{\mathsf{sub{\heteroname}cube}_{#1}^{#2}}
 \newcommand{\depdownboxtype}[2]{\mathsf{Subdepbox}_{#1}^{#2}}
 \newcommand{\depdownlayertype}[2]{\mathsf{Subdeplayer}_{#1}^{#2}}
-\newcommand{\depdowncubetype}[2]{\mathsf{Subdep\cubeovername}_{#1}^{#2}}
+\newcommand{\depdowncubetype}[2]{\mathsf{Subdepcube}_{#1}^{#2}}
 \newcommand{\downboxtype}[2]{\mathsf{Subbox}_{#1}^{#2}}
 \newcommand{\downlayertype}[2]{\mathsf{Sublayer}_{#1}^{#2}}
-\newcommand{\downcubetype}[2]{\mathsf{Sub\cubeovername}_{#1}^{#2}}
+\newcommand{\downcubetype}[2]{\mathsf{Subcube}_{#1}^{#2}}
 \newcommand{\cohreflbox}[1]{\mathsf{cohreflbox}_{#1}}
 \newcommand{\cohrefllayer}[1]{\mathsf{cohrefllayer}_{#1}}
 \newcommand{\cohreflcube}[1]{\mathsf{cohreflcube}_{#1}}
@@ -357,32 +389,30 @@
 \newcommand{\cohrefleqcube}[1]{\mathsf{cohrefleqcube}_{#1}}
 \newcommand{\cohboxtype}[2]{\mathsf{Cohbox}_{#1}^{#2}}
 \newcommand{\cohlayertype}[2]{\mathsf{Cohlayer}_{#1}^{#2}}
-\newcommand{\cohcubetype}[2]{\mathsf{Coh\cubeovername}_{#1}^{#2}}
+\newcommand{\cohcubetype}[2]{\mathsf{Cohcube}_{#1}^{#2}}
 \newcommand{\heterocohbox}[2]{\mathsf{coh{\heteroname}box}_{#1}^{#2}}
 \newcommand{\heterocohlayer}[2]{\mathsf{coh{\heteroname}layer}_{#1}^{#2}}
-\newcommand{\heterocohcube}[2]{\mathsf{coh{\heteroname}\cubeovername}_{#1}^{#2}}
+\newcommand{\heterocohcube}[2]{\mathsf{coh{\heteroname}cube}_{#1}^{#2}}
 \newcommand{\myappdepbox}[1]{\mathsf{homoappbox}_{#1}}
 \newcommand{\myappdeplayer}[1]{\mathsf{homoapplayer}_{#1}}
-\newcommand{\myappdepcube}[1]{\mathsf{homoapp\cubeovername}_{#1}}
+\newcommand{\myappdepcube}[1]{\mathsf{homoappcube}_{#1}}
 \newcommand{\myappdepfullcube}[1]{\mathsf{homoappfullcube}_{#1}}
 \newcommand{\myappdepboxtype}[1]{\mathsf{homoappbox}_{#1}}
 \newcommand{\myappdepfullboxtype}[1]{\mathsf{homoappfullbox}_{#1}}
 \newcommand{\myappdeplayertype}[1]{\mathsf{homoapplayer}_{#1}}
-\newcommand{\myappdepcubetype}[1]{\mathsf{homoapp\cubeovername}_{#1}}
+\newcommand{\myappdepcubetype}[1]{\mathsf{homoappcube}_{#1}}
 \newcommand{\myappdepfullcubetype}[1]{\mathsf{homoappfullcube}_{#1}}
 \newcommand{\myfullcube}[1]{\mathsf{fullcube}_{#1}}
 \newcommand{\myfullheteroboxtype}[2]{\mathsf{fullBox}_{#1}^{#2}}
 \newcommand{\myfullheterobox}[2]{\mathsf{full{\heteroname}box}_{#1}^{#2}}
 \newcommand{\reflfullcube}[1]{\mathsf{reflfullcube}_{#1}}
 \newcommand{\unitpoint}{\star}
-\newcommand{\unittype}{\ensuremath{\mathsf{unit}}}
 \newcommand{\eqett}{\equiv_{\mathit{ETT}}}
 \newcommand{\reflett}{\mathsf{refl}_{\mathit{ETT}}}
 \newcommand{\mygpd}{\mathsf{gpd}}
 
 \newcommand{\mycubset}[1]{\mathsf{cubset}_{#1}}
 \newcommand{\mycubsetfrom}[2]{\mathsf{cubset}_{#1}^{\geq#2}}
-\newcommand{\partialcubset}[2]{\ensuremath{\mathsf{cubset}_{#1}^{<#2}}}
 \newcommand{\mydepcubset}[1]{\mathsf{dephomocubset}_{#1}}
 \newcommand{\mydepcubsetfrom}[2]{\mathsf{dephomocubset}_{#1}^{\geq#2}}
 \newcommand{\mydepcubsetcomp}[2]{\mathsf{dephomocubset}_{#1}^{=#2}}
@@ -395,12 +425,12 @@
 \newcommand{\deppartialheterocubset}[3]{\mathsf{depcubset}_{#1}^{#2,<#3}}
 \newcommand{\myappheterodepbox}[1]{\mathsf{appbox}_{#1}}
 \newcommand{\myappheterodeplayer}[1]{\mathsf{applayer}_{#1}}
-\newcommand{\myappheterodepcube}[1]{\mathsf{app\cubeovername}_{#1}}
+\newcommand{\myappheterodepcube}[1]{\mathsf{appcube}_{#1}}
 \newcommand{\myappheterodepfullcube}[1]{\mathsf{appfullcube}_{#1}}
 \newcommand{\myappheterodepboxtype}[1]{\mathsf{appbox}_{#1}}
 \newcommand{\myappheterodepfullboxtype}[3]{\mathsf{appfullbox}_{#1}^{#2,#3}}
 \newcommand{\myappheterodeplayertype}[1]{\mathsf{applayer}_{#1}}
-\newcommand{\myappheterodepcubetype}[1]{\mathsf{app\cubeovername}_{#1}}
+\newcommand{\myappheterodepcubetype}[1]{\mathsf{appcube}_{#1}}
 \newcommand{\myappheterodepfullcubetype}[1]{\mathsf{appfullcube}_{#1}}
 
 \newcommand{\typecubset}{\mathsf{typecubset}}
@@ -464,28 +494,12 @@
 \newcommand{\permutebox}{\mathsf{permutebox}}
 \newcommand{\diagbox}{\mathsf{diagbox}}
 \newcommand{\connbox}{\mathsf{connbox}}
-\newcommand{\hd}{\mathsf{hd}}
-\newcommand{\tl}{\mathsf{tl}}
 \newcommand{\first}{\mathsf{first}}
 \newcommand{\groupoid}{\mathsf{groupoid}}
 \newcommand{\groupoidn}{\mathsf{groupoidn}}
 \newcommand{\letinsplit}[3]{\!\!\begin{array}{l}\mathbf{let}~{#1}=#2\;\mathbf{in}~\\#3\end{array}}
 
 \newcommand{\UIP}{\mathsf{UIP}}
-
-% Simplicial set macros
-\newcommand{\BDelta}{\ensuremath{\boldsymbol{\Delta}}}
-\newcommand{\Simplex}[1][n]{\ensuremath{\boldsymbol{\Delta^{#1}}}}
-\newcommand{\DeltaHat}{\ensuremath{\hat{\boldsymbol{\Delta}}}}
-\newcommand{\SSet}{\ensuremath{\text{Set}_{\boldsymbol{\Delta}}}}
-
-% The eqntable environment, displaying the various
-\NewDocumentEnvironment{eqntable}{m}{\table[h!]\tabularx{\linewidth}{l c c c}}
-{\endtabularx\caption{#1}\endtable}
-
-% A block in the eqntable environment
-\newcommand{\eqnline}[4]{#1 & #2 & #3 & #4 \\}
-\newcommand{\mc}[1]{\multicolumn{4}{c}{\textit{#1}} \\\\}
 
 \title{An indexed construction of semi-cubical types}
 \author{Ramkumar Ramachandra}
@@ -522,32 +536,32 @@ When reflexivities are excepted, we call the structure thus defined \emph{bare t
 \begin{eqntable}{Definition of a truncated cubical set (boxes)}
   \mc{Full homogeneous $n$-boxes}
   \eqnline{\myfullbox{l}{n}}{(D:\partialcubset{l}{n})}{:}{\sort{l}}
-  \eqnline{\myfullbox{l}{n}}{D}{}{\defeq}{\mybox{l}^{n,n}(D)}
+  \eqnline{\myfullbox{l}{n}}{D}{\defeq}{\mybox{l}{n,n}(D)}
   \\
   \mc{Homogeneous partial $n$-boxes and homogeneous partial $n$-cubes}
-  \eqnline{\mybox{l}^{n,p,[p \leq n]}}{(D:\partialcubset{l}{n})}{:}{\sort{l}}
-  \eqnline{\mybox{l}^{n,0}}{D}{\defeq}{\unittype}
-  \eqnline{\mybox{l}^{n,p'+1}}{D}{\defeq}{\Sigma d:\mybox{l}^{n,p'}(D).\,\mylayer{l}^{n,p'}(D)(d)}
+  \eqnline{\mybox{l}{n,p,[p \leq n]}}{(D:\partialcubset{l}{n})}{:}{\sort{l}}
+  \eqnline{\mybox{l}{n,0}}{D}{\defeq}{\unittype}
+  \eqnline{\mybox{l}{n,p'+1}}{D}{\defeq}{\Sigma d:\mybox{l}{n,p'}(D).\,\mylayer{l}{n,p'}(D)(d)}
   \\
-  \eqnline{\mylayer{l}^{n,p,[p < n]}{\mbox{(D:\partialcubset{l}{n}) \\ (d:\mybox{l}^{n,p}(D))}}{:}{\sort{l}}
-  \eqnline{\mylayer{l}^{n,p}}{D~d}{\defeq}{\mbox{\mycube{l}^{n-1,p}(\hd(D))(\tl(D))(\downbox{l,L,p}{n,p}(D)(d)) \\ \times\; \mycube{l}^{n-1,p}(\hd(D))(\tl(D))(\downbox{l,R,p}{n,p}(D)(d))}}
+  \eqnline{\mylayer{l}{n,p,[p < n]}}{\shortstack{(D:\partialcubset{l}{n}) \\ (d:\mybox{l}{n,p}(D))}}{:}{\sort{l}}
+  \eqnline{\mylayer{l}{n,p}}{D~d}{\defeq}{\shortstack{\mycube{l}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,L,p}{n,p}(D)(d)) \\ \times\; \mycube{l}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,R,p}{n,p}(D)(d))}}
   \\
-  \eqnline{\mycube{l}^{n,p,[p \leq n]}}{\mbox{(D:\partialcubset{l}{n}) \\(E:\mycubsetcomp{l}{n}(D)) \\ (d:\mybox{l}^{n,p}(D))}}{:}{\sort{l}}
-  \eqnline{\mycube{l}^{n,p,[p = n]}}{D~E~d}{\defeq}{E.\mathsf{rel}(d)}
-  \eqnline{\mycube{l}^{n,p,[p < n]}}{D~E~d}{\defeq}{\Sigma b:\mylayer{l}^{n,p}(D)(d).\,\mycube{l}^{n,p+1}(D)(E)(d,b)}
+  \eqnline{\mycube{l}{n,p,[p \leq n]}}{\shortstack{(D:\partialcubset{l}{n}) \\(E:\mycubsetcomp{l}{n}(D)) \\ (d:\mybox{l}{n,p}(D))}}{:}{\sort{l}}
+  \eqnline{\mycube{l}{n,p,[p = n]}}{D~E~d}{\defeq}{E.\ensuremath{\mathsf{rel}}(d)}
+  \eqnline{\mycube{l}{n,p,[p < n]}}{D~E~d}{\defeq}{\Sigma b:\mylayer{l}{n,p}(D)(d).\,\mycube{l}{n,p+1}(D)(E)(d,b)}
 \end{eqntable}
 
 \begin{figure*}
   \centerline{ \framebox{$
         \begin{array}{llcl}
-          \downbox{l,\epsilon,q}{n,p,[p \leq q \leq n - 1]}   & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}^{n,p}(D))\end{array} & :      & \mybox{l}^{n-1,p}(\hd(D))                                                             \\
+          \downbox{l,\epsilon,q}{n,p,[p \leq q \leq n - 1]}   & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}{n,p}(D))\end{array} & :      & \mybox{l}{n-1,p}(\hd(D))                                                              \\
           \downbox{l,\epsilon,q}{n,0}                         & D~\unitpoint                    & \defeq & \unitpoint                                                                            \\
           \downbox{l,\epsilon,q}{n,p'+1}                      & D~(d,b)                         & \defeq & (\downbox{l,\epsilon,q}{n,p'}(D)(d),\downlayer{l,\epsilon,q-1}{n,p'}(D)(d)(b))        \\
           \\
-          \downlayer{l,\epsilon,q}{n,p,[p \leq q \leq n - 2]} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}^{n,p}(D))\\(b:\mylayer{l}^{n,p}(D)(d))\end{array} & :      & \mylayer{l}^{n-1,p}(\hd(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))                      \\
+          \downlayer{l,\epsilon,q}{n,p,[p \leq q \leq n - 2]} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}{n,p}(D))\\(b:\mylayer{l}{n,p}(D)(d))\end{array} & :      & \mylayer{l}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))                       \\
           \downlayer{l,\epsilon,q}{n,p}                       & D~d~c                           & \defeq & \!\!\begin{array}{l}(\overrightarrow{\cohbox{l,\epsilon,L,q,p}{n,p}(D)(d)}(\downcube{l,\epsilon,q}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,L,p}{n,p}(D)(d))(c_L)),\\\;\overrightarrow{\cohbox{l,\epsilon,R,q,p}{n,p}(D)(d)}(\downcube{l,\epsilon,q}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,R,p}{n,p}(D)(d))(c_R)))\end{array}                                                         \\
           \\
-          \downcube{l,\epsilon,q}{n,p,[p \leq q \leq n - 1]}  & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(E:\mycubsetcomp{l}{n}(D))\\(d:\mybox{l}^{n,p}(D))\\(b:\mycube{l}^{n,p}(D)(E)(d))\end{array} & :      & \mycube{l}^{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))               \\
+          \downcube{l,\epsilon,q}{n,p,[p \leq q \leq n - 1]}  & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(E:\mycubsetcomp{l}{n}(D))\\(d:\mybox{l}{n,p}(D))\\(b:\mycube{l}{n,p}(D)(E)(d))\end{array} & :      & \mycube{l}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))                \\
           \downcube{l,\epsilon,q}{n,p,[p=q]}                  & D~E~d~(b,\_)                    & \defeq & b_{\epsilon}                                                                          \\
           \downcube{l,\epsilon,q}{n,p,[p<q]}                  & D~E~d~(b,c)                     & \defeq & (\downlayer{l,\epsilon,q}{n,p}(D)(d)(b),\downcube{l,\epsilon,q}{n,p+1}(D)(E)(d,b)(c)) \\
           \\
@@ -560,14 +574,14 @@ When reflexivities are excepted, we call the structure thus defined \emph{bare t
 \begin{figure*}
   \centerline{ \framebox{$
         \begin{array}{llcl}
-          \cohbox{l,\epsilon,\epsilon',q,r}{\!\!\!\begin{array}{l}n,p\\\mbox{}[p \leq r \leq q \leq n - 2]\end{array}}    & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}^{n,p}(D))\end{array}  & :      & \!\!\!\begin{array}{ll}\downbox{l,\epsilon,q}{n-1,p}(\hd(D))(\downbox{l,\epsilon',r}{n,p}(D)(d)) \\ \eqett \downbox{l,\epsilon',r}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))\end{array}                                                                              \\
+          \cohbox{l,\epsilon,\epsilon',q,r}{\!\!\!\begin{array}{l}n,p\\\mbox{}[p \leq r \leq q \leq n - 2]\end{array}}    & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}{n,p}(D))\end{array}  & :      & \!\!\!\begin{array}{ll}\downbox{l,\epsilon,q}{n-1,p}(\hd(D))(\downbox{l,\epsilon',r}{n,p}(D)(d)) \\ \eqett \downbox{l,\epsilon',r}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))\end{array}                                                                              \\
           \cohbox{l,\epsilon,\epsilon',q,r}{n,0}                                & D~\unitpoint                     & \defeq & \reflett(\unitpoint)                                                                                         \\
           \cohbox{l,\epsilon,\epsilon',q,r}{n,p'+1}                             & D~(d,b)                          & \defeq & (\cohbox{l,\epsilon,\epsilon',q,r}{n,p'}(D)(d),\cohlayer{l,\epsilon,\epsilon',q,r}{n,p'}(D)(d)(b))           \\
           \\
-          \cohlayer{l,\epsilon,\epsilon',q,r}{\!\!\!\begin{array}{l}n,p\\\mbox{}[p < r \leq q \leq n - 2]\end{array}} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}^{n,p}(D))\\(b:\mylayer{l}^{n,p}(D)(d))\end{array} & :      & \!\!\!\begin{array}{ll}\downlayer{l,\epsilon,q}{n-1,p}(\hd(D))(\downbox{l,\epsilon',r}{n,p}(D)(d))(\downlayer{l,\epsilon',r}{n,p}(D)(d)(b)) \\ \eqett \downlayer{l,\epsilon',r}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))(\downlayer{l,\epsilon,q+1}{n,p}(D)(d)(b))\end{array}                                                                             \\
+          \cohlayer{l,\epsilon,\epsilon',q,r}{\!\!\!\begin{array}{l}n,p\\\mbox{}[p < r \leq q \leq n - 2]\end{array}} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}{n,p}(D))\\(b:\mylayer{l}{n,p}(D)(d))\end{array} & :      & \!\!\!\begin{array}{ll}\downlayer{l,\epsilon,q}{n-1,p}(\hd(D))(\downbox{l,\epsilon',r}{n,p}(D)(d))(\downlayer{l,\epsilon',r}{n,p}(D)(d)(b)) \\ \eqett \downlayer{l,\epsilon',r}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))(\downlayer{l,\epsilon,q+1}{n,p}(D)(d)(b))\end{array}                                                                             \\
           \cohlayer{l,\epsilon,\epsilon',q,r}{n,p}                              & D~d~c                            & \defeq & \!\!\begin{array}{l}(\cohcube{l,\epsilon,\epsilon',q-1,r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,L,p}{n,p}(D)(d))(c_L),\\\;\cohcube{l,\epsilon,\epsilon',q-1,r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,R,p}{n,p}(D)(d))(c_R))\end{array}                                                                               \\
           \\
-          \cohcube{l,\epsilon,\epsilon',q,r}{\!\!\!\begin{array}{l}n,p\\\mbox{}[p \leq r \leq q \leq n - 2]\end{array}}  & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(E:\mycubsetcomp{l}{n}(D))\\(d:\mybox{l}^{n,p}(D))\\(b:\mycube{l}^{n,p}(D)(E)(d))\end{array} & :      & \!\!\!\begin{array}{ll}\downcube{l,\epsilon,q}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon',r}{n,p}(D)(d))(\downcube{l,\epsilon',r}{n,p}(D)(E)(d)(b)) \\ \eqett \downcube{l,\epsilon',r}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))(\downcube{l,\epsilon,q+1}{n,p}(D)(E)(d)(b))\end{array}                                                                             \\
+          \cohcube{l,\epsilon,\epsilon',q,r}{\!\!\!\begin{array}{l}n,p\\\mbox{}[p \leq r \leq q \leq n - 2]\end{array}}  & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(E:\mycubsetcomp{l}{n}(D))\\(d:\mybox{l}{n,p}(D))\\(b:\mycube{l}{n,p}(D)(E)(d))\end{array} & :      & \!\!\!\begin{array}{ll}\downcube{l,\epsilon,q}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon',r}{n,p}(D)(d))(\downcube{l,\epsilon',r}{n,p}(D)(E)(d)(b)) \\ \eqett \downcube{l,\epsilon',r}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))(\downcube{l,\epsilon,q+1}{n,p}(D)(E)(d)(b))\end{array}                                                                             \\
           \cohcube{l,\epsilon,\epsilon',q,r}{n,p,[p=r]}                         & D~E~d~(b,\_)                     & \defeq & \reflett(\downcube{l,\epsilon,q-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon',p}{n,p}(D)(d))(b_{\epsilon})) \\
           \cohcube{l,\epsilon,\epsilon',q,r}{n,p,[p<r]}                         & D~E~d~(b,c)                      & \defeq & \!\!\begin{array}{l}(\cohlayer{l,\epsilon,\epsilon',q,r}{n,p}(D)(d)(b),\;\cohcube{l,\epsilon,\epsilon',q,r}{n,p+1}(D)(E)(d,b)(c))\end{array}                                                                               \\
         \end{array}
@@ -579,7 +593,7 @@ When reflexivities are excepted, we call the structure thus defined \emph{bare t
 \subsection{Derived notions}
 \label{sec:derived-notions}
 
-On top of the basic definitions on Figures~\ref{fig:barecubicalsetstructure}, \ref{fig:barecubicalsetfaces} and \ref{fig:barecubicalsetcoherences}, we can define on Figures~\ref{fig:macros} and~\ref{fig:macroscont} a few other concepts at a more standard level of abstraction. In particular, a homogeneous $n$-box in the above sense is defined to be an object of type $\myfullbox{l}{n}(D_{n})$ for $D_{n} \defeq (A,=_A,...,=^n_A)$ the initial segment of $n$-th first iterated equalities over $A$ (by convention, a homogeneous $0$-box shall be the canonical singleton type). A $n$-tube is of type $\mybox{l}^{n+1,n}(D_{n+1})$. An homogeneous (proper) $n$-cube in some $n$-box $d$ is of type $\mycube{l}^{n+1,n}(\hd(D_{n+1}))(\tl(D_{n+1}))(d)$ and a full $n$-cube is of type $\mycube{l}^{n+1,0}(\hd(D_{n+1}))(\tl(D_{n+1})))(\star)$.
+On top of the basic definitions on Figures~\ref{fig:barecubicalsetstructure}, \ref{fig:barecubicalsetfaces} and \ref{fig:barecubicalsetcoherences}, we can define on Figures~\ref{fig:macros} and~\ref{fig:macroscont} a few other concepts at a more standard level of abstraction. In particular, a homogeneous $n$-box in the above sense is defined to be an object of type $\myfullbox{l}{n}(D_{n})$ for $D_{n} \defeq (A,=_A,...,=^n_A)$ the initial segment of $n$-th first iterated equalities over $A$ (by convention, a homogeneous $0$-box shall be the canonical singleton type). A $n$-tube is of type $\mybox{l}{n+1,n}(D_{n+1})$. An homogeneous (proper) $n$-cube in some $n$-box $d$ is of type $\mycube{l}{n+1,n}(\hd(D_{n+1}))(\tl(D_{n+1}))(d)$ and a full $n$-cube is of type $\mycube{l}{n+1,0}(\hd(D_{n+1}))(\tl(D_{n+1})))(\star)$.
 
 Note that the components of an $n$-box or $n$-tube are tuples associated to the left. For cubes, the components can be associated to the left, and we call this a full $n$-cube or to the right, which we call grounded $n$-cube, and which corresponds to ``complete'' partial cubes, i.e. to partial cubes over the empty box. Figure~\ref{fig:macros} show how to compute the $n$-box surrounding a full $n$-cube over a prefix $D_{n+1}$ of iterated equalities (see $\border{}$).
 
@@ -605,36 +619,36 @@ Figure~\ref{fig:macros} also shows how to compute the faces of a box or of a cub
 \begin{figure*}
   \centerline{ \framebox{$
         \begin{array}{llcl}
-          \multicolumn{4}{c}{\mbox{\textit{Type of full $n$-cubes}}}                                                                                                                           \\
+          \multicolumn{4}{c}{\mbox{\textit{Type of full $n$-cubes}}}                                                                                                                         \\
           \\
-          \myfullcube{l}^{n}     & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n+1})\end{array}                                                               & :      & \sort{l}                                          \\
-          \myfullcube{l}^{n}     & (D,E)                                                                                          & \defeq & \Sigma d:\myfullbox{l}{n}(D).\, E.\mathsf{rel}(d) \\
+          \myfullcube{l}^{n}     & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n+1})\end{array}                                                             & :      & \sort{l}                                          \\
+          \myfullcube{l}^{n}     & (D,E)                                                                                        & \defeq & \Sigma d:\myfullbox{l}{n}(D).\, E.\mathsf{rel}(d) \\
           \\
-          \multicolumn{4}{c}{\mbox{\textit{Type of $n$-tubes}}}                                                                                                                                \\
+          \multicolumn{4}{c}{\mbox{\textit{Type of $n$-tubes}}}                                                                                                                              \\
           \\
-          \tube{l}^{n}           & (D:\partialcubset{l}{n+1})                                                                     & :      & \sort{l}                                          \\
-          \tube{l}^{n}           & D                                                                                              & \defeq & \mybox{l}^{n+1,n}(D)                              \\
+          \tube{l}^{n}           & (D:\partialcubset{l}{n+1})                                                                   & :      & \sort{l}                                          \\
+          \tube{l}^{n}           & D                                                                                            & \defeq & \mybox{l}{n+1,n}(D)                               \\
           \\
-          \multicolumn{4}{c}{\mbox{\textit{Type of grounded $n$-cubes}}}                                                                                                                       \\
+          \multicolumn{4}{c}{\mbox{\textit{Type of grounded $n$-cubes}}}                                                                                                                     \\
           \\
-          \mygroundedcube{l}^{n} & (D:\partialcubset{l}{n+1})                                                                     & :      & \sort{l}                                          \\
-          \mygroundedcube{l}^{n} & (D,E)                                                                                          & \defeq & \mycube{l}^{n,0}(D)(E)(\star)                     \\
+          \mygroundedcube{l}^{n} & (D:\partialcubset{l}{n+1})                                                                   & :      & \sort{l}                                          \\
+          \mygroundedcube{l}^{n} & (D,E)                                                                                        & \defeq & \mycube{l}{n,0}(D)(E)(\star)                      \\
           \\
-          \multicolumn{4}{c}{\mbox{\textit{Type of fillers of some $n$-box}}}                                                                                                                  \\
+          \multicolumn{4}{c}{\mbox{\textit{Type of fillers of some $n$-box}}}                                                                                                                \\
           \\
-          \propercube{l}^{n}     & (D:\partialcubset{l}{n+1})~(d:\myfullbox{l}{n}(\hd(D)))                                        & :      & \sort{l}                                          \\
-          \propercube{l}^{n}     & (D,E)~d                                                                                        & \defeq & E.\mathsf{rel}(d)                                 \\
+          \propercube{l}^{n}     & (D:\partialcubset{l}{n+1})~(d:\myfullbox{l}{n}(\hd(D)))                                      & :      & \sort{l}                                          \\
+          \propercube{l}^{n}     & (D,E)~d                                                                                      & \defeq & E.\mathsf{rel}(d)                                 \\
           \\
-          \multicolumn{4}{c}{\mbox{\textit{Border of a grounded $n$-cube}}}                                                                                                                    \\
+          \multicolumn{4}{c}{\mbox{\textit{Border of a grounded $n$-cube}}}                                                                                                                  \\
           \\
-          \border{l}^{n}         & (D:\partialcubset{l}{n+1})~(c:\mygroundedcube{l}^{n}(D))                                       & :      & \myfullbox{l}{n}(\hd(D))                          \\
-          \border{l}^{n}         & D~c                                                                                            & \defeq & \border{l}^{n,0}(D)(\star)(c)                     \\
+          \border{l}^{n}         & (D:\partialcubset{l}{n+1})~(c:\mygroundedcube{l}^{n}(D))                                     & :      & \myfullbox{l}{n}(\hd(D))                          \\
+          \border{l}^{n}         & D~c                                                                                          & \defeq & \border{l}^{n,0}(D)(\star)(c)                     \\
           \\
-          \multicolumn{4}{c}{\mbox{\textit{where the border of partial cubes is defined by}}}                                                                                                  \\
+          \multicolumn{4}{c}{\mbox{\textit{where the border of partial cubes is defined by}}}                                                                                                \\
           \\
-          \border{l}^{n,p}       & (D:\partialcubset{l}{n+1})~(d:\mybox{l}^{n,p}(\hd(D)))~(c:\mycube{l}^{n,p}(\hd(D))(\tl(D))(d)) & :      & \myfullbox{l}{n}(\hd(D))                          \\
-          \border{l}^{n,p,[p=n]} & D~d~c                                                                                          & \defeq & d                                                 \\
-          \border{l}^{n,p,[p<n]} & D~d~(b,c)                                                                                      & \defeq & \border{l}^{n,p+1}(D)(d,b)(c)                     \\
+          \border{l}^{n,p}       & (D:\partialcubset{l}{n+1})~(d:\mybox{l}{n,p}(\hd(D)))~(c:\mycube{l}{n,p}(\hd(D))(\tl(D))(d)) & :      & \myfullbox{l}{n}(\hd(D))                          \\
+          \border{l}^{n,p,[p=n]} & D~d~c                                                                                        & \defeq & d                                                 \\
+          \border{l}^{n,p,[p<n]} & D~d~(b,c)                                                                                    & \defeq & \border{l}^{n,p+1}(D)(d,b)(c)                     \\
         \end{array}
       $
     }}
@@ -657,7 +671,7 @@ Figure~\ref{fig:macros} also shows how to compute the faces of a box or of a cub
           \\
           \multicolumn{4}{c}{\mbox{\textit{where the extension of $\downbox{l}{}$ to $p>q$ is}}}                                                                                                \\
           \\
-          \downbox{l,\epsilon,q}{n,p,[q < p < n]} & (D:\partialcubset{l}{n})~(d:\mybox{l}^{n,p}(D))      & :      & \myfullbox{l}{n-1}(\hd(D))                                                  \\
+          \downbox{l,\epsilon,q}{n,p,[q < p < n]} & (D:\partialcubset{l}{n})~(d:\mybox{l}{n,p}(D))       & :      & \myfullbox{l}{n-1}(\hd(D))                                                  \\
           \downbox{l,\epsilon,q}{n,q+1}           & D~(d,b)                                              & \defeq & \border{l}^{n-1,q}(\hd(D))(\downbox{l,\epsilon,q}{n,q}(D)(d))(b_{\epsilon}) \\
           \downbox{l,\epsilon,q}{n,p,[q < p-1]}   & D~(d,b)                                              & \defeq & \downbox{l,\epsilon,q}{n,p-1}(D)(d)
         \end{array}
