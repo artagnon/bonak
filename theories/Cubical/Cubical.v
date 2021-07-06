@@ -135,7 +135,9 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
                  (C.(Cube).(cube) D.2 (Sub' L d) *
                   C.(Cube).(cube) D.2 (Sub' R d))%type }.
     * simpl. intros. destruct X as (d, (CL, CR)). (* subboxSn *)
-      rewrite C.(@eqBoxSp _). destruct q. admit. unshelve esplit.
+      rewrite C.(@eqBoxSp _). destruct q. exfalso. clear -Hp.
+      apply le_S_both in Hp. apply le_contra in Hp; assumption.
+      unshelve esplit.
       - clear CL CR.
         exact (subboxSn q.+1 (↓ Hp) Hq ε _ d).
       - simpl in *; cbv zeta; unfold Sub. (* Sides L and R *)
