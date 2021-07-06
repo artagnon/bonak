@@ -654,31 +654,26 @@ Figure~\ref{fig:macros} also shows how to compute the faces of a box or of a cub
   \eqnline{\border{l}^{n,p,[p<n]}}{D~d~(b,c)}{\defeq}{\border{l}^{n,p+1}(D)(d,b)(c)}
 \end{eqntable}
 
-\begin{figure*}
-  \centerline{ \framebox{$
-        \begin{array}{llcl}
-          \multicolumn{4}{c}{\mbox{$q$-th projection of an $n$-box}}                                                                                                                            \\
-          \\
-          \fulldownbox{l,\epsilon,q}{n,[q < n]}   & (D:\partialcubset{l}{n})~(d:\myfullbox{l}{n}(D))     & :      & \myfullbox{l}{n-1}(\hd(D))                                                  \\
-          \fulldownbox{l,\epsilon,q}{n}           & D~(d,\_)                                             & \defeq & \downbox{l,\epsilon,q}{n,n-1}(D)(d)                                         \\
-          \\
-          \multicolumn{4}{c}{\mbox{$q$-th face of an $n$-cube}}                                                                                                                                 \\
-          \\
-          \fulldowncube{l,\epsilon,q}{n,[q < n]}  & (D:\partialcubset{l}{n+1})~(c:\myfullcube{l}^{n}(D)) & :      & \myfullcube{l}^{n-1}(\hd(D))                                                \\
-          \fulldowncube{l,\epsilon,q}{n}          & (D,E)~c                                              & \defeq & \downcube{l,\epsilon,q}{n,0}(D)(E)(\star)(c)                                \\
-          \\
-          \multicolumn{4}{c}{\mbox{\textit{where the extension of $\downbox{l}{}$ to $p>q$ is}}}                                                                                                \\
-          \\
-          \downbox{l,\epsilon,q}{n,p,[q < p < n]} & (D:\partialcubset{l}{n})~(d:\mybox{l}{n,p}(D))       & :      & \myfullbox{l}{n-1}(\hd(D))                                                  \\
-          \downbox{l,\epsilon,q}{n,q+1}           & D~(d,b)                                              & \defeq & \border{l}^{n-1,q}(\hd(D))(\downbox{l,\epsilon,q}{n,q}(D)(d))(b_{\epsilon}) \\
-          \downbox{l,\epsilon,q}{n,p,[q < p-1]}   & D~(d,b)                                              & \defeq & \downbox{l,\epsilon,q}{n,p-1}(D)(d)
-        \end{array}
-      $
-    }}
-  \caption{Standard derived notions (continued)}
-  \label{fig:macroscont}
-\end{figure*}
+\begin{eqntable}{Standard derived notions (continued)}
+  \mc{$q$-th projection of an $n$-box}
 
-\printbibliography
+  \eqnline{\fulldownbox{l,\epsilon,q}{n,[q < n]}}{(D:\partialcubset{l}{n})~(d:\myfullbox{l}{n}(D))}{:}{\myfullbox{l}{n-1}(\hd(D))}
+
+  \eqnline{\fulldownbox{l,\epsilon,q}{n}}{D~(d,\_)}{\defeq}{\downbox{l,\epsilon,q}{n,n-1}(D)(d)}
+
+  \\ \mc{$q$-th face of an $n$-cube}
+
+  \eqnline{\fulldowncube{l,\epsilon,q}{n,[q < n]}}{(D:\partialcubset{l}{n+1})~(c:\myfullcube{l}^{n}(D))}{:}{\myfullcube{l}^{n-1}(\hd(D))}
+
+  \eqnline{\fulldowncube{l,\epsilon,q}{n}}{(D,E)~c}{\defeq}{\downcube{l,\epsilon,q}{n,0}(D)(E)(\star)(c)}
+
+  \\ \mc{where the extension of \downbox{l} to $p>q$ is}
+
+  \eqnline{\downbox{l,\epsilon,q}{n,p,[q < p < n]}}{(D:\partialcubset{l}{n})~(d:\mybox{l}{n,p}(D))}{:}{\myfullbox{l}{n-1}(\hd(D))}
+
+  \eqnline{\downbox{l,\epsilon,q}{n,q+1}}{D~(d,b)}{\defeq}{\border{l}^{n-1,q}(\hd(D))(\downbox{l,\epsilon,q}{n,q}(D)(d))(b_{\epsilon})}
+
+  \eqnline{\downbox{l,\epsilon,q}{n,p,[q < p-1]}}{D~(d,b)}{\defeq}{\downbox{l,\epsilon,q}{n,p-1}(D)(d)}
+\end{eqntable}
 
 \end{document}
