@@ -6,11 +6,6 @@
 \usepackage[compact]{titlesec}
 \usepackage[margin=0.5in]{geometry}
 
-\usepackage[backend=biber, style=apa, natbib=true, sorting=nyt, url=false,isbn=false, doi=false]{biblatex}
-
-% Add biblio-en.bib to the database
-\addbibresource{biblio-en.bib}
-
 \newcommand{\highlight}[1]{\emph{#1}}
 
 \include{macros}
@@ -25,8 +20,10 @@
 % The unit type
 \newcommand{\unittype}{\ensuremath{\mathsf{unit}}}
 
-% Definitional equality
+% Definitional and extensional equality
 \newcommand{\defeq}{\ensuremath{\triangleq}}
+\newcommand{\eqett}{\equiv_{\mathit{ETT}}}
+
 
 % Box, layer, and cube
 \newcommand{\mybox}[2]{\ensuremath{\mathsf{box}_{#1}^{#2}}}
@@ -34,21 +31,24 @@
 \newcommand{\mycube}[2]{\ensuremath{\mathsf{cube}_{#1}^{#2}}}
 
 % Subbox, sublayer, and subcube
-\newcommand{\downbox}[2][2=]{\ensuremath{\mathsf{subbox}_{#1}^{#2}}}
-\newcommand{\downlayer}[2][2=]{\ensuremath{\mathsf{sublayer}_{#1}^{#2}}}
-\newcommand{\downcube}[2][2=]{\ensuremath{\mathsf{subcube}_{#1}^{#2}}}
-\newcommand{\myfullbox}[2][2=]{\ensuremath{\mathsf{fullbox}_{#1}^{#2}}}
+\newcommand{\downbox}[2]{\ensuremath{\mathsf{subbox}_{#1}^{#2}}}
+\newcommand{\downlayer}[2]{\ensuremath{\mathsf{sublayer}_{#1}^{#2}}}
+\newcommand{\downcube}[2]{\ensuremath{\mathsf{subcube}_{#1}^{#2}}}
+\newcommand{\myfullbox}[2]{\ensuremath{\mathsf{fullbox}_{#1}^{#2}}}
 
 % Coherence conditions
-\newcommand{\cohbox}[2][2=]{\ensuremath{\mathsf{cohbox}_{{#1}}^{{#2}}}}
-\newcommand{\cohcube}[2][2=]{\ensuremath{\mathsf{cohcube}_{#1,#2}}}
-\newcommand{\cohlayer}[2][2=]{\ensuremath{\mathsf{cohlayer}_{#1}^{#2}}}
+\newcommand{\cohbox}[2]{\ensuremath{\mathsf{cohbox}_{#1}^{#2}}}
+\newcommand{\cohlayer}[2]{\ensuremath{\mathsf{cohlayer}_{#1}^{#2}}}
+\newcommand{\cohcube}[2]{\ensuremath{\mathsf{cohcube}_{#1}^{#2}}}
 
 % Border
-\newcommand{\border}[1][1=]{\ensuremath{\mathsf{border}_{#1}}}
+\newcommand{\border}[1]{\ensuremath{\mathsf{border}_{#1}}}
 
+% Partials and fulls
 \newcommand{\partialcubset}[2]{\ensuremath{\mathsf{cubset}_{#1}^{<#2}}}
 \newcommand{\mycubsetcomp}[2]{\ensuremath{\mathsf{cubset}_{#1}^{=#2}}}
+\newcommand{\fulldownbox}[2]{\mathsf{subfullbox}_{#1}^{#2}}
+\newcommand{\fulldowncube}[2]{\mathsf{subfullcube}_{#1}^{#2}}
 
 % Logical implication
 \newcommand{\imp}{\ensuremath{\rightarrow}}
@@ -61,7 +61,7 @@
 \newcommand{\SSet}{\ensuremath{\text{Set}_{\boldsymbol{\Delta}}}}
 
 % The eqntable environment, displaying the various
-\NewDocumentEnvironment{eqntable}{m}{\table[h!]
+\NewDocumentEnvironment{eqntable}{m}{\table[!ht]
 \tabularx{\textwidth}{@{} l c c >{\centering\arraybackslash}X @{}}\toprule}
 {\endtabularx\hrule\caption{#1}\endtable}
 
@@ -320,9 +320,6 @@
 \newcommand{\pboxname}{box}
 \newcommand{\pBoxname}{Box}
 
-\newcommand{\fulldownbox}[2]{\mathsf{subfullbox}_{#1}^{#2}}
-\newcommand{\fulldowncube}[2]{\mathsf{subfullcube}_{#1}^{#2}}
-
 \newcommand{\myheterobox}[2]{\mathsf{{\heteroname}box}_{#1}^{#2}}
 \newcommand{\myheterolayer}[2]{\mathsf{{\heteroname}layer}_{#1}^{#2}}
 \newcommand{\myheterocube}[2]{\mathsf{{\heteroname}cube}_{#1}^{#2}}
@@ -411,7 +408,6 @@
 \newcommand{\myfullheterobox}[2]{\mathsf{full{\heteroname}box}_{#1}^{#2}}
 \newcommand{\reflfullcube}[1]{\mathsf{reflfullcube}_{#1}}
 \newcommand{\unitpoint}{\star}
-\newcommand{\eqett}{\equiv_{\mathit{ETT}}}
 \newcommand{\reflett}{\mathsf{refl}_{\mathit{ETT}}}
 \newcommand{\mygpd}{\mathsf{gpd}}
 
@@ -516,36 +512,42 @@
 \section{Semi-cubical sets}
 
 In this section, we give the core of the definition of semi-cubical
-sets as the coinductive limit (see Figure~\ref{fig:barecubicalset}) of a
+sets as the coinductive limit (see Figure~\ref{tab:barecubicalset}) of a
 construction of truncated semi-cubical sets.
 
 \subsection{Truncated semi-cubical sets}
 
-The definition is dispatched over Figures~\ref{fig:barecubicalsetstructurecore}, \ref{fig:barecubicalsetstructure}, \ref{fig:barecubicalsetfaces} and \ref{fig:barecubicalsetcoherences}. It describes the structure of the underlying higher-dimensional relations on which cubes and boxes are built, together with the definition of homogeneous $n$-boxes, homogeneous $n$-cubes, together with face operations on boxes and cubes, together with commutation properties of the face operations. All are mutually defined as types of the target language ETT. Note that such relational structure, cubes and boxes are relative to a universe. Note the presence of a coherence condition \cohbox{l} to ensuring that both sides of the equality in \downlayer{l} and \downcube{l} are in the same type. The proof of \cohbox{l} itself requires an higher-dimensional coherence condition which we obtain by working here in ETT where all proofs of an equality are identified (principle of Unicity of Identity Proofs). Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory). Note also that for a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning \downbox{l} nor \cohbox{l} anymore.
+The definition is dispatched over Figures~\ref{tab:barecubicalsetstructurecore}, \ref{tab:barecubicalsetstructure}, \ref{tab:barecubicalsetfaces} and \ref{tab:barecubicalsetcoherences}. It describes the structure of the underlying higher-dimensional relations on which cubes and boxes are built, together with the definition of homogeneous $n$-boxes, homogeneous $n$-cubes, together with face operations on boxes and cubes, together with commutation properties of the face operations. All are mutually defined as types of the target language ETT. Note that such relational structure, cubes and boxes are relative to a universe. Note the presence of a coherence condition \cohbox{l} to ensuring that both sides of the equality in \downlayer{l} and \downcube{l} are in the same type. The proof of \cohbox{l} itself requires an higher-dimensional coherence condition which we obtain by working here in ETT where all proofs of an equality are identified (principle of Unicity of Identity Proofs). Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory). Note also that for a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning \downbox{l} nor \cohbox{l} anymore.
 
 When reflexivities are excepted, we call the structure thus defined \emph{bare truncated cubical sets}: \emph{bare} because it can be seen as defining a cubical equivalent to semi-simplicial sets with only faces as part of the structure (otherwise said, another terminology could have been ``semi-cubical'' sets); \emph{truncated} because we consider only such cubical sets up to some fixed dimension.
 
-\begin{eqntable}{Definition of a truncated cubical set (main part of the higher-dimensional relation structure)}
+\begin{eqntable}{\label{tab:barecubicalsetstructurecore} Definition of a truncated cubical set (main part of the higher-dimensional relation structure)}
   \mc{Type of truncated cubical sets} \\
   \eqnline{\partialcubset{l}{n}}{}{:}{\sort{l+1}}
   \eqnline{\partialcubset{l}{0}}{}{\defeq}{\unittype}
   \eqnline{\partialcubset{l}{n'+1}}{}{\defeq}{\ensuremath{\Sigma}D:\partialcubset{l}{n'}.\,\mycubsetcomp{l}{n'}(D)}
+
   \\
+
   \mc{Structure carried at each dimension}
   \eqnline{\mycubsetcomp{l}{n}}{(D:\partialcubset{l}{n})}{:}{\sort{l}}
   \eqnline{\mycubsetcomp{l}{n}}{D}{\defeq}{\myfullbox{l}{n}(D)\imp \sort{l}}
 \end{eqntable}
 
-\begin{eqntable}{Definition of a truncated cubical set (boxes)}
+\begin{eqntable}{\label{tab:barecubicalsetstructure} Definition of a truncated cubical set (boxes)}
   \mc{Full homogeneous $n$-boxes}
   \eqnline{\myfullbox{l}{n}}{(D:\partialcubset{l}{n})}{:}{\sort{l}}
   \eqnline{\myfullbox{l}{n}}{D}{\defeq}{\mybox{l}{n,n}(D)}
+
   \\
+
   \mc{Homogeneous partial $n$-boxes and homogeneous partial $n$-cubes}
   \eqnline{\mybox{l}{n,p,[p \leq n]}}{(D:\partialcubset{l}{n})}{:}{\sort{l}}
   \eqnline{\mybox{l}{n,0}}{D}{\defeq}{\unittype}
   \eqnline{\mybox{l}{n,p'+1}}{D}{\defeq}{\Sigma d:\mybox{l}{n,p'}(D).\,\mylayer{l}{n,p'}(D)(d)}
+
   \\
+
   \eqnline{\mylayer{l}{n,p,[p < n]}}{\makecell{(D:\partialcubset{l}{n}) \\ (d:\mybox{l}{n,p}(D))}}{:}{\sort{l}}
 
   \eqnline{\mylayer{l}{n,p}}{D~d}{\defeq}{\makecell{\mycube{l}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,L,p}{n,p}(D)(d)) \\ \times\;\mycube{l}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,R,p}{n,p}(D)(d))}}
@@ -559,7 +561,8 @@ When reflexivities are excepted, we call the structure thus defined \emph{bare t
   \eqnline{\mycube{l}{n,p,[p < n]}}{D~E~d}{\defeq}{\Sigma b:\mylayer{l}{n,p}(D)(d).\,\mycube{l}{n,p+1}(D)(E)(d,b)}
 \end{eqntable}
 
-\begin{eqntable}{Definition of a homogeneous bare cubical set ($q$-th projection)}
+\begin{eqntable}{\label{tab:barecubicalsetfaces} Definition of a homogeneous bare cubical set ($q$-th projection)}
+
   \eqnline{\downbox{l,\epsilon,q}{n,p,[p \leq q \leq n - 1]}}{\makecell{(D:\partialcubset{l}{n}) \\ (d:\mybox{l}{n,p}(D))}}{:}{\mybox{l}{n-1,p}(\hd(D))}
 
   \eqnline{\downbox{l,\epsilon,q}{n,p'+1}}{D~(d,b)}{\defeq}{(\downbox{l,\epsilon,q}{n,p'}(D)(d),\downlayer{l,\epsilon,q-1}{n,p'}(D)(d)(b))}
@@ -579,9 +582,9 @@ When reflexivities are excepted, we call the structure thus defined \emph{bare t
   \eqnline{\downcube{l,\epsilon,q}{n,p,[p<q]}}{D~E~d~(b,c)}{\defeq}{(\downlayer{l,\epsilon,q}{n,p}(D)(d)(b),\downcube{l,\epsilon,q}{n,p+1}(D)(E)(d,b)(c))}
 \end{eqntable}
 
-\begin{eqntable}{Definition of a homogeneous bare cubical set (commutation of $q$-th projection and $r$-th projection)}
+\begin{eqntable}{\label{tab:barecubicalsetcoherences} Definition of a homogeneous bare cubical set (commutation of $q$-th projection and $r$-th projection)}
 
-  \eqnline{\cohbox{l,\epsilon,\epsilon',q,r}{\multicell{n,p \\ [p \leq r \leq q \leq n - 2]}}}{\multicell{(D:\partialcubset{l}{n}) \\ (d:\mybox{l}{n,p}(D))}}{:}{\multicell{\downbox{l,\epsilon,q}{n-1,p}(\hd(D))(\downbox{l,\epsilon',r}{n,p}(D)(d)) \\ \eqett \downbox{l,\epsilon',r}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))}}
+  \eqnline{\cohbox{l,\epsilon,\epsilon',q,r}{n,p,[p \leq r \leq q \leq n - 2]}}{\makecell{(D:\partialcubset{l}{n}) \\ (d:\mybox{l}{n,p}(D))}}{:}{\makecell{\downbox{l,\epsilon,q}{n-1,p}(\hd(D))(\downbox{l,\epsilon',r}{n,p}(D)(d)) \\ \eqett \downbox{l,\epsilon',r}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))}}
 
   \eqnline{\cohbox{l,\epsilon,\epsilon',q,r}{n,0}}{D~\unitpoint}{\defeq}{\reflett}{(\unitpoint)}
 
@@ -589,25 +592,29 @@ When reflexivities are excepted, we call the structure thus defined \emph{bare t
 
   \\
 
-  \cohlayer{l,\epsilon,\epsilon',q,r}{\!\!\!\begin{array}{l}n,p\\\mbox{}[p < r \leq q \leq n - 2]\end{array}} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(d:\mybox{l}{n,p}(D))\\(b:\mylayer{l}{n,p}(D)(d))\end{array}  & :      & \!\!\!\begin{array}{ll}\downlayer{l,\epsilon,q}{n-1,p}(\hd(D))(\downbox{l,\epsilon',r}{n,p}(D)(d))(\downlayer{l,\epsilon',r}{n,p}(D)(d)(b)) \\ \eqett \downlayer{l,\epsilon',r}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))(\downlayer{l,\epsilon,q+1}{n,p}(D)(d)(b))\end{array}                                                                              \\
-  \cohlayer{l,\epsilon,\epsilon',q,r}{n,p}                             & D~d~c                            & \defeq & \!\!\begin{array}{l}(\cohcube{l,\epsilon,\epsilon',q-1,r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,L,p}{n,p}(D)(d))(c_L),\\\;\cohcube{l,\epsilon,\epsilon',q-1,r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,R,p}{n,p}(D)(d))(c_R))\end{array}                                                                               \\
-  \\
-  \cohcube{l,\epsilon,\epsilon',q,r}{\!\!\!\begin{array}{l}n,p\\\mbox{}[p \leq r \leq q \leq n - 2]\end{array}} & \!\!\!\begin{array}{l}(D:\partialcubset{l}{n})\\(E:\mycubsetcomp{l}{n}(D))\\(d:\mybox{l}{n,p}(D))\\(b:\mycube{l}{n,p}(D)(E)(d))\end{array} & :      & \!\!\!\begin{array}{ll}\downcube{l,\epsilon,q}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon',r}{n,p}(D)(d))(\downcube{l,\epsilon',r}{n,p}(D)(E)(d)(b)) \\ \eqett \downcube{l,\epsilon',r}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))(\downcube{l,\epsilon,q+1}{n,p}(D)(E)(d)(b))\end{array}                                                                             \\
-  \cohcube{l,\epsilon,\epsilon',q,r}{n,p,[p=r]}                        & D~E~d~(b,\_)                     & \defeq & \reflett(\downcube{l,\epsilon,q-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon',p}{n,p}(D)(d))(b_{\epsilon})) \\
-  \cohcube{l,\epsilon,\epsilon',q,r}{n,p,[p<r]}                        & D~E~d~(b,c)                      & \defeq & \!\!\begin{array}{l}(\cohlayer{l,\epsilon,\epsilon',q,r}{n,p}(D)(d)(b),\;\cohcube{l,\epsilon,\epsilon',q,r}{n,p+1}(D)(E)(d,b)(c))\end{array}
-\end{eqntable}
+  \eqnline{\cohlayer{l,\epsilon,\epsilon',q,r}{n,p,[p < r \leq q \leq n - 2]}}{\makecell{(D:\partialcubset{l}{n}) \\ (d:\mybox{l}{n,p}(D)) \\(b:\mylayer{l}{n,p}(D)(d))}}{:}{\makecell{\downlayer{l,\epsilon,q}{n-1,p}(\hd(D))(\downbox{l,\epsilon',r}{n,p}(D)(d))(\downlayer{l,\epsilon',r}{n,p}(D)(d)(b)) \\ \eqett \downlayer{l,\epsilon',r}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))(\downlayer{l,\epsilon,q+1}{n,p}(D)(d)(b))}}
 
+  \eqnline{\cohlayer{l,\epsilon,\epsilon',q,r}{n,p}}{D~d~c}{\defeq}{\makecell{(\cohcube{l,\epsilon,\epsilon',q-1,r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,L,p}{n,p}(D)(d))(c_L), \\ \;\cohcube{l,\epsilon,\epsilon',q-1,r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,R,p}{n,p}(D)(d))(c_R))}}
+
+  \\
+
+  \eqnline{\cohcube{l,\epsilon,\epsilon',q,r}{n,p,[p \leq r \leq q \leq n - 2]}}{\makecell{(D:\partialcubset{l}{n}) \\ (E:\mycubsetcomp{l}{n}(D)) \\ (d:\mybox{l}{n,p}(D)) \\ (b:\mycube{l}{n,p}(D)(E)(d))}}{:}{\makecell{\downcube{l,\epsilon,q}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon',r}{n,p}(D)(d))(\downcube{l,\epsilon',r}{n,p}(D)(E)(d)(b)) \\ \eqett \downcube{l,\epsilon',r}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))(\downcube{l,\epsilon,q+1}{n,p}(D)(E)(d)(b))}}
+
+  \eqnline{\cohcube{l,\epsilon,\epsilon',q,r}{n,p,[p=r]}}{D~E~d~(b,\_)}{\defeq}{\reflett(\downcube{l,\epsilon,q-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon',p}{n,p}(D)(d))(b_{\epsilon}))}
+
+  \eqnline{\cohcube{l,\epsilon,\epsilon',q,r}{n,p,[p<r]}}{D~E~d~(b,c)}{\defeq}{(\cohlayer{l,\epsilon,\epsilon',q,r}{n,p}(D)(d)(b),\;\cohcube{l,\epsilon,\epsilon',q,r}{n,p+1}(D)(E)(d,b)(c))}
+\end{eqntable}
 
 \subsection{Derived notions}
 \label{sec:derived-notions}
 
-On top of the basic definitions on Figures~\ref{fig:barecubicalsetstructure}, \ref{fig:barecubicalsetfaces} and \ref{fig:barecubicalsetcoherences}, we can define on Figures~\ref{fig:macros} and~\ref{fig:macroscont} a few other concepts at a more standard level of abstraction. In particular, a homogeneous $n$-box in the above sense is defined to be an object of type $\myfullbox{l}{n}(D_{n})$ for $D_{n} \defeq (A,=_A,...,=^n_A)$ the initial segment of $n$-th first iterated equalities over $A$ (by convention, a homogeneous $0$-box shall be the canonical singleton type). A $n$-tube is of type $\mybox{l}{n+1,n}(D_{n+1})$. An homogeneous (proper) $n$-cube in some $n$-box $d$ is of type $\mycube{l}{n+1,n}(\hd(D_{n+1}))(\tl(D_{n+1}))(d)$ and a full $n$-cube is of type $\mycube{l}{n+1,0}(\hd(D_{n+1}))(\tl(D_{n+1})))(\star)$.
+On top of the basic definitions on Figures~\ref{tab:barecubicalsetstructure}, \ref{tab:barecubicalsetfaces} and \ref{tab:barecubicalsetcoherences}, we can define on Figures~\ref{tab:macros} and~\ref{tab:macroscont} a few other concepts at a more standard level of abstraction. In particular, a homogeneous $n$-box in the above sense is defined to be an object of type $\myfullbox{l}{n}(D_{n})$ for $D_{n} \defeq (A,=_A,...,=^n_A)$ the initial segment of $n$-th first iterated equalities over $A$ (by convention, a homogeneous $0$-box shall be the canonical singleton type). A $n$-tube is of type $\mybox{l}{n+1,n}(D_{n+1})$. An homogeneous (proper) $n$-cube in some $n$-box $d$ is of type $\mycube{l}{n+1,n}(\hd(D_{n+1}))(\tl(D_{n+1}))(d)$ and a full $n$-cube is of type $\mycube{l}{n+1,0}(\hd(D_{n+1}))(\tl(D_{n+1})))(\star)$.
 
-Note that the components of an $n$-box or $n$-tube are tuples associated to the left. For cubes, the components can be associated to the left, and we call this a full $n$-cube or to the right, which we call grounded $n$-cube, and which corresponds to ``complete'' partial cubes, i.e. to partial cubes over the empty box. Figure~\ref{fig:macros} show how to compute the $n$-box surrounding a full $n$-cube over a prefix $D_{n+1}$ of iterated equalities (see \border).
+Note that the components of an $n$-box or $n$-tube are tuples associated to the left. For cubes, the components can be associated to the left, and we call this a full $n$-cube or to the right, which we call grounded $n$-cube, and which corresponds to ``complete'' partial cubes, i.e. to partial cubes over the empty box. Figure~\ref{tab:macros} show how to compute the $n$-box surrounding a full $n$-cube over a prefix $D_{n+1}$ of iterated equalities (see \border).
 
-Figure~\ref{fig:macros} also shows how to compute the faces of a box or of a cube.
+Figure~\ref{tab:macros} also shows how to compute the faces of a box or of a cube.
 
-\begin{eqntable}{Definition of a bare cubical set (coinductive structure)}
+\begin{eqntable}{\label{tab:barecubicalset} Definition of a bare cubical set (coinductive structure)}
   \mc{Full (non-truncated) cubical sets with degeneracies}
   \eqnline{\mycubset{l}}{}{:}{\sort{l+1}}
   \eqnline{\mycubset{l}}{}{\defeq}{\mycubsetfrom{l}{0}(\star)}
@@ -616,9 +623,8 @@ Figure~\ref{fig:macros} also shows how to compute the faces of a box or of a cub
   \eqnline{\mycubsetfrom{l}{n}}{D}{\defeq}{\Sigma R:\mycubsetcomp{l}{n}(D).\,\mycubsetfrom{l}{n+1}(D,R)}
 \end{eqntable}
 
-\begin{eqntable}{Standard derived notions}
+\begin{eqntable}{\label{tab:macros} Standard derived notions}
   \mc{Type of full $n$-cubes}
-
   \eqnline{\myfullcube{l}^{n}}{(D:\partialcubset{l}{n+1})}{:}{\sort{l}}
 
   \eqnline{\myfullcube{l}^{n}}{(D,E)}{\defeq}{\Sigma d:\myfullbox{l}{n}(D).\, E.\mathsf{rel}(d)}
@@ -654,7 +660,7 @@ Figure~\ref{fig:macros} also shows how to compute the faces of a box or of a cub
   \eqnline{\border{l}^{n,p,[p<n]}}{D~d~(b,c)}{\defeq}{\border{l}^{n,p+1}(D)(d,b)(c)}
 \end{eqntable}
 
-\begin{eqntable}{Standard derived notions (continued)}
+\begin{eqntable}{\label{tab:macroscont} Standard derived notions (continued)}
   \mc{$q$-th projection of an $n$-box}
 
   \eqnline{\fulldownbox{l,\epsilon,q}{n,[q < n]}}{(D:\partialcubset{l}{n})~(d:\myfullbox{l}{n}(D))}{:}{\myfullbox{l}{n-1}(\hd(D))}
@@ -675,5 +681,10 @@ Figure~\ref{fig:macros} also shows how to compute the faces of a box or of a cub
 
   \eqnline{\downbox{l,\epsilon,q}{n,p,[q < p-1]}}{D~(d,b)}{\defeq}{\downbox{l,\epsilon,q}{n,p-1}(D)(d)}
 \end{eqntable}
+
+\begin{thebibliography}{10}
+  \bibitem{Herbelin15}
+  Herbelin, H. (2015). A dependently-typed construction of semi-simplicial types. \textit{Mathematical Structures in Computer Science, 25}(5), 1116-1131.
+\end{thebibliography}
 
 \end{document}

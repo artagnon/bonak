@@ -157,6 +157,11 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
       destruct d as (d', (CL, CR)); destruct r.
       -  exfalso. clear -Hpr. repeat apply le_S_both in Hpr. (* r = S O *)
          eapply le_contra. eassumption.
-      - admit. (* r = S (S _) *)
+      - (* r = S (S _) *)
+        pose (P := (rew cohboxSn r _ (le_refl p.+2) _ _ _ _ _ d' in
+                     C.(Cube).(subcube) _ ε' _ CL,
+                   rew cohboxSn _ _ (le_refl p.+2) _ _ _ _ _ d' in
+                     C.(Cube).(subcube) _ ε' _ CR)).
+        admit.
 Admitted.
 End Cubical.
