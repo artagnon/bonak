@@ -96,8 +96,8 @@ Class Cubical (n : nat) := {
     Box.(box) Hp D = {d : Box.(box) (↓ Hp) D &
                   (PC.(cube') (Box.(subbox) (Hp := le_refl p.+1) _ L d) *
                   PC.(cube') (Box.(subbox) (Hp := le_refl p.+1) _ R d))%type } ;
-  eqSubbox0 {q} {len0: 0 <= q} (Hq : q.+1 <= n) (ε : side) (D : csp) :
-    Box.(subbox) (Hp := (⇑ len0)) Hq ε (rew <- [id] eqBox0 (D := D) in tt) =
+  eqSubbox0 {q} {Hp : 1 <= q.+1} (Hq : q.+1 <= n) (ε : side) (D : csp) :
+    Box.(subbox) (Hp := Hp) Hq ε (rew <- [id] eqBox0 (D := D) in tt) =
       (rew <- [id] eqBox0' in tt);
 }.
 
@@ -124,8 +124,8 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
   * intros Hp D; exact unit.
   * simpl; intros. rewrite C.(@eqBox0 _); exact tt. (* subboxSn *)
   * simpl; intros. (* cohboxSn *)
-    rewrite (eqSubbox0 (len0 := (⇓ ⇓ Hpr))).
-    rewrite (eqSubbox0 (len0 := (⇓ ⇓ (Hpr ↕ Hr)))); reflexivity.
+    rewrite (eqSubbox0 (Hp := ⇓ Hpr)).
+    rewrite (eqSubbox0 (Hp := ⇓ (Hpr ↕ Hr))); reflexivity.
   + unshelve esplit; (* p = S _ *)
     pose (Sub Hp side := (subboxSn p (le_refl p.+1) Hp side)).
     * intros Hp D. (* boxSn *)
