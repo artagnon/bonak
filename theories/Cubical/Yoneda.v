@@ -23,7 +23,7 @@ Theorem le_irrelevance : forall {n m} (H H' : n <= m), H =S H'.
 Defined.
 
 Definition le_refl n : n <= n :=
-  fun _ x => x.
+  fun _ x => x. (* Coq bug! *)
 
 Definition le_trans {n m p} (Hnm : n <= m) (Hmp : m <= p) : n <= p :=
   fun q (Hqn : le' q n) => Hmp _ (Hnm _ Hqn).

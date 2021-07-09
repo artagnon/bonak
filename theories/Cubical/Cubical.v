@@ -5,7 +5,6 @@ Import LeYoneda.
 Require Import Aux.
 Require Import RewLemmas.
 Set Printing Projections.
-Set Primitive Projections.
 
 Section Cubical.
 Universe l'.
@@ -28,16 +27,15 @@ Arguments box'' {n csp} _ {p} Hp D.
 Arguments subbox' {n csp} _ {p q Hp} Hq ε {D} d.
 
 Record PartialBox (n p : nat) (csp : Type@{l'})
-       (PB : PartialBoxBase n csp) := {
+(PB : PartialBoxBase n csp) := {
   box (Hp : p <= n) : csp -> Type@{l} ;
   subbox {q} {Hp : p.+1 <= q.+1} (Hq : q.+1 <= n) (ε : side) {D : csp} :
-    box (↓ (Hp ↕ Hq)) D -> PB.(box') (Hp ↕ Hq) D;
+  box (↓ (Hp ↕ Hq)) D -> PB.(box') (Hp ↕ Hq) D;
   cohbox {q r} {Hpr : p.+2 <= r.+2} {Hr : r.+2 <= q.+2} {Hq : q.+2 <= n}
-    {ε : side} {ε' : side} {D: csp} (d : box (↓ (⇓ Hpr ↕ (↓ (Hr ↕ Hq)))) D) :
-    PB.(subbox') Hq ε (subbox (↓ (Hr ↕ Hq)) ε' d) =
-    (PB.(subbox') (Hp := Hpr) (Hr ↕ Hq) ε' (subbox Hq ε d));
+  {ε : side} {ε' : side} {D: csp} (d : box (↓ (⇓ Hpr ↕ (↓ (Hr ↕ Hq)))) D) :
+  PB.(subbox') (Hp := Hpr ↕ Hr) Hq ε (subbox (Hp := ⇓ Hpr) (↓ (Hr ↕ Hq)) ε' d) =
+  (PB.(subbox') (Hp := Hpr) (Hr ↕ Hq) ε' (subbox (Hp := ↓ (Hpr ↕ Hr)) Hq ε d));
 }.
-
 
 Arguments box {n p csp PB} _ Hp D.
 Arguments subbox {n p csp PB} _ {q Hp} Hq ε {D}.
@@ -96,8 +94,8 @@ Class Cubical (n : nat) := {
   eqBox0' {len1: 1 <= n} {D : csp} : PB.(box') len1 D = unit ;
   eqBoxSp {D : csp} {p} (Hp : p.+1 <= n) :
     Box.(box) Hp D = {d : Box.(box) (↓ Hp) D &
-                          (PC.(cube') (Box.(subbox) _ L d) *
-                           PC.(cube') (Box.(subbox) _ R d))%type } ;
+                  (PC.(cube') (Box.(subbox) (Hp := le_refl p.+1) _ L d) *
+                  PC.(cube') (Box.(subbox) (Hp := le_refl p.+1) _ R d))%type } ;
   eqSubbox0 {q} {len0: 0 <= q} (Hq : q.+1 <= n) (ε : side) (D : csp) :
     Box.(subbox) (Hp := (⇑ len0)) Hq ε (rew <- [id] eqBox0 (D := D) in tt) =
       (rew <- [id] eqBox0' in tt);
@@ -144,13 +142,9 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
       - simpl in *; cbv zeta; unfold Sub. (* Sides L and R *)
         specialize cohboxSn with (Hpr := le_refl p.+2) (Hr := Hp) (Hq := Hq)
                                  (ε := ε) (D := D).
-        change (le_refl p.+2 ↕ (Hp ↕ Hq)) with (Hp ↕ Hq) in cohboxSn.
-        set (T := fun (q : nat) Hqn => _) in cohboxSn at 3. (* Coq bug! *)
-        change T with (↓ Hp) in cohboxSn; clear T.
-        set (T := fun (q0 : nat) Hqn => Hqn).
-        (* SProp bug! *)
-        change T with (le_refl p.+1); clear T.
-        change (le_refl p.+1) with (⇓ le_refl p.+2). split.
+        change (le_refl p.+2 ↕ Hp) with Hp in cohboxSn.
+        change (⇓ le_refl p.+2) with (le_refl p.+1) in cohboxSn.
+        split.
         ++ specialize cohboxSn with (ε' := L) (d := d). (* The side L *)
            rewrite <- cohboxSn.
            eapply (C.(Cube).(subcube) (Hp := ⇓ Hp)) with (Hq := ⇓ Hq) in CL.
@@ -161,5 +155,8 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
            exact CR.
     * simpl; intros. (* cohboxSn *)
       destruct d as (d', (CL, CR)); destruct r.
+      -  exfalso. clear -Hpr. repeat apply le_S_both in Hpr. (* r = S O *)
+         eapply le_contra. eassumption.
+      - admit. (* r = S (S _) *)
 Admitted.
 End Cubical.
