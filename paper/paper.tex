@@ -72,6 +72,9 @@
 }
 \floatsetup[table]{capposition=bottom}
 
+% Lettered footnotes
+\renewcommand{\thefootnote}{\alph{footnote}}
+
 % Theorems
 \newtheorem{notation}{Notation}
 \newtheorem{definition}{Definition}
@@ -103,6 +106,10 @@
 \end{abstract}
 \maketitle
 \tableofcontents
+
+\section{Introduction}
+
+Cubical type theory is an extension of dependent type theory that provides a way to provide a computational interpretation of Voevodsky's Univalence Axiom. Several strides in the field have been made since \cite{Bezem14} in constructing a model of type theory for cubical sets, and we present another approach to the construction, with a rigorous mathematical foundation. Though motivated by homotopy type theory, construction of the path type and transport are beyond the scope of our work. Our secondary contribution is a formalization of semi-cubical sets in vanilla Coq~\footnote{\href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak}}.
 
 \section{The intutution from \texorpdfstring{\SSet}{simplicial sets}}
 \subsection{Standard definitions}
@@ -188,7 +195,7 @@ To concretely define simplicial sets in terms of objects and morphisms, they can
 
 \subsection{The motivation for \texorpdfstring{\DeltaHat}{delta sets}}
 
-The issue with mechanisation of \SSet, and the corresponding cubical sets, is the degeneracy maps - there are an infinite number of degenerate simplices in any simplicial set, and these degeneracies are not interesting from the point of view of cubical type theory. To remedy this problem, let us instead use \DeltaHat, and proceed towards building, what is called semi-cubical sets in literature. $\DeltaHat$ is identical to \BDelta, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are strictly order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. In mathematical literature, there is little interest in studying \DeltaHat, since delta maps are not well-defined, and constructing a $\Set^{\DeltaHat^{op}}$ is inelegant. The objective of this paper is to first generalize delta-sets to the cubical setting, and provide a precise mechanically-checked formalization of the same. The formalization effort pushes the boundaries of dependently-typed programming and the tactic system in Coq.
+The issue with mechanisation of \SSet, and the corresponding cubical sets, is the degeneracy maps - there are an infinite number of degenerate simplices in any simplicial set, and these degeneracies are not interesting from the point of view of cubical type theory. To remedy this problem, let us instead use \DeltaHat, and proceed towards building, what is called semi-cubical sets in literature. $\DeltaHat$ is identical to \BDelta, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are strictly order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. In mathematical literature, there is little interest in studying \DeltaHat, since delta maps are not well-defined, and constructing a $\Set^{\DeltaHat^{op}}$ is inelegant. The objective of this paper is to first generalize delta-sets to the cubical setting, and provide a precise mechanically-checked formalization of the same.
 
 \subsection{Towards semi-cubical sets}
 
@@ -375,6 +382,9 @@ Figure~\ref{tab:macros} also shows how to compute the faces of a box or of a cub
 \end{eqntable}
 
 \begin{thebibliography}{10}
+  \bibitem{Bezem14}
+  Bezem, M., Coquand, T., \& Huber, S. (2014, July). A model of type theory in cubical sets. \textit{In 19th International Conference on Types for Proofs and Programs (TYPES 2013)} (Vol. 26, pp. 107-128). Wadern, Germany: Schloss Dagstuhl–Leibniz Zentrum fuer Informatik.
+
   \bibitem{Friedman08}
   Friedman, G. (2008). An elementary illustrated introduction to simplicial sets. \textit{arXiv preprint arXiv:0809.4221}.
 
