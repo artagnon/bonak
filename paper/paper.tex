@@ -1,7 +1,7 @@
 \documentclass[10pt]{amsart}
 
 \usepackage[allbordercolors={.192157 .76862 .28627}]{hyperref} % Emerald Green
-\usepackage{bookmark, fontspec, xargs, multirow, polyglossia, luacode, amssymb, listings, color, soulutf8, graphicx, tcolorbox, tabularx, tikz, booktabs, setspace, makecell, caption, floatrow}
+\usepackage{bookmark, fontspec, xargs, multirow, polyglossia, luacode, amssymb, listings, color, soulutf8, graphicx, tcolorbox, tabularx, tikz, booktabs, setspace, makecell, caption, floatrow, amsthm}
 \usepackage[margin=0.3in]{geometry}
 
 % Head and tail
@@ -53,12 +53,6 @@
 \newcommand{\imp}{\ensuremath{\rightarrow}}
 \newcommand{\overright}[1]{\ensuremath{\overrightarrow{#1}}}
 
-% Simplicial set macros
-\newcommand{\BDelta}{\ensuremath{\boldsymbol{\Delta}}}
-\newcommand{\Simplex}[1][n]{\ensuremath{\boldsymbol{\Delta^{#1}}}}
-\newcommand{\DeltaHat}{\ensuremath{\hat{\boldsymbol{\Delta}}}}
-\newcommand{\SSet}{\ensuremath{\text{Set}_{\boldsymbol{\Delta}}}}
-
 % The eqntable environment, displaying the various
 \NewDocumentEnvironment{eqntable}{m}{\table[!ht]
 \tabularx{\textwidth}{@{} l c c >{\centering\arraybackslash}X @{}}\toprule}
@@ -78,6 +72,27 @@
 }
 \floatsetup[table]{capposition=bottom}
 
+% Theorems
+\newtheorem{notation}{Notation}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{example}{Example}
+
+% Simplicial sets
+\newcommand{\BDelta}{\ensuremath{\boldsymbol{\Delta}}}
+\newcommand{\Simplex}{\ensuremath{\boldsymbol{\Delta^n}}}
+\newcommand{\DeltaHat}{\ensuremath{\hat{\boldsymbol{\Delta}}}}
+\newcommand{\SSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\Delta}}}}
+\newcommand{\Set}{\ensuremath{\mathsf{Set}}}
+\newcommand{\sq}[1]{\ensuremath{\mathsf{[#1]}}}
+\newcommand{\sqsn}{\ensuremath{\mathsf{[1 \ldots n]}}}
+
+% Cubical sets
+\newcommand{\Cube}{\ensuremath{\boldsymbol{\square}}}
+
 \title{An indexed construction of semi-cubical types}
 \author{Ramkumar Ramachandra}
 \author{Hugo Herbelin}
@@ -89,6 +104,103 @@
 \maketitle
 \tableofcontents
 
+\section{The intutution from \texorpdfstring{\SSet}{simplicial sets}}
+\subsection{Standard definitions}
+
+Let us first review a few standard definitions appearing in mathematical literature. We will refer the reader to \cite{Friedman08} and \cite{Riehl11} for more on the subject.
+
+\begin{notation}[\sq{n}]
+  The notation \sq{n} is used to denote the set of finite ordinals, with preorder structure.
+
+  \begin{equation*}
+    \sq{n} := 0 \rightarrow 1 \rightarrow \ldots \rightarrow n
+  \end{equation*}
+\end{notation}
+
+\begin{definition}[Informal definition of \Simplex]
+  The standard $n$-simplex is the prototypical example of a simplicial set,  can be informally defined as all ordered subsets of \sq{n}, also denoted \sqsn.
+\end{definition}
+
+We will now define the category of simplicial sets, and redefine $\Simplex$ formally.
+
+\begin{definition}[\BDelta]
+  The $\BDelta$ category can be defined in terms of its objects and morphisms:
+
+  \begin{align*}
+    obj(\BDelta) & := \sq{n}                                             \\
+    mor(\BDelta) & := \sq{m} \rightarrow \sq{n}, \text{order-preserving}
+  \end{align*}
+\end{definition}
+
+\begin{definition}[\SSet]
+  The category of simplicial sets is then defined as the functor category:
+
+  \begin{equation*}
+    \SSet := \Set^{\BDelta^{op}}
+  \end{equation*}
+\end{definition}
+
+\begin{definition}[\Simplex]
+  $\Simplex$ is the Yoneda embedding of \sq{n}.
+
+  \begin{equation*}
+    \Simplex := y(\sq{n})
+  \end{equation*}
+\end{definition}
+
+To concretely define simplicial sets in terms of objects and morphisms, they can be viewed from two different equivalent viewpoints.
+
+\begin{definition}[\SSet, from the first viewpoint]
+  \begin{align*}
+    obj(\SSet) & := \text{functors}, \BDelta \rightarrow \Set      \\
+    mor(\SSet) & := \text{natural transforms between the functors}
+  \end{align*}
+\end{definition}
+
+\begin{definition}[\SSet, from the second viewpoint]
+  \begin{align*}
+    obj(\SSet) & := \text{ordered n-simplices}, X_n \\
+    mor(\SSet) & :=
+    \begin{cases}
+      d_i : X_{n + 1} \rightarrow X_n & \text{face maps}       \\
+      s_i : X_n \rightarrow X_{n + 1} & \text{degeneracy maps}
+    \end{cases}
+  \end{align*}
+
+  where $X_n$ is defined as:
+  \begin{equation*}
+    X_n := \text{Hom}(\Simplex, X), \text{where X is the simplicial set}
+  \end{equation*}
+
+  and $d_i$, $s_i$ are constrained by the following ``gluing conditions'':
+
+  \begin{align*}
+    d_i d_j & = d_{j - 1} d_i, i < j \\
+    s_i s_j & = s_{j + 1} s_i, i < j \\
+    d_i s_j & =
+    \begin{cases}
+      s_{j - 1} d_i & i < j \\
+      id            & i = j \\
+      s_j d_{i - 1} & i > j
+    \end{cases}
+  \end{align*}
+\end{definition}
+
+\subsection{The motivation for \texorpdfstring{\DeltaHat}{delta sets}}
+
+The issue with mechanisation of \SSet, and the corresponding cubical sets, is the degeneracy maps - there are an infinite number of degenerate simplices in any simplicial set, and these degeneracies are not interesting from the point of view of cubical type theory. To remedy this problem, let us instead use \DeltaHat, and proceed towards building, what is called semi-cubical sets in literature. $\DeltaHat$ is identical to \BDelta, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are strictly order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. In mathematical literature, there is little interest in studying \DeltaHat, since delta maps are not well-defined, and constructing a $\Set^{\DeltaHat^{op}}$ is inelegant. The objective of this paper is to first generalize delta-sets to the cubical setting, and provide a precise mechanically-checked formalization of the same. The formalization effort pushes the boundaries of dependently-typed programming and the tactic system in Coq.
+
+\subsection{Towards semi-cubical sets}
+
+Let us, on the outset, define \Cube, identically to \DeltaHat.
+
+\begin{definition}[\Cube]
+  \begin{align*}
+    \text{obj}(\Cube) & := \sq{n}                                                      \\
+    \text{mor}(\Cube) & := \sq{m} \rightarrow \sq{n}, \text{strictly order-preserving}
+  \end{align*}
+\end{definition}
+
 \section{Semi-cubical sets}
 
 In this section, we give the core of the definition of semi-cubical
@@ -97,7 +209,7 @@ construction of truncated semi-cubical sets.
 
 \subsection{Truncated semi-cubical sets}
 
-The definition is dispatched over Figures~\ref{tab:barecubicalsetstructurecore}, \ref{tab:barecubicalsetstructure}, \ref{tab:barecubicalsetfaces} and \ref{tab:barecubicalsetcoherences}. It describes the structure of the underlying higher-dimensional relations on which cubes and boxes are built, together with the definition of homogeneous $n$-boxes, homogeneous $n$-cubes, together with face operations on boxes and cubes, together with commutation properties of the face operations. All are mutually defined as types of the target language ETT. Note that such relational structure, cubes and boxes are relative to a universe. Note the presence of a coherence condition \cohbox{l} to ensuring that both sides of the equality in \downlayer{l} and \downcube{l} are in the same type. The proof of \cohbox{l} itself requires an higher-dimensional coherence condition which we obtain by working here in ETT where all proofs of an equality are identified (principle of Unicity of Identity Proofs). Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory). Note also that for a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning \downbox{l} nor \cohbox{l} anymore.
+The definition is dispatched over Figures~\ref{tab:barecubicalsetstructurecore}, \ref{tab:barecubicalsetstructure}, \ref{tab:barecubicalsetfaces} and \ref{tab:barecubicalsetcoherences}. It describes the structure of the underlying higher-dimensional relations on which cubes and boxes are built, together with the definition of homogeneous $n$-boxes, homogeneous $n$-cubes, together with face operations on boxes and cubes, together with commutation properties of the face operations. All are mutually defined as types of the target language ETT. Note that such relational structure, cubes and boxes are relative to a universe. Note the presence of a coherence condition $\cohbox{l}{}$ to ensuring that both sides of the equality in $\downlayer{l}{}$ and $\downcube{l}{}$ are in the same type. The proof of $\cohbox{l}{}$ itself requires an higher-dimensional coherence condition which we obtain by working here in ETT where all proofs of an equality are identified (principle of Unicity of Identity Proofs). Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory). Note also that for a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\downbox{l}{}$ nor $\cohbox{l}{}$ anymore.
 
 When reflexivities are excepted, we call the structure thus defined \emph{bare truncated cubical sets}: \emph{bare} because it can be seen as defining a cubical equivalent to semi-simplicial sets with only faces as part of the structure (otherwise said, another terminology could have been ``semi-cubical'' sets); \emph{truncated} because we consider only such cubical sets up to some fixed dimension.
 
@@ -188,9 +300,9 @@ When reflexivities are excepted, we call the structure thus defined \emph{bare t
 \subsection{Derived notions}
 \label{sec:derived-notions}
 
-On top of the basic definitions on Figures~\ref{tab:barecubicalsetstructure}, \ref{tab:barecubicalsetfaces} and \ref{tab:barecubicalsetcoherences}, we can define on Figures~\ref{tab:macros} and~\ref{tab:macroscont} a few other concepts at a more standard level of abstraction. In particular, a homogeneous $n$-box in the above sense is defined to be an object of type $\myfullbox{l}{n}(D_{n})$ for $D_{n} \defeq (A,=_A,...,=^n_A)$ the initial segment of $n$-th first iterated equalities over $A$ (by convention, a homogeneous $0$-box shall be the canonical singleton type). A $n$-tube is of type $\mybox{l}{n+1,n}(D_{n+1})$. An homogeneous (proper) $n$-cube in some $n$-box $d$ is of type $\mycube{l}{n+1,n}(\hd(D_{n+1}))(\tl(D_{n+1}))(d)$ and a full $n$-cube is of type $\mycube{l}{n+1,0}(\hd(D_{n+1}))(\tl(D_{n+1})))(\star)$.
+On top of the basic definitions on Figures~\ref{tab:barecubicalsetstructure}, \ref{tab:barecubicalsetfaces} and \ref{tab:barecubicalsetcoherences}, we can define on Figures~\ref{tab:macros} and~\ref{tab:macroscont} a few other concepts at a more standard level of abstraction. In particular, a homogeneous $n$-box in the above sense is defined to be an object of type $\myfullbox{l}{n}(D_{n})$ for $D_{n} \defeq (A, =_A, \ldots, =^n_A)$ the initial segment of $n$-th first iterated equalities over $A$ (by convention, a homogeneous $0$-box shall be the canonical singleton type). A $n$-tube is of type $\mybox{l}{n+1,n}(D_{n+1})$. An homogeneous (proper) $n$-cube in some $n$-box $d$ is of type $\mycube{l}{n+1,n}(\hd(D_{n+1}))(\tl(D_{n+1}))(d)$ and a full $n$-cube is of type $\mycube{l}{n+1,0}(\hd(D_{n+1}))(\tl(D_{n+1})))(\star)$.
 
-Note that the components of an $n$-box or $n$-tube are tuples associated to the left. For cubes, the components can be associated to the left, and we call this a full $n$-cube or to the right, which we call grounded $n$-cube, and which corresponds to ``complete'' partial cubes, i.e. to partial cubes over the empty box. Figure~\ref{tab:macros} show how to compute the $n$-box surrounding a full $n$-cube over a prefix $D_{n+1}$ of iterated equalities (see \border).
+Note that the components of an $n$-box or $n$-tube are tuples associated to the left. For cubes, the components can be associated to the left, and we call this a full $n$-cube or to the right, which we call grounded $n$-cube, and which corresponds to ``complete'' partial cubes, i.e. to partial cubes over the empty box. Figure~\ref{tab:macros} show how to compute the $n$-box surrounding a full $n$-cube over a prefix $D_{n+1}$ of iterated equalities (see $\border{}$).
 
 Figure~\ref{tab:macros} also shows how to compute the faces of a box or of a cube.
 
@@ -263,6 +375,12 @@ Figure~\ref{tab:macros} also shows how to compute the faces of a box or of a cub
 \end{eqntable}
 
 \begin{thebibliography}{10}
+  \bibitem{Friedman08}
+  Friedman, G. (2008). An elementary illustrated introduction to simplicial sets. \textit{arXiv preprint arXiv:0809.4221}.
+
+  \bibitem{Riehl11}
+  Riehl, E. (2011). A leisurely introduction to simplicial sets. \textit{Unpublished expository article available online at \href{http://www.math.harvard.edu/~eriehl}{http://www.math.harvard.edu/~eriehl}}.
+
   \bibitem{Herbelin15}
   Herbelin, H. (2015). A dependently-typed construction of semi-simplicial types. \textit{Mathematical Structures in Computer Science, 25}(5), 1116-1131.
 \end{thebibliography}
