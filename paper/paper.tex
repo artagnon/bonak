@@ -130,6 +130,35 @@ Let us first review a few standard definitions appearing in mathematical literat
   The standard $n$-simplex is the prototypical example of a simplicial set,  can be informally defined as all ordered subsets of \sq{n}, also denoted \sqsn.
 \end{definition}
 
+\begin{example}[\Simplex{0}, \Simplex{1}, and \Simplex{2}]
+  $\Simplex{0}$ can be drawn as:
+
+  $$
+    \begin{tikzcd}
+      0
+    \end{tikzcd}
+  $$
+
+  $\Simplex{1}$ can be drawn as:
+
+  $$
+    \begin{tikzcd}
+      0 \arrow[r] & 1
+    \end{tikzcd}
+  $$
+
+  and $\Simplex{2}$ can be drawn as:
+
+  $$
+    \begin{tikzcd}
+      & 1 \arrow[dr] & \\
+      0 \arrow[ur] \arrow[rr] & & 2
+    \end{tikzcd}
+  $$
+
+  Note that we only show non-degerate simplices in the figure.
+\end{example}
+
 We will now define the category of simplicial sets, and redefine $\Simplex{n}$ formally.
 
 \begin{definition}[\Simplex{}]
@@ -205,18 +234,45 @@ Let us first motivate the definition of semi-cubical sets, as defined in \cite{A
 
 $$
   \begin{tikzcd}
-    \bullet \arrow[r] \arrow[dr] \arrow[d] & \bullet \arrow[dl] \arrow[d] \\
-    \bullet \arrow[r] & \bullet
+    \bullet \arrow[r] \arrow[dr] \arrow[d] & \bullet \arrow[d] \\
+    \bullet \arrow[r] \arrow[ur] & \bullet
   \end{tikzcd}
 $$
 
-where the filling conditions are conflated with the cube itself. $\Simplex{n}$ can be defined quite simply as the convex hull of $n$ points, but even defining the standard $n$-cube becomes a problem if we start with with the point as $\Cube{0}$, but the situation becomes much more amenable if we define:
+where the filling conditions are conflated with the cube itself. $\Simplex{n}$ can be defined quite simply as the convex hull of $n$ points, but even defining the standard $n$-cube becomes a problem if we start with $\sq{n}$, but the situation becomes much more amenable if we define:
 
 \begin{definition}[\Cube{n}]
   \begin{equation*}
     \Cube{n} := \I{n} = \sq{0, 1}^n
   \end{equation*}
 \end{definition}
+
+\begin{example}[$\Cube{0}$, $\Cube{1}$ and $\Cube{2}$]
+  $\Cube{0}$ can be drawn as:
+
+  $$
+    \begin{tikzcd}
+      0 \equiv 1
+    \end{tikzcd}
+  $$
+
+  $\Cube{1}$ can be drawn as:
+
+  $$
+    \begin{tikzcd}
+      0 \arrow[r, dash] & 1
+    \end{tikzcd}
+  $$
+
+  and $\Cube{2}$ can be drawn as:
+
+  $$
+    \begin{tikzcd}
+      1 \arrow[r, dash] & 1' \arrow[d, dash] \\
+      0 \arrow[u, dash] & 0' \arrow[l, dash]
+    \end{tikzcd}
+  $$
+\end{example}
 
 Here, $\I{n}$ serves the purpose of $\sq{n}$, but this change will cascade into other definitions. In view of defining a category \CSet, we will restrict the morphisms in \Cube{}.
 
