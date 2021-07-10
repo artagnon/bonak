@@ -37,7 +37,7 @@
 \newcommand{\cohlayer}[2]{\ensuremath{\mathsf{cohlayer}_{#1}^{#2}}}
 \newcommand{\cohcube}[2]{\ensuremath{\mathsf{cohcube}_{#1}^{#2}}}
 
-% Partials and fulls, related to box, cube, and tube
+% Partials and fulls related to box, cube, and tube
 \newcommand{\border}[1]{\ensuremath{\mathsf{border}_{#1}}}
 \newcommand{\partialcubset}[2]{\ensuremath{\mathsf{cubset}_{#1}^{<#2}}}
 \newcommand{\mycubsetcomp}[2]{\ensuremath{\mathsf{cubset}_{#1}^{=#2}}}
@@ -86,10 +86,10 @@
 \newtheorem{example}{Example}
 
 % Simplicial sets
+\newcommand{\Set}{\ensuremath{\mathsf{Set}}}
 \newcommand{\Simplex}[1]{\ensuremath{\boldsymbol{\Delta^{#1}}}}
 \newcommand{\DeltaHat}{\ensuremath{\hat{\boldsymbol{\Delta}}}}
 \newcommand{\SSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\Delta}}}}
-\newcommand{\Set}{\ensuremath{\mathsf{Set}}}
 \newcommand{\sq}[1]{\ensuremath{\mathsf{[#1]}}}
 \newcommand{\sqsn}{\ensuremath{\mathsf{[1 \ldots n]}}}
 
@@ -111,7 +111,7 @@
 
 \section{Introduction}
 
-Cubical type theory is an extension of dependent type theory that provides a way to provide a computational interpretation of Voevodsky's Univalence Axiom. Several strides in the field have been made since \cite{Bezem14} in constructing a model of type theory for cubical sets, and we present another approach to the construction, with a rigorous mathematical foundation. Though motivated by homotopy type theory, construction of the path type and transport are beyond the scope of our work. Our secondary contribution is a formalization of semi-cubical sets in vanilla Coq~\footnote{\href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak}}.
+Cubical type theory is an extension of dependent type theory that provides a computational interpretation of Voevodsky's Univalence Axiom. Several strides in the field have been made since \cite{Bezem14} in constructing a model of type theory for cubical sets, and we present another approach to the construction, with a rigorous mathematical foundation. Though motivated by homotopy type theory, construction of the path type and transport are beyond the scope of our work; we merely formalize semi-cubical sets. Our secondary contribution is a mechanically checked proof of our construction in vanilla Coq~\footnote{\href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak}}.
 
 \section{The intutution from \texorpdfstring{\SSet}{simplicial sets}}
 \subsection{Standard definitions}
@@ -259,17 +259,21 @@ Then, the first viewpoint corresponding to the one in simplicial sets is uninter
   \end{align*}
 \end{definition}
 
+\begin{theorem}[$\CSet$ does not admit degeneracies]
+  This is proved in \cite{Antolini00}.
+\end{theorem}
+
 \section{Semi-cubical sets}
 
 In this section, we give the core of the definition of semi-cubical
-sets as the coinductive limit (see Figure~\ref{tab:barecubicalset}) of a
+sets as the coinductive limit (see table \ref{tab:barecubicalset}) of a
 construction of truncated semi-cubical sets.
 
 \subsection{Truncated semi-cubical sets}
 
-The definition is dispatched over Figures~\ref{tab:barecubicalsetstructurecore}, \ref{tab:barecubicalsetstructure}, \ref{tab:barecubicalsetfaces} and \ref{tab:barecubicalsetcoherences}. It describes the structure of the underlying higher-dimensional relations on which cubes and boxes are built, together with the definition of homogeneous $n$-boxes, homogeneous $n$-cubes, together with face operations on boxes and cubes, together with commutation properties of the face operations. All are mutually defined as types of the target language ETT. Note that such relational structure, cubes and boxes are relative to a universe. Note the presence of a coherence condition $\cohbox{l}{}$ to ensuring that both sides of the equality in $\downlayer{l}{}$ and $\downcube{l}{}$ are in the same type. The proof of $\cohbox{l}{}$ itself requires an higher-dimensional coherence condition which we obtain by working here in ETT where all proofs of an equality are identified (principle of Unicity of Identity Proofs). Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory). Note also that for a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\downbox{l}{}$ nor $\cohbox{l}{}$ anymore.
+The definition is dispatched over tables \ref{tab:barecubicalsetstructurecore}, \ref{tab:barecubicalsetstructure}, \ref{tab:barecubicalsetfaces} and \ref{tab:barecubicalsetcoherences}. It describes the structure of the underlying higher-dimensional relations on which cubes and boxes are built, together with the definition of homogeneous $n$-boxes, homogeneous $n$-cubes, together with face operations on boxes and cubes, together with commutation properties of the face operations. All are mutually defined as types of the target language ETT. Note that such relational structure, cubes and boxes are relative to a universe. Note the presence of a coherence condition $\cohbox{l}{}$ to ensuring that both sides of the equality in $\downlayer{l}{}$ and $\downcube{l}{}$ are in the same type. The proof of $\cohbox{l}{}$ itself requires an higher-dimensional coherence condition which we obtain by working here in ETT where all proofs of an equality are identified (principle of Unicity of Identity Proofs). Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory). Note also that for a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\downbox{l}{}$ nor $\cohbox{l}{}$ anymore.
 
-When reflexivities are excepted, we call the structure thus defined \emph{bare truncated cubical sets}: \emph{bare} because it can be seen as defining a cubical equivalent to semi-simplicial sets with only faces as part of the structure (otherwise said, another terminology could have been ``semi-cubical'' sets); \emph{truncated} because we consider only such cubical sets up to some fixed dimension.
+When reflexivities are excepted, we call the structure thus defined \emph{bare truncated cubical sets}: \emph{bare} because it can be seen as defining semi-cubical sets corresponding to semi-simplicial sets with only faces as part of the structure; \emph{truncated} because we consider only such cubical sets up to some fixed dimension.
 
 \begin{eqntable}{\label{tab:barecubicalsetstructurecore} Definition of a truncated cubical set (main part of the higher-dimensional relation structure)}
   \mc{Type of truncated cubical sets} \\
@@ -358,11 +362,11 @@ When reflexivities are excepted, we call the structure thus defined \emph{bare t
 \subsection{Derived notions}
 \label{sec:derived-notions}
 
-On top of the basic definitions on Figures~\ref{tab:barecubicalsetstructure}, \ref{tab:barecubicalsetfaces} and \ref{tab:barecubicalsetcoherences}, we can define on Figures~\ref{tab:macros} and~\ref{tab:macroscont} a few other concepts at a more standard level of abstraction. In particular, a homogeneous $n$-box in the above sense is defined to be an object of type $\myfullbox{l}{n}(D_{n})$ for $D_{n} \defeq (A, =_A, \ldots, =^n_A)$ the initial segment of $n$-th first iterated equalities over $A$ (by convention, a homogeneous $0$-box shall be the canonical singleton type). A $n$-tube is of type $\mybox{l}{n+1,n}(D_{n+1})$. An homogeneous (proper) $n$-cube in some $n$-box $d$ is of type $\mycube{l}{n+1,n}(\hd(D_{n+1}))(\tl(D_{n+1}))(d)$ and a full $n$-cube is of type $\mycube{l}{n+1,0}(\hd(D_{n+1}))(\tl(D_{n+1})))(\star)$.
+On top of the basic definitions on tables \ref{tab:barecubicalsetstructure}, \ref{tab:barecubicalsetfaces} and \ref{tab:barecubicalsetcoherences}, we can define on tables \ref{tab:macros} and \ref{tab:macroscont} a few other concepts at a more standard level of abstraction. In particular, a homogeneous $n$-box in the above sense is defined to be an object of type $\myfullbox{l}{n}(D_{n})$ for $D_{n} \defeq (A, =_A, \ldots, =^n_A)$ the initial segment of $n$-th first iterated equalities over $A$ (by convention, a homogeneous $0$-box shall be the canonical singleton type). A $n$-tube is of type $\mybox{l}{n+1,n}(D_{n+1})$. An homogeneous (proper) $n$-cube in some $n$-box $d$ is of type $\mycube{l}{n+1,n}(\hd(D_{n+1}))(\tl(D_{n+1}))(d)$ and a full $n$-cube is of type $\mycube{l}{n+1,0}(\hd(D_{n+1}))(\tl(D_{n+1})))(\star)$.
 
-Note that the components of an $n$-box or $n$-tube are tuples associated to the left. For cubes, the components can be associated to the left, and we call this a full $n$-cube or to the right, which we call grounded $n$-cube, and which corresponds to ``complete'' partial cubes, i.e. to partial cubes over the empty box. Figure~\ref{tab:macros} show how to compute the $n$-box surrounding a full $n$-cube over a prefix $D_{n+1}$ of iterated equalities (see $\border{}$).
+Note that the components of an $n$-box or $n$-tube are tuples associated to the left. For cubes, the components can be associated to the left, and we call this a full $n$-cube or to the right, which we call grounded $n$-cube, and which corresponds to ``complete'' partial cubes, i.e. to partial cubes over the empty box. Table \ref{tab:macros} show how to compute the $n$-box surrounding a full $n$-cube over a prefix $D_{n+1}$ of iterated equalities (see $\border{}$).
 
-Figure~\ref{tab:macros} also shows how to compute the faces of a box or of a cube.
+Table \ref{tab:macros} also shows how to compute the faces of a box or of a cube.
 
 \begin{eqntable}{\label{tab:barecubicalset} Definition of a bare cubical set (coinductive structure)}
   \mc{Full (non-truncated) cubical sets with degeneracies}
@@ -423,7 +427,7 @@ Figure~\ref{tab:macros} also shows how to compute the faces of a box or of a cub
 
   \eqnline{\fulldowncube{l,\epsilon,q}{n}}{(D,E)~c}{\defeq}{\downcube{l,\epsilon,q}{n,0}(D)(E)(\star)(c)}
 
-  \\ \mc{where the extension of \downbox{l} to $p>q$ is}
+  \\ \mc{where the extension of $\downbox{l}{}$ to $p>q$ is}
 
   \eqnline{\downbox{l,\epsilon,q}{n,p,[q < p < n]}}{(D:\partialcubset{l}{n})~(d:\mybox{l}{n,p}(D))}{:}{\myfullbox{l}{n-1}(\hd(D))}
 
