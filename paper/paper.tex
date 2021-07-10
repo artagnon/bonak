@@ -1,7 +1,7 @@
-\documentclass[10pt]{amsart}
+\documentclass[10pt, titlepage]{amsart}
 
 \usepackage[allbordercolors={.192157 .76862 .28627}]{hyperref} % Emerald Green
-\usepackage{bookmark, fontspec, xargs, multirow, polyglossia, luacode, amssymb, listings, color, soulutf8, graphicx, tcolorbox, tabularx, tikz, booktabs, setspace, makecell, caption, floatrow, amsthm}
+\usepackage{bookmark, fontspec, xargs, multirow, polyglossia, luacode, amssymb, listings, color, soulutf8, graphicx, tcolorbox, tabularx, tikz, tikz-cd, booktabs, setspace, makecell, caption, floatrow, amsthm, lmodern}
 \usepackage[margin=0.3in]{geometry}
 
 % Head and tail
@@ -70,7 +70,8 @@
   font=bf,
   labelfont=mdit,
 }
-\floatsetup[table]{capposition=bottom}
+\DeclareFloatFont{small}{\small}
+\floatsetup[table]{capposition=bottom, font=small}
 
 % Lettered footnotes
 \renewcommand{\thefootnote}{\alph{footnote}}
@@ -85,8 +86,7 @@
 \newtheorem{example}{Example}
 
 % Simplicial sets
-\newcommand{\BDelta}{\ensuremath{\boldsymbol{\Delta}}}
-\newcommand{\Simplex}{\ensuremath{\boldsymbol{\Delta^n}}}
+\newcommand{\Simplex}[1]{\ensuremath{\boldsymbol{\Delta^{#1}}}}
 \newcommand{\DeltaHat}{\ensuremath{\hat{\boldsymbol{\Delta}}}}
 \newcommand{\SSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\Delta}}}}
 \newcommand{\Set}{\ensuremath{\mathsf{Set}}}
@@ -94,7 +94,9 @@
 \newcommand{\sqsn}{\ensuremath{\mathsf{[1 \ldots n]}}}
 
 % Cubical sets
-\newcommand{\Cube}{\ensuremath{\boldsymbol{\square}}}
+\newcommand{\Cube}[1]{\ensuremath{\boldsymbol{\square^{#1}}}}
+\newcommand{\I}[1]{\ensuremath{\mathsf{I}^{#1}}}
+\newcommand{\CSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\square}}}}
 
 \title{An indexed construction of semi-cubical types}
 \author{Ramkumar Ramachandra}
@@ -124,18 +126,18 @@ Let us first review a few standard definitions appearing in mathematical literat
   \end{equation*}
 \end{notation}
 
-\begin{definition}[Informal definition of \Simplex]
+\begin{definition}[Informal definition of \Simplex{n}]
   The standard $n$-simplex is the prototypical example of a simplicial set,  can be informally defined as all ordered subsets of \sq{n}, also denoted \sqsn.
 \end{definition}
 
-We will now define the category of simplicial sets, and redefine $\Simplex$ formally.
+We will now define the category of simplicial sets, and redefine $\Simplex{n}$ formally.
 
-\begin{definition}[\BDelta]
-  The $\BDelta$ category can be defined in terms of its objects and morphisms:
+\begin{definition}[\Simplex{}]
+  The $\Simplex{}$ category can be defined in terms of its objects and morphisms:
 
   \begin{align*}
-    obj(\BDelta) & := \sq{n}                                             \\
-    mor(\BDelta) & := \sq{m} \rightarrow \sq{n}, \text{order-preserving}
+    obj(\Simplex{}) & := \sq{n}                                             \\
+    mor(\Simplex{}) & := \sq{m} \rightarrow \sq{n}, \text{order-preserving}
   \end{align*}
 \end{definition}
 
@@ -143,15 +145,15 @@ We will now define the category of simplicial sets, and redefine $\Simplex$ form
   The category of simplicial sets is then defined as the functor category:
 
   \begin{equation*}
-    \SSet := \Set^{\BDelta^{op}}
+    \SSet := \Set^{\Simplex{}^{op}}
   \end{equation*}
 \end{definition}
 
-\begin{definition}[\Simplex]
-  $\Simplex$ is the Yoneda embedding of \sq{n}.
+\begin{definition}[\Simplex{n}]
+  $\Simplex{n}$ is the Yoneda embedding of \sq{n}.
 
   \begin{equation*}
-    \Simplex := y(\sq{n})
+    \Simplex{n} := y(\sq{n})
   \end{equation*}
 \end{definition}
 
@@ -159,7 +161,7 @@ To concretely define simplicial sets in terms of objects and morphisms, they can
 
 \begin{definition}[\SSet, from the first viewpoint]
   \begin{align*}
-    obj(\SSet) & := \text{functors}, \BDelta \rightarrow \Set      \\
+    obj(\SSet) & := \text{functors}, \Simplex{} \rightarrow \Set   \\
     mor(\SSet) & := \text{natural transforms between the functors}
   \end{align*}
 \end{definition}
@@ -176,7 +178,7 @@ To concretely define simplicial sets in terms of objects and morphisms, they can
 
   where $X_n$ is defined as:
   \begin{equation*}
-    X_n := \text{Hom}(\Simplex, X), \text{where X is the simplicial set}
+    X_n := X(\sq{n}) = \text{Hom}(\Simplex{n}, X), \text{where X is the simplicial set}
   \end{equation*}
 
   and $d_i$, $s_i$ are constrained by the following ``gluing conditions'':
@@ -195,16 +197,65 @@ To concretely define simplicial sets in terms of objects and morphisms, they can
 
 \subsection{The motivation for \texorpdfstring{\DeltaHat}{delta sets}}
 
-The issue with mechanisation of \SSet, and the corresponding cubical sets, is the degeneracy maps - there are an infinite number of degenerate simplices in any simplicial set, and these degeneracies are not interesting from the point of view of cubical type theory. To remedy this problem, let us instead use \DeltaHat, and proceed towards building, what is called semi-cubical sets in literature. $\DeltaHat$ is identical to \BDelta, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are strictly order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. In mathematical literature, there is little interest in studying \DeltaHat, since delta maps are not well-defined, and constructing a $\Set^{\DeltaHat^{op}}$ is inelegant. The objective of this paper is to first generalize delta-sets to the cubical setting, and provide a precise mechanically-checked formalization of the same.
+The issue with mechanisation of \SSet, and the corresponding cubical sets, is the degeneracy maps - there are an infinite number of degenerate simplices in any simplicial set, and these degeneracies are not interesting from the point of view of cubical type theory. To remedy this problem, let us instead use \DeltaHat, and proceed towards building, what is called semi-cubical sets in literature. $\DeltaHat$ is identical to \Simplex{}, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are strictly order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. In mathematical literature, there is little interest in studying \DeltaHat, since delta maps are not well-defined, and constructing a $\Set^{\DeltaHat^{op}}$ is inelegant. The objective of this paper is to first generalize delta-sets to the cubical setting, and provide a precise mechanically-checked formalization of the same.
 
 \subsection{Towards semi-cubical sets}
 
-Let us, on the outset, define \Cube, identically to \DeltaHat.
+Let us first motivate the definition of semi-cubical sets, as defined in \cite{Antolini00}. On the outset, we might naively attempt to define $\Cube{}$ identically to \DeltaHat, but let us briefly explain why this wouldn't work. If there were morphisms from every $\sq{m}$ to $\sq{n}$, we would end up with:
 
-\begin{definition}[\Cube]
+$$
+  \begin{tikzcd}
+    \bullet \arrow[r] \arrow[dr] \arrow[d] & \bullet \arrow[dl] \arrow[d] \\
+    \bullet \arrow[r] & \bullet
+  \end{tikzcd}
+$$
+
+where the filling conditions are conflated with the cube itself. $\Simplex{n}$ can be defined quite simply as the convex hull of $n$ points, but even defining the standard $n$-cube becomes a problem if we start with with the point as $\Cube{0}$, but the situation becomes much more amenable if we define:
+
+\begin{definition}[\Cube{n}]
+  \begin{equation*}
+    \Cube{n} := \I{n} = \sq{0, 1}^n
+  \end{equation*}
+\end{definition}
+
+Here, $\I{n}$ serves the purpose of $\sq{n}$, but this change will cascade into other definitions. In view of defining a category \CSet, we will restrict the morphisms in \Cube{}.
+
+\begin{definition}[\Cube{}]
   \begin{align*}
-    \text{obj}(\Cube) & := \sq{n}                                                      \\
-    \text{mor}(\Cube) & := \sq{m} \rightarrow \sq{n}, \text{strictly order-preserving}
+    obj(\Cube{}) & := \I{n}                                           \\
+    mor(\Cube{}) & := \delta^\epsilon_i : \I{n + 1} \rightarrow \I{n}
+  \end{align*}
+
+  where $\delta^\epsilon_i$ must satisfy the corresponding face map condition:
+
+  \begin{equation*}
+    \delta^\epsilon_i \delta^\omega_j = \delta^\omega_{j - 1} \delta^\epsilon_i
+  \end{equation*}
+
+  where $\epsilon$ and $\omega$ correspond to opposite faces.
+\end{definition}
+
+\begin{definition}[\CSet]
+  Just as in \SSet, we define semi-cubical sets as the functor category:
+
+  \begin{equation*}
+    \CSet := \Set^{\Cube{}^{op}}
+  \end{equation*}
+\end{definition}
+
+Then, the first viewpoint corresponding to the one in simplicial sets is uninteresting for our purposes. Let us, instead, elaborate on the second viewpoint:
+
+\begin{definition}[$\CSet$ in terms of objects and morphisms]
+  \begin{align*}
+    obj(\CSet) & := X_n                                                   \\
+    mor(\CSet) & := X_\lambda, \text{where $\lambda$ is \Cube{}-morphism}
+  \end{align*}
+
+  where we term $X_n$ as the $n$-cubex, and $X_\lambda$ as the ``face map'', defined similarly:
+
+  \begin{align*}
+    X_n       & := X(\I{n}) = \text{Hom}(\I{n}, X), \text{where X is the semi-cubical set} \\
+    X_\lambda & := X(\lambda)
   \end{align*}
 \end{definition}
 
@@ -283,25 +334,25 @@ When reflexivities are excepted, we call the structure thus defined \emph{bare t
 
 \begin{eqntable}{\label{tab:barecubicalsetcoherences} Definition of a homogeneous bare cubical set (commutation of $q$-th projection and $r$-th projection)}
 
-  \eqnline{\cohbox{l,\epsilon,\epsilon',q,r}{n,p,[p \leq r \leq q \leq n - 2]}}{\makecell{(D:\partialcubset{l}{n}) \\ (d:\mybox{l}{n,p}(D))}}{:}{\makecell{\downbox{l,\epsilon,q}{n-1,p}(\hd(D))(\downbox{l,\epsilon',r}{n,p}(D)(d)) \\ \eqett \downbox{l,\epsilon',r}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))}}
+  \eqnline{\cohbox{l,\epsilon,\omega,q,r}{n,p,[p \leq r \leq q \leq n - 2]}}{\makecell{(D:\partialcubset{l}{n}) \\ (d:\mybox{l}{n,p}(D))}}{:}{\makecell{\downbox{l,\epsilon,q}{n-1,p}(\hd(D))(\downbox{l,\omega,r}{n,p}(D)(d)) \\ \eqett \downbox{l,\omega,r}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))}}
 
-  \eqnline{\cohbox{l,\epsilon,\epsilon',q,r}{n,0}}{D~\unitpoint}{\defeq}{\reflett}{(\unitpoint)}
+  \eqnline{\cohbox{l,\epsilon,\omega,q,r}{n,0}}{D~\unitpoint}{\defeq}{\reflett}{(\unitpoint)}
 
-  \eqnline{\cohbox{l,\epsilon,\epsilon',q,r}{n,p'+1}}{D~(d,b)}{\defeq}{(\cohbox{l,\epsilon,\epsilon',q,r}{n,p'}(D)(d),\cohlayer{l,\epsilon,\epsilon',q,r}{n,p'}(D)(d)(b))}
-
-  \\
-
-  \eqnline{\cohlayer{l,\epsilon,\epsilon',q,r}{n,p,[p < r \leq q \leq n - 2]}}{\makecell{(D:\partialcubset{l}{n}) \\ (d:\mybox{l}{n,p}(D)) \\(b:\mylayer{l}{n,p}(D)(d))}}{:}{\makecell{\downlayer{l,\epsilon,q}{n-1,p}(\hd(D))(\downbox{l,\epsilon',r}{n,p}(D)(d))(\downlayer{l,\epsilon',r}{n,p}(D)(d)(b)) \\ \eqett \downlayer{l,\epsilon',r}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))(\downlayer{l,\epsilon,q+1}{n,p}(D)(d)(b))}}
-
-  \eqnline{\cohlayer{l,\epsilon,\epsilon',q,r}{n,p}}{D~d~c}{\defeq}{\makecell{(\cohcube{l,\epsilon,\epsilon',q-1,r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,L,p}{n,p}(D)(d))(c_L), \\ \;\cohcube{l,\epsilon,\epsilon',q-1,r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,R,p}{n,p}(D)(d))(c_R))}}
+  \eqnline{\cohbox{l,\epsilon,\omega,q,r}{n,p'+1}}{D~(d,b)}{\defeq}{(\cohbox{l,\epsilon,\omega,q,r}{n,p'}(D)(d),\cohlayer{l,\epsilon,\omega,q,r}{n,p'}(D)(d)(b))}
 
   \\
 
-  \eqnline{\cohcube{l,\epsilon,\epsilon',q,r}{n,p,[p \leq r \leq q \leq n - 2]}}{\makecell{(D:\partialcubset{l}{n}) \\ (E:\mycubsetcomp{l}{n}(D)) \\ (d:\mybox{l}{n,p}(D)) \\ (b:\mycube{l}{n,p}(D)(E)(d))}}{:}{\makecell{\downcube{l,\epsilon,q}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon',r}{n,p}(D)(d))(\downcube{l,\epsilon',r}{n,p}(D)(E)(d)(b)) \\ \eqett \downcube{l,\epsilon',r}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))(\downcube{l,\epsilon,q+1}{n,p}(D)(E)(d)(b))}}
+  \eqnline{\cohlayer{l,\epsilon,\omega,q,r}{n,p,[p < r \leq q \leq n - 2]}}{\makecell{(D:\partialcubset{l}{n}) \\ (d:\mybox{l}{n,p}(D)) \\(b:\mylayer{l}{n,p}(D)(d))}}{:}{\makecell{\downlayer{l,\epsilon,q}{n-1,p}(\hd(D))(\downbox{l,\omega,r}{n,p}(D)(d))(\downlayer{l,\omega,r}{n,p}(D)(d)(b)) \\ \eqett \downlayer{l,\omega,r}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))(\downlayer{l,\epsilon,q+1}{n,p}(D)(d)(b))}}
 
-  \eqnline{\cohcube{l,\epsilon,\epsilon',q,r}{n,p,[p=r]}}{D~E~d~(b,\_)}{\defeq}{\reflett(\downcube{l,\epsilon,q-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon',p}{n,p}(D)(d))(b_{\epsilon}))}
+  \eqnline{\cohlayer{l,\epsilon,\omega,q,r}{n,p}}{D~d~c}{\defeq}{\makecell{(\cohcube{l,\epsilon,\omega,q-1,r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,L,p}{n,p}(D)(d))(c_L), \\ \;\cohcube{l,\epsilon,\omega,q-1,r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,R,p}{n,p}(D)(d))(c_R))}}
 
-  \eqnline{\cohcube{l,\epsilon,\epsilon',q,r}{n,p,[p<r]}}{D~E~d~(b,c)}{\defeq}{(\cohlayer{l,\epsilon,\epsilon',q,r}{n,p}(D)(d)(b),\;\cohcube{l,\epsilon,\epsilon',q,r}{n,p+1}(D)(E)(d,b)(c))}
+  \\
+
+  \eqnline{\cohcube{l,\epsilon,\omega,q,r}{n,p,[p \leq r \leq q \leq n - 2]}}{\makecell{(D:\partialcubset{l}{n}) \\ (E:\mycubsetcomp{l}{n}(D)) \\ (d:\mybox{l}{n,p}(D)) \\ (b:\mycube{l}{n,p}(D)(E)(d))}}{:}{\makecell{\downcube{l,\epsilon,q}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\omega,r}{n,p}(D)(d))(\downcube{l,\omega,r}{n,p}(D)(E)(d)(b)) \\ \eqett \downcube{l,\omega,r}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))(\downcube{l,\epsilon,q+1}{n,p}(D)(E)(d)(b))}}
+
+  \eqnline{\cohcube{l,\epsilon,\omega,q,r}{n,p,[p=r]}}{D~E~d~(b,\_)}{\defeq}{\reflett(\downcube{l,\epsilon,q-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\omega,p}{n,p}(D)(d))(b_{\epsilon}))}
+
+  \eqnline{\cohcube{l,\epsilon,\omega,q,r}{n,p,[p<r]}}{D~E~d~(b,c)}{\defeq}{(\cohlayer{l,\epsilon,\omega,q,r}{n,p}(D)(d)(b),\;\cohcube{l,\epsilon,\omega,q,r}{n,p+1}(D)(E)(d,b)(c))}
 \end{eqntable}
 
 \subsection{Derived notions}
@@ -390,6 +441,9 @@ Figure~\ref{tab:macros} also shows how to compute the faces of a box or of a cub
 
   \bibitem{Riehl11}
   Riehl, E. (2011). A leisurely introduction to simplicial sets. \textit{Unpublished expository article available online at \href{http://www.math.harvard.edu/~eriehl}{http://www.math.harvard.edu/~eriehl}}.
+
+  \bibitem{Antolini00}
+  Antolini, R. (2000). Cubical structures, homotopy theory. \textit{Annali di Matematica pura ed applicata, 178}(1), 317-324.
 
   \bibitem{Herbelin15}
   Herbelin, H. (2015). A dependently-typed construction of semi-simplicial types. \textit{Mathematical Structures in Computer Science, 25}(5), 1116-1131.
