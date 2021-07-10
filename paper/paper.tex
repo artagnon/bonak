@@ -1,10 +1,8 @@
 \documentclass[10pt]{amsart}
 
 \usepackage[allbordercolors={.192157 .76862 .28627}]{hyperref} % Emerald Green
-\usepackage{bookmark, titling, fontspec, xargs, multirow, polyglossia, luacode, amssymb, listings, color, soulutf8, graphicx, tcolorbox, tabularx, tikz, booktabs, setspace, makecell}
+\usepackage{bookmark, fontspec, xargs, multirow, polyglossia, luacode, amssymb, listings, color, soulutf8, graphicx, tcolorbox, tabularx, tikz, booktabs, setspace, makecell, caption, floatrow}
 \usepackage[margin=0.3in]{geometry}
-
-\newcommand{\highlight}[1]{\emph{#1}}
 
 % Head and tail
 \newcommand{\hd}{\ensuremath{\mathsf{hd}}}
@@ -69,6 +67,16 @@
 % A block in the eqntable environment
 \newcommand{\eqnline}[4]{$#1$ & $#2$ & $#3$ & $#4$ \\}
 \newcommand{\mc}[1]{\multicolumn{4}{c}{\textit{#1}} \\\\}
+
+% Table caption set up
+\DeclareCaptionFormat{hfillstart}{\hfill#1#2#3\par}
+\DeclareCaptionFont{mdit}{\mdseries\itshape}
+\captionsetup[table]{
+  justification=centering,
+  font=bf,
+  labelfont=mdit,
+}
+\floatsetup[table]{capposition=bottom}
 
 \title{An indexed construction of semi-cubical types}
 \author{Ramkumar Ramachandra}
