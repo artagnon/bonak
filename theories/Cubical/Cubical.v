@@ -32,14 +32,14 @@ Record PartialBox (n p : nat) (csp : Type@{l'})
   subbox {q} {Hp : p.+1 <= q.+1} (Hq : q.+1 <= n) (ε : side) {D : csp} :
   box (↓ (Hp ↕ Hq)) D -> PB.(box') (Hp ↕ Hq) D;
   cohbox {q r} {Hpr : p.+2 <= r.+2} {Hr : r.+2 <= q.+2} {Hq : q.+2 <= n}
-  {ε : side} {ε' : side} {D: csp} (d : box (↓ (⇓ Hpr ↕ (↓ (Hr ↕ Hq)))) D) :
-  PB.(subbox') (Hp := Hpr ↕ Hr) Hq ε (subbox (Hp := ⇓ Hpr) (↓ (Hr ↕ Hq)) ε' d) =
-  (PB.(subbox') (Hp := Hpr) (Hr ↕ Hq) ε' (subbox (Hp := ↓ (Hpr ↕ Hr)) Hq ε d));
+  {ε : side} {ω : side} {D: csp} (d : box (↓ (⇓ Hpr ↕ (↓ (Hr ↕ Hq)))) D) :
+  PB.(subbox') (Hp := Hpr ↕ Hr) Hq ε (subbox (Hp := ⇓ Hpr) (↓ (Hr ↕ Hq)) ω d) =
+  (PB.(subbox') (Hp := Hpr) (Hr ↕ Hq) ω (subbox (Hp := ↓ (Hpr ↕ Hr)) Hq ε d));
 }.
 
 Arguments box {n p csp PB} _ Hp D.
 Arguments subbox {n p csp PB} _ {q Hp} Hq ε {D}.
-Arguments cohbox {n p csp PB} _ {q r Hpr Hr Hq ε ε' D} d.
+Arguments cohbox {n p csp PB} _ {q r Hpr Hr Hq ε ω D} d.
 
 Record PartialCubeBase (n : nat) (csp : Type@{l'})
   (PB : PartialBoxBase n (@csp)) := {
@@ -70,17 +70,17 @@ Record PartialCube (n p : nat) (csp : Type@{l'}) {PB : PartialBoxBase n (@csp)}
     PC.(cube') (Box.(subbox) Hq ε d) ;
   cohcube {q r} {Hpr : p.+2 <= r.+2}
     {Hr : r.+2 <= q.+2} {Hq : q.+2 <= n}
-    (ε : side) (ε' : side) {D : csp}
+    (ε : side) (ω : side) {D : csp}
     (E : Box.(box) (le_refl n) D -> Type@{l})
     (d : Box.(box) (↓ (⇓ Hpr ↕ (↓ (Hr ↕ Hq)))) D) (b : cube E d) :
     rew (Box.(cohbox) d) in
-    (PC.(subcube') Hq ε (subcube (↓ (Hr ↕ Hq)) ε' b)) =
-    (PC.(subcube') (Hp := Hpr) (Hr ↕ Hq) ε' (subcube Hq ε b))
+    (PC.(subcube') Hq ε (subcube (↓ (Hr ↕ Hq)) ω b)) =
+    (PC.(subcube') (Hp := Hpr) (Hr ↕ Hq) ω (subcube Hq ε b))
 }.
 
 Arguments cube {n p csp PB PC Box} _ {Hp D} E.
 Arguments subcube {n p csp PB PC Box} _ {q Hp} Hq ε {D} E {d} b.
-Arguments cohcube {n p csp PB PC Box} _ {q r Hpr Hr Hq ε ε' D E d} b.
+Arguments cohcube {n p csp PB PC Box} _ {q r Hpr Hr Hq ε ω D E d} b.
 
 (* Cube consists of cubesetprefix, a box built out of partial boxes,
   a cube built out of partial cubes *)
@@ -145,11 +145,11 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
         change (le_refl p.+2 ↕ Hp) with Hp in cohboxSn.
         change (⇓ le_refl p.+2) with (le_refl p.+1) in cohboxSn.
         split.
-        ++ specialize cohboxSn with (ε' := L) (d := d). (* The side L *)
+        ++ specialize cohboxSn with (ω := L) (d := d). (* The side L *)
            rewrite <- cohboxSn.
            eapply (C.(Cube).(subcube) (Hp := ⇓ Hp)) with (Hq := ⇓ Hq) in CL.
            exact CL.
-        ++ specialize cohboxSn with (ε' := R) (d := d). (* The side R *)
+        ++ specialize cohboxSn with (ω := R) (d := d). (* The side R *)
            rewrite <- cohboxSn.
            eapply (C.(Cube).(subcube) (Hp := ⇓ Hp)) with (Hq := ⇓ Hq) in CR.
            exact CR.
@@ -159,9 +159,9 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
          eapply le_contra. eassumption.
       - (* r = S (S _) *)
         pose (P := (rew cohboxSn r _ (le_refl p.+2) _ _ _ _ _ d' in
-                     C.(Cube).(subcube) _ ε' _ CL,
+                     C.(Cube).(subcube) _ ω _ CL,
                    rew cohboxSn _ _ (le_refl p.+2) _ _ _ _ _ d' in
-                     C.(Cube).(subcube) _ ε' _ CR)).
+                     C.(Cube).(subcube) _ ω _ CR)).
         admit.
 Admitted.
 End Cubical.
