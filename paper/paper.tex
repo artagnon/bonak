@@ -1,7 +1,7 @@
 \documentclass[10pt, titlepage]{amsart}
 
 \usepackage[allbordercolors={.192157 .76862 .28627}]{hyperref} % Emerald Green
-\usepackage{bookmark, fontspec, xargs, multirow, polyglossia, luacode, amssymb, listings, color, soulutf8, graphicx, tcolorbox, tabularx, tikz, tikz-cd, booktabs, setspace, makecell, caption, floatrow, amsthm, lmodern}
+\usepackage{bookmark, fontspec, xargs, multirow, polyglossia, luacode, amssymb, listings, color, soulutf8, graphicx, tcolorbox, tabularx, tikz, tikz-cd, booktabs, setspace, makecell, caption, floatrow, amsthm, mathrsfs, lmodern}
 \usepackage[margin=0.3in]{geometry}
 
 % Head and tail
@@ -98,7 +98,10 @@
 \newcommand{\I}[1]{\ensuremath{\mathsf{I}^{#1}}}
 \newcommand{\CSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\square}}}}
 
-\title{An indexed construction of semi-cubical types}
+% Type theory
+\newcommand{\U}{\ensuremath{\mathscr{U}}}
+
+\title{An iterated Grothendieck construction of semi-cubical types}
 \author{Ramkumar Ramachandra}
 \author{Hugo Herbelin}
 
@@ -268,8 +271,8 @@ where the filling conditions are conflated with the cube itself. $\Simplex{n}$ c
 
   $$
     \begin{tikzcd}
-      1 \arrow[r, dash] & 1' \arrow[d, dash] \\
-      0 \arrow[u, dash] & 0' \arrow[l, dash]
+      (0, 1) \arrow[r, dash] & (1, 1) \arrow[d, dash] \\
+      (0, 0) \arrow[u, dash] & (1, 0) \arrow[l, dash]
     \end{tikzcd}
   $$
 \end{example}
@@ -299,7 +302,7 @@ Here, $\I{n}$ serves the purpose of $\sq{n}$, but this change will cascade into 
   \end{equation*}
 \end{definition}
 
-Then, the first viewpoint corresponding to the one in simplicial sets is uninteresting for our purposes. Let us, instead, elaborate on the second viewpoint:
+Or, in terms of objects and morphisms:
 
 \begin{definition}[$\CSet$ in terms of objects and morphisms]
   \begin{align*}
@@ -310,7 +313,7 @@ Then, the first viewpoint corresponding to the one in simplicial sets is uninter
   where we term $X_n$ as the $n$-cubex, and $X_\lambda$ as the ``face map'', defined similarly:
 
   \begin{align*}
-    X_n       & := X(\I{n}) = \text{Hom}(\I{n}, X), \text{where X is the semi-cubical set} \\
+    X_n       & := X(\I{n}), \text{where X is the semi-cubical set} \\
     X_\lambda & := X(\lambda)
   \end{align*}
 \end{definition}
@@ -318,6 +321,23 @@ Then, the first viewpoint corresponding to the one in simplicial sets is uninter
 \begin{theorem}[$\CSet$ does not admit degeneracies]
   This is proved in \cite{Antolini00}.
 \end{theorem}
+
+\section{Iterated Grothendieck construction}
+
+The Grothendieck construction provides a correspondence between a fibered representation, and an indexed representation.
+
+$$
+  \begin{tikzcd}
+    X_0 : \U & X_1 : \U \arrow[l, "\delta^\epsilon_0" description, shift left=2] \arrow[l, "\delta^\omega_0" description, shift right=2] & X_2 : \U \arrow[l, "\delta^\epsilon_1" description, shift left=6] \arrow[l, "\delta^\epsilon_0" description, shift left=2] \arrow[l, "\delta^\omega_0" description, shift right=2] \arrow[l, "\delta^\omega_1" description, shift right=6] & \ldots
+  \end{tikzcd}
+$$
+
+\begin{align*}
+  X_0 & : \U                                                                                                      \\
+  X_1 & : X_0 \times X_0 \rightarrow \U                                                                           \\
+  X_2 & : \forall a b c d, X_1 : ab \rightarrow X_1 : bc \rightarrow X_1 : cd \rightarrow X_1 : da \rightarrow \U \\
+  \ldots
+\end{align*}
 
 \section{Semi-cubical sets}
 
@@ -493,19 +513,19 @@ Table \ref{tab:macros} also shows how to compute the faces of a box or of a cube
 \end{eqntable}
 
 \begin{thebibliography}{10}
-  \bibitem{Bezem14}
+  \bibitem[Bez]{Bezem14}
   Bezem, M., Coquand, T., \& Huber, S. (2014, July). A model of type theory in cubical sets. \textit{In 19th International Conference on Types for Proofs and Programs (TYPES 2013)} (Vol. 26, pp. 107-128). Wadern, Germany: Schloss Dagstuhl–Leibniz Zentrum fuer Informatik.
 
-  \bibitem{Friedman08}
+  \bibitem[Fri]{Friedman08}
   Friedman, G. (2008). An elementary illustrated introduction to simplicial sets. \textit{arXiv preprint arXiv:0809.4221}.
 
-  \bibitem{Riehl11}
+  \bibitem[Rie]{Riehl11}
   Riehl, E. (2011). A leisurely introduction to simplicial sets. \textit{Unpublished expository article available online at \href{http://www.math.harvard.edu/~eriehl}{http://www.math.harvard.edu/~eriehl}}.
 
-  \bibitem{Antolini00}
+  \bibitem[Ant]{Antolini00}
   Antolini, R. (2000). Cubical structures, homotopy theory. \textit{Annali di Matematica pura ed applicata, 178}(1), 317-324.
 
-  \bibitem{Herbelin15}
+  \bibitem[Her]{Herbelin15}
   Herbelin, H. (2015). A dependently-typed construction of semi-simplicial types. \textit{Mathematical Structures in Computer Science, 25}(5), 1116-1131.
 \end{thebibliography}
 
