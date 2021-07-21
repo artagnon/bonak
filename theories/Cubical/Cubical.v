@@ -49,8 +49,8 @@ Record PartialCubeBase (n : nat) (csp : Type@{l'})
     PB.(box'') Hp D -> Type@{l} ;
   subcube' {p q} {Hp : p.+2 <= q.+2}
     (Hq : q.+2 <= n) (ε : side) {D : csp}
-    {d : PB.(box') (↓ (Hp ↕ Hq)) D} (b : cube' d) :
-    cube'' (PB.(subbox') Hq ε d) ;
+    {d : PB.(box') (↓ (Hp ↕ Hq)) D} :
+    cube' d -> cube'' (PB.(subbox') Hq ε d) ;
 }.
 
 Arguments cube' {n csp PB} _ {p Hp D} d.
@@ -96,9 +96,20 @@ Class Cubical (n : nat) := {
     Box.(box) Hp D = {d : Box.(box) (↓ Hp) D &
                   (PC.(cube') (Box.(subbox) (Hp := le_refl p.+1) _ L d) *
                   PC.(cube') (Box.(subbox) (Hp := le_refl p.+1) _ R d))%type } ;
+  eqBoxSp' {D : csp} {p} (Hp : p.+2 <= n) :
+    PB.(box') Hp D = {d : PB.(box') (↓ Hp) D &
+                (PC.(cube'') (PB.(subbox') (Hp := le_refl p.+2) _ L d) *
+                PC.(cube'') (PB.(subbox') (Hp := le_refl p.+2) _ R d))%type } ;
   eqSubbox0 {q} {Hp : 1 <= q.+1} (Hq : q.+1 <= n) (ε : side) (D : csp) :
     Box.(subbox) (Hp := Hp) Hq ε (rew <- [id] eqBox0 (D := D) in tt) =
-      (rew <- [id] eqBox0' in tt);
+      (rew <- [id] eqBox0' in tt) ;
+  eqSubboxSn {ε p q r} {D : csp} {Hq : q.+1 <= n} {Hr : r.+2 <= q.+1}
+    {Hpr : p.+2 <= r.+2} {d : Box.(box) (p := p) _ D} {CL CR} :
+    Box.(subbox) (Hp := (Hpr ↕ Hr)) Hq ε
+    (rew <- [id] eqBoxSp (↓ (Hpr ↕ Hr ↕ Hq)) in
+    (d; (CL, CR))) = (rew <- [id] eqBoxSp' (Hpr ↕ Hr ↕ Hq) in
+    (Box.(subbox) _ _ d; (PC.(subcube') _ _ CL,
+    PC.(subcube') _ _ CR))) ;
 }.
 
 Arguments csp {n} _.
