@@ -103,13 +103,16 @@ Class Cubical (n : nat) := {
   eqSubbox0 {q} {Hp : 1 <= q.+1} (Hq : q.+1 <= n) (ε : side) (D : csp) :
     Box.(subbox) (Hp := Hp) Hq ε (rew <- [id] eqBox0 (D := D) in tt) =
       (rew <- [id] eqBox0' in tt) ;
-  eqSubboxSn {ε p q r} {D : csp} {Hq : q.+1 <= n} {Hr : r.+2 <= q.+1}
-    {Hpr : p.+2 <= r.+2} {d : Box.(box) (p := p) _ D} {CL CR} :
-    Box.(subbox) (Hp := (Hpr ↕ Hr)) Hq ε
-    (rew <- [id] eqBoxSp (↓ (Hpr ↕ Hr ↕ Hq)) in
-    (d; (CL, CR))) = (rew <- [id] eqBoxSp' (Hpr ↕ Hr ↕ Hq) in
-    (Box.(subbox) _ _ d; (PC.(subcube') _ _ CL,
-    PC.(subcube') _ _ CR))) ;
+  eqSubboxSn {ε p q r} {D : csp} {Hq : q.+2 <= n} {Hpq : p.+2 <= q.+2}
+    {d} {CL CR} :
+    Box.(subbox) Hq ε
+    (rew <- [id] eqBoxSp (↓ (Hpq ↕ Hq)) in
+      (d; (CL, CR))) = (rew <- [id] eqBoxSp' (Hpq ↕ Hq) in
+      (Box.(subbox) (Hp := ↓ Hpq) (↓ Hq) ε d;
+      (rew <- [PC.(cube'')] Box.(cohbox) (Hq := Hpq ↕ Hq) _ in
+      PC.(subcube') Hq ε CL,
+       rew <- [PC.(cube'')] Box.(cohbox) (Hq := Hpq ↕ Hq) _ in
+       PC.(subcube') Hq ε CR))) ;
 }.
 
 Arguments csp {n} _.
