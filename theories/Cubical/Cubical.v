@@ -122,6 +122,7 @@ Arguments PB {n} _.
 Arguments PC {n} _.
 Arguments Box {n} _ {p}.
 Arguments Cube {n} _ {p}.
+Arguments eqSubboxSn {n} _ {ε p q D Hpq Hq d CL CR}.
 
 Definition mkcsp {n : nat} {C : Cubical n} : Type@{l'} :=
   { D : C.(csp) & C.(Box).(box) (le_refl n) D -> Type@{l} }.
@@ -171,13 +172,13 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
            exact CR.
     * simpl; intros. (* cohboxSn *)
       destruct d as (d', (CL, CR)); destruct r.
-      -  exfalso. clear -Hpr. repeat apply le_S_both in Hpr. (* r = S O *)
-         eapply le_contra. eassumption.
-      - (* r = S (S _) *)
-        pose (P := (rew cohboxSn r _ (le_refl p.+2) _ _ _ _ _ d' in
-                     C.(Cube).(subcube) _ ω _ CL,
-                   rew cohboxSn _ _ (le_refl p.+2) _ _ _ _ _ d' in
-                     C.(Cube).(subcube) _ ω _ CR)).
+      exfalso. clear -Hpr. repeat apply le_S_both in Hpr. (* r = S O *)
+      eapply le_contra.
+      - eassumption.
+      - destruct q. (* r = S (S _) *)
+        exfalso. clear -Hr. repeat apply le_S_both in Hr. eapply le_contra.
+        ++ eassumption.
+        ++ rewrite <- le_trans_comm7. rewrite eqSubboxSn.
         admit.
 Admitted.
 End Cubical.
