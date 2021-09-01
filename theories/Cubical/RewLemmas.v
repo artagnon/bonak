@@ -3,7 +3,7 @@ Import Logic.EqNotations.
 Require Import Aux.
 
 Section RewLemmas.
-  Lemma rew_rew A (x y : A) (H : x = y) P (a : P x) :
+  Lemma rew_rew A (x y : A) (H : x = y) P {a : P x} :
   rew <- [P] H in rew [P] H in a = a.
   destruct H; reflexivity.
   Defined.
@@ -70,5 +70,11 @@ Section RewLemmas.
     intros.
     destruct H0.
     assumption.
+  Defined.
+
+  Lemma rew_pair : forall A (P Q : A->Type) a b (x:P a) (y:Q a) (H:a=b),
+    (rew H in x, rew H in y) = rew [fun a => (P a * Q a)%type] H in (x,y).
+  Proof.
+  destruct H. reflexivity.
   Defined.
 End RewLemmas.

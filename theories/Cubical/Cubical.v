@@ -74,9 +74,10 @@ Record PartialCube (n p : nat) (csp : Type@{l'}) {PB : PartialBoxBase n (@csp)}
     (E : Box.(box) (le_refl n) D -> Type@{l})
     (d : Box.(box) (↓ (⇓ Hpr ↕ (↓ (Hr ↕ Hq)))) D) (b : cube E d) :
     rew (Box.(cohbox) d) in
-    PC.(subcube') (Hp := Hpr ↕ Hr) Hq ε (subcube (Hp := ⇓ Hpr)
-      (↓ (Hr ↕ Hq)) ω b) = (PC.(subcube') (Hp := Hpr) (Hr ↕ Hq) ω
-      (subcube (Hp := ↓ (Hpr ↕ Hr)) Hq ε b));
+    PC.(subcube') (Hp := Hpr ↕ Hr) Hq
+    ε (subcube (Hp := ⇓ Hpr) (↓ (Hr ↕ Hq)) ω b) =
+      (PC.(subcube') (Hp := Hpr) (Hr ↕ Hq)
+      ω (subcube (Hp := ↓ (Hpr ↕ Hr)) Hq ε b));
 }.
 
 Arguments cube {n p csp PB PC Box} _ {Hp D} E.
@@ -178,7 +179,14 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
       - destruct q. (* r = S (S _) *)
         exfalso. clear -Hr. repeat apply le_S_both in Hr. eapply le_contra.
         ++ eassumption.
-        ++ rewrite <- le_trans_comm7. rewrite eqSubboxSn.
-        admit.
+        ++ rewrite <- le_trans_comm7. repeat rewrite eqSubboxSn. f_equal.
+           simpl in cohboxSn. unshelve eapply eq_existT_curried.
+           exact (cohboxSn _ _ (↓ Hpr) Hr Hq _ _ _ _).
+           rewrite <- rew_pair. apply eq_pair.
+          ** eapply eq_trans with (rew (eq_trans _ _) in _).
+             Import Logic.EqNotations. (* Delicate rew rewriting *)
+             -- rewrite rew_map. apply rew_compose.
+             --  admit.
+          ** admit.
 Admitted.
 End Cubical.

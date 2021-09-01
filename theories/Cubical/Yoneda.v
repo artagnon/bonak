@@ -119,4 +119,8 @@ Theorem le_contra {n}: S n <= O -> False.
   assumption.
 Defined.
 
+Lemma eq_pair {A B : Type} {u1 v1 : A} {u2 v2 : B}
+              (p : u1 = v1) (q : u2 = v2) : (u1, u2) = (v1, v2).
+  now destruct p, q.
+Defined.
 End LeYoneda.
