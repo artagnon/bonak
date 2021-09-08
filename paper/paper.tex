@@ -1,8 +1,8 @@
-\documentclass[10pt, titlepage]{amsart}
+\documentclass[10pt]{amsart}
 
 \usepackage[allbordercolors={.192157 .76862 .28627}]{hyperref} % Emerald Green
-\usepackage{bookmark, fontspec, xargs, multirow, polyglossia, luacode, amssymb, listings, color, soulutf8, graphicx, tcolorbox, tabularx, tikz, tikz-cd, booktabs, setspace, makecell, caption, floatrow, amsthm, mathrsfs, lmodern}
-\usepackage[margin=0.3in]{geometry}
+\usepackage{amsthm, amssymb, amsaddr, fancyhdr, bookmark, fontspec, xargs, multirow, polyglossia, luacode, listings, color, soulutf8, tcolorbox, tabularx, tikz-cd, booktabs, setspace, makecell, caption, floatrow, mathrsfs, xpatch, lmodern}
+\usepackage[hmargin=0.4in, vmargin=0.8in, headheight=10pt]{geometry}
 
 % Head and tail
 \newcommand{\hd}{\ensuremath{\mathsf{hd}}}
@@ -87,11 +87,11 @@
 
 % Simplicial sets
 \newcommand{\Set}{\ensuremath{\mathsf{Set}}}
+\newcommand{\op}{\ensuremath{\mathsf{op}}}
 \newcommand{\Simplex}[1]{\ensuremath{\boldsymbol{\Delta^{#1}}}}
 \newcommand{\DeltaHat}{\ensuremath{\hat{\boldsymbol{\Delta}}}}
 \newcommand{\SSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\Delta}}}}
 \newcommand{\sq}[1]{\ensuremath{\mathsf{[#1]}}}
-\newcommand{\sqsn}{\ensuremath{\mathsf{[1 \ldots n]}}}
 
 % Cubical sets
 \newcommand{\Cube}[1]{\ensuremath{\boldsymbol{\square^{#1}}}}
@@ -101,37 +101,198 @@
 % Type theory
 \newcommand{\U}{\ensuremath{\mathscr{U}}}
 
+% Roman numerals for chapters
+\renewcommand{\thesection}{\Roman{section}}
+
+% Fancy headers
+\pagestyle{fancy} % choose the "fancy" pagestyle
+\fancyhf{}        % clear all headers and footers
+% Now set the headers
+\fancyhead[LE,RO]{\footnotesize\thepage}
+\fancyhead[LO,RE]{\footnotesize\leftmark}
+\makeatletter
+\xapptocmd{\@sect}{\csname #1mark\endcsname{#7}}{}{}
+\makeatother
+
+% Subsection centering
+\makeatletter
+\def\subsection{\@startsection{subsection}{2}
+  \z@{.5\linespacing\@plus.7\linespacing}{.6\baselineskip}{\centering}}
+\makeatother
+
+% Nested numbering of sections and subsections
+\makeatletter
+\newif\ifsection
+\newif\ifsubsection
+\preto\section{\sectiontrue\subsectionfalse}
+\preto\subsection{\sectionfalse\subsectiontrue}
+\patchcmd{\@xsect}% <cmd>
+  {\ignorespaces}% <search>
+  {\ifsubsection
+   \numberwithin{definition}{subsection}
+   \else
+   \numberwithin{definition}{section}
+   \fi
+   \setcounter{definition}{0}\relax\ignorespaces}% <replace>
+  {}{}% <success><failure>
+\makeatother
+
 \title{An iterated Grothendieck construction of semi-cubical types}
 \author{Ramkumar Ramachandra}
+\address{Université de Paris}
 \author{Hugo Herbelin}
+\address{Institut de Recherche en Informatique Fondamentale}
 
 \begin{document}
 \begin{abstract}
-  We present a dependently-typed construction of semi-cubical sets, along with an accompanying artifact in Coq.
+  A fresh approach to formalizing semi-cubical sets in dependent type theory with extensional equality. The approach could be described as a \emph{reverse iterated Grothendieck construction}, that is crisp and concise. The accompanying artifact is a Coq formalization that uses highly sophisticated rewriting techniques and pushes the boundary of proof assistant technology.
 \end{abstract}
 \maketitle
 \tableofcontents
+\newpage
 
 \section{Introduction}
-
-Cubical type theory is an extension of dependent type theory that provides a computational interpretation of Voevodsky's Univalence Axiom. Several strides in the field have been made since \cite{Bezem14} in constructing a model of type theory for cubical sets, and we present another approach to the construction, with a rigorous mathematical foundation. Though motivated by homotopy type theory, construction of the path type and transport are beyond the scope of our work; we merely formalize semi-cubical sets. Our secondary contribution is a mechanically checked proof of our construction in vanilla Coq~\footnote{\href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak}}.
+Cubical type theory is an extension of dependent type theory that provides a computational interpretation of Voevodsky's \emph{univalence axiom}. Several strides in the field have been made since \cite{Bezem14} in constructing a model of type theory for cubical sets, and we present another approach to the construction, with a sound motivation. Although our work is motivated by homotopy type theory, construction of the \emph{path type} and \emph{transport} are beyond the scope of our work; we merely formalize semi-cubical sets. Our secondary contribution is a mechanically checked proof of our construction in Coq~\footnote{\href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak}}.
 
 \section{The intutution from \texorpdfstring{\SSet}{simplicial sets}}
-\subsection{Standard definitions}
+Simplicial sets are powerful mathematical objects, that form the basis of much of modern homotopy theory. Their power derives from the fact that their homotopy category is exceptionally well-behaved, and different model structures on them, as we will see in the following chapter. Unlike CW-complexes that rely on pure topological notions like spheres and disks to ``tame'' a topological space, the definition of simplicial sets is purely categorical, and exist independent of topological spaces. The geometric realization and singular complex functors facilitate travelling back-and-forth between simplicial sets and topological spaces, and these are non-trivial constructions. As such, simplicial sets exist purely in the imagination of the mathematician; each simplicial set has an infinite number of degenerate simplices, and they are not particularly well-suited to machine-based representation.
 
-Let us first review a few standard definitions appearing in mathematical literature. We will refer the reader to \cite{Friedman08} and \cite{Riehl11} for more on the subject.
+\subsection{The category of simplicial sets}
+There exists vast mathematical literature on the subject, and we refer the uninitiated reader to \cite{Friedman08} for a gentle introduction with excellent intutions. With these intuitions in place, we proceed with a purely categorical treatment. Emily Riehl's \cite{Riehl11} is a well-written manuscript on the subject.
 
-\begin{notation}[\sq{n}]
-  The notation \sq{n} is used to denote the set of finite ordinals, with preorder structure.
+\begin{definition}[\sq{n}]
+  $\sq{n}$ is used to denote a totally-ordered set of natural numbers less than or equal to $n$, ordered by magnitude.
+
+  \begin{equation*}
+    \sq{n} := \{0, 1, \ldots, n\}
+  \end{equation*}
+
+  We will regard the totally-ordered set as a category in certain contexts, and it should be clear which interpretation we're referring to from the context.
 
   \begin{equation*}
     \sq{n} := 0 \rightarrow 1 \rightarrow \ldots \rightarrow n
   \end{equation*}
+\end{definition}
+
+\begin{definition}[\Simplex{}]
+  The category $\Simplex{}$ is defined in terms of its objects and morphisms:
+
+  \begin{align*}
+    obj(\Simplex{}) & := \sq{n}, \text{regarded as a totally-ordered set}   \\
+    mor(\Simplex{}) & := \sq{m} \rightarrow \sq{n}, \text{order-preserving}
+  \end{align*}
+\end{definition}
+
+\begin{definition}[\SSet]
+  The category of simplicial sets is defined as:
+
+  \begin{equation*}
+    \SSet := \Set^{\Simplex{}^\op}
+  \end{equation*}
+
+  It is a functor category, whose objects and morphisms are given by:
+
+  \begin{align*}
+    obj(\SSet)             & := \text{functors} \; \Simplex{}^\op \rightarrow \Set      \\
+    mor(\SSet)             & := \text{natural transforms between the functors}          \\
+    \text{composition law} & := \text{the usual composition of natural transformations} \\
+  \end{align*}
+\end{definition}
+
+\begin{definition}[\Simplex{n}]
+  The Yoneda embedding of $\sq{n}$ is referred to as the standard $n$-simplex.
+
+  \begin{equation*}
+    \Simplex{n} := y(\sq{n})
+  \end{equation*}
+\end{definition}
+
+\begin{notation}[$\sq{0, \ldots, n}$]
+  The notation $\sq{0, \ldots, n}$ denotes all ordered subsets of \sq{n}.
 \end{notation}
 
-\begin{definition}[Informal definition of \Simplex{n}]
-  The standard $n$-simplex is the prototypical example of a simplicial set,  can be informally defined as all ordered subsets of \sq{n}, also denoted \sqsn.
+With the definition of the category of simplicial sets firmly in place, we look inside a simplicial set to see the data it actually encodes concretely.
+
+\begin{definition}[The data of a simplicial set]
+  A simplicial set is equivalent to the data of a set of $n$-simplices, related to each other via face and degeneracy maps.
+
+  \begin{align*}
+    X_n                             & \;\;\text{a set of n-simplices} \\
+    d_i : X_{n + 1} \rightarrow X_n & \;\;\text{face maps}            \\
+    s_i : X_n \rightarrow X_{n + 1} & \;\;\text{degeneracy maps}      \\
+  \end{align*}
+
+  where $X_n$ is the set of $n$-simplices contained within the simplicial set $X$:
+
+  \begin{align*}
+    X_n & : \Set                                             \\
+    X_n & := X(\sq{n}), \text{where X is the simplicial set} \\
+  \end{align*}
+
+  and $d_i$ and $s_i$ operate on $X_n$ as follows (the hat on $i$ indicates that it is to be omitted):
+
+  \begin{align*}
+    d_i(\sq{0, \ldots, n}) & = \sq{0, \ldots, \hat{i}, \ldots, n} \\
+    s_i(\sq{0, \ldots, n}) & = \sq{0, \ldots, i, i, \ldots, n}    \\
+  \end{align*}
+
+  and $d_i$, $s_i$ are constrained by the following ``simplicial identities'':
+
+  \begin{align*}
+    d_i d_j & = d_{j - 1} d_i, i < j \\
+    s_i s_j & = s_{j + 1} s_i, i < j \\
+    d_i s_j & =
+    \begin{cases}
+      s_{j - 1} d_i & i < j \\
+      id            & i = j \\
+      s_j d_{i - 1} & i > j \\
+    \end{cases}
+  \end{align*}
 \end{definition}
+
+We mentioned degeneracies in the introduction to this section, and we define precisely what a degenerate simplex is now.
+
+\begin{definition}[Degenerate simplex]
+  A simplex is $x \in X_n$ is termed degenerate if it is the image of some degeneracy map $s_i$, and non-degenerate otherwise.
+\end{definition}
+
+\begin{example}[Non-degenerate simplices of \Simplex{n}]
+  The non-degenerate $k$-simplices of $\Simplex{n}$ are the injective maps $\sq{k} \rightarrow \sq{n}$ in $\Simplex{}$. In particular, $\Simplex{n}$ has a unique non-degenerate $n$-simplex.
+\end{example}
+
+As is clear from the above definitions, simplicial sets have an infinite number of degeneracies, and the first step towards drawing a simplicial set is to define a convention that omits these degeneracies in the drawing.
+
+\begin{notation}[Drawing of a simplicial set\label{not:drawsset}]
+  A diagram of the form
+
+  \begin{equation*}
+    \begin{tikzcd}
+      x \arrow[r, "f"] & y
+    \end{tikzcd}
+  \end{equation*}
+
+  in simplicial set $S$ will mean that $f$ is a non-degenerate $1$-simplex, and $x$ and $y$ are $0$-simplices. The simplices have a relationship to the simplicial set $S$ given by the following commutative diagram:
+
+  \begin{equation*}
+    \begin{tikzcd}
+      \Simplex{0} \arrow[dr] \arrow[drr, "x", bend left] & & \\
+      & \Simplex{1} \arrow[r, "f"] & S \\
+      \Simplex{0} \arrow[ur] \arrow[urr, "y"', bend right] & & \\
+    \end{tikzcd}
+  \end{equation*}
+
+  To attempting to draw simplices of dimension greater than $1$, we see that there is a potential ambiguity. Consider the following diagram:
+
+  \begin{equation*}
+    \begin{tikzcd}
+      & \bullet \arrow[ddr] & \\
+      \\
+      \bullet \arrow[uur] \arrow[rr] & & \bullet
+    \end{tikzcd}
+  \end{equation*}
+
+  In the above diagram, it is clear that there are three non-degenerate $1$-simplices, but it is unclear whether there is a non-degenerate $2$-simplex. By convention, when we draw such a diagram, we will assume that there is a non-degenerate $2$-simplex border by the three non-degenerate $1$-simplices. To generalize, we will always assume that there exists a non-degenerate $n$-simplex, when bounded by non-degenerate $(n - 1)$-simplices.
+\end{notation}
 
 \begin{example}[\Simplex{0}, \Simplex{1}, and \Simplex{2}]
   $\Simplex{0}$ can be drawn as:
@@ -154,86 +315,20 @@ Let us first review a few standard definitions appearing in mathematical literat
 
   $$
     \begin{tikzcd}
-      & 1 \arrow[dr] & \\
-      0 \arrow[ur] \arrow[rr] & & 2
+      & 1 \arrow[ddr] & \\
+      \\
+      0 \arrow[uur] \arrow[rr] & & 2
     \end{tikzcd}
   $$
-
-  Note that we only show non-degerate simplices in the figure.
 \end{example}
-
-We will now define the category of simplicial sets, and redefine $\Simplex{n}$ formally.
-
-\begin{definition}[\Simplex{}]
-  The $\Simplex{}$ category can be defined in terms of its objects and morphisms:
-
-  \begin{align*}
-    obj(\Simplex{}) & := \sq{n}                                             \\
-    mor(\Simplex{}) & := \sq{m} \rightarrow \sq{n}, \text{order-preserving}
-  \end{align*}
-\end{definition}
-
-\begin{definition}[\SSet]
-  The category of simplicial sets is then defined as the functor category:
-
-  \begin{equation*}
-    \SSet := \Set^{\Simplex{}^{op}}
-  \end{equation*}
-\end{definition}
-
-\begin{definition}[\Simplex{n}]
-  $\Simplex{n}$ is the Yoneda embedding of \sq{n}.
-
-  \begin{equation*}
-    \Simplex{n} := y(\sq{n})
-  \end{equation*}
-\end{definition}
-
-To concretely define simplicial sets in terms of objects and morphisms, they can be viewed from two different equivalent viewpoints.
-
-\begin{definition}[\SSet, from the first viewpoint]
-  \begin{align*}
-    obj(\SSet) & := \text{functors}, \Simplex{} \rightarrow \Set   \\
-    mor(\SSet) & := \text{natural transforms between the functors}
-  \end{align*}
-\end{definition}
-
-\begin{definition}[\SSet, from the second viewpoint]
-  \begin{align*}
-    obj(\SSet) & := \text{ordered n-simplices}, X_n \\
-    mor(\SSet) & :=
-    \begin{cases}
-      d_i : X_{n + 1} \rightarrow X_n & \text{face maps}       \\
-      s_i : X_n \rightarrow X_{n + 1} & \text{degeneracy maps}
-    \end{cases}
-  \end{align*}
-
-  where $X_n$ is defined as:
-  \begin{equation*}
-    X_n := X(\sq{n}) = \text{Hom}(\Simplex{n}, X), \text{where X is the simplicial set}
-  \end{equation*}
-
-  and $d_i$, $s_i$ are constrained by the following ``gluing conditions'':
-
-  \begin{align*}
-    d_i d_j & = d_{j - 1} d_i, i < j \\
-    s_i s_j & = s_{j + 1} s_i, i < j \\
-    d_i s_j & =
-    \begin{cases}
-      s_{j - 1} d_i & i < j \\
-      id            & i = j \\
-      s_j d_{i - 1} & i > j
-    \end{cases}
-  \end{align*}
-\end{definition}
 
 \subsection{The motivation for \texorpdfstring{\DeltaHat}{delta sets}}
 
-The issue with mechanisation of \SSet, and the corresponding cubical sets, is the degeneracy maps - there are an infinite number of degenerate simplices in any simplicial set, and these degeneracies are not interesting from the point of view of cubical type theory. To remedy this problem, let us instead use \DeltaHat, and proceed towards building, what is called semi-cubical sets in literature. $\DeltaHat$ is identical to \Simplex{}, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are strictly order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. In mathematical literature, there is little interest in studying \DeltaHat, since delta maps are not well-defined, and constructing a $\Set^{\DeltaHat^{op}}$ is inelegant. The objective of this paper is to first generalize delta-sets to the cubical setting, and provide a precise mechanically-checked formalization of the same.
+As hinted earlier, simplicial sets are ill-suited for machine-based representation, due to the infinite number of degenerate simplices that are uninteresting from the point of view of cubical type theory. To remedy this problem, let us instead use \DeltaHat, and proceed towards building, what is called \emph{semi-cubical sets} in literature. $\DeltaHat$ is identical to \Simplex{}, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are \emph{strictly} order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. In mathematical literature, there is little interest in studying \DeltaHat, since delta maps are not well-defined, and constructing a $\Set^{\DeltaHat^{op}}$ is inelegant.
 
 \subsection{Towards semi-cubical sets}
 
-Let us first motivate the definition of semi-cubical sets, as defined in \cite{Antolini00}. On the outset, we might naively attempt to define $\Cube{}$ identically to \DeltaHat, but let us briefly explain why this wouldn't work. If there were morphisms from every $\sq{m}$ to $\sq{n}$, we would end up with:
+We might naively attempt to define $\Cube{}$ identically to \DeltaHat, but let us briefly explain why this wouldn't work, motivating the definition of semi-cubical sets as in \cite{Antolini00}. If there were morphisms from every $\sq{m}$ to \sq{n}, we would end up with:
 
 $$
   \begin{tikzcd}
@@ -277,7 +372,7 @@ where the filling conditions are conflated with the cube itself. $\Simplex{n}$ c
   $$
 \end{example}
 
-Here, $\I{n}$ serves the purpose of $\sq{n}$, but this change will cascade into other definitions. In view of defining a category \CSet, we will restrict the morphisms in \Cube{}.
+Here, $\I{n}$ serves the purpose of \sq{n}, but this change will cascade into other definitions. In view of defining a category \CSet, we will restrict the morphisms in \Cube{}.
 
 \begin{definition}[\Cube{}]
   \begin{align*}
@@ -318,12 +413,15 @@ Or, in terms of objects and morphisms:
   \end{align*}
 \end{definition}
 
-\begin{theorem}[$\CSet$ does not admit degeneracies]
-  This is proved in \cite{Antolini00}.
+\begin{theorem}
+  $\CSet$ does not admit degeneracies.
 \end{theorem}
 
-\section{Iterated Grothendieck construction}
+\begin{proof}
+  The reader is advised to refer to \cite{Antolini00} for the proof.
+\end{proof}
 
+\section{Iterated Grothendieck construction}
 The Grothendieck construction provides a correspondence between a fibered representation, and an indexed representation.
 
 $$
@@ -340,18 +438,16 @@ $$
 \end{align*}
 
 \section{Semi-cubical sets}
-
 In this section, we give the core of the definition of semi-cubical
 sets as the coinductive limit (see table \ref{tab:barecubicalset}) of a
 construction of truncated semi-cubical sets.
 
 \subsection{Truncated semi-cubical sets}
-
 The definition is dispatched over tables \ref{tab:barecubicalsetstructurecore}, \ref{tab:barecubicalsetstructure}, \ref{tab:barecubicalsetfaces} and \ref{tab:barecubicalsetcoherences}. It describes the structure of the underlying higher-dimensional relations on which cubes and boxes are built, together with the definition of homogeneous $n$-boxes, homogeneous $n$-cubes, together with face operations on boxes and cubes, together with commutation properties of the face operations. All are mutually defined as types of the target language ETT. Note that such relational structure, cubes and boxes are relative to a universe. Note the presence of a coherence condition $\cohbox{l}{}$ to ensuring that both sides of the equality in $\downlayer{l}{}$ and $\downcube{l}{}$ are in the same type. The proof of $\cohbox{l}{}$ itself requires an higher-dimensional coherence condition which we obtain by working here in ETT where all proofs of an equality are identified (principle of Unicity of Identity Proofs). Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory). Note also that for a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\downbox{l}{}$ nor $\cohbox{l}{}$ anymore.
 
 When reflexivities are excepted, we call the structure thus defined \emph{bare truncated cubical sets}: \emph{bare} because it can be seen as defining semi-cubical sets corresponding to semi-simplicial sets with only faces as part of the structure; \emph{truncated} because we consider only such cubical sets up to some fixed dimension.
 
-\begin{eqntable}{\label{tab:barecubicalsetstructurecore} Definition of a truncated cubical set (main part of the higher-dimensional relation structure)}
+\begin{eqntable}{Definition of a truncated cubical set (main part of the higher-dimensional relation structure)\label{tab:barecubicalsetstructurecore}}
   \mc{Type of truncated cubical sets}
   \eqnline{\partialcubset{l}{n}}{}{:}{\sort{l+1}}
   \eqnline{\partialcubset{l}{0}}{}{\defeq}{\unittype}
@@ -364,7 +460,7 @@ When reflexivities are excepted, we call the structure thus defined \emph{bare t
   \eqnline{\mycubsetcomp{l}{n}}{D}{\defeq}{\myfullbox{l}{n}(D)\imp \sort{l}}
 \end{eqntable}
 
-\begin{eqntable}{\label{tab:barecubicalsetstructure} Definition of a truncated cubical set (boxes)}
+\begin{eqntable}{Definition of a truncated cubical set (boxes)\label{tab:barecubicalsetstructure}}
   \mc{Full homogeneous $n$-boxes}
   \eqnline{\myfullbox{l}{n}}{(D:\partialcubset{l}{n})}{:}{\sort{l}}
   \eqnline{\myfullbox{l}{n}}{D}{\defeq}{\mybox{l}{n,n}(D)}
@@ -391,7 +487,7 @@ When reflexivities are excepted, we call the structure thus defined \emph{bare t
   \eqnline{\mycube{l}{n,p,[p < n]}}{D~E~d}{\defeq}{\Sigma b:\mylayer{l}{n,p}(D)(d).\,\mycube{l}{n,p+1}(D)(E)(d,b)}
 \end{eqntable}
 
-\begin{eqntable}{\label{tab:barecubicalsetfaces} Definition of a homogeneous bare cubical set ($q$-th projection)}
+\begin{eqntable}{Definition of a homogeneous bare cubical set ($q$-th projection)\label{tab:barecubicalsetfaces}}
 
   \eqnline{\downbox{l,\epsilon,q}{n,p,[p \leq q \leq n - 1]}}{\makecell{(D:\partialcubset{l}{n}) \\ (d:\mybox{l}{n,p}(D))}}{:}{\mybox{l}{n-1,p}(\hd(D))}
 
@@ -412,7 +508,7 @@ When reflexivities are excepted, we call the structure thus defined \emph{bare t
   \eqnline{\downcube{l,\epsilon,q}{n,p,[p<q]}}{D~E~d~(b,c)}{\defeq}{(\downlayer{l,\epsilon,q}{n,p}(D)(d)(b),\downcube{l,\epsilon,q}{n,p+1}(D)(E)(d,b)(c))}
 \end{eqntable}
 
-\begin{eqntable}{\label{tab:barecubicalsetcoherences} Definition of a homogeneous bare cubical set (commutation of $q$-th projection and $r$-th projection)}
+\begin{eqntable}{Definition of a homogeneous bare cubical set (commutation of $q$-th projection and $r$-th projection)\label{tab:barecubicalsetcoherences}}
 
   \eqnline{\cohbox{l,\epsilon,\omega,q,r}{n,p,[p \leq r \leq q \leq n - 2]}}{\makecell{(D:\partialcubset{l}{n}) \\ (d:\mybox{l}{n,p}(D))}}{:}{\makecell{\downbox{l,\epsilon,q}{n-1,p}(\hd(D))(\downbox{l,\omega,r}{n,p}(D)(d)) \\ \eqett \downbox{l,\omega,r}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))}}
 
@@ -435,16 +531,14 @@ When reflexivities are excepted, we call the structure thus defined \emph{bare t
   \eqnline{\cohcube{l,\epsilon,\omega,q,r}{n,p,[p<r]}}{D~E~d~(b,c)}{\defeq}{(\cohlayer{l,\epsilon,\omega,q,r}{n,p}(D)(d)(b),\;\cohcube{l,\epsilon,\omega,q,r}{n,p+1}(D)(E)(d,b)(c))}
 \end{eqntable}
 
-\subsection{Derived notions}
-\label{sec:derived-notions}
-
+\subsection{Derived notions\label{sec:derived-notions}}
 On top of the basic definitions on tables \ref{tab:barecubicalsetstructure}, \ref{tab:barecubicalsetfaces} and \ref{tab:barecubicalsetcoherences}, we can define on tables \ref{tab:macros} and \ref{tab:macroscont} a few other concepts at a more standard level of abstraction. In particular, a homogeneous $n$-box in the above sense is defined to be an object of type $\myfullbox{l}{n}(D_{n})$ for $D_{n} \defeq (A, =_A, \ldots, =^n_A)$ the initial segment of $n$-th first iterated equalities over $A$ (by convention, a homogeneous $0$-box shall be the canonical singleton type). A $n$-tube is of type $\mybox{l}{n+1,n}(D_{n+1})$. An homogeneous (proper) $n$-cube in some $n$-box $d$ is of type $\mycube{l}{n+1,n}(\hd(D_{n+1}))(\tl(D_{n+1}))(d)$ and a full $n$-cube is of type $\mycube{l}{n+1,0}(\hd(D_{n+1}))(\tl(D_{n+1})))(\star)$.
 
 Note that the components of an $n$-box or $n$-tube are tuples associated to the left. For cubes, the components can be associated to the left, and we call this a full $n$-cube or to the right, which we call grounded $n$-cube, and which corresponds to ``complete'' partial cubes, i.e. to partial cubes over the empty box. Table \ref{tab:macros} show how to compute the $n$-box surrounding a full $n$-cube over a prefix $D_{n+1}$ of iterated equalities (see $\border{}$).
 
 Table \ref{tab:macros} also shows how to compute the faces of a box or of a cube.
 
-\begin{eqntable}{\label{tab:barecubicalset} Definition of a bare cubical set (coinductive structure)}
+\begin{eqntable}{Definition of a bare cubical set (coinductive structure)\label{tab:barecubicalset}}
   \mc{Full (non-truncated) cubical sets with degeneracies}
   \eqnline{\mycubset{l}}{}{:}{\sort{l+1}}
   \eqnline{\mycubset{l}}{}{\defeq}{\mycubsetfrom{l}{0}(\star)}
@@ -453,7 +547,7 @@ Table \ref{tab:macros} also shows how to compute the faces of a box or of a cube
   \eqnline{\mycubsetfrom{l}{n}}{D}{\defeq}{\Sigma R:\mycubsetcomp{l}{n}(D).\,\mycubsetfrom{l}{n+1}(D,R)}
 \end{eqntable}
 
-\begin{eqntable}{\label{tab:macros} Standard derived notions}
+\begin{eqntable}{Standard derived notions\label{tab:macros}}
   \mc{Type of full $n$-cubes}
   \eqnline{\myfullcube{l}^{n}}{(D:\partialcubset{l}{n+1})}{:}{\sort{l}}
 
@@ -490,7 +584,7 @@ Table \ref{tab:macros} also shows how to compute the faces of a box or of a cube
   \eqnline{\border{l}^{n,p,[p<n]}}{D~d~(b,c)}{\defeq}{\border{l}^{n,p+1}(D)(d,b)(c)}
 \end{eqntable}
 
-\begin{eqntable}{\label{tab:macroscont} Standard derived notions (continued)}
+\begin{eqntable}{Standard derived notions (continued)\label{tab:macroscont}}
   \mc{$q$-th projection of an $n$-box}
 
   \eqnline{\fulldownbox{l,\epsilon,q}{n,[q < n]}}{(D:\partialcubset{l}{n})~(d:\myfullbox{l}{n}(D))}{:}{\myfullbox{l}{n-1}(\hd(D))}
@@ -520,7 +614,7 @@ Table \ref{tab:macros} also shows how to compute the faces of a box or of a cube
   Friedman, G. (2008). An elementary illustrated introduction to simplicial sets. \textit{arXiv preprint arXiv:0809.4221}.
 
   \bibitem[Rie]{Riehl11}
-  Riehl, E. (2011). A leisurely introduction to simplicial sets. \textit{Unpublished expository article available online at \href{http://www.math.harvard.edu/~eriehl}{http://www.math.harvard.edu/~eriehl}}.
+  Riehl, E. (2011). A leisurely introduction to simplicial sets. \textit{Unpublished expository article available online from the author's web page}.
 
   \bibitem[Ant]{Antolini00}
   Antolini, R. (2000). Cubical structures, homotopy theory. \textit{Annali di Matematica pura ed applicata, 178}(1), 317-324.

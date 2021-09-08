@@ -3,7 +3,7 @@ Import Logic.EqNotations.
 Require Import Aux.
 
 Section RewLemmas.
-  Lemma rew_rew A (x y : A) (H : x = y) P {a : P x} :
+  Lemma rew_rew {A} {x y : A} (H : x = y) P {a : P x} :
   rew <- [P] H in rew [P] H in a = a.
   destruct H; reflexivity.
   Defined.
