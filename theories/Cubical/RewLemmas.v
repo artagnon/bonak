@@ -75,6 +75,18 @@ Section RewLemmas.
   Lemma rew_pair : forall A (P Q : A->Type) a b (x:P a) (y:Q a) (H:a=b),
     (rew H in x, rew H in y) = rew [fun a => (P a * Q a)%type] H in (x,y).
   Proof.
-  destruct H. reflexivity.
+    destruct H. reflexivity.
+  Defined.
+
+  Lemma rew_swap : forall A (P : A -> Type) a b (H: a = b) (x : P a) (y : P b),
+  x = rew <- H in y -> rew H in x = y.
+  Proof.
+    destruct H. trivial.
+  Defined.
+
+  Lemma rew_app A (P : A -> Type) (x y : A) (H H' : x = y) (a : P x) :
+  H = H' -> rew <- [P] H in rew [P] H' in a = a.
+  Proof.
+    intros * ->. now destruct H'.
   Defined.
 End RewLemmas.

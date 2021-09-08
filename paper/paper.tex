@@ -1,7 +1,7 @@
 \documentclass[10pt]{amsart}
 
 \usepackage[allbordercolors={.192157 .76862 .28627}]{hyperref} % Emerald Green
-\usepackage{amsthm, amssymb, amsaddr, fancyhdr, bookmark, fontspec, xargs, multirow, polyglossia, luacode, listings, color, soulutf8, tcolorbox, tabularx, tikz-cd, booktabs, setspace, makecell, caption, floatrow, mathrsfs, xpatch, lmodern}
+\usepackage{amsthm, amssymb, amsaddr, fancyhdr, bookmark, fontspec, xargs, multirow, polyglossia, luacode, minted, color, soulutf8, tcolorbox, tabularx, tikz-cd, booktabs, setspace, makecell, caption, mathrsfs, xpatch, lmodern}
 \usepackage[hmargin=0.4in, vmargin=0.8in, headheight=10pt]{geometry}
 
 % Head and tail
@@ -70,8 +70,6 @@
   font=bf,
   labelfont=mdit,
 }
-\DeclareFloatFont{small}{\small}
-\floatsetup[table]{capposition=bottom, font=small}
 
 % Lettered footnotes
 \renewcommand{\thefootnote}{\alph{footnote}}
@@ -137,6 +135,9 @@
   {}{}% <success><failure>
 \makeatother
 
+% Code listings
+\usemintedstyle{tango}
+
 \title{An iterated Grothendieck construction of semi-cubical types}
 \author{Ramkumar Ramachandra}
 \address{Université de Paris}
@@ -151,13 +152,15 @@
 \tableofcontents
 \newpage
 
-\section{Introduction}
-Cubical type theory is an extension of dependent type theory that provides a computational interpretation of Voevodsky's \emph{univalence axiom}. Several strides in the field have been made since \cite{Bezem14} in constructing a model of type theory for cubical sets, and we present another approach to the construction, with a sound motivation. Although our work is motivated by homotopy type theory, construction of the \emph{path type} and \emph{transport} are beyond the scope of our work; we merely formalize semi-cubical sets. Our secondary contribution is a mechanically checked proof of our construction in Coq~\footnote{\href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak}}.
+\section{Overture}
+Cubical type theory is an extension of dependent type theory that provides a computational interpretation of Voevodsky's \emph{univalence axiom}, in a field known as \emph{homotopy type theory}. Cubical type theory has several attractive features, and people have been working on it since 2014~\cite{Bezem14}. Today, an experimental branch of Agda, known as \emph{Cubical Agda} is being worked on~\cite{Vezzosi21}.
 
-\section{The intutution from \texorpdfstring{\SSet}{simplicial sets}}
+However, there is no known formalization of cubical types in \emph{Coq}, which is a vastly more powerful proof assistant than Agda. Our work lays the foundation for a future Cubical Coq.
+
+\section{The intutution from simplicial sets}
 Simplicial sets are powerful mathematical objects, that form the basis of much of modern homotopy theory. Their power derives from the fact that their homotopy category is exceptionally well-behaved, and different model structures on them, as we will see in the following chapter. Unlike CW-complexes that rely on pure topological notions like spheres and disks to ``tame'' a topological space, the definition of simplicial sets is purely categorical, and exist independent of topological spaces. The geometric realization and singular complex functors facilitate travelling back-and-forth between simplicial sets and topological spaces, and these are non-trivial constructions. As such, simplicial sets exist purely in the imagination of the mathematician; each simplicial set has an infinite number of degenerate simplices, and they are not particularly well-suited to machine-based representation.
 
-\subsection{The category of simplicial sets}
+\subsection{\texorpdfstring{\SSet}{The category of simplicial sets}}
 There exists vast mathematical literature on the subject, and we refer the uninitiated reader to \cite{Friedman08} for a gentle introduction with excellent intutions. With these intuitions in place, we proceed with a purely categorical treatment. Emily Riehl's \cite{Riehl11} is a well-written manuscript on the subject.
 
 \begin{definition}[\sq{n}]
@@ -322,12 +325,10 @@ As is clear from the above definitions, simplicial sets have an infinite number 
   $$
 \end{example}
 
-\subsection{The motivation for \texorpdfstring{\DeltaHat}{delta sets}}
-
+\subsection{Motivation for \texorpdfstring{\DeltaHat}{delta sets}}
 As hinted earlier, simplicial sets are ill-suited for machine-based representation, due to the infinite number of degenerate simplices that are uninteresting from the point of view of cubical type theory. To remedy this problem, let us instead use \DeltaHat, and proceed towards building, what is called \emph{semi-cubical sets} in literature. $\DeltaHat$ is identical to \Simplex{}, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are \emph{strictly} order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. In mathematical literature, there is little interest in studying \DeltaHat, since delta maps are not well-defined, and constructing a $\Set^{\DeltaHat^{op}}$ is inelegant.
 
 \subsection{Towards semi-cubical sets}
-
 We might naively attempt to define $\Cube{}$ identically to \DeltaHat, but let us briefly explain why this wouldn't work, motivating the definition of semi-cubical sets as in \cite{Antolini00}. If there were morphisms from every $\sq{m}$ to \sq{n}, we would end up with:
 
 $$
@@ -421,7 +422,7 @@ Or, in terms of objects and morphisms:
   The reader is advised to refer to \cite{Antolini00} for the proof.
 \end{proof}
 
-\section{Iterated Grothendieck construction}
+\section{Grothendieck construction}
 The Grothendieck construction provides a correspondence between a fibered representation, and an indexed representation.
 
 $$
@@ -606,9 +607,95 @@ Table \ref{tab:macros} also shows how to compute the faces of a box or of a cube
   \eqnline{\downbox{l,\epsilon,q}{n,p,[q < p-1]}}{D~(d,b)}{\defeq}{\downbox{l,\epsilon,q}{n,p-1}(D)(d)}
 \end{eqntable}
 
+\section{The formalization effort}
+\subsection{Converging on an approach}
+The core of our formalization effort demands proof irrelevance for inequalities. There were two approaches on the outset: one was HoTT, where we'd have proof relevance, but be able to transport one proof to another, and another was SProp, where we'd get proof irrelevance out-of-the-box. We initially experimented with HoTT, but there were serious limitations: HoTT drops the Coq standard library, and several tactics are (unfortunately) reliant on the standard library. As a result, several sophisticated tactics are infeasible in HoTT.
+
+SProp comes with a host of bugs and it took us some time to become comfortable with it, and realize its limitations. We did go back and forth with SProp a bit, but ended up using it in the final version.
+
+
+\subsection{Yoneda.v}
+\subsection{RewLemmas.v}
+\subsection{Notes on SProp}
+\subsection{Cubical.v}
+
+We'd tried to build the \texttt{Cubical} as a \texttt{Fixpoint} initially, but ran into unification problems with \texttt{le\_dec}.
+
+Type unification on the term \texttt{D} fails.
+
+\begin{minted}{coq}
+From Coq Require Import Arith.
+
+Theorem le_S_up {n m} (Hnm : n <= m) : n <= S m.
+Admitted.
+Theorem le_S_down {n m} (Hnm : S n <= m) : n <= m.
+Admitted.
+Theorem le_discr {n} : S n <= 0 -> forall {A}, A.
+Admitted.
+Theorem propagate_eq {m n} : m <= S n -> m = S n -> n <= n.
+Admitted.
+Theorem le_dec {n m} : n <= S m -> {n = S m} + {n <= m}.
+Admitted.
+Theorem le_dec' {n m} : n <= m -> {n = m} + {n <= pred m} + {m = O}.
+Admitted.
+Theorem lower_both {m n} : S m <= S n -> m <= n.
+Admitted.
+
+Notation "⇓ p" := (le_S_down p) (at level 40).
+Notation "↑ h" := (le_S_up h) (at level 40).
+Notation "l '.1'" := (projT1 l) (at level 40).
+Notation "l '.2'" := (projT2 l) (at level 40).
+
+Section Cubical.
+
+Universe l'.
+Universe l.
+
+Record Cubical {n : nat} :=
+{
+csp {n'} (Hn' : n' <= n) : Type@{l'} ;
+hd {n'} {Hn' : S n' <= n} : csp Hn' -> csp (⇓ Hn') ;
+box {n' p} {Hn' : n' <= n} (Hp : p <= n') : csp Hn' -> Type@{l} ;
+}.
+
+Fixpoint cubical {n : nat} : Cubical :=
+match n with
+| O => {| csp _ _ := unit;
+hd _ Hn' _ := ltac:(apply (le_discr Hn'));
+box _ _ _ _ _ := unit;
+|}
+| S n => let cn := cubical (n := n) in
+let cspn {n'} (Hn' : n' <= S n) :=
+match le_dec Hn' with
+| left Heq (* n' = S n *) => { D : cn.(csp) (propagate_eq Hn' Heq) &
+cn.(box) _ D -> Type@{l} }
+| right Hineq (* n' <= n *) => cn.(csp) Hineq
+end in
+let hdn {n'} (Hn' : S n' <= S n) :=
+match le_dec' (lower_both Hn') return cspn Hn' (* S n' <= S n *) ->
+cspn (⇓ Hn') (* n' <= S n *) with
+| inleft Hcmp =>
+match Hcmp with
+| left _ (* n' = n *) => fun D => D.1 (* n' = S n *)
+| right _ (* n' <= pred n *) => fun D => cn.(hd) D (* n' <= n *)
+end
+| inright _ (* n = O *) => fun D => cn.(hd) D
+end in
+  {|
+    csp _ Hn' := cspn Hn';
+    hd _ Hn' := hdn Hn';
+    |}
+end.
+
+End Section.
+\end{minted}
+
 \begin{thebibliography}{10}
   \bibitem[Bez]{Bezem14}
   Bezem, M., Coquand, T., \& Huber, S. (2014, July). A model of type theory in cubical sets. \textit{In 19th International Conference on Types for Proofs and Programs (TYPES 2013)} (Vol. 26, pp. 107-128). Wadern, Germany: Schloss Dagstuhl–Leibniz Zentrum fuer Informatik.
+
+  \bibitem[CubAgda]{Vezzosi21}
+  Vezzosi, A., Mörtberg, A., \& Abel, A. (2021). Cubical Agda: a dependently typed programming language with univalence and higher inductive types. \textit{Journal of Functional Programming, 31}.
 
   \bibitem[Fri]{Friedman08}
   Friedman, G. (2008). An elementary illustrated introduction to simplicial sets. \textit{arXiv preprint arXiv:0809.4221}.
@@ -616,11 +703,14 @@ Table \ref{tab:macros} also shows how to compute the faces of a box or of a cube
   \bibitem[Rie]{Riehl11}
   Riehl, E. (2011). A leisurely introduction to simplicial sets. \textit{Unpublished expository article available online from the author's web page}.
 
-  \bibitem[Ant]{Antolini00}
+  \bibitem[CubSet]{Antolini00}
   Antolini, R. (2000). Cubical structures, homotopy theory. \textit{Annali di Matematica pura ed applicata, 178}(1), 317-324.
 
   \bibitem[Her]{Herbelin15}
   Herbelin, H. (2015). A dependently-typed construction of semi-simplicial types. \textit{Mathematical Structures in Computer Science, 25}(5), 1116-1131.
 \end{thebibliography}
+
+\appendix
+\section{Source code listing}
 
 \end{document}

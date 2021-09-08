@@ -1,5 +1,6 @@
 From Coq Require Import Arith.
 Import Logic.EqNotations.
+Require Import Logic.Eqdep.
 Require Import Yoneda.
 Import LeYoneda.
 Require Import Aux.
@@ -55,7 +56,7 @@ Record PartialCubeBase (n : nat) (csp : Type@{l'})
 
 Arguments cube' {n csp PB} _ {p Hp D} d.
 Arguments cube'' {n csp PB} _ {p Hp D} d.
-Arguments subcube' {n csp PB} _ {p q Hp} Hq ε {D d} b.
+Arguments subcube' {n csp PB} _ {p q Hp} Hq ε {D} [d] b.
 
 (* Cube consists of cube, subcube, and coherence conditions between them *)
 Record PartialCube (n p : nat) (csp : Type@{l'}) {PB : PartialBoxBase n (@csp)}
@@ -81,7 +82,7 @@ Record PartialCube (n p : nat) (csp : Type@{l'}) {PB : PartialBoxBase n (@csp)}
 }.
 
 Arguments cube {n p csp PB PC Box} _ {Hp D} E.
-Arguments subcube {n p csp PB PC Box} _ {q Hp} Hq ε {D} E {d} b.
+Arguments subcube {n p csp PB PC Box} _ {q Hp} Hq ε {D} E [d] b.
 Arguments cohcube {n p csp PB PC Box} _ {q r Hpr Hr Hq ε ω D E d} b.
 
 (* Cube consists of cubesetprefix, a box built out of partial boxes,
@@ -183,10 +184,31 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
            simpl in cohboxSn. unshelve eapply eq_existT_curried.
            exact (cohboxSn _ _ (↓ Hpr) Hr Hq _ _ _ _).
            rewrite <- rew_pair. apply eq_pair.
-          ** eapply eq_trans with (rew (eq_trans _ _) in _).
-             Import Logic.EqNotations. (* Delicate rew rewriting *)
-             -- rewrite rew_map. apply rew_compose.
-             --  admit.
-          ** admit.
-Admitted.
+          ** rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ Hq) ε).
+             rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ (Hr ↕ Hq)) ω).
+             eapply eq_trans.
+             -- rewrite rew_map; apply rew_compose.
+             -- eapply eq_trans.
+              +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε).
+                  apply rew_compose.
+              +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hr ↕ Hq)) ω).
+                  rewrite rew_compose. apply rew_swap.
+                  rewrite <- (C.(Cube).(cohcube) (Hr := ⇓ Hr) (Hq := ⇓ Hq)).
+                  rewrite rew_compose. rewrite rew_app.
+                  *** reflexivity.
+                  *** apply UIP.
+          ** rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ Hq) ε).
+             rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ (Hr ↕ Hq)) ω).
+             eapply eq_trans.
+             -- rewrite rew_map; apply rew_compose.
+             -- eapply eq_trans.
+              +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε).
+                  apply rew_compose.
+              +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hr ↕ Hq)) ω).
+                  rewrite rew_compose. apply rew_swap.
+                  rewrite <- (C.(Cube).(cohcube) (Hr := ⇓ Hr) (Hq := ⇓ Hq)).
+                  rewrite rew_compose. rewrite rew_app.
+                  *** reflexivity.
+                  *** apply UIP.
+Defined.
 End Cubical.
