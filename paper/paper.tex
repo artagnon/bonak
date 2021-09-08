@@ -54,9 +54,9 @@
 \newcommand{\overright}[1]{\ensuremath{\overrightarrow{#1}}}
 
 % The eqntable environment, displaying the various
-\NewDocumentEnvironment{eqntable}{m}{\table[!ht]
+\NewDocumentEnvironment{eqntable}{m}{\table[!ht]\small
 \tabularx{\textwidth}{@{} l c c >{\centering\arraybackslash}X @{}}\toprule}
-{\endtabularx\hrule\caption{#1}\endtable}
+{\endtabularx\vspace{0.3em}\hrule\vspace{0.5em}\caption{#1}\endtable}
 
 % A block in the eqntable environment
 \newcommand{\eqnline}[4]{$#1$ & $#2$ & $#3$ & $#4$ \\}
@@ -146,18 +146,18 @@
 
 \begin{document}
 \begin{abstract}
-  A fresh approach to formalizing semi-cubical sets in dependent type theory with extensional equality. The approach could be described as a \emph{reverse iterated Grothendieck construction}, that is crisp and concise. The accompanying artifact is a Coq formalization that uses highly sophisticated rewriting techniques and pushes the boundary of proof assistant technology.
+  A proposed model of \emph{homotopy type theory} built via a \emph{reverse iterated Grothendieck construction} process formalizing semi-cubical sets in dependent type theory with \emph{extensional equality}. The accompanying artifact is a Coq formalization that uses highly sophisticated rewriting techniques and pushes the boundary of proof assistant technology.
 \end{abstract}
 \maketitle
 \tableofcontents
 \newpage
 
 \section{Overture}
-Cubical type theory is an extension of dependent type theory that provides a computational interpretation of Voevodsky's \emph{univalence axiom}, in a field known as \emph{homotopy type theory}. Cubical type theory has several attractive features, and people have been working on it since 2014~\cite{Bezem14}. Today, an experimental branch of Agda, known as \emph{Cubical Agda} is being worked on~\cite{Vezzosi21}.
+Cubical type theory is an extension of dependent type theory that provides a computational interpretation of Voevodsky's \emph{univalence axiom}, in a field known as \emph{homotopy type theory}, or HoTT. Cubical type theory has several attractive features, and people have been working on it since 2014~\cite{Bezem14}. Today, an experimental branch of Agda, known as \emph{Cubical Agda} is being worked on~\cite{Vezzosi21}.
 
-However, there is no known formalization of cubical types in \emph{Coq}, which is a vastly more powerful proof assistant than Agda. Our work lays the foundation for a future Cubical Coq.
+Our contribution takes a different direction from traditional contributions to the field of HoTT: although it is a proposed model of HoTT, it uses \emph{unicity of identity proofs} (UIP) instead of univalence to finish off the final coherence condition; the two axoims are mutually incompatible.
 
-\section{The intutution from simplicial sets}
+\section{The intuition from simplicial sets}
 Simplicial sets are powerful mathematical objects, that form the basis of much of modern homotopy theory. Their power derives from the fact that their homotopy category is exceptionally well-behaved, and different model structures on them, as we will see in the following chapter. Unlike CW-complexes that rely on pure topological notions like spheres and disks to ``tame'' a topological space, the definition of simplicial sets is purely categorical, and exist independent of topological spaces. The geometric realization and singular complex functors facilitate travelling back-and-forth between simplicial sets and topological spaces, and these are non-trivial constructions. As such, simplicial sets exist purely in the imagination of the mathematician; each simplicial set has an infinite number of degenerate simplices, and they are not particularly well-suited to machine-based representation.
 
 \subsection{\texorpdfstring{\SSet}{The category of simplicial sets}}
@@ -608,87 +608,116 @@ Table \ref{tab:macros} also shows how to compute the faces of a box or of a cube
 \end{eqntable}
 
 \section{The formalization effort}
-\subsection{Converging on an approach}
-The core of our formalization effort demands proof irrelevance for inequalities. There were two approaches on the outset: one was HoTT, where we'd have proof relevance, but be able to transport one proof to another, and another was SProp, where we'd get proof irrelevance out-of-the-box. We initially experimented with HoTT, but there were serious limitations: HoTT drops the Coq standard library, and several tactics are (unfortunately) reliant on the standard library. As a result, several sophisticated tactics are infeasible in HoTT.
+The core of our formalization effort demanded proof irrelevance for inequalities: \mintinline{coq}{SProp} was the natural choice.
 
-SProp comes with a host of bugs and it took us some time to become comfortable with it, and realize its limitations. We did go back and forth with SProp a bit, but ended up using it in the final version.
+\subsection{\texorpdfstring{\leq}{<=} in SProp}
+We start with one inequality primitive, namely $\leq$, and build up all our inequalities on the basis of that inequality. We tried three different approaches to defining $\leq$ in \mintinline{coq}{SProp}.
 
+\begin{enumerate}
+  \item[(a)] An inductive definition.
+    \begin{listing}[H]
+      \begin{minted}{coq}
+      Inductive le' (n : nat) : nat -> SProp :=
+      | le_refl : n <= n
+      | le_S_up : forall {m : nat}, n <= m -> n <= S m
+      where "n <= m" := (le' n m) : nat_scope.
 
+    Definition le := le'.
+    \end{minted}
+    \end{listing}
+  \item[(b)] A recursive definition.
+    \begin{listing}[H]
+      \begin{minted}{coq}
+      Inductive sFalse : SProp :=.
+      Inductive sTrue : SProp := sI.
+
+      Fixpoint le m n : SProp :=
+        match m with
+        | 0 => sTrue
+        | S m =>
+          match n with
+          | 0 => sFalse
+          | S n => le m n
+          end
+        end.
+     \end{minted}
+    \end{listing}
+  \item[(c)] An nested implication.
+    \begin{listing}[H]
+      \begin{minted}{coq}
+      Inductive le' (n : nat) : nat -> SProp :=
+        | le_refl' : n <= n
+        | le_S_up' : forall (m : nat), n <= m -> n <= S m
+        where "n <= m" := (le' n m) : nat_scope.
+
+      Definition le n m := forall p, p <= n -> p <= m.
+      \end{minted}
+    \end{listing}
+\end{enumerate}
+
+(b) was unworkable right from the start, and we tried approach (a) for a while, before settling on approach (c), because it made compositions of inequalities almost trivial to prove. Compare the following snippets defining transitivity of $\leq$:
+
+\begin{listing}[H]
+  \begin{minted}[linenos]{coq}
+    Theorem le_trans {p q n} : p <= q -> q <= n -> p <= n.
+    (* ... a non-trivial proof ... *)
+    Defined.
+  \end{minted}
+  \caption{↕ definition, when $\leq$ is defined using an inductive approach}
+\end{listing}
+
+\begin{listing}[H]
+  \begin{minted}[linenos]{coq}
+    Definition le_trans {n m p} (Hnm : n <= m) (Hmp : m <= p) : n <= p :=
+      fun q (Hqn : le' q n) => Hmp _ (Hnm _ Hqn).
+  \end{minted}
+  \caption{↕ definition, when $\leq$ is defined using a nested implication}
+\end{listing}
+
+Implications are naturally easier to work with, so the nested implication in \mintinline{coq}{SProp} was an easy choice. Many of the commutativity proofs were a simple \mintinline{coq}{reflexivity}:
+
+\begin{listing}[H]
+  \begin{minted}{coq}
+  Theorem le_trans_comm4 {n m p} (Hmn : S n <= S m) (Hmp : S m <= S p) :
+  ⇓ (Hmn ↕ Hmp) =S (⇓ Hmn) ↕ (⇓ Hmp).
+    reflexivity.
+  Defined.
+  \end{minted}
+\end{listing}
+
+\subsection{Raising and lowering operations on \texorpdfstring{\leq}{<=}}
+\mint{coq}/Notation "↕" := (Hnm : n <= m) (Hmp : m <= p) : n <= p/
+\mint{coq}/Notation "↑" := (Hnm : n <= m) : n <= S m/
+\mint{coq}/Notation "↓" := (Hnm : S n <= m) : n <= m/
+\mint{coq}/Notation "⇓" := (Hnm : S n <= S m) : n <= m/
+\mint{coq}/Notation "⇑" := (Hnm : n <= m) : S n <= S m/
 \subsection{Yoneda.v}
 \subsection{RewLemmas.v}
 \subsection{Notes on SProp}
 \subsection{Cubical.v}
 
-We'd tried to build the \texttt{Cubical} as a \texttt{Fixpoint} initially, but ran into unification problems with \texttt{le\_dec}.
+We'd tried to build the \mintinline{coq}{Cubical} as a \mintinline{coq}{Fixpoint} initially, but ran into unification problems with \mintinline{coq}{le_dec}.
 
-Type unification on the term \texttt{D} fails.
+Type unification on the term \mintinline{coq}{D} fails.
 
-\begin{minted}{coq}
-From Coq Require Import Arith.
-
-Theorem le_S_up {n m} (Hnm : n <= m) : n <= S m.
-Admitted.
-Theorem le_S_down {n m} (Hnm : S n <= m) : n <= m.
-Admitted.
-Theorem le_discr {n} : S n <= 0 -> forall {A}, A.
-Admitted.
-Theorem propagate_eq {m n} : m <= S n -> m = S n -> n <= n.
-Admitted.
-Theorem le_dec {n m} : n <= S m -> {n = S m} + {n <= m}.
-Admitted.
-Theorem le_dec' {n m} : n <= m -> {n = m} + {n <= pred m} + {m = O}.
-Admitted.
-Theorem lower_both {m n} : S m <= S n -> m <= n.
-Admitted.
-
-Notation "⇓ p" := (le_S_down p) (at level 40).
-Notation "↑ h" := (le_S_up h) (at level 40).
-Notation "l '.1'" := (projT1 l) (at level 40).
-Notation "l '.2'" := (projT2 l) (at level 40).
-
-Section Cubical.
-
-Universe l'.
-Universe l.
-
-Record Cubical {n : nat} :=
-{
-csp {n'} (Hn' : n' <= n) : Type@{l'} ;
-hd {n'} {Hn' : S n' <= n} : csp Hn' -> csp (⇓ Hn') ;
-box {n' p} {Hn' : n' <= n} (Hp : p <= n') : csp Hn' -> Type@{l} ;
-}.
-
-Fixpoint cubical {n : nat} : Cubical :=
-match n with
-| O => {| csp _ _ := unit;
-hd _ Hn' _ := ltac:(apply (le_discr Hn'));
-box _ _ _ _ _ := unit;
-|}
-| S n => let cn := cubical (n := n) in
-let cspn {n'} (Hn' : n' <= S n) :=
-match le_dec Hn' with
-| left Heq (* n' = S n *) => { D : cn.(csp) (propagate_eq Hn' Heq) &
-cn.(box) _ D -> Type@{l} }
-| right Hineq (* n' <= n *) => cn.(csp) Hineq
-end in
-let hdn {n'} (Hn' : S n' <= S n) :=
-match le_dec' (lower_both Hn') return cspn Hn' (* S n' <= S n *) ->
-cspn (⇓ Hn') (* n' <= S n *) with
-| inleft Hcmp =>
-match Hcmp with
-| left _ (* n' = n *) => fun D => D.1 (* n' = S n *)
-| right _ (* n' <= pred n *) => fun D => cn.(hd) D (* n' <= n *)
-end
-| inright _ (* n = O *) => fun D => cn.(hd) D
-end in
-  {|
-    csp _ Hn' := cspn Hn';
-    hd _ Hn' := hdn Hn';
-    |}
-end.
-
-End Section.
-\end{minted}
+\begin{listing}[H]
+  \begin{minted}[linenos]{coq}
+    Theorem le_dec {n m} : n <= S m -> {n = S m} + {n <= m}.
+    Admitted.
+    Theorem le_dec' {n m} : n <= m -> {n = m} + {n <= pred m} + {m = O}.
+    Admitted.
+    (* ... *)
+    let hdn {n'} (Hn' : S n' <= S n) :=
+    match le_dec' (lower_both Hn') return cspn Hn' (* S n' <= S n *) ->
+    cspn (⇓ Hn') (* n' <= S n *) with
+    | inleft Hcmp =>
+    match Hcmp with
+    | left _ (* n' = n *) => fun D => D.1 (* n' = S n *)
+    | right _ (* n' <= pred n *) => fun D => cn.(hd) D (* n' <= n *)
+    end
+    (* ... *)
+    \end{minted}
+\end{listing}
 
 \begin{thebibliography}{10}
   \bibitem[Bez]{Bezem14}
