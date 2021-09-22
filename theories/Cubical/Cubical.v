@@ -45,17 +45,17 @@ Arguments cohbox {n p csp PB} _ {q r Hpr Hr Hq ε ω D} d.
 Record PartialCubeBase (n : nat) (csp : Type@{l'})
   (PB : PartialBoxBase n (@csp)) := {
   cube' {p} {Hp : p.+1 <= n} {D : csp} :
-    PB.(box') Hp D -> Type@{l} ;
+    PB.(box') Hp D -> Type@{l};
   cube'' {p} {Hp : p.+2 <= n} {D : csp} :
-    PB.(box'') Hp D -> Type@{l} ;
+    PB.(box'') Hp D -> Type@{l};
   subcube' {p q} {Hp : p.+2 <= q.+2}
     (Hq : q.+2 <= n) (ε : side) {D : csp}
     {d : PB.(box') (↓ (Hp ↕ Hq)) D} :
     cube' d -> cube'' (PB.(subbox') Hq ε d) ;
 }.
 
-Arguments cube' {n csp PB} _ {p Hp D} d.
-Arguments cube'' {n csp PB} _ {p Hp D} d.
+Arguments cube' {n csp PB} _ {p Hp} {D} d.
+Arguments cube'' {n csp PB} _ {p Hp} {D} d.
 Arguments subcube' {n csp PB} _ {p q Hp} Hq ε {D} [d] b.
 
 (* Cube consists of cube, subcube, and coherence conditions between them *)
@@ -137,10 +137,21 @@ Definition mkPB {n} {C : Cubical n} :
     C.(Box).(subbox) (Hp := ⇓ Hp) (⇓ Hq) ε d ;
 |}.
 
-Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
+Definition mkPC {n} {C : Cubical n} :
+  PartialCubeBase n.+1 mkcsp mkPB := {|
+  cube' {p} {Hp : p.+1 <= n.+1} {D : mkcsp} := C.(Cube).(cube) D.2 :
+    mkPB.(box') Hp D -> Type; (* Bug? *)
+  cube'' {p} {Hp : p.+2 <= n.+1} {D : mkcsp} {d : C.(PB).(box') _ D.1} :=
+    C.(PC).(cube') d ;
+  subcube' {p q} {Hp : p.+2 <= q.+2} {Hq : q.+2 <= n.+1} {ε} {D : mkcsp} {d}
+    {b : C.(Cube).(cube) D.2 _} :=
+    C.(Cube).(subcube) (Hp := ⇓ Hp) (⇓ Hq) ε D.2 b;
+|}.
+
+Definition mkBox {n} {C : Cubical n} p : PartialBox n.+1 p mkcsp mkPB.
   induction p as [|p (boxSn, subboxSn, cohboxSn)].
-  + unshelve esplit. (* p = O *)
-  * intros Hp D; exact unit.
+  + unshelve esplit.
+  * intros Hp D; exact unit. (* p = O *)
   * simpl; intros. rewrite C.(@eqBox0 _); exact tt. (* subboxSn *)
   * simpl; intros. (* cohboxSn *)
     rewrite (eqSubbox0 (Hp := ⇓ Hpr)).
@@ -184,31 +195,46 @@ Definition mkBox {n p} {C : Cubical n} : PartialBox n.+1 p mkcsp mkPB.
            simpl in cohboxSn. unshelve eapply eq_existT_curried.
            exact (cohboxSn _ _ (↓ Hpr) Hr Hq _ _ _ _).
            rewrite <- rew_pair. apply eq_pair.
-          ** rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ Hq) ε).
-             rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ (Hr ↕ Hq)) ω).
-             eapply eq_trans.
-             -- rewrite rew_map; apply rew_compose.
-             -- eapply eq_trans.
-              +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε).
-                  apply rew_compose.
-              +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hr ↕ Hq)) ω).
-                  rewrite rew_compose. apply rew_swap.
-                  rewrite <- (C.(Cube).(cohcube) (Hr := ⇓ Hr) (Hq := ⇓ Hq)).
-                  rewrite rew_compose. rewrite rew_app.
-                  *** reflexivity.
-                  *** apply UIP.
-          ** rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ Hq) ε).
-             rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ (Hr ↕ Hq)) ω).
-             eapply eq_trans.
-             -- rewrite rew_map; apply rew_compose.
-             -- eapply eq_trans.
-              +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε).
-                  apply rew_compose.
-              +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hr ↕ Hq)) ω).
-                  rewrite rew_compose. apply rew_swap.
-                  rewrite <- (C.(Cube).(cohcube) (Hr := ⇓ Hr) (Hq := ⇓ Hq)).
-                  rewrite rew_compose. rewrite rew_app.
-                  *** reflexivity.
-                  *** apply UIP.
+        ** rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ Hq) ε).
+           rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ (Hr ↕ Hq)) ω).
+           eapply eq_trans.
+           -- rewrite rew_map; apply rew_compose.
+           -- eapply eq_trans.
+           +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε).
+               apply rew_compose.
+           +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hr ↕ Hq)) ω).
+               rewrite rew_compose. apply rew_swap.
+               rewrite <- (C.(Cube).(cohcube) (Hr := ⇓ Hr) (Hq := ⇓ Hq)).
+               rewrite rew_compose. rewrite rew_app.
+               *** reflexivity.
+               *** apply UIP.
+        ** rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ Hq) ε).
+           rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ (Hr ↕ Hq)) ω).
+           eapply eq_trans.
+           -- rewrite rew_map; apply rew_compose.
+           -- eapply eq_trans.
+           +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε).
+               apply rew_compose.
+           +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hr ↕ Hq)) ω).
+               rewrite rew_compose. apply rew_swap.
+               rewrite <- (C.(Cube).(cohcube) (Hr := ⇓ Hr) (Hq := ⇓ Hq)).
+               rewrite rew_compose. rewrite rew_app.
+               *** reflexivity.
+               *** apply UIP.
 Defined.
+
+Definition mkCube {n p} {C : Cubical n} : PartialCube n.+1 p mkcsp mkPC mkBox.
+  revert C.
+  replace n with (n.+1 - p + p - 1).
+  induction (n.+1 - p) as [|p' (cubeSn, subcubeSn, cohcubeSn)].
+  + assert (1 <= p). (* n = p case *)
+    - admit.
+    - destruct p. exfalso. eapply le_contra. eassumption.
+      unshelve esplit; simpl Nat.add in *. simpl Nat.sub in *. revert C.
+      rewrite Nat.sub_0_r.
+      * intros C Hp D E. exact E. (* cubeSn *)
+      * intros. admit. (* subcubeSn *)
+      * admit. (* cohcubeSn *)
+  +  admit.
+Admitted.
 End Cubical.

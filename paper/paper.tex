@@ -137,6 +137,8 @@
 
 % Code listings
 \usemintedstyle{tango}
+\setminted{escapeinside=~~}
+\setmintedinline{escapeinside=~~}
 
 \title{An iterated Grothendieck construction of semi-cubical types}
 \author{Ramkumar Ramachandra}
@@ -679,18 +681,18 @@ Implications are naturally easier to work with, so the nested implication in \mi
 \begin{listing}[H]
   \begin{minted}{coq}
   Theorem le_trans_comm4 {n m p} (Hmn : S n <= S m) (Hmp : S m <= S p) :
-  ⇓ (Hmn ↕ Hmp) =S (⇓ Hmn) ↕ (⇓ Hmp).
+  ~⇓~ (Hmn ~↕~ Hmp) =S (~⇓~ Hmn) ~↕~ (~⇓~ Hmp).
     reflexivity.
   Defined.
   \end{minted}
 \end{listing}
 
 \subsection{Raising and lowering operations on \texorpdfstring{\leq}{<=}}
-\mint{coq}/Notation "↕" := (Hnm : n <= m) (Hmp : m <= p) : n <= p/
-\mint{coq}/Notation "↑" := (Hnm : n <= m) : n <= S m/
-\mint{coq}/Notation "↓" := (Hnm : S n <= m) : n <= m/
-\mint{coq}/Notation "⇓" := (Hnm : S n <= S m) : n <= m/
-\mint{coq}/Notation "⇑" := (Hnm : n <= m) : S n <= S m/
+\mint{coq}/~↕~ := (Hnm : n <= m) (Hmp : m <= p) : n <= p/
+\mint{coq}/~↑~ := (Hnm : n <= m) : n <= S m/
+\mint{coq}/~↓~ := (Hnm : S n <= m) : n <= m/
+\mint{coq}/~⇓~ := (Hnm : S n <= S m) : n <= m/
+\mint{coq}/~⇑~ := (Hnm : n <= m) : S n <= S m/
 \subsection{Yoneda.v}
 \subsection{RewLemmas.v}
 \subsection{Notes on SProp}
