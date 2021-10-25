@@ -1,14 +1,14 @@
 \documentclass[10pt]{amsart}
 
 \usepackage[allbordercolors={.192157 .76862 .28627}]{hyperref} % Emerald Green
-\usepackage{amsthm, amssymb, amsaddr, fancyhdr, bookmark, fontspec, xargs, multirow, polyglossia, luacode, minted, color, soulutf8, tcolorbox, tabularx, tikz-cd, booktabs, setspace, makecell, caption, mathrsfs, xpatch, lmodern}
+\usepackage{amsthm, amssymb, amsmath, mathtools, amsaddr, fancyhdr, bookmark, fontspec, xargs, multirow, polyglossia, luacode, minted, color, soulutf8, tcolorbox, tabularx, tikz-cd, booktabs, setspace, makecell, caption, mathrsfs, xpatch, lmodern}
 \usepackage[hmargin=0.4in, vmargin=0.8in, headheight=10pt]{geometry}
 
 % Head and tail
 \newcommand{\hd}{\ensuremath{\mathsf{hd}}}
 \newcommand{\tl}{\ensuremath{\mathsf{tl}}}
 
-% Universes
+% Universes, obj, mor
 \newcommand{\sort}[1]{\ensuremath{\mathsf{U}_{#1}}}
 
 % The unit type
@@ -83,6 +83,10 @@
 \newtheorem{remark}{Remark}
 \newtheorem{example}{Example}
 
+% Objects and morphisms
+\newcommand{\obj}{\ensuremath{\mathsf{obj}}}
+\newcommand{\mor}{\ensuremath{\mathsf{mor}}}
+
 % Simplicial sets
 \newcommand{\Set}{\ensuremath{\mathsf{Set}}}
 \newcommand{\op}{\ensuremath{\mathsf{op}}}
@@ -140,11 +144,18 @@
 \setminted{escapeinside=~~}
 \setmintedinline{escapeinside=~~}
 
+% Fonts
+\setmainfont{Avenir Next}
+\setmonofont{Source Code Pro}
+\newfontfamily\mainfont{Avenir Next}
+\newfontfamily\caslon{Adobe Caslon Pro}
+\defaultfontfeatures{Ligatures=TeX, Scale=MatchUppercase}
+
 \title{An iterated Grothendieck construction of semi-cubical types}
-\author{Ramkumar Ramachandra}
-\address{Université de Paris}
 \author{Hugo Herbelin}
 \address{Institut de Recherche en Informatique Fondamentale}
+\author{Ramkumar Ramachandra}
+\address{Université de Paris}
 
 \begin{document}
 \begin{abstract}
@@ -157,7 +168,19 @@
 \section{Overture}
 Cubical type theory is an extension of dependent type theory that provides a computational interpretation of Voevodsky's \emph{univalence axiom}, in a field known as \emph{homotopy type theory}, or HoTT. Cubical type theory has several attractive features, and people have been working on it since 2014~\cite{Bezem14}. Today, an experimental branch of Agda, known as \emph{Cubical Agda} is being worked on~\cite{Vezzosi21}.
 
-Our contribution takes a different direction from traditional contributions to the field of HoTT: although it is a proposed model of HoTT, it uses \emph{unicity of identity proofs} (UIP) instead of univalence to finish off the final coherence condition; the two axoims are mutually incompatible.
+Our contribution uses the indexed approach to constructing semi-cubical types, as opposed to CCHM~\cite{Cohen16} in 2016, which takes a fibered approach. We will expound on this further in the Grothendieck construction section. We also use \emph{unicity of identity of proofs} (UIP) to finish off the last coherence condition, and we have dedicated a section to discussing it in various settings.
+
+\begin{table}[H]
+  \begin{tabularx}{\linewidth}{p{.3\linewidth}|p{.3\linewidth}|p{.3\linewidth}}
+    \toprule
+            & Set theory & Type theory \\
+    \midrule
+    Fibered & CCHM       &             \\
+    \midrule
+    Indexed &            & Our work    \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
 
 \section{The intuition from simplicial sets}
 Simplicial sets are powerful mathematical objects, that form the basis of much of modern homotopy theory. Their power derives from the fact that their homotopy category is exceptionally well-behaved, and different model structures on them, as we will see in the following chapter. Unlike CW-complexes that rely on pure topological notions like spheres and disks to ``tame'' a topological space, the definition of simplicial sets is purely categorical, and exist independent of topological spaces. The geometric realization and singular complex functors facilitate travelling back-and-forth between simplicial sets and topological spaces, and these are non-trivial constructions. As such, simplicial sets exist purely in the imagination of the mathematician; each simplicial set has an infinite number of degenerate simplices, and they are not particularly well-suited to machine-based representation.
@@ -183,8 +206,8 @@ There exists vast mathematical literature on the subject, and we refer the unini
   The category $\Simplex{}$ is defined in terms of its objects and morphisms:
 
   \begin{align*}
-    obj(\Simplex{}) & := \sq{n}, \text{regarded as a totally-ordered set}   \\
-    mor(\Simplex{}) & := \sq{m} \rightarrow \sq{n}, \text{order-preserving}
+    \obj(\Simplex{}) & := \sq{n}, \text{regarded as a totally-ordered set}   \\
+    \mor(\Simplex{}) & := \sq{m} \rightarrow \sq{n}, \text{order-preserving}
   \end{align*}
 \end{definition}
 
@@ -198,8 +221,8 @@ There exists vast mathematical literature on the subject, and we refer the unini
   It is a functor category, whose objects and morphisms are given by:
 
   \begin{align*}
-    obj(\SSet)             & := \text{functors} \; \Simplex{}^\op \rightarrow \Set      \\
-    mor(\SSet)             & := \text{natural transforms between the functors}          \\
+    \obj(\SSet)            & := \text{functors} \; \Simplex{}^\op \rightarrow \Set      \\
+    \mor(\SSet)            & := \text{natural transforms between the functors}          \\
     \text{composition law} & := \text{the usual composition of natural transformations} \\
   \end{align*}
 \end{definition}
@@ -379,8 +402,8 @@ Here, $\I{n}$ serves the purpose of \sq{n}, but this change will cascade into ot
 
 \begin{definition}[\Cube{}]
   \begin{align*}
-    obj(\Cube{}) & := \I{n}                                           \\
-    mor(\Cube{}) & := \delta^\epsilon_i : \I{n + 1} \rightarrow \I{n}
+    \obj(\Cube{}) & := \I{n}                                           \\
+    \mor(\Cube{}) & := \delta^\epsilon_i : \I{n + 1} \rightarrow \I{n}
   \end{align*}
 
   where $\delta^\epsilon_i$ must satisfy the corresponding face map condition:
@@ -404,8 +427,8 @@ Or, in terms of objects and morphisms:
 
 \begin{definition}[$\CSet$ in terms of objects and morphisms]
   \begin{align*}
-    obj(\CSet) & := X_n                                                   \\
-    mor(\CSet) & := X_\lambda, \text{where $\lambda$ is \Cube{}-morphism}
+    \obj(\CSet) & := X_n                                                   \\
+    \mor(\CSet) & := X_\lambda, \text{where \lambda is \Cube{}-morphism}
   \end{align*}
 
   where we term $X_n$ as the $n$-cubex, and $X_\lambda$ as the ``face map'', defined similarly:
@@ -439,6 +462,50 @@ $$
   X_2 & : \forall a b c d, X_1 : ab \rightarrow X_1 : bc \rightarrow X_1 : cd \rightarrow X_1 : da \rightarrow \U \\
   \ldots
 \end{align*}
+
+\section{Unicity of identity proofs}
+We dedicate this section to discussing UIP in different settings, and supply intuitions into this notion.
+
+UIP is a flavor of proof-irrelevance:
+
+\begin{align*}
+  \forall x y, \forall p q : x = y, p = q
+\end{align*}
+
+which is to say that any two proofs of \emph{equality} of the same two types are \emph{equal}. In other words, the proofs cannot be distinguished from one another.
+
+Proof irrelevance is an inherent part of set theory and first-order logic, although the property cannot be stated in the language of natural deductions. Intuititively, what it means is that a tree of deductions converges to a result, with no memory of the proof route; the tree itself is forgotten once the final result is obtained.
+
+One way of formalising set theory in type theory is via Aczel sets [ref]. It can be written down as an inductive as follows:
+
+\begin{listing}[H]
+  \begin{minted}[mathescape]{coq}
+    Inductive SET : Type :=
+      node : \forall A : Type, (A -> SET) -> SET
+      ~$=_\textrm{SET}$~ : ...
+  \end{minted}
+\end{listing}
+
+[draw tree structure of set]
+
+Then, proof irrelevance can be stated as:
+
+\begin{align*}
+  \forall x y, \forall p q : x =_{\textrm{SET}} y, p = q
+\end{align*}
+
+We use UIP in the final coherence condition in \mintinline{coq}{cohbox} and \mintinline{coq}{cohcube}. If we weren't to use UIP in \mintinline{coq}{cohbox}, then we'd have something similar to:
+
+\begin{listing}[H]
+  \begin{minted}{coq}
+    cohbox : subbox ( subbox ... ) = subbox ( subbox ... )
+    coh2box : cohbox ... = cohbox ...
+    ...
+    cohNbox : cohPredNbox ... = cohPredNbox ...
+  \end{minted}
+\end{listing}
+
+In attempting to write the proof without UIP, we'd have a relation between \mintinline{coq}{cohNbox} and \mintinline{coq}{cohPredNbox}, which would be very difficult to prove.
 
 \section{Semi-cubical sets}
 In this section, we give the core of the definition of semi-cubical
@@ -665,7 +732,7 @@ We start with one inequality primitive, namely $\leq$, and build up all our ineq
     (* ... a non-trivial proof ... *)
     Defined.
   \end{minted}
-  \caption{↕ definition, when $\leq$ is defined using an inductive approach}
+  \caption{when $\leq$ is defined using an inductive approach}
 \end{listing}
 
 \begin{listing}[H]
@@ -673,7 +740,7 @@ We start with one inequality primitive, namely $\leq$, and build up all our ineq
     Definition le_trans {n m p} (Hnm : n <= m) (Hmp : m <= p) : n <= p :=
       fun q (Hqn : le' q n) => Hmp _ (Hnm _ Hqn).
   \end{minted}
-  \caption{↕ definition, when $\leq$ is defined using a nested implication}
+  \caption{when $\leq$ is defined using a nested implication}
 \end{listing}
 
 Implications are naturally easier to work with, so the nested implication in \mintinline{coq}{SProp} was an easy choice. Many of the commutativity proofs were a simple \mintinline{coq}{reflexivity}:
@@ -728,6 +795,9 @@ Type unification on the term \mintinline{coq}{D} fails.
   \bibitem[CubAgda]{Vezzosi21}
   Vezzosi, A., Mörtberg, A., \& Abel, A. (2021). Cubical Agda: a dependently typed programming language with univalence and higher inductive types. \textit{Journal of Functional Programming, 31}.
 
+  \bibitem[CohCoq]{Cohen16}
+  Cohen, C., Coquand, T., Huber, S., \& Mörtberg, A. (2016). Cubical type theory: a constructive interpretation of the univalence axiom. arXiv preprint arXiv:1611.02108.
+
   \bibitem[Fri]{Friedman08}
   Friedman, G. (2008). An elementary illustrated introduction to simplicial sets. \textit{arXiv preprint arXiv:0809.4221}.
 
@@ -739,6 +809,9 @@ Type unification on the term \mintinline{coq}{D} fails.
 
   \bibitem[Her]{Herbelin15}
   Herbelin, H. (2015). A dependently-typed construction of semi-simplicial types. \textit{Mathematical Structures in Computer Science, 25}(5), 1116-1131.
+
+  \bibitem[CoqInCoq]{Barras97}
+  Barras, B., \& Werner, B. (1997). Coq in coq. \textit{Available on the WWW.}
 \end{thebibliography}
 
 \appendix
