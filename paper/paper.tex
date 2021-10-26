@@ -53,36 +53,6 @@
 \newcommand{\imp}{\ensuremath{\rightarrow}}
 \newcommand{\overright}[1]{\ensuremath{\overrightarrow{#1}}}
 
-% The eqntable environment, displaying the various
-\NewDocumentEnvironment{eqntable}{m}{\table[!ht]\small
-\tabularx{\textwidth}{@{} l c c >{\centering\arraybackslash}X @{}}\toprule}
-{\endtabularx\vspace{0.3em}\hrule\vspace{0.5em}\caption{#1}\endtable}
-
-% A block in the eqntable environment
-\newcommand{\eqnline}[4]{$#1$ & $#2$ & $#3$ & $#4$ \\}
-\newcommand{\mc}[1]{\multicolumn{4}{c}{\textit{#1}} \\\\}
-
-% Table caption set up
-\DeclareCaptionFormat{hfillstart}{\hfill#1#2#3\par}
-\DeclareCaptionFont{mdit}{\mdseries\itshape}
-\captionsetup[table]{
-  justification=centering,
-  font=bf,
-  labelfont=mdit,
-}
-
-% Lettered footnotes
-\renewcommand{\thefootnote}{\alph{footnote}}
-
-% Theorems
-\newtheorem{notation}{Notation}
-\newtheorem{definition}{Definition}
-\newtheorem{lemma}{Lemma}
-\newtheorem{proposition}{Proposition}
-\newtheorem{theorem}{Theorem}
-\newtheorem{remark}{Remark}
-\newtheorem{example}{Example}
-
 % Objects and morphisms
 \newcommand{\obj}{\ensuremath{\mathsf{obj}}}
 \newcommand{\mor}{\ensuremath{\mathsf{mor}}}
@@ -103,8 +73,43 @@
 % Type theory
 \newcommand{\U}{\ensuremath{\mathscr{U}}}
 
-% Roman numerals for chapters
-\renewcommand{\thesection}{\Roman{section}}
+% The eqntable environment, displaying the various
+\NewDocumentEnvironment{eqntable}{m}{\table[!ht]\small
+\tabularx{\textwidth}{@{} l c c >{\centering\arraybackslash}X @{}}\toprule}
+{\endtabularx\vspace{0.3em}\hrule\vspace{0.5em}\caption{#1}\endtable}
+
+% A block in the eqntable environment
+\newcommand{\eqnline}[4]{$#1$ & $#2$ & $#3$ & $#4$ \\}
+\newcommand{\mc}[1]{\multicolumn{4}{c}{\textit{#1}} \\\\}
+
+% Table caption set up
+\DeclareCaptionFormat{hfillstart}{\hfill#1#2#3\par}
+\DeclareCaptionFont{mdit}{\mdseries\itshape}
+\captionsetup[table]{
+  justification=centering,
+  font=bf,
+  labelfont=mdit,
+}
+
+% Use lettered footnotes
+\renewcommand{\thefootnote}{\alph{footnote}}
+
+% amsthm theorems
+\swapnumbers
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{terminology}[definition]{Terminology}
+\newtheorem{notation}[definition]{Notation}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{corollary}[definition]{Corollary}
+\newtheorem{remark}[definition]{Remark}
+\newtheorem{example}[definition]{Example}
+\newtheorem{caution}[definition]{Caution}
+\newtheorem{discussion}[definition]{Discussion}
+
+\usepackage{thmtools}
 
 % Fancy headers
 \pagestyle{fancy} % choose the "fancy" pagestyle
@@ -139,6 +144,22 @@
   {}{}% <success><failure>
 \makeatother
 
+% Fancy headers
+\pagestyle{fancy} % choose the "fancy" pagestyle
+\fancyhf{}        % clear all headers and footers
+% Now set the headers
+\fancyhead[LE,RO]{\footnotesize\thepage}
+\fancyhead[LO,RE]{\footnotesize\leftmark}
+\makeatletter
+\xapptocmd{\@sect}{\csname #1mark\endcsname{#7}}{}{}
+\makeatother
+
+% Subsection centering
+\makeatletter
+\def\subsection{\@startsection{subsection}{2}
+  \z@{.5\linespacing\@plus.7\linespacing}{.6\baselineskip}{\centering}}
+\makeatother
+
 % Code listings
 \usemintedstyle{tango}
 \setminted{escapeinside=~~}
@@ -148,7 +169,6 @@
 \setmainfont{Avenir Next}
 \setmonofont{Source Code Pro}
 \newfontfamily\mainfont{Avenir Next}
-\newfontfamily\caslon{Adobe Caslon Pro}
 \defaultfontfeatures{Ligatures=TeX, Scale=MatchUppercase}
 
 \title{An iterated Grothendieck construction of semi-cubical types}
@@ -166,9 +186,9 @@
 \newpage
 
 \section{Overture}
-Cubical type theory is an extension of dependent type theory that provides a computational interpretation of Voevodsky's \emph{univalence axiom}, in a field known as \emph{homotopy type theory}, or HoTT. Cubical type theory has several attractive features, and people have been working on it since 2014~\cite{Bezem14}. Today, an experimental branch of Agda, known as \emph{Cubical Agda} is being worked on~\cite{Vezzosi21}.
+Cubical type theory~\cite{Bezem14}~\cite{Cohen16}~\cite{Angiuli17} is an extension of dependent type theory that provides a computational interpretation of Voevodsky's \emph{univalence axiom}, in a field known as \emph{homotopy type theory}, or HoTT. Two real-world projects that implement cubical type theory are worthy of mention: an experimental branch of Agda, known as \emph{Cubical Agda}~\cite{Vezzosi21}, and the Arend theorem prover~\footnote{\href{https://arend-lang.github.io}{arend-lang.github.io}}. Cubical type theory is usually modeled as cubical sets, in the set-theoretic setting. Efforts to model cubical type theory have been ongoing since 2014, and many of these efforts are in the set-theoretic setting.
 
-Our contribution uses the indexed approach to constructing semi-cubical types, as opposed to CCHM~\cite{Cohen16} in 2016, which takes a fibered approach. We will expound on this further in the Grothendieck construction section. We also use \emph{unicity of identity of proofs} (UIP) to finish off the last coherence condition, and we have dedicated a section to discussing it in various settings.
+Our contribution is to model the core of cubical types, semi-cubical sets, in type theory, using an indexed representation, in contrast to previous efforts that use a fibered representation. We use an \emph{iterated reverse-Grothendieck} construction as the basis of our formalization, which we expound on in \ref{sec:grothendieckconstr}. Another feature of our work is that, as we are in the type-theoretic setting, we use \emph{unicity of identity of proofs} (UIP), which would be an inherent property in the set-theoretic setting (see \ref{sec:uip}).
 
 \begin{table}[H]
   \begin{tabularx}{\linewidth}{p{.3\linewidth}|p{.3\linewidth}|p{.3\linewidth}}
@@ -428,7 +448,7 @@ Or, in terms of objects and morphisms:
 \begin{definition}[$\CSet$ in terms of objects and morphisms]
   \begin{align*}
     \obj(\CSet) & := X_n                                                   \\
-    \mor(\CSet) & := X_\lambda, \text{where \lambda is \Cube{}-morphism}
+    \mor(\CSet) & := X_\lambda, \text{where $\lambda$ is \Cube{}-morphism}
   \end{align*}
 
   where we term $X_n$ as the $n$-cubex, and $X_\lambda$ as the ``face map'', defined similarly:
@@ -447,7 +467,7 @@ Or, in terms of objects and morphisms:
   The reader is advised to refer to \cite{Antolini00} for the proof.
 \end{proof}
 
-\section{Grothendieck construction}
+\section{Grothendieck construction\label{sec:grothendieckconstr}}
 The Grothendieck construction provides a correspondence between a fibered representation, and an indexed representation.
 
 $$
@@ -463,7 +483,7 @@ $$
   \ldots
 \end{align*}
 
-\section{Unicity of identity proofs}
+\section{Unicity of identity proofs\label{sec:uip}}
 We dedicate this section to discussing UIP in different settings, and supply intuitions into this notion.
 
 UIP is a flavor of proof-irrelevance:
@@ -481,12 +501,22 @@ One way of formalising set theory in type theory is via Aczel sets [ref]. It can
 \begin{listing}[H]
   \begin{minted}[mathescape]{coq}
     Inductive SET : Type :=
-      node : \forall A : Type, (A -> SET) -> SET
+      node : ~$\forall$~A : Type, (A -> SET) -> SET
       ~$=_\textrm{SET}$~ : ...
   \end{minted}
 \end{listing}
 
-[draw tree structure of set]
+The special case of \mintinline{coq}{(Bool -> SET) -> SET} can be drawn as:
+
+\begin{equation*}
+  \begin{tikzcd}
+    & & \{0, 1, 2\} \arrow[dr]\arrow[dl] & \\
+    & \{0, 1\} \arrow[dl]\arrow[dr] & & \{2\} \\
+    \{0\} & & \{1\} & \\
+  \end{tikzcd}
+\end{equation*}
+
+In general, \mintinline{coq}{SET} can have an $n$-ary branching structure, splitting out the various subsets until we get to the leaves.
 
 Then, proof irrelevance can be stated as:
 
@@ -505,7 +535,7 @@ We use UIP in the final coherence condition in \mintinline{coq}{cohbox} and \min
   \end{minted}
 \end{listing}
 
-In attempting to write the proof without UIP, we'd have a relation between \mintinline{coq}{cohNbox} and \mintinline{coq}{cohPredNbox}, which would be very difficult to prove.
+In attempting to write the proof without UIP, we'd have a relation between \mintinline{coq}{cohNbox} and \mintinline{coq}{cohPredNbox}, which, we expect to be tricky to prove.
 
 \section{Semi-cubical sets}
 In this section, we give the core of the definition of semi-cubical
@@ -797,6 +827,9 @@ Type unification on the term \mintinline{coq}{D} fails.
 
   \bibitem[CohCoq]{Cohen16}
   Cohen, C., Coquand, T., Huber, S., \& Mörtberg, A. (2016). Cubical type theory: a constructive interpretation of the univalence axiom. arXiv preprint arXiv:1611.02108.
+
+  \bibitem[Angiuli]{Angiuli17}
+  Carlo Angiuli, Guillaume Brunerie, Thierry Coquand, Kuen-Bang Hou (Favonia),Robert Harper, \& Daniel R. Licata. arXiv preprint.
 
   \bibitem[Fri]{Friedman08}
   Friedman, G. (2008). An elementary illustrated introduction to simplicial sets. \textit{arXiv preprint arXiv:0809.4221}.
