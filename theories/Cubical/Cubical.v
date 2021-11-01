@@ -205,7 +205,7 @@ Definition mkBox {n} {C : Cubical n} p : PartialBox n.+1 p mkcsp mkPB.
            +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hr ↕ Hq)) ω).
                rewrite rew_compose. apply rew_swap.
                rewrite <- (C.(Cube).(cohcube) (Hr := ⇓ Hr) (Hq := ⇓ Hq)).
-               rewrite rew_compose. rewrite rew_app.
+               rewrite rew_compose, rew_app.
                *** reflexivity.
                *** apply UIP.
         ** rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ Hq) ε).
@@ -218,7 +218,7 @@ Definition mkBox {n} {C : Cubical n} p : PartialBox n.+1 p mkcsp mkPB.
            +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hr ↕ Hq)) ω).
                rewrite rew_compose. apply rew_swap.
                rewrite <- (C.(Cube).(cohcube) (Hr := ⇓ Hr) (Hq := ⇓ Hq)).
-               rewrite rew_compose. rewrite rew_app.
+               rewrite rew_compose, rew_app.
                *** reflexivity.
                *** apply UIP.
 Defined.
@@ -232,13 +232,17 @@ Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
       simpl Nat.add. simpl Nat.sub. rewrite Nat.sub_0_r.
       * intros C Hp D E. exact E.
       * intros. admit.
-    + admit.
+    + rewrite Nat.sub_1_r, Nat.sub_succ_l, Nat.add_succ_l, Nat.pred_succ.
+      rewrite Nat.add_comm. induction p.
+      * rewrite Nat.sub_0_r, Nat.add_0_l. trivial. (* the p = 0 case *)
+      * admit. (* the p.+1 case *)
+      * admit. (* p <= n *)
   - intros p q. revert C. assert (1 <= p). admit. (* subcubeSn *)
     replace q with (q.+1 - p + p - 1).
     + induction (q.+1 - p).
       destruct p. exfalso. eapply le_contra. eassumption.
-      simpl Nat.add. simpl Nat.sub. rewrite Nat.sub_0_r.
-      * intros C Hp D E. exact E.
+      simpl Nat.add. simpl Nat.sub.
+      * intros C Hp D E. admit.
       * intros. admit.
     + admit.
   - admit.
