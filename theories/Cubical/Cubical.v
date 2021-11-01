@@ -59,17 +59,17 @@ Arguments cube'' {n csp PB} _ {p Hp} {D} d.
 Arguments subcube' {n csp PB} _ {p q Hp} Hq ε {D} [d] b.
 
 (* Cube consists of cube, subcube, and coherence conditions between them *)
-Record PartialCube (n p : nat) (csp : Type@{l'}) {PB : PartialBoxBase n (@csp)}
+Record PartialCube (n : nat) (csp : Type@{l'}) {PB : PartialBoxBase n (@csp)}
   (PC : PartialCubeBase n csp PB)
   (Box : forall {p}, PartialBox n p (@csp) PB) := {
-  cube {Hp : p <= n} {D : csp} :
+  cube {p} {Hp : p <= n} {D : csp} :
     (Box.(box) (le_refl n) D -> Type@{l}) -> Box.(box) Hp D -> Type@{l} ;
-  subcube {q} {Hp : p.+1 <= q.+1}
+  subcube {p q} {Hp : p.+1 <= q.+1}
     (Hq : q.+1 <= n) (ε : side) {D : csp}
     {E : Box.(box) (le_refl n) D -> Type@{l}}
     {d : Box.(box) (↓ (Hp ↕ Hq)) D} (b : cube E d) :
     PC.(cube') (Box.(subbox) Hq ε d) ;
-  cohcube {q r} {Hpr : p.+2 <= r.+2}
+  cohcube {p q r} {Hpr : p.+2 <= r.+2}
     {Hr : r.+2 <= q.+2} {Hq : q.+2 <= n}
     (ε : side) (ω : side) {D : csp}
     (E : Box.(box) (le_refl n) D -> Type@{l})
@@ -81,9 +81,9 @@ Record PartialCube (n p : nat) (csp : Type@{l'}) {PB : PartialBoxBase n (@csp)}
       ω (subcube (Hp := ↓ (Hpr ↕ Hr)) Hq ε b));
 }.
 
-Arguments cube {n p csp PB PC Box} _ {Hp D} E.
-Arguments subcube {n p csp PB PC Box} _ {q Hp} Hq ε {D} E [d] b.
-Arguments cohcube {n p csp PB PC Box} _ {q r Hpr Hr Hq ε ω D E d} b.
+Arguments cube {n csp PB PC Box} _ {p Hp D} E.
+Arguments subcube {n csp PB PC Box} _ {p q Hp} Hq ε {D} E [d] b.
+Arguments cohcube {n csp PB PC Box} _ {p q r Hpr Hr Hq ε ω D E d} b.
 
 (* Cube consists of cubesetprefix, a box built out of partial boxes,
   a cube built out of partial cubes *)
@@ -92,7 +92,7 @@ Class Cubical (n : nat) := {
   PB : PartialBoxBase n csp ;
   Box {p} : PartialBox n p csp PB ;
   PC : PartialCubeBase n csp PB ;
-  Cube {p} : PartialCube n p csp PC (@Box) ;
+  Cube : PartialCube n csp PC (@Box) ;
   eqBox0 {len0: 0 <= n} {D : csp} : Box.(box) len0 D = unit ;
   eqBox0' {len1: 1 <= n} {D : csp} : PB.(box') len1 D = unit ;
   eqBoxSp {D : csp} {p} (Hp : p.+1 <= n) :
@@ -123,7 +123,7 @@ Arguments csp {n} _.
 Arguments PB {n} _.
 Arguments PC {n} _.
 Arguments Box {n} _ {p}.
-Arguments Cube {n} _ {p}.
+Arguments Cube {n} _.
 Arguments eqSubboxSn {n} _ {ε p q D Hpq Hq d CL CR}.
 
 Definition mkcsp {n : nat} {C : Cubical n} : Type@{l'} :=
@@ -223,18 +223,24 @@ Definition mkBox {n} {C : Cubical n} p : PartialBox n.+1 p mkcsp mkPB.
                *** apply UIP.
 Defined.
 
-Definition mkCube {n p} {C : Cubical n} : PartialCube n.+1 p mkcsp mkPC mkBox.
-  revert C.
-  replace n with (n.+1 - p + p - 1).
-  induction (n.+1 - p) as [|p' (cubeSn, subcubeSn, cohcubeSn)].
-  + assert (1 <= p). (* n = p case *)
-    - admit.
-    - destruct p. exfalso. eapply le_contra. eassumption.
-      unshelve esplit; simpl Nat.add in *. simpl Nat.sub in *. revert C.
-      rewrite Nat.sub_0_r.
-      * intros C Hp D E. exact E. (* cubeSn *)
-      * intros. admit. (* subcubeSn *)
-      * admit. (* cohcubeSn *)
-  +  admit.
+Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
+  unshelve esplit.
+  - intros p. revert C. assert (1 <= p). admit. (* cubeSn *)
+    replace n with (n.+1 - p + p - 1).
+    + induction (n.+1 - p).
+      destruct p. exfalso. eapply le_contra. eassumption.
+      simpl Nat.add. simpl Nat.sub. rewrite Nat.sub_0_r.
+      * intros C Hp D E. exact E.
+      * intros. admit.
+    + admit.
+  - intros p q. revert C. assert (1 <= p). admit. (* subcubeSn *)
+    replace q with (q.+1 - p + p - 1).
+    + induction (q.+1 - p).
+      destruct p. exfalso. eapply le_contra. eassumption.
+      simpl Nat.add. simpl Nat.sub. rewrite Nat.sub_0_r.
+      * intros C Hp D E. exact E.
+      * intros. admit.
+    + admit.
+  - admit.
 Admitted.
 End Cubical.
