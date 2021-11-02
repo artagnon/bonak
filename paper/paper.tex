@@ -506,9 +506,17 @@ One way of formalising set theory in type theory is via Aczel sets [ref]. It can
   \end{minted}
 \end{listing}
 
-The special case of \mintinline{coq}{(Bool -> SET) -> SET} can be drawn as:
+\mintinline{coq}{(A -> SET) -> SET} can be drawn as:
 
 \begin{equation*}
+  \begin{tikzcd}
+    \{0\} \arrow[dr] & \\
+    & \{\} \\
+  \end{tikzcd}
+  \begin{tikzcd}
+    & \{0, 1\} \arrow[dr]\arrow[dl] & \\
+    \{0\} & & \{1\} \\
+  \end{tikzcd}
   \begin{tikzcd}
     & & \{0, 1, 2\} \arrow[dr]\arrow[dl] & \\
     & \{0, 1\} \arrow[dl]\arrow[dr] & & \{2\} \\
@@ -523,19 +531,6 @@ Then, proof irrelevance can be stated as:
 \begin{align*}
   \forall x y, \forall p q : x =_{\textrm{SET}} y, p = q
 \end{align*}
-
-We use UIP in the final coherence condition in \mintinline{coq}{cohbox} and \mintinline{coq}{cohcube}. If we weren't to use UIP in \mintinline{coq}{cohbox}, then we'd have something similar to:
-
-\begin{listing}[H]
-  \begin{minted}{coq}
-    cohbox : subbox ( subbox ... ) = subbox ( subbox ... )
-    coh2box : cohbox ... = cohbox ...
-    ...
-    cohNbox : cohPredNbox ... = cohPredNbox ...
-  \end{minted}
-\end{listing}
-
-In attempting to write the proof without UIP, we'd have a relation between \mintinline{coq}{cohNbox} and \mintinline{coq}{cohPredNbox}, which, we expect to be tricky to prove.
 
 \section{Semi-cubical sets}
 In this section, we give the core of the definition of semi-cubical
@@ -706,25 +701,48 @@ Table \ref{tab:macros} also shows how to compute the faces of a box or of a cube
   \eqnline{\downbox{l,\epsilon,q}{n,p,[q < p-1]}}{D~(d,b)}{\defeq}{\downbox{l,\epsilon,q}{n,p-1}(D)(d)}
 \end{eqntable}
 
-\section{The formalization effort}
-The core of our formalization effort demanded proof irrelevance for inequalities: \mintinline{coq}{SProp} was the natural choice.
+\section{Notes on the formalization}
+The core of our formalization effort consists of inequalities in \emph{Peano arithmetic}. We start with one inequality primitive, namely $\leq$, and build up all our inequalities on the basis of that inequality. Two different proofs of \mintinline{coq}{p <= q} must be the same: we chose to use \mintinline{coq}{SProp} for the proof irrelevance.
+
+\subsection{Notations in \texorpdfstring{\leq}{<=}}
+On the outset, we defined various \emph{raising}, \emph{lowering}, and \emph{composition} operations on $\leq$:
+
+\mint{coq}/~↑~ := (Hnm : n <= m) : n <= S m/
+\mint{coq}/~⇑~ := (Hnm : n <= m) : S n <= S m/
+\mint{coq}/~↓~ := (Hnm : S n <= m) : n <= m/
+\mint{coq}/~⇓~ := (Hnm : S n <= S m) : n <= m/
+\mint{coq}/~↕~ := (Hnm : n <= m) (Hmp : m <= p) : n <= p/
+
+\subsection{An SProp primer}
+\mintinline{coq}{SProp} is a replacement for standard propositions, or \mintinline{coq}{Prop}, that provides proof irrelevance.
+
+There are three inhabitants of \mintinline{coq}{SProp}: \mintinline{coq}{sUnit} corresponding to $\top$, \mintinline{coq}{sEmpty} corresponding to $\bot$, and \mintinline{coq}{sProposition} corresponding to a definitionally proof-irrelevant term. The way \mintinline{coq}{SProp} implements definitional proof-irrelevance is a simple engineering detail: there is hard-coding in Coq to render two inhabitants of \mintinline{coq}{sProposition} trivially inter-convertible.
+
+\begin{listing}[H]
+  \begin{minted}{coq}
+    Theorem SPropIrr (P : SProp) (x y : P) : x = y.
+    Proof.
+      by reflexivity.
+    Abort. (* Type-check fails at Qed.
+            * (=) : ∀ A, A -> A -> Prop, but we want to return an SProp.
+            *)
+  \end{minted}
+\end{listing}
+
+We can, however, define an \mintinline{coq}{=S} that returns an \mintinline{coq}{SProp}:
+
+\begin{listing}[H]
+  \begin{minted}{coq}
+    Inductive eqsprop {A : SProp} (x : A) : A -> Prop := eqsprop_refl : eqsprop x x.
+    Infix "=S" := eqsprop (at level 70) : type_scope.
+  \end{minted}
+\end{listing}
 
 \subsection{\texorpdfstring{\leq}{<=} in SProp}
-We start with one inequality primitive, namely $\leq$, and build up all our inequalities on the basis of that inequality. We tried three different approaches to defining $\leq$ in \mintinline{coq}{SProp}.
+We tried three different approaches to defining $\leq$ in \mintinline{coq}{SProp}.
 
 \begin{enumerate}
-  \item[(a)] An inductive definition.
-    \begin{listing}[H]
-      \begin{minted}{coq}
-      Inductive le' (n : nat) : nat -> SProp :=
-      | le_refl : n <= n
-      | le_S_up : forall {m : nat}, n <= m -> n <= S m
-      where "n <= m" := (le' n m) : nat_scope.
-
-    Definition le := le'.
-    \end{minted}
-    \end{listing}
-  \item[(b)] A recursive definition.
+  \item[(a)] A recursive definition.
     \begin{listing}[H]
       \begin{minted}{coq}
       Inductive sFalse : SProp :=.
@@ -741,20 +759,26 @@ We start with one inequality primitive, namely $\leq$, and build up all our ineq
         end.
      \end{minted}
     \end{listing}
-  \item[(c)] An nested implication.
+  \item[(b)] An inductive definition.
     \begin{listing}[H]
       \begin{minted}{coq}
       Inductive le' (n : nat) : nat -> SProp :=
-        | le_refl' : n <= n
-        | le_S_up' : forall (m : nat), n <= m -> n <= S m
-        where "n <= m" := (le' n m) : nat_scope.
+      | le_refl : n <= n
+      | le_S_up : forall {m : nat}, n <= m -> n <= S m
+      where "n <= m" := (le' n m) : nat_scope.
 
+    Definition le := le'.
+    \end{minted}
+    \end{listing}
+  \item[(c)] A refinement of the inductive definition; a nested implication.
+    \begin{listing}[H]
+      \begin{minted}{coq}
       Definition le n m := forall p, p <= n -> p <= m.
       \end{minted}
     \end{listing}
 \end{enumerate}
 
-(b) was unworkable right from the start, and we tried approach (a) for a while, before settling on approach (c), because it made compositions of inequalities almost trivial to prove. Compare the following snippets defining transitivity of $\leq$:
+(a) was unworkable right from the start, and we tried approach (b) for a while, before running into unification problems. We then settled on approach (c), because it made compositions of inequalities almost trivial to prove. Compare the following snippets defining transitivity of $\leq$:
 
 \begin{listing}[H]
   \begin{minted}[linenos]{coq}
@@ -762,7 +786,7 @@ We start with one inequality primitive, namely $\leq$, and build up all our ineq
     (* ... a non-trivial proof ... *)
     Defined.
   \end{minted}
-  \caption{when $\leq$ is defined using an inductive approach}
+  \caption{\mintinline{coq}{le_trans} when $\leq$ is defined using an inductive approach}
 \end{listing}
 
 \begin{listing}[H]
@@ -770,10 +794,10 @@ We start with one inequality primitive, namely $\leq$, and build up all our ineq
     Definition le_trans {n m p} (Hnm : n <= m) (Hmp : m <= p) : n <= p :=
       fun q (Hqn : le' q n) => Hmp _ (Hnm _ Hqn).
   \end{minted}
-  \caption{when $\leq$ is defined using a nested implication}
+  \caption{\mintinline{coq}{le_trans} when $\leq$ is defined using a nested implication}
 \end{listing}
 
-Implications are naturally easier to work with, so the nested implication in \mintinline{coq}{SProp} was an easy choice. Many of the commutativity proofs were a simple \mintinline{coq}{reflexivity}:
+Implications are naturally easier to work with, so the nested implication in \mintinline{coq}{SProp} was an easy choice. Many of the associtivity and commutativity proofs are then a simple \mintinline{coq}{reflexivity}:
 
 \begin{listing}[H]
   \begin{minted}{coq}
@@ -784,39 +808,122 @@ Implications are naturally easier to work with, so the nested implication in \mi
   \end{minted}
 \end{listing}
 
-\subsection{Raising and lowering operations on \texorpdfstring{\leq}{<=}}
-\mint{coq}/~↕~ := (Hnm : n <= m) (Hmp : m <= p) : n <= p/
-\mint{coq}/~↑~ := (Hnm : n <= m) : n <= S m/
-\mint{coq}/~↓~ := (Hnm : S n <= m) : n <= m/
-\mint{coq}/~⇓~ := (Hnm : S n <= S m) : n <= m/
-\mint{coq}/~⇑~ := (Hnm : n <= m) : S n <= S m/
-\subsection{Yoneda.v}
-\subsection{RewLemmas.v}
-\subsection{Notes on SProp}
-\subsection{Cubical.v}
+\subsection{The Fibonacci trick}
+We'd initially defined \mintinline{coq}{Cubical} in a monolithic manner, and attempted to use \emph{well-founded induction} to build it up in steps. Induction is the process of successively building up a type by reasoning on the result of the previous iteration, and well-founded induction remembers all the previous levels. A simple induction is clearly insufficient for our purposes, and as it turned out, well-founded induction was a non-starter too.
 
-We'd tried to build the \mintinline{coq}{Cubical} as a \mintinline{coq}{Fixpoint} initially, but ran into unification problems with \mintinline{coq}{le_dec}.
+Our initial \mintinline{coq}{Record} looked like:
 
-Type unification on the term \mintinline{coq}{D} fails.
+\begin{listing}[H]
+  \begin{minted}{coq}
+    Record Cubical {n : nat} :=
+    {
+    csp {n'} (Hn' : n' <= n) : Type@{l'} ;
+    hd {n'} {Hn' : S n' <= n} : csp Hn' -> csp (⇓ Hn') ;
+    box {n' p} {Hn' : n' <= n} (Hp : p <= n') : csp Hn' -> Type@{l} ;
+    tl {n'} {Hn' : S n' <= n} (D : csp Hn') :
+      box (le_refl n') (hd D) -> Type@{l} ;
+    (* ... *)
+    }.
+  \end{minted}
+\end{listing}
+
+To build it up in steps, we defined a \mintinline{coq}{Fixpoint} as follows, but ran into unification problems:
 
 \begin{listing}[H]
   \begin{minted}[linenos]{coq}
-    Theorem le_dec {n m} : n <= S m -> {n = S m} + {n <= m}.
+    Theorem le_dec {n m} : n <= m -> {n = m} + {n <= pred m} + {m = O}.
     Admitted.
-    Theorem le_dec' {n m} : n <= m -> {n = m} + {n <= pred m} + {m = O}.
+    Theorem lower_both {m n} : S m <= S n -> m <= n.
     Admitted.
+
     (* ... *)
+
+    Fixpoint cubical {n : nat} : Cubical :=
+    match n with
+    | O => {|
+      csp _ _ := unit;
+      hd _ Hn' _ := ltac:(apply (le_discr Hn'));
+      box _ _ _ _ _ := unit;
+      tl _ Hn' _ _ := ltac:(apply (le_discr Hn'));
+      (* ... *)
+      |}
+    | S n => let cn := cubical (n := n) in
+
+    (* ... *)
+
     let hdn {n'} (Hn' : S n' <= S n) :=
-    match le_dec' (lower_both Hn') return cspn Hn' (* S n' <= S n *) ->
+    match le_dec (lower_both Hn') return cspn Hn' (* S n' <= S n *) ->
     cspn (⇓ Hn') (* n' <= S n *) with
     | inleft Hcmp =>
     match Hcmp with
     | left _ (* n' = n *) => fun D => D.1 (* n' = S n *)
     | right _ (* n' <= pred n *) => fun D => cn.(hd) D (* n' <= n *)
     end
-    (* ... *)
     \end{minted}
+  \caption{Type unification on the term \mintinline{coq}{D} fails}
 \end{listing}
+
+We then settled on remembering the previous two levels of induction, a middle-ground between plain induction and well-founded recursion, which we refer to as the Fibonacci trick. Our final \mintinline{coq}{Record} for the box looks like:
+
+\begin{listing}[H]
+  \begin{minted}{coq}
+    (* PartialBox consists of an 0-cells, and fillers which are the 1-cells,
+    2-cells, and 3-cells relating the different 0-cells on the cube  *)
+    Record PartialBoxBase (n : nat) (csp : Type@{l'}) := {
+      box' {p} (Hp : p.+1 <= n) : csp -> Type@{l} ;
+      (* [box' n D] is [box (n-1) D.1] *)
+      box'' {p} (Hp : p.+2 <= n) : csp -> Type@{l} ;
+      subbox' {p q} {Hp : p.+2 <= q.+2} (Hq : q.+2 <= n) (ε : side) {D : csp} :
+        box' (↓ (Hp ↕ Hq)) D -> box'' (Hp ↕ Hq) D;
+    }.
+
+    Record PartialBox (n p : nat) (csp : Type@{l'})
+    (PB : PartialBoxBase n csp) := {
+      box (Hp : p <= n) : csp -> Type@{l} ;
+      subbox {q} {Hp : p.+1 <= q.+1} (Hq : q.+1 <= n) (ε : side) {D : csp} :
+      box (↓ (Hp ↕ Hq)) D -> PB.(box') (Hp ↕ Hq) D;
+      cohbox {q r} {Hpr : p.+2 <= r.+2} {Hr : r.+2 <= q.+2} {Hq : q.+2 <= n}
+      {ε : side} {ω : side} {D: csp} (d : box (↓ (⇓ Hpr ↕ (↓ (Hr ↕ Hq)))) D) :
+      PB.(subbox') (Hp := Hpr ↕ Hr) Hq ε (subbox (Hp := ⇓ Hpr) (↓ (Hr ↕ Hq)) ω d) =
+      (PB.(subbox') (Hp := Hpr) (Hr ↕ Hq) ω (subbox (Hp := ↓ (Hpr ↕ Hr)) Hq ε d));
+    }.
+  \end{minted}
+\end{listing}
+
+To build up the box, we'd simply have to induction on \mintinline{coq}{p}:
+
+\begin{listing}[H]
+  \begin{minted}{coq}
+    Definition mkcsp {n : nat} {C : Cubical n} : Type@{l'} :=
+      { D : C.(csp) & C.(Box).(box) (le_refl n) D -> Type@{l} }.
+
+    Definition mkPB {n} {C : Cubical n} :
+      PartialBoxBase n.+1 mkcsp := {|
+      box' {p} {Hp : p.+1 <= n.+1} {D : mkcsp} := C.(Box).(box) (⇓ Hp) D.1 ;
+      box'' {p} {Hp : p.+2 <= n.+1} {D : mkcsp} := C.(PB).(box') (⇓ Hp) D.1 ;
+      subbox' {p q} {Hp : p.+2 <= q.+2} {Hq : q.+2 <= n.+1} {ε} {D : mkcsp} {d} :=
+        C.(Box).(subbox) (Hp := ⇓ Hp) (⇓ Hq) ε d ;
+    |}.
+
+    Definition mkBox {n} {C : Cubical n} p : PartialBox n.+1 p mkcsp mkPB.
+      induction p as [|p (boxSn, subboxSn, cohboxSn)].
+      + (* ... *)
+  \end{minted}
+\end{listing}
+
+\subsection{UIP}
+We use UIP in the final coherence condition in \mintinline{coq}{cohbox} and \mintinline{coq}{cohcube}. If we weren't to use UIP in \mintinline{coq}{cohbox}, then we'd have something similar to:
+
+\begin{listing}[H]
+  \begin{minted}{coq}
+    cohbox : subbox ( subbox ... ) = subbox ( subbox ... )
+    coh2box : cohbox ... = cohbox ...
+    ...
+    cohNbox : cohPredNbox ... = cohPredNbox ...
+  \end{minted}
+\end{listing}
+
+In attempting to write the proof without UIP, we'd have a relation between \mintinline{coq}{cohNbox} and \mintinline{coq}{cohPredNbox}, which, we expect to be tricky to prove.
 
 \begin{thebibliography}{10}
   \bibitem[Bez]{Bezem14}
@@ -846,8 +953,5 @@ Type unification on the term \mintinline{coq}{D} fails.
   \bibitem[CoqInCoq]{Barras97}
   Barras, B., \& Werner, B. (1997). Coq in coq. \textit{Available on the WWW.}
 \end{thebibliography}
-
-\appendix
-\section{Source code listing}
 
 \end{document}
