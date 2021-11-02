@@ -5,6 +5,7 @@ Require Import Yoneda.
 Import LeYoneda.
 Require Import Aux.
 Require Import RewLemmas.
+Require Import Program.
 Set Printing Projections.
 
 Section Cubical.
@@ -225,17 +226,24 @@ Defined.
 
 Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
   unshelve esplit.
-  - intros p. revert C. assert (1 <= p). admit. (* cubeSn *)
+  - intros p Hp. generalize Hp. revert C. assert (1 <= p). admit. (* cubeSn *)
     replace n with (n.+1 - p + p - 1).
     + induction (n.+1 - p).
       destruct p. exfalso. eapply le_contra. eassumption.
       simpl Nat.add. simpl Nat.sub. rewrite Nat.sub_0_r.
-      * intros C Hp D E. exact E.
+      * intros C Hp' D E. exact E.
       * intros. admit.
-    + rewrite Nat.sub_1_r, Nat.sub_succ_l, Nat.add_succ_l, Nat.pred_succ.
-      rewrite Nat.add_comm. induction p.
-      * rewrite Nat.sub_0_r, Nat.add_0_l. trivial. (* the p = 0 case *)
-      * admit. (* the p.+1 case *)
+      + clear H. induction p.
+      * simpl. rewrite Nat.sub_0_r, Nat.add_0_r. trivial. (* the p = 0 case *)
+      * replace (n.+1 - p.+1) with (n - p) by auto. (* the p.+1 case *)
+        rewrite Nat.add_comm, Nat.add_succ_comm, Nat.add_comm.
+        rewrite <- Nat.sub_succ_l. apply IHp, le_S_down, Hp.
+        pose proof (le_S_both Hp). unfold "<=" in H.
+        specialize H with (1 := le_refl' p). clear Hp IHp.
+        destruct (Compare_dec.le_dec p n). assumption.
+        enough (H0: SFalse) by destruct H0. dependent induction H.
+        destruct n0. constructor. apply IHle'. intro. apply n0. constructor.
+        assumption.
       * admit. (* p <= n *)
   - intros p q. revert C. assert (1 <= p). admit. (* subcubeSn *)
     replace q with (q.+1 - p + p - 1).
