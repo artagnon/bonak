@@ -233,17 +233,15 @@ Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
       destruct p; [exfalso; eapply le_contra; eassumption |
       simpl Nat.add; simpl Nat.sub].
       * exact E. (* n = p *)
-      * intros d. assert ((n - n0).+1 <= n.+1). (* p = S n *)
-        -- clear d. rewrite Nat.sub_succ_r, Nat.sub_succ_l, Nat.pred_succ in *.
-           admit. admit. admit.
-        -- rewrite Nat.sub_succ_l in IHn0.
-           ++ specialize IHn0 with H0.
-              simpl in d.
-              exact True. (* {b :
-                  (C.(Cube).(cube) D.2 ((mkBox (n - n0)).(subbox) H0 L d) *
-                  C.(Cube).(cube) D.2 ((mkBox (n - n0)).(subbox) H0 R d))%type
-                  & IHn0 (d; b)}. *)
-           ++ admit.
+      * intros d. simpl Nat.sub in HpEq.  (* p = S n *)
+          assert ((n.+1 - n0) <= n.+1).
+          ++ admit.
+          ++ specialize IHn0 with H0.
+             simpl in d.
+             exact True. (* {b :
+                (C.(Cube).(cube) D.2 ((mkBox (n - n0)).(subbox) H0 L d) *
+                C.(Cube).(cube) D.2 ((mkBox (n - n0)).(subbox) H0 R d))%type
+                & IHn0 (d; b)}. *)
     + now apply np_comparitor_shift2. (* now apply np_comparitor_shift. *)
   - intros *. (* subcubeSn *)
     lazy beta zeta.

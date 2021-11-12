@@ -154,4 +154,9 @@ Lemma np_comparitor_shift2 {n p} : p <= n -> n - (n - p) = p.
     rewrite Nat.sub_succ_l. f_equal. apply IHp. now apply le_S_both in H.
     now apply Nat.le_sub_l.
 Qed.
+
+Lemma le'_sub_l {n p} : n - p <= n -> Peano.le p n.
+  intros. unfold "<=" in H. specialize H with (1 := le_refl' (n - p)).
+  apply le'_implies_le in H. admit.
+Admitted.
 End LeYoneda.
