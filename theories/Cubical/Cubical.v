@@ -7,6 +7,7 @@ Require Import Aux.
 Require Import RewLemmas.
 Require Import Program.
 Set Printing Projections.
+Set Primitive Projections.
 
 Section Cubical.
 Universe l'.
@@ -226,33 +227,34 @@ Defined.
 
 Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
   unshelve esplit.
-  - intros p Hp. generalize Hp. revert C. assert (1 <= p). admit. (* cubeSn *)
-    replace n with (n.+1 - p + p - 1).
-    + induction (n.+1 - p).
-      destruct p. exfalso. eapply le_contra. eassumption.
-      simpl Nat.add. simpl Nat.sub. rewrite Nat.sub_0_r.
-      * intros C Hp' D E. exact E.
-      * intros. admit.
-      + clear H. induction p.
-      * simpl. rewrite Nat.sub_0_r, Nat.add_0_r. trivial. (* the p = 0 case *)
-      * replace (n.+1 - p.+1) with (n - p) by auto. (* the p.+1 case *)
-        rewrite Nat.add_comm, Nat.add_succ_comm, Nat.add_comm.
-        rewrite <- Nat.sub_succ_l. apply IHp, le_S_down, Hp.
-        pose proof (le_S_both Hp). unfold "<=" in H.
-        specialize H with (1 := le_refl' p). clear Hp IHp.
-        destruct (Compare_dec.le_dec p n). assumption.
-        enough (H0: SFalse) by destruct H0. dependent induction H.
-        destruct n0. constructor. apply IHle'. intro. apply n0. constructor.
-        assumption.
-      * admit. (* p <= n *)
-  - intros p q. revert C. assert (1 <= p). admit. (* subcubeSn *)
+  - intros p Hp D E. generalize Hp. (* cubeSn *)
+    replace p with (n.+1 - (n.+1 - p)).
+    + assert (1 <= p). admit. induction (n.+1 - p); intros HpEq.
+      destruct p; [exfalso; eapply le_contra; eassumption |
+      simpl Nat.add; simpl Nat.sub].
+      * exact E. (* n = p *)
+      * intros d. assert ((n - n0).+1 <= n.+1). (* p = S n *)
+        -- clear d. rewrite Nat.sub_succ_r, Nat.sub_succ_l, Nat.pred_succ in *.
+           admit. admit. admit.
+        -- rewrite Nat.sub_succ_l in IHn0.
+           ++ specialize IHn0 with H0.
+              simpl in d.
+              exact True. (* {b :
+                  (C.(Cube).(cube) D.2 ((mkBox (n - n0)).(subbox) H0 L d) *
+                  C.(Cube).(cube) D.2 ((mkBox (n - n0)).(subbox) H0 R d))%type
+                  & IHn0 (d; b)}. *)
+           ++ admit.
+    + now apply np_comparitor_shift2. (* now apply np_comparitor_shift. *)
+  - intros *. (* subcubeSn *)
+    lazy beta zeta.
+    generalize (↓ (Hp ↕ Hq)), d.
     replace q with (q.+1 - p + p - 1).
-    + induction (q.+1 - p).
+    + assert (1 <= p). admit. induction (q.+1 - p).
       destruct p. exfalso. eapply le_contra. eassumption.
       simpl Nat.add. simpl Nat.sub.
-      * intros C Hp D E. admit.
-      * intros. admit.
-    + admit.
-  - admit.
+      * intros. admit. (* p = q *)
+      * intros. admit. (* p = S q *)
+    + now apply np_comparitor_shift, (le_S_down Hp).
+  - admit. (* cohcubeSn *)
 Admitted.
 End Cubical.

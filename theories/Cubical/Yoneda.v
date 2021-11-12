@@ -1,6 +1,8 @@
 Require Import Interface.
 Require Import Arith.
 Require Import RelationClasses.
+Require Import Program.
+Require Import Aux.
 
 Module LeYoneda.
 
@@ -123,4 +125,33 @@ Lemma eq_pair {A B : Type} {u1 v1 : A} {u2 v2 : B}
               (p : u1 = v1) (q : u2 = v2) : (u1, u2) = (v1, v2).
   now destruct p, q.
 Defined.
+
+Ltac applys_eq_core H :=
+  eapply applys_eq_init;
+  [ applys_eq_loop tt | apply H ];
+  try ( reflexivity || apply le_irrelevance ).
+
+Tactic Notation "applys_eq" constr(H) :=
+  applys_eq_core H.
+
+Lemma le'_implies_le {n p} : le' p n -> Peano.le p n.
+  intros H. destruct (Compare_dec.le_dec p n) as [|n0].
+  assumption. enough (G:SFalse) by destruct G. dependent induction H.
+  destruct n0; constructor. apply IHle'; intro; apply n0; constructor; assumption.
+Qed.
+
+Lemma np_comparitor_shift {n p} : p <= n.+1 -> n.+1 - p + p - 1 = n.
+  intros Hp. induction p.
+  * simpl. rewrite Nat.sub_0_r, Nat.add_0_r. trivial. (* the p = 0 case *)
+  * replace (n.+1 - p.+1) with (n - p) by auto; rewrite Nat.add_comm, Nat.add_succ_comm, Nat.add_comm; rewrite <- Nat.sub_succ_l; [apply IHp, le_S_down, Hp | pose proof (le_S_both Hp) as H; unfold "<=" in H;
+  specialize H with (1 := le_refl' p); clear Hp IHp]. now apply le'_implies_le.
+Qed.
+
+Lemma np_comparitor_shift2 {n p} : p <= n -> n - (n - p) = p.
+  revert n. induction p; intros.
+  * simpl. now rewrite Nat.sub_0_r, Nat.sub_diag.
+  * destruct n. apply le_contra in H as []. simpl Nat.sub at 2.
+    rewrite Nat.sub_succ_l. f_equal. apply IHp. now apply le_S_both in H.
+    now apply Nat.le_sub_l.
+Qed.
 End LeYoneda.
