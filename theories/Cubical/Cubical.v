@@ -157,7 +157,7 @@ Definition mkBox {n} {C : Cubical n} p : PartialBox n.+1 p mkcsp mkPB.
   * simpl; intros. rewrite C.(@eqBox0 _); exact tt. (* subboxSn *)
   * simpl; intros. (* cohboxSn *)
     rewrite (eqSubbox0 (Hp := ⇓ Hpr)).
-    rewrite (eqSubbox0 (Hp := ⇓ (Hpr ↕ Hr))); reflexivity.
+    now rewrite (eqSubbox0 (Hp := ⇓ (Hpr ↕ Hr))).
   + unshelve esplit; (* p = S _ *)
     pose (Sub Hp side := (subboxSn p (le_refl p.+1) Hp side)).
     * intros Hp D. (* boxSn *)
@@ -167,7 +167,7 @@ Definition mkBox {n} {C : Cubical n} p : PartialBox n.+1 p mkcsp mkPB.
                   C.(Cube).(cube) D.2 (Sub' R d))%type }.
     * simpl. intros. destruct X as (d, (CL, CR)). (* subboxSn *)
       rewrite C.(@eqBoxSp _). destruct q. exfalso. clear -Hp.
-      apply le_S_both in Hp. apply le_contra in Hp; assumption.
+      now apply le_S_both, le_contra in Hp.
       unshelve esplit.
       - clear CL CR.
         exact (subboxSn q.+1 (↓ Hp) Hq ε _ d).
@@ -227,29 +227,20 @@ Defined.
 
 Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
   unshelve esplit.
-  - intros p Hp D E. generalize Hp. (* cubeSn *)
-    replace p with (n.+1 - (n.+1 - p)).
-    + assert (1 <= p). admit. induction (n.+1 - p); intros HpEq.
-      destruct p; [exfalso; eapply le_contra; eassumption |
-      simpl Nat.add; simpl Nat.sub].
-      * exact E. (* n = p *)
-      * intros d. simpl Nat.sub in HpEq.  (* p = S n *)
-          assert ((n.+1 - n0) <= n.+1).
-          ++ admit.
-          ++ specialize IHn0 with H0.
-             simpl in d.
-             exact True. (* {b :
-                (C.(Cube).(cube) D.2 ((mkBox (n - n0)).(subbox) H0 L d) *
-                C.(Cube).(cube) D.2 ((mkBox (n - n0)).(subbox) H0 R d))%type
-                & IHn0 (d; b)}. *)
-    + now apply np_comparitor_shift2. (* now apply np_comparitor_shift. *)
+  - intros p Hp D E; apply le_induction with (H := Hp); clear p Hp. (* cubeSn *)
+    + exact E. (* n = p *)
+    + intros p Hp IH d.  (* p = S n *)
+      exact {b :
+          (C.(Cube).(cube) D.2 ((mkBox p).(subbox) Hp L d) *
+          C.(Cube).(cube) D.2 ((mkBox p).(subbox) Hp R d))%type
+          & IH (d; b)}.
   - intros *. (* subcubeSn *)
     lazy beta zeta.
-    generalize (↓ (Hp ↕ Hq)), d.
-    replace q with (q.+1 - p + p - 1).
-    + assert (1 <= p). admit. induction (q.+1 - p).
-      destruct p. exfalso. eapply le_contra. eassumption.
-      simpl Nat.add. simpl Nat.sub.
+    rewrite le_induction_computes.
+    apply le_induction with (H := Hp).
+    + assert (1 <= p). admit. induction (q.+1 - p); intros HpEq.
+      destruct p; [exfalso; eapply le_contra; eassumption |
+      simpl Nat.add; simpl Nat.sub].
       * intros. admit. (* p = q *)
       * intros. admit. (* p = S q *)
     + now apply np_comparitor_shift, (le_S_down Hp).
