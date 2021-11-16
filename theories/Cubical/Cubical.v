@@ -234,16 +234,12 @@ Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
           (C.(Cube).(cube) D.2 ((mkBox p).(subbox) Hp L d) *
           C.(Cube).(cube) D.2 ((mkBox p).(subbox) Hp R d))%type
           & IH (d; b)}.
-  - intros *. (* subcubeSn *)
+  - intros *. revert d. (* subcubeSn *)
     lazy beta zeta.
     rewrite le_induction_computes.
-    apply le_induction with (H := Hp).
-    + assert (1 <= p). admit. induction (q.+1 - p); intros HpEq.
-      destruct p; [exfalso; eapply le_contra; eassumption |
-      simpl Nat.add; simpl Nat.sub].
-      * intros. admit. (* p = q *)
-      * intros. admit. (* p = S q *)
-    + now apply np_comparitor_shift, (le_S_down Hp).
+    (* refine (le_induction' _ _ _ _ _ Hp). *)
+    (* intros ((BL, BR), d'). *)
+    admit.
   - admit. (* cohcubeSn *)
 Admitted.
 End Cubical.
