@@ -3,12 +3,13 @@ Require Import Arith.
 Require Import RelationClasses.
 Require Import Program.
 Require Import Aux.
+Require Import Lia.
 
 Module LeYoneda.
 
 Inductive le' (n : nat) : nat -> SProp :=
   | le_refl' : n <= n
-  | le_S_up' : forall (m : nat), n <= m -> n <= S m
+  | le_S_up' : forall {m : nat}, n <= m -> n <= S m
   where "n <= m" := (le' n m) : nat_scope.
 
 Ltac reflexivity' := apply le_refl' || reflexivity.
@@ -23,6 +24,36 @@ Infix "=S" := eqsprop (at level 70) : type_scope.
 Theorem le_irrelevance : forall {n m} (H H' : n <= m), H =S H'.
   reflexivity.
 Defined.
+
+Inductive SFalse : SProp :=.
+
+Lemma le'_1_O_contra: le' 1 O -> SFalse.
+  inversion 1.
+Defined.
+
+Theorem le_contra {n}: S n <= O -> False.
+  intros; elimtype SFalse; unfold le in H.
+  specialize H with (p := 1); apply le'_1_O_contra.
+  apply H; clear H; induction n. constructor. now constructor.
+Defined.
+Lemma le'_implies_le {n p} : le' p n -> Peano.le p n.
+  intros H. destruct (Compare_dec.le_dec p n) as [|n0].
+  assumption. enough (G:SFalse) by destruct G. dependent induction H.
+  destruct n0; constructor. apply IHle'; intro; apply n0; now constructor.
+Qed.
+
+Lemma le_implies_le' {n p} : Peano.le p n -> le' p n.
+  intros H. induction H. constructor. now constructor.
+Qed.
+
+Lemma leYoneda_implies_le {n p} : p <= n -> Peano.le p n.
+  intros H. apply le'_implies_le. unfold "<=" in H. now apply H, le_refl'.
+Qed.
+
+Lemma le_implies_leYoneda {n p} : Peano.le p n -> p <= n.
+  intros H. unfold "<=". intros p0 H0. apply le'_implies_le in H0.
+  apply le_implies_le'. now lia.
+Qed.
 
 Definition le_refl n : n <= n :=
   fun _ x => x. (* Coq bug! *)
@@ -47,14 +78,14 @@ Defined.
 Notation "↓ p" := (le_S_down p) (at level 40).
 
 Theorem le_S_both {n m} (Hnm : S n <= S m) : n <= m.
-  unfold le; intros p Hpn.
-Admitted.
+  apply leYoneda_implies_le in Hnm. apply le_implies_leYoneda. now lia.
+Defined.
 
 Notation "⇓ p" := (le_S_both p) (at level 40).
 
 Theorem raise_S_both {n m} (Hnm : n <= m) : S n <= S m.
-  unfold le; intros p Hpn.
-Admitted.
+  apply leYoneda_implies_le in Hnm. apply le_implies_leYoneda. now lia.
+Defined.
 
 Notation "⇑ p" := (raise_S_both p) (at level 40).
 
@@ -100,18 +131,6 @@ Theorem le_trans_comm7 {n m p} (Hmn : S n <= S m) (Hmp : S m <= p) :
   reflexivity.
 Defined.
 
-Inductive SFalse : SProp :=.
-
-Lemma le'_1_O_contra: le' 1 O -> SFalse.
-  inversion 1.
-Defined.
-
-Theorem le_contra {n}: S n <= O -> False.
-  intros; elimtype SFalse; unfold le in H.
-  specialize H with (p := 1); apply le'_1_O_contra.
-  apply H; clear H; induction n. constructor. now constructor.
-Defined.
-
 Lemma eq_pair {A B : Type} {u1 v1 : A} {u2 v2 : B}
               (p : u1 = v1) (q : u2 = v2) : (u1, u2) = (v1, v2).
   now destruct p, q.
@@ -125,25 +144,6 @@ Ltac applys_eq_core H :=
 Tactic Notation "applys_eq" constr(H) :=
   applys_eq_core H.
 
-Lemma le'_implies_le {n p} : le' p n -> Peano.le p n.
-  intros H. destruct (Compare_dec.le_dec p n) as [|n0].
-  assumption. enough (G:SFalse) by destruct G. dependent induction H.
-  destruct n0; constructor. apply IHle'; intro; apply n0; now constructor.
-Qed.
-
-Lemma le_implies_le' {n p} : Peano.le p n -> le' p n.
-  intros H. induction H. constructor. now constructor.
-Qed.
-
-Lemma leYoneda_implies_le {n p} : p <= n -> Peano.le p n.
-  intros H. apply le'_implies_le. unfold "<=" in H. now apply H, le_refl'.
-Qed.
-
-Lemma le_implies_leYoneda {n p} : Peano.le p n -> p <= n.
-  intros H. unfold "<=". intros p0 H0. apply le'_implies_le in H0.
-  apply le_implies_le'. apply (Nat.le_trans p0 p). assumption. now assumption.
-Qed.
-
 Lemma np_comparitor_shift {n p} : p <= n.+1 -> n.+1 - p + p - 1 = n.
   intros Hp. induction p.
   * simpl. rewrite Nat.sub_0_r, Nat.add_0_r. trivial. (* the p = 0 case *)
@@ -156,7 +156,7 @@ Lemma np_comparitor_shift2 {n p} : p <= n -> n - (n - p) = p.
   * simpl. now rewrite Nat.sub_0_r, Nat.sub_diag.
   * destruct n. apply le_contra in H as []. simpl Nat.sub at 2.
     rewrite Nat.sub_succ_l. f_equal. apply IHp. now apply le_S_both in H.
-    now apply Nat.le_sub_l.
+    now lia.
 Qed.
 
 Theorem le_induction : forall n, forall P : forall p, p <= n -> Type,

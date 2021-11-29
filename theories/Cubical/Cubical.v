@@ -254,8 +254,9 @@ Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
     simpl.
     unfold mkBox at 2.
     change p with (pred p.+1).
-    change (pred p.+1).+1 with p.+1. pattern p.+1, Hp.
-    refine (le_induction _ _ _ _ _ Hp).
+    (* change (pred p.+1).+1 with p.+1.
+    pattern p.+1, Hp.
+    refine (le_induction _ _ _ _ _ Hp). *)
     (* intros ((BL, BR), d'). *)
     admit.
   - admit. (* cohcubeSn *)
