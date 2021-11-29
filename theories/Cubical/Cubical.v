@@ -139,7 +139,7 @@ Definition mkPB {n} {C : Cubical n} :
     C.(Box).(subbox) (Hp := ⇓ Hp) (⇓ Hq) ε d ;
 |}.
 
-Definition mkPC {n} {C : Cubical n} :
+Definition mkPC {n} {C: Cubical n} :
   PartialCubeBase n.+1 mkcsp mkPB := {|
   cube' {p} {Hp : p.+1 <= n.+1} {D : mkcsp} := C.(Cube).(cube) D.2 :
     mkPB.(box') Hp D -> Type; (* Bug? *)
@@ -150,94 +150,112 @@ Definition mkPC {n} {C : Cubical n} :
     C.(Cube).(subcube) (Hp := ⇓ Hp) (⇓ Hq) ε D.2 b;
 |}.
 
-Definition mkBox {n} {C : Cubical n} p : PartialBox n.+1 p mkcsp mkPB.
-  induction p as [|p (boxSn, subboxSn, cohboxSn)].
-  + unshelve esplit.
-  * intros Hp D; exact unit. (* p = O *)
+Definition mkBox0 {n} {C: Cubical n} : PartialBox n.+1 O mkcsp mkPB.
+  unshelve esplit.
+  * intros Hp D; exact unit. (* boxSn *)
   * simpl; intros. rewrite C.(@eqBox0 _); exact tt. (* subboxSn *)
-  * simpl; intros. (* cohboxSn *)
+  * simpl; intros. (* cohboxp *)
     rewrite (eqSubbox0 (Hp := ⇓ Hpr)).
     now rewrite (eqSubbox0 (Hp := ⇓ (Hpr ↕ Hr))).
-  + unshelve esplit; (* p = S _ *)
-    pose (Sub Hp side := (subboxSn p (le_refl p.+1) Hp side)).
-    * intros Hp D. (* boxSn *)
-      pose (Sub' side d := Sub Hp side D d).
-      exact {d : boxSn (↓ Hp) D &
-                 (C.(Cube).(cube) D.2 (Sub' L d) *
-                  C.(Cube).(cube) D.2 (Sub' R d))%type }.
-    * simpl. intros. destruct X as (d, (CL, CR)). (* subboxSn *)
-      rewrite C.(@eqBoxSp _). destruct q. exfalso. clear -Hp.
-      now apply le_S_both, le_contra in Hp.
-      unshelve esplit.
-      - clear CL CR.
-        exact (subboxSn q.+1 (↓ Hp) Hq ε _ d).
-      - simpl in *; cbv zeta; unfold Sub. (* Sides L and R *)
-        specialize cohboxSn with (Hpr := le_refl p.+2) (Hr := Hp) (Hq := Hq)
-                                 (ε := ε) (D := D).
-        change (le_refl p.+2 ↕ Hp) with Hp in cohboxSn.
-        change (⇓ le_refl p.+2) with (le_refl p.+1) in cohboxSn.
-        split.
-        ++ specialize cohboxSn with (ω := L) (d := d). (* The side L *)
-           rewrite <- cohboxSn.
-           eapply (C.(Cube).(subcube) (Hp := ⇓ Hp)) with (Hq := ⇓ Hq) in CL.
-           exact CL.
-        ++ specialize cohboxSn with (ω := R) (d := d). (* The side R *)
-           rewrite <- cohboxSn.
-           eapply (C.(Cube).(subcube) (Hp := ⇓ Hp)) with (Hq := ⇓ Hq) in CR.
-           exact CR.
-    * simpl; intros. (* cohboxSn *)
-      destruct d as (d', (CL, CR)); destruct r.
-      exfalso. clear -Hpr. repeat apply le_S_both in Hpr. (* r = S O *)
-      eapply le_contra.
-      - eassumption.
-      - destruct q. (* r = S (S _) *)
-        exfalso. clear -Hr. repeat apply le_S_both in Hr. eapply le_contra.
-        ++ eassumption.
-        ++ rewrite <- le_trans_comm7. repeat rewrite eqSubboxSn. f_equal.
-           simpl in cohboxSn. unshelve eapply eq_existT_curried.
-           exact (cohboxSn _ _ (↓ Hpr) Hr Hq _ _ _ _).
-           rewrite <- rew_pair. apply eq_pair.
-        ** rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ Hq) ε).
-           rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ (Hr ↕ Hq)) ω).
-           eapply eq_trans.
-           -- rewrite rew_map; apply rew_compose.
-           -- eapply eq_trans.
-           +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε).
-               apply rew_compose.
-           +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hr ↕ Hq)) ω).
-               rewrite rew_compose. apply rew_swap.
-               rewrite <- (C.(Cube).(cohcube) (Hr := ⇓ Hr) (Hq := ⇓ Hq)).
-               rewrite rew_compose, rew_app.
-               *** reflexivity.
-               *** apply UIP.
-        ** rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ Hq) ε).
-           rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ (Hr ↕ Hq)) ω).
-           eapply eq_trans.
-           -- rewrite rew_map; apply rew_compose.
-           -- eapply eq_trans.
-           +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε).
-               apply rew_compose.
-           +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hr ↕ Hq)) ω).
-               rewrite rew_compose. apply rew_swap.
-               rewrite <- (C.(Cube).(cohcube) (Hr := ⇓ Hr) (Hq := ⇓ Hq)).
-               rewrite rew_compose, rew_app.
-               *** reflexivity.
-               *** apply UIP.
+Defined.
+
+Definition mkBoxSp {n p} {C: Cubical n}
+  (PBp: PartialBox n.+1 p mkcsp mkPB): PartialBox n.+1 p.+1 mkcsp mkPB.
+  destruct PBp as (boxp, subboxp, cohboxp).
+  unshelve esplit; pose (Sub Hp side := (subboxp p (le_refl p.+1) Hp side)).
+  * intros Hp D. (* boxSn *)
+    pose (Sub' side d := Sub Hp side D d).
+    exact {d : boxp (↓ Hp) D &
+                (C.(Cube).(cube) D.2 (Sub' L d) *
+                C.(Cube).(cube) D.2 (Sub' R d))%type }.
+  * simpl. intros. destruct X as (d, (CL, CR)). (* subboxSn *)
+    rewrite C.(@eqBoxSp _). destruct q. exfalso. clear -Hp.
+    now apply le_S_both, le_contra in Hp.
+    unshelve esplit.
+    - clear CL CR.
+      exact (subboxp q.+1 (↓ Hp) Hq ε _ d).
+    - simpl in *; cbv zeta; unfold Sub. (* Sides L and R *)
+      specialize cohboxp with (Hpr := le_refl p.+2) (Hr := Hp) (Hq := Hq)
+                                (ε := ε) (D := D).
+      change (le_refl p.+2 ↕ Hp) with Hp in cohboxp.
+      change (⇓ le_refl p.+2) with (le_refl p.+1) in cohboxp.
+      split.
+      ++ specialize cohboxp with (ω := L) (d := d). (* The side L *)
+          rewrite <- cohboxp.
+          eapply (C.(Cube).(subcube) (Hp := ⇓ Hp)) with (Hq := ⇓ Hq) in CL.
+          exact CL.
+      ++ specialize cohboxp with (ω := R) (d := d). (* The side R *)
+          rewrite <- cohboxp.
+          eapply (C.(Cube).(subcube) (Hp := ⇓ Hp)) with (Hq := ⇓ Hq) in CR.
+          exact CR.
+  * simpl; intros. (* cohboxp *)
+    destruct d as (d', (CL, CR)); destruct r.
+    exfalso. clear -Hpr. repeat apply le_S_both in Hpr. (* r = S O *)
+    eapply le_contra.
+    - eassumption.
+    - destruct q. (* r = S (S _) *)
+      exfalso. clear -Hr. repeat apply le_S_both in Hr. eapply le_contra.
+      ++ eassumption.
+      ++ rewrite <- le_trans_comm7. repeat rewrite eqSubboxSn. f_equal.
+          simpl in cohboxp. unshelve eapply eq_existT_curried.
+          exact (cohboxp _ _ (↓ Hpr) Hr Hq _ _ _ _).
+          rewrite <- rew_pair. apply eq_pair.
+      ** rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ Hq) ε).
+          rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ (Hr ↕ Hq)) ω).
+          eapply eq_trans.
+          -- rewrite rew_map; apply rew_compose.
+          -- eapply eq_trans.
+          +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε).
+              apply rew_compose.
+          +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hr ↕ Hq)) ω).
+              rewrite rew_compose. apply rew_swap.
+              rewrite <- (C.(Cube).(cohcube) (Hr := ⇓ Hr) (Hq := ⇓ Hq)).
+              rewrite rew_compose, rew_app.
+              *** reflexivity.
+              *** apply UIP.
+      ** rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ Hq) ε).
+          rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ (Hr ↕ Hq)) ω).
+          eapply eq_trans.
+          -- rewrite rew_map; apply rew_compose.
+          -- eapply eq_trans.
+          +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε).
+              apply rew_compose.
+          +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hr ↕ Hq)) ω).
+              rewrite rew_compose. apply rew_swap.
+              rewrite <- (C.(Cube).(cohcube) (Hr := ⇓ Hr) (Hq := ⇓ Hq)).
+              rewrite rew_compose, rew_app.
+              *** reflexivity.
+              *** apply UIP.
+Defined.
+
+Definition mkBox {n} {C: Cubical n} p : PartialBox n.+1 p mkcsp mkPB.
+  induction p.
+  + now apply mkBox0. (* p = O *)
+  + now apply mkBoxSp. (* p = S _ *)
+Defined.
+
+
+Definition mkcube {n} {C: Cubical n}: forall (p : nat) (Hp : p <= n.+1)
+(D : mkcsp),
+((mkBox n.+1).(box) (le_refl n.+1) D -> Type) -> (mkBox p).(box) Hp D -> Type.
+  intros p Hp D E; apply le_induction with (H := Hp); clear p Hp. (* cubeSn *)
+  + exact E. (* n = p *)
+  + intros p Hp IH d.  (* p = S n *)
+    exact {b :
+        (C.(Cube).(cube) D.2 ((mkBox p).(subbox) Hp L d) *
+        C.(Cube).(cube) D.2 ((mkBox p).(subbox) Hp R d))%type
+        & IH (d; b)}.
 Defined.
 
 Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
   unshelve esplit.
-  - intros p Hp D E; apply le_induction with (H := Hp); clear p Hp. (* cubeSn *)
-    + exact E. (* n = p *)
-    + intros p Hp IH d.  (* p = S n *)
-      exact {b :
-          (C.(Cube).(cube) D.2 ((mkBox p).(subbox) Hp L d) *
-          C.(Cube).(cube) D.2 ((mkBox p).(subbox) Hp R d))%type
-          & IH (d; b)}.
+  - now apply mkcube.
   - intros *. revert d. (* subcubeSn *)
-    lazy beta zeta.
-    rewrite le_induction_computes.
-    (* refine (le_induction' _ _ _ _ _ Hp). *)
+    simpl.
+    unfold mkBox at 2.
+    change p with (pred p.+1).
+    change (pred p.+1).+1 with p.+1. pattern p.+1, Hp.
+    refine (le_induction _ _ _ _ _ Hp).
     (* intros ((BL, BR), d'). *)
     admit.
   - admit. (* cohcubeSn *)
