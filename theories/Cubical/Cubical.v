@@ -119,11 +119,11 @@ Class Cubical (n : nat) := {
         PC.(subcube') Hq ε CL,
       rew [PC.(cube'')] Box.(cohbox) (Hr := Hpq) d in
         PC.(subcube') Hq ε CR))) ;
-  (* eqCubeSp {ε q} {Hq : q.+1 <= n} {D : csp} {d E} :
-  Cube.(cube) E (Box.(subbox) Hq ε d) = {b :
-        (Cube.(cube') E (PB.(subbox) _ L d) *
-        Cube.(cube') E (PB.(subbox) _ R d))%type
-        & Cube.(cube) E (d; b)} ; *)
+  eqCubeSn {q} {Hq : q.+1 <= n} {D : csp} {E d} :
+  Cube.(cube) (Hp := ↓ Hq) E d = {b :
+        (PC.(cube') (Box.(subbox) _ L d) *
+        PC.(cube') (Box.(subbox) _ R d))%type
+        & Cube.(cube) (D := D) E (rew <- [id] (eqBoxSp _) in (d; b))} ;
 }.
 
 Arguments csp {n} _.
@@ -132,6 +132,7 @@ Arguments PC {n} _.
 Arguments Box {n} _ {p}.
 Arguments Cube {n} _.
 Arguments eqSubboxSn {n} _ {ε p q D Hpq Hq d CL CR}.
+Arguments eqCubeSn {n} _ {q Hq D E d}.
 
 Definition mkcsp {n : nat} {C : Cubical n} : Type@{l'} :=
   { D : C.(csp) & C.(Box).(box) (le_refl n) D -> Type@{l} }.
@@ -277,7 +278,13 @@ Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
       destruct ε. now exact BL. now exact BR.
     + clear p Hp. intros p Hp IH d. rewrite mkcube_computes.
       intros ((BL, BR), d').
-      admit.
+      change (⇓ (↓ Hp ↕ Hq)) with (↓ ⇓ (Hp ↕ Hq)). (* This shouldn't be
+                                                      necessary: rewrite
+                                                      should support SProp. *)
+      rewrite C.(eqCubeSn).
+      unshelve esplit.
+      * split. admit. admit.
+      * apply IH in d'.
   - admit. (* cohcubeSn *)
 Admitted.
 End Cubical.
