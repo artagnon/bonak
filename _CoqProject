@@ -1,6 +1,5 @@
 -R theories/Cubical Cubical
 
-theories/Cubical/Interface.v
 theories/Cubical/Yoneda.v
 theories/Cubical/Aux.v
 theories/Cubical/RewLemmas.v

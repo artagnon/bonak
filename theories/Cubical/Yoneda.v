@@ -89,44 +89,7 @@ Defined.
 
 Notation "⇑ p" := (raise_S_both p) (at level 40).
 
-Theorem le_trans_assoc {n m p q} (Hnm : n <= m) (Hmp : m <= p) (Hpq : p <= q) :
-  Hnm ↕ (Hmp ↕ Hpq) =S (Hnm ↕ Hmp) ↕ Hpq.
-Proof.
-  reflexivity.
-Defined.
-
-Theorem le_trans_comm {n m p} (Hnm : n <= m) (Hmp : m <= p) :
-  (Hnm ↕ ↑ Hmp) =S ↑ (Hnm ↕ Hmp).
-Proof.
-  reflexivity.
-Defined.
-
-Theorem le_trans_comm2 {m p} (Hmm : m <= m) (Hmp : S m <= S p) :
-  (Hmm ↕ ↓ Hmp) =S ↑ (⇓ Hmp).
-Proof.
-  reflexivity.
-Defined.
-
-Theorem le_trans_comm3 {n m} (Hmn : S (S n) <= S m) : ⇓ (↓ Hmn) =S ↓ (⇓ Hmn).
-Proof.
-  reflexivity.
-Defined.
-
-Theorem le_trans_comm4 {n m p} (Hmn : S n <= S m) (Hmp : S m <= S p) :
-  ⇓ (Hmn ↕ Hmp) =S (⇓ Hmn) ↕ (⇓ Hmp).
-  reflexivity.
-Defined.
-
-Theorem le_trans_comm5 {n m p} (Hmn : n <= m) (Hmp : m <= p) :
-  ⇑ (Hmn ↕ Hmp) =S (⇑ Hmn) ↕ (⇑ Hmp).
-  reflexivity.
-Defined.
-
-Theorem le_trans_comm6 {n m} (Hmn : n <= m) : (⇓ ⇑ Hmn) =S Hmn.
-  reflexivity.
-Defined.
-
-Theorem le_trans_comm7 {n m p} (Hmn : S n <= S m) (Hmp : S m <= p) :
+Theorem le_S_down_distr {n m p} (Hmn : S n <= S m) (Hmp : S m <= p) :
   ↓ (Hmn ↕ Hmp) =S (⇓ Hmn) ↕ (↓ Hmp).
   reflexivity.
 Defined.
