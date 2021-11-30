@@ -134,25 +134,27 @@ Arguments Cube {n} _.
 Arguments eqSubboxSn {n} _ {ε p q D Hpq Hq d CL CR}.
 Arguments eqCubeSn {n} _ {q Hq D E d}.
 
-Definition mkcsp {n : nat} {C : Cubical n} : Type@{l'} :=
+Definition mkcsp {n} {C : Cubical n} : Type@{l'} :=
   { D : C.(csp) & C.(Box).(box) (le_refl n) D -> Type@{l} }.
 
 Definition mkPB {n} {C : Cubical n} :
   PartialBoxBase n.+1 mkcsp := {|
-  box' {p} {Hp : p.+1 <= n.+1} {D : mkcsp} := C.(Box).(box) (⇓ Hp) D.1 ;
-  box'' {p} {Hp : p.+2 <= n.+1} {D : mkcsp} := C.(PB).(box') (⇓ Hp) D.1 ;
-  subbox' {p q} {Hp : p.+2 <= q.+2} {Hq : q.+2 <= n.+1} {ε} {D : mkcsp} {d} :=
+  box' (p : nat) (Hp : p.+1 <= n.+1) (D : mkcsp) := C.(Box).(box) (⇓ Hp) D.1 ;
+  box'' (p : nat) (Hp : p.+2 <= n.+1) (D : mkcsp) :=
+    C.(PB).(box') (⇓ Hp) D.1 ;
+  subbox' (p q : nat) (Hp : p.+2 <= q.+2) (Hq : q.+2 <= n.+1) (ε : side)
+    (D : mkcsp) (d : _) :=
     C.(Box).(subbox) (Hp := ⇓ Hp) (⇓ Hq) ε d ;
 |}.
 
 Definition mkPC {n} {C: Cubical n} :
   PartialCubeBase n.+1 mkcsp mkPB := {|
-  cube' {p} {Hp : p.+1 <= n.+1} {D : mkcsp} := C.(Cube).(cube) D.2 :
+  cube' (p : nat) (Hp : p.+1 <= n.+1) (D : mkcsp) := C.(Cube).(cube) D.2 :
     mkPB.(box') Hp D -> Type; (* Bug? *)
-  cube'' {p} {Hp : p.+2 <= n.+1} {D : mkcsp} {d : C.(PB).(box') _ D.1} :=
+  cube'' (p : nat) (Hp : p.+2 <= n.+1) (D : mkcsp) (d : _) :=
     C.(PC).(cube') d ;
-  subcube' {p q} {Hp : p.+2 <= q.+2} {Hq : q.+2 <= n.+1} {ε} {D : mkcsp} {d}
-    {b : C.(Cube).(cube) D.2 _} :=
+  subcube' (p q : nat) (Hp : p.+2 <= q.+2) (Hq : q.+2 <= n.+1) (ε : side)
+    (D : mkcsp) (d : _) (b : _) :=
     C.(Cube).(subcube) (Hp := ⇓ Hp) (⇓ Hq) ε D.2 b;
 |}.
 
@@ -240,8 +242,7 @@ Definition mkBox {n} {C: Cubical n} p : PartialBox n.+1 p mkcsp mkPB.
 Defined.
 
 
-Definition mkcube {n} {C: Cubical n}: forall (p : nat) (Hp : p <= n.+1)
-(D : mkcsp),
+Definition mkcube {n} {C: Cubical n}: forall {p} (Hp : p <= n.+1) (D : mkcsp),
 ((mkBox n.+1).(box) (le_refl n.+1) D -> Type) -> (mkBox p).(box) Hp D -> Type.
   intros p Hp D E; apply le_induction with (H := Hp); clear p Hp. (* cubeSn *)
   + now exact E. (* n = p *)
@@ -253,19 +254,17 @@ Definition mkcube {n} {C: Cubical n}: forall (p : nat) (Hp : p <= n.+1)
 Defined.
 
 Lemma mkcube_computes {q n} {C : Cubical n} {Hq : q.+1 <= n.+1} {D E d} :
-  mkcube q (↓ Hq) D E d = {b :
+  mkcube (↓ Hq) D E d = {b :
         (C.(Cube).(cube) D.2 ((mkBox q).(subbox) _ L d) *
         C.(Cube).(cube) D.2 ((mkBox q).(subbox) _ R d))%type
-        & mkcube q.+1 Hq D E (d; b)}.
+        & mkcube Hq D E (d; b)}.
 Proof.
-  unfold mkcube.
-  rewrite le_induction_computes.
-  now reflexivity.
+  unfold mkcube; now rewrite le_induction_computes.
 Qed.
 
 Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
   unshelve esplit.
-  - now apply mkcube.
+  - intros p; now apply mkcube.
   - intros *. revert d. (* subcubeSn *)
     simpl.
     pattern p, Hp. (* Bug? Why is this needed? *)
