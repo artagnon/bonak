@@ -176,7 +176,7 @@ Definition mkBoxSp {n p} {C: Cubical n}
                 C.(Cube).(cube) D.2 (Sub' R d))%type }.
   * simpl. intros. destruct X as (d, (CL, CR)). (* subboxSn *)
     rewrite C.(@eqBoxSp _). destruct q. exfalso. clear -Hp.
-    now apply le_S_both, le_contra in Hp.
+    now apply lower_S_both, le_contra in Hp.
     unshelve esplit.
     - clear CL CR; now exact (subboxp q.+1 (↓ Hp) Hq ε _ d).
     - simpl in *; cbv zeta; unfold Sub. (* Sides L and R *)
@@ -195,11 +195,11 @@ Definition mkBoxSp {n p} {C: Cubical n}
           now exact CR.
   * simpl; intros. (* cohboxp *)
     destruct d as (d', (CL, CR)); destruct r.
-    exfalso. clear -Hpr. repeat apply le_S_both in Hpr. (* r = S O *)
+    exfalso. clear -Hpr. repeat apply lower_S_both in Hpr. (* r = S O *)
     eapply le_contra.
     - now eassumption.
     - destruct q. (* r = S (S _) *)
-      exfalso. clear -Hr. repeat apply le_S_both in Hr. eapply le_contra.
+      exfalso. clear -Hr. repeat apply lower_S_both in Hr. eapply le_contra.
       ++ now eassumption.
       ++ rewrite <- le_S_down_distr. repeat rewrite eqSubboxSn. f_equal.
           simpl in cohboxp. unshelve eapply eq_existT_curried.
