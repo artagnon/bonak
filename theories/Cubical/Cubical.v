@@ -119,6 +119,11 @@ Class Cubical (n : nat) := {
         PC.(subcube') Hq ε CL,
       rew [PC.(cube'')] Box.(cohbox) (Hr := Hpq) d in
         PC.(subcube') Hq ε CR))) ;
+  (* eqCubeSp {ε q} {Hq : q.+1 <= n} {D : csp} {d E} :
+  Cube.(cube) E (Box.(subbox) Hq ε d) = {b :
+        (Cube.(cube') E (PB.(subbox) _ L d) *
+        Cube.(cube') E (PB.(subbox) _ R d))%type
+        & Cube.(cube) E (d; b)} ; *)
 }.
 
 Arguments csp {n} _.
@@ -247,18 +252,32 @@ Definition mkcube {n} {C: Cubical n}: forall (p : nat) (Hp : p <= n.+1)
         & IH (d; b)}.
 Defined.
 
+Lemma mkcube_computes {q n} {C : Cubical n} {Hq : q.+1 <= n.+1} {D E d} :
+  mkcube q (↓ Hq) D E d = {b :
+        (C.(Cube).(cube) D.2 ((mkBox q).(subbox) _ L d) *
+        C.(Cube).(cube) D.2 ((mkBox q).(subbox) _ R d))%type
+        & mkcube q.+1 Hq D E (d; b)}.
+Proof.
+  unfold mkcube.
+  rewrite le_induction_computes.
+  now reflexivity.
+Qed.
+
 Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
   unshelve esplit.
   - now apply mkcube.
   - intros *. revert d. (* subcubeSn *)
     simpl.
-    unfold mkBox at 2.
-    change p with (pred p.+1).
-    (* change (pred p.+1).+1 with p.+1.
-    pattern p.+1, Hp.
-    refine (le_induction _ _ _ _ _ Hp). *)
-    (* intros ((BL, BR), d'). *)
-    admit.
+    pattern p, Hp. (* Bug? Why is this needed? *)
+    apply le_induction'.
+    + change (le_refl q.+1 ↕ Hq) with Hq.
+      intros d.
+      rewrite mkcube_computes.
+      intros ((BL, BR), d').
+      destruct ε. now exact BL. now exact BR.
+    + clear p Hp. intros p Hp IH d. rewrite mkcube_computes.
+      intros ((BL, BR), d').
+      admit.
   - admit. (* cohcubeSn *)
 Admitted.
 End Cubical.
