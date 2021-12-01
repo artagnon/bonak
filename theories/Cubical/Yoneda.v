@@ -3,9 +3,11 @@ Require Import Arith.
 Require Import RelationClasses.
 Require Import Program.
 Require Import Aux.
+Import Aux.
 Require Import Lia.
 
-Module LeYoneda.
+Module Yoneda.
+Set Warnings "-notation-overridden".
 
 Inductive le' (n : nat) : nat -> SProp :=
   | le_refl' : n <= n
@@ -140,4 +142,4 @@ Lemma le_induction_computes {n P H0 HS p H} :
           HS p H (le_induction n P H0 HS p.+1 H).
 Proof.
 Admitted.
-End LeYoneda.
+End Yoneda.

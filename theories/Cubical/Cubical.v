@@ -1,15 +1,22 @@
 From Coq Require Import Arith.
 Import Logic.EqNotations.
 Require Import Logic.Eqdep.
-Require Import Yoneda.
-Import LeYoneda.
-Require Import Aux.
-Require Import RewLemmas.
 Require Import Program.
+
+Require Import Aux.
+Import Aux.
+
+Set Warnings "-notation-overridden".
+Require Import Yoneda.
+Import Yoneda.
+
+Require Import RewLemmas.
+Import RewLemmas.
+
 Set Printing Projections.
 Set Primitive Projections.
 
-Section Cubical.
+Module Cubical.
 Universe l'.
 Universe l.
 

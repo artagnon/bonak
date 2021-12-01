@@ -2,6 +2,7 @@ From Coq Require Import Arith.
 Import Logic.EqNotations.
 Require Import Program.
 
+Module Aux.
 Notation "( a ; b )" := (existT _ a b).
 Notation "x .1" := (projT1 x) (at level 1, left associativity, format "x .1").
 Notation "x .2" := (projT2 x) (at level 1, left associativity, format "x .2").
@@ -36,3 +37,4 @@ Theorem proxy {A B} {P : B -> Type} (f : A -> B)
 Proof.
   now destruct e.
 Defined.
+End Aux.
