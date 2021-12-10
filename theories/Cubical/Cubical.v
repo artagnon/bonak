@@ -34,7 +34,7 @@ Record PartialBoxBase (n : nat) (csp : Type@{l'}) := {
 
 Arguments box' {n csp} _ {p} Hp D.
 Arguments box'' {n csp} _ {p} Hp D.
-Arguments subbox' {n csp} _ {p q Hp} Hq ε {D} d.
+Arguments subbox' {n csp} _ {p q Hp} Hq ε {D} d, {n csp} _ {p q} Hp Hq ε {D} d.
 
 Record PartialBox (n p : nat) (csp : Type@{l'})
 (PB : PartialBoxBase n csp) := {
@@ -43,8 +43,8 @@ Record PartialBox (n p : nat) (csp : Type@{l'})
   box (↓ (Hp ↕ Hq)) D -> PB.(box') (Hp ↕ Hq) D;
   cohbox {q r} {Hpr : p.+2 <= r.+2} {Hr : r.+2 <= q.+2} {Hq : q.+2 <= n}
   {ε : side} {ω : side} {D: csp} (d : box (↓ (⇓ Hpr ↕ (↓ (Hr ↕ Hq)))) D) :
-  PB.(subbox') (Hp := Hpr ↕ Hr) Hq ε (subbox (Hp := ⇓ Hpr) (↓ (Hr ↕ Hq)) ω d) =
-  (PB.(subbox') (Hp := Hpr) (Hr ↕ Hq) ω (subbox (Hp := ↓ (Hpr ↕ Hr)) Hq ε d));
+  PB.(subbox') (Hpr ↕ Hr) Hq ε (subbox (Hp := ⇓ Hpr) (↓ (Hr ↕ Hq)) ω d) =
+  (PB.(subbox') Hpr (Hr ↕ Hq) ω (subbox (Hp := ↓ (Hpr ↕ Hr)) Hq ε d));
 }.
 
 Arguments box {n p csp PB} _ Hp D.
@@ -110,8 +110,8 @@ Class Cubical (n : nat) := {
                   PC.(cube') (Box.(subbox) (Hp := le_refl p.+1) _ R d))%type } ;
   eqBoxSp' {D : csp} {p} (Hp : p.+2 <= n) :
     PB.(box') Hp D = {d : PB.(box') (↓ Hp) D &
-                (PC.(cube'') (PB.(subbox') (Hp := le_refl p.+2) _ L d) *
-                PC.(cube'') (PB.(subbox') (Hp := le_refl p.+2) _ R d))%type } ;
+                (PC.(cube'') (PB.(subbox') (le_refl p.+2) _ L d) *
+                PC.(cube'') (PB.(subbox') (le_refl p.+2) _ R d))%type } ;
   eqSubbox0 {q} {Hp : 1 <= q.+1} (Hq : q.+1 <= n) (ε : side) (D : csp) :
     Box.(subbox) (Hp := Hp) Hq ε (rew <- [id] eqBox0 (D := D) in tt) =
       (rew <- [id] eqBox0' in tt) ;
@@ -287,9 +287,17 @@ Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
                                                       necessary: rewrite
                                                       should support SProp. *)
       rewrite C.(eqCubeSn).
+      destruct q. exfalso. clear -Hp.
+      apply lower_S_both in Hp. now apply le_contra in Hp.
       unshelve esplit.
-      * split. admit. admit.
-      * apply IH in d'. admit.
+      * change (C.(Box).(subbox) (⇓ (Hp ↕ Hq)) ?ε' _) with
+               (mkPB.(subbox') (le_refl p.+2) (Hp ↕ Hq) ε'
+                  ((mkBox p).(subbox) Hq ε d)).
+        change (le_refl _ ↕ ?H) with H. split;
+        rewrite <- ((mkBox p).(cohbox) (q := q) (r := p) (Hr := Hp) (Hpr := (le_refl p.+2)));
+        eapply (C.(Cube).(subcube) (Hp := ⇓ Hp)) with (Hq := ⇓ Hq) (E := D.2).
+        now exact BL. now exact BR.
+      * apply IH in d'. now exact d'.
   - admit. (* cohcubeSn *)
 Admitted.
 End Cubical.
