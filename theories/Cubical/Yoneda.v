@@ -1,4 +1,3 @@
-Require Import Interface.
 Require Import Arith.
 Require Import RelationClasses.
 Require Import Program.
@@ -137,9 +136,28 @@ Lemma le_induction' : forall n, forall P : forall p, p.+1 <= n.+1 -> Type,
 Proof.
 Admitted.
 
+Lemma le_induction'' : forall n, forall P : forall p, p.+2 <= n.+2 -> Type,
+        P n (le_refl n.+2) ->
+        (forall p (H : p.+3 <= n.+2), P p.+1 H -> P p (le_S_down H)) ->
+        forall p (H : p.+2 <= n.+2),
+        P p H.
+Proof.
+Admitted.
+
 Lemma le_induction_computes {n P H0 HS p H} :
         le_induction n P H0 HS p (le_S_down H) =
           HS p H (le_induction n P H0 HS p.+1 H).
+Proof.
+Admitted.
+
+Lemma le_induction'_base_computes {n P H0 HS} :
+  le_induction' n P H0 HS n (le_refl n.+1) = H0.
+Proof.
+Admitted.
+
+Lemma le_induction'_step_computes {n P H0 HS p H} :
+  le_induction' n P H0 HS p (le_S_down H) =
+    HS p H (le_induction' n P H0 HS p.+1 H).
 Proof.
 Admitted.
 End Yoneda.

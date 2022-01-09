@@ -9,6 +9,11 @@ rew <- [P] H in rew [P] H in a = a.
   now destruct H.
 Defined.
 
+Lemma rew_rew_opp {A} {x y: A} (H : x = y) P {a: P y} :
+rew [P] H in rew <- [P] H in a = a.
+  now destruct H.
+Defined.
+
 Lemma rew_context {A} {x y : A} (eq: x = y) {P} {a: P x}
 {Q : forall a, P a -> Type} : Q y (rew eq in a) = Q x a.
   now destruct eq.

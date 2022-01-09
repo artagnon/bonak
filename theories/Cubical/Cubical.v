@@ -269,35 +269,59 @@ Proof.
   unfold mkcube; now rewrite le_induction_computes.
 Qed.
 
+Definition mksubcube {n} {C: Cubical n} {p q} (Hp : p.+1 <= q.+1)
+  (Hq: q.+1 <= n.+1) (ε : side) {D}
+  (E : (mkBox n.+1).(box) (le_refl n.+1) D -> Type)
+  (d : (mkBox p).(box) (↓ (Hp ↕ Hq)) D):
+  mkcube (↓ (Hp ↕ Hq)) D E d -> mkPC.(cube') ((mkBox p).(subbox) Hq ε d).
+Proof.
+  intros *. revert d. (* subcubeSn *)
+  simpl.
+  pattern p, Hp. (* Bug? Why is this needed? *)
+  apply le_induction'.
+  + intros d c. rewrite mkcube_computes in c. destruct c as (b, _).
+    destruct b as (BL, BR). destruct ε. now exact BL. now exact BR.
+  + clear p Hp. intros p Hp IH d c. rewrite mkcube_computes in c.
+    destruct c as ((BL, BR), d').
+    change (⇓ (↓ Hp ↕ Hq)) with (↓ ⇓ (Hp ↕ Hq)). (* This shouldn't be
+                                                    necessary: rewrite
+                                                    should support SProp. *)
+    rewrite C.(eqCubeSn).
+    destruct q. exfalso. clear -Hp.
+    apply lower_S_both in Hp. now apply le_contra in Hp.
+    unshelve esplit.
+    * change (C.(Box).(subbox) (⇓ (Hp ↕ Hq)) ?ω _) with
+              (mkPB.(subbox') (le_refl p.+2) (Hp ↕ Hq) ω
+                ((mkBox p).(subbox) Hq ε d)).
+      change (le_refl _ ↕ ?H) with H. split;
+      rewrite <- ((mkBox p).(cohbox) (q := q) (r := p) (Hr := Hp) (Hpr := (le_refl p.+2)));
+      eapply (C.(Cube).(subcube) (Hp := ⇓ Hp)) with (Hq := ⇓ Hq) (E := D.2).
+      now exact BL. now exact BR.
+    * apply IH in d'. now exact d'.
+Defined.
+
+Lemma mksubcube_base_computes {q r n} {C : Cubical n} {Hq : q.+2 <= n.+1}
+  {Hr : r.+2 <= q.+2} {ω : side} {D E} {d: (mkBox r).(box) _ D} {b} :
+  mksubcube (le_refl r.+1) (↓ (Hr ↕ Hq)) ω E d b =
+  match (rew [id] mkcube_computes in b) with
+  | ((BL, BR); c) => match ω with
+    | L => BL
+    | R => BR
+    end
+  end.
+Proof.
+  unfold mksubcube; now rewrite le_induction'_base_computes.
+Qed.
+
 Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
   unshelve esplit.
   - intros p; now apply mkcube.
-  - intros *. revert d. (* subcubeSn *)
-    simpl.
-    pattern p, Hp. (* Bug? Why is this needed? *)
-    apply le_induction'.
-    + change (le_refl q.+1 ↕ Hq) with Hq.
-      intros d.
-      rewrite mkcube_computes.
-      intros ((BL, BR), d').
-      destruct ε. now exact BL. now exact BR.
-    + clear p Hp. intros p Hp IH d. rewrite mkcube_computes.
-      intros ((BL, BR), d').
-      change (⇓ (↓ Hp ↕ Hq)) with (↓ ⇓ (Hp ↕ Hq)). (* This shouldn't be
-                                                      necessary: rewrite
-                                                      should support SProp. *)
-      rewrite C.(eqCubeSn).
-      destruct q. exfalso. clear -Hp.
-      apply lower_S_both in Hp. now apply le_contra in Hp.
-      unshelve esplit.
-      * change (C.(Box).(subbox) (⇓ (Hp ↕ Hq)) ?ε' _) with
-               (mkPB.(subbox') (le_refl p.+2) (Hp ↕ Hq) ε'
-                  ((mkBox p).(subbox) Hq ε d)).
-        change (le_refl _ ↕ ?H) with H. split;
-        rewrite <- ((mkBox p).(cohbox) (q := q) (r := p) (Hr := Hp) (Hpr := (le_refl p.+2)));
-        eapply (C.(Cube).(subcube) (Hp := ⇓ Hp)) with (Hq := ⇓ Hq) (E := D.2).
-        now exact BL. now exact BR.
-      * apply IH in d'. now exact d'.
-  - admit. (* cohcubeSn *)
+  - intros p q; now apply mksubcube.
+  - cbv beta. intros *. revert d b. pattern p, Hpr. apply le_induction''.
+    + change (le_refl r.+2 ↕ ?H) with H. change (⇓ le_refl r.+2 ↕ ?H) with H.
+      simpl. change (⇓ le_refl r.+2) with (le_refl r.+1).
+      intros d b. rewrite mksubcube_base_computes. unfold mksubcube.
+      rewrite le_induction'_step_computes.
+      admit. (* cohcubeSn *)
 Admitted.
 End Cubical.
