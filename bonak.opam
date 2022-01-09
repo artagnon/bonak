@@ -1,0 +1,14 @@
+opam-version: "2.0"
+name: "bonak"
+version: "fib"
+synopsis: "A formalization of semi-cubical types"
+maintainer: "Ramkumar Ramachandra <r@artagnon.com>"
+authors: [ "Ramkumar Ramachandra <r@artagnon.com>" "Hugo Herbelin <hugo.herbelin@inria.fr>" ]
+license: "Private"
+homepage: ""
+bug-reports: ""
+dev-repo: "https://github.com/artagnon/bonak"
+depends: [ "ocaml" "ocamlfind" ]
+build: [
+  [make]
+]

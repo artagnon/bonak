@@ -1,0 +1,19 @@
+name: coq-action
+
+on:
+  push:
+    branches: [fib]
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        coq_version: ["8.14"]
+      fail-fast: false
+    steps:
+      - uses: "actions/checkout@v2"
+      - name: "Docker Coq action"
+        uses: "coq-community/docker-coq-action@v1"
+        with:
+          coq_version: ${{ matrix.coq_version }}
