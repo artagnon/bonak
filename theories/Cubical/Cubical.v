@@ -131,6 +131,18 @@ Class Cubical (n : nat) := {
         (PC.(cube') (Box.(subbox) _ L d) *
         PC.(cube') (Box.(subbox) _ R d))%type
         & Cube.(cube) (D := D) E (rew <- [id] (eqBoxSp _) in (d; b))} ;
+  (* eqSubcube0 {q r} {Hq: q.+2 <= n} {Hr: r.+2 <= q.+2} {D: csp} {E}
+    {d : Box.(box) (↓ ↓ (Hr ↕ Hq)) D}
+    {CL: PC.(cube') (Box.(subbox) (↓ (Hr ↕ Hq)) L d)}
+    {CR: PC.(cube') (Box.(subbox) (↓ (Hr ↕ Hq)) R d)}
+    {ε ω : side} {Q: PC.(cube') (Box.(subbox) Hq ε (d; (CL, CR)))} :
+  rew [id] Box.(cohbox) d in PC.(subcube') (⇓ Hq) ε E (match ω with
+  | L => CL
+  | R => CR
+  end) = Cube.(subcube) (⇓ (Hr ↕ Hq)) ω E
+          (rew <- [id] eqCubeSn in
+          ((rew Box.(cohbox (r := r)) d in PC.(subcube') (⇓ Hq) ε E CL,
+            rew Box.(cohbox (r := r)) d in PC.(subcube') (⇓ Hq) ε E CR); Q)) *)
 }.
 
 Arguments csp {n} _.
@@ -248,7 +260,6 @@ Definition mkBox {n} {C: Cubical n} p : PartialBox n.+1 p mkcsp mkPB.
   + now apply mkBoxSp. (* p = S _ *)
 Defined.
 
-
 Definition mkcube {n} {C: Cubical n}: forall {p} (Hp : p <= n.+1) (D : mkcsp),
 ((mkBox n.+1).(box) (le_refl n.+1) D -> Type) -> (mkBox p).(box) Hp D -> Type.
   intros p Hp D E; apply le_induction with (H := Hp); clear p Hp. (* cubeSn *)
@@ -304,13 +315,26 @@ Lemma mksubcube_base_computes {q r n} {C : Cubical n} {Hq : q.+2 <= n.+1}
   {Hr : r.+2 <= q.+2} {ω : side} {D E} {d: (mkBox r).(box) _ D} {b} :
   mksubcube (le_refl r.+1) (↓ (Hr ↕ Hq)) ω E d b =
   match (rew [id] mkcube_computes in b) with
-  | ((BL, BR); c) => match ω with
+  | ((BL, BR); _) => match ω with
     | L => BL
     | R => BR
     end
   end.
 Proof.
   unfold mksubcube; now rewrite le_induction'_base_computes.
+Qed.
+
+Lemma mksubcube_step_computes {q r n} {C : Cubical n} {Hq : q.+2 <= n.+1}
+  {Hr : r.+2 <= q.+2} {ω : side} {D E} {d: (mkBox r).(box) _ D} {b} :
+  mksubcube (↓ Hr) Hq ω E d b =
+  match (rew [id] mkcube_computes in b) with
+  | ((BL, BR); c) => rew <- [id] C.(eqCubeSn) in
+    ((rew (mkBox r).(cohbox (r := r)) d in C.(Cube).(subcube) (⇓ Hq) ω D.2 BL,
+      rew (mkBox r).(cohbox (r := r)) d in C.(Cube).(subcube) (⇓ Hq) ω D.2 BR);
+    mksubcube Hr _ ω E (d; (BL, BR)) c)
+  end.
+Proof.
+  unfold mksubcube; now rewrite le_induction'_step_computes.
 Qed.
 
 Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
@@ -320,8 +344,19 @@ Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
   - cbv beta. intros *. revert d b. pattern p, Hpr. apply le_induction''.
     + change (le_refl r.+2 ↕ ?H) with H. change (⇓ le_refl r.+2 ↕ ?H) with H.
       simpl. change (⇓ le_refl r.+2) with (le_refl r.+1).
-      intros d b. rewrite mksubcube_base_computes. unfold mksubcube.
-      rewrite le_induction'_step_computes.
+      intros d b. rewrite mksubcube_base_computes.
+      rewrite mksubcube_step_computes. destruct (rew [id] mkcube_computes in b).
+      destruct x, ω.
+      all: set (P :=
+                 rew (mkBox _).(cohbox) d in C.(Cube).(subcube) (⇓ Hq) _ _ c).
+      all: set (P' :=
+                  rew (mkBox _).(cohbox) d in C.(Cube).(subcube) (⇓ Hq) _ _ c0).
+      all: change (rew (mkBox _).(cohbox) d in C.(Cube).(subcube) (⇓ Hq) _ _ c)
+             with P.
+      all: change (rew (mkBox _).(cohbox) d in C.(Cube).(subcube) (⇓ Hq) _ _ c0)
+             with P'.
+      all: set (Q := mksubcube Hr Hq ε E (d; _) m).
+      all: clearbody Q.
       admit. (* cohcubeSn *)
 Admitted.
 End Cubical.
