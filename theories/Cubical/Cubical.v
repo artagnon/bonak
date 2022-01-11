@@ -104,11 +104,11 @@ Class Cubical (n : nat) := {
   Cube : PartialCube n csp PC (@Box) ;
   eqBox0 {len0: 0 <= n} {D : csp} : Box.(box) len0 D = unit ;
   eqBox0' {len1: 1 <= n} {D : csp} : PB.(box') len1 D = unit ;
-  eqBoxSp {D : csp} {p} (Hp : p.+1 <= n) :
+  eqBoxSp {D : csp} {p} {Hp : p.+1 <= n} :
     Box.(box) Hp D = {d : Box.(box) (↓ Hp) D &
                   (PC.(cube') (Box.(subbox) (Hp := le_refl p.+1) _ L d) *
                   PC.(cube') (Box.(subbox) (Hp := le_refl p.+1) _ R d))%type } ;
-  eqBoxSp' {D : csp} {p} (Hp : p.+2 <= n) :
+  eqBoxSp' {D : csp} {p} {Hp : p.+2 <= n} :
     PB.(box') Hp D = {d : PB.(box') (↓ Hp) D &
                 (PC.(cube'') (PB.(subbox') (le_refl p.+2) _ L d) *
                 PC.(cube'') (PB.(subbox') (le_refl p.+2) _ R d))%type } ;
@@ -120,29 +120,29 @@ Class Cubical (n : nat) := {
     {CL : PC.(cube') (Box.(subbox) (↓ (Hpq ↕ Hq)) L d)}
     {CR : PC.(cube') (Box.(subbox) (↓ (Hpq ↕ Hq)) R d)} :
     Box.(subbox) Hq ε
-    (rew <- [id] eqBoxSp (↓ (Hpq ↕ Hq)) in (d; (CL, CR))) =
-    (rew <- [id] eqBoxSp' (Hpq ↕ Hq) in (Box.(subbox) Hq ε d;
+    (rew <- [id] eqBoxSp in (d; (CL, CR))) =
+    (rew <- [id] eqBoxSp' in (Box.(subbox) Hq ε d;
       (rew [PC.(cube'')] Box.(cohbox) (Hr := Hpq) d in
         PC.(subcube') Hq ε CL,
       rew [PC.(cube'')] Box.(cohbox) (Hr := Hpq) d in
         PC.(subcube') Hq ε CR))) ;
   eqCubeSn {q} {Hq : q.+1 <= n} {D : csp} {E d} :
-  Cube.(cube) (Hp := ↓ Hq) E d = {b :
-        (PC.(cube') (Box.(subbox) _ L d) *
-        PC.(cube') (Box.(subbox) _ R d))%type
-        & Cube.(cube) (D := D) E (rew <- [id] (eqBoxSp _) in (d; b))} ;
+    Cube.(cube) (Hp := ↓ Hq) E d = {b :
+          (PC.(cube') (Box.(subbox) _ L d) *
+          PC.(cube') (Box.(subbox) _ R d))%type
+          & Cube.(cube) (D := D) E (rew <- [id] eqBoxSp in (d; b))} ;
   (* eqSubcube0 {q r} {Hq: q.+2 <= n} {Hr: r.+2 <= q.+2} {D: csp} {E}
-    {d : Box.(box) (↓ ↓ (Hr ↕ Hq)) D}
-    {CL: PC.(cube') (Box.(subbox) (↓ (Hr ↕ Hq)) L d)}
-    {CR: PC.(cube') (Box.(subbox) (↓ (Hr ↕ Hq)) R d)}
-    {ε ω : side} {Q: PC.(cube') (Box.(subbox) Hq ε (d; (CL, CR)))} :
-  rew [id] Box.(cohbox) d in PC.(subcube') (⇓ Hq) ε E (match ω with
+    {d : Box.(box) _ D}
+    {CL: Cube.(cube) (Box.(subbox) _ L d)}
+    {CR: Cube.(cube) (Box.(subbox) _ R d)}
+    {ε ω : side} {Q: PC.(cube') (Box.(subbox) Hq ε _)} :
+  rew Box.(cohbox) d in PC.(subcube') (Hr ↕ Hq) ε (match ω with
   | L => CL
   | R => CR
-  end) = Cube.(subcube) (⇓ (Hr ↕ Hq)) ω E
+  end) = Cube.(subcube) _ ω E
           (rew <- [id] eqCubeSn in
-          ((rew Box.(cohbox (r := r)) d in PC.(subcube') (⇓ Hq) ε E CL,
-            rew Box.(cohbox (r := r)) d in PC.(subcube') (⇓ Hq) ε E CR); Q)) *)
+          ((rew Box.(cohbox) (r := r) d in Cube.(subcube) (Hr ↕ Hq) ε E CL,
+            rew Box.(cohbox) (r := r) d in Cube.(subcube) (Hr ↕ Hq) ε E CR); Q)) *)
 }.
 
 Arguments csp {n} _.
@@ -150,8 +150,10 @@ Arguments PB {n} _.
 Arguments PC {n} _.
 Arguments Box {n} _ {p}.
 Arguments Cube {n} _.
+Arguments eqBoxSp {n} _ {D p Hp}.
 Arguments eqSubboxSn {n} _ {ε p q D Hpq Hq d CL CR}.
 Arguments eqCubeSn {n} _ {q Hq D E d}.
+(* Arguments eqSubcube0 {n} _ {q r Hq Hr E d CL CR ε ω Q}. *)
 
 Definition mkcsp {n} {C : Cubical n} : Type@{l'} :=
   { D : C.(csp) & C.(Box).(box) (le_refl n) D -> Type@{l} }.
@@ -329,8 +331,8 @@ Lemma mksubcube_step_computes {q r n} {C : Cubical n} {Hq : q.+2 <= n.+1}
   mksubcube (↓ Hr) Hq ω E d b =
   match (rew [id] mkcube_computes in b) with
   | ((BL, BR); c) => rew <- [id] C.(eqCubeSn) in
-    ((rew (mkBox r).(cohbox (r := r)) d in C.(Cube).(subcube) (⇓ Hq) ω D.2 BL,
-      rew (mkBox r).(cohbox (r := r)) d in C.(Cube).(subcube) (⇓ Hq) ω D.2 BR);
+    ((rew (mkBox r).(cohbox) (r := r) d in C.(Cube).(subcube) (⇓ Hq) ω D.2 BL,
+      rew (mkBox r).(cohbox) (r := r) d in C.(Cube).(subcube) (⇓ Hq) ω D.2 BR);
     mksubcube Hr _ ω E (d; (BL, BR)) c)
   end.
 Proof.
@@ -347,6 +349,8 @@ Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
       intros d b. rewrite mksubcube_base_computes.
       rewrite mksubcube_step_computes. destruct (rew [id] mkcube_computes in b).
       destruct x, ω.
+      all: set (Q := mksubcube Hr Hq ε E (d; _) m).
+      simpl in Q.
       all: set (P :=
                  rew (mkBox _).(cohbox) d in C.(Cube).(subcube) (⇓ Hq) _ _ c).
       all: set (P' :=
@@ -355,8 +359,16 @@ Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
              with P.
       all: change (rew (mkBox _).(cohbox) d in C.(Cube).(subcube) (⇓ Hq) _ _ c0)
              with P'.
-      all: set (Q := mksubcube Hr Hq ε E (d; _) m).
+      (* BUG!
+      change (rew (mkBox _).(cohbox) d in C.(Cube).(subcube) (⇓ Hq) _ _ c) with
+        P in Q.
+      does not work.
+      *)
       all: clearbody Q.
-      admit. (* cohcubeSn *)
+      all: change (C.(Cube).(cube) D.2
+        (rew <- [id] C.(eqBoxSp) in ((mkBox r).(subbox) Hq ε d;
+        (P, P')))) in Q.
+      all: clearbody P P'.
+    admit. (* cohcubeSn *)
 Admitted.
 End Cubical.
