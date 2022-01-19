@@ -15,6 +15,7 @@ Import RewLemmas.
 
 Set Printing Projections.
 Set Primitive Projections.
+Remove Printing Let sigT.
 
 Module Cubical.
 Universe l'.
@@ -40,11 +41,11 @@ Record PartialBox (n p : nat) (csp : Type@{l'})
 (PB : PartialBoxBase n csp) := {
   box (Hp : p <= n) : csp -> Type@{l} ;
   subbox {q} {Hp : p.+1 <= q.+1} (Hq : q.+1 <= n) (ε : side) {D : csp} :
-  box (↓ (Hp ↕ Hq)) D -> PB.(box') (Hp ↕ Hq) D;
+    box (↓ (Hp ↕ Hq)) D -> PB.(box') (Hp ↕ Hq) D;
   cohbox {q r} {Hpr : p.+2 <= r.+2} {Hr : r.+2 <= q.+2} {Hq : q.+2 <= n}
-  {ε : side} {ω : side} {D: csp} (d : box (↓ (⇓ Hpr ↕ (↓ (Hr ↕ Hq)))) D) :
-  PB.(subbox') (Hpr ↕ Hr) Hq ε (subbox (Hp := ⇓ Hpr) (↓ (Hr ↕ Hq)) ω d) =
-  (PB.(subbox') Hpr (Hr ↕ Hq) ω (subbox (Hp := ↓ (Hpr ↕ Hr)) Hq ε d));
+    {ε : side} {ω : side} {D: csp} (d : box (↓ (⇓ Hpr ↕ (↓ (Hr ↕ Hq)))) D) :
+    PB.(subbox') (Hpr ↕ Hr) Hq ε (subbox (Hp := ⇓ Hpr) (↓ (Hr ↕ Hq)) ω d) =
+    (PB.(subbox') Hpr (Hr ↕ Hq) ω (subbox (Hp := ↓ (Hpr ↕ Hr)) Hq ε d));
 }.
 
 Arguments box {n p csp PB} _ Hp D.
@@ -131,18 +132,14 @@ Class Cubical (n : nat) := {
           (PC.(cube') (Box.(subbox) _ L d) *
           PC.(cube') (Box.(subbox) _ R d))%type
           & Cube.(cube) (D := D) E (rew <- [id] eqBoxSp in (d; b))} ;
-  (* eqSubcube0 {q r} {Hq: q.+2 <= n} {Hr: r.+2 <= q.+2} {D: csp} {E}
-    {d : Box.(box) _ D}
-    {CL: Cube.(cube) (Box.(subbox) _ L d)}
-    {CR: Cube.(cube) (Box.(subbox) _ R d)}
-    {ε ω : side} {Q: PC.(cube') (Box.(subbox) Hq ε _)} :
-  rew Box.(cohbox) d in PC.(subcube') (Hr ↕ Hq) ε (match ω with
-  | L => CL
-  | R => CR
-  end) = Cube.(subcube) _ ω E
-          (rew <- [id] eqCubeSn in
-          ((rew Box.(cohbox) (r := r) d in Cube.(subcube) (Hr ↕ Hq) ε E CL,
-            rew Box.(cohbox) (r := r) d in Cube.(subcube) (Hr ↕ Hq) ε E CR); Q)) *)
+  eqSubcube0 {q} {Hq: q.+1 <= n} {D: csp} {E} {d} {ε : side}
+      {CL : PC.(cube') (Box.(subbox) Hq L d)}
+      {CR : PC.(cube') (Box.(subbox) Hq R d)}
+      {Q : Cube.(cube) (D := D) E (rew <- eqBoxSp in (d; (CL, CR)))} :
+        match ε with
+        | L => CL
+        | R => CR
+        end = Cube.(subcube) Hq ε E (rew <- [id] eqCubeSn in ((CL, CR); Q))
 }.
 
 Arguments csp {n} _.
@@ -339,6 +336,19 @@ Proof.
   unfold mksubcube; now rewrite le_induction'_step_computes.
 Qed.
 
+Lemma commutative_cuts {P Q : side -> Type} {ω}
+  {f: forall ω, P ω -> Q ω} {CL} {CR} :
+  f ω (match ω with
+    | L => CL
+    | R => CR end) =
+      match ω with
+      | L => f L CL
+      | R => f R CR
+      end.
+Proof.
+  now destruct ω.
+Qed.
+
 Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
   unshelve esplit.
   - intros p; now apply mkcube.
@@ -347,28 +357,10 @@ Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
     + change (le_refl r.+2 ↕ ?H) with H. change (⇓ le_refl r.+2 ↕ ?H) with H.
       simpl. change (⇓ le_refl r.+2) with (le_refl r.+1).
       intros d b. rewrite mksubcube_base_computes.
-      rewrite mksubcube_step_computes. destruct (rew [id] mkcube_computes in b).
-      destruct x, ω.
-      all: set (Q := mksubcube Hr Hq ε E (d; _) m).
-      simpl in Q.
-      all: set (P :=
-                 rew (mkBox _).(cohbox) d in C.(Cube).(subcube) (⇓ Hq) _ _ c).
-      all: set (P' :=
-                  rew (mkBox _).(cohbox) d in C.(Cube).(subcube) (⇓ Hq) _ _ c0).
-      all: change (rew (mkBox _).(cohbox) d in C.(Cube).(subcube) (⇓ Hq) _ _ c)
-             with P.
-      all: change (rew (mkBox _).(cohbox) d in C.(Cube).(subcube) (⇓ Hq) _ _ c0)
-             with P'.
-      (* BUG!
-      change (rew (mkBox _).(cohbox) d in C.(Cube).(subcube) (⇓ Hq) _ _ c) with
-        P in Q.
-      does not work.
-      *)
-      all: clearbody Q.
-      all: change (C.(Cube).(cube) D.2
-        (rew <- [id] C.(eqBoxSp) in ((mkBox r).(subbox) Hq ε d;
-        (P, P')))) in Q.
-      all: clearbody P P'.
-    admit. (* cohcubeSn *)
+      rewrite mksubcube_step_computes.
+      destruct (rew [id] mkcube_computes in b) as (b', c).
+      destruct b' as (CL, CR). clear b. destruct ω.
+      now refine (eqSubcube0 (ε := L)). now refine (eqSubcube0 (ε := R)).
+    + admit.
 Admitted.
 End Cubical.
