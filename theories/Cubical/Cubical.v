@@ -16,6 +16,7 @@ Import RewLemmas.
 Set Printing Projections.
 Set Primitive Projections.
 Remove Printing Let sigT.
+Remove Printing Let prod.
 
 Module Cubical.
 Universe l'.
@@ -132,6 +133,11 @@ Class Cubical (n : nat) := {
           (PC.(cube') (Box.(subbox) _ L d) *
           PC.(cube') (Box.(subbox) _ R d))%type
           & Cube.(cube) (D := D) E (rew <- [id] eqBoxSp in (d; b))} ;
+  eqCubeSn' {p} {Hp : p.+2 <= n} {D : csp} {d} :
+    PC.(cube') (Hp := ↓ Hp) d = {b :
+          (PC.(cube'') (PB.(subbox') _ L d) *
+          PC.(cube'') (PB.(subbox') _ R d))%type
+          & PC.(cube') (rew <- [id] eqBoxSp' (D := D) in (d; b))} ;
   eqSubcube0 {q} {Hq: q.+1 <= n} {D: csp} {E} {d} {ε : side}
       {CL : PC.(cube') (Box.(subbox) Hq L d)}
       {CR : PC.(cube') (Box.(subbox) Hq R d)}
@@ -139,7 +145,17 @@ Class Cubical (n : nat) := {
         match ε with
         | L => CL
         | R => CR
-        end = Cube.(subcube) Hq ε E (rew <- [id] eqCubeSn in ((CL, CR); Q))
+        end = Cube.(subcube) Hq ε E (rew <- [id] eqCubeSn in ((CL, CR); Q)) ;
+  eqSubcubeSn {p q} {Hpq : p.+2 <= q.+2} {Hq : q.+2 <= n} {D : csp} {E} {d}
+  {ω : side}
+  {CL : PC.(cube') (Box.(subbox) (↓ (Hpq ↕ Hq)) L d)}
+  {CR : PC.(cube') (Box.(subbox) (↓ (Hpq ↕ Hq)) R d)}
+  {Q : Cube.(cube) (D := D) E (rew <- eqBoxSp in (d; (CL, CR)))} :
+  Cube.(subcube) (Hp := ↓ Hpq) Hq ω E (rew <- [id] eqCubeSn in
+  ((CL, CR); Q)) = rew <- [id] eqCubeSn' (Hp := Hpq ↕ Hq) in
+  ((rew [PC.(cube'')] Box.(cohbox) d in PC.(subcube') Hq _ CL,
+    rew [PC.(cube'')] Box.(cohbox) d in PC.(subcube') Hq _ CR);
+    rew [PC.(cube')] eqSubboxSn in Cube.(subcube) _ _ _ Q) ;
 }.
 
 Arguments csp {n} _.
@@ -150,7 +166,7 @@ Arguments Cube {n} _.
 Arguments eqBoxSp {n} _ {D p Hp}.
 Arguments eqSubboxSn {n} _ {ε p q D Hpq Hq d CL CR}.
 Arguments eqCubeSn {n} _ {q Hq D E d}.
-(* Arguments eqSubcube0 {n} _ {q r Hq Hr E d CL CR ε ω Q}. *)
+Arguments eqSubcubeSn {n} _ {p q Hpq Hq D E d ω CL CR Q}.
 
 Definition mkcsp {n} {C : Cubical n} : Type@{l'} :=
   { D : C.(csp) & C.(Box).(box) (le_refl n) D -> Type@{l} }.
@@ -277,7 +293,7 @@ Lemma mkcube_computes {q n} {C : Cubical n} {Hq : q.+1 <= n.+1} {D E d} :
         & mkcube Hq D E (d; b)}.
 Proof.
   unfold mkcube; now rewrite le_induction_computes.
-Qed.
+Defined.
 
 Definition mksubcube {n} {C: Cubical n} {p q} (Hp : p.+1 <= q.+1)
   (Hq: q.+1 <= n.+1) (ε : side) {D}
@@ -361,6 +377,15 @@ Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
       destruct (rew [id] mkcube_computes in b) as (b', c).
       destruct b' as (CL, CR). clear b. destruct ω.
       now refine (eqSubcube0 (ε := L)). now refine (eqSubcube0 (ε := R)).
-    + admit.
+    + clear p Hpr; unfold mkPC, subcube'; cbv beta iota; intros p Hpr IHP d b.
+      change (⇓ (↓ Hpr)) with (↓ (⇓ Hpr)).
+      destruct r. exfalso. clear -Hpr. do 2 apply lower_S_both in Hpr.
+      now apply le_contra in Hpr.
+      destruct q. exfalso. clear -Hr. do 2 apply lower_S_both in Hr.
+      now apply le_contra in Hr.
+      do 2 rewrite mksubcube_step_computes.
+      destruct (rew [id] mkcube_computes in b) as ((CL, CR), c).
+      rewrite @eqSubcubeSn with (Hpq := ⇓ (Hpr ↕ Hr)) (Hq := ⇓ Hq).
+      admit.
 Admitted.
 End Cubical.
