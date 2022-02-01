@@ -73,6 +73,21 @@ Proof.
   now destruct H.
 Defined.
 
+Lemma rew_sigT {A x} {P : A -> Type} (Q : forall a, P a -> Type)
+  (u : { p : P x & Q x p }) {y} (H : x = y)
+    : rew [fun x => { p : P x & Q x p }] H in u
+      = existT (Q y) (rew H in u.1) (rew dependent H in u.2).
+Proof.
+  now destruct H, u.
+Defined.
+
+Theorem rew_permute A (P Q: A -> Type) (x y: A) (H: forall z, Q z = P z)
+  (H': x = y) (a: P x) :
+  rew <- [fun x => x] H y in rew H' in a =
+  rew [Q] H' in rew <- [fun x => x] H x in a.
+now destruct H'.
+Defined.
+
 Lemma rew_swap : forall A (P : A -> Type) a b (H: a = b) (x : P a) (y : P b),
 x = rew <- H in y -> rew H in x = y.
 Proof.

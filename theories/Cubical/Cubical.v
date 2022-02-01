@@ -15,6 +15,7 @@ Import RewLemmas.
 
 Set Printing Projections.
 Set Primitive Projections.
+Set Keyed Unification.
 Remove Printing Let sigT.
 Remove Printing Let prod.
 
@@ -155,7 +156,7 @@ Class Cubical (n : nat) := {
   ((CL, CR); Q)) = rew <- [id] eqCubeSn' (Hp := Hpq ↕ Hq) in
   ((rew [PC.(cube'')] Box.(cohbox) d in PC.(subcube') Hq _ CL,
     rew [PC.(cube'')] Box.(cohbox) d in PC.(subcube') Hq _ CR);
-    rew [PC.(cube')] eqSubboxSn in Cube.(subcube) _ _ _ Q) ;
+   rew [PC.(cube')] eqSubboxSn in Cube.(subcube) _ _ _ Q) ;
 }.
 
 Arguments csp {n} _.
@@ -386,6 +387,32 @@ Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
       do 2 rewrite mksubcube_step_computes.
       destruct (rew [id] mkcube_computes in b) as ((CL, CR), c).
       rewrite @eqSubcubeSn with (Hpq := ⇓ (Hpr ↕ Hr)) (Hq := ⇓ Hq).
-      admit.
+      rewrite @eqSubcubeSn with (Hpq := ⇓ Hpr) (Hq := ⇓ (Hr ↕ Hq)).
+      change ((fun _ (x : le' _ ?y) => x) ↕ ?z) with z.
+      change (⇓ ?x ↕ ⇓ ?y) with (⇓ (x ↕ y)).
+      rewrite <- rew_permute with (H := @eqCubeSn' _ _ _ (⇓ _) _)
+                                  (H' := (mkBox p).(cohbox) _).
+      change (↓ Hpr ↕ Hr) with (↓ (Hpr ↕ Hr)).
+      rewrite <- IHP with (d := (d; (CL, CR))) (b := c).
+      rewrite rew_sigT; simpl projT1; simpl projT2.
+      f_equal. unshelve eapply eq_existT_curried. rewrite <- rew_pair.
+      Arguments cohbox {n p csp PB} _ {q r Hpr Hr Hq} ε ω {D} d. f_equal.
+      * repeat rewrite <- map_subst.
+      rewrite <- (C.(Cube).(cohcube) (Hr := ⇓ Hr) (Hq := ⇓ Hq)).
+      rewrite rew_map.
+      rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε).
+      rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hr ↕ Hq)) ω).
+      repeat rewrite rew_compose. apply rew_swap. rewrite rew_app.
+      -- now reflexivity.
+      -- now apply UIP.
+      * repeat rewrite <- map_subst.
+      rewrite <- (C.(Cube).(cohcube) (Hr := ⇓ Hr) (Hq := ⇓ Hq)).
+      rewrite rew_map.
+      rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε).
+      rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hr ↕ Hq)) ω).
+      repeat rewrite rew_compose. apply rew_swap. rewrite rew_app.
+      -- now reflexivity.
+      -- now apply UIP.
+      * admit.
 Admitted.
 End Cubical.
