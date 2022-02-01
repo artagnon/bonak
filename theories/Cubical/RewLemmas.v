@@ -94,9 +94,18 @@ Defined.
 
 Theorem rew_permute A (P Q: A -> Type) (x y: A) (H: forall z, Q z = P z)
   (H': x = y) (a: P x) :
-  rew <- [fun x => x] H y in rew H' in a =
-  rew [Q] H' in rew <- [fun x => x] H x in a.
-now destruct H'.
+  rew <- [id] H y in rew H' in a =
+  rew [Q] H' in rew <- [id] H x in a.
+Proof.
+  now destruct H'.
+Defined.
+
+Theorem rew_permute' A (P Q: A -> Type) (x y: A) (H: forall z, P z = Q z)
+  (H': x = y) (a: P x) :
+  rew [id] H y in rew H' in a =
+  rew [Q] H' in rew [id] H x in a.
+Proof.
+  now destruct H'.
 Defined.
 
 Lemma rew_swap : forall A (P : A -> Type) a b (H: a = b) (x : P a) (y : P b),
