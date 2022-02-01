@@ -25,16 +25,4 @@ Inductive eq_over {A} (x: A) : forall {B} (y: B), A = B -> Prop :=
 eq_over_refl : x =_{eq_refl} x
 where "x =_{ H } y" := (eq_over x y H).
 
-(* Dependent induction *)
-Ltac elim_ind_as p pat := elim_tac ltac:(fun p el => induction p as pat using el) p.
-Ltac do_ind_as p pat := introduce p; (induction p as pat || elim_ind_as p pat).
-
-Tactic Notation "dependent" "induction" ident(H) "as" simple_intropattern(pat) := do_depind ltac:(fun hyp => do_ind_as hyp pat) H.
-
-Theorem proxy {A B} {P : B -> Type} (f : A -> B)
-(Q : forall a, P (f a) -> Type) {x y} (e : f x = y)
-(H : forall D : P y, Q x (rew <- e in D)) : (forall D : P (f x), Q x D).
-Proof.
-  now destruct e.
-Defined.
 End Aux.
