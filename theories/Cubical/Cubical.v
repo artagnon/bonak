@@ -394,25 +394,25 @@ Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
                                   (H' := (mkBox p).(cohbox) _).
       change (↓ Hpr ↕ Hr) with (↓ (Hpr ↕ Hr)).
       rewrite <- IHP with (d := (d; (CL, CR))) (b := c).
-      rewrite rew_sigT; simpl projT1; simpl projT2.
-      f_equal. unshelve eapply eq_existT_curried. rewrite <- rew_pair.
-      Arguments cohbox {n p csp PB} _ {q r Hpr Hr Hq} ε ω {D} d. f_equal.
+      rewrite rew_triple; simpl projT1; simpl projT2; f_equal.
+      Arguments cohbox {n p csp PB} _ {q r Hpr Hr Hq} ε ω {D} d.
+      unshelve eapply eq_existT_curried.
       * repeat rewrite <- map_subst.
-      rewrite <- (C.(Cube).(cohcube) (Hr := ⇓ Hr) (Hq := ⇓ Hq)).
-      rewrite rew_map.
-      rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε).
-      rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hr ↕ Hq)) ω).
-      repeat rewrite rew_compose. apply rew_swap. rewrite rew_app.
-      -- now reflexivity.
-      -- now apply UIP.
-      * repeat rewrite <- map_subst.
-      rewrite <- (C.(Cube).(cohcube) (Hr := ⇓ Hr) (Hq := ⇓ Hq)).
-      rewrite rew_map.
-      rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε).
-      rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hr ↕ Hq)) ω).
-      repeat rewrite rew_compose. apply rew_swap. rewrite rew_app.
-      -- now reflexivity.
-      -- now apply UIP.
+        rewrite <- rew_pair.
+        repeat rewrite <- (C.(Cube).(cohcube) (Hr := ⇓ Hr) (Hq := ⇓ Hq)).
+        repeat rewrite rew_map with (f :=
+          C.(PB).(subbox') (⇓ ((Hpr ↕ Hr) ↕ Hq)) L).
+        repeat rewrite rew_map with (f :=
+          C.(PB).(subbox') (⇓ ((Hpr ↕ Hr) ↕ Hq)) R).
+        repeat rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε).
+        repeat rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hr ↕ Hq)) ω).
+        repeat rewrite rew_compose. f_equal.
+      -- apply rew_swap; rewrite rew_app.
+         now change (↓ (⇓ Hr ↕ ⇓ Hq)) with (⇓ (↓ (Hr ↕ Hq))).
+         now apply UIP.
+      -- apply rew_swap; rewrite rew_app.
+         now change (↓ (⇓ Hr ↕ ⇓ Hq)) with (⇓ (↓ (Hr ↕ Hq))).
+         now apply UIP.
       * admit.
 Admitted.
 End Cubical.

@@ -67,16 +67,27 @@ Proof.
   intros; now destruct H0.
 Defined.
 
-Lemma rew_pair : forall A (P Q: A -> Type) a b (x: P a) (y: Q a) (H: a = b),
-  (rew H in x, rew H in y) = rew [fun a => (P a * Q a)%type] H in (x, y).
+Lemma rew_pair : forall A {a} (P Q: A -> Type) (x: P a) (y: Q a)
+  {b} (H: a = b), (rew H in x, rew H in y) =
+                   rew [fun a => (P a * Q a)%type] H in (x, y).
 Proof.
   now destruct H.
 Defined.
 
 Lemma rew_sigT {A x} {P : A -> Type} (Q : forall a, P a -> Type)
-  (u : { p : P x & Q x p }) {y} (H : x = y)
+  (u : { p : P x & Q x p }) {y} (H: x = y)
     : rew [fun x => { p : P x & Q x p }] H in u
       = existT (Q y) (rew H in u.1) (rew dependent H in u.2).
+Proof.
+  now destruct H, u.
+Defined.
+
+Lemma rew_triple {A x} {P P': A -> Type}
+  (Q: forall a, (P a * P' a)%type -> Type)
+  (u: { p: (P x * P' x)%type & Q x p }) {y} (H: x = y)
+    : rew [fun x => { p : (P x * P' x)%type & Q x p }] H in u
+      = existT (Q y) (rew [fun x => (P x * P' x)%type] H in u.1)
+        (rew dependent H in u.2).
 Proof.
   now destruct H, u.
 Defined.
