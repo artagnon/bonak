@@ -45,21 +45,21 @@ Lemma le'_implies_le {n p} : le' p n -> Peano.le p n.
   intros H. destruct (Compare_dec.le_dec p n) as [|n0].
   now assumption. enough (G:SFalse) by destruct G. dependent induction H.
   destruct n0; now constructor. apply IHle'; intro; apply n0; now constructor.
-Qed.
+Defined.
 
 Lemma le_implies_le' {n p} : Peano.le p n -> le' p n.
   intros H. induction H. now constructor. now constructor.
-Qed.
+Defined.
 
 (* leYoneda <-> Peano.le *)
 Lemma leYoneda_implies_le {n p} : p <= n -> Peano.le p n.
   intros H. apply le'_implies_le. unfold "<=" in H. now apply H, le_refl'.
-Qed.
+Defined.
 
 Lemma le_implies_leYoneda {n p} : Peano.le p n -> p <= n.
   intros H. unfold "<=". intros p0 H0. apply le'_implies_le in H0.
   apply le_implies_le'. now lia.
-Qed.
+Defined.
 
 Definition le_refl n : n <= n :=
   fun _ x => x. (* Coq bug! *)
@@ -110,7 +110,7 @@ Lemma np_comparitor_shift {n p} : p <= n.+1 -> n.+1 - p + p - 1 = n.
   * simpl. rewrite Nat.sub_0_r, Nat.add_0_r. trivial. (* the p = 0 case *)
   * replace (n.+1 - p.+1) with (n - p) by auto; rewrite Nat.add_comm, Nat.add_succ_comm, Nat.add_comm; rewrite <- Nat.sub_succ_l; [apply IHp, le_S_down, Hp | pose proof (lower_S_both Hp) as H; unfold "<=" in H;
   specialize H with (1 := le_refl' p); clear Hp IHp]. now apply le'_implies_le.
-Qed.
+Defined.
 
 Lemma np_comparitor_shift2 {n p} : p <= n -> n - (n - p) = p.
   revert n. induction p; intros.
@@ -118,7 +118,7 @@ Lemma np_comparitor_shift2 {n p} : p <= n -> n - (n - p) = p.
   * destruct n. apply le_contra in H as []. simpl Nat.sub at 2.
     rewrite Nat.sub_succ_l. f_equal. apply IHp. now apply lower_S_both in H.
     now lia.
-Qed.
+Defined.
 
 Theorem le_induction : forall n, forall P : forall p, p <= n -> Type,
           P n (le_refl n) ->
