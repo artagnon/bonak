@@ -120,6 +120,19 @@ Lemma np_comparitor_shift2 {n p} : p <= n -> n - (n - p) = p.
     now lia.
 Defined.
 
+Ltac find_raise q :=
+  match q with
+  | ?q.+1 => find_raise q
+  | _ => constr:(q)
+  end.
+
+Ltac invert_le Hpq :=
+  match type of Hpq with
+  | ?p.+1 <= ?q => let c := find_raise q in destruct c;
+                   [exfalso; clear -Hpq; repeat apply lower_S_both in Hpq;
+                   now apply le_contra in Hpq |]
+  end.
+
 Theorem le_induction : forall n, forall P : forall p, p <= n -> Type,
           P n (le_refl n) ->
           (forall p' (H : p'.+1 <= n), P p'.+1 H -> P p' (le_S_down H)) ->
