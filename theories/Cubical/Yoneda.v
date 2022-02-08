@@ -1,11 +1,9 @@
 Require Import Arith.
 Require Import RelationClasses.
-Require Import Program.
-Require Import Aux.
-Import Aux.
+Require Import Coq.Program.Equality. (* dependent induction *)
 Require Import Lia.
+Require Import Aux.
 
-Module Yoneda.
 Set Warnings "-notation-overridden".
 
 Inductive le' (n : nat) : nat -> SProp :=
@@ -173,4 +171,3 @@ Lemma le_induction'_step_computes {n P H0 HS p H} :
     HS p H (le_induction' n P H0 HS p.+1 H).
 Proof.
 Admitted.
-End Yoneda.

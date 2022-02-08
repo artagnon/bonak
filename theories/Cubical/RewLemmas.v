@@ -1,9 +1,6 @@
-From Coq Require Import Arith.
 Import Logic.EqNotations.
 Require Import Aux.
-Import Aux.
 
-Module RewLemmas.
 Lemma rew_rew {A} {x y: A} (H : x = y) P {a: P x} :
 rew <- [P] H in rew [P] H in a = a.
   now destruct H.
@@ -119,4 +116,3 @@ H = H' -> rew <- [P] H in rew [P] H' in a = a.
 Proof.
   intros * ->. now destruct H'.
 Defined.
-End RewLemmas.

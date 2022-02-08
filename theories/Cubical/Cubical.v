@@ -1,17 +1,10 @@
-From Coq Require Import Arith.
 Import Logic.EqNotations.
-Require Import Logic.Eqdep.
-Require Import Program.
-
+Require Import Program. (* UIP *)
 Require Import Aux.
-Import Aux.
+Require Import RewLemmas.
 
 Set Warnings "-notation-overridden".
 Require Import Yoneda.
-Import Yoneda.
-
-Require Import RewLemmas.
-Import RewLemmas.
 
 Set Printing Projections.
 Set Primitive Projections.
@@ -19,7 +12,6 @@ Set Keyed Unification.
 Remove Printing Let sigT.
 Remove Printing Let prod.
 
-Module Cubical.
 Universe l'.
 Universe l.
 
@@ -395,4 +387,3 @@ Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
       1, 3: now change (↓ (⇓ ?Hrq ↕ ⇓ ?Hq)) with (⇓ (↓ (Hrq ↕ Hq))).
       all: now apply UIP.
 Admitted.
-End Cubical.
