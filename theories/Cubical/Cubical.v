@@ -219,17 +219,14 @@ Definition mkBoxSp {n p} {C: Cubical n}
     - simpl in *; cbv zeta; unfold Sub. (* Sides L and R *)
       specialize cohboxp with (Hpr := le_refl p.+2) (Hrq := Hpq) (Hq := Hq)
                                 (ε := ε) (D := D).
-      change (le_refl p.+2 ↕ ?x) with x in cohboxp.
-      change (⇓ le_refl p.+2) with (le_refl p.+1) in cohboxp.
+      change (le_refl _ ↕ ?x) with x in cohboxp.
+      change (⇓ le_refl ?p.+2) with (le_refl p.+1) in cohboxp.
       split.
-      ++ specialize cohboxp with (ω := L) (d := d). (* The side L *)
-          rewrite <- cohboxp.
-          eapply (C.(Cube).(subcube) (Hp := ⇓ Hpq)) with (Hq := ⇓ Hq) in CL.
-          now exact CL.
-      ++ specialize cohboxp with (ω := R) (d := d). (* The side R *)
-          rewrite <- cohboxp.
-          eapply (C.(Cube).(subcube) (Hp := ⇓ Hpq)) with (Hq := ⇓ Hq) in CR.
-          now exact CR.
+      all: rewrite <- cohboxp.
+      ++ eapply (C.(Cube).(subcube) (Hp := ⇓ Hpq)) with (Hq := ⇓ Hq) in CL;
+         now exact CL.
+      ++ eapply (C.(Cube).(subcube) (Hp := ⇓ Hpq)) with (Hq := ⇓ Hq) in CR.
+         now exact CR.
   * simpl; intros. (* cohboxp *)
     destruct d as (d', (CL, CR)); invert_le Hpr; invert_le Hrq.
     (* r = S (S _) *)
@@ -237,28 +234,20 @@ Definition mkBoxSp {n p} {C: Cubical n}
         simpl in cohboxp. unshelve eapply eq_existT_curried.
         exact (cohboxp _ _ (↓ Hpr) Hrq Hq _ _ _ _).
         rewrite <- rew_pair. apply eq_pair.
-    ** rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ Hq) ε).
-        rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ (Hrq ↕ Hq)) ω).
-        eapply eq_trans.
-        -- rewrite rew_map; now apply rew_compose.
-        -- eapply eq_trans.
-        +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε).
-            now apply rew_compose.
-        +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hrq ↕ Hq)) ω).
-            rewrite rew_compose; apply rew_swap.
-            rewrite <- (C.(Cube).(cohcube) (Hrq := ⇓ Hrq) (Hq := ⇓ Hq)).
-            rewrite rew_compose, rew_app. now reflexivity. now apply UIP.
-    ** rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ Hq) ε).
-        rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ (Hrq ↕ Hq)) ω).
-        eapply eq_trans.
-        -- rewrite rew_map; now apply rew_compose.
-        -- eapply eq_trans.
-        +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε).
-            now apply rew_compose.
-        +++ rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hrq ↕ Hq)) ω).
-            rewrite rew_compose; apply rew_swap.
-            rewrite <- (C.(Cube).(cohcube) (Hrq := ⇓ Hrq) (Hq := ⇓ Hq)).
-            rewrite rew_compose, rew_app. now reflexivity. now apply UIP.
+        all:  rewrite <- map_subst with (f := C.(PC).(subcube') (⇓ Hq) ε);
+              rewrite <- map_subst with (f :=
+                                          C.(PC).(subcube') (⇓ (Hrq ↕ Hq)) ω);
+              rewrite rew_map; eapply eq_trans.
+        1, 3: now apply rew_compose.
+        all:  eapply eq_trans.
+        1, 3: rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε);
+              now apply rew_compose.
+        all:  rewrite rew_map with (f := C.(PB).(subbox') (⇓ (Hrq ↕ Hq)) ω),
+              rew_compose; apply rew_swap;
+              rewrite <- (C.(Cube).(cohcube) (Hrq := ⇓ Hrq) (Hq := ⇓ Hq));
+              rewrite rew_compose, rew_app.
+        1, 3: now reflexivity.
+        all:  now apply UIP.
 Defined.
 
 Definition mkBox {n} {C: Cubical n} p : PartialBox n.+1 p mkcsp mkPB.
@@ -301,7 +290,7 @@ Proof.
     destruct b as (BL, BR). destruct ε. now exact BL. now exact BR.
   + clear p Hp. intros p Hp IH d c. rewrite mkcube_computes in c.
     destruct c as ((BL, BR), d').
-    change (⇓ (↓ Hp ↕ Hq)) with (↓ ⇓ (Hp ↕ Hq)). (* This shouldn't be
+    change (⇓ (↓ ?Hp ↕ ?Hq)) with (↓ ⇓ (Hp ↕ Hq)). (* This shouldn't be
                                                     necessary: rewrite
                                                     should support SProp. *)
     rewrite C.(eqCubeSn); invert_le Hp.
@@ -391,19 +380,19 @@ Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkPC mkBox.
             format "'[' 'rew'  <-  [ P ]  '/    ' H  in  '/' H' ']'").
       2 : { unfold cube'', mkPB, box', box'', subbox'.
             admit. }
-      1 : { repeat rewrite <- map_subst.
-            rewrite <- rew_pair.
-            repeat rewrite <- (C.(Cube).(cohcube) (Hrq := ⇓ Hrq) (Hq := ⇓ Hq)).
-            repeat rewrite rew_map with (f :=
-              C.(PB).(subbox') (⇓ ((Hpr ↕ Hrq) ↕ Hq)) L).
-            repeat rewrite rew_map with (f :=
-              C.(PB).(subbox') (⇓ ((Hpr ↕ Hrq) ↕ Hq)) R).
-            repeat rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε).
-            repeat rewrite rew_map with (f :=
-              C.(PB).(subbox') (⇓ (Hrq ↕ Hq)) ω).
-            repeat rewrite rew_compose; f_equal.
-            all: apply rew_swap; rewrite rew_app.
-            1, 3: now change (↓ (⇓ ?Hrq ↕ ⇓ ?Hq)) with (⇓ (↓ (Hrq ↕ Hq))).
-            all: now apply UIP.
+      repeat rewrite <- map_subst.
+      rewrite <- rew_pair.
+      repeat rewrite <- (C.(Cube).(cohcube) (Hrq := ⇓ Hrq) (Hq := ⇓ Hq)).
+      repeat rewrite rew_map with (f :=
+        C.(PB).(subbox') (⇓ ((Hpr ↕ Hrq) ↕ Hq)) L).
+      repeat rewrite rew_map with (f :=
+        C.(PB).(subbox') (⇓ ((Hpr ↕ Hrq) ↕ Hq)) R).
+      repeat rewrite rew_map with (f := C.(PB).(subbox') (⇓ Hq) ε).
+      repeat rewrite rew_map with (f :=
+        C.(PB).(subbox') (⇓ (Hrq ↕ Hq)) ω).
+      repeat rewrite rew_compose; f_equal.
+      all: apply rew_swap; rewrite rew_app.
+      1, 3: now change (↓ (⇓ ?Hrq ↕ ⇓ ?Hq)) with (⇓ (↓ (Hrq ↕ Hq))).
+      all: now apply UIP.
 Admitted.
 End Cubical.
