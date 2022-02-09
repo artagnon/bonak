@@ -2,7 +2,7 @@ name: coq-action
 
 on:
   push:
-    branches: [fib]
+    branches: [master]
 jobs:
   build:
     runs-on: ${{ matrix.os }}
