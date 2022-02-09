@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        coq_version: ["8.14"]
+        coq_version: ["8.15"]
       fail-fast: false
     steps:
       - uses: "actions/checkout@v2"
