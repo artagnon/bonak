@@ -67,7 +67,8 @@ Arguments cube'' {n csp BoxPrev} _ {p Hp} {D} d.
 Arguments subcube' {n csp BoxPrev} _ {p q Hpq} Hq ε {D} [d] b.
 
 (* Cube consists of cube, subcube, and coherence conditions between them *)
-Record PartialCube (n : nat) (csp : Type@{l'}) {BoxPrev : PartialBoxPrev n (@csp)}
+Record PartialCube (n : nat) (csp : Type@{l'})
+  {BoxPrev : PartialBoxPrev n (@csp)}
   (CubePrev : PartialCubePrev n csp BoxPrev)
   (Box : forall {p}, PartialBox n p (@csp) BoxPrev) := {
   cube {p} {Hp : p <= n} {D : csp} :
@@ -201,9 +202,12 @@ Definition mkLayer {n p} {Hp: p.+1 <= n.+1} {C: Cubical n} {D: mkcsp}
 (* Definition mkSubLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
   {C: Cubical n} {D: mkcsp} {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
   {d: Box.(box) (↓ ↓ (Hpq ↕ Hq)) D} {c: mkLayer d}: Type :=
-  let SubC x := C.(Cube).(subcube) (Hp := ⇓ Hpq) (ε := ε) (Hq := ⇓ Hq) x in
-  let Rx x := rew Box.(cohbox) (D := D) (ε := ε) (Hrq := Hpq) d in (SubC x) in
-  rew <- C.(eqBoxSp) in (Box.(subbox) Hq ε d, (Rx (fst c), Rx (snd c))). *)
+  let SubC x := C.(Cube).(subcube) (Hp := ⇓ Hpq) (ε := x.1) (Hq := ⇓ Hq) x.2 in
+  let Rx (x: {ω: side & C.(Cube).(cube) _ (Box.(subbox) _ ω _)}) :=
+    rew Box.(cohbox) (D := D) (Hrq := Hpq) (Hq := Hq) d in (SubC x) in
+  rew <- [id] C.(eqBoxSp) in
+    (Box.(subbox) (Hpq := ↓ Hpq) Hq ε d, (Rx (L; (fst c)),
+                                          Rx (R; (snd c)))). *)
 
 Definition mkBox0 {n} {C: Cubical n} : PartialBox n.+1 O mkcsp mkBoxPrev.
   unshelve esplit.
