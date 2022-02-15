@@ -205,23 +205,6 @@ Definition mkLayer {n p} {Hp: p.+1 <= n.+1} {C: Cubical n} {D: mkcsp}
   let Rx x := rew Box.(cohbox) (D := D) (ε := ε) (Hrq := Hpq) d in (SubC x) in
   rew <- C.(eqBoxSp) in (Box.(subbox) Hq ε d, (Rx (fst c), Rx (snd c))). *)
 
-  (* * simpl; intros. destruct X as (d, (CL, CR)). (* subboxSn *)
-    pose (Sub Hp side := (subboxp p (le_refl p.+1) Hp side)).
-    rewrite C.(eqBoxSp); invert_le Hpq.
-    unshelve esplit.
-    - clear CL CR; now exact (subboxp q.+1 (↓ Hpq) Hq ε _ d).
-    - simpl in *; cbv zeta; unfold Sub. (* Sides L and R *)
-      specialize cohboxp with (Hpr := le_refl p.+2) (Hrq := Hpq) (Hq := Hq)
-                                (ε := ε) (D := D).
-      change (le_refl _ ↕ ?x) with x in cohboxp.
-      change (⇓ le_refl ?p.+2) with (le_refl p.+1) in cohboxp.
-      split.
-      all: rewrite <- cohboxp;
-      apply (C.(Cube).(subcube) (Hp := ⇓ Hpq)) with (Hq := ⇓ Hq) (ε := ε) in CL;
-      apply (C.(Cube).(subcube) (Hp := ⇓ Hpq)) with (Hq := ⇓ Hq) (ε := ε) in CR.
-      ++ now exact CL.
-      ++ now exact CR. *)
-
 Definition mkBox0 {n} {C: Cubical n} : PartialBox n.+1 O mkcsp mkBoxPrev.
   unshelve esplit.
   * intros Hp D; exact unit. (* boxSn *)
@@ -356,7 +339,7 @@ Lemma mksubcube_step_computes {q r n} {C : Cubical n} {Hq : q.+2 <= n.+1}
     ((rew (mkBox r).(cohbox) (r := r) d in
       C.(Cube).(subcube) (Hq := ⇓ Hq) (ε := ω) (E := D.2) BL,
       rew (mkBox r).(cohbox) (r := r) d in
-      C.(Cube).(subcube) (Hq := ⇓ Hq) (ε := ω) (E := D.2)  BR);
+      C.(Cube).(subcube) (Hq := ⇓ Hq) (ε := ω) (E := D.2) BR);
     mksubcube Hrq _ ω E (d; (BL, BR)) c)
   end.
 Proof.
