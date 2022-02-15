@@ -201,10 +201,12 @@ Definition mkLayer {n p} {Hp: p.+1 <= n.+1} {C: Cubical n} {D: mkcsp}
 
 (* Definition mkSubLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
   {C: Cubical n} {D: mkcsp} {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
-  {d: Box.(box) (↓ (le_refl p.+1 ↕ ↓ (Hpq ↕ Hq))) D} {c: mkLayer d}: Type :=
-  let SubC x := C.(Cube).(subcube) (Hp := ⇓ Hpq) (ε := x.1) (Hq := ⇓ Hq) x.2 in
-  let Rx (x: {ω: side & C.(Cube).(cube) _ (Box.(subbox) _ ω _)}) :=
-  rew Box.(cohbox) (ε := x.1) (D := D) (Hrq := Hpq) (Hq := Hq) d in (SubC x) in
+  {d: Box.(box) (↓ (le_refl p.+1 ↕ ↓ (Hpq ↕ Hq))) D}
+  {c: mkLayer d}: mkBoxPrev.(box') (Hpq ↕ Hq) D :=
+  let SubC x := C.(Cube).(subcube) (Hp := ⇓ Hpq) (Hq := ⇓ Hq) x in
+  let Rx (x: {ω: side & C.(Cube).(cube) D.2 (Box.(subbox) _ ω _)}) :=
+  rew Box.(cohbox) (ε := ε) (ω := x.1) (D := D) (Hrq := Hpq) (Hq := Hq) d in
+    (SubC x.2) in
   rew <- [id] C.(eqBoxSp) (D := D.1) in
     (Box.(subbox) (Hpq := ↓ Hpq) Hq ε d; (Rx (L; (fst c)), Rx (R; (snd c)))). *)
 
