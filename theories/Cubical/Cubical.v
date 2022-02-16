@@ -229,14 +229,14 @@ Definition mkSubLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
   {d: Box.(box) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D} {c: mkLayer}:
   let Rx {H0: p.+3 <= q.+3} {H1: q.+3 <= n.+1}
          {H2: p.+3 <= r.+3} {H3: r.+3 <= n.+1} :=
-    Box.(subbox) (Hpq := ↓ ⇓ H0) (↓ H1) ε (* (⇓ H0) (⇓ H1) *)
-      (rew <- [id] C.(eqBoxSp) (Hp := (⇓ ↓ (H2 ↕ H3))) in
-        (Box.(subbox) (Hpq := ⇓ ⇓ H2) (↓ ↓ H3) ω d; (* (⇓ H2) (↓ H3) *)
-        mkSubLayer (Hpq := ⇓ H2) (Hq := ↓ H3) (c := c))) = (* (⇓ H2) (↓ H3) *)
-    Box.(subbox) (Hpq := ↓ ⇓ H2) (↓ H3) ω (* (⇓ H2) (⇓ H3) *)
-      (rew <- [id] C.(eqBoxSp) (Hp := ⇓ (↓ H0 ↕ H1)) in
-        (Box).(subbox) (Hpq := ⇓ ↓ H0) (↓ H1) ε d; (* (↓ H0) H1 *)
-        mkSubLayer (Hpq := ↓ H0) (Hq := H1)) in (* (↓ H0) H1 *)
+    Box.(subbox) (q := q.+1) (Hpq := ⇓ ↓ H0) (↓ H1) ε (* (⇓ H0) (⇓ H1) *)
+      (rew <- [id] C.(eqBoxSp) in (* Hp := (Hp := (↓ ⇓ (H2 ↕ H3))) *)
+        (Box.(subbox) (q := r) (Hpq := ⇓ ⇓ H2) (↓ ↓ H3) ω d; (* (⇓ H2) (↓ H3) *)
+        mkSubLayer (Hpq := ⇓ H2) (Hq := ↓ H3) (Box := Box))) = (* gold *)
+    Box.(subbox) (q := r.+1) (Hpq := ⇓ ↓ H2) (↓ H3) ω (* (⇓ H2) (⇓ H3) *)
+      (rew <- [id] C.(eqBoxSp) in (* (Hp := ⇓ (↓ H0 ↕ H1)) *)
+        (Box).(subbox) (q := q.+1) (Hpq := ⇓ ↓ H0) (↓ H1) ε d; (* (↓ H0) H1 *)
+        mkSubLayer (Hpq := ↓ H0) (Hq := H1)) in (* gold *)
   Rx (Hpr ↕ Hrq) Hq Hpr (Hrq ↕ Hq). *)
 
 Definition mkBox0 {n} {C: Cubical n} : PartialBox n.+1 O mkcsp mkBoxPrev.
