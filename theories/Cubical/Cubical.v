@@ -202,21 +202,25 @@ Definition mkLayer {n p} {Hp: p.+1 <= n.+1} {C: Cubical n} {D: mkcsp}
 Definition mkSubLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
   {C: Cubical n} {D: mkcsp} {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
   {d: Box.(box) (↓ ↓ (Hpq ↕ Hq)) D}
-  {c: mkLayer}: C.(Layer') (Hp := (⇓ (Hpq ↕ Hq))) (Box.(subbox) Hq ε d) :=
+  {c: mkLayer}: C.(Layer') (Box.(subbox) Hq ε d) :=
   let Rx (x: {ω: side & C.(Cube).(cube) D.2 (Box.(subbox) _ ω _)}) :=
-    rew Box.(cohbox) (ε := ε) (ω := x.1) (D := D) (Hrq := Hpq) (Hq := Hq) d in
-      (C.(Cube).(subcube) (Hp := ⇓ Hpq) (Hq := ⇓ Hq) x.2) in
+    rew Box.(cohbox) (ε := ε) (ω := x.1) (Hrq := Hpq) d in
+      (C.(Cube).(subcube) (Hp := ⇓ Hpq) x.2) in
   (Rx (L; (fst c)), Rx (R; (snd c))).
 
 (* Definition mkCohLayer {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
   {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
-  {d: Box.(box) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D} {c: mkLayer}:
-  Box.(subbox) (⇓ Hq) ε
-    (rew <- C.(eqBoxSp) in (Box.(subbox) (↓ (Hrq ↕ Hq)) ω d; mkSubLayer)) =
-  Box.(subbox) (⇓ (Hrq ↕ Hq)) ω
-    (rew <- C.(eqBoxSp) in (Box.(subbox) Hq ε d; mkSubLayer)).
- *)
+  {d: Box.(box) (↓ ↓ (⇓ (Hpr ↕ Hrq) ↕ ↓ Hq)) D} {c: mkLayer}:
+  Box.(subbox) (↓ Hq) ε
+    (rew <- [id] C.(eqBoxSp) in
+      (Box.(subbox) (Hpq := ⇓ ↓ Hpr) (↓ (Hrq ↕ Hq)) ω d;
+       mkSubLayer (Hpq := ⇓ Hpr))) =
+  Box.(subbox) (↓ (Hrq ↕ Hq)) ω
+    (rew <- [id] C.(eqBoxSp) in
+      (Box.(subbox) (Hpq := ⇓ ↓ (Hpr ↕ Hrq)) Hq ε d;
+       mkSubLayer (Hpq := ⇓ (Hpr ↕ Hrq)))). *)
+
 Definition mkBox0 {n} {C: Cubical n} : PartialBox n.+1 O mkcsp mkBoxPrev.
   unshelve esplit.
   * intros Hp D; exact unit. (* boxSn *)
@@ -236,10 +240,10 @@ Definition mkBoxSp {n p} {C: Cubical n}
     rewrite C.(eqBoxSp); invert_le Hpq.
     now exact (Box.(subbox) Hq ε d; mkSubLayer (c := c)).
   * simpl; intros. (* cohboxp *)
-    destruct d as (d', c); invert_le Hpr; invert_le Hrq.
-    destruct Box as (boxp, subboxp, cohboxp).
+    destruct d as (d, c); invert_le Hpr; invert_le Hrq.
     change ((⇓ ?x) ↕ (↓ ?y)) with (↓ (x ↕ y)); repeat rewrite eqSubboxSn.
     f_equal.
+    destruct Box as (boxp, subboxp, cohboxp).
     simpl in cohboxp. unshelve eapply eq_existT_curried.
     exact (cohboxp _ _ (↓ Hpr) Hrq Hq _ _ _ _).
     rewrite <- rew_pair. apply eq_pair.
