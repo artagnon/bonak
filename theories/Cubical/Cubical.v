@@ -212,14 +212,14 @@ Definition mkSubLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
   {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
   {d: Box.(box) (↓ ↓ (⇓ (Hpr ↕ Hrq) ↕ ↓ Hq)) D} {c: mkLayer}:
-  Box.(subbox) (↓ Hq) ε
+  Box.(subbox) (Hpq := ⇓ ↓ (Hpr ↕ Hrq)) (↓ Hq) ε
     (rew <- [id] C.(eqBoxSp) in
       (Box.(subbox) (Hpq := ⇓ ↓ Hpr) (↓ (Hrq ↕ Hq)) ω d;
-       mkSubLayer (Hpq := ⇓ Hpr))) =
-  Box.(subbox) (↓ (Hrq ↕ Hq)) ω
+       mkSubLayer (Hpq := ↓ Hpr) (Hq := Hrq ↕ Hq))) =
+  Box.(subbox) (Hpq := ⇓ ↓ Hpr) (↓ (Hrq ↕ Hq)) ω
     (rew <- [id] C.(eqBoxSp) in
-      (Box.(subbox) (Hpq := ⇓ ↓ (Hpr ↕ Hrq)) Hq ε d;
-       mkSubLayer (Hpq := ⇓ (Hpr ↕ Hrq)))). *)
+      (Box.(subbox) (Hpq := ⇓ ↓ (Hpr ↕ Hrq)) (↓ Hq) ε d;
+       mkSubLayer (Hpq := ↓ (Hpr ↕ Hrq)))). *)
 
 Definition mkBox0 {n} {C: Cubical n} : PartialBox n.+1 O mkcsp mkBoxPrev.
   unshelve esplit.
