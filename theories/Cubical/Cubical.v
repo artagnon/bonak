@@ -221,6 +221,22 @@ Definition mkSubLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
       (Box.(subbox) (Hpq := ⇓ ↓ (Hpr ↕ Hrq)) (↓ Hq) ε d;
        mkSubLayer (Hpq := ↓ (Hpr ↕ Hrq)))). *)
 
+(* Definition mkCohLayer {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
+  {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
+  {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
+  {d: Box.(box) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D} {c: mkLayer}:
+  let Rx H H' (x: { ω: side * side &
+                    mkCubePrev.(cube') (Box.(subbox) Hq (fst ω) d) }) :=
+    rew Box.(cohbox) (ε := ε) (ω := ω) (Box.(subbox) H (fst x.1) d) in
+      mkCubePrev.(subcube') H' (snd x.1) x.2 in
+  let Px H H' (x: {ω: side * side & C.(Layer') (Box.(subbox) Hq (fst ω) d)}) :=
+    (Rx H H' ((L, snd x.1); fst x.2), Rx H H' ((R, snd x.1); snd x.2)) in
+
+  (* The statement *)
+  rew Box.(cohbox) (Hpr := ↓ Hpr) (Hrq := Hrq) (Hq := Hq) d in
+    Px (⇓ Hq) (↓ (Hrq ↕ Hq)) ((ω, ε); mkSubLayer) =
+  Px Hq (⇓ (Hrq ↕ Hq)) ((ε, ω); mkSubLayer). *)
+
 Definition mkBox0 {n} {C: Cubical n} : PartialBox n.+1 O mkcsp mkBoxPrev.
   unshelve esplit.
   * intros Hp D; exact unit. (* boxSn *)
