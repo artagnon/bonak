@@ -211,19 +211,6 @@ Definition mkSubLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
 (* Definition mkCohLayer {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
   {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
-  {d: Box.(box) (↓ ↓ (⇓ (Hpr ↕ Hrq) ↕ ↓ Hq)) D} {c: mkLayer}:
-  Box.(subbox) (Hpq := ⇓ ↓ (Hpr ↕ Hrq)) (↓ Hq) ε
-    (rew <- [id] C.(eqBoxSp) in
-      (Box.(subbox) (Hpq := ⇓ ↓ Hpr) (↓ (Hrq ↕ Hq)) ω d;
-       mkSubLayer (Hpq := ↓ Hpr) (Hq := Hrq ↕ Hq))) =
-  Box.(subbox) (Hpq := ⇓ ↓ Hpr) (↓ (Hrq ↕ Hq)) ω
-    (rew <- [id] C.(eqBoxSp) in
-      (Box.(subbox) (Hpq := ⇓ ↓ (Hpr ↕ Hrq)) (↓ Hq) ε d;
-       mkSubLayer (Hpq := ↓ (Hpr ↕ Hrq)))). *)
-
-(* Definition mkCohLayer {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
-  {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
-  {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
   {d: Box.(box) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D} {c: mkLayer}:
   let Rx H H' (x: { ω: side * side &
                     mkCubePrev.(cube') (Box.(subbox) Hq (fst ω) d) }) :=
@@ -236,6 +223,22 @@ Definition mkSubLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
   rew Box.(cohbox) (Hpr := ↓ Hpr) (Hrq := Hrq) (Hq := Hq) d in
     Px (⇓ Hq) (↓ (Hrq ↕ Hq)) ((ω, ε); mkSubLayer) =
   Px Hq (⇓ (Hrq ↕ Hq)) ((ε, ω); mkSubLayer). *)
+
+(* Definition mkCohBox {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
+  {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
+  {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
+  {d: Box.(box) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D} {c: mkLayer}:
+  let Rx {H0: p.+3 <= q.+3} {H1: q.+3 <= n.+1}
+         {H2: p.+3 <= r.+3} {H3: r.+3 <= n.+1} :=
+    Box.(subbox) (Hpq := ⇓ ↓ H0) (↓ H1) ε
+      (rew <- [id] C.(eqBoxSp) in
+        (Box.(subbox) (Hpq := ⇓ ↓ H2) (↓ H3) ω d;
+        mkSubLayer (Hpq := ↓ H2) (Hq := H3))) =
+    Box.(subbox) (Hpq := ⇓ ↓ H2) (↓ H3) ω
+      (rew <- [id] C.(eqBoxSp) in
+        (Box).(subbox) (Hpq := ⇓ ↓ H0) (↓ H1) ε d;
+        mkSubLayer (Hpq := ↓ H0) (Hq := H1)) in
+  Rx (Hpr ↕ Hrq) Hq Hpr (Hrq ↕ Hq). *)
 
 Definition mkBox0 {n} {C: Cubical n} : PartialBox n.+1 O mkcsp mkBoxPrev.
   unshelve esplit.
