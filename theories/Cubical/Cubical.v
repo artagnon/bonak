@@ -21,7 +21,6 @@ Inductive side := L | R.
    2-cells, and 3-cells relating the different 0-cells on the cube. *)
 Record PartialBoxPrev (n : nat) (csp : Type@{l'}) := { (* csp: CubeSetPrefix *)
   box' {p} (Hp : p.+1 <= n) : csp -> Type@{l} ;
-  (* [box' n D] is [box (n-1) D.1] *)
   box'' {p} (Hp : p.+2 <= n) : csp -> Type@{l} ;
   subbox' {p q} {Hpq : p.+2 <= q.+2} (Hq : q.+2 <= n) (ε : side) {D : csp} :
     box' (↓ (Hpq ↕ Hq)) D -> box'' (Hpq ↕ Hq) D;
@@ -230,14 +229,14 @@ Definition mkSubLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
   {d: Box.(box) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D} {c: mkLayer}:
   let Rx {H0: p.+3 <= q.+3} {H1: q.+3 <= n.+1}
          {H2: p.+3 <= r.+3} {H3: r.+3 <= n.+1} :=
-    Box.(subbox) (Hpq := ⇓ ↓ H0) (↓ H1) ε
-      (rew <- [id] C.(eqBoxSp) in
-        (Box.(subbox) (Hpq := ⇓ ↓ H2) (↓ H3) ω d;
-        mkSubLayer (Hpq := ↓ H2) (Hq := H3))) =
-    Box.(subbox) (Hpq := ⇓ ↓ H2) (↓ H3) ω
-      (rew <- [id] C.(eqBoxSp) in
-        (Box).(subbox) (Hpq := ⇓ ↓ H0) (↓ H1) ε d;
-        mkSubLayer (Hpq := ↓ H0) (Hq := H1)) in
+    Box.(subbox) (Hpq := ↓ ⇓ H0) (↓ H1) ε (* (⇓ H0) (⇓ H1) *)
+      (rew <- [id] C.(eqBoxSp) (Hp := (⇓ ↓ (H2 ↕ H3))) in
+        (Box.(subbox) (Hpq := ⇓ ⇓ H2) (↓ ↓ H3) ω d; (* (⇓ H2) (↓ H3) *)
+        mkSubLayer (Hpq := ⇓ H2) (Hq := ↓ H3) (c := c))) = (* (⇓ H2) (↓ H3) *)
+    Box.(subbox) (Hpq := ↓ ⇓ H2) (↓ H3) ω (* (⇓ H2) (⇓ H3) *)
+      (rew <- [id] C.(eqBoxSp) (Hp := ⇓ (↓ H0 ↕ H1)) in
+        (Box).(subbox) (Hpq := ⇓ ↓ H0) (↓ H1) ε d; (* (↓ H0) H1 *)
+        mkSubLayer (Hpq := ↓ H0) (Hq := H1)) in (* (↓ H0) H1 *)
   Rx (Hpr ↕ Hrq) Hq Hpr (Hrq ↕ Hq). *)
 
 Definition mkBox0 {n} {C: Cubical n} : PartialBox n.+1 O mkcsp mkBoxPrev.
@@ -260,6 +259,8 @@ Definition mkBoxSp {n p} {C: Cubical n}
     now exact (Box.(subbox) Hq ε d; mkSubLayer (c := c)).
   * simpl; intros. (* cohboxp *)
     destruct d as (d, c); invert_le Hpr; invert_le Hrq.
+    set (H0 := Hpr ↕ Hrq). set (H1 := Hq). set (H2 := Hpr).
+    set (H3 := Hrq ↕ Hq).
     change ((⇓ ?x) ↕ (↓ ?y)) with (↓ (x ↕ y)); repeat rewrite eqSubboxSn.
     f_equal.
     destruct Box as (boxp, subboxp, cohboxp).
