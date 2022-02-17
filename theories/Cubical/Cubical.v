@@ -212,7 +212,8 @@ Definition mkSubLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
 (* Definition mkCohLayer {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
   {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
-  {d: Box.(box) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D} {c: mkLayer}:
+  {d: Box.(box) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D}
+  {c: mkLayer (Hp := ↓ ↓ (Hpr ↕ Hrq ↕ Hq))}:
   let Rx (ω': side) x :=
   (rew [fun z => C.(CubePrev).(cube'') (Hp := ⇓ (Hpr ↕ Hrq) ↕ ⇓ Hq)
     (C.(BoxPrev).(subbox') (le_refl _) (⇓ (Hpr ↕ Hrq) ↕ ⇓ Hq) ω' D.1 z)]
