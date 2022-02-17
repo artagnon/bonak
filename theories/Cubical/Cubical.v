@@ -213,19 +213,19 @@ Definition mkSubLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
   {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
   {d: Box.(box) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D} {c: mkLayer}:
-  let Rx (ω: side) x :=
+  let Rx (ω': side) x :=
   (rew [fun z => C.(CubePrev).(cube'') (Hp := ⇓ (Hpr ↕ Hrq) ↕ ⇓ Hq)
-    (C.(BoxPrev).(subbox') (le_refl _) (⇓ (Hpr ↕ Hrq) ↕ ⇓ Hq) ω D.1 z)]
-      Box.(cohbox) (Hpr := ⇓ Hpr) (Hrq := ⇓ Hrq) (Hq := ↓ Hq) (ε := ε) (ω := ω)
-        d in x) in
-  let sl (ω: side) :=
+    (C.(BoxPrev).(subbox') (le_refl _) (⇓ (Hpr ↕ Hrq) ↕ ⇓ Hq) ω' D.1 z)]
+      Box.(cohbox) (Hrq := Hrq) (ε := ε) (ω := ω) d in x) in
+  let sl :=
     C.(SubLayer') (ε := ε) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq)
-      (mkSubLayer (ε := ω) (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq))
-        (Box := Box) (d := d)) in
-  let sl' := C.(SubLayer') (ε := ω) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq)
-      (mkSubLayer (ε := ε) (Hpq := ↓ Hpr) (Hq := (Hrq ↕ Hq))
-        (Box := Box) (d := d)) in
-  (Rx L (fst (sl L)), Rx R (snd (sl R))) = sl'. *)
+        (mkSubLayer (ε := ω) (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq))
+          (Box := Box) (d := d)) in
+  let sl' :=
+    C.(SubLayer') (ε := ω) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq))
+        (mkSubLayer (ε := ε) (Hpq := ↓ (Hpr ↕ Hrq)) (Hq := Hq)
+          (Box := Box) (d := d)) in
+  (Rx L (fst sl), Rx R (snd sl)) = (fst sl', snd sl'). *)
 
 (* Definition mkCohBox {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
