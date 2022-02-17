@@ -235,13 +235,12 @@ Definition mkCohLayer {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
     C.(SubLayer') (ε := ω) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq))
         (mkSubLayer (ε := ε) (Hpq := ↓ (Hpr ↕ Hrq)) (Hq := Hq)
           (Box := Box) (d := d) (c := c)) in
-  (Rx L (fst sl), Rx R (snd sl)) = (fst sl', snd sl').
+  (Rx L (fst sl), Rx R (snd sl)) = sl'.
 Proof.
-  simpl; apply eq_pair.
-  all:  rewrite <- map_subst with (f := C.(CubePrev).(subcube') (⇓ Hq) ε);
-        rewrite <- map_subst with (f :=
-                                C.(CubePrev).(subcube') (⇓ (Hrq ↕ Hq)) ω);
-        rewrite rew_map; eapply eq_trans.
+  simpl; apply eq_pair;
+  rewrite <- map_subst with (f := C.(CubePrev).(subcube') (⇓ Hq) ε);
+  rewrite <- map_subst with (f := C.(CubePrev).(subcube') (⇓ (Hrq ↕ Hq)) ω);
+  rewrite rew_map; eapply eq_trans.
   1, 3: now apply rew_compose.
   all:  eapply eq_trans.
   1, 3: rewrite rew_map with (f := C.(BoxPrev).(subbox') (⇓ Hq) ε);
