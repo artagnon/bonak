@@ -29,7 +29,8 @@ Record PartialBoxPrev (n : nat) (csp : Type@{l'}) := { (* csp: CubeSetPrefix *)
 Arguments box' {n csp} _ {p} Hp D.
 Arguments box'' {n csp} _ {p} Hp D.
 Arguments subbox' {n csp} _ {p q Hpq} Hq ε {D} d,
-                  {n csp} _ {p q} Hpq Hq ε {D} d.
+                  {n csp} _ {p q} Hpq Hq ε {D} d,
+                  {n csp} _ {p q} Hpq Hq ε D d.
 
 Record PartialBox (n p : nat) (csp : Type@{l'})
 (BoxPrev : PartialBoxPrev n csp) := {
@@ -158,7 +159,7 @@ Arguments Box {n} _ {p}.
 Arguments Cube {n} _.
 Arguments Layer' {n} _ {p Hp D} d.
 Arguments Layer'' {n} _ {p Hp D} d.
-Arguments SubLayer' {n} _ {p q ε Hpq Hq D} d c.
+Arguments SubLayer' {n} _ {p q ε Hpq Hq D d} c.
 Arguments eqBox0 {n} _ {len0 D}.
 Arguments eqBox0' {n} _ {len1 D}.
 Arguments eqBoxSp {n} _ {p Hp D}.
@@ -195,8 +196,8 @@ Definition mkCubePrev {n} {C: Cubical n} :
 
 Definition mkLayer {n p} {Hp: p.+1 <= n.+1} {C: Cubical n} {D: mkcsp}
   {Box: PartialBox n.+1 p mkcsp mkBoxPrev} {d: Box.(box) (↓ Hp) D}: Type :=
-  (C.(Cube).(cube) D.2 (Box.(subbox) Hp L d) *
-   C.(Cube).(cube) D.2 (Box.(subbox) Hp R d))%type.
+  (C.(Cube).(cube) D.2 (Box.(subbox) (Hpq := le_refl _) Hp L d) *
+   C.(Cube).(cube) D.2 (Box.(subbox) (Hpq := le_refl _) Hp R d))%type.
 
 Definition mkSubLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
   {C: Cubical n} {D: mkcsp} {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
@@ -211,17 +212,16 @@ Definition mkSubLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
   {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
   {d: Box.(box) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D} {c: mkLayer}:
-  let Rx H H' (x: { ω: side * side &
-                    mkCubePrev.(cube') (Box.(subbox) Hq (fst ω) d) }) :=
-    rew Box.(cohbox) (ε := ε) (ω := ω) (Box.(subbox) H (fst x.1) d) in
-      mkCubePrev.(subcube') H' (snd x.1) x.2 in
-  let Px H H' (x: {ω: side * side & C.(Layer') (Box.(subbox) Hq (fst ω) d)}) :=
-    (Rx H H' ((L, snd x.1); fst x.2), Rx H H' ((R, snd x.1); snd x.2)) in
-
-  (* The statement *)
-  rew Box.(cohbox) (Hpr := ↓ Hpr) (Hrq := Hrq) (Hq := Hq) d in
-    Px (⇓ Hq) (↓ (Hrq ↕ Hq)) ((ω, ε); mkSubLayer) =
-  Px Hq (⇓ (Hrq ↕ Hq)) ((ε, ω); mkSubLayer). *)
+  let Rx (ω: side) x :=
+  (rew [fun z => mkCubePrev.(cube'')
+    (mkBoxPrev.(subbox') (⇓ (Hpr ↕ Hrq)) (↓ Hq) ω D z)]
+      Box.(cohbox) (Hpr := ⇓ Hpr) (Hrq := ⇓ Hrq) (Hq := ↓ Hq)
+        d in x) in
+  let sl := C.(SubLayer') (ε := ε)
+    (mkSubLayer (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq)) (ε := ω) (c := c)) in
+  let sl' := C.(SubLayer') (ε := ω)
+    (mkSubLayer (Hpq := ↓ (Hpr ↕ Hrq)) (Hq := Hq) (ε := ε) (c := c)) in
+  (Rx L (fst sl), Rx R (snd sl)) = sl'. *)
 
 (* Definition mkCohBox {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
@@ -259,8 +259,6 @@ Definition mkBoxSp {n p} {C: Cubical n}
     now exact (Box.(subbox) Hq ε d; mkSubLayer (c := c)).
   * simpl; intros. (* cohboxp *)
     destruct d as (d, c); invert_le Hpr; invert_le Hrq.
-    set (H0 := Hpr ↕ Hrq). set (H1 := Hq). set (H2 := Hpr).
-    set (H3 := Hrq ↕ Hq).
     change ((⇓ ?x) ↕ (↓ ?y)) with (↓ (x ↕ y)); repeat rewrite eqSubboxSn.
     f_equal.
     destruct Box as (boxp, subboxp, cohboxp).
