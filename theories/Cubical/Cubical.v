@@ -209,24 +209,53 @@ Definition mkSubLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
       (C.(Cube).(subcube) (Hp := ⇓ Hpq) x.2) in
   (Rx (L; (fst c)), Rx (R; (snd c))).
 
-(* Definition mkCohLayer {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
+Lemma cohBoxSnHyp {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
+  {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
+  {Box': PartialBox n.+1 p mkcsp mkBoxPrev}
+  {d: Box'.(box) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D} :
+  C.(Box).(subbox) (Hpq := ↓ ⇓ (Hpr ↕ Hrq)) (⇓ Hq) ε
+    (Box'.(subbox) (Hpq := ↓ ⇓ Hpr) (↓ (Hrq ↕ Hq)) ω d) =
+  C.(Box).(subbox) (Hpq := ↓ ⇓ Hpr) (⇓ (Hrq ↕ Hq)) ω
+    (Box'.(subbox) Hq ε d).
+  exact (Box'.(cohbox) (Hpr := ↓ Hpr) (Hrq := Hrq) (Hq := Hq) d).
+Defined.
+
+Definition mkCohLayer {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
   {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
   {d: Box.(box) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D}
-  {c: mkLayer (Hp := ↓ ↓ (Hpr ↕ Hrq ↕ Hq))}:
+  {c: mkLayer (Hp := ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) (Box := Box) (d := d) (D := D)}:
   let Rx (ω': side) x :=
   (rew [fun z => C.(CubePrev).(cube'') (Hp := ⇓ (Hpr ↕ Hrq) ↕ ⇓ Hq)
     (C.(BoxPrev).(subbox') (le_refl _) (⇓ (Hpr ↕ Hrq) ↕ ⇓ Hq) ω' D.1 z)]
-      Box.(cohbox) (Hrq := Hrq) (ε := ε) (ω := ω) d in x) in
+      cohBoxSnHyp (Hrq := Hrq) (ε := ε) (ω := ω) (d := d) in x) in
   let sl :=
     C.(SubLayer') (ε := ε) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq)
         (mkSubLayer (ε := ω) (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq))
-          (Box := Box) (d := d)) in
+          (Box := Box) (d := d) (c := c)) in
   let sl' :=
     C.(SubLayer') (ε := ω) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq))
         (mkSubLayer (ε := ε) (Hpq := ↓ (Hpr ↕ Hrq)) (Hq := Hq)
-          (Box := Box) (d := d)) in
-  (Rx L (fst sl), Rx R (snd sl)) = (fst sl', snd sl'). *)
+          (Box := Box) (d := d) (c := c)) in
+  (Rx L (fst sl), Rx R (snd sl)) = (fst sl', snd sl').
+Proof.
+  intros *. subst Rx sl sl'.
+  (* rewrite <- rew_pair. apply eq_pair.
+  all:  rewrite <- map_subst with (f := C.(CubePrev).(subcube') (⇓ Hq) ε);
+        rewrite <- map_subst with (f :=
+                                C.(CubePrev).(subcube') (⇓ (Hrq ↕ Hq)) ω);
+        rewrite rew_map; eapply eq_trans.
+  1, 3: now apply rew_compose.
+  all:  eapply eq_trans.
+  1, 3: rewrite rew_map with (f := C.(BoxPrev).(subbox') (⇓ Hq) ε);
+        now apply rew_compose.
+  all:  rewrite rew_map with (f := C.(BoxPrev).(subbox') (⇓ (Hrq ↕ Hq)) ω),
+        rew_compose; apply rew_swap;
+        rewrite <- (C.(Cube).(cohcube) (Hrq := ⇓ Hrq) (Hq := ⇓ Hq));
+        rewrite rew_compose, rew_app.
+  1, 3: now reflexivity.
+  all:  now apply UIP. *)
+Admitted.
 
 (* Definition mkCohBox {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
@@ -267,16 +296,9 @@ Definition mkBoxSp {n p} {C: Cubical n}
     change ((⇓ ?x) ↕ (↓ ?y)) with (↓ (x ↕ y)); repeat rewrite eqSubboxSn.
     f_equal.
     destruct Box as (boxp, subboxp, cohboxp).
-    simpl in cohboxp. unshelve eapply eq_existT_curried.
-    exact (cohboxp _ _ (↓ Hpr) Hrq Hq _ _ _ _).
+    unshelve eapply eq_existT_curried.
+    now exact cohBoxSnHyp.
     rewrite <- rew_pair. apply eq_pair.
-          Notation "'rew' [ P ] H 'in' H'" := (eq_rect _ P H' _ H)
-            (at level 10, H' at level 10,
-            format "'[' 'rew'  [ P ]  '/    ' H  in  '/' H' ']'").
-      Notation "'rew' <- [ P ] H 'in' H'" := (eq_rect_r P H' H)
-            (at level 10, H' at level 10,
-            format "'[' 'rew'  <-  [ P ]  '/    ' H  in  '/' H' ']'").
-
     all:  rewrite <- map_subst with (f := C.(CubePrev).(subcube') (⇓ Hq) ε);
           rewrite <- map_subst with (f :=
                                   C.(CubePrev).(subcube') (⇓ (Hrq ↕ Hq)) ω);
