@@ -292,22 +292,8 @@ Definition mkBoxSp {n p} {C: Cubical n}
     repeat rewrite eqSubboxSn.
     f_equal.
     unshelve eapply eq_existT_curried.
-    now exact cohBoxSnHyp.
-    rewrite <- rew_pair. apply eq_pair.
-    all:  rewrite <- map_subst with (f := C.(CubePrev).(subcube') (⇓ Hq) ε);
-          rewrite <- map_subst with (f :=
-                                  C.(CubePrev).(subcube') (⇓ (Hrq ↕ Hq)) ω);
-          rewrite rew_map; eapply eq_trans.
-    1, 3: now apply rew_compose.
-    all:  eapply eq_trans.
-    1, 3: rewrite rew_map with (f := C.(BoxPrev).(subbox') (⇓ Hq) ε);
-          now apply rew_compose.
-    all:  rewrite rew_map with (f := C.(BoxPrev).(subbox') (⇓ (Hrq ↕ Hq)) ω),
-          rew_compose; apply rew_swap;
-          rewrite <- (C.(Cube).(cohcube) (Hrq := ⇓ Hrq) (Hq := ⇓ Hq));
-          rewrite rew_compose, rew_app.
-    1, 3: now reflexivity.
-    all:  now apply UIP.
+    now exact cohBoxSnHyp. rewrite <- rew_pair.
+    now exact (mkCohLayer (Hpr := Hpr) (Hrq := Hrq) (C := C)).
 Defined.
 
 Definition mkBox {n} {C: Cubical n} p : PartialBox n.+1 p mkcsp mkBoxPrev.
