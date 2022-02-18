@@ -73,10 +73,10 @@ Record PartialCube (n : nat) (csp : Type@{l'})
   (Box : forall {p}, PartialBox n p (@csp) BoxPrev) := {
   cube {p} {Hp : p <= n} {D : csp} :
     (Box.(box) (le_refl n) D -> Type@{l}) -> Box.(box) Hp D -> Type@{l} ;
-  subcube {p q} {Hp : p.+1 <= q.+1}
+  subcube {p q} {Hpq : p.+1 <= q.+1}
     (Hq : q.+1 <= n) (ε : side) {D : csp}
     {E : Box.(box) (le_refl n) D -> Type@{l}}
-    {d : Box.(box) (↓ (Hp ↕ Hq)) D} (c : cube E d) :
+    {d : Box.(box) (↓ (Hpq ↕ Hq)) D} (c : cube E d) :
     CubePrev.(cube') (Box.(subbox) Hq ε d) ;
   cohcube {p q r} {Hpr : p.+2 <= r.+2}
     {Hrq : r.+2 <= q.+2} {Hq : q.+2 <= n}
@@ -85,13 +85,13 @@ Record PartialCube (n : nat) (csp : Type@{l'})
     (d : Box.(box) (↓ (⇓ Hpr ↕ (↓ (Hrq ↕ Hq)))) D) (c : cube E d) :
     rew (Box.(cohbox) d) in
     CubePrev.(subcube') (Hpq := Hpr ↕ Hrq) Hq
-    ε (subcube (Hp := ⇓ Hpr) (↓ (Hrq ↕ Hq)) ω c) =
+    ε (subcube (Hpq := ⇓ Hpr) (↓ (Hrq ↕ Hq)) ω c) =
       (CubePrev.(subcube') (Hpq := Hpr) (Hrq ↕ Hq)
-      ω (subcube (Hp := ↓ (Hpr ↕ Hrq)) Hq ε c));
+      ω (subcube (Hpq := ↓ (Hpr ↕ Hrq)) Hq ε c));
 }.
 
 Arguments cube {n csp BoxPrev CubePrev Box} _ {p Hp D} E.
-Arguments subcube {n csp BoxPrev CubePrev Box} _ {p q Hp Hq ε D E} [d] c.
+Arguments subcube {n csp BoxPrev CubePrev Box} _ {p q Hpq Hq ε D E} [d] c.
 Arguments cohcube {n csp BoxPrev CubePrev Box} _ {p q r Hpr Hrq Hq ε ω D E d} c.
 
 (* Cube consists of CubeSetPrefix, a box built out of partial boxes,
@@ -104,7 +104,7 @@ Class Cubical (n : nat) := {
   CubePrev : PartialCubePrev n csp BoxPrev ;
   Cube : PartialCube n csp CubePrev (@Box) ;
 
-  (* A few abbreviations *)
+  (* Abbreviations corresponding to coherence conditions in Box *)
   Layer' {p} {Hp : p.+1 <= n} {D: csp} (d: Box.(box) (↓ Hp) D) :=
     (CubePrev.(cube') (Box.(subbox) Hp L d) *
      CubePrev.(cube') (Box.(subbox) Hp R d))%type ;
@@ -147,7 +147,7 @@ Class Cubical (n : nat) := {
     {ε: side}
     {l: Layer' (Hp := ↓ (Hpq ↕ Hq)) d}
     {Q: Cube.(cube) (D := D) E (rew <- eqBoxSp in (d; l))} :
-    Cube.(subcube) (Hp := ↓ Hpq) (ε := ε) (rew <- [id] eqCubeSn in (l; Q)) = rew <- [id] eqCubeSn' (Hp := Hpq ↕ Hq) in
+    Cube.(subcube) (Hpq := ↓ Hpq) (ε := ε) (rew <- [id] eqCubeSn in (l; Q)) = rew <- [id] eqCubeSn' (Hp := Hpq ↕ Hq) in
       (SubLayer' d l; rew [CubePrev.(cube')] eqSubboxSn in Cube.(subcube) Q) ;
 }.
 
@@ -170,9 +170,11 @@ Arguments eqCubeSn' {n} _ {p Hp D d}.
 Arguments eqSubcube0 {n} _ {p Hp D E d ε l Q}.
 Arguments eqSubcubeSn {n} _ {p q Hpq Hq D E d ε l Q}.
 
+(* The csp at universe l' *)
 Definition mkcsp {n} {C : Cubical n} : Type@{l'} :=
   { D : C.(csp) & C.(Box).(box) (le_refl n) D -> Type@{l} }.
 
+(* The previous level of Box *)
 Definition mkBoxPrev {n} {C : Cubical n} :
   PartialBoxPrev n.+1 mkcsp := {|
   box' (p : nat) (Hp : p.+1 <= n.+1) (D : mkcsp) := C.(Box).(box) (⇓ Hp) D.1 ;
@@ -183,17 +185,8 @@ Definition mkBoxPrev {n} {C : Cubical n} :
     C.(Box).(subbox) (Hpq := ⇓ Hpq) (⇓ Hq) ε d ;
 |}.
 
-Definition mkCubePrev {n} {C: Cubical n} :
-  PartialCubePrev n.+1 mkcsp mkBoxPrev := {|
-  cube' (p : nat) (Hp : p.+1 <= n.+1) (D : mkcsp) := C.(Cube).(cube) D.2 :
-    mkBoxPrev.(box') Hp D -> Type; (* Bug? *)
-  cube'' (p : nat) (Hp : p.+2 <= n.+1) (D : mkcsp)
-    (d : mkBoxPrev.(box'') Hp D) :=
-    C.(CubePrev).(cube') d;
-  subcube' (p q : nat) (Hpq : p.+2 <= q.+2) (Hq : q.+2 <= n.+1) (ε : side)
-    (D : mkcsp) (d : _) (b : _) := C.(Cube).(subcube) (Hp := ⇓ Hpq)
-    (Hq := ⇓ Hq) (E := D.2) b;
-|}.
+(* The coherence conditions that Box needs to satisfy to build the next level
+   of Box. These will be used in the proof script of mkBox. *)
 
 Definition mkLayer {n p} {Hp: p.+1 <= n.+1} {C: Cubical n} {D: mkcsp}
   {Box: PartialBox n.+1 p mkcsp mkBoxPrev} {d: Box.(box) (↓ Hp) D}: Type :=
@@ -206,7 +199,7 @@ Definition mkSubLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
   {l: mkLayer}: C.(Layer') (Box.(subbox) Hq ε d) :=
   let Rx (x: {ω: side & C.(Cube).(cube) D.2 (Box.(subbox) _ ω _)}) :=
     rew Box.(cohbox) (ε := ε) (ω := x.1) (Hrq := Hpq) d in
-      (C.(Cube).(subcube) (Hp := ⇓ Hpq) x.2) in
+      (C.(Cube).(subcube) (Hpq := ⇓ Hpq) x.2) in
   (Rx (L; (fst l)), Rx (R; (snd l))).
 
 Definition cohBoxSnHyp {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
@@ -247,6 +240,20 @@ Proof.
   all:  now apply UIP.
 Defined.
 
+(* The previous level of Cube *)
+Definition mkCubePrev {n} {C: Cubical n} :
+  PartialCubePrev n.+1 mkcsp mkBoxPrev := {|
+  cube' (p : nat) (Hp : p.+1 <= n.+1) (D : mkcsp) := C.(Cube).(cube) D.2 :
+    mkBoxPrev.(box') Hp D -> Type; (* Bug? *)
+  cube'' (p : nat) (Hp : p.+2 <= n.+1) (D : mkcsp)
+    (d : mkBoxPrev.(box'') Hp D) :=
+    C.(CubePrev).(cube') d;
+  subcube' (p q : nat) (Hpq : p.+2 <= q.+2) (Hq : q.+2 <= n.+1) (ε : side)
+    (D : mkcsp) (d : _) (b : _) := C.(Cube).(subcube) (Hpq := ⇓ Hpq)
+    (Hq := ⇓ Hq) (E := D.2) b;
+|}.
+
+(* The box at level n.+1 with p = O *)
 Definition mkBox0 {n} {C: Cubical n} : PartialBox n.+1 O mkcsp mkBoxPrev.
   unshelve esplit.
   * intros Hp D; exact unit. (* boxSn *)
@@ -256,6 +263,7 @@ Definition mkBox0 {n} {C: Cubical n} : PartialBox n.+1 O mkcsp mkBoxPrev.
                 eqSubbox0 with (Hpq := ⇓ (Hpr ↕ Hrq)).
 Defined.
 
+(* The box at level n.+1 with p = S _ *)
 Definition mkBoxSp {n p} {C: Cubical n}
   {Box: PartialBox n.+1 p mkcsp mkBoxPrev}:
   PartialBox n.+1 p.+1 mkcsp mkBoxPrev.
@@ -275,18 +283,23 @@ Definition mkBox {n} {C: Cubical n} p : PartialBox n.+1 p mkcsp mkBoxPrev.
   + now exact (mkBoxSp (Box := IHp)). (* p = S _ *)
 Defined.
 
+(* For Cube, we take a different strategy. We first define mkcube, mksubcube,
+  and lemmas corresponding to their computational properties *)
+(* Fist, for cube *)
+
 Definition mkcube {n p} {C: Cubical n} {Hp : p <= n.+1} {D : mkcsp}
   (E: (mkBox n.+1).(box) (le_refl n.+1) D -> Type)
   (d: (mkBox p).(box) Hp D): Type.
   revert d; apply le_induction with (H := Hp); clear p Hp. (* cubeSn *)
-  + now exact E. (* n = p *)
+  + now exact E. (* p = n *)
   + intros p Hp IH d; exact {l : mkLayer & IH (d; l)}. (* p = S n *)
 Defined.
 
+(* Now, subcube *)
+
 Lemma mkcube_computes {q n} {C : Cubical n} {Hq : q.+1 <= n.+1} {D : mkcsp}
   {E: (mkBox n.+1).(box) (le_refl n.+1) D -> Type} {d}:
-  mkcube (Hp := ↓ Hq) E d =
-    {l : mkLayer & mkcube (Hp := Hq) E (d; l)}.
+  mkcube (Hp := ↓ Hq) E d = {l : mkLayer & mkcube (Hp := Hq) E (d; l)}.
 Proof.
   unfold mkcube; now rewrite le_induction_computes.
 Defined.
@@ -294,11 +307,11 @@ Defined.
 Definition mksubcube {n} {C: Cubical n} {p q} {Hpq : p.+1 <= q.+1}
   {Hq: q.+1 <= n.+1} {ε : side} {D}
   (E : (mkBox n.+1).(box) (le_refl n.+1) D -> Type)
-  (d : (mkBox p).(box) (↓ (Hpq ↕ Hq)) D) :
-  mkcube (Hp := ↓ (Hpq ↕ Hq)) E d ->
+  (d : (mkBox p).(box) (↓ (Hpq ↕ Hq)) D)
+  (Cube: mkcube (Hp := ↓ (Hpq ↕ Hq)) E d):
     mkCubePrev.(cube') ((mkBox p).(subbox) Hq ε d).
 Proof.
-  intros *; revert d; simpl. (* subcubeSn *)
+  intros *; revert d Cube; simpl. (* subcubeSn *)
   pattern p, Hpq. (* Bug? Why is this needed? *)
   apply le_induction'.
   + intros d c; rewrite mkcube_computes in c. destruct c as (l, _).
@@ -316,15 +329,15 @@ Proof.
       change (le_refl _ ↕ ?H) with H.
       split.
       all: repeat rewrite <- ((mkBox p).(cohbox) (Hrq := Hpq));
-           apply (C.(Cube).(subcube) (Hp := ⇓ Hpq) (Hq := ⇓ Hq) (E := D.2)).
+           apply (C.(Cube).(subcube) (Hpq := ⇓ Hpq) (Hq := ⇓ Hq) (E := D.2)).
       now exact (fst l). now exact (snd l).
     * apply IH in d'. now exact d'.
 Defined.
 
 Lemma mksubcube_base_computes {q r n} {C : Cubical n} {Hrq : r.+2 <= q.+2}
-  {Hq : q.+2 <= n.+1} {ε : side} {D E} {d: (mkBox r).(box) _ D} {c} :
-  mksubcube (Hq := ↓ (Hrq ↕ Hq)) E d c =
-  match (rew [id] mkcube_computes in c) with
+  {Hq : q.+2 <= n.+1} {ε : side} {D E} {d: (mkBox r).(box) _ D} {Cube} :
+  mksubcube (Hq := ↓ (Hrq ↕ Hq)) E d Cube =
+  match (rew [id] mkcube_computes in Cube) with
   | (l; _) => match ε with
     | L => fst l
     | R => snd l
@@ -335,51 +348,78 @@ Proof.
 Qed.
 
 Lemma mksubcube_step_computes {q r n} {C : Cubical n} {Hq : q.+2 <= n.+1}
-  {Hrq : r.+2 <= q.+2} {ε : side} {D E} {d: (mkBox r).(box) _ D} {c} :
-  mksubcube (Hpq := ↓ Hrq) (Hq := Hq) (ε := ε) E d c =
-  match (rew [id] mkcube_computes in c) with
-  | (l; c) => rew <- [id] C.(eqCubeSn) in
-    (mkSubLayer (d := d); mksubcube (Hpq := Hrq) E (d; l) c)
+  {Hrq : r.+2 <= q.+2} {ε : side} {D E} {d: (mkBox r).(box) _ D} {Cube} :
+  mksubcube (Hpq := ↓ Hrq) (Hq := Hq) (ε := ε) E d Cube =
+  match (rew [id] mkcube_computes in Cube) with
+  | (l; Cube) => rew <- [id] C.(eqCubeSn) in
+    (mkSubLayer (d := d); mksubcube (Hpq := Hrq) E (d; l) Cube)
   end.
 Proof.
   unfold mksubcube; now rewrite le_induction'_step_computes.
 Qed.
 
+Definition mkCohSheet_qr {q r n} {ε ω: side}
+  {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n.+1}
+  {C : Cubical n} {D: mkcsp} {E: (mkBox n.+1).(box) (le_refl n.+1) D -> Type}
+  (d: (mkBox r).(box) (↓ ↓ (Hrq ↕ Hq)) D)
+  (c: mkcube E d):
+  rew [mkCubePrev.(cube'')] (mkBox r).(cohbox) (Hpr := le_refl _) d in
+    mkCubePrev.(subcube') (Hpq := Hrq) Hq ε
+      (mksubcube (ε := ω) (Hpq := le_refl _) (Hq := ↓ (Hrq ↕ Hq)) E d c) =
+  mkCubePrev.(subcube') (Hpq := le_refl _) (Hrq ↕ Hq) ω
+    (mksubcube (ε := ε) (Hpq := ↓ Hrq) (Hq := Hq) E d c).
+  change (le_refl _ ↕ ?H) with H; change (⇓ le_refl _ ↕ ?H) with H.
+  rewrite mksubcube_base_computes, mksubcube_step_computes.
+  destruct (rew [id] mkcube_computes in c) as (l, c'); clear c; destruct ω.
+  now refine (C.(eqSubcube0) (ε := L)
+    (Q := mksubcube (Hpq := Hrq) E (_; _) c')).
+  now refine (C.(eqSubcube0) (ε := R)
+    (Q := mksubcube (Hpq := Hrq) E (_; _) c')).
+Defined.
+
+Definition mkCohSheet_pqr {p q r n} {ε ω: side}
+  {Hpr: p.+3 <= r.+3} {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
+  {C : Cubical n} {D: mkcsp} {E: (mkBox n.+1).(box) (le_refl n.+1) D -> Type}
+  {d: (mkBox p).(box) (↓ ↓ (↓ Hpr ↕ Hrq ↕ Hq)) D}
+  {c: mkcube E d}:
+  rew [mkCubePrev.(cube'')] (mkBox p).(cohbox) (Hpr := ↓ Hpr)
+      (Hrq := Hrq) (Hq := Hq) d in
+    C.(Cube).(subcube) (ε := ε) (Hpq := ⇓ (↓ Hpr ↕ Hrq)) (Hq := ⇓ Hq)
+      (mksubcube (ε := ω) (Hpq := ↓ (⇓ Hpr)) (Hq := ↓ (Hrq ↕ Hq)) E d c) =
+    C.(Cube).(subcube) (ε := ω) (Hpq := ↓ (⇓ Hpr)) (Hq := ⇓ (Hrq ↕ Hq))
+      (mksubcube (ε := ε) (Hpq := ↓ (↓ Hpr ↕ Hrq)) (Hq := Hq) E d c).
+  Notation "'rew' [ P ] H 'in' H'" := (eq_rect _ P H' _ H)
+        (at level 10, H' at level 10,
+        format "'[' 'rew'  [ P ]  '/    ' H  in  '/' H' ']'").
+  Notation "'rew' <- [ P ] H 'in' H'" := (eq_rect_r P H' H)
+        (at level 10, H' at level 10,
+        format "'[' 'rew'  <-  [ P ]  '/    ' H  in  '/' H' ']'").
+  change (⇓ (↓ ?Hpr)) with (↓ (⇓ Hpr)).
+  do 2 rewrite mksubcube_step_computes.
+  destruct (rew [id] mkcube_computes in c) as (l, c'); clear c.
+  rewrite (C.(eqSubcubeSn) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq)).
+  rewrite (C.(eqSubcubeSn) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq))).
+  change ((fun _ (x : le' _ ?y) => x) ↕ ?z) with z.
+  change (⇓ ?x ↕ ⇓ ?y) with (⇓ (x ↕ y)).
+  rewrite <- rew_permute with (H := @eqCubeSn' _ _ _ (⇓ _) _)
+                              (H' := (mkBox p).(cohbox) _).
+  change (↓ ?Hpr ↕ ?Hrq) with (↓ (Hpr ↕ Hrq)).
+  (* rewrite <- mkCohSheet_qr.
+  f_equal; rewrite rew_triple; simpl projT1; simpl projT2.
+  unshelve eapply eq_existT_curried.
+  now rewrite mkCohLayer.
+  Arguments cohbox {n p csp BoxPrev} _ {q r Hpr Hrq Hq} ε ω {D} d.
+  unfold cube'', mkBoxPrev, box', box'', subbox'. *)
+  admit.
+Admitted.
+
 Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkCubePrev mkBox.
   unshelve esplit; intros p.
   - intros Hp D; now exact mkcube.
   - intros q Hpq Hq ε D; now exact mksubcube.
-  -  intros *. revert d c. pattern p, Hpr. apply le_induction''.
-    + change (le_refl _ ↕ ?H) with H; change (⇓ le_refl _ ↕ ?H) with H.
-      change (⇓ le_refl ?r.+2) with (le_refl r.+1); intros d c.
-      rewrite mksubcube_base_computes, mksubcube_step_computes.
-      destruct (rew [id] mkcube_computes in c) as (l, c'); clear c; destruct ω.
-      now refine (C.(eqSubcube0) (ε := L)
-        (Q := mksubcube (Hpq := Hrq) E (_; _) c')).
-      now refine (C.(eqSubcube0) (ε := R)
-        (Q := mksubcube (Hpq := Hrq) E (_; _) c')).
+  - intros *. revert d c. pattern p, Hpr. apply le_induction''.
+    + exact mkCohSheet_qr.
     + clear p Hpr; unfold mkCubePrev, subcube'; cbv beta iota;
       intros p Hpr IHP d c; invert_le Hpr; invert_le Hrq.
-      change (⇓ (↓ ?Hpr)) with (↓ (⇓ Hpr)).
-      do 2 rewrite mksubcube_step_computes.
-      destruct (rew [id] mkcube_computes in c) as (l, c'); clear c.
-      rewrite (C.(eqSubcubeSn) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq)).
-      rewrite (C.(eqSubcubeSn) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq))).
-      change ((fun _ (x : le' _ ?y) => x) ↕ ?z) with z.
-      change (⇓ ?x ↕ ⇓ ?y) with (⇓ (x ↕ y)).
-      rewrite <- rew_permute with (H := @eqCubeSn' _ _ _ (⇓ _) _)
-                                  (H' := (mkBox p).(cohbox) _).
-      change (↓ ?Hpr ↕ ?Hrq) with (↓ (Hpr ↕ Hrq)).
-      rewrite <- IHP with (d := (d; l)) (c := c').
-      f_equal; rewrite rew_triple; simpl projT1; simpl projT2.
-      unshelve eapply eq_existT_curried.
-      now rewrite mkCohLayer.
-      Arguments cohbox {n p csp BoxPrev} _ {q r Hpr Hrq Hq} ε ω {D} d.
-      Notation "'rew' [ P ] H 'in' H'" := (eq_rect _ P H' _ H)
-            (at level 10, H' at level 10,
-            format "'[' 'rew'  [ P ]  '/    ' H  in  '/' H' ']'").
-      Notation "'rew' <- [ P ] H 'in' H'" := (eq_rect_r P H' H)
-            (at level 10, H' at level 10,
-            format "'[' 'rew'  <-  [ P ]  '/    ' H  in  '/' H' ']'").
-      unfold cube'', mkBoxPrev, box', box'', subbox'. admit.
-Admitted.
+      now exact mkCohSheet_pqr.
+Defined.
