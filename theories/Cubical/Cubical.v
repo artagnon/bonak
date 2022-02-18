@@ -350,9 +350,10 @@ Qed.
 (* Now, for the last part of the proof: proving coherence conditions
   on cohcube *)
 
-Definition mkCohSheet_base {q r n} {ε ω: side}
+(* The base case is easily discharged *)
+Definition mkCohSheet_base {q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
   {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n.+1}
-  {C : Cubical n} {D: mkcsp} {E: (mkBox n.+1).(box) (le_refl n.+1) D -> Type}
+  {E: (mkBox n.+1).(box) (le_refl n.+1) D -> Type}
   (d: (mkBox r).(box) (↓ ↓ (Hrq ↕ Hq)) D)
   (c: mkcube E d):
   rew [mkCubePrev.(cube'')] (mkBox r).(cohbox) (Hpr := le_refl _) d in
@@ -369,32 +370,40 @@ Definition mkCohSheet_base {q r n} {ε ω: side}
     (Q := mksubcube (Hpq := Hrq) E (_; _) c')).
 Defined.
 
-Definition mkCohSheet_step {p q r n} {ε ω: side}
+Set Cumulative StrictProp. (* Needed for sigT with SProp *)
+
+(* A small abbreviation *)
+Definition mkCohSheet {q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
+  (Hpr: {p: nat & p.+2 <= r.+3}) {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
+  {E: (mkBox n.+1).(box) (le_refl n.+1) D -> Type}
+  (d: (mkBox Hpr.1).(box) (↓ ↓ (Hpr.2 ↕ Hrq ↕ Hq)) D)
+  (c: mkcube E d) :=
+  rew [mkCubePrev.(cube'')] (mkBox Hpr.1).(cohbox) (Hrq := Hrq) d in
+  C.(Cube).(subcube) (ε := ε) (Hpq := ⇓ (Hpr.2 ↕ Hrq)) (Hq := ⇓ Hq)
+    (mksubcube (ε := ω) (Hpq := (⇓ Hpr.2)) (Hq := ↓ (Hrq ↕ Hq)) E d c) =
+  C.(Cube).(subcube) (ε := ω) (Hpq := (⇓ Hpr.2)) (Hq := ⇓ (Hrq ↕ Hq))
+    (mksubcube (ε := ε) (Hpq := ↓ (Hpr.2 ↕ Hrq)) (Hq := Hq) E d c).
+
+(* The meat of the proof is here *)
+Definition mkCohSheet_step {p q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
   {Hpr: p.+3 <= r.+3} {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
-  {C : Cubical n} {D: mkcsp} {E: (mkBox n.+1).(box) (le_refl n.+1) D -> Type}
+  {E: (mkBox n.+1).(box) (le_refl n.+1) D -> Type}
   {d: (mkBox p).(box) (↓ ↓ (↓ Hpr ↕ Hrq ↕ Hq)) D}
   {c: mkcube E d}
 
   (* The induction hypothesis needs to be passed *)
   {IHP: forall (d: (mkBox p.+1).(box) (↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D) (c: mkcube E d),
-    rew [mkCubePrev.(cube'')] (mkBox p.+1).(cohbox) (Hrq := Hrq) d in
-      C.(Cube).(subcube) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq) (ε := ε)
-        (mksubcube (ε := ω) (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq)) E d c) =
-    C.(Cube).(subcube) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq)) (ε := ω)
-      (mksubcube (ε := ε) (Hpq := ↓ (Hpr ↕ Hrq)) (Hq := Hq) E d c)}:
+        mkCohSheet (p.+1; Hpr) (ε := ε) (ω := ω) d c}:
+        mkCohSheet (p; ↓ Hpr) (ε := ε) (ω := ω) d c.
 
   (* The statement *)
-  rew [mkCubePrev.(cube'')] (mkBox p).(cohbox) (Hrq := Hrq) d in
-    C.(Cube).(subcube) (ε := ε) (Hpq := ⇓ (↓ Hpr ↕ Hrq)) (Hq := ⇓ Hq)
-      (mksubcube (ε := ω) (Hpq := ↓ (⇓ Hpr)) (Hq := ↓ (Hrq ↕ Hq)) E d c) =
-    C.(Cube).(subcube) (ε := ω) (Hpq := ↓ (⇓ Hpr)) (Hq := ⇓ (Hrq ↕ Hq))
-      (mksubcube (ε := ε) (Hpq := ↓ (↓ Hpr ↕ Hrq)) (Hq := Hq) E d c).
   Notation "'rew' [ P ] H 'in' H'" := (eq_rect _ P H' _ H)
         (at level 10, H' at level 10,
         format "'[' 'rew'  [ P ]  '/    ' H  in  '/' H' ']'").
   Notation "'rew' <- [ P ] H 'in' H'" := (eq_rect_r P H' H)
         (at level 10, H' at level 10,
         format "'[' 'rew'  <-  [ P ]  '/    ' H  in  '/' H' ']'").
+  unfold mkCohSheet in *; simpl projT1 in *; simpl projT2 in *.
   change (⇓ (↓ ?Hpr)) with (↓ (⇓ Hpr)).
   do 2 rewrite mksubcube_step_computes.
   destruct (rew [id] mkcube_computes in c) as (l, c'); clear c.
@@ -414,7 +423,7 @@ Definition mkCohSheet_step {p q r n} {ε ω: side}
   admit.
 Admitted.
 
-(* Finally, finish building the n.+1 cube *)
+(* Finally, finish building the n.+1 Cube *)
 Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkCubePrev mkBox.
   unshelve esplit; intros p.
   - intros Hp D; now exact mkcube.
