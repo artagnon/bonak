@@ -358,7 +358,10 @@ Proof.
   unfold mksubcube; now rewrite le_induction'_step_computes.
 Qed.
 
-Definition mkCohSheet_qr {q r n} {ε ω: side}
+(* Now, for the last part of the proof: proving coherence conditions
+  on cohcube *)
+
+Definition mkCohSheet_base {q r n} {ε ω: side}
   {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n.+1}
   {C : Cubical n} {D: mkcsp} {E: (mkBox n.+1).(box) (le_refl n.+1) D -> Type}
   (d: (mkBox r).(box) (↓ ↓ (Hrq ↕ Hq)) D)
@@ -377,11 +380,17 @@ Definition mkCohSheet_qr {q r n} {ε ω: side}
     (Q := mksubcube (Hpq := Hrq) E (_; _) c')).
 Defined.
 
-Definition mkCohSheet_pqr {p q r n} {ε ω: side}
+Definition mkCohSheet_step {p q r n} {ε ω: side}
   {Hpr: p.+3 <= r.+3} {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
   {C : Cubical n} {D: mkcsp} {E: (mkBox n.+1).(box) (le_refl n.+1) D -> Type}
   {d: (mkBox p).(box) (↓ ↓ (↓ Hpr ↕ Hrq ↕ Hq)) D}
-  {c: mkcube E d}:
+  {c: mkcube E d}
+  {IHP: forall (d: (mkBox p.+1).(box) (↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D) (c: mkcube E d),
+    rew [mkCubePrev.(cube'')] (mkBox p.+1).(cohbox) (Hrq := Hrq) d in
+      C.(Cube).(subcube) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq) (ε := ε)
+        (mksubcube (ε := ω) (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq)) E d c) =
+    C.(Cube).(subcube) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq)) (ε := ω)
+      (mksubcube (ε := ε) (Hpq := ↓ (Hpr ↕ Hrq)) (Hq := Hq) E d c)}:
   rew [mkCubePrev.(cube'')] (mkBox p).(cohbox) (Hpr := ↓ Hpr)
       (Hrq := Hrq) (Hq := Hq) d in
     C.(Cube).(subcube) (ε := ε) (Hpq := ⇓ (↓ Hpr ↕ Hrq)) (Hq := ⇓ Hq)
@@ -404,12 +413,12 @@ Definition mkCohSheet_pqr {p q r n} {ε ω: side}
   rewrite <- rew_permute with (H := @eqCubeSn' _ _ _ (⇓ _) _)
                               (H' := (mkBox p).(cohbox) _).
   change (↓ ?Hpr ↕ ?Hrq) with (↓ (Hpr ↕ Hrq)).
-  (* rewrite <- mkCohSheet_qr.
+  rewrite <- IHP with (d := (d; l)) (c := c').
   f_equal; rewrite rew_triple; simpl projT1; simpl projT2.
   unshelve eapply eq_existT_curried.
   now rewrite mkCohLayer.
   Arguments cohbox {n p csp BoxPrev} _ {q r Hpr Hrq Hq} ε ω {D} d.
-  unfold cube'', mkBoxPrev, box', box'', subbox'. *)
+  unfold cube'', mkBoxPrev, box', box'', subbox'.
   admit.
 Admitted.
 
@@ -418,8 +427,8 @@ Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkCubePrev mkBox.
   - intros Hp D; now exact mkcube.
   - intros q Hpq Hq ε D; now exact mksubcube.
   - intros *. revert d c. pattern p, Hpr. apply le_induction''.
-    + exact mkCohSheet_qr.
+    + now exact mkCohSheet_base.
     + clear p Hpr; unfold mkCubePrev, subcube'; cbv beta iota;
       intros p Hpr IHP d c; invert_le Hpr; invert_le Hrq.
-      now exact mkCohSheet_pqr.
+      now exact (mkCohSheet_step (IHP := IHP)).
 Defined.
