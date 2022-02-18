@@ -295,14 +295,14 @@ Definition mkcube {n p} {C: Cubical n} {Hp : p <= n.+1} {D : mkcsp}
   + intros p Hp IH d; exact {l : mkLayer & IH (d; l)}. (* p = S n *)
 Defined.
 
-(* Now, subcube *)
-
 Lemma mkcube_computes {q n} {C : Cubical n} {Hq : q.+1 <= n.+1} {D : mkcsp}
   {E: (mkBox n.+1).(box) (le_refl n.+1) D -> Type} {d}:
   mkcube (Hp := ↓ Hq) E d = {l : mkLayer & mkcube (Hp := Hq) E (d; l)}.
 Proof.
   unfold mkcube; now rewrite le_induction_computes.
 Defined.
+
+(* Now, subcube *)
 
 Definition mksubcube {n} {C: Cubical n} {p q} {Hpq : p.+1 <= q.+1}
   {Hq: q.+1 <= n.+1} {ε : side} {D}
@@ -316,22 +316,11 @@ Proof.
   apply le_induction'.
   + intros d c; rewrite mkcube_computes in c. destruct c as (l, _).
     destruct ε. now exact (fst l). now exact (snd l).
-  + clear p Hpq; intros p Hpq IH d c; rewrite mkcube_computes in c.
-    destruct c as (l, d').
-    change (⇓ (↓ ?Hpq ↕ ?Hq)) with (↓ ⇓ (Hpq ↕ Hq)). (* This shouldn't be
-                                                    necessary: rewrite
-                                                    should support SProp. *)
-    rewrite C.(eqCubeSn); invert_le Hpq.
-    unshelve esplit.
-    * change (C.(Box).(subbox) _ ?ω _) with
-                (mkBoxPrev.(subbox') (le_refl p.+2) (Hpq ↕ Hq) ω
-                  ((mkBox p).(subbox) _ ε d)).
-      change (le_refl _ ↕ ?H) with H.
-      split.
-      all: repeat rewrite <- ((mkBox p).(cohbox) (Hrq := Hpq));
-           apply (C.(Cube).(subcube) (Hpq := ⇓ Hpq) (Hq := ⇓ Hq) (E := D.2)).
-      now exact (fst l). now exact (snd l).
-    * apply IH in d'. now exact d'.
+  + clear p Hpq; intros p Hpq IH d c; invert_le Hpq.
+    rewrite mkcube_computes in c; destruct c as (l, c).
+    change (⇓ (↓ ?Hpq ↕ ?Hq)) with (↓ ⇓ (Hpq ↕ Hq)); rewrite C.(eqCubeSn).
+    apply IH in c.
+    now exact (mkSubLayer (l := l); c).
 Defined.
 
 Lemma mksubcube_base_computes {q r n} {C : Cubical n} {Hrq : r.+2 <= q.+2}
@@ -385,14 +374,17 @@ Definition mkCohSheet_step {p q r n} {ε ω: side}
   {C : Cubical n} {D: mkcsp} {E: (mkBox n.+1).(box) (le_refl n.+1) D -> Type}
   {d: (mkBox p).(box) (↓ ↓ (↓ Hpr ↕ Hrq ↕ Hq)) D}
   {c: mkcube E d}
+
+  (* The induction hypothesis needs to be passed *)
   {IHP: forall (d: (mkBox p.+1).(box) (↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D) (c: mkcube E d),
     rew [mkCubePrev.(cube'')] (mkBox p.+1).(cohbox) (Hrq := Hrq) d in
       C.(Cube).(subcube) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq) (ε := ε)
         (mksubcube (ε := ω) (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq)) E d c) =
     C.(Cube).(subcube) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq)) (ε := ω)
       (mksubcube (ε := ε) (Hpq := ↓ (Hpr ↕ Hrq)) (Hq := Hq) E d c)}:
-  rew [mkCubePrev.(cube'')] (mkBox p).(cohbox) (Hpr := ↓ Hpr)
-      (Hrq := Hrq) (Hq := Hq) d in
+
+  (* The statement *)
+  rew [mkCubePrev.(cube'')] (mkBox p).(cohbox) (Hrq := Hrq) d in
     C.(Cube).(subcube) (ε := ε) (Hpq := ⇓ (↓ Hpr ↕ Hrq)) (Hq := ⇓ Hq)
       (mksubcube (ε := ω) (Hpq := ↓ (⇓ Hpr)) (Hq := ↓ (Hrq ↕ Hq)) E d c) =
     C.(Cube).(subcube) (ε := ω) (Hpq := ↓ (⇓ Hpr)) (Hq := ⇓ (Hrq ↕ Hq))
@@ -422,6 +414,7 @@ Definition mkCohSheet_step {p q r n} {ε ω: side}
   admit.
 Admitted.
 
+(* Finally, finish building the n.+1 cube *)
 Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkCubePrev mkBox.
   unshelve esplit; intros p.
   - intros Hp D; now exact mkcube.
