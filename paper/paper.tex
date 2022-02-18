@@ -613,13 +613,13 @@ When reflexivities are excepted, we call the structure thus defined \emph{bare t
 
   \\
 
-  \eqnline{\cohlayer{l,\epsilon,\omega,q,r}{n,p,[p < r \leq q \leq n - 2]}}{\makecell{(D:\partialcubset{l}{n}) \\ (d:\mybox{l}{n,p}(D)) \\(b:\mylayer{l}{n,p}(D)(d))}}{:}{\makecell{\downlayer{l,\epsilon,q}{n-1,p}(\hd(D))(\downbox{l,\omega,r}{n,p}(D)(d))(\downlayer{l,\omega,r}{n,p}(D)(d)(b)) \\ \eqett \downlayer{l,\omega,r}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))(\downlayer{l,\epsilon,q+1}{n,p}(D)(d)(b))}}
+  \eqnline{\cohlayer{l,\epsilon,\omega,q,r}{n,p,[p < r \leq q \leq n - 2]}}{\makecell{(D:\partialcubset{l}{n}) \\ (d:\mybox{l}{n,p}(D)) \\(b:\mylayer{l}{n,p}(D)(d))}}{:}{\makecell{\overright{\cohbox{l,\epsilon,\omega,q+1,r+1}{n,p}(D)(d)}(\downlayer{l,\epsilon,q}{n-1,p}(\hd(D))(\downbox{l,\omega,r}{n,p}(D)(d))(\downlayer{l,\omega,r}{n,p}(D)(d)(b))) \\ \eqett \downlayer{l,\omega,r}{n-1,p}(\hd(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))(\downlayer{l,\epsilon,q+1}{n,p}(D)(d)(b))}}
 
   \eqnline{\cohlayer{l,\epsilon,\omega,q,r}{n,p}}{D~d~c}{\defeq}{\makecell{(\cohcube{l,\epsilon,\omega,q-1,r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,L,p}{n,p}(D)(d))(c_L), \\ \;\cohcube{l,\epsilon,\omega,q-1,r-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,R,p}{n,p}(D)(d))(c_R))}}
 
   \\
 
-  \eqnline{\cohcube{l,\epsilon,\omega,q,r}{n,p,[p \leq r \leq q \leq n - 2]}}{\makecell{(D:\partialcubset{l}{n}) \\ (E:\mycubsetcomp{l}{n}(D)) \\ (d:\mybox{l}{n,p}(D)) \\ (b:\mycube{l}{n,p}(D)(E)(d))}}{:}{\makecell{\downcube{l,\epsilon,q}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\omega,r}{n,p}(D)(d))(\downcube{l,\omega,r}{n,p}(D)(E)(d)(b)) \\ \eqett \downcube{l,\omega,r}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))(\downcube{l,\epsilon,q+1}{n,p}(D)(E)(d)(b))}}
+  \eqnline{\cohcube{l,\epsilon,\omega,q,r}{n,p,[p \leq r \leq q \leq n - 2]}}{\makecell{(D:\partialcubset{l}{n}) \\ (E:\mycubsetcomp{l}{n}(D)) \\ (d:\mybox{l}{n,p}(D)) \\ (b:\mycube{l}{n,p}(D)(E)(d))}}{:}{\makecell{\overright{\cohbox{l,\epsilon,\omega,q+1,r+1}{n,p}(D)(d)}(\downcube{l,\epsilon,q}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\omega,r}{n,p}(D)(d))(\downcube{l,\omega,r}{n,p}(D)(E)(d)(b))) \\ \eqett \downcube{l,\omega,r}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\epsilon,q+1}{n,p}(D)(d))(\downcube{l,\epsilon,q+1}{n,p}(D)(E)(d)(b))}}
 
   \eqnline{\cohcube{l,\epsilon,\omega,q,r}{n,p,[p=r]}}{D~E~d~(b,\_)}{\defeq}{\reflett(\downcube{l,\epsilon,q-1}{n-1,p}(\hd(D))(\tl(D))(\downbox{l,\omega,p}{n,p}(D)(d))(b_{\epsilon}))}
 
