@@ -412,7 +412,7 @@ Definition mkCohSheet_step {p q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
         (at level 10, H' at level 10,
         format "'[' 'rew'  <-  [ P ]  '/    ' H  in  '/' H' ']'").
   f_equal.
-  (* rewrite (rew_existT_curried (P := C.(Layer''))
+  unshelve eapply (rew_existT_curried (P := C.(Layer''))
   (Q := fun x => C.(CubePrev).(cube') (rew <- [id] C.(eqBoxSp') in x))
   (H := (mkBox p).(cohbox) (Hpr := ↓ Hpr) (Hrq := Hrq) (Hq := Hq) (ε := ε)
         (ω := ω) (D := D) d)
@@ -424,8 +424,9 @@ Definition mkCohSheet_step {p q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
                        (D := D.1) (E := D.2)
                        (mksubcube (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq))
                        (D := D) (ε := ω) E (d; l) c'))).
-  now apply mkCohLayer.
-  rewrite <- IHP with (d := (d; l)) (c := c'). *)
+  now exact (mkCohLayer (Hpr := Hpr) (Hrq := Hrq) (Hq := Hq) l).
+  rewrite <- IHP with (d := (d; l)) (c := c').
+  simpl (mkBox p.+1).
   admit.
 Admitted.
 
