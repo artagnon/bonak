@@ -867,9 +867,7 @@ We then settled on remembering the previous two levels of induction, a middle-gr
 
 \begin{listing}[H]
   \begin{minted}{coq}
-    (* PartialBox consists of an 0-cells, and fillers which are the 1-cells,
-    2-cells, and 3-cells relating the different 0-cells on the cube  *)
-    Record PartialBoxBase (n : nat) (csp : Type@{l'}) := {
+    Record PartialBoxPrev (n : nat) (csp : Type@{l'}) := {
       box' {p} (Hp : p.+1 <= n) : csp -> Type@{l} ;
       (* [box' n D] is [box (n-1) D.1] *)
       box'' {p} (Hp : p.+2 <= n) : csp -> Type@{l} ;
@@ -897,7 +895,7 @@ To build up the box, we'd simply have to induction on \mintinline{coq}{p}:
     Definition mkcsp {n : nat} {C : Cubical n} : Type@{l'} :=
       { D : C.(csp) & C.(Box).(box) (le_refl n) D -> Type@{l} }.
 
-    Definition mkPB {n} {C : Cubical n} :
+    Definition mkBoxPrev {n} {C : Cubical n} :
       PartialBoxBase n.+1 mkcsp := {|
       box' {p} {Hp : p.+1 <= n.+1} {D : mkcsp} := C.(Box).(box) (⇓ Hp) D.1 ;
       box'' {p} {Hp : p.+2 <= n.+1} {D : mkcsp} := C.(PB).(box') (⇓ Hp) D.1 ;
@@ -906,7 +904,7 @@ To build up the box, we'd simply have to induction on \mintinline{coq}{p}:
     |}.
 
     Definition mkBox {n} {C : Cubical n} p : PartialBox n.+1 p mkcsp mkPB.
-      induction p as [|p (boxSn, subboxSn, cohboxSn)].
+      induction p.
       + (* ... *)
   \end{minted}
 \end{listing}

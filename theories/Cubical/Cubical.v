@@ -305,7 +305,7 @@ Proof.
   unfold mkcube; now rewrite le_induction_computes.
 Defined.
 
-(* Now, subcube *)
+(* Now, subcube, and the corresponding computational properties. *)
 
 Definition mksubcube {n} {C: Cubical n} {p q} {Hpq : p.+1 <= q.+1}
   {Hq: q.+1 <= n.+1} {ε : side} {D}
@@ -337,7 +337,7 @@ Lemma mksubcube_base_computes {q r n} {C : Cubical n} {Hrq : r.+2 <= q.+2}
   end.
 Proof.
   unfold mksubcube; now rewrite le_induction'_base_computes.
-Qed.
+Defined.
 
 Lemma mksubcube_step_computes {q r n} {C : Cubical n} {Hq : q.+2 <= n.+1}
   {Hrq : r.+2 <= q.+2} {ε : side} {D E} {d: (mkBox r).(box) _ D} {Cube} :
@@ -348,12 +348,12 @@ Lemma mksubcube_step_computes {q r n} {C : Cubical n} {Hq : q.+2 <= n.+1}
   end.
 Proof.
   unfold mksubcube; now rewrite le_induction'_step_computes.
-Qed.
+Defined.
 
 (* Now, for the last part of the proof: proving coherence conditions
   on cohcube *)
 
-(* The base case is easily discharged: r <-> q; p = r *)
+(* The base case is easily discharged *)
 Definition mkCohSheet_base {q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
   {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n.+1}
   {E: (mkBox n.+1).(box) (le_refl n.+1) D -> Type}
@@ -385,7 +385,7 @@ Definition mkCohSheet p {q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
   C.(Cube).(subcube) (ε := ω) (Hpq := (⇓ Hpr)) (Hq := ⇓ (Hrq ↕ Hq))
     (mksubcube (ε := ε) (Hpq := ↓ (Hpr ↕ Hrq)) (Hq := Hq) E d c).
 
-(* The meat of the proof is here *)
+(* The step case is discharged as (mkCohLayer; IHP) *)
 Definition mkCohSheet_step {p q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
   {Hpr: p.+3 <= r.+3} {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
   {E: (mkBox n.+1).(box) (le_refl n.+1) D -> Type}
@@ -394,8 +394,6 @@ Definition mkCohSheet_step {p q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
   {IHP: forall (d: (mkBox p.+1).(box) (↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D) (c: mkcube E d),
         mkCohSheet p.+1 Hpr (ε := ε) (ω := ω) d c}:
         mkCohSheet p (↓ Hpr) (ε := ε) (ω := ω) d c.
-
-  (* The statement *)
   unfold mkCohSheet in *; simpl projT1 in *; simpl projT2 in *.
   change (⇓ (↓ ?Hpr)) with (↓ (⇓ Hpr)).
   do 2 rewrite mksubcube_step_computes.
@@ -426,12 +424,12 @@ Definition mkCohSheet_step {p q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
                        (D := D.1) (E := D.2)
                        (mksubcube (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq))
                        (D := D) (ε := ω) E (d; l) c'))).
-  now apply mkCohLayer. (* r <-> q; p <= r *)
+  now apply mkCohLayer.
   rewrite <- IHP with (d := (d; l)) (c := c'). *)
   admit.
 Admitted.
 
-(* Finally, finish building the n.+1 Cube *)
+(* Build a PartialCube n.+1 using what we just defined *)
 Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkCubePrev mkBox.
   unshelve esplit; intros p.
   - intros Hp D; now exact mkcube.
@@ -442,3 +440,17 @@ Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkCubePrev mkBox.
       intros p Hpr IHP d c; invert_le Hpr; invert_le Hrq.
       now exact (mkCohSheet_step (IHP := IHP)).
 Defined.
+
+(* We are now ready to build a Cubical *)
+Definition mkCubical {n}: Cubical n -> Cubical n.+1.
+Admitted.
+
+Definition CubicalAt: forall n, Cubical n.
+Admitted.
+
+(* CoInductive CubeUniverse n (X: (CubicalAt n).(csp)) : Type := cons {
+  this : (CubicalAt n).(Box).(box) (le_refl n) D -> Type@{l};
+  next : CubeUniverse n.+1 (X; this)
+}.
+
+Definition CubeInfinity := CubeUniverse 0 tt. *)
