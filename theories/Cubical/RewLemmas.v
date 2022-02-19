@@ -89,6 +89,16 @@ Proof.
   now destruct H, u.
 Defined.
 
+Lemma rew_existT_curried {A x} {P : A -> Type} {Q: {a & P a} -> Type}
+   {y} {H : x = y}
+   {u : P x} {v : Q (x; u)}
+   {u': P y} {v': Q (y; u')}
+   {Hu : rew H in u = u'} {Hv : rew (=H; Hu) in v = v'}:
+   rew [fun x => {a: P x & Q (x; a)}] H in (u; v) = (u'; v').
+Proof.
+   now destruct Hu, Hv, H.
+Defined.
+
 Theorem rew_permute A (P Q: A -> Type) (x y: A) (H: forall z, Q z = P z)
   (H': x = y) (a: P x) :
   rew <- [id] H y in rew H' in a =

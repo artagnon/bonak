@@ -22,3 +22,6 @@ Inductive eq_over {A} (x: A) : forall {B} (y: B), A = B -> Prop :=
 eq_over_refl : x =_{eq_refl} x
 where "x =_{ H } y" := (eq_over x y H).
 
+(* Notation for eq_existT_curried *)
+Notation "(= u ; v )" := (eq_existT_curried u v)
+(at level 0, format "(= u ;  '/  ' v )").
