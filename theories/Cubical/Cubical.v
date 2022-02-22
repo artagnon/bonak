@@ -276,8 +276,9 @@ Definition mkBoxSp {n p} {C: Cubical n}
     now exact (Box.(subbox) Hq ε d; mkSubLayer d l).
   * simpl; intros q r Hpr Hrq Hq ε ω D (d, l). (* cohboxp *)
     invert_le Hpr; invert_le Hrq.
-    repeat rewrite eqSubboxSn. f_equal. apply eq_existT_uncurried.
-    now exact (cohBoxSnHyp; mkCohLayer l).
+    repeat rewrite eqSubboxSn. f_equal.
+    now exact (= (cohBoxSnHyp (Hpr := Hpr) (Hrq := Hrq)); mkCohLayer l).
+    (* Bug? Coq being too smart for its own good. *)
 Defined.
 
 Definition mkBox {n} {C: Cubical n} p : PartialBox n.+1 p mkcsp mkBoxPrev.
@@ -426,7 +427,7 @@ Definition mkCohSheet_step {p q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
                        (D := D) (ε := ω) E (d; l) c'))).
   now exact (mkCohLayer (Hpr := Hpr) (Hrq := Hrq) (Hq := Hq) l).
   rewrite <- IHP with (d := (d; l)) (c := c').
-  simpl (mkBox p.+1).
+  simpl (mkBox p.+1). unfold mkCubePrev, cube''.
   admit.
 Admitted.
 
@@ -450,7 +451,7 @@ Definition CubicalAt: forall n, Cubical n.
 Admitted.
 
 (* CoInductive CubeUniverse n (X: (CubicalAt n).(csp)) : Type := cons {
-  this : (CubicalAt n).(Box).(box) (le_refl n) D -> Type@{l};
+  this : (CubicalAt n).(Box).(box) (le_refl n) X -> Type@{l};
   next : CubeUniverse n.+1 (X; this)
 }.
 
