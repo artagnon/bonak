@@ -7,13 +7,13 @@ Notation "x .+1" := (S x) (at level 1, left associativity, format "x .+1").
 Notation "x .+2" := (S (S x)) (at level 1, left associativity, format "x .+2").
 Notation "x .+3" := (S (S (S x))) (at level 1, left associativity, format "x .+3").
 
-(* Override rew notation to avoid showing terms in [...] *)
-Notation "'rew' H 'in' H'" := (eq_rect _ _ H' _ H)
-  (at level 10, H' at level 10,
-    format "'[' 'rew'  H  in  '/' H' ']'").
-Notation "'rew' <- H 'in' H'" := (eq_rect_r _ H' H)
-  (at level 10, H' at level 10,
-    format "'[' 'rew'  <-  H  in  '/' H' ']'").
+(* Notations for rew *)
+Notation "'rew' [ P ] H 'in' H'" := (eq_rect _ P H' _ H)
+    (at level 10, H' at level 10,
+    format "'[' 'rew'  [ P ]  '/    ' H  in  '/' H' ']'").
+Notation "'rew' <- [ P ] H 'in' H'" := (eq_rect_r P H' H)
+    (at level 10, H' at level 10,
+    format "'[' 'rew'  <-  [ P ]  '/    ' H  in  '/' H' ']'").
 
 (* eq_over: ... ={ H } ... *)
 Reserved Notation "x =_{ H } y" (at level 70, format "'[' x  '/ ' =_{ H }  '/' y ']'").

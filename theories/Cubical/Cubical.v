@@ -7,7 +7,6 @@ Set Warnings "-notation-overridden".
 Require Import Yoneda.
 
 Set Printing Projections.
-Set Primitive Projections.
 Set Keyed Unification.
 Remove Printing Let sigT.
 Remove Printing Let prod.
@@ -19,7 +18,7 @@ Inductive side := L | R.
 
 (* PartialBox consists of an 0-cells, and fillers which are the 1-cells,
    2-cells, and 3-cells relating the different 0-cells on the cube. *)
-Record PartialBoxPrev (n : nat) (csp : Type@{l'}) := { (* csp: CubeSetPrefix *)
+Class PartialBoxPrev (n : nat) (csp : Type@{l'}) := { (* csp: CubeSetPrefix *)
   box' {p} (Hp : p.+1 <= n) : csp -> Type@{l} ;
   box'' {p} (Hp : p.+2 <= n) : csp -> Type@{l} ;
   subbox' {p q} {Hpq : p.+2 <= q.+2} (Hq : q.+2 <= n) (ε : side) {D : csp} :
@@ -28,29 +27,29 @@ Record PartialBoxPrev (n : nat) (csp : Type@{l'}) := { (* csp: CubeSetPrefix *)
 
 Arguments box' {n csp} _ {p} Hp D.
 Arguments box'' {n csp} _ {p} Hp D.
-Arguments subbox' {n csp} _ {p q Hpq} Hq ε {D} d,
-                  {n csp} _ {p q} Hpq Hq ε {D} d,
-                  {n csp} _ {p q} Hpq Hq ε D d.
+Arguments subbox' {n csp} _ {p q Hpq} Hq ε {D} d.
 
-Record PartialBox (n p : nat) (csp : Type@{l'})
+Class PartialBox (n p : nat) (csp : Type@{l'})
 (BoxPrev : PartialBoxPrev n csp) := {
   box (Hp : p <= n) : csp -> Type@{l} ;
   subbox {q} {Hpq : p.+1 <= q.+1} (Hq : q.+1 <= n) (ε : side) {D : csp} :
     box (↓ (Hpq ↕ Hq)) D -> BoxPrev.(box') (Hpq ↕ Hq) D;
   cohbox {q r} {Hpr : p.+2 <= r.+2} {Hrq : r.+2 <= q.+2} {Hq : q.+2 <= n}
     {ε : side} {ω : side} {D: csp} (d : box (↓ (⇓ Hpr ↕ (↓ (Hrq ↕ Hq)))) D) :
-    BoxPrev.(subbox') (Hpr ↕ Hrq) Hq ε (subbox (Hpq := ⇓ Hpr) (↓ (Hrq ↕ Hq)) ω d) =
-    (BoxPrev.(subbox') Hpr (Hrq ↕ Hq) ω (subbox (Hpq := ↓ (Hpr ↕ Hrq)) Hq ε d));
+    BoxPrev.(subbox') (Hpq := Hpr ↕ Hrq) Hq ε
+      (subbox (Hpq := ⇓ Hpr) (↓ (Hrq ↕ Hq)) ω d) =
+    (BoxPrev.(subbox') (Hpq := Hpr) (Hrq ↕ Hq) ω
+      (subbox (Hpq := ↓ (Hpr ↕ Hrq)) Hq ε d));
 }.
 
 Arguments box {n p csp BoxPrev} _ Hp D.
-Arguments subbox {n p csp BoxPrev} _ {q Hpq} Hq ε {D}.
+Arguments subbox {n p csp BoxPrev} _ {q Hpq} Hq ε {D} d.
 Arguments cohbox {n p csp BoxPrev} _ {q r Hpr Hrq Hq ε ω D} d.
 
 (* We build cubes using an iterated construction: a cube at level n depends
    on cubes at level n-1 and n-2; just as we have box' and box'', we have
    cube' and cube''. *)
-Record PartialCubePrev (n : nat) (csp : Type@{l'})
+Class PartialCubePrev (n : nat) (csp : Type@{l'})
   (BoxPrev : PartialBoxPrev n (@csp)) := {
   cube' {p} {Hp : p.+1 <= n} {D : csp} :
     BoxPrev.(box') Hp D -> Type@{l};
@@ -67,7 +66,7 @@ Arguments cube'' {n csp BoxPrev} _ {p Hp} {D} d.
 Arguments subcube' {n csp BoxPrev} _ {p q Hpq} Hq ε {D} [d] b.
 
 (* Cube consists of cube, subcube, and coherence conditions between them *)
-Record PartialCube (n : nat) (csp : Type@{l'})
+Class PartialCube (n : nat) (csp : Type@{l'})
   {BoxPrev : PartialBoxPrev n (@csp)}
   (CubePrev : PartialCubePrev n csp BoxPrev)
   (Box : forall {p}, PartialBox n p (@csp) BoxPrev) := {
@@ -93,8 +92,6 @@ Record PartialCube (n : nat) (csp : Type@{l'})
 Arguments cube {n csp BoxPrev CubePrev Box} _ {p Hp D} E.
 Arguments subcube {n csp BoxPrev CubePrev Box} _ {p q Hpq Hq ε D E} [d] c.
 Arguments cohcube {n csp BoxPrev CubePrev Box} _ {p q r Hpr Hrq Hq ε ω D E d} c.
-
-Unset Primitive Projections.
 
 (* Cube consists of CubeSetPrefix, a box built out of partial boxes,
   a cube built out of partial cubes, and some axioms related to our
@@ -259,8 +256,8 @@ Definition mkCubePrev {n} {C: Cubical n} :
 (* The box at level n.+1 with p = O *)
 Definition mkBox0 {n} {C: Cubical n} : PartialBox n.+1 O mkcsp mkBoxPrev.
   unshelve esplit.
-  * intros Hp D; exact unit. (* boxSn *)
-  * simpl; intros. rewrite C.(eqBox0); exact tt. (* subboxSn *)
+  * intros; now exact unit. (* boxSn *)
+  * simpl; intros; rewrite C.(eqBox0). now exact tt. (* subboxSn *)
   * simpl; intros. (* cohboxp *)
     now rewrite eqSubbox0 with (Hpq := ⇓ Hpr),
                 eqSubbox0 with (Hpq := ⇓ (Hpr ↕ Hrq)).
@@ -411,12 +408,6 @@ Definition mkCohSheet_step {p q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
   rewrite <- rew_permute with (H := @eqCubeSp' _ _ _ (⇓ _) _)
                               (H' := (mkBox p).(cohbox) _).
   change (↓ ?Hpr ↕ ?Hrq) with (↓ (Hpr ↕ Hrq)).
-  Notation "'rew' [ P ] H 'in' H'" := (eq_rect _ P H' _ H)
-        (at level 10, H' at level 10,
-        format "'[' 'rew'  [ P ]  '/    ' H  in  '/' H' ']'").
-  Notation "'rew' <- [ P ] H 'in' H'" := (eq_rect_r P H' H)
-        (at level 10, H' at level 10,
-        format "'[' 'rew'  <-  [ P ]  '/    ' H  in  '/' H' ']'").
   f_equal.
   unshelve eapply (rew_existT_curried (P := C.(Layer''))
   (Q := fun x => C.(CubePrev).(cube') (rew <- [id] C.(eqBoxSp') in x))
@@ -446,8 +437,8 @@ Defined.
 (* Build a PartialCube n.+1 using what we just defined *)
 Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkCubePrev mkBox.
   unshelve esplit; intros p.
-  - intros Hp D; now exact mkcube.
-  - intros q Hpq Hq ε D; now exact mksubcube.
+  - intros *; now exact mkcube.
+  - intros q Hpq Hq ε d; now exact mksubcube.
   - intros *. revert d c. pattern p, Hpr. apply le_induction''.
     + now exact mkCohSheet_base.
     + clear p Hpr; unfold mkCubePrev, subcube'; cbv beta iota;
@@ -461,19 +452,18 @@ Definition mkCubical0: Cubical 0.
   - unshelve esplit.
     * intros p Hp; now apply le_contra in Hp.
     * intros p Hp; now apply le_contra in Hp.
-    * intros p q Hpq Hq; exfalso; now apply le_contra in Hq.
+    * intros *; exfalso; now apply le_contra in Hq.
   - unshelve esplit.
     * intros Hp _; now exact unit.
-    * intros q Hpq Hq; exfalso; now apply le_contra in Hq.
-    * intros q r Hpr Hrq Hq; exfalso; now apply le_contra in Hq.
-  - unshelve esplit; intros p Hp.
+    * intros *; exfalso; now apply le_contra in Hq.
+    * intros *; exfalso; clear -Hq; now apply le_contra in Hq.
+  - unshelve esplit; intros *.
     * exfalso; now apply le_contra in Hp.
     * exfalso; now apply le_contra in Hp.
-    * intros Hpq Hq; exfalso; now apply le_contra in Hq.
+    * exfalso; clear -Hq; now apply le_contra in Hq.
   - unshelve esplit.
     * unfold box. intros p Hp _ _ _; now exact unit.
-    * simpl; intros p q Hpq Hq; exfalso;
-      now apply le_contra in Hq.
+    * simpl; intros *; exfalso; now apply le_contra in Hq.
     * simpl; intros *; exfalso; now apply le_contra in Hq.
   - now intros *.
   - intros *; exfalso; now apply le_contra in len1.
@@ -490,11 +480,11 @@ Defined.
 (* We are now ready to build a Cubical *)
 Definition mkCubicalSn {n} {C: Cubical n}: Cubical n.+1.
   unshelve esplit.
-  - exact mkcsp.
-  - exact mkBoxPrev.
-  - exact mkBox.
-  - exact mkCubePrev.
-  - exact mkCube.
+  - now exact mkcsp.
+  - now exact mkBoxPrev.
+  - now exact mkBox.
+  - now exact mkCubePrev.
+  - now exact mkCube.
   - now intros *.
   - intros *; now apply C.(eqBox0).
   - now intros *.
