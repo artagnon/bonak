@@ -1,3 +1,7 @@
 {
-  "editor.wordWrapColumn": 80
+  "editor.wordWrapColumn": 80,
+  "ocaml.sandbox": {
+    "kind": "opam",
+    "switch": "default"
+  }
 }

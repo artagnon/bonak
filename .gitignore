@@ -12,3 +12,5 @@ Makefile.coq*
 Makefile.conf
 TAGS
 .DS_Store
+_build
+.lia.cache
