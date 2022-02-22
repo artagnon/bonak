@@ -116,7 +116,7 @@ Proof.
 Defined.
 
 Lemma rew_swap : forall A (P : A -> Type) a b (H: a = b) (x : P a) (y : P b),
-x = rew <- H in y -> rew H in x = y.
+x = rew <- H in y <-> rew H in x = y.
 Proof.
   now destruct H.
 Defined.
@@ -125,4 +125,9 @@ Lemma rew_app A (P : A -> Type) (x y : A) (H H' : x = y) (a : P x) :
 H = H' -> rew <- [P] H in rew [P] H' in a = a.
 Proof.
   intros * ->. now destruct H'.
+Defined.
+
+Lemma eq_ind_r_refl {A} {x y: A} {H: x = y} :
+  eq_ind_r (fun x => eq x y) eq_refl H = H.
+  now destruct H.
 Defined.
