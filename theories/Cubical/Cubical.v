@@ -30,7 +30,7 @@ Arguments box'' {n csp} _ {p} Hp D.
 Arguments subbox' {n csp} _ {p q Hpq} Hq ε {D} d.
 
 Class PartialBox (n p : nat) (csp : Type@{l'})
-(BoxPrev : PartialBoxPrev n csp) := {
+  (BoxPrev : PartialBoxPrev n csp) := {
   box (Hp : p <= n) : csp -> Type@{l} ;
   subbox {q} {Hpq : p.+1 <= q.+1} (Hq : q.+1 <= n) (ε : side) {D : csp} :
     box (↓ (Hpq ↕ Hq)) D -> BoxPrev.(box') (Hpq ↕ Hq) D;
@@ -238,7 +238,7 @@ Proof.
         rewrite rew_compose, rew_app.
   1, 3: now reflexivity.
   all:  now apply UIP.
-Defined.
+Qed.
 
 (* The previous level of Cube *)
 Definition mkCubePrev {n} {C: Cubical n} :
@@ -254,7 +254,8 @@ Definition mkCubePrev {n} {C: Cubical n} :
 |}.
 
 (* The box at level n.+1 with p = O *)
-Definition mkBox0 {n} {C: Cubical n} : PartialBox n.+1 O mkcsp mkBoxPrev.
+#[local]
+Instance mkBox0 {n} {C: Cubical n} : PartialBox n.+1 O mkcsp mkBoxPrev.
   unshelve esplit.
   * intros; now exact unit. (* boxSn *)
   * simpl; intros; rewrite C.(eqBox0). now exact tt. (* subboxSn *)
@@ -264,7 +265,8 @@ Definition mkBox0 {n} {C: Cubical n} : PartialBox n.+1 O mkcsp mkBoxPrev.
 Defined.
 
 (* The box at level n.+1 with p = S _ *)
-Definition mkBoxSp {n p} {C: Cubical n}
+#[local]
+Instance mkBoxSp {n p} {C: Cubical n}
   {Box: PartialBox n.+1 p mkcsp mkBoxPrev}:
   PartialBox n.+1 p.+1 mkcsp mkBoxPrev.
   unshelve esplit.
@@ -283,7 +285,9 @@ Definition mkBoxSp {n p} {C: Cubical n}
     (* Bug? Coq being too smart for its own good. *)
 Defined.
 
-Definition mkBox {n} {C: Cubical n} p : PartialBox n.+1 p mkcsp mkBoxPrev.
+(* Finally, we can define mkBox *)
+#[local]
+Instance mkBox {n} {C: Cubical n} p : PartialBox n.+1 p mkcsp mkBoxPrev.
   induction p.
   + now exact mkBox0. (* p = O *)
   + now exact (mkBoxSp (Box := IHp)). (* p = S _ *)
@@ -306,7 +310,7 @@ Lemma mkcube_computes {n p} {C : Cubical n} {Hp : p.+1 <= n.+1} {D : mkcsp}
   mkcube (Hp := ↓ Hp) E d = {l : mkLayer & mkcube (Hp := Hp) E (d; l)}.
 Proof.
   unfold mkcube; now rewrite le_induction_computes.
-Defined.
+Qed.
 
 (* Now, subcube, and the corresponding computational properties. *)
 
@@ -340,7 +344,7 @@ Lemma mksubcube_base_computes {p n} {C : Cubical n} {Hp : p.+1 <= n.+1}
   end.
 Proof.
   unfold mksubcube; now rewrite le_induction'_base_computes.
-Defined.
+Qed.
 
 Lemma mksubcube_step_computes {q r n} {C : Cubical n} {Hq : q.+2 <= n.+1}
   {Hrq : r.+2 <= q.+2} {ε : side} {D E} {d: (mkBox r).(box) _ D} {c} :
@@ -351,7 +355,7 @@ Lemma mksubcube_step_computes {q r n} {C : Cubical n} {Hq : q.+2 <= n.+1}
   end.
 Proof.
   unfold mksubcube; now rewrite le_induction'_step_computes.
-Defined.
+Qed.
 
 (* Now, for the last part of the proof: proving coherence conditions
   on cohcube *)
@@ -374,7 +378,7 @@ Definition mkCohSheet_base {q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
     (Q := mksubcube (Hpq := Hrq) E (_; _) c')).
   now refine (C.(eqSubcube0) (ε := R)
     (Q := mksubcube (Hpq := Hrq) E (_; _) c')).
-Defined.
+Qed.
 
 (* A small abbreviation *)
 Definition mkCohSheet p {q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
@@ -432,10 +436,11 @@ Definition mkCohSheet_step {p q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
   set (FEQ := f_equal _ _); simpl in FEQ; clearbody FEQ.
   repeat rewrite <- eq_trans_assoc.
   now rewrite eq_trans_sym_inv_l, eq_trans_refl_r.
-Defined.
+Qed.
 
 (* Build a PartialCube n.+1 using what we just defined *)
-Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkCubePrev mkBox.
+#[local]
+Instance mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkCubePrev mkBox.
   unshelve esplit; intros p.
   - intros *; now exact mkcube.
   - intros q Hpq Hq ε d; now exact mksubcube.
@@ -446,7 +451,8 @@ Definition mkCube {n} {C : Cubical n} : PartialCube n.+1 mkcsp mkCubePrev mkBox.
       now exact (mkCohSheet_step (IHP := IHP)).
 Defined.
 
-Definition mkCubical0: Cubical 0.
+#[local]
+Instance mkCubical0: Cubical 0.
   unshelve esplit.
   - now exact unit.
   - unshelve esplit.
@@ -478,7 +484,8 @@ Definition mkCubical0: Cubical 0.
 Defined.
 
 (* We are now ready to build a Cubical *)
-Definition mkCubicalSn {n} {C: Cubical n}: Cubical n.+1.
+#[local]
+Instance mkCubicalSn {n} {C: Cubical n}: Cubical n.+1.
   unshelve esplit.
   - now exact mkcsp.
   - now exact mkBoxPrev.
