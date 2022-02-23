@@ -47,9 +47,6 @@
 \newcommand{\imp}{\ensuremath{\rightarrow}}
 \newcommand{\overright}[1]{\ensuremath{\overrightarrow{#1}}}
 
-% Type theory
-\newcommand{\UU}{\ensuremath{\mathscr{U}}}
-
 % Some abbreviations
 \renewcommand{\D}{\ensuremath{(D)}}
 \newcommand{\hdD}{\ensuremath{(D.1)}}
@@ -226,16 +223,18 @@ With the definition of the category of simplicial sets firmly in place, we look 
 
   and $d_i$, $s_i$ are constrained by the following ``simplicial identities'':
 
-  \begin{align*}
-    d_i d_j & = d_{j - 1} d_i, i < j \\
-    s_i s_j & = s_{j + 1} s_i, i < j \\
-    d_i s_j & =
-    \begin{cases}
-      s_{j - 1} d_i & i < j \\
-      id            & i = j \\
-      s_j d_{i - 1} & i > j \\
-    \end{cases}
-  \end{align*}
+  \begin{equation*}
+    \begin{matrix}
+      d_i d_j & = & d_{j - 1} d_i & i < j \\
+      s_i s_j & = & s_{j + 1} s_i & i < j \\
+      d_i s_j & = &
+      \begin{cases}
+        s_{j - 1} d_i & i < j \\
+        id            & i = j \\
+        s_j d_{i - 1} & i > j \\
+      \end{cases}
+    \end{matrix}
+  \end{equation*}
 \end{definition}
 
 We mentioned degeneracies in the introduction to this section, and we define precisely what a degenerate simplex is now.
@@ -412,14 +411,14 @@ The Grothendieck construction provides a correspondence between a fibered repres
 
 $$
   \begin{tikzcd}
-    X_0 : \UU & X_1 : \UU \arrow[l, "\delta^\epsilon_0" description, shift left=2] \arrow[l, "\delta^\omega_0" description, shift right=2] & X_2 : \UU \arrow[l, "\delta^\epsilon_1" description, shift left=6] \arrow[l, "\delta^\epsilon_0" description, shift left=2] \arrow[l, "\delta^\omega_0" description, shift right=2] \arrow[l, "\delta^\omega_1" description, shift right=6] & \ldots
+    X_0 : \sort{} & X_1 : \sort{} \arrow[l, "\delta^\epsilon_0" description, shift left=2] \arrow[l, "\delta^\omega_0" description, shift right=2] & X_2 : \sort{} \arrow[l, "\delta^\epsilon_1" description, shift left=6] \arrow[l, "\delta^\epsilon_0" description, shift left=2] \arrow[l, "\delta^\omega_0" description, shift right=2] \arrow[l, "\delta^\omega_1" description, shift right=6] & \ldots
   \end{tikzcd}
 $$
 
 \begin{align*}
-  X_0 & : \UU                                                                                                      \\
-  X_1 & : X_0 \times X_0 \rightarrow \UU                                                                           \\
-  X_2 & : \forall a b c d, X_1 : ab \rightarrow X_1 : bc \rightarrow X_1 : cd \rightarrow X_1 : da \rightarrow \UU \\
+  X_0 & : \sort{}                                                                                                      \\
+  X_1 & : X_0 \times X_0 \rightarrow \sort{}                                                                           \\
+  X_2 & : \forall a b c d, X_1 : ab \rightarrow X_1 : bc \rightarrow X_1 : cd \rightarrow X_1 : da \rightarrow \sort{} \\
   \ldots
 \end{align*}
 
