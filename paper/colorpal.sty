@@ -1,0 +1,18 @@
+% The lua code to transform ('FFFFFFF', 0) into 255
+\begin{luacode}
+function rgbcomponents(hexstr, i)
+    return tonumber(string.sub(hexstr, i * 2 + 1, i * 2 + 2), 16) / 255
+end
+\end{luacode}
+
+\newcommand{\definehexcolor}[2]{
+\definecolor{#1}{rgb}{\directlua{tex.write(rgbcomponents("#2", 0))}, \directlua{tex.write(rgbcomponents("#2", 1))}, \directlua{tex.write(rgbcomponents("#2", 2))}}
+}
+
+% Color palette
+\definehexcolor{white}{FFFFFF}
+\definecolor{gray80}{rgb}{0.2, 0.2, 0.2}
+\definecolor{gray65}{rgb}{0.35, 0.35, 0.35}
+\definehexcolor{raspeberry}{BF3343}
+\definehexcolor{strawberry}{D86E7A}
+\definehexcolor{hlcolor}{FBEFF1}  

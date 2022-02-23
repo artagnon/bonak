@@ -1,8 +1,13 @@
-\documentclass[10pt]{amsart}
+\documentclass[10pt]{art}
 
-\usepackage[allbordercolors={.192157 .76862 .28627}]{hyperref} % Emerald Green
-\usepackage{amsthm, amssymb, amsmath, mathtools, amsaddr, fancyhdr, bookmark, fontspec, xargs, multirow, polyglossia, luacode, minted, color, soulutf8, tcolorbox, tabularx, tikz-cd, booktabs, setspace, makecell, caption, mathrsfs, xpatch, lmodern}
+\usepackage{multirow, minted, tabularx, booktabs, setspace, makecell, caption}
 \usepackage[hmargin=0.4in, vmargin=0.8in, headheight=10pt]{geometry}
+
+% Simplicial and Cubical sets
+\newcommand{\DeltaHat}{\ensuremath{\hat{\boldsymbol{\Delta}}}}
+\newcommand{\Cube}[1]{\ensuremath{\boldsymbol{\square^{#1}}}}
+\renewcommand{\I}[1]{\ensuremath{\mathsf{I}^{#1}}}
+\newcommand{\CSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\square}}}}
 
 % Universes
 \newcommand{\sort}[1]{\ensuremath{\mathsf{U}_{#1}}}
@@ -42,34 +47,34 @@
 \newcommand{\imp}{\ensuremath{\rightarrow}}
 \newcommand{\overright}[1]{\ensuremath{\overrightarrow{#1}}}
 
-% Objects and morphisms
-\newcommand{\obj}{\ensuremath{\mathsf{obj}}}
-\newcommand{\mor}{\ensuremath{\mathsf{mor}}}
-
-% Simplicial sets
-\newcommand{\Set}{\ensuremath{\mathsf{Set}}}
-\newcommand{\op}{\ensuremath{\mathsf{op}}}
-\newcommand{\Simplex}[1]{\ensuremath{\boldsymbol{\Delta^{#1}}}}
-\newcommand{\DeltaHat}{\ensuremath{\hat{\boldsymbol{\Delta}}}}
-\newcommand{\SSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\Delta}}}}
-\newcommand{\sq}[1]{\ensuremath{\mathsf{[#1]}}}
-
-% Cubical sets
-\newcommand{\Cube}[1]{\ensuremath{\boldsymbol{\square^{#1}}}}
-\newcommand{\I}[1]{\ensuremath{\mathsf{I}^{#1}}}
-\newcommand{\CSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\square}}}}
-
 % Type theory
 \newcommand{\UU}{\ensuremath{\mathscr{U}}}
 
 % Some abbreviations
-\newcommand{\D}{\ensuremath{(D)}}
+\renewcommand{\D}{\ensuremath{(D)}}
 \newcommand{\hdD}{\ensuremath{(D.1)}}
 \newcommand{\tlD}{\ensuremath{(D.2)}}
 \renewcommand{\d}{\ensuremath{(d)}}
 \newcommand{\E}{\ensuremath{(E)}}
 \renewcommand{\l}{\ensuremath{(l)}}
 \renewcommand{\c}{\ensuremath{(c)}}
+
+
+% Fancy headers
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\footnotesize\textcolor{gray80}{{\thepage / \pageref{LastPage}}}}
+\renewcommand{\sectionmark}[1]{\markboth{}{\thesection.\ #1}}
+\fancyhead[L]{\footnotesize\textcolor{gray80}{{\MakeUppercase{\rightmark}}}}
+
+% Section and subsection styles
+\renewcommand{\thesection}{\Roman{section}}
+\titleformat{\section}{\centering\scshape\Large\color{raspeberry}}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\strongenv\large\color{gray80}}{\thesubsection}{0.7em}{}
+
+% Pack enumerate items and bibitems
+\setlist{nolistsep}
+\setlength{\bibitemsep}{.2\baselineskip plus .05\baselineskip minus .05\baselineskip}
 
 % The eqntable environment, displaying the various
 \NewDocumentEnvironment{eqntable}{m}{\table[!ht]\small
@@ -89,75 +94,6 @@
   labelfont=mdit,
 }
 
-% Use lettered footnotes
-\renewcommand{\thefootnote}{\alph{footnote}}
-
-% amsthm theorems
-\swapnumbers
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}[section]
-\newtheorem{terminology}[definition]{Terminology}
-\newtheorem{notation}[definition]{Notation}
-\newtheorem{proposition}[definition]{Proposition}
-\newtheorem{lemma}[definition]{Lemma}
-\newtheorem{theorem}[definition]{Theorem}
-\newtheorem{corollary}[definition]{Corollary}
-\newtheorem{remark}[definition]{Remark}
-\newtheorem{example}[definition]{Example}
-\newtheorem{caution}[definition]{Caution}
-\newtheorem{discussion}[definition]{Discussion}
-
-\usepackage{thmtools}
-
-% Fancy headers
-\pagestyle{fancy} % choose the "fancy" pagestyle
-\fancyhf{}        % clear all headers and footers
-% Now set the headers
-\fancyhead[LE,RO]{\footnotesize\thepage}
-\fancyhead[LO,RE]{\footnotesize\leftmark}
-\makeatletter
-\xapptocmd{\@sect}{\csname #1mark\endcsname{#7}}{}{}
-\makeatother
-
-% Subsection centering
-\makeatletter
-\def\subsection{\@startsection{subsection}{2}
-  \z@{.5\linespacing\@plus.7\linespacing}{.6\baselineskip}{\centering}}
-\makeatother
-
-% Nested numbering of sections and subsections
-\makeatletter
-\newif\ifsection
-\newif\ifsubsection
-\preto\section{\sectiontrue\subsectionfalse}
-\preto\subsection{\sectionfalse\subsectiontrue}
-\patchcmd{\@xsect}% <cmd>
-  {\ignorespaces}% <search>
-  {\ifsubsection
-   \numberwithin{definition}{subsection}
-   \else
-   \numberwithin{definition}{section}
-   \fi
-   \setcounter{definition}{0}\relax\ignorespaces}% <replace>
-  {}{}% <success><failure>
-\makeatother
-
-% Fancy headers
-\pagestyle{fancy} % choose the "fancy" pagestyle
-\fancyhf{}        % clear all headers and footers
-% Now set the headers
-\fancyhead[LE,RO]{\footnotesize\thepage}
-\fancyhead[LO,RE]{\footnotesize\leftmark}
-\makeatletter
-\xapptocmd{\@sect}{\csname #1mark\endcsname{#7}}{}{}
-\makeatother
-
-% Subsection centering
-\makeatletter
-\def\subsection{\@startsection{subsection}{2}
-  \z@{.5\linespacing\@plus.7\linespacing}{.6\baselineskip}{\centering}}
-\makeatother
-
 % Code listings
 \usemintedstyle{tango}
 \setminted{escapeinside=~~}
@@ -166,20 +102,24 @@
 % Fonts
 \setmainfont{Avenir Next}
 \setmonofont{Source Code Pro}
-\newfontfamily\mainfont{Avenir Next}
 \defaultfontfeatures{Ligatures=TeX, Scale=MatchUppercase}
 
 \title{An iterated Grothendieck construction of semi-cubical types}
-\author{Hugo Herbelin}
-\address{Institut de Recherche en Informatique Fondamentale}
-\author{Ramkumar Ramachandra}
-\address{Université de Paris}
+\author{
+  \textcolor{gray80}{Hugo Herbelin} \\
+  \itshape \textcolor{gray80}{IRIF}
+  \and
+  \textcolor{gray80}{Ramkumar Ramachandra} \\
+  \itshape \textcolor{gray80}{Université de Paris}
+}
+\date{}
 
 \begin{document}
+\thispagestyle{empty}
+\maketitle
 \begin{abstract}
   A proposed model of \emph{homotopy type theory} built via a \emph{reverse iterated Grothendieck construction} process formalizing semi-cubical sets in dependent type theory with \emph{extensional equality}. The accompanying artifact is a Coq formalization that uses highly sophisticated rewriting techniques and pushes the boundary of proof assistant technology.
 \end{abstract}
-\maketitle
 \tableofcontents
 \newpage
 
@@ -233,13 +173,13 @@ There exists vast mathematical literature on the subject, and we refer the unini
   The category of simplicial sets is defined as:
 
   \begin{equation*}
-    \SSet := \Set^{\Simplex{}^\op}
+    \SSet := \Set^{\op{\Simplex{}}}
   \end{equation*}
 
   It is a functor category, whose objects and morphisms are given by:
 
   \begin{align*}
-    \obj(\SSet)            & := \text{functors} \; \Simplex{}^\op \rightarrow \Set      \\
+    \obj(\SSet)            & := \text{functors} \; \op{\Simplex{}} \rightarrow \Set     \\
     \mor(\SSet)            & := \text{natural transforms between the functors}          \\
     \text{composition law} & := \text{the usual composition of natural transformations} \\
   \end{align*}
@@ -369,7 +309,7 @@ As is clear from the above definitions, simplicial sets have an infinite number 
 \end{example}
 
 \subsection{Motivation for \texorpdfstring{\DeltaHat}{delta sets}}
-As hinted earlier, simplicial sets are ill-suited for machine-based representation, due to the infinite number of degenerate simplices that are uninteresting from the point of view of cubical type theory. To remedy this problem, let us instead use \DeltaHat, and proceed towards building, what is called \emph{semi-cubical sets} in literature. $\DeltaHat$ is identical to \Simplex{}, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are \emph{strictly} order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. In mathematical literature, there is little interest in studying \DeltaHat, since delta maps are not well-defined, and constructing a $\Set^{\DeltaHat^{op}}$ is inelegant.
+As hinted earlier, simplicial sets are ill-suited for machine-based representation, due to the infinite number of degenerate simplices that are uninteresting from the point of view of cubical type theory. To remedy this problem, let us instead use \DeltaHat, and proceed towards building, what is called \emph{semi-cubical sets} in literature. $\DeltaHat$ is identical to \Simplex{}, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are \emph{strictly} order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. In mathematical literature, there is little interest in studying \DeltaHat, since delta maps are not well-defined, and constructing a $\Set^{\op{\DeltaHat}}$ is inelegant.
 
 \subsection{Towards semi-cubical sets}
 We might naively attempt to define $\Cube{}$ identically to \DeltaHat, but let us briefly explain why this wouldn't work, motivating the definition of semi-cubical sets as in \cite{Antolini00}. If there were morphisms from every $\sq{m}$ to \sq{n}, we would end up with:
