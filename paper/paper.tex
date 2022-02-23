@@ -77,7 +77,7 @@
 \setlength{\bibitemsep}{.2\baselineskip plus .05\baselineskip minus .05\baselineskip}
 
 % The eqntable environment, displaying the various
-\NewDocumentEnvironment{eqntable}{m}{\table[!ht]\small
+\NewDocumentEnvironment{eqntable}{m}{\table[H]\small
 \tabularx{\textwidth}{@{} l c c >{\centering\arraybackslash}X @{}}\toprule}
 {\endtabularx\vspace{0.3em}\hrule\vspace{0.5em}\caption{#1}\endtable}
 
@@ -113,6 +113,8 @@
   \itshape \textcolor{gray80}{Université de Paris}
 }
 \date{}
+
+\color{gray65}
 
 \begin{document}
 \thispagestyle{empty}
@@ -596,8 +598,7 @@ There are three inhabitants of \mintinline{coq}{SProp}: \mintinline{coq}{sUnit} 
     Proof.
       by reflexivity.
     Abort. (* Type-check fails at Qed.
-            * (=) : ∀ A, A -> A -> Prop, but we want to return an SProp.
-            *)
+            * (=) : ∀ A, A -> A -> Prop, but we want to return an SProp. *)
   \end{minted}
 \end{listing}
 
@@ -653,7 +654,7 @@ We tried three different approaches to defining $\leq$ in \mintinline{coq}{SProp
 (a) was unworkable right from the start, and we tried approach (b) for a while, before running into unification problems. We then settled on approach \c, because it made compositions of inequalities almost trivial to prove. Compare the following snippets defining transitivity of $\leq$:
 
 \begin{listing}[H]
-  \begin{minted}[linenos]{coq}
+  \begin{minted}{coq}
     Theorem le_trans {p q n} : p <= q -> q <= n -> p <= n.
     (* ... a non-trivial proof ... *)
     Defined.
@@ -662,7 +663,7 @@ We tried three different approaches to defining $\leq$ in \mintinline{coq}{SProp
 \end{listing}
 
 \begin{listing}[H]
-  \begin{minted}[linenos]{coq}
+  \begin{minted}{coq}
     Definition le_trans {n m p} (Hnm : n <= m) (Hmp : m <= p) : n <= p :=
       fun q (Hqn : le' q n) => Hmp _ (Hnm _ Hqn).
   \end{minted}
@@ -741,7 +742,6 @@ We then settled on remembering the previous two levels of induction, a middle-gr
   \begin{minted}{coq}
     Record PartialBoxPrev (n : nat) (csp : Type@{l'}) := {
       box' {p} (Hp : p.+1 <= n) : csp -> Type@{l} ;
-      (* [box' n D] is [box (n-1) D.1] *)
       box'' {p} (Hp : p.+2 <= n) : csp -> Type@{l} ;
       subbox' {p q} {Hp : p.+2 <= q.+2} (Hq : q.+2 <= n) (ε : side) {D : csp} :
         box' (↓ (Hp ↕ Hq)) D -> box'' (Hp ↕ Hq) D;
@@ -795,6 +795,8 @@ We use UIP in the final coherence condition in \mintinline{coq}{cohbox} and \min
 
 In attempting to write the proof without UIP, we'd have a relation between \mintinline{coq}{cohNbox} and \mintinline{coq}{cohPredNbox}, which, we expect to be tricky to prove.
 
+\newpage
+
 \begin{thebibliography}{10}
   \bibitem[Bez]{Bezem14}
   Bezem, M., Coquand, T., \& Huber, S. (2014, July). A model of type theory in cubical sets. \textit{In 19th International Conference on Types for Proofs and Programs (TYPES 2013)} (Vol. 26, pp. 107-128). Wadern, Germany: Schloss Dagstuhl–Leibniz Zentrum fuer Informatik.
@@ -806,7 +808,7 @@ In attempting to write the proof without UIP, we'd have a relation between \mint
   Cohen, C., Coquand, T., Huber, S., \& Mörtberg, A. (2016). Cubical type theory: a constructive interpretation of the univalence axiom. arXiv preprint arXiv:1611.02108.
 
   \bibitem[Angiuli]{Angiuli17}
-  Carlo Angiuli, Guillaume Brunerie, Thierry Coquand, Kuen-Bang Hou (Favonia),Robert Harper, \& Daniel R. Licata. arXiv preprint.
+  Carlo Angiuli, Guillaume Brunerie, Thierry Coquand, Kuen-Bang Hou (Favonia), Robert Harper, \& Daniel R. Licata. arXiv preprint.
 
   \bibitem[Fri]{Friedman08}
   Friedman, G. (2008). An elementary illustrated introduction to simplicial sets. \textit{arXiv preprint arXiv:0809.4221}.
