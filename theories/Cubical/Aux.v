@@ -22,6 +22,13 @@ Inductive eq_over {A} (x: A) : forall {B} (y: B), A = B -> Prop :=
 eq_over_refl : x =_{eq_refl} x
 where "x =_{ H } y" := (eq_over x y H).
 
-(* Notation for eq_existT_curried *)
+(* eq_existT_curried *)
 Notation "(= u ; v )" := (eq_existT_curried u v)
 (at level 0, format "(= u ;  '/  ' v )").
+
+(* eq_trans, eq_sym, and le_refl *)
+Infix "•" := eq_trans (at level 65, left associativity).
+Notation "[ x ⇒ f ] e" := (f_equal (fun x => f) e)
+(at level 60, left associativity).
+Notation "x ^" := (eq_sym x) (at level 55, left associativity, format "x ^").
+Notation "¹" := le_refl (at level 0).

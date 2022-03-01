@@ -45,6 +45,8 @@ Class PartialBox (n p : nat) (csp : Type@{l'})
 Arguments box {n p csp BoxPrev} _ Hp D.
 Arguments subbox {n p csp BoxPrev} _ {q Hpq} Hq ε {D} d.
 Arguments cohbox {n p csp BoxPrev} _ {q r Hpr Hrq Hq ε ω D} d.
+(* We want ε and ω to be printed, but have them inferred;
+   Coq doesn't support this. *)
 
 (* We build cubes using an iterated construction: a cube at level n depends
    on cubes at level n-1 and n-2; just as we have box' and box'', we have
@@ -430,7 +432,7 @@ Definition mkCohSheet_step {p q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
   simpl (mkBox p.+1). unfold mkCubePrev, cube''.
   change (fun x => C.(CubePrev).(cube') (Hp := ?Hp) (D := ?D) x) with
     (C.(CubePrev).(cube') (Hp := Hp) (D := D)).
-  unfold mkBoxSp, cohbox.
+  unfold mkBoxSp; unfold cohbox at -1.
   rewrite rew_map with (f := fun x => rew <- [id] C.(eqBoxSp') in x).
   repeat rewrite rew_compose.
   set (FEQ := f_equal _ _); simpl in FEQ; clearbody FEQ.
