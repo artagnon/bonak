@@ -241,6 +241,7 @@ Definition mkCohLayer_fext {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
   rew [C.(Layer'')] cohBoxSnHyp in sl = sl'.
 Proof.
   pose (P := mkCohLayer l (ε := ε) (ω := ω)); simpl in P; extensionality in P.
+  simpl.
 Admitted.
 
 Definition mkCubePrev {n} {C: Cubical n} :
@@ -375,10 +376,8 @@ Definition mkCohCube_base {q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
     (mksubcube (ε := ε) (Hpq := ↓ Hrq) (Hq := Hq) E d c).
   change (le_refl _ ↕ ?H) with H; change (⇓ le_refl _ ↕ ?H) with H.
   rewrite mksubcube_base_computes, mksubcube_step_computes.
-  destruct (rew [id] mkcube_computes in c) as (l, c'); clear c; destruct ω.
-  now refine (C.(eqSubcube0) (ε := L)
-    (Q := mksubcube (Hpq := Hrq) E (_; _) c')).
-  now refine (C.(eqSubcube0) (ε := R)
+  destruct (rew [id] mkcube_computes in c) as (l, c'); clear c.
+  now refine (C.(eqSubcube0)
     (Q := mksubcube (Hpq := Hrq) E (_; _) c')).
 Qed.
 
