@@ -1,4 +1,5 @@
 Import Logic.EqNotations.
+Require Import Logic.FunctionalExtensionality.
 Require Import Program. (* UIP *)
 Require Import Aux.
 Require Import RewLemmas.
@@ -229,7 +230,19 @@ Proof.
   now reflexivity. now apply UIP.
 Qed.
 
-(* The previous level of Cube *)
+Definition mkCohLayer_fext {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
+  {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
+  {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
+  {d: Box.(box) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D} (l: mkLayer):
+  let sl := C.(SubLayer') (Hpq := ⇓ (Hpr ↕ Hrq)) ε
+              (mkSubLayer (Hpq := ⇓ Hpr) d l) in
+  let sl' := C.(SubLayer') (Hpq := ⇓ Hpr) ω
+               (mkSubLayer (Hpq := ↓ (Hpr ↕ Hrq)) d l) in
+  rew [C.(Layer'')] cohBoxSnHyp in sl = sl'.
+Proof.
+  pose (P := mkCohLayer l (ε := ε) (ω := ω)); simpl in P; extensionality in P.
+Admitted.
+
 Definition mkCubePrev {n} {C: Cubical n} :
   PartialCubePrev n.+1 mkcsp mkBoxPrev := {|
   cube' (p : nat) (Hp : p.+1 <= n.+1) (D : mkcsp) := C.(Cube).(cube) D.2 :
@@ -265,12 +278,15 @@ Instance mkBoxSp {n p} {C: Cubical n}
       (Box.(subbox) Hq ε d; mkSubLayer d l)).
   * simpl; intros q r Hpr Hrq Hq ε ω D (d, l). (* cohboxp *)
     invert_le Hpr; invert_le Hrq.
+
+    (* A roundabout way to simplify the proof of mkCohCube_step *)
     etransitivity. apply (C.(eqSubboxSp) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq)).
     etransitivity.
     2: symmetry; apply (C.(eqSubboxSp) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq))).
+
     apply f_equal with (B := C.(BoxPrev).(box') _ D.1)
       (f := fun x => rew <- (C.(eqBoxSp') (Hp := ⇓ (Hpr ↕ Hrq) ↕ ⇓ Hq)) in x).
-    now exact (= (cohBoxSnHyp (Hpr := Hpr) (Hrq := Hrq)); mkCohLayer l).
+    now exact (= (cohBoxSnHyp (Hpr := Hpr) (Hrq := Hrq)); mkCohLayer_fext l).
     (* Bug? Coq being too smart for its own good. *)
 Defined.
 
@@ -314,7 +330,7 @@ Proof.
   pattern p, Hpq. (* Bug? Why is this needed? *)
   apply le_induction'.
   + intros d c; rewrite mkcube_computes in c. destruct c as (l, _).
-    destruct ε. now exact (fst l). now exact (snd l).
+    now exact (l ε).
   + clear p Hpq; intros p Hpq IH d c; invert_le Hpq.
     rewrite mkcube_computes in c; destruct c as (l, c).
     change (⇓ (↓ ?Hpq ↕ ?Hq)) with (↓ ⇓ (Hpq ↕ Hq)); rewrite C.(eqCubeSp).
@@ -326,10 +342,7 @@ Lemma mksubcube_base_computes {p n} {C : Cubical n} {Hp : p.+1 <= n.+1}
   {ε : side} {D E} {d: (mkBox p).(box) _ D} {c} :
   mksubcube (Hq := Hp) E d c =
   match (rew [id] mkcube_computes in c) with
-  | (l; _) => match ε with
-    | L => fst l
-    | R => snd l
-    end
+  | (l; _) => l ε
   end.
 Proof.
   unfold mksubcube; now rewrite le_induction'_base_computes.
@@ -370,7 +383,7 @@ Definition mkCohCube_base {q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
 Qed.
 
 (* A small abbreviation *)
-Definition mkCohcube p {q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
+Definition mkCohCube p {q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
   (Hpr: p.+2 <= r.+3) {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
   {E: (mkBox n.+1).(box) (le_refl n.+1) D -> Type}
   (d: (mkBox p).(box) (↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D)
@@ -388,9 +401,9 @@ Definition mkCohCube_step {p q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
   {d: (mkBox p).(box) (↓ ↓ (↓ Hpr ↕ Hrq ↕ Hq)) D}
   {c: mkcube E d}
   {IHP: forall (d: (mkBox p.+1).(box) (↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D) (c: mkcube E d),
-        mkCohcube p.+1 Hpr (ε := ε) (ω := ω) d c}:
-        mkCohcube p (↓ Hpr) (ε := ε) (ω := ω) d c.
-  unfold mkCohcube in *; simpl projT1 in *; simpl projT2 in *.
+        mkCohCube p.+1 Hpr (ε := ε) (ω := ω) d c}:
+        mkCohCube p (↓ Hpr) (ε := ε) (ω := ω) d c.
+  unfold mkCohCube in *; simpl projT1 in *; simpl projT2 in *.
   change (⇓ (↓ ?Hpr)) with (↓ (⇓ Hpr)).
   do 2 rewrite mksubcube_step_computes.
   destruct (rew [id] mkcube_computes in c) as (l, c'); clear c.
@@ -414,7 +427,7 @@ Definition mkCohCube_step {p q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
                        (D := D.1) (E := D.2)
                        (mksubcube (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq))
                        (D := D) (ε := ω) E (d; l) c'))).
-  now exact (mkCohLayer (Hpr := Hpr) (Hrq := Hrq) (Hq := Hq) l).
+  now exact (mkCohLayer_fext (Hpr := Hpr) (Hrq := Hrq) (Hq := Hq) l).
   rewrite <- IHP with (d := (d; l)) (c := c').
   simpl (mkBox p.+1). unfold mkCubePrev, cube''.
   change (fun x => C.(CubePrev).(cube') (Hp := ?Hp) (D := ?D) x) with
