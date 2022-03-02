@@ -172,8 +172,7 @@ Definition mkcsp {n} {C : Cubical n} : Type@{l'} :=
   { D : C.(csp) & C.(Box).(box) (le_refl n) D -> Type@{l} }.
 
 (* The previous level of Box *)
-Definition mkBoxPrev {n} {C : Cubical n} :
-  PartialBoxPrev n.+1 mkcsp := {|
+Definition mkBoxPrev {n} {C : Cubical n}: PartialBoxPrev n.+1 mkcsp := {|
   box' (p : nat) (Hp : p.+1 <= n.+1) (D : mkcsp) := C.(Box).(box) (⇓ Hp) D.1 ;
   box'' (p : nat) (Hp : p.+2 <= n.+1) (D : mkcsp) :=
     C.(BoxPrev).(box') (⇓ Hp) D.1 ;
@@ -235,8 +234,9 @@ Proof.
   now reflexivity. now apply UIP.
 Qed.
 
-Definition mkCubePrev {n} {C: Cubical n} :
-  PartialCubePrev n.+1 mkcsp mkBoxPrev := {|
+#[local]
+Instance mkCubePrev {n} {C: Cubical n} : PartialCubePrev n.+1 mkcsp mkBoxPrev :=
+{|
   cube' (p : nat) (Hp : p.+1 <= n.+1) (D : mkcsp) := C.(Cube).(cube) D.2 :
     mkBoxPrev.(box') Hp D -> Type; (* Bug? *)
   cube'' (p : nat) (Hp : p.+2 <= n.+1) (D : mkcsp)
