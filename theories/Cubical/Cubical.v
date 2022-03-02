@@ -205,7 +205,7 @@ Definition cohBoxSnHyp {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
     (Box.(subbox) Hq ε d) :=
   Box.(cohbox) (Hpr := ↓ Hpr) (Hrq := Hrq) (Hq := Hq) d.
 
-Definition mkCohLayer_forall {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
+Definition mkCohLayer {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
   {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
   {d: Box.(box) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D} (l: mkLayer):
@@ -216,12 +216,12 @@ Definition mkCohLayer_forall {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
   rew [C.(Layer'')] cohBoxSnHyp in sl = sl'.
 Proof.
   intros *.
-
-  (* First, prove the forall version *)
-  assert (forall 𝛉,
-    rew [fun x => C.(CubePrev).(cube'') (C.(BoxPrev).(subbox') _ 𝛉 x)]
-      cohBoxSnHyp in sl 𝛉 = sl' 𝛉).
-  subst sl sl'; intros 𝛉.
+  subst sl sl'; apply functional_extensionality_dep; intros 𝛉; unfold Layer''.
+  rewrite <- map_subst_app with
+    (C := fun 𝛉 x =>
+      C.(CubePrev).(cube'') (C.(BoxPrev).(subbox') _ 𝛉 x))
+    (f := C.(SubLayer') _ (mkSubLayer d l))
+    (H := cohBoxSnHyp).
   unfold SubLayer', cohBoxSnHyp, mkSubLayer.
   rewrite <- map_subst with (f := C.(CubePrev).(subcube') (⇓ Hq) ε).
   rewrite <- map_subst with (f := C.(CubePrev).(subcube') (⇓ (Hrq ↕ Hq)) ω).
@@ -233,16 +233,7 @@ Proof.
   rewrite <- (C.(Cube).(cohcube) (Hrq := ⇓ Hrq) (Hq := ⇓ Hq)).
   repeat rewrite rew_compose; rewrite <- rew_swap. rewrite rew_app.
   now reflexivity. now apply UIP.
-
-  (* Now prove it with functional extensionality *)
-  subst sl sl'.
-  Fail rewrite map_subst_app with
-    (C := fun 𝛉 x => C.(CubePrev).(cube'') (C.(BoxPrev).(subbox') _ 𝛉 x))
-    (f := C.(SubLayer') _ _)
-    (H := cohBoxSnHyp) in H.
-  change (fun x => forall a : side, C.(CubePrev).(cube'') (C.(BoxPrev).(subbox') ?H a x)) with (C.(Layer'') (Hp := H) (D := D.1)) in H.
-  Fail apply equal_f in H; exact H.
-Admitted.
+Qed.
 
 Definition mkCubePrev {n} {C: Cubical n} :
   PartialCubePrev n.+1 mkcsp mkBoxPrev := {|
@@ -287,7 +278,7 @@ Instance mkBoxSp {n p} {C: Cubical n}
 
     apply f_equal with (B := C.(BoxPrev).(box') _ D.1)
       (f := fun x => rew <- (C.(eqBoxSp') (Hp := ⇓ (Hpr ↕ Hrq) ↕ ⇓ Hq)) in x).
-    now exact (= (cohBoxSnHyp (Hpr := Hpr) (Hrq := Hrq)); mkCohLayer_fext l).
+    now exact (= (cohBoxSnHyp (Hpr := Hpr) (Hrq := Hrq)); mkCohLayer l).
     (* Bug? Coq being too smart for its own good. *)
 Defined.
 
@@ -426,7 +417,7 @@ Definition mkCohCube_step {p q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
                        (D := D.1) (E := D.2)
                        (mksubcube (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq))
                        (D := D) (ε := ω) E (d; l) c'))).
-  now exact (mkCohLayer_fext (Hpr := Hpr) (Hrq := Hrq) (Hq := Hq) l).
+  now exact (mkCohLayer (Hpr := Hpr) (Hrq := Hrq) (Hq := Hq) l).
   rewrite <- IHP with (d := (d; l)) (c := c').
   simpl (mkBox p.+1). unfold mkCubePrev, cube''.
   change (fun x => C.(CubePrev).(cube') (Hp := ?Hp) (D := ?D) x) with
