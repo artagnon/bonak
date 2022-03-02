@@ -205,7 +205,7 @@ Definition cohBoxSnHyp {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
     (Box.(subbox) Hq ε d) :=
   Box.(cohbox) (Hpr := ↓ Hpr) (Hrq := Hrq) (Hq := Hq) d.
 
-Definition mkCohLayer {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
+Definition mkCohLayer_forall {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
   {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
   {d: Box.(box) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D} (l: mkLayer):
@@ -213,11 +213,16 @@ Definition mkCohLayer {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
               (mkSubLayer (Hpq := ⇓ Hpr) d l) in
   let sl' := C.(SubLayer') (Hpq := ⇓ Hpr) ω
                (mkSubLayer (Hpq := ↓ (Hpr ↕ Hrq)) d l) in
-  forall 𝛉,
-    rew [fun x => C.(CubePrev).(cube'') (C.(BoxPrev).(subbox') _ 𝛉 x)]
-      cohBoxSnHyp in sl 𝛉 = sl' 𝛉.
+  rew [C.(Layer'')] cohBoxSnHyp in sl = sl'.
 Proof.
-  simpl; intros 𝛉. unfold SubLayer', cohBoxSnHyp, mkSubLayer.
+  intros *.
+
+  (* First, prove the forall version *)
+  assert (forall 𝛉,
+    rew [fun x => C.(CubePrev).(cube'') (C.(BoxPrev).(subbox') _ 𝛉 x)]
+      cohBoxSnHyp in sl 𝛉 = sl' 𝛉).
+  subst sl sl'; intros 𝛉.
+  unfold SubLayer', cohBoxSnHyp, mkSubLayer.
   rewrite <- map_subst with (f := C.(CubePrev).(subcube') (⇓ Hq) ε).
   rewrite <- map_subst with (f := C.(CubePrev).(subcube') (⇓ (Hrq ↕ Hq)) ω).
   rewrite rew_map with
@@ -228,20 +233,15 @@ Proof.
   rewrite <- (C.(Cube).(cohcube) (Hrq := ⇓ Hrq) (Hq := ⇓ Hq)).
   repeat rewrite rew_compose; rewrite <- rew_swap. rewrite rew_app.
   now reflexivity. now apply UIP.
-Qed.
 
-Definition mkCohLayer_fext {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
-  {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
-  {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
-  {d: Box.(box) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D} (l: mkLayer):
-  let sl := C.(SubLayer') (Hpq := ⇓ (Hpr ↕ Hrq)) ε
-              (mkSubLayer (Hpq := ⇓ Hpr) d l) in
-  let sl' := C.(SubLayer') (Hpq := ⇓ Hpr) ω
-               (mkSubLayer (Hpq := ↓ (Hpr ↕ Hrq)) d l) in
-  rew [C.(Layer'')] cohBoxSnHyp in sl = sl'.
-Proof.
-  pose (P := mkCohLayer l (ε := ε) (ω := ω)); simpl in P; extensionality in P.
-  simpl.
+  (* Now prove it with functional extensionality *)
+  subst sl sl'.
+  Fail rewrite map_subst_app with
+    (C := fun 𝛉 x => C.(CubePrev).(cube'') (C.(BoxPrev).(subbox') _ 𝛉 x))
+    (f := C.(SubLayer') _ _)
+    (H := cohBoxSnHyp) in H.
+  change (fun x => forall a : side, C.(CubePrev).(cube'') (C.(BoxPrev).(subbox') ?H a x)) with (C.(Layer'') (Hp := H) (D := D.1)) in H.
+  Fail apply equal_f in H; exact H.
 Admitted.
 
 Definition mkCubePrev {n} {C: Cubical n} :
