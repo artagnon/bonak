@@ -138,9 +138,9 @@ Proof.
   now destruct H.
 Qed.
 
-Lemma map_subst_app {A B} {x y} (a: A) (H: x = y :> B) (C: A -> B -> Type)
-  (f: forall a, C a x):
-  rew [C a] H in f a = (rew [fun x => forall a, C a x] H in f) a.
+Lemma map_subst_app {A B} {x y} {𝛉: A} (H: x = y :> B) (P: A -> B -> Type)
+  (f: forall 𝛉, P 𝛉 x):
+  rew [P 𝛉] H in f 𝛉 = (rew [fun x => forall 𝛉, P 𝛉 x] H in f) 𝛉.
 Proof.
   now destruct H.
 Defined.

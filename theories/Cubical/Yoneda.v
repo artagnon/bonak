@@ -131,12 +131,14 @@ Ltac invert_le Hpq :=
                    now apply le_contra in Hpq |]
   end.
 
-Theorem le_induction : forall n, forall P : forall p, p <= n -> Type,
+Theorem le_induction n (P: forall p, p <= n -> Type):
           P n (le_refl n) ->
-          (forall p' (H : p'.+1 <= n), P p'.+1 H -> P p' (le_S_down H)) ->
+          (forall p (H : p.+1 <= n), P p.+1 H -> P p (le_S_down H)) ->
           forall p (H : p <= n),
           P p H.
 Proof.
+  intros H_base H_step *. induction n, p.
+  now exact H_base. exfalso; now apply le_contra in H.
 Admitted.
 
 Lemma le_induction' : forall n, forall P : forall p, p.+1 <= n.+1 -> Type,

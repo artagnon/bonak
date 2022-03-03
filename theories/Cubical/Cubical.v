@@ -15,7 +15,7 @@ Remove Printing Let prod.
 Universe l'.
 Universe l.
 
-Inductive side := L | R.
+Parameter side: Type.
 
 (* PartialBox consists of an 0-cells, and fillers which are the 1-cells,
    2-cells, and 3-cells relating the different 0-cells on the cube. *)
@@ -217,8 +217,7 @@ Proof.
   intros *.
   subst sl sl'; apply functional_extensionality_dep; intros 𝛉; unfold Layer''.
   rewrite <- map_subst_app with
-    (C := fun 𝛉 x =>
-      C.(CubePrev).(cube'') (C.(BoxPrev).(subbox') _ 𝛉 x))
+    (P := fun 𝛉 x => C.(CubePrev).(cube'') (C.(BoxPrev).(subbox') _ 𝛉 x))
     (f := C.(SubLayer') _ (mkSubLayer d l))
     (H := cohBoxSnHyp).
   unfold SubLayer', cohBoxSnHyp, mkSubLayer.
