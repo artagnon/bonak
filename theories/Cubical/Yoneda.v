@@ -62,6 +62,8 @@ Qed.
 Definition le_refl n : n <= n :=
   fun _ x => x. (* Coq bug! *)
 
+Notation "¹" := le_refl (at level 0).
+
 Definition le_trans {n m p} (Hnm : n <= m) (Hmp : m <= p) : n <= p :=
   fun q (Hqn : le' q n) => Hmp _ (Hnm _ Hqn).
 
@@ -132,7 +134,7 @@ Ltac invert_le Hpq :=
   end.
 
 Theorem le_induction n (P: forall p, p <= n -> Type):
-          P n (le_refl n) ->
+          P n (¹ n) ->
           (forall p (H : p.+1 <= n), P p.+1 H -> P p (le_S_down H)) ->
           forall p (H : p <= n),
           P p H.
@@ -142,7 +144,7 @@ Proof.
 Admitted.
 
 Lemma le_induction' : forall n, forall P : forall p, p.+1 <= n.+1 -> Type,
-        P n (le_refl n.+1) ->
+        P n (¹ n.+1) ->
         (forall p (H : p.+2 <= n.+1), P p.+1 H -> P p (le_S_down H)) ->
         forall p (H : p.+1 <= n.+1),
         P p H.
@@ -150,7 +152,7 @@ Proof.
 Admitted.
 
 Lemma le_induction'' : forall n, forall P : forall p, p.+2 <= n.+2 -> Type,
-        P n (le_refl n.+2) ->
+        P n (¹ n.+2) ->
         (forall p (H : p.+3 <= n.+2), P p.+1 H -> P p (le_S_down H)) ->
         forall p (H : p.+2 <= n.+2),
         P p H.
@@ -164,7 +166,7 @@ Proof.
 Admitted.
 
 Lemma le_induction'_base_computes {n P H0 HS} :
-  le_induction' n P H0 HS n (le_refl n.+1) = H0.
+  le_induction' n P H0 HS n (¹ n.+1) = H0.
 Proof.
 Admitted.
 
