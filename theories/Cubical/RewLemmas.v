@@ -6,7 +6,7 @@ rew <- [P] H in rew [P] H in a = a.
   now destruct H.
 Qed.
 
-Lemma rew_rew_opp {A} {x y: A} (H : x = y) P {a: P y} :
+Lemma rew_rew' {A} {x y: A} (H : x = y) P {a: P y} :
 rew [P] H in rew <- [P] H in a = a.
   now destruct H.
 Qed.
@@ -14,24 +14,6 @@ Qed.
 Lemma rew_context {A} {x y : A} (eq: x = y) {P} {a: P x}
 {Q : forall a, P a -> Type} : Q y (rew eq in a) = Q x a.
   now destruct eq.
-Qed.
-
-Theorem rew_map_top A (P:A->Type) x1 x2 (H: x1 = x2) (y: P x1) :
-  rew [P] H in y = rew [id] f_equal P H in y.
-Proof.
-  now destruct H.
-Qed.
-
-Theorem rew_map_opp_top A (P:A->Type) x1 x2 (H: x2 = x1) (y: P x1) :
-  rew <- [P] H in y = rew <- [id] f_equal P H in y.
-Proof.
-  now destruct H.
-Qed.
-
-Lemma rew_opp_extrude A (P: A -> Type) x1 x2 (H: x2 = x1) (y: P x1) :
-  rew <- [P] H in y = rew [P] (eq_sym H) in y.
-Proof.
-  now destruct H.
 Qed.
 
 Lemma eq_over_rew {A A'} {a: A} {a': A'} {H} (H0: a =_{H} a') : rew H in a = a'.

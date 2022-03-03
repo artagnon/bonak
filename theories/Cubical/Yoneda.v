@@ -100,24 +100,9 @@ Theorem le_S_down_distr {n m p} (Hmn : n.+1 <= m.+1) (Hmp : m.+1 <= p) :
   reflexivity.
 Qed.
 
-Lemma eq_pair {A B : Type} {u1 v1 : A} {u2 v2 : B}
-              (p : u1 = v1) (q : u2 = v2) : (u1, u2) = (v1, v2).
+Lemma eq_pair {A B : Type} {u1 v1 : A} {u2 v2 : B} (p : u1 = v1) (q : u2 = v2):
+  (u1, u2) = (v1, v2).
   now destruct p, q.
-Qed.
-
-Lemma np_comparitor_shift {n p} : p <= n.+1 -> n.+1 - p + p - 1 = n.
-  intros Hp. induction p.
-  * simpl. rewrite Nat.sub_0_r, Nat.add_0_r. trivial. (* the p = 0 case *)
-  * replace (n.+1 - p.+1) with (n - p) by auto; rewrite Nat.add_comm, Nat.add_succ_comm, Nat.add_comm; rewrite <- Nat.sub_succ_l; [apply IHp, le_S_down, Hp | pose proof (lower_S_both Hp) as H; unfold "<=" in H;
-  specialize H with (1 := le_refl' p); clear Hp IHp]. now apply le'_implies_le.
-Qed.
-
-Lemma np_comparitor_shift2 {n p} : p <= n -> n - (n - p) = p.
-  revert n. induction p; intros.
-  * simpl. now rewrite Nat.sub_0_r, Nat.sub_diag.
-  * destruct n. apply le_contra in H as []. simpl Nat.sub at 2.
-    rewrite Nat.sub_succ_l. f_equal. apply IHp. now apply lower_S_both in H.
-    now lia.
 Qed.
 
 Ltac find_raise q :=
@@ -135,7 +120,7 @@ Ltac invert_le Hpq :=
 
 Theorem le_induction n (P: forall p, p <= n -> Type):
           P n (¹ n) ->
-          (forall p (H : p.+1 <= n), P p.+1 H -> P p (le_S_down H)) ->
+          (forall p (H : p.+1 <= n), P p.+1 H -> P p (↓ H)) ->
           forall p (H : p <= n),
           P p H.
 Proof.
@@ -145,7 +130,7 @@ Admitted.
 
 Lemma le_induction' : forall n, forall P : forall p, p.+1 <= n.+1 -> Type,
         P n (¹ n.+1) ->
-        (forall p (H : p.+2 <= n.+1), P p.+1 H -> P p (le_S_down H)) ->
+        (forall p (H : p.+2 <= n.+1), P p.+1 H -> P p (↓ H)) ->
         forall p (H : p.+1 <= n.+1),
         P p H.
 Proof.
@@ -153,15 +138,15 @@ Admitted.
 
 Lemma le_induction'' : forall n, forall P : forall p, p.+2 <= n.+2 -> Type,
         P n (¹ n.+2) ->
-        (forall p (H : p.+3 <= n.+2), P p.+1 H -> P p (le_S_down H)) ->
+        (forall p (H : p.+3 <= n.+2), P p.+1 H -> P p (↓ H)) ->
         forall p (H : p.+2 <= n.+2),
         P p H.
 Proof.
 Admitted.
 
 Lemma le_induction_computes {n P H0 HS p H} :
-        le_induction n P H0 HS p (le_S_down H) =
-          HS p H (le_induction n P H0 HS p.+1 H).
+  le_induction n P H0 HS p (↓ H) =
+    HS p H (le_induction n P H0 HS p.+1 H).
 Proof.
 Admitted.
 
@@ -171,7 +156,7 @@ Proof.
 Admitted.
 
 Lemma le_induction'_step_computes {n P H0 HS p H} :
-  le_induction' n P H0 HS p (le_S_down H) =
+  le_induction' n P H0 HS p (↓ H) =
     HS p H (le_induction' n P H0 HS p.+1 H).
 Proof.
 Admitted.

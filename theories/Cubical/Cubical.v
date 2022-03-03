@@ -493,9 +493,9 @@ Instance mkCubicalSn {n} {C: Cubical n}: Cubical n.+1.
   - now intros *.
   - intros *; change (fun _ (_ : le' _ ?q) => _) with (¹ q); simpl.
     rewrite mksubcube_base_computes; rewrite eq_ind_r_refl.
-    now rewrite rew_rew_opp.
+    now rewrite rew_rew'.
   - intros *; simpl; rewrite eq_ind_r_refl; rewrite mksubcube_step_computes.
-    now rewrite rew_rew_opp.
+    now rewrite rew_rew'.
 Defined.
 
 Definition CubicalAt: forall n, Cubical n.
