@@ -133,35 +133,33 @@ Proof.
   assert (p = n.+1) as -> by assumption. now exact H_base.
 Qed.
 
-Lemma le_induction' : forall n, forall P : forall p, p.+1 <= n.+1 -> Type,
-        P n (¹ n.+1) ->
-        (forall p (H : p.+2 <= n.+1), P p.+1 H -> P p (↓ H)) ->
-        forall p (H : p.+1 <= n.+1),
-        P p H.
+Definition le_induction' (n p: nat) (P: forall p (Hpn: p.+1 <= n.+1), Type)
+  (H_base: P n (¹ n.+1))
+  (H_step: forall p (H : p.+2 <= n.+1), P p.+1 H -> P p (↓ H))
+  (Hpn: p.+1 <= n.+1): P p Hpn :=
+  le_induction n p (fun p Hpn => P p (⇑ Hpn)) H_base
+    (fun q Hqn => H_step q (⇑ Hqn)) (⇓ Hpn).
+
+Definition le_induction'' (n p: nat) (P : forall p (Hpn: p.+2 <= n.+2), Type)
+  (H_base: P n (¹ n.+2))
+  (H_step: forall p (H : p.+3 <= n.+2), P p.+1 H -> P p (↓ H))
+  (Hpn : p.+2 <= n.+2): P p Hpn :=
+  le_induction' n p (fun p Hpn => P p (⇑ Hpn)) H_base
+    (fun q Hqn => H_step q (⇑ Hqn)) (⇓ Hpn).
+
+Lemma le_induction_computes {n p P H_base H_step Hpn}:
+  le_induction n p P H_base H_step (↓ Hpn) =
+    H_step p Hpn (le_induction n p.+1 P H_base H_step Hpn).
 Proof.
 Admitted.
 
-Lemma le_induction'' : forall n, forall P : forall p, p.+2 <= n.+2 -> Type,
-        P n (¹ n.+2) ->
-        (forall p (H : p.+3 <= n.+2), P p.+1 H -> P p (↓ H)) ->
-        forall p (H : p.+2 <= n.+2),
-        P p H.
+Lemma le_induction'_base_computes {n P H_base H_step}:
+  le_induction' n n P H_base H_step (¹ n.+1) = H_base.
 Proof.
 Admitted.
 
-Lemma le_induction_computes {n p P H0 HS H} :
-  le_induction n p P H0 HS (↓ H) =
-    HS p H (le_induction n p.+1 P H0 HS H).
-Proof.
-Admitted.
-
-Lemma le_induction'_base_computes {n P H0 HS} :
-  le_induction' n P H0 HS n (¹ n.+1) = H0.
-Proof.
-Admitted.
-
-Lemma le_induction'_step_computes {n P H0 HS p H} :
-  le_induction' n P H0 HS p (↓ H) =
-    HS p H (le_induction' n P H0 HS p.+1 H).
+Lemma le_induction'_step_computes {n p P H_base H_step H}:
+  le_induction' n p P H_base H_step (↓ H) =
+    H_step p H (le_induction' n p.+1 P H_base H_step H).
 Proof.
 Admitted.
