@@ -118,15 +118,20 @@ Ltac invert_le Hpq :=
                    now apply le_contra in Hpq |]
   end.
 
-Theorem le_induction n (P: forall p, p <= n -> Type):
-          P n (¹ n) ->
-          (forall p (H : p.+1 <= n), P p.+1 H -> P p (↓ H)) ->
-          forall p (H : p <= n),
-          P p H.
+Theorem le_induction (n p: nat) (P: forall p (Hpn: p <= n), Type)
+  (H_base: P n (¹ n))
+  (H_step: forall p (Hpn: p.+1 <= n) (H: P p.+1 Hpn), P p (↓ Hpn))
+  (Hpn : p <= n): P p Hpn.
 Proof.
-  intros H_base H_step *. induction n, p.
-  now exact H_base. exfalso; now apply le_contra in H.
-Admitted.
+  intros *. induction n.
+  pose (Q := leYoneda_implies_le Hpn); pose (R := Peano.le_0_n).
+  assert (p = 0) as -> by lia; now exact H_base.
+  pose (Q := leYoneda_implies_le Hpn); apply le_lt_eq_dec in Q;
+  destruct Q. apply le_implies_leYoneda in l. apply (H_step p l).
+  refine (IHn (fun p Hpn => P p.+1 (⇑ Hpn)) H_base _ (⇓ l)).
+  change (⇑ (↓ ?H)) with (↑ H); intros q Hqn; now exact (H_step q.+1 (⇑ Hqn)).
+  assert (p = n.+1) as -> by assumption. now exact H_base.
+Qed.
 
 Lemma le_induction' : forall n, forall P : forall p, p.+1 <= n.+1 -> Type,
         P n (¹ n.+1) ->
@@ -144,9 +149,9 @@ Lemma le_induction'' : forall n, forall P : forall p, p.+2 <= n.+2 -> Type,
 Proof.
 Admitted.
 
-Lemma le_induction_computes {n P H0 HS p H} :
-  le_induction n P H0 HS p (↓ H) =
-    HS p H (le_induction n P H0 HS p.+1 H).
+Lemma le_induction_computes {n p P H0 HS H} :
+  le_induction n p P H0 HS (↓ H) =
+    HS p H (le_induction n p.+1 P H0 HS H).
 Proof.
 Admitted.
 

@@ -296,7 +296,7 @@ Defined.
 Definition mkcube {n p} {C: Cubical n} {Hp : p <= n.+1} {D : mkcsp}
   (E: (mkBox n.+1).(box) (¹ n.+1) D -> Type)
   (d: (mkBox p).(box) Hp D): Type.
-  revert d; apply le_induction with (H := Hp); clear p Hp. (* cubeSn *)
+  revert d; apply le_induction with (Hpn := Hp); clear p Hp. (* cubeSn *)
   + now exact E. (* p = n *)
   + intros p Hp IH d; exact {l : mkLayer & IH (d; l)}. (* p = S n *)
 Defined.
