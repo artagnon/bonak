@@ -149,6 +149,7 @@ Lemma le_induction_computes {n p P H_base H_step} {Hp: p.+1 <= n}:
   le_induction (↓ Hp) P H_base H_step =
     H_step p Hp (le_induction Hp P H_base H_step).
 Proof.
+  invert_le Hp; induction p. simpl le_induction at 1.
 Admitted.
 
 Lemma le_induction'_base_computes {n P H_base H_step}:

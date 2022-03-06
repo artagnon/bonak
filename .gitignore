@@ -6,6 +6,7 @@
 *.bbl
 *.bcf
 *.xml
+*.pdf
 .coqdeps.d
 .Makefile.d
 Makefile.coq*
@@ -14,4 +15,4 @@ TAGS
 .DS_Store
 _build
 .lia.cache
-_minted-paper/
+_minted*/
