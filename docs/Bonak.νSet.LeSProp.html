@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>Bonak.νSet.LeSProp</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Bonak.νSet.LeSProp</h1>
+
+<div class="code">
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "-notation-overridden".<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Stdlib</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="library">Logic.StrictProp</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Bonak</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="Bonak.νSet.Notation.html#"><span class="id" title="library">Notation</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+False and True in SProp 
+</div>
+<div class="code">
+<span class="id" title="keyword">Inductive</span> <a id="SFalse" class="idref" href="#SFalse"><span class="id" title="definition, inductive"><span id="SFalse_rect" class="id"><span id="SFalse_ind" class="id"><span id="SFalse_rec" class="id"><span id="SFalse_sind" class="id">SFalse</span></span></span></span></span></a>: <span class="id" title="var">SProp</span> :=.<br/>
+<span class="id" title="keyword">Inductive</span> <a id="STrue" class="idref" href="#STrue"><span class="id" title="definition, inductive"><span id="STrue_sind" class="id">STrue</span></span></a>: <span class="id" title="var">SProp</span> := <a id="sI" class="idref" href="#sI"><span class="id" title="constructor">sI</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A recursive definition of le 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="leR" class="idref" href="#leR"><span class="id" title="definition">leR</span></a> (<a id="n:5" class="idref" href="#n:5"><span class="id" title="binder">n</span></a> <a id="m:6" class="idref" href="#m:6"><span class="id" title="binder">m</span></a>: <a class="idref" href="http://rocq-prover.org/doc/V9.1.0/stdlib//Corelib.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>): <span class="id" title="var">SProp</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="Bonak.νSet.LeSProp.html#n:5"><span class="id" title="variable">n</span></a>, <a class="idref" href="Bonak.νSet.LeSProp.html#m:6"><span class="id" title="variable">m</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="http://rocq-prover.org/doc/V9.1.0/stdlib//Corelib.Init.Datatypes.html#O"><span class="id" title="constructor">O</span></a>, <span class="id" title="var">_</span> ⇒ <a class="idref" href="Bonak.νSet.LeSProp.html#STrue"><span class="id" title="inductive">STrue</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="http://rocq-prover.org/doc/V9.1.0/stdlib//Corelib.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n</span>, <a class="idref" href="http://rocq-prover.org/doc/V9.1.0/stdlib//Corelib.Init.Datatypes.html#O"><span class="id" title="constructor">O</span></a> ⇒ <a class="idref" href="Bonak.νSet.LeSProp.html#SFalse"><span class="id" title="inductive">SFalse</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="http://rocq-prover.org/doc/V9.1.0/stdlib//Corelib.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n</span>, <a class="idref" href="http://rocq-prover.org/doc/V9.1.0/stdlib//Corelib.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">m</span> ⇒ <a class="idref" href="Bonak.νSet.LeSProp.html#leR:7"><span class="id" title="definition">leR</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#n:5"><span class="id" title="variable">n</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#m:6"><span class="id" title="variable">m</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="leR_refl" class="idref" href="#leR_refl"><span class="id" title="lemma">leR_refl</span></a> {<a id="n:10" class="idref" href="#n:10"><span class="id" title="binder">n</span></a>}: <a class="idref" href="Bonak.νSet.LeSProp.html#leR"><span class="id" title="definition">leR</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#n:10"><span class="id" title="variable">n</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#n:10"><span class="id" title="variable">n</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">induction</span> <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="leR_O_contra" class="idref" href="#leR_O_contra"><span class="id" title="lemma">leR_O_contra</span></a> {<a id="n:11" class="idref" href="#n:11"><span class="id" title="binder">n</span></a>}: <a class="idref" href="Bonak.νSet.LeSProp.html#leR"><span class="id" title="definition">leR</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#n:11"><span class="id" title="variable">n</span></a><a class="idref" href="Bonak.νSet.Notation.html#9c103920f8e0be789ba768cf55671c49"><span class="id" title="notation">.+1</span></a> <a class="idref" href="http://rocq-prover.org/doc/V9.1.0/stdlib//Corelib.Init.Datatypes.html#O"><span class="id" title="constructor">O</span></a> <a class="idref" href="http://rocq-prover.org/doc/V9.1.0/stdlib//Corelib.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#SFalse"><span class="id" title="inductive">SFalse</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">auto</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="leR_O" class="idref" href="#leR_O"><span class="id" title="lemma">leR_O</span></a> {<a id="n:12" class="idref" href="#n:12"><span class="id" title="binder">n</span></a>}: <a class="idref" href="Bonak.νSet.LeSProp.html#leR"><span class="id" title="definition">leR</span></a> <a class="idref" href="http://rocq-prover.org/doc/V9.1.0/stdlib//Corelib.Init.Datatypes.html#O"><span class="id" title="constructor">O</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#n:12"><span class="id" title="variable">n</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">auto</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="leR_trans" class="idref" href="#leR_trans"><span class="id" title="lemma">leR_trans</span></a> {<a id="n:13" class="idref" href="#n:13"><span class="id" title="binder">n</span></a> <a id="m:14" class="idref" href="#m:14"><span class="id" title="binder">m</span></a> <a id="p:15" class="idref" href="#p:15"><span class="id" title="binder">p</span></a>} (<a id="Hnm:16" class="idref" href="#Hnm:16"><span class="id" title="binder">Hnm</span></a>: <a class="idref" href="Bonak.νSet.LeSProp.html#leR"><span class="id" title="definition">leR</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#n:13"><span class="id" title="variable">n</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#m:14"><span class="id" title="variable">m</span></a>) (<a id="Hmp:17" class="idref" href="#Hmp:17"><span class="id" title="binder">Hmp</span></a>: <a class="idref" href="Bonak.νSet.LeSProp.html#leR"><span class="id" title="definition">leR</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#m:14"><span class="id" title="variable">m</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#p:15"><span class="id" title="variable">p</span></a>): <a class="idref" href="Bonak.νSet.LeSProp.html#leR"><span class="id" title="definition">leR</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#n:13"><span class="id" title="variable">n</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#p:15"><span class="id" title="variable">p</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">n</span> <span class="id" title="var">p</span> <span class="id" title="var">Hnm</span> <span class="id" title="var">Hmp</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">m</span>, <span class="id" title="var">n</span>, <span class="id" title="var">p</span>. <span class="id" title="var">all</span>: <span class="id" title="tactic">try</span> <span class="id" title="var">now</span> <span class="id" title="tactic">auto</span>. <span class="id" title="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">IHm</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Infix</span> <a id="2b0a8cf18e80c1b40f16aa97a84240d5" class="idref" href="#2b0a8cf18e80c1b40f16aa97a84240d5"><span class="id" title="notation">&quot;</span></a>↕" := <a class="idref" href="Bonak.νSet.LeSProp.html#leR_trans"><span class="id" title="lemma">leR_trans</span></a> (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 45).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="leR_up" class="idref" href="#leR_up"><span class="id" title="lemma">leR_up</span></a> {<a id="n:18" class="idref" href="#n:18"><span class="id" title="binder">n</span></a> <a id="m:19" class="idref" href="#m:19"><span class="id" title="binder">m</span></a>} (<a id="Hnm:20" class="idref" href="#Hnm:20"><span class="id" title="binder">Hnm</span></a>: <a class="idref" href="Bonak.νSet.LeSProp.html#leR"><span class="id" title="definition">leR</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#n:18"><span class="id" title="variable">n</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#m:19"><span class="id" title="variable">m</span></a>): <a class="idref" href="Bonak.νSet.LeSProp.html#leR"><span class="id" title="definition">leR</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#n:18"><span class="id" title="variable">n</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#m:19"><span class="id" title="variable">m</span></a><a class="idref" href="Bonak.νSet.Notation.html#9c103920f8e0be789ba768cf55671c49"><span class="id" title="notation">.+1</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">m</span> <span class="id" title="var">Hnm</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">n</span>. <span class="id" title="var">now</span> <span class="id" title="tactic">auto</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">m</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">apply</span> <a class="idref" href="Bonak.νSet.LeSProp.html#leR_O_contra"><span class="id" title="lemma">leR_O_contra</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="var">now</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">IHn</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="dd9f1db366d5503b67fa5e258849f459" class="idref" href="#dd9f1db366d5503b67fa5e258849f459"><span class="id" title="notation">&quot;</span></a>↑ h" := (<a class="idref" href="Bonak.νSet.LeSProp.html#leR_up"><span class="id" title="lemma">leR_up</span></a> <span class="id" title="var">h</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 40).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="leR_down" class="idref" href="#leR_down"><span class="id" title="lemma">leR_down</span></a> {<a id="n:21" class="idref" href="#n:21"><span class="id" title="binder">n</span></a> <a id="m:22" class="idref" href="#m:22"><span class="id" title="binder">m</span></a>} (<a id="Hnm:23" class="idref" href="#Hnm:23"><span class="id" title="binder">Hnm</span></a>: <a class="idref" href="Bonak.νSet.LeSProp.html#leR"><span class="id" title="definition">leR</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#n:21"><span class="id" title="variable">n</span></a><a class="idref" href="Bonak.νSet.Notation.html#9c103920f8e0be789ba768cf55671c49"><span class="id" title="notation">.+1</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#m:22"><span class="id" title="variable">m</span></a>): <a class="idref" href="Bonak.νSet.LeSProp.html#leR"><span class="id" title="definition">leR</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#n:21"><span class="id" title="variable">n</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#m:22"><span class="id" title="variable">m</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">revert</span> <span class="id" title="var">m</span> <span class="id" title="var">Hnm</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">n</span>. <span class="id" title="var">now</span> <span class="id" title="tactic">auto</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">m</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">apply</span> <a class="idref" href="Bonak.νSet.LeSProp.html#leR_O_contra"><span class="id" title="lemma">leR_O_contra</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="var">now</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">IHn</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="cc335bcd7b5b2cff15983f4140aeb24a" class="idref" href="#cc335bcd7b5b2cff15983f4140aeb24a"><span class="id" title="notation">&quot;</span></a>↓ p" := (<a class="idref" href="Bonak.νSet.LeSProp.html#leR_down"><span class="id" title="lemma">leR_down</span></a> <span class="id" title="var">p</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 40).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="leR_lower_both" class="idref" href="#leR_lower_both"><span class="id" title="lemma">leR_lower_both</span></a> {<a id="n:24" class="idref" href="#n:24"><span class="id" title="binder">n</span></a> <a id="m:25" class="idref" href="#m:25"><span class="id" title="binder">m</span></a>} (<a id="Hnm:26" class="idref" href="#Hnm:26"><span class="id" title="binder">Hnm</span></a>: <a class="idref" href="Bonak.νSet.LeSProp.html#leR"><span class="id" title="definition">leR</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#n:24"><span class="id" title="variable">n</span></a><a class="idref" href="Bonak.νSet.Notation.html#9c103920f8e0be789ba768cf55671c49"><span class="id" title="notation">.+1</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#m:25"><span class="id" title="variable">m</span></a><a class="idref" href="Bonak.νSet.Notation.html#9c103920f8e0be789ba768cf55671c49"><span class="id" title="notation">.+1</span></a>): <a class="idref" href="Bonak.νSet.LeSProp.html#leR"><span class="id" title="definition">leR</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#n:24"><span class="id" title="variable">n</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#m:25"><span class="id" title="variable">m</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">auto</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="1695f728496aee914649990b3695bf3d" class="idref" href="#1695f728496aee914649990b3695bf3d"><span class="id" title="notation">&quot;</span></a>⇓ p" := (<a class="idref" href="Bonak.νSet.LeSProp.html#leR_lower_both"><span class="id" title="lemma">leR_lower_both</span></a> <span class="id" title="var">p</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 40).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="leR_raise_both" class="idref" href="#leR_raise_both"><span class="id" title="lemma">leR_raise_both</span></a> {<a id="n:27" class="idref" href="#n:27"><span class="id" title="binder">n</span></a> <a id="m:28" class="idref" href="#m:28"><span class="id" title="binder">m</span></a>} (<a id="Hnm:29" class="idref" href="#Hnm:29"><span class="id" title="binder">Hnm</span></a>: <a class="idref" href="Bonak.νSet.LeSProp.html#leR"><span class="id" title="definition">leR</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#n:27"><span class="id" title="variable">n</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#m:28"><span class="id" title="variable">m</span></a>): <a class="idref" href="Bonak.νSet.LeSProp.html#leR"><span class="id" title="definition">leR</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#n:27"><span class="id" title="variable">n</span></a><a class="idref" href="Bonak.νSet.Notation.html#9c103920f8e0be789ba768cf55671c49"><span class="id" title="notation">.+1</span></a> <a class="idref" href="Bonak.νSet.LeSProp.html#m:28"><span class="id" title="variable">m</span></a><a class="idref" href="Bonak.νSet.Notation.html#9c103920f8e0be789ba768cf55671c49"><span class="id" title="notation">.+1</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">now</span> <span class="id" title="tactic">auto</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="53381d4046a55425b79d983532cca692" class="idref" href="#53381d4046a55425b79d983532cca692"><span class="id" title="notation">&quot;</span></a>⇑ p" := (<a class="idref" href="Bonak.νSet.LeSProp.html#leR_raise_both"><span class="id" title="lemma">leR_raise_both</span></a> <span class="id" title="var">p</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 40).<br/>
+<span class="id" title="keyword">Infix</span> <a id="cb53cf0ee22c036a03b4a9281c68b5a3" class="idref" href="#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">&quot;</span></a>≤" := <a class="idref" href="Bonak.νSet.LeSProp.html#leR"><span class="id" title="definition">leR</span></a>: <span class="id" title="var">nat_scope</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://rocq-prover.org/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

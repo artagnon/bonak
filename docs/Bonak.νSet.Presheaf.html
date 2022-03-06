@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>Bonak.νSet.Presheaf</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Bonak.νSet.Presheaf</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+The *fibred* (†) presentation of ν-sets — presheaves over the
+    ν-category: one HSet of cells per dimension, with face maps down to the
+    dimension below, subject to the exchange law. Each <span class="inlinecode"><span class="id" title="var">F0</span></span> <span class="inlinecode"><span class="id" title="var">n</span>.+1</span> is a single
+    set, fibred over its faces by the maps out of it.
+
+<div class="paragraph"> </div>
+
+    (†) This presentation is usually called the indexed one. Here fibred/indexed
+    are used in the sense of Herbelin and Ramachandra, "A parametricity-based
+    formalization of semi-simplicial and semi-cubical sets". 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "-notation-overridden".<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Bonak</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="library">HSet</span> <span class="id" title="library">Notation</span> <span class="id" title="library">LeSProp</span> <a class="idref" href="Bonak.νSet.Layer.html#"><span class="id" title="library">νSet.Layer</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Primitive</span> <span class="id" title="var">Projections</span>.<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="keyword">Printing</span> <span class="id" title="var">Projections</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <a id="Presheaf" class="idref" href="#Presheaf"><span class="id" title="module">Presheaf</span></a> (<span class="id" title="var">A</span>: <a class="idref" href="Bonak.νSet.Layer.html#LayerSig"><span class="id" title="module">LayerSig</span></a>).<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="Bonak.νSet.Presheaf.html#A"><span class="id" title="module">A</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><span class="id" title="var">Face</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">q</span></span> <span class="inlinecode"><span class="id" title="var">Hq</span></span> <span class="inlinecode"><span class="id" title="var">ε</span></span> is the face map removing dimension <span class="inlinecode"><span class="id" title="var">q</span></span> in direction <span class="inlinecode"><span class="id" title="var">ε</span></span>,
+    from level <span class="inlinecode"><span class="id" title="var">n</span>.+1</span> down to level <span class="inlinecode"><span class="id" title="var">n</span></span>. <span class="inlinecode"><span class="id" title="var">FaceCoh</span></span> is the exchange law: the
+    two ways of erasing dimensions <span class="inlinecode"><span class="id" title="var">r</span></span> and <span class="inlinecode"><span class="id" title="var">q</span>.+1</span> (for <span class="inlinecode"><span class="id" title="var">r</span></span> <span class="inlinecode">≤</span> <span class="inlinecode"><span class="id" title="var">q</span></span>) from a cell
+    of level <span class="inlinecode"><span class="id" title="var">n</span>.+2</span> agree. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Record</span> <a id="Presheaf.Presheaf" class="idref" href="#Presheaf.Presheaf"><span class="id" title="record">Presheaf</span></a> := {<br/>
+&nbsp;&nbsp;<a id="Presheaf.F0" class="idref" href="#Presheaf.F0"><span class="id" title="projection">F0</span></a>: <a class="idref" href="http://rocq-prover.org/doc/V9.4+alpha/corelib//Corelib.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://rocq-prover.org/doc/V9.4+alpha/corelib//Corelib.Init.Notations.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="record">HSet</span>;<br/>
+&nbsp;&nbsp;<a id="Presheaf.Face" class="idref" href="#Presheaf.Face"><span class="id" title="projection">Face</span></a> <a id="n:3" class="idref" href="#n:3"><span class="id" title="binder">n</span></a> <a id="q:4" class="idref" href="#q:4"><span class="id" title="binder">q</span></a> (<a id="Hq:5" class="idref" href="#Hq:5"><span class="id" title="binder">Hq</span></a>: <a class="idref" href="Bonak.νSet.Presheaf.html#q:4"><span class="id" title="variable">q</span></a> <span class="id" title="notation">≤</span> <a class="idref" href="Bonak.νSet.Presheaf.html#n:3"><span class="id" title="variable">n</span></a>) (<a id="3f2f8b19b3d3e1269da0091e54ceb5b4" class="idref" href="#3f2f8b19b3d3e1269da0091e54ceb5b4"><span class="id" title="binder">ε</span></a>: <a class="idref" href="Bonak.νSet.Presheaf.html#A.arity"><span class="id" title="axiom">arity</span></a>): <a class="idref" href="Bonak.νSet.Presheaf.html#F0:2"><span class="id" title="method">F0</span></a> <a class="idref" href="Bonak.νSet.Presheaf.html#n:3"><span class="id" title="variable">n</span></a><span class="id" title="notation">.+1</span> <a class="idref" href="http://rocq-prover.org/doc/V9.4+alpha/corelib//Corelib.Init.Notations.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="Bonak.νSet.Presheaf.html#F0:2"><span class="id" title="method">F0</span></a> <a class="idref" href="Bonak.νSet.Presheaf.html#n:3"><span class="id" title="variable">n</span></a>;<br/>
+&nbsp;&nbsp;<a id="Presheaf.FaceCoh" class="idref" href="#Presheaf.FaceCoh"><span class="id" title="projection">FaceCoh</span></a> <a id="n:8" class="idref" href="#n:8"><span class="id" title="binder">n</span></a> <a id="q:9" class="idref" href="#q:9"><span class="id" title="binder">q</span></a> (<a id="Hq:10" class="idref" href="#Hq:10"><span class="id" title="binder">Hq</span></a>: <a class="idref" href="Bonak.νSet.Presheaf.html#q:9"><span class="id" title="variable">q</span></a> <span class="id" title="notation">≤</span> <a class="idref" href="Bonak.νSet.Presheaf.html#n:8"><span class="id" title="variable">n</span></a>) <a id="r:11" class="idref" href="#r:11"><span class="id" title="binder">r</span></a> (<a id="Hr:12" class="idref" href="#Hr:12"><span class="id" title="binder">Hr</span></a>: <a class="idref" href="Bonak.νSet.Presheaf.html#r:11"><span class="id" title="variable">r</span></a> <span class="id" title="notation">≤</span> <a class="idref" href="Bonak.νSet.Presheaf.html#q:9"><span class="id" title="variable">q</span></a>) (<a id="df197b48193683435b9f58ae1781e4c8" class="idref" href="#df197b48193683435b9f58ae1781e4c8"><span class="id" title="binder">ε</span></a> <a id="28568faf958b0f66b67fddc2969a12dd" class="idref" href="#28568faf958b0f66b67fddc2969a12dd"><span class="id" title="binder">ω</span></a>: <a class="idref" href="Bonak.νSet.Presheaf.html#A.arity"><span class="id" title="axiom">arity</span></a>) (<a id="X:15" class="idref" href="#X:15"><span class="id" title="binder">X</span></a>: <a class="idref" href="Bonak.νSet.Presheaf.html#F0:2"><span class="id" title="method">F0</span></a> <a class="idref" href="Bonak.νSet.Presheaf.html#n:8"><span class="id" title="variable">n</span></a><span class="id" title="notation">.+2</span>):<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bonak.νSet.Presheaf.html#Face:7"><span class="id" title="method">Face</span></a> <a class="idref" href="Bonak.νSet.Presheaf.html#n:8"><span class="id" title="variable">n</span></a> <a class="idref" href="Bonak.νSet.Presheaf.html#q:9"><span class="id" title="variable">q</span></a> <a class="idref" href="Bonak.νSet.Presheaf.html#Hq:10"><span class="id" title="variable">Hq</span></a> <a class="idref" href="Bonak.νSet.Presheaf.html#df197b48193683435b9f58ae1781e4c8"><span class="id" title="variable">ε</span></a> (<a class="idref" href="Bonak.νSet.Presheaf.html#Face:7"><span class="id" title="method">Face</span></a> <a class="idref" href="Bonak.νSet.Presheaf.html#n:8"><span class="id" title="variable">n</span></a><span class="id" title="notation">.+1</span> <a class="idref" href="Bonak.νSet.Presheaf.html#r:11"><span class="id" title="variable">r</span></a> (<a class="idref" href="Bonak.νSet.Presheaf.html#Hr:12"><span class="id" title="variable">Hr</span></a> <span class="id" title="notation">↕</span> <span class="id" title="notation">(</span><span class="id" title="notation">↑</span> <a class="idref" href="Bonak.νSet.Presheaf.html#Hq:10"><span class="id" title="variable">Hq</span></a><span class="id" title="notation">)</span>) <a class="idref" href="Bonak.νSet.Presheaf.html#28568faf958b0f66b67fddc2969a12dd"><span class="id" title="variable">ω</span></a> <a class="idref" href="Bonak.νSet.Presheaf.html#X:15"><span class="id" title="variable">X</span></a>) <a class="idref" href="http://rocq-prover.org/doc/V9.4+alpha/corelib//Corelib.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Bonak.νSet.Presheaf.html#Face:7"><span class="id" title="method">Face</span></a> <a class="idref" href="Bonak.νSet.Presheaf.html#n:8"><span class="id" title="variable">n</span></a> <a class="idref" href="Bonak.νSet.Presheaf.html#r:11"><span class="id" title="variable">r</span></a> (<a class="idref" href="Bonak.νSet.Presheaf.html#Hr:12"><span class="id" title="variable">Hr</span></a> <span class="id" title="notation">↕</span> <a class="idref" href="Bonak.νSet.Presheaf.html#Hq:10"><span class="id" title="variable">Hq</span></a>) <a class="idref" href="Bonak.νSet.Presheaf.html#28568faf958b0f66b67fddc2969a12dd"><span class="id" title="variable">ω</span></a> (<a class="idref" href="Bonak.νSet.Presheaf.html#Face:7"><span class="id" title="method">Face</span></a> <a class="idref" href="Bonak.νSet.Presheaf.html#n:8"><span class="id" title="variable">n</span></a><span class="id" title="notation">.+1</span> <a class="idref" href="Bonak.νSet.Presheaf.html#q:9"><span class="id" title="variable">q</span></a><span class="id" title="notation">.+1</span> (<span class="id" title="notation">⇑</span> <a class="idref" href="Bonak.νSet.Presheaf.html#Hq:10"><span class="id" title="variable">Hq</span></a>) <a class="idref" href="Bonak.νSet.Presheaf.html#df197b48193683435b9f58ae1781e4c8"><span class="id" title="variable">ε</span></a> <a class="idref" href="Bonak.νSet.Presheaf.html#X:15"><span class="id" title="variable">X</span></a>)<br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="Bonak.νSet.Presheaf.html#Presheaf"><span class="id" title="module">Presheaf</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <a id="PresheafSimplicial" class="idref" href="#PresheafSimplicial"><span class="id" title="module">PresheafSimplicial</span></a> := <a class="idref" href="Bonak.νSet.Presheaf.html#Presheaf"><span class="id" title="module">Presheaf</span></a> <a class="idref" href="Bonak.νSet.Layer.html#SimplicialLayer"><span class="id" title="module">SimplicialLayer</span></a>.<br/>
+<span class="id" title="keyword">Module</span> <a id="PresheafCubical" class="idref" href="#PresheafCubical"><span class="id" title="module">PresheafCubical</span></a> := <a class="idref" href="Bonak.νSet.Presheaf.html#Presheaf"><span class="id" title="module">Presheaf</span></a> <a class="idref" href="Bonak.νSet.Layer.html#CubicalLayer"><span class="id" title="module">CubicalLayer</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="AugmentedSemiSimplicialPresheaf" class="idref" href="#AugmentedSemiSimplicialPresheaf"><span class="id" title="definition">AugmentedSemiSimplicialPresheaf</span></a> := <a class="idref" href="Bonak.νSet.Presheaf.html#Presheaf"><span class="id" title="record">PresheafSimplicial.Presheaf</span></a>.<br/>
+<span class="id" title="keyword">Definition</span> <a id="SemiCubicalPresheaf" class="idref" href="#SemiCubicalPresheaf"><span class="id" title="definition">SemiCubicalPresheaf</span></a> := <a class="idref" href="Bonak.νSet.Presheaf.html#Presheaf"><span class="id" title="record">PresheafCubical.Presheaf</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://rocq-prover.org/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
