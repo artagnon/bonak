@@ -118,12 +118,14 @@ Ltac invert_le Hpq :=
                    now apply le_contra in Hpq |]
   end.
 
+(* le_induction, along with a couple of helpers *)
+
 Theorem le_induction {n p} (Hp : p <= n) (P: forall p (Hp: p <= n), Type)
   (H_base: P n (¹ n))
   (H_step: forall p (Hp: p.+1 <= n) (H: P p.+1 Hp), P p (↓ Hp)): P p Hp.
 Proof.
-  induction n. pose (Q := leYoneda_implies_le Hp); pose (R := Peano.le_0_n).
-  assert (p = 0) as -> by lia; now exact H_base.
+  induction n. pose (Q := leYoneda_implies_le Hp).
+  assert (0 = p) as <- by now apply Le.le_n_0_eq. now exact H_base.
   pose (Q := leYoneda_implies_le Hp); apply le_lt_eq_dec in Q;
   destruct Q. apply le_implies_leYoneda in l. apply (H_step p l).
   now exact (IHn (⇓ l) (fun p Hp => P p.+1 (⇑ Hp)) H_base
@@ -145,20 +147,40 @@ Definition le_induction'' {n p} (Hp : p.+2 <= n.+2)
   le_induction' (⇓ Hp) (fun p Hp => P p (⇑ Hp)) H_base
     (fun q Hq => H_step q (⇑ Hq)).
 
-Lemma le_induction_computes {n p P H_base H_step} {Hp: p.+1 <= n}:
+(* Computational properties of le_induction *)
+
+Lemma le_induction_cases {n p} (Hp : p.+1 <= n.+1)
+  (P : forall p (Hp: p <= n.+1), Type)
+  (H_base: P n.+1 (¹ n.+1))
+  (H_step: forall p (H : p.+1 <= n.+1), P p.+1 H -> P p (↓ H)):
+  le_induction (⇓ Hp) (fun (p : nat) (Hp : p <= n) => P p.+1 (⇑ Hp)) H_base
+    (fun (q : nat) (Hq : q.+1 <= n) => H_step q.+1 (⇑ Hq)) =
+    le_induction Hp P H_base H_step.
+Admitted.
+
+Lemma le_induction_base_computes {n P H_base H_step}:
+  le_induction (¹ n) P H_base H_step = H_base.
+Proof.
+  induction n. simpl le_induction. replace (le_n_0_eq 0 _) with (eq_refl 0).
+  2: symmetry; apply Eqdep_dec.UIP_refl_nat. now simpl. admit.
+Admitted.
+
+Lemma le_induction_step_computes {n p P H_base H_step} {Hp: p.+1 <= n}:
   le_induction (↓ Hp) P H_base H_step =
     H_step p Hp (le_induction Hp P H_base H_step).
 Proof.
   invert_le Hp; induction p. simpl le_induction at 1.
+  pose (Q := lower_S_both Hp). now rewrite (le_induction_cases Hp).
+  simpl le_induction at 1.
 Admitted.
 
-Lemma le_induction'_base_computes {n P H_base H_step}:
-  le_induction' (¹ n.+1) P H_base H_step = H_base.
-Proof.
-Admitted.
+(* Helpers for computational properties *)
 
-Lemma le_induction'_step_computes {n p P H_base H_step} {Hp: p.+2 <= n.+1}:
+Definition le_induction'_base_computes {n P H_base H_step}:
+  le_induction' (¹ n.+1) P H_base H_step = H_base :=
+  le_induction_base_computes.
+
+Definition le_induction'_step_computes {n p P H_base H_step} {Hp: p.+2 <= n.+1}:
   le_induction' (↓ Hp) P H_base H_step =
-    H_step p Hp (le_induction' Hp P H_base H_step).
-Proof.
-Admitted.
+    H_step p Hp (le_induction' Hp P H_base H_step) :=
+      le_induction_step_computes.
