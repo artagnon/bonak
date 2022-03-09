@@ -7,6 +7,11 @@ Notation "x .+1" := (S x) (at level 1, left associativity, format "x .+1").
 Notation "x .+2" := (S (S x)) (at level 1, left associativity, format "x .+2").
 Notation "x .+3" := (S (S (S x))) (at level 1, left associativity, format "x .+3").
 
+Lemma eq_pair {A B : Type} {u1 v1 : A} {u2 v2 : B} (p : u1 = v1) (q : u2 = v2):
+  (u1, u2) = (v1, v2).
+  now destruct p, q.
+Qed.
+
 (* Notations for rew *)
 Notation "'rew' [ P ] H 'in' H'" := (eq_rect _ P H' _ H)
     (at level 10, H' at level 10,
@@ -31,3 +36,11 @@ Infix "•" := eq_trans (at level 65, left associativity).
 Notation "[ x ⇒ f ] e" := (f_equal (fun x => f) e)
 (at level 60, left associativity).
 Notation "x ^" := (eq_sym x) (at level 55, left associativity, format "x ^").
+
+(* Yet another flavor of <= -- required to prove le_induction *)
+Reserved Infix "<~" (at level 70).
+
+Inductive Le : nat -> nat -> Type :=
+| Le_n n : Le n n
+| Le_S {p n} : Le (S p) n -> Le p n
+where "n <~ m" := (Le n m) : nat_scope.

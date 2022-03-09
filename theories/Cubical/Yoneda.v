@@ -7,9 +7,9 @@ Require Import Aux.
 Set Warnings "-notation-overridden".
 
 Inductive le' (n : nat) : nat -> SProp :=
-  | le_refl' : n <= n
-  | le_S_up' : forall {m : nat}, n <= m -> n <= m.+1
-  where "n <= m" := (le' n m) : nat_scope.
+| le_refl' : n <= n
+| le_S_up' : forall {m : nat}, n <= m -> n <= m.+1
+where "n <= m" := (le' n m) : nat_scope.
 
 Ltac reflexivity' := apply le_refl' || reflexivity.
 Ltac reflexivity := reflexivity'.
@@ -95,16 +95,6 @@ Qed.
 
 Notation "⇑ p" := (raise_S_both p) (at level 40).
 
-Theorem le_S_down_distr {n m p} (Hmn : n.+1 <= m.+1) (Hmp : m.+1 <= p) :
-  ↓ (Hmn ↕ Hmp) =S (⇓ Hmn) ↕ (↓ Hmp).
-  reflexivity.
-Qed.
-
-Lemma eq_pair {A B : Type} {u1 v1 : A} {u2 v2 : B} (p : u1 = v1) (q : u2 = v2):
-  (u1, u2) = (v1, v2).
-  now destruct p, q.
-Qed.
-
 Ltac find_raise q :=
   match q with
   | ?q.+1 => find_raise q
@@ -118,20 +108,62 @@ Ltac invert_le Hpq :=
                    now apply le_contra in Hpq |]
   end.
 
-(* le_induction, along with a couple of helpers *)
+(* Connecting Le with leYoneda *)
+
+Lemma Le_implies_leYoneda {n p}: p <~ n -> p <= n.
+  intros H.
+Admitted.
+
+Lemma leYoneda_implies_Le {n p}: p <= n -> p <~ n.
+  intros H. unfold "<=" in H.
+Admitted.
+
+(* A couple of morphisms *)
+
+Lemma Le_refl_morphism n: leYoneda_implies_Le (¹ n) = Le_n _.
+Admitted.
+
+Lemma Le_S_morphism {n p} (Hp: p.+1 <= n.+1):
+  leYoneda_implies_Le (↓ Hp) = Le_S (leYoneda_implies_Le Hp).
+Admitted.
+
+(* Another way to state leYoneda *)
+
+Inductive Leind n : forall p, p <= n -> Type :=
+| Leind_n : Leind n n (¹ n)
+| Leind_S p Hp : Leind n p.+1 Hp -> Leind n p (↓ Hp).
+
+Lemma Leind_construct {n p} Hp: Leind n p Hp.
+intros; induction (leYoneda_implies_Le Hp).
+- rewrite (le_irrelevance Hp (¹ n)). (* should not be needed *)
+  exact (Leind_n _).
+- rewrite (le_irrelevance Hp (↓ (Le_implies_leYoneda l))).
+  apply Leind_S, IHl.
+Defined.
 
 Theorem le_induction {n p} (Hp : p <= n) (P: forall p (Hp: p <= n), Type)
   (H_base: P n (¹ n))
   (H_step: forall p (Hp: p.+1 <= n) (H: P p.+1 Hp), P p (↓ Hp)): P p Hp.
 Proof.
-  induction n. pose (Q := leYoneda_implies_le Hp).
-  assert (0 = p) as <- by now apply Le.le_n_0_eq. now exact H_base.
-  pose (Q := leYoneda_implies_le Hp); apply le_lt_eq_dec in Q;
-  destruct Q. apply le_implies_leYoneda in l. apply (H_step p l).
-  now exact (IHn (⇓ l) (fun p Hp => P p.+1 (⇑ Hp)) H_base
-    (fun q Hq => H_step q.+1 (⇑ Hq))).
-  assert (p = n.+1) as -> by assumption. now exact H_base.
+  induction (Leind_construct Hp); now auto.
 Defined.
+
+Lemma le_induction_base_computes {n P H_base H_step}:
+  le_induction (¹ n) P H_base H_step = H_base.
+Proof.
+  unfold le_induction, Leind_construct. rewrite Le_refl_morphism; simpl.
+  now destruct le_irrelevance.
+Qed.
+
+Lemma le_induction_step_computes {n p P H_base H_step} {Hp: p.+1 <= n}:
+  le_induction (↓ Hp) P H_base H_step =
+    H_step p Hp (le_induction Hp P H_base H_step).
+Proof.
+  invert_le Hp. unfold le_induction, Leind_construct.
+  rewrite Le_S_morphism; simpl. now destruct le_irrelevance.
+Qed.
+
+(* Some helpers *)
 
 Definition le_induction' {n p} (Hp: p.+1 <= n.+1)
   (P: forall p (Hp: p.+1 <= n.+1), Type)
@@ -146,35 +178,6 @@ Definition le_induction'' {n p} (Hp : p.+2 <= n.+2)
   (H_step: forall p (H : p.+3 <= n.+2), P p.+1 H -> P p (↓ H)): P p Hp :=
   le_induction' (⇓ Hp) (fun p Hp => P p (⇑ Hp)) H_base
     (fun q Hq => H_step q (⇑ Hq)).
-
-(* Computational properties of le_induction *)
-
-Lemma le_induction_cases {n p} (Hp : p.+1 <= n.+1)
-  (P : forall p (Hp: p <= n.+1), Type)
-  (H_base: P n.+1 (¹ n.+1))
-  (H_step: forall p (H : p.+1 <= n.+1), P p.+1 H -> P p (↓ H)):
-  le_induction (⇓ Hp) (fun (p : nat) (Hp : p <= n) => P p.+1 (⇑ Hp)) H_base
-    (fun (q : nat) (Hq : q.+1 <= n) => H_step q.+1 (⇑ Hq)) =
-    le_induction Hp P H_base H_step.
-Admitted.
-
-Lemma le_induction_base_computes {n P H_base H_step}:
-  le_induction (¹ n) P H_base H_step = H_base.
-Proof.
-  induction n. simpl le_induction. replace (le_n_0_eq 0 _) with (eq_refl 0).
-  2: symmetry; apply Eqdep_dec.UIP_refl_nat. now simpl. admit.
-Admitted.
-
-Lemma le_induction_step_computes {n p P H_base H_step} {Hp: p.+1 <= n}:
-  le_induction (↓ Hp) P H_base H_step =
-    H_step p Hp (le_induction Hp P H_base H_step).
-Proof.
-  invert_le Hp; induction p. simpl le_induction at 1.
-  pose (Q := lower_S_both Hp). now rewrite (le_induction_cases Hp).
-  simpl le_induction at 1.
-Admitted.
-
-(* Helpers for computational properties *)
 
 Definition le_induction'_base_computes {n P H_base H_step}:
   le_induction' (¹ n.+1) P H_base H_step = H_base :=
