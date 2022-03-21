@@ -22,7 +22,6 @@ Notation "'rew' <- [ P ] H 'in' H'" := (eq_rect_r P H' H)
 
 (* eq_over: ... ={ H } ... *)
 Reserved Notation "x =_{ H } y" (at level 70, format "'[' x  '/ ' =_{ H }  '/' y ']'").
-
 Inductive eq_over {A} (x: A) : forall {B} (y: B), A = B -> Prop :=
 eq_over_refl : x =_{eq_refl} x
 where "x =_{ H } y" := (eq_over x y H).
@@ -39,8 +38,7 @@ Notation "x ^" := (eq_sym x) (at level 55, left associativity, format "x ^").
 
 (* Yet another flavor of <= -- required to prove le_induction *)
 Reserved Infix "<~" (at level 70).
-
 Inductive Le : nat -> nat -> Type :=
-| Le_n n : Le n n
-| Le_S {p n} : Le (S p) n -> Le p n
+| Le_refl' n : Le n n
+| Le_S_down' {n p} : Le (S p) n -> Le p n
 where "n <~ m" := (Le n m) : nat_scope.

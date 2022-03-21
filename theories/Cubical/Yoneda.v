@@ -37,7 +37,7 @@ Theorem le_contra {n}: n.+1 <= O -> False.
   apply H; clear H; induction n. constructor. now constructor.
 Qed.
 
-(* le' <-> Peano.le *)
+(* le' -> Peano.le *)
 (* SProp does not have <-> *)
 Lemma le'_implies_le {n p} : le' p n -> Peano.le p n.
   intros H. destruct (Compare_dec.le_dec p n) as [|n0].
@@ -45,15 +45,17 @@ Lemma le'_implies_le {n p} : le' p n -> Peano.le p n.
   destruct n0; now constructor. apply IHle'; intro; apply n0; now constructor.
 Qed.
 
+(* Peano.le -> le' *)
 Lemma le_implies_le' {n p} : Peano.le p n -> le' p n.
   intros H. induction H. now constructor. now constructor.
 Qed.
 
-(* leYoneda <-> Peano.le *)
+(* leYoneda -> Peano.le *)
 Lemma leYoneda_implies_le {n p} : p <= n -> Peano.le p n.
   intros H. apply le'_implies_le. unfold "<=" in H. now apply H, le_refl'.
 Qed.
 
+(* Peano.le -> leYoneda *)
 Lemma le_implies_leYoneda {n p} : Peano.le p n -> p <= n.
   intros H. unfold "<=". intros p0 H0. apply le'_implies_le in H0.
   apply le_implies_le'. now lia.
@@ -111,20 +113,21 @@ Ltac invert_le Hpq :=
 (* Connecting Le with leYoneda *)
 
 Lemma Le_implies_leYoneda {n p}: p <~ n -> p <= n.
-  intros H.
-Admitted.
+  intros [refl | q r]. now apply le_refl. apply le_S_down. induction l.
+  now apply le_refl. now apply le_S_down.
+Qed.
 
 Lemma leYoneda_implies_Le {n p}: p <= n -> p <~ n.
-  intros H. unfold "<=" in H.
+  intros H. apply leYoneda_implies_le in H.
 Admitted.
 
 (* A couple of morphisms *)
 
-Lemma Le_refl_morphism n: leYoneda_implies_Le (¹ n) = Le_n _.
+Lemma Le_refl_morphism n: leYoneda_implies_Le (¹ n) = Le_refl' _.
 Admitted.
 
 Lemma Le_S_morphism {n p} (Hp: p.+1 <= n.+1):
-  leYoneda_implies_Le (↓ Hp) = Le_S (leYoneda_implies_Le Hp).
+  leYoneda_implies_Le (↓ Hp) = Le_S_down' (leYoneda_implies_Le Hp).
 Admitted.
 
 (* Another way to state leYoneda *)

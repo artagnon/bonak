@@ -13,4 +13,4 @@ Some features of this project:
 
 ## Current status
 
-Our approach naturally generalizes to (augmented) simplicial types, as well as higher types: we use functional extensionality for this, but it can, in principle, be done without this axiom. There are four minor lemmas that are not yet proved, and our paper is unfinished.
+Our approach naturally generalizes to (augmented) simplicial types, as well as higher types: we use functional extensionality for this, but it can, in principle, be done without this axiom. There are three minor lemmas that are not yet proved, and our paper is unfinished.
