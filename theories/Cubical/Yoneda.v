@@ -126,23 +126,29 @@ Lemma Le_implies_leYoneda {n p}: p <~ n -> p <= n.
 Proof.
   intros [refl | q r]. now apply le_refl. apply le_S_down. induction l.
   now apply le_refl. now apply le_S_down.
-Defined.
+Qed.
 
 Lemma leYoneda_implies_Le {n p}: p <= n -> p <~ n.
 Proof.
   intros H. unfold "<=" in H. specialize H with (1 := le_refl').
-  induction p, n. now constructor.
-Admitted.
+  revert n H. induction p, n. now constructor.
+  intros _; now apply Le_0. intros H; now contradiction.
+  intros H. simpl in H. apply IHp in H. now apply Raise_S_both.
+Defined.
 
 (* A couple of properties of the two connections, asserting the equality
  * of morphisms *)
 
 Lemma Le_refl_morphism n: leYoneda_implies_Le (¹ n) = Le_refl' _.
-Admitted.
+Proof.
+  induction n. now simpl.
+  change (Le_refl' n.+1) with (Raise_S_both (Le_refl' n)). now rewrite <- IHn.
+Qed.
 
 Lemma Le_S_morphism {n p} (Hp: p.+1 <= n.+1):
   leYoneda_implies_Le (↓ Hp) = Le_S_down' (leYoneda_implies_Le Hp).
 Proof.
+  unfold leYoneda_implies_Le at 1.
 Admitted.
 
 (* Another way to state leYoneda *)
