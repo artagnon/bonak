@@ -39,15 +39,25 @@ Theorem le_irrelevance : forall {n m} (H H' : n <= m), H =S H'.
 Qed.
 
 (* A simple contraction used in the next lemma *)
-Lemma leR_1_O_contra: leR 1 O -> SFalse.
+Lemma leR_contra {p}: leR p.+1 O -> SFalse.
   now auto.
 Qed.
 
 (* Contradiction of type n.+1 <= 0 *)
 Theorem leY_contra {n}: n.+1 <= O -> False.
   intros; elimtype SFalse; unfold leY in H.
-  specialize H with (p := 1); apply leR_1_O_contra.
+  specialize H with (p := 1); eapply leR_contra.
   apply H; clear H. now auto.
+Qed.
+
+Lemma leR_0 {n}: leR O n.
+  destruct n. now simpl. now simpl.
+Qed.
+
+Lemma leY_0 {n}: O <= n.
+  unfold leY. destruct p.
+  - intros O. now apply leR_0.
+  - intros H. now apply leR_contra in H.
 Qed.
 
 (* SProp does not have <-> *)
@@ -145,7 +155,15 @@ Qed.
 Lemma leI_down_morphism {n p} (Hp: p.+1 <= n.+1):
   leI_of_leY (↓ Hp) = leI_down (leI_of_leY Hp).
 Proof.
-  unfold leI_of_leY at 1.
+  revert n Hp. induction p, n.
+  - unfold leI_of_leY at 1; now simpl.
+  - unfold leI_of_leY; simpl. intros _. induction n. now auto.
+    simpl. rewrite IHn at 1. admit.
+  - intros Hp. exfalso.
+    now apply leY_lower_both, leY_contra in Hp.
+  - intros Hp.
+    change (leI_of_leY (↓ Hp)) with (leI_raise_both (leI_of_leY (↓ ⇓ Hp))).
+    now rewrite IHp.
 Admitted.
 
 (* An inductive on leY *)
