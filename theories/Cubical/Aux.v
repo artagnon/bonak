@@ -36,26 +36,26 @@ Notation "[ x ⇒ f ] e" := (f_equal (fun x => f) e)
 (at level 60, left associativity).
 Notation "x ^" := (eq_sym x) (at level 55, left associativity, format "x ^").
 
-(* Yet another flavor of <= -- required to prove le_induction *)
+(* An inductive definition of le *)
 Reserved Infix "<~" (at level 70).
-Inductive Le : nat -> nat -> Type :=
-| Le_refl' n : n <~ n
-| Le_S_down' {n p} : p.+1 <~ n -> p <~ n
-where "n <~ m" := (Le n m) : nat_scope.
+Inductive leI : nat -> nat -> Type :=
+| leI_refl n : n <~ n
+| leI_down {n p} : p.+1 <~ n -> p <~ n
+where "n <~ m" := (leI n m) : nat_scope.
 
-Lemma Le_S_up {n p : nat} : n <~ p -> n <~ p.+1.
+Lemma leI_up {n p : nat} : n <~ p -> n <~ p.+1.
   induction 1. constructor. now constructor. now constructor.
 Qed.
 
-Lemma Le_0 {p}: O <~ p.
-  induction p. now constructor. now apply Le_S_up.
+Lemma leI_0 {p}: O <~ p.
+  induction p. now constructor. now apply leI_up.
 Qed.
 
-Lemma Lower_S_both {n p}: p.+1 <~ n.+1 -> p <~ n.
-  induction 1 using Le_rec with (P := fun p n _ => pred p <~ pred n).
-  now constructor. destruct p0. now apply Le_0. now constructor.
+Lemma leI_lower_both {n p}: p.+1 <~ n.+1 -> p <~ n.
+  induction 1 using leI_rec with (P := fun p n _ => pred p <~ pred n).
+  now constructor. destruct p0. now apply leI_0. now constructor.
 Qed.
 
-Lemma Raise_S_both {n p}: p <~ n -> p.+1 <~ n.+1.
+Lemma leI_raise_both {n p}: p <~ n -> p.+1 <~ n.+1.
   induction 1. now constructor. now constructor.
 Defined.

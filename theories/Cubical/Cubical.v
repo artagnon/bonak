@@ -398,7 +398,7 @@ Definition mkCohCube_step {p q r n} {ε ω: side} {C : Cubical n} {D: mkcsp}
   destruct (rew [id] mkcube_computes in c) as (l, c'); clear c.
   rewrite (C.(eqSubcubeSp) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq)).
   rewrite (C.(eqSubcubeSp) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq))).
-  change ((fun _ (x : le' _ ?y) => x) ↕ ?z) with z.
+  change ((fun _ (x : leR _ ?y) => x) ↕ ?z) with z.
   change (⇓ ?x ↕ ⇓ ?y) with (⇓ (x ↕ y)).
   rewrite <- rew_permute with (H := @eqCubeSp' _ _ _ (⇓ _) _)
                               (H' := (mkBox p).(cohbox) _).
@@ -447,31 +447,31 @@ Instance mkCubical0: Cubical 0.
   unshelve esplit.
   - now exact unit.
   - unshelve esplit.
-    * intros p Hp; now apply le_contra in Hp.
-    * intros p Hp; now apply le_contra in Hp.
-    * intros *; exfalso; now apply le_contra in Hq.
+    * intros p Hp; now apply leY_contra in Hp.
+    * intros p Hp; now apply leY_contra in Hp.
+    * intros *; exfalso; now apply leY_contra in Hq.
   - unshelve esplit.
     * intros Hp _; now exact unit.
-    * intros *; exfalso; now apply le_contra in Hq.
-    * intros *; exfalso; clear -Hq; now apply le_contra in Hq.
+    * intros *; exfalso; now apply leY_contra in Hq.
+    * intros *; exfalso; clear -Hq; now apply leY_contra in Hq.
   - unshelve esplit; intros *.
-    * exfalso; now apply le_contra in Hp.
-    * exfalso; now apply le_contra in Hp.
-    * exfalso; clear -Hq; now apply le_contra in Hq.
+    * exfalso; now apply leY_contra in Hp.
+    * exfalso; now apply leY_contra in Hp.
+    * exfalso; clear -Hq; now apply leY_contra in Hq.
   - unshelve esplit.
     * unfold box. intros p Hp _ _ _; now exact unit.
-    * simpl; intros *; exfalso; now apply le_contra in Hq.
-    * simpl; intros *; exfalso; now apply le_contra in Hq.
+    * simpl; intros *; exfalso; now apply leY_contra in Hq.
+    * simpl; intros *; exfalso; now apply leY_contra in Hq.
   - now intros *.
-  - intros *; exfalso; now apply le_contra in len1.
-  - intros *; exfalso; now apply le_contra in Hp.
-  - intros *; exfalso; now apply le_contra in Hp.
-  - intros *; exfalso; clear -Hq; now apply le_contra in Hq.
-  - intros *; exfalso; clear -Hp; now apply le_contra in Hp.
-  - intros *; exfalso; clear -Hp; now apply le_contra in Hp.
-  - intros *; exfalso; now apply le_contra in Hq.
-  - intros *; exfalso; clear -Hp; now apply le_contra in Hp.
-  - intros *; exfalso; clear -Hq; now apply le_contra in Hq.
+  - intros *; exfalso; now apply leY_contra in len1.
+  - intros *; exfalso; now apply leY_contra in Hp.
+  - intros *; exfalso; now apply leY_contra in Hp.
+  - intros *; exfalso; clear -Hq; now apply leY_contra in Hq.
+  - intros *; exfalso; clear -Hp; now apply leY_contra in Hp.
+  - intros *; exfalso; clear -Hp; now apply leY_contra in Hp.
+  - intros *; exfalso; now apply leY_contra in Hq.
+  - intros *; exfalso; clear -Hp; now apply leY_contra in Hp.
+  - intros *; exfalso; clear -Hq; now apply leY_contra in Hq.
 Defined.
 
 (* We are now ready to build a Cubical *)
@@ -491,7 +491,7 @@ Instance mkCubicalSn {n} {C: Cubical n}: Cubical n.+1.
   - intros *; simpl; now rewrite mkcube_computes.
   - intros *; now refine C.(eqCubeSp).
   - now intros *.
-  - intros *; change (fun _ (_ : le' _ ?q) => _) with (¹ q); simpl.
+  - intros *; change (fun _ (_ : leR _ ?q) => _) with (¹ q); simpl.
     rewrite mksubcube_base_computes; rewrite eq_ind_r_refl.
     now rewrite rew_rew'.
   - intros *; simpl; rewrite eq_ind_r_refl; rewrite mksubcube_step_computes.
