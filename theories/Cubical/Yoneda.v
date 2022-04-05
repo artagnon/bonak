@@ -60,19 +60,6 @@ Lemma leY_0 {n}: O <= n.
   - intros H. now apply leR_contra in H.
 Qed.
 
-(* SProp does not have <-> *)
-Lemma peano_of_leR {n p} : leR p n -> Peano.le p n.
-Admitted.
-
-Lemma leR_of_Peano {n p} : Peano.le p n -> leR p n.
-Admitted.
-
-Lemma peano_of_leY {n p} : p <= n -> Peano.le p n.
-Admitted.
-
-Lemma leY_of_peano {n p} : Peano.le p n -> p <= n.
-Admitted.
-
 (* Reflexivity in leY *)
 Definition leY_refl n : n <= n :=
   fun _ x => x. (* Coq bug! *)
@@ -87,26 +74,45 @@ Infix "↕" := leY_trans (at level 45).
 
 (* Some trivial inequality proofs in leYoneda *)
 
-Theorem leY_up {n m} (Hnm : n <= m) : n <= m.+1.
-  apply peano_of_leY in Hnm. apply leY_of_peano. now lia.
+Lemma leR_up {n m} (Hnm : leR n m): leR n m.+1.
+  revert m Hnm. induction n. now auto. destruct m. intros H.
+  now apply leR_contra in H. now apply IHn.
+Qed.
+
+Lemma leY_up {n m} (Hnm : n <= m): n <= m.+1.
+  unfold "<=" in *. intros p Hpn. now apply leR_up, Hnm, Hpn.
 Qed.
 
 Notation "↑ h" := (leY_up h) (at level 40).
 
-Theorem leY_down {n m} (Hnm : n.+1 <= m) : n <= m.
-  apply peano_of_leY in Hnm. apply leY_of_peano. now lia.
+Lemma leR_down {n m} (Hnm: leR n.+1 m): leR n m.
+  revert m Hnm. induction n. now auto. destruct m. intros H.
+  now apply leR_contra in H. now apply IHn.
+Qed.
+
+Lemma leY_down {n m} (Hnm: n.+1 <= m): n <= m.
+  unfold "<=" in *. intros p Hpn. now apply leR_down, Hnm, Hpn.
 Qed.
 
 Notation "↓ p" := (leY_down p) (at level 40).
 
-Theorem leY_lower_both {n m} (Hnm : n.+1 <= m.+1) : n <= m.
-  apply peano_of_leY in Hnm. apply leY_of_peano. now lia.
+Lemma leR_lower_both {n m} (Hnm: leR n.+1 m.+1): leR n m.
+  now auto.
+Qed.
+
+Lemma leY_lower_both {n m} (Hnm: n.+1 <= m.+1) : n <= m.
+  unfold "<=" in *. intros p Hpn. now apply leR_lower_both, Hnm, Hpn.
 Qed.
 
 Notation "⇓ p" := (leY_lower_both p) (at level 40).
 
-Theorem leY_raise_both {n m} (Hnm : n <= m) : n.+1 <= m.+1.
-  apply peano_of_leY in Hnm. apply leY_of_peano. now lia.
+Lemma leR_raise_both {n m} (Hnm: leR n m): leR n.+1 m.+1.
+  now auto.
+Qed.
+
+Lemma leY_raise_both {n m} (Hnm: n <= m): n.+1 <= m.+1.
+  unfold "<=" in *. intros p Hpn. destruct p. now auto.
+  now apply leR_raise_both, Hnm, Hpn.
 Qed.
 
 Notation "⇑ p" := (leY_raise_both p) (at level 40).
