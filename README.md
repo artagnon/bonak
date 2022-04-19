@@ -13,4 +13,4 @@ Some features of this project:
 
 ## Current status
 
-Our approach naturally generalizes to (augmented) simplicial types, as well as higher types: we use functional extensionality for this, but it can, in principle, be done without this axiom. There are three minor lemmas that are not yet proved, and our paper is unfinished.
+Our approach naturally generalizes to (augmented) semi-simplicial types, as well as higher types: we use functional extensionality for this, but it can, in principle, be done without this axiom. `master` is a nominally complete version of our formalization, without any incomplete proofs, but we're currently working on minimizing the set of assumptions.
