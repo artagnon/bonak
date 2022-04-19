@@ -163,14 +163,14 @@ Lemma leI_down_morphism {n p} (Hp: p.+1 <= n.+1):
 Proof.
   revert n Hp. induction p, n.
   - unfold leI_of_leY at 1; now simpl.
-  - unfold leI_of_leY; simpl. intros _. induction n. now auto.
-    simpl. rewrite IHn at 1. admit.
+  - unfold leI_of_leY; simpl. intros _. induction (leI_up leI_0). now auto.
+    simpl. now rewrite IHl.
   - intros Hp. exfalso.
     now apply leY_lower_both, leY_contra in Hp.
   - intros Hp.
     change (leI_of_leY (↓ Hp)) with (leI_raise_both (leI_of_leY (↓ ⇓ Hp))).
     now rewrite IHp.
-Admitted.
+Defined.
 
 (* An inductive on leY *)
 Inductive leYind n : forall p, p <= n -> Type :=
