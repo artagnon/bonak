@@ -1,11 +1,12 @@
-Require Import Arith.
-
 Notation "( a ; b )" := (existT _ a b).
 Notation "x .1" := (projT1 x) (at level 1, left associativity, format "x .1").
 Notation "x .2" := (projT2 x) (at level 1, left associativity, format "x .2").
 Notation "x .+1" := (S x) (at level 1, left associativity, format "x .+1").
 Notation "x .+2" := (S (S x)) (at level 1, left associativity, format "x .+2").
 Notation "x .+3" := (S (S (S x))) (at level 1, left associativity, format "x .+3").
+
+(* This is in Program.Basics for some strange reason *)
+Arguments id {A} x.
 
 Lemma eq_pair {A B : Type} {u1 v1 : A} {u2 v2 : B} (p : u1 = v1) (q : u2 = v2):
   (u1, u2) = (v1, v2).

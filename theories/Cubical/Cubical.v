@@ -1,6 +1,6 @@
 Import Logic.EqNotations.
 Require Import Logic.FunctionalExtensionality.
-Require Import Program. (* UIP *)
+Require Import Logic.Eqdep. (* UIP *)
 Require Import Aux.
 Require Import RewLemmas.
 
@@ -229,7 +229,7 @@ Proof.
   rewrite rew_map with
     (f := fun x => (C.(BoxPrev).(subbox') (⇓ (Hrq ↕ Hq)) ω x)).
   rewrite <- (C.(Cube).(cohcube) (Hrq := ⇓ Hrq) (Hq := ⇓ Hq)).
-  repeat rewrite rew_compose; rewrite <- rew_swap. rewrite rew_app.
+  repeat rewrite rew_compose; apply rew_swap. rewrite rew_app.
   now reflexivity. now apply UIP.
 Qed.
 

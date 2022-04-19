@@ -1,7 +1,3 @@
-Require Import Arith.
-Require Import RelationClasses.
-Require Import Coq.Program.Equality. (* dependent induction *)
-Require Import Lia.
 Require Import Aux.
 
 Set Warnings "-notation-overridden".
