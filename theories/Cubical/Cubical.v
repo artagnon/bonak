@@ -1,6 +1,7 @@
 Import Logic.EqNotations.
 Require Import Logic.FunctionalExtensionality.
 Require Import Logic.Eqdep. (* UIP *)
+Require Import Logic.Eqdep_dec. (* UIP_refl_HUnit *)
 Require Import Aux.
 Require Import RewLemmas.
 
@@ -21,7 +22,11 @@ Parameter side: Type.
    2-cells, and 3-cells relating the different 0-cells on the cube. *)
 Class PartialBoxPrev (n : nat) (csp : Type@{l'}) := { (* csp: CubeSetPrefix *)
   box' {p} (Hp : p.+1 <= n) : csp -> Type@{l} ;
+  box'_UIP {p} (Hp: p.+1 <= n) (D: csp):
+    forall (x y: box' Hp D) (p1 p2: x = y), p1 = p2;
   box'' {p} (Hp : p.+2 <= n) : csp -> Type@{l} ;
+  box''_UIP {p} (Hp: p.+2 <= n) (D: csp):
+    forall (x y: box'' Hp D) (p1 p2: x = y), p1 = p2;
   subbox' {p q} {Hpq : p.+2 <= q.+2} (Hq : q.+2 <= n) (ε : side) {D : csp} :
     box' (↓ (Hpq ↕ Hq)) D -> box'' (Hpq ↕ Hq) D;
 }.
@@ -32,7 +37,9 @@ Arguments subbox' {n csp} _ {p q Hpq} Hq ε {D} d.
 
 Class PartialBox (n p : nat) (csp : Type@{l'})
   (BoxPrev : PartialBoxPrev n csp) := {
-  box (Hp : p <= n) : csp -> Type@{l} ;
+  box (Hp : p <= n): csp -> Type@{l} ;
+  box_UIP (Hp: p <= n) (D: csp):
+    forall (x y: box Hp D) (p1 p2: x = y), p1 = p2;
   subbox {q} {Hpq : p.+1 <= q.+1} (Hq : q.+1 <= n) (ε : side) {D : csp} :
     box (↓ (Hpq ↕ Hq)) D -> BoxPrev.(box') (Hpq ↕ Hq) D;
   cohbox {q r} {Hpr : p.+2 <= r.+2} {Hrq : r.+2 <= q.+2} {Hq : q.+2 <= n}
@@ -174,8 +181,12 @@ Definition mkcsp {n} {C : Cubical n} : Type@{l'} :=
 (* The previous level of Box *)
 Definition mkBoxPrev {n} {C : Cubical n}: PartialBoxPrev n.+1 mkcsp := {|
   box' (p : nat) (Hp : p.+1 <= n.+1) (D : mkcsp) := C.(Box).(box) (⇓ Hp) D.1 ;
+  box'_UIP (p: nat) (Hp: p.+1 <= n.+1) (D: mkcsp) :=
+    C.(Box).(box_UIP) (⇓ Hp) D.1 ;
   box'' (p : nat) (Hp : p.+2 <= n.+1) (D : mkcsp) :=
     C.(BoxPrev).(box') (⇓ Hp) D.1 ;
+  box''_UIP (p: nat) (Hp: p.+2 <= n.+1) (D: mkcsp) :=
+    C.(BoxPrev).(box'_UIP) (⇓ Hp) D.1 ;
   subbox' (p q : nat) (Hpq : p.+2 <= q.+2) (Hq : q.+2 <= n.+1) (ε : side)
     (D : mkcsp) (d : _) :=
     C.(Box).(subbox) (Hpq := ⇓ Hpq) (⇓ Hq) ε d ;
@@ -230,7 +241,7 @@ Proof.
     (f := fun x => (C.(BoxPrev).(subbox') (⇓ (Hrq ↕ Hq)) ω x)).
   rewrite <- (C.(Cube).(cohcube) (Hrq := ⇓ Hrq) (Hq := ⇓ Hq)).
   repeat rewrite rew_compose; apply rew_swap. rewrite rew_app.
-  now reflexivity. now apply UIP.
+  now reflexivity. now apply C.(BoxPrev).(box''_UIP).
 Qed.
 
 #[local]
@@ -252,6 +263,7 @@ Instance mkBox0 {n} {C: Cubical n} : PartialBox n.+1 O mkcsp mkBoxPrev.
   unshelve esplit.
   * intros; now exact unit. (* boxSn *)
   * simpl; intros; rewrite C.(eqBox0). now exact tt. (* subboxSn *)
+  * destruct x, p2. now apply UIP_refl_unit.
   * simpl; intros. (* cohboxp *)
     now rewrite eqSubbox0 with (Hpq := ⇓ Hpr),
                 eqSubbox0 with (Hpq := ⇓ (Hpr ↕ Hrq)).
@@ -267,6 +279,7 @@ Instance mkBoxSp {n p} {C: Cubical n}
   * simpl; intros * ε * (d, l); invert_le Hpq. (* subboxp *)
     now exact (rew <- [id] C.(eqBoxSp) in
       (Box.(subbox) Hq ε d; mkSubLayer d l)).
+  * simpl; intros. destruct x, y. now apply UIP.
   * simpl; intros q r Hpr Hrq Hq ε ω D (d, l). (* cohboxp *)
     invert_le Hpr; invert_le Hrq.
 
@@ -449,17 +462,20 @@ Instance mkCubical0: Cubical 0.
   - unshelve esplit.
     * intros p Hp; now apply leY_contra in Hp.
     * intros p Hp; now apply leY_contra in Hp.
+    * intros p Hp; exfalso; now apply leY_contra in Hp.
+    * intros p Hp; exfalso; now apply leY_contra in Hp.
     * intros *; exfalso; now apply leY_contra in Hq.
   - unshelve esplit.
     * intros Hp _; now exact unit.
     * intros *; exfalso; now apply leY_contra in Hq.
+    * intros *; destruct x, p2; now apply UIP_refl_unit.
     * intros *; exfalso; clear -Hq; now apply leY_contra in Hq.
   - unshelve esplit; intros *.
     * exfalso; now apply leY_contra in Hp.
     * exfalso; now apply leY_contra in Hp.
     * exfalso; clear -Hq; now apply leY_contra in Hq.
   - unshelve esplit.
-    * unfold box. intros p Hp _ _ _; now exact unit.
+    * intros p Hp _ _ _; now exact unit.
     * simpl; intros *; exfalso; now apply leY_contra in Hq.
     * simpl; intros *; exfalso; now apply leY_contra in Hq.
   - now intros *.
