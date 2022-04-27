@@ -126,24 +126,3 @@ Lemma map_subst_app {A B} {x y} {𝛉: A} (H: x = y :> B) (P: A -> B -> Type)
 Proof.
   now destruct H.
 Defined.
-
-Lemma sig_eq {A: Type} {B} {x y: {a: A & B a}}:
-  (x.1; x.2) = (y.1; y.2) -> x = y.
-Proof.
-  now repeat rewrite <- sigT_eta.
-Qed.
-
-Lemma sig_decompose_eq {A: Type} {B} {x y: {a: A & B a}} {p: x = y}:
-  p = (sigT_eta x) • (= projT1_eq p; projT2_eq p) • (eq_sym (sigT_eta y)).
-Proof.
-  now destruct p, x.
-Qed.
-
-Lemma sig_decompose {A: Type} {B} {x y: {a: A & B a}} {p q: x = y}
-  {alpha: projT1_eq p = projT1_eq q}:
-  rew [fun r => rew [fun b: A => B b] r in x.2 = y.2] alpha in
-    projT2_eq p = projT2_eq q -> p = q.
-Proof.
-  destruct p; simpl in *. revert alpha; rewrite (sig_decompose_eq (p := q)).
-  destruct x; rewrite eq_trans_refl_l; simpl. admit.
-Admitted.
