@@ -67,17 +67,17 @@ Set Warnings "-notation-overridden".
 Notation "{ x & P }" := (hsigT (fun x => P)): type_scope.
 Notation "{ x : A & P }" := (hsigT (A := A) (fun x => P)): type_scope.
 
-Polymorphic Definition hprod_UIP {A: Type} (B: A -> HSet)
+Polymorphic Definition hpiT_UIP {A: Type} (B: A -> HSet)
   (x y: forall a: A, B a) (p q: x = y): p = q.
 Proof.
 Admitted.
 
-Polymorphic Definition hprod {A: Type} (B: A -> HSet): HSet.
+Polymorphic Definition hpiT {A: Type} (B: A -> HSet): HSet.
 Proof.
-  exists (forall a: A, B a). intros x y h g. now apply hprod_UIP.
+  exists (forall a: A, B a). intros x y h g. now apply hpiT_UIP.
 Defined.
 
-Notation "'hforall' x , A" := (hprod (fun x => A))
+Notation "'hforall' x , A" := (hpiT (fun x => A))
 (x binder, at level 200): type_scope.
 
 Parameter side: HSet.
@@ -367,7 +367,7 @@ Defined.
 
 Lemma mkcube_computes {n p} {C: Cubical n} {Hp: p.+1 <= n.+1} {D: mkcsp}
   {E: (mkBox n.+1).(box) (¹ n.+1) D -> HSet} {d}:
-  mkcube (Hp := ↓ Hp) E d = {l : mkLayer & mkcube (Hp := Hp) E (d; l)}.
+  mkcube (Hp := ↓ Hp) E d = {l : mkLayer & mkcube (Hp := Hp) E (d; l)} :> Type.
 Proof.
   unfold mkcube; now rewrite le_induction_step_computes.
 Qed.
@@ -396,7 +396,7 @@ Defined.
 Lemma mksubcube_base_computes {p n} {C: Cubical n} {Hp: p.+1 <= n.+1}
   {ε: side} {D E} {d: (mkBox p).(box) _ D} {c}:
   mksubcube (Hq := Hp) E d c =
-  match (rew [Dom] mkcube_computes in c) with
+  match (rew [id] mkcube_computes in c) with
   | (l; _) => l ε
   end.
 Proof.
@@ -406,7 +406,7 @@ Qed.
 Lemma mksubcube_step_computes {q r n} {C: Cubical n} {Hq: q.+2 <= n.+1}
   {Hrq: r.+2 <= q.+2} {ε: side} {D E} {d: (mkBox r).(box) _ D} {c}:
   mksubcube (Hpq := ↓ Hrq) (Hq := Hq) (ε := ε) E d c =
-  match (rew [Dom] mkcube_computes in c) with
+  match (rew [id] mkcube_computes in c) with
   | (l; c) => rew <- [id] C.(eqCubeSp) in
     (mkSubLayer d l; mksubcube (Hpq := Hrq) E (d; l) c)
   end.
@@ -430,7 +430,7 @@ Definition mkCohCube_base {q r n} {ε ω: side} {C: Cubical n} {D: mkcsp}
     (mksubcube (ε := ε) (Hpq := ↓ Hrq) (Hq := Hq) E d c).
   change (¹ _ ↕ ?H) with H; change (⇓ ¹ _ ↕ ?H) with H.
   rewrite mksubcube_base_computes, mksubcube_step_computes.
-  destruct (rew [Dom] mkcube_computes in c) as (l, c'); clear c.
+  destruct (rew [id] mkcube_computes in c) as (l, c'); clear c.
   now refine (C.(eqSubcube0)
     (Q := mksubcube (Hpq := Hrq) E (_; _) c')).
 Qed.
@@ -459,7 +459,7 @@ Definition mkCohCube_step {p q r n} {ε ω: side} {C: Cubical n} {D: mkcsp}
   unfold mkCohCube in *; simpl projT1 in *; simpl projT2 in *.
   change (⇓ (↓ ?Hpr)) with (↓ (⇓ Hpr)).
   do 2 rewrite mksubcube_step_computes.
-  destruct (rew [Dom] mkcube_computes in c) as (l, c'); clear c.
+  destruct (rew [id] mkcube_computes in c) as (l, c'); clear c.
   rewrite (C.(eqSubcubeSp) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq)).
   rewrite (C.(eqSubcubeSp) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq))).
   change ((fun _ (x : leR _ ?y) => x) ↕ ?z) with z.
@@ -543,25 +543,25 @@ Defined.
 #[local]
 Instance mkCubicalSn {n} {C: Cubical n}: Cubical n.+1.
   unshelve esplit.
-  - now exact mkcsp.
-  - now exact mkBoxPrev.
-  - now exact mkBox.
-  - now exact mkCubePrev.
-  - now exact mkCube.
-  - now intros *.
-  - intros *; now apply C.(eqBox0).
-  - now intros *.
-  - intros *; now refine C.(eqBoxSp).
-  - now intros *.
-  - intros *; simpl; now rewrite mkcube_computes.
-  - intros *; now refine C.(eqCubeSp).
-  - now intros *.
-  - intros *; change (fun _ (_: leR _ ?q) => _) with (¹ q); simpl.
+  - (* csp *) now exact mkcsp.
+  - (* BoxPrev *) now exact mkBoxPrev.
+  - (* Box *) now exact mkBox.
+  - (* CubePrev *) now exact mkCubePrev.
+  - (* Cube *) now exact mkCube.
+  - (* eqBox0 *) now intros *.
+  - (* eqBox0' *) intros *; now apply C.(eqBox0).
+  - (* eqBoxSp *) now intros *.
+  - (* eqBoxSp' *) intros *; now refine C.(eqBoxSp).
+  - (* eqSubbox0 *) now intros *.
+  - (* eqSubboxSp *) intros *; simpl; now rewrite mkcube_computes.
+  - (* eqCubeSp *) intros *; now refine C.(eqCubeSp).
+  - (* eqCubeSp' *) now intros *.
+  - (* eqSubcube0 *) intros *.
+    change (fun _ (_: leR _ ?q) => _) with (¹ q); simpl.
     rewrite mksubcube_base_computes.
-    rewrite (eq_ind_r_refl (A := HSet) (H := mkcube_computes)).
-    now rewrite rew_map with (P := id) (f := Dom), rew_rew'.
-  - intros *; simpl; rewrite eq_ind_r_refl; rewrite mksubcube_step_computes.
-    now rewrite rew_rew'.
+    now rewrite eq_ind_r_refl, rew_rew'.
+  - (* eqSubcubeSp *) intros *; simpl.
+    now rewrite eq_ind_r_refl, mksubcube_step_computes, rew_rew'.
 Defined.
 
 Definition CubicalAt: forall n, Cubical n.
@@ -570,7 +570,7 @@ Definition CubicalAt: forall n, Cubical n.
   - now exact mkCubicalSn.
 Defined.
 
-CoInductive CubeUniverse n (X: (CubicalAt n).(csp)): HSet := cons {
+CoInductive CubeUniverse n (X: (CubicalAt n).(csp)): Type@{l'} := cons {
   this: (CubicalAt n).(Box).(box) (¹ n) X -> HSet@{l};
   next: CubeUniverse n.+1 (X; this);
 }.
