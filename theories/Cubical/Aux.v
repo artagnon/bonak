@@ -8,11 +8,6 @@ Notation "x .+3" := (S (S (S x))) (at level 1, left associativity, format "x .+3
 (* This is in Program.Basics for some strange reason *)
 Arguments id {A} x.
 
-Lemma eq_pair {A B : Type} {u1 v1 : A} {u2 v2 : B} (p : u1 = v1) (q : u2 = v2):
-  (u1, u2) = (v1, v2).
-  now destruct p, q.
-Qed.
-
 (* Notations for rew *)
 Notation "'rew' [ P ] H 'in' H'" := (eq_rect _ P H' _ H)
     (at level 10, H' at level 10,
