@@ -1,6 +1,5 @@
 Import Logic.EqNotations.
 Require Import Logic.FunctionalExtensionality.
-Require Import Logic.Eqdep. (* UIP *)
 Require Import Logic.Eqdep_dec. (* UIP_refl_unit *)
 Require Import Aux.
 Require Import RewLemmas.
@@ -67,10 +66,32 @@ Set Warnings "-notation-overridden".
 Notation "{ x & P }" := (hsigT (fun x => P)): type_scope.
 Notation "{ x : A & P }" := (hsigT (A := A) (fun x => P)): type_scope.
 
-Polymorphic Definition hpiT_UIP {A: Type} (B: A -> HSet)
-  (x y: forall a: A, B a) (p q: x = y): p = q.
+(* Bug! equal_f_dep is unnecessarily opaque in Coq *)
+Lemma equal_f_dep: forall {A B} {f g: forall (x: A), B x},
+  f = g -> forall x, f x = g x.
 Proof.
-Admitted.
+  intros A B f g <- H; now reflexivity.
+Defined.
+
+Axiom fext_computes: forall {A: Type} {B: A -> HSet} {f: forall a: A, B a},
+  functional_extensionality_dep f f (fun a: A => eq_refl) = eq_refl.
+
+Lemma hpiT_decompose {A: Type} (B: A -> HSet)
+  (f g: forall a: A, B a) (p: f = g):
+  functional_extensionality_dep _ _ (equal_f_dep p) = p.
+Proof.
+  destruct p; simpl; now apply fext_computes.
+Qed.
+
+Polymorphic Definition hpiT_UIP {A: Type} (B: A -> HSet)
+  (f g: forall a: A, B a) (p q: f = g): p = q.
+Proof.
+  rewrite <- hpiT_decompose with (p := p).
+  rewrite <- hpiT_decompose with (p := q).
+  f_equal.
+  apply functional_extensionality_dep; intros a.
+  apply (B a).
+Qed.
 
 Polymorphic Definition hpiT {A: Type} (B: A -> HSet): HSet.
 Proof.
