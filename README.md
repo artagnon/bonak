@@ -9,8 +9,21 @@ Some features of this project:
 1. We do not make use of [HoTT](https://github.com/HoTT/HoTT), or any fancy libraries for that matter. Bonak is written is vanilla Coq, making use of the core standard libarary. In particular, we make heavy use of [SProp](https://coq.inria.fr/refman/addendum/sprop.html) for proof irrelevance.
 2. Bonak has led to many bugs being filed and fixed in core Coq. It pushes the boundaries of proof assistant technology, and can serve as as a benchmark against which to improve core Coq features.
 3. As the main contribution of Bonak is the Coq code, we have placed high emphasis on code cleanliness and readability. As a result, it's quite plesant to step through the code, and have a succint goal at all times.
-4. Bonak is tiny! In ~700 lines of Coq code, we have managed to prove something remarkable. We did have a lot of false starts, and tried various approaches, before settling on what we have today.
+4. Bonak is tiny! In ~1000 lines of Coq code, we have managed to prove something remarkable. We did have a lot of false starts, and tried various approaches, before settling on what we have today.
+
+Our axioms are:
+
+```text
+STrue relies on definitional UIP.
+side : HSet
+functional_extensionality_dep
+  : forall (A : Type) (B : A -> Type) (f g : forall x : A, B x),
+	(forall x : A, f x = g x) -> f = g
+fext_computes
+  : forall (A : Type) (B : A -> HSet) (f : forall a : A, B a),
+    functional_extensionality_dep f f (fun a : A => eq_refl) = eq_refl
+```
 
 ## Current status
 
-Our approach naturally generalizes to (augmented) semi-simplicial types, as well as higher types: we use functional extensionality for this, but it can, in principle, be done without this axiom. `master` is a nominally complete version of our formalization, without any incomplete proofs, but we're currently working on minimizing the set of assumptions.
+Our approach naturally generalizes to (augmented) semi-simplicial types, as well as higher types: we use functional extensionality for this, but it can, in principle, be done without this axiom. `master` is a complete version of our formalization, without any incomplete proofs.
