@@ -22,26 +22,26 @@
 \newcommand{\reflett}{\ensuremath{\mathsf{refl}_{\mathit{ETT}}}}
 
 % cubset
-\newcommand{\csp}[1]{\ensuremath{\mathsf{cubset}_{#1}}}
-\newcommand{\cubeset}[2]{\ensuremath{\mathsf{cubset}_{#1}^{<#2}}}
-\newcommand{\cubesetcomp}[2]{\ensuremath{\mathsf{cubset}_{#1}^{=#2}}}
-\newcommand{\cubesetfrom}[2]{\ensuremath{\mathsf{cubset}_{#1}^{\geq#2}}}
+\newcommand{\Xp}[1]{\ensuremath{\mathsf{X}_{#1}}}
+\newcommand{\X}[2]{\ensuremath{\mathsf{X}_{#1}^{<#2}}}
+\newcommand{\Xcomp}[2]{\ensuremath{\mathsf{X}_{#1}^{=#2}}}
+\newcommand{\Xfrom}[2]{\ensuremath{\mathsf{X}_{#1}^{\geq#2}}}
 
-% Box, layer, and cube
-\newcommand{\mybox}[2]{\ensuremath{\mathsf{box}_{#1}^{#2}}}
+% Frame, layer, and filler
+\newcommand{\framep}[2]{\ensuremath{\mathsf{frame}_{#1}^{#2}}}
 \newcommand{\layer}[2]{\ensuremath{\mathsf{layer}_{#1}^{#2}}}
-\newcommand{\cube}[2]{\ensuremath{\mathsf{cube}_{#1}^{#2}}}
+\newcommand{\filler}[2]{\ensuremath{\mathsf{filler}_{#1}^{#2}}}
 
-% Subbox, sublayer, and subcube
-\newcommand{\subbox}[2]{\ensuremath{\mathsf{subbox}_{#1}^{#2}}}
-\newcommand{\sublayer}[2]{\ensuremath{\mathsf{sublayer}_{#1}^{#2}}}
-\newcommand{\subcube}[2]{\ensuremath{\mathsf{subcube}_{#1}^{#2}}}
-\newcommand{\fullbox}[2]{\ensuremath{\mathsf{fullbox}_{#1}^{#2}}}
+% Restriction for frame, layer, and filler
+\newcommand{\restrf}[2]{\ensuremath{\mathsf{restr}_{\mathsf{frame}, #1}^{#2}}}
+\newcommand{\restrl}[2]{\ensuremath{\mathsf{restr}_{\mathsf{layer}, #1}^{#2}}}
+\newcommand{\restrc}[2]{\ensuremath{\mathsf{restr}_{\mathsf{filler}, #1}^{#2}}}
+\newcommand{\fullframe}[2]{\ensuremath{\mathsf{fullframe}_{#1}^{#2}}}
 
-% Coherence conditions
-\newcommand{\cohbox}[2]{\ensuremath{\mathsf{cohbox}_{#1}^{#2}}}
+% Coherence conditions for frame, layer, and filler
+\newcommand{\cohframe}[2]{\ensuremath{\mathsf{cohframe}_{#1}^{#2}}}
 \newcommand{\cohlayer}[2]{\ensuremath{\mathsf{cohlayer}_{#1}^{#2}}}
-\newcommand{\cohcube}[2]{\ensuremath{\mathsf{cohcube}_{#1}^{#2}}}
+\newcommand{\cohfiller}[2]{\ensuremath{\mathsf{cohfiller}_{#1}^{#2}}}
 
 % Logical implication
 \newcommand{\imp}{\ensuremath{\rightarrow}}
@@ -101,7 +101,7 @@
 \setmonofont{Source Code Pro}
 \defaultfontfeatures{Ligatures=TeX, Scale=MatchUppercase}
 
-\title{An iterated Grothendieck construction of semi-cubical types}
+\title{An indexed construction of semi-simplicial and semi-cubical types}
 \author{
   \textcolor{gray80}{Hugo Herbelin} \\
   \itshape \textcolor{gray80}{IRIF}
@@ -117,7 +117,7 @@
 \thispagestyle{empty}
 \maketitle
 \begin{abstract}
-  A proposed model of \emph{homotopy type theory} built via a \emph{reverse iterated Grothendieck construction} process formalizing semi-cubical sets in dependent type theory with \emph{extensional equality}. The accompanying artifact is a Coq formalization that uses highly sophisticated rewriting techniques and pushes the boundary of proof assistant technology.
+  A proposed model of \emph{homotopy type theory} built via a \emph{reverse iterated Grothendieck construction} process formalizing semi-simplicial and semi-cubical sets in dependent type theory with \emph{extensional equality}. The accompanying artifact is a Coq formalization that uses highly sophisticated rewriting techniques and pushes the boundary of proof assistant technology.
 \end{abstract}
 \tableofcontents
 \newpage
@@ -125,7 +125,7 @@
 \section{Overture}
 Cubical type theory~\cite{Bezem14}~\cite{Cohen16}~\cite{Angiuli17} is an extension of dependent type theory that provides a computational interpretation of Voevodsky's \emph{univalence axiom}, in a field known as \emph{homotopy type theory}, or HoTT. Two real-world projects that implement cubical type theory are worthy of mention: an experimental branch of Agda, known as \emph{Cubical Agda}~\cite{Vezzosi21}, and the Arend theorem prover~\footnote{\href{https://arend-lang.github.io}{arend-lang.github.io}}. Cubical type theory is usually modeled as cubical sets, in the set-theoretic setting. Efforts to model cubical type theory have been ongoing since 2014, and many of these efforts are in the set-theoretic setting.
 
-Our contribution is to model the core of cubical types, semi-cubical sets, in type theory, using an indexed representation, in contrast to previous efforts that use a fibered representation. We use an \emph{iterated reverse-Grothendieck} construction as the basis of our formalization, which we expound on in \ref{sec:grothendieckconstr}. Another feature of our work is that, as we are in the type-theoretic setting, we use \emph{unicity of identity of proofs} (UIP), which would be an inherent property in the set-theoretic setting (see \ref{sec:uip}).
+Our contribution is to model the core of semi-simplicial and semi-cubical types, truncated sets, in type theory, using an indexed representation, in contrast to previous efforts that use a fibered representation. We use an \emph{iterated reverse-Grothendieck} construction as the basis of our formalization, which we expound on in \ref{sec:grothendieckconstr}. Our work is, in principle axiom-free, although the accompanying artifact uses functional extensionality in order to generalize our work to $n$-truncated sets.
 
 \begin{table}[H]
   \begin{tabularx}{\linewidth}{p{.3\linewidth}|p{.3\linewidth}|p{.3\linewidth}}
@@ -139,7 +139,7 @@ Our contribution is to model the core of cubical types, semi-cubical sets, in ty
   \end{tabularx}
 \end{table}
 
-\section{The intuition from simplicial sets}
+\section{Simplicial sets}
 Simplicial sets are powerful mathematical objects, that form the basis of much of modern homotopy theory. Their power derives from the fact that their homotopy category is exceptionally well-behaved, and different model structures on them, as we will see in the following chapter. Unlike CW-complexes that rely on pure topological notions like spheres and disks to ``tame'' a topological space, the definition of simplicial sets is purely categorical, and exist independent of topological spaces. The geometric realization and singular complex functors facilitate travelling back-and-forth between simplicial sets and topological spaces, and these are non-trivial constructions. As such, simplicial sets exist purely in the imagination of the mathematician; each simplicial set has an infinite number of degenerate simplices, and they are not particularly well-suited to machine-based representation.
 
 \subsection{\texorpdfstring{\SSet}{The category of simplicial sets}}
@@ -312,7 +312,7 @@ As is clear from the above definitions, simplicial sets have an infinite number 
 \subsection{Motivation for \texorpdfstring{\DeltaHat}{delta sets}}
 As hinted earlier, simplicial sets are ill-suited for machine-based representation, due to the infinite number of degenerate simplices that are uninteresting from the point of view of cubical type theory. To remedy this problem, let us instead use \DeltaHat, and proceed towards building, what is called \emph{semi-cubical sets} in literature. $\DeltaHat$ is identical to \Simplex{}, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are \emph{strictly} order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. In mathematical literature, there is little interest in studying \DeltaHat, since delta maps are not well-defined, and constructing a $\Set^{\op{\DeltaHat}}$ is inelegant.
 
-\subsection{Towards semi-cubical sets}
+\subsection{Semi-cubical sets}
 We might naively attempt to define $\Cube{}$ identically to \DeltaHat, but let us briefly explain why this wouldn't work, motivating the definition of semi-cubical sets as in \cite{Antolini00}. If there were morphisms from every $\sq{m}$ to \sq{n}, we would end up with:
 
 $$
@@ -473,105 +473,103 @@ Then, proof irrelevance can be stated as:
 
 \section{Semi-cubical sets}
 In this section, we give the core of the definition of semi-cubical
-sets as the coinductive limit (see table \ref{tab:barecubicalset}) of a
+sets as the coinductive limit (see table \ref{tab:coind}) of a
 construction of truncated semi-cubical sets.
 
-\subsection{Truncated semi-cubical sets}
-The definition is dispatched over tables \ref{tab:barecubicalsetstructurecore}, \ref{tab:barecubicalsetstructure}, \ref{tab:barecubicalsetfaces} and \ref{tab:barecubicalsetcoherences}. It describes the structure of the underlying higher-dimensional relations on which cubes and boxes are built, together with the definition of homogeneous $n$-boxes, homogeneous $n$-cubes, together with face operations on boxes and cubes, together with commutation properties of the face operations. All are mutually defined as types of the target language ETT. Note that such relational structure, cubes and boxes are relative to a universe. Note the presence of a coherence condition $\cohbox{l}{}$ to ensuring that both sides of the equality in $\sublayer{l}{}$ and $\subcube{l}{}$ are in the same type. The proof of $\cohbox{l}{}$ itself requires an higher-dimensional coherence condition which we obtain by working here in ETT where all proofs of an equality are identified (principle of Unicity of Identity Proofs). Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory). Note also that for a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\subbox{l}{}$ nor $\cohbox{l}{}$ anymore.
+\subsection{Truncated sets}
+The definition is dispatched over tables \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces} and \ref{tab:coh}. It describes the structure of the underlying higher-dimensional relations on which cubes and boxes are built, together with the definition of homogeneous $n$-boxes, homogeneous $n$-cubes, together with face operations on boxes and cubes, together with commutation properties of the face operations. All are mutually defined as types of the target language ETT. Note that such relational structure, cubes and boxes are relative to a universe. Note the presence of a coherence condition $\cohframe{l}{}$ to ensuring that both sides of the equality in $\restrl{l}{}$ and $\restrc{l}{}$ are in the same type. The proof of $\cohframe{l}{}$ itself requires an higher-dimensional coherence condition which we obtain by working here in ETT where all proofs of an equality are identified (principle of Unicity of Identity Proofs). Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory). Note also that for a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\restrf{l}{}$ nor $\cohframe{l}{}$ anymore.
 
-When reflexivities are excepted, we call the structure thus defined \emph{bare truncated cubical sets}: \emph{bare} because it can be seen as defining semi-cubical sets corresponding to semi-simplicial sets with only faces as part of the structure; \emph{truncated} because we consider only such cubical sets up to some fixed dimension.
+When reflexivities are excepted, we call the structure thus defined \emph{bare truncated sets}: \emph{bare} because it can be seen as defining semi-cubical sets corresponding to semi-simplicial sets with only faces as part of the structure; \emph{truncated} because we consider only such cubical sets up to some fixed dimension.
 
-\begin{eqntable}{Definition of a truncated cubical set (main part of the higher-dimensional relation structure)\label{tab:barecubicalsetstructurecore}}
-  \mc{Type of truncated cubical sets}
-  \eqnline{\cubeset{l}{n}}{}{:}{\sort{l+1}}
-  \eqnline{\cubeset{l}{0}}{}{\defeq}{\unittype}
-  \eqnline{\cubeset{l}{n'+1}}{}{\defeq}{\ensuremath{\Sigma}D:\cubeset{l}{n'}.\,\cubesetcomp{l}{n'} \D}
+\begin{eqntable}{Truncated sets, the core\label{tab:core}}
+  \mc{Type of truncated sets}
+  \eqnline{\X{l}{n}}{}{:}{\sort{l+1}}
+  \eqnline{\X{l}{0}}{}{\defeq}{\unittype}
+  \eqnline{\X{l}{n'+1}}{}{\defeq}{\ensuremath{\Sigma}D:\X{l}{n'}.\,\Xcomp{l}{n'} \D}
 
   \\
 
   \mc{Structure carried at each dimension}
-  \eqnline{\cubesetcomp{l}{n}}{(D:\cubeset{l}{n})}{:}{\sort{l}}
-  \eqnline{\cubesetcomp{l}{n}}{D}{\defeq}{\fullbox{l}{n}\D\imp \sort{l}}
+  \eqnline{\Xcomp{l}{n}}{(D:\X{l}{n})}{:}{\sort{l}}
+  \eqnline{\Xcomp{l}{n}}{D}{\defeq}{\fullframe{l}{n}\D\imp \sort{l}}
 \end{eqntable}
 
-\begin{eqntable}{Definition of a truncated cubical set (boxes)\label{tab:barecubicalsetstructure}}
-  \mc{Full homogeneous $n$-boxes}
-  \eqnline{\fullbox{l}{n}}{(D:\cubeset{l}{n})}{:}{\sort{l}}
-  \eqnline{\fullbox{l}{n}}{D}{\defeq}{\mybox{l}{n,n}\D}
+\begin{eqntable}{$\mathsf{frame}, \mathsf{layer}, \mathsf{filler}$\label{tab:frames}}
+  \mc{Full $n$-frames}
+  \eqnline{\fullframe{l}{n}}{(D:\X{l}{n})}{:}{\sort{l}}
+  \eqnline{\fullframe{l}{n}}{D}{\defeq}{\framep{l}{n,n}\D}
 
   \\
 
-  \mc{Homogeneous partial $n$-boxes and homogeneous partial $n$-cubes}
-  \eqnline{\mybox{l}{n,p,[p \leq n]}}{(D:\cubeset{l}{n})}{:}{\sort{l}}
-  \eqnline{\mybox{l}{n,0}}{D}{\defeq}{\unittype}
-  \eqnline{\mybox{l}{n,p'+1}}{D}{\defeq}{\Sigma d:\mybox{l}{n,p'}\D.\,\layer{l}{n,p'} \D \d}
+  \mc{Partial $n$-frames, $n$-layers, and $n$-fillers}
+  \eqnline{\framep{l}{n,p,[p \leq n]}}{(D:\X{l}{n})}{:}{\sort{l}}
+  \eqnline{\framep{l}{n,0}}{D}{\defeq}{\unittype}
+  \eqnline{\framep{l}{n,p'+1}}{D}{\defeq}{\Sigma d:\framep{l}{n,p'}\D.\,\layer{l}{n,p'} \D \d}
 
   \\
 
-  \eqnline{\layer{l}{n,p,[p < n]}}{\makecell{(D:\cubeset{l}{n}) \\ (d:\mybox{l}{n,p} \D)}}{:}{\sort{l}}
+  \eqnline{\layer{l}{n,p,[p < n]}}{\makecell{(D:\X{l}{n}) \\ (d:\framep{l}{n,p} \D)}}{:}{\sort{l}}
 
-  \eqnline{\layer{l}{n,p}}{D~d}{\defeq}{\makecell{\cube{l}{n-1,p}\hdD\tlD(\subbox{l,L,p}{n,p} \D \d) \\ \times\;\cube{l}{n-1,p}\hdD\tlD(\subbox{l,R,p}{n,p} \D \d)}}
+  \eqnline{\layer{l}{n,p}}{D~d}{\defeq}{\makecell{\filler{l}{n-1,p}\hdD\tlD(\restrf{l,L,p}{n,p} \D \d) \\ \times\;\filler{l}{n-1,p}\hdD\tlD(\restrf{l,R,p}{n,p} \D \d)}}
 
   \\
 
-  \eqnline{\cube{l}{n,p,[p \leq n]}}{\makecell{(D:\cubeset{l}{n}) \\(E:\cubesetcomp{l}{n} \D) \\ (d:\mybox{l}{n,p} \D)}}{:}{\sort{l}}
+  \eqnline{\filler{l}{n,p,[p \leq n]}}{\makecell{(D:\X{l}{n}) \\(E:\Xcomp{l}{n} \D) \\ (d:\framep{l}{n,p} \D)}}{:}{\sort{l}}
 
-  \eqnline{\cube{l}{n,p,[p = n]}}{D~E~d}{\defeq}{\E \d}
+  \eqnline{\filler{l}{n,p,[p = n]}}{D~E~d}{\defeq}{\E \d}
 
-  \eqnline{\cube{l}{n,p,[p < n]}}{D~E~d}{\defeq}{\Sigma l:\layer{l}{n,p} \D \d.\,\cube{l}{n,p+1} \E(d,l)}
+  \eqnline{\filler{l}{n,p,[p < n]}}{D~E~d}{\defeq}{\Sigma l:\layer{l}{n,p} \D \d.\,\filler{l}{n,p+1} \E(d,l)}
 \end{eqntable}
 
-\begin{eqntable}{Definition of a homogeneous bare cubical set ($q$-th projection)\label{tab:barecubicalsetfaces}}
+\begin{eqntable}{$q$-th projection of $\mathsf{restr}$, or faces\label{tab:faces}}
+  \eqnline{\restrf{l,\epsilon,q}{n,p,[p \leq q \leq n - 1]}}{\makecell{(D:\X{l}{n}) \\ (d:\framep{l}{n,p} \D)}}{:}{\framep{l}{n-1,p}\hdD}
 
-  \eqnline{\subbox{l,\epsilon,q}{n,p,[p \leq q \leq n - 1]}}{\makecell{(D:\cubeset{l}{n}) \\ (d:\mybox{l}{n,p} \D)}}{:}{\mybox{l}{n-1,p}\hdD}
-
-  \eqnline{\subbox{l,\epsilon,q}{n,p'+1}}{D~(d,l)}{\defeq}{(\subbox{l,\epsilon,q}{n,p'} \D\d,\sublayer{l,\epsilon,q-1}{n,p'} \D \d\l)}
-
-  \\
-
-  \eqnline{\sublayer{l,\epsilon,q}{n,p,[p \leq q \leq n - 2]}}{\makecell{(D:\cubeset{l}{n}) \\ (d:\mybox{l}{n,p} \D) \\ (b:\layer{l}{n,p} \D \d)}}{:}{\layer{l}{n-1,p}\hdD(\subbox{l,\epsilon,q+1}{n,p} \D \d)}
-
-  \eqnline{\sublayer{l,\epsilon,q}{n,p}}{D~d~c}{\defeq}{\makecell{(\overright{\cohbox{l,\epsilon,L,q,p}{n,p} \D \d}(\subcube{l,\epsilon,q}{n-1,p}\hdD\tlD(\subbox{l,L,p}{n,p} \D \d)(c_L)), \\ \;\overright{\cohbox{l,\epsilon,R,q,p}{n,p} \D \d}(\subcube{l,\epsilon,q}{n-1,p}\hdD\tlD(\subbox{l,R,p}{n,p}\D\d)(c_R)))}}
+  \eqnline{\restrf{l,\epsilon,q}{n,p'+1}}{D~(d,l)}{\defeq}{(\restrf{l,\epsilon,q}{n,p'} \D\d,\restrl{l,\epsilon,q-1}{n,p'} \D \d\l)}
 
   \\
 
-  \eqnline{\subcube{l,\epsilon,q}{n,p,[p \leq q \leq n - 1]}}{\makecell{(D:\cubeset{l}{n}) \\ (E:\cubesetcomp{l}{n} \D) \\(d:\mybox{l}{n,p} \D) \\ (b:\cube{l}{n,p} \D\E\d)}}{:}{\cube{l}{n-1,p}\hdD\tlD(\subbox{l,\epsilon,q+1}{n,p} \D \d)}
+  \eqnline{\restrl{l,\epsilon,q}{n,p,[p \leq q \leq n - 2]}}{\makecell{(D:\X{l}{n}) \\ (d:\framep{l}{n,p} \D) \\ (b:\layer{l}{n,p} \D \d)}}{:}{\layer{l}{n-1,p}\hdD(\restrf{l,\epsilon,q+1}{n,p} \D \d)}
 
-  \eqnline{\subcube{l,\epsilon,q}{n,p,[p=q]}}{D~E~d~(b,\_)}{\defeq}{b_\epsilon}
+  \eqnline{\restrl{l,\epsilon,q}{n,p}}{D~d~c}{\defeq}{\makecell{(\overright{\cohframe{l,\epsilon,L,q,p}{n,p} \D \d}(\restrc{l,\epsilon,q}{n-1,p}\hdD\tlD(\restrf{l,L,p}{n,p} \D \d)(c_L)), \\ \;\overright{\cohframe{l,\epsilon,R,q,p}{n,p} \D \d}(\restrc{l,\epsilon,q}{n-1,p}\hdD\tlD(\restrf{l,R,p}{n,p}\D\d)(c_R)))}}
 
-  \eqnline{\subcube{l,\epsilon,q}{n,p,[p<q]}}{D~E~d~(b,c)}{\defeq}{(\sublayer{l,\epsilon,q}{n,p} \D \d(b),\subcube{l,\epsilon,q}{n,p+1} \D\E(d,b)\c)}
+  \\
+
+  \eqnline{\restrc{l,\epsilon,q}{n,p,[p \leq q \leq n - 1]}}{\makecell{(D:\X{l}{n}) \\ (E:\Xcomp{l}{n} \D) \\(d:\framep{l}{n,p} \D) \\ (b:\filler{l}{n,p} \D\E\d)}}{:}{\filler{l}{n-1,p}\hdD\tlD(\restrf{l,\epsilon,q+1}{n,p} \D \d)}
+
+  \eqnline{\restrc{l,\epsilon,q}{n,p,[p=q]}}{D~E~d~(b,\_)}{\defeq}{b_\epsilon}
+
+  \eqnline{\restrc{l,\epsilon,q}{n,p,[p<q]}}{D~E~d~(b,c)}{\defeq}{(\restrl{l,\epsilon,q}{n,p} \D \d(b),\restrc{l,\epsilon,q}{n,p+1} \D\E(d,b)\c)}
 \end{eqntable}
 
-\begin{eqntable}{Definition of a homogeneous bare cubical set (commutation of $q$-th projection and $r$-th projection)\label{tab:barecubicalsetcoherences}}
+\begin{eqntable}{Commutation of $q$-th projection and $r$-th projection, or coherence conditions\label{tab:coh}}
 
-  \eqnline{\cohbox{l,\epsilon,\omega,q,r}{n,p,[p \leq r \leq q \leq n - 2]}}{\makecell{(D:\cubeset{l}{n}) \\ (d:\mybox{l}{n,p} \D)}}{:}{\makecell{\subbox{l,\epsilon,q}{n-1,p}\hdD(\subbox{l,\omega,r}{n,p} \D \d) \\ \eqett \subbox{l,\omega,r}{n-1,p}\hdD(\subbox{l,\epsilon,q+1}{n,p} \D \d)}}
+  \eqnline{\cohframe{l,\epsilon,\omega,q,r}{n,p,[p \leq r \leq q \leq n - 2]}}{\makecell{(D:\X{l}{n}) \\ (d:\framep{l}{n,p} \D)}}{:}{\makecell{\restrf{l,\epsilon,q}{n-1,p}\hdD(\restrf{l,\omega,r}{n,p} \D \d) \\ \eqett \restrf{l,\omega,r}{n-1,p}\hdD(\restrf{l,\epsilon,q+1}{n,p} \D \d)}}
 
-  \eqnline{\cohbox{l,\epsilon,\omega,q,r}{n,0}}{D~\unitpoint}{\defeq}{\reflett(\unitpoint)}
+  \eqnline{\cohframe{l,\epsilon,\omega,q,r}{n,0}}{D~\unitpoint}{\defeq}{\reflett(\unitpoint)}
 
-  \eqnline{\cohbox{l,\epsilon,\omega,q,r}{n,p'+1}}{D~(d,c)}{\defeq}{(\cohbox{l,\epsilon,\omega,q,r}{n,p'} \D\d,\cohlayer{l,\epsilon,\omega,q,r}{n,p'} \D\d\c)}
-
-  \\
-
-  \eqnline{\cohlayer{l,\epsilon,\omega,q,r}{n,p,[p < r \leq q \leq n - 2]}}{\makecell{(D:\cubeset{l}{n}) \\ (d:\mybox{l}{n,p} \D) \\(b:\layer{l}{n,p} \D \d)}}{:}{\makecell{\overright{\cohbox{l,\epsilon,\omega,q+1,r+1}{n,p} \D \d}(\sublayer{l,\epsilon,q}{n-1,p}\hdD(\subbox{l,\omega,r}{n,p} \D \d)(\sublayer{l,\omega,r}{n,p} \D \d(b))) \\ \eqett \sublayer{l,\omega,r}{n-1,p}\hdD(\subbox{l,\epsilon,q+1}{n,p} \D \d)(\sublayer{l,\epsilon,q+1}{n,p} \D \d(b))}}
-
-  \eqnline{\cohlayer{l,\epsilon,\omega,q,r}{n,p}}{D~d~c}{\defeq}{\makecell{(\cohcube{l,\epsilon,\omega,q-1,r-1}{n-1,p}\hdD\tlD(\subbox{l,L,p}{n,p} \D \d)(c_L), \\ \;\cohcube{l,\epsilon,\omega,q-1,r-1}{n-1,p}\hdD\tlD(\subbox{l,R,p}{n,p} \D \d)(c_R))}}
+  \eqnline{\cohframe{l,\epsilon,\omega,q,r}{n,p'+1}}{D~(d,c)}{\defeq}{(\cohframe{l,\epsilon,\omega,q,r}{n,p'} \D\d,\cohlayer{l,\epsilon,\omega,q,r}{n,p'} \D\d\c)}
 
   \\
 
-  \eqnline{\cohcube{l,\epsilon,\omega,q,r}{n,p,[p \leq r \leq q \leq n - 2]}}{\makecell{(D:\cubeset{l}{n}) \\ (E:\cubesetcomp{l}{n} \D) \\ (d:\mybox{l}{n,p} \D) \\ (b:\cube{l}{n,p} \D\E \d)}}{:}{\makecell{\overright{\cohbox{l,\epsilon,\omega,q+1,r+1}{n,p} \D \d}(\subcube{l,\epsilon,q}{n-1,p}\hdD\tlD(\subbox{l,\omega,r}{n,p} \D \d)(\subcube{l,\omega,r}{n,p} \D\E \d(b))) \\ \eqett \subcube{l,\omega,r}{n-1,p}\hdD\tlD(\subbox{l,\epsilon,q+1}{n,p} \D \d)(\subcube{l,\epsilon,q+1}{n,p} \D\E \d(b))}}
+  \eqnline{\cohlayer{l,\epsilon,\omega,q,r}{n,p,[p < r \leq q \leq n - 2]}}{\makecell{(D:\X{l}{n}) \\ (d:\framep{l}{n,p} \D) \\(b:\layer{l}{n,p} \D \d)}}{:}{\makecell{\overright{\cohframe{l,\epsilon,\omega,q+1,r+1}{n,p} \D \d}(\restrl{l,\epsilon,q}{n-1,p}\hdD(\restrf{l,\omega,r}{n,p} \D \d)(\restrl{l,\omega,r}{n,p} \D \d(b))) \\ \eqett \restrl{l,\omega,r}{n-1,p}\hdD(\restrf{l,\epsilon,q+1}{n,p} \D \d)(\restrl{l,\epsilon,q+1}{n,p} \D \d(b))}}
 
-  \eqnline{\cohcube{l,\epsilon,\omega,q,r}{n,p,[p=r]}}{D~E~d~(b,\_)}{\defeq}{\reflett(\subcube{l,\epsilon,q-1}{n-1,p}\hdD\tlD(\subbox{l,\omega,p}{n,p} \D \d)(b_{\epsilon}))}
+  \eqnline{\cohlayer{l,\epsilon,\omega,q,r}{n,p}}{D~d~c}{\defeq}{\makecell{(\cohfiller{l,\epsilon,\omega,q-1,r-1}{n-1,p}\hdD\tlD(\restrf{l,L,p}{n,p} \D \d)(c_L), \\ \;\cohfiller{l,\epsilon,\omega,q-1,r-1}{n-1,p}\hdD\tlD(\restrf{l,R,p}{n,p} \D \d)(c_R))}}
 
-  \eqnline{\cohcube{l,\epsilon,\omega,q,r}{n,p,[p<r]}}{D~E~d~(b,c)}{\defeq}{(\cohlayer{l,\epsilon,\omega,q,r}{n,p} \D \d(b),\;\cohcube{l,\epsilon,\omega,q,r}{n,p+1} \D\E(d,b)\c)}
+  \\
+
+  \eqnline{\cohfiller{l,\epsilon,\omega,q,r}{n,p,[p \leq r \leq q \leq n - 2]}}{\makecell{(D:\X{l}{n}) \\ (E:\Xcomp{l}{n} \D) \\ (d:\framep{l}{n,p} \D) \\ (b:\filler{l}{n,p} \D\E \d)}}{:}{\makecell{\overright{\cohframe{l,\epsilon,\omega,q+1,r+1}{n,p} \D \d}(\restrc{l,\epsilon,q}{n-1,p}\hdD\tlD(\restrf{l,\omega,r}{n,p} \D \d)(\restrc{l,\omega,r}{n,p} \D\E \d(b))) \\ \eqett \restrc{l,\omega,r}{n-1,p}\hdD\tlD(\restrf{l,\epsilon,q+1}{n,p} \D \d)(\restrc{l,\epsilon,q+1}{n,p} \D\E \d(b))}}
+
+  \eqnline{\cohfiller{l,\epsilon,\omega,q,r}{n,p,[p=r]}}{D~E~d~(b,\_)}{\defeq}{\reflett(\restrc{l,\epsilon,q-1}{n-1,p}\hdD\tlD(\restrf{l,\omega,p}{n,p} \D \d)(b_{\epsilon}))}
+
+  \eqnline{\cohfiller{l,\epsilon,\omega,q,r}{n,p,[p<r]}}{D~E~d~(b,c)}{\defeq}{(\cohlayer{l,\epsilon,\omega,q,r}{n,p} \D \d(b),\;\cohfiller{l,\epsilon,\omega,q,r}{n,p+1} \D\E(d,b)\c)}
 \end{eqntable}
 
-\begin{eqntable}{Definition of a bare cubical set (coinductive structure)\label{tab:barecubicalset}}
-  \mc{Full (non-truncated) cubical sets with degeneracies}
-  \eqnline{\csp{l}}{}{:}{\sort{l+1}}
-  \eqnline{\csp{l}}{}{\defeq}{\cubesetfrom{l}{0}(\star)}
+\begin{eqntable}{Coinductive structure\label{tab:coind}}
+  \eqnline{\Xp{l}}{}{:}{\sort{l+1}}
+  \eqnline{\Xp{l}}{}{\defeq}{\Xfrom{l}{0}(\star)}
   \\
-  \eqnline{\cubesetfrom{l}{n}}{(D:\cubeset{l}{n})}{:}{\sort{l+1}}
-  \eqnline{\cubesetfrom{l}{n}}{D}{\defeq}{\Sigma R:\cubesetcomp{l}{n} \D.\,\cubesetfrom{l}{n+1}(D,R)}
+  \eqnline{\Xfrom{l}{n}}{(D:\X{l}{n})}{:}{\sort{l+1}}
+  \eqnline{\Xfrom{l}{n}}{D}{\defeq}{\Sigma R:\Xcomp{l}{n} \D.\,\Xfrom{l}{n+1}(D,R)}
 \end{eqntable}
 
 \newpage
