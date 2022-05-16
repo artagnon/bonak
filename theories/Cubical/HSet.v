@@ -14,7 +14,7 @@ Proof.
   destruct g, x. now apply UIP_refl_unit.
 Qed.
 
-Definition hunit@{l}: HSet@{l} := {|
+Definition hunit@{m}: HSet@{m} := {|
   Dom := unit;
   UIP := unit_UIP;
 |}.
