@@ -1,17 +1,17 @@
 \begin{eqntable}{$q$-th projection of $\mathsf{restr}$, or faces\label{tab:faces}}
-  \eqnline{\restrf[m][\epsilon][q][n][p][p \leq q \leq n - 1]}{\makecell{(D:\X{l}{n}) \\ (d:\framep[m][n][p] \D)}}{:}{\framep[m][n-1][p] \hdD}
+  \eqnline{\restrf[m][\epsilon][q][n][p][p \leq q \leq n - 1]}{\makecell{(D:\X{m}{n}) \\ (d:\framep[m][n][p] \D)}}{:}{\framep[m][n-1][p] \hdD}
 
   \eqnline{\restrf[m][\epsilon][q][n][p'+1]}{D~(d,l)}{\defeq}{(\restrf[m][\epsilon][q][n][p'] \D\d,\restrl[m][\epsilon][q-1][n][p'] \D \d\l)}
 
   \\
 
-  \eqnline{\restrl[m][\epsilon][q][n][p][p \leq q \leq n - 2]}{\makecell{(D:\X{l}{n}) \\ (d:\framep[m][n][p] \D) \\ (l:\layer[m][n][p] \D \d)}}{:}{\layer[m][n-1][p] \hdD(\restrf[m][\epsilon][q+1][n][p] \D \d)}
+  \eqnline{\restrl[m][\epsilon][q][n][p][p \leq q \leq n - 2]}{\makecell{(D:\X{m}{n}) \\ (d:\framep[m][n][p] \D) \\ (l:\layer[m][n][p] \D \d)}}{:}{\layer[m][n-1][p] \hdD(\restrf[m][\epsilon][q+1][n][p] \D \d)}
 
-  \eqnline{\restrl[m][\epsilon][q][n,p]}{D~d~l}{\defeq}{\makecell{(\overright{\cohframe[m][\epsilon][m][q][p][n][p] \D \d}(\restrc[m][\epsilon][q][n-1][p]\hdD\tlD(\restrf[m][L][p][n][p] \D \d)(l_\epsilon)))}}
+  \eqnline{\restrl[m][\epsilon][q][n,p]}{D~d~l}{\defeq}{\makecell{\omega \imp (\overright{\cohframe[m][\epsilon][m][q][p][n][p] \D \d}(\restrc[m][\epsilon][q][n-1][p]\hdD\tlD(\restrc[m][\omega][p][n][p] \D \d)(l_\omega)))}}
 
   \\
 
-  \eqnline{\restrc[m][\epsilon][q][n][p][p \leq q \leq n - 1]}{\makecell{(D:\X{l}{n}) \\ (E:\Xcomp{l}{n} \D) \\(d:\framep[m][n][p] \D) \\ (c:\filler[m][n][p] \D\E\d)}}{:}{\filler[m][n-1][p] \hdD\tlD(\restrf[m][\epsilon][q+1][n][p] \D \d)}
+  \eqnline{\restrc[m][\epsilon][q][n][p][p \leq q \leq n - 1]}{\makecell{(D:\X{m}{n}) \\ (E:\Xcomp{m}{n} \D) \\(d:\framep[m][n][p] \D) \\ (c:\filler[m][n][p] \D\E\d)}}{:}{\filler[m][n-1][p] \hdD\tlD(\restrf[m][\epsilon][q+1][n][p] \D \d)}
 
   \eqnline{\restrc[m][\epsilon][q][n][p][p=q]}{D~E~d~(l,\_)}{\defeq}{l_\epsilon}
 

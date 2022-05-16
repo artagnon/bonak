@@ -1,24 +1,24 @@
 \begin{eqntable}{frame, layer, and filler\label{tab:frames}}
   \mc{Full $n$-frames}
-  \eqnline{\fullframe[m][n]}{(D:\X{l}{n})}{:}{\U{l}}
+  \eqnline{\fullframe[m][n]}{(D:\X{m}{n})}{:}{\U{l}}
   \eqnline{\fullframe[m][n]}{D}{\defeq}{\framep[m][n][n] \D}
 
   \\
 
   \mc{Partial $n$-frames, $n$-layers, and $n$-fillers}
-  \eqnline{\framep[m][n][p][p \leq n]}{(D:\X{l}{n})}{:}{\U{l}}
+  \eqnline{\framep[m][n][p][p \leq n]}{(D:\X{m}{n})}{:}{\U{l}}
   \eqnline{\framep[m][n][0]}{D}{\defeq}{\unittype}
   \eqnline{\framep[m][n][p'+1]}{D}{\defeq}{\Sigma d:\framep[m][n][p']\D.\,\layer[m][n][p'] \D \d}
 
   \\
 
-  \eqnline{\layer[m][n][p][p < n]}{\makecell{(D:\X{l}{n}) \\ (d:\framep[m][n][p] \D)}}{:}{\U{l}}
+  \eqnline{\layer[m][n][p][p < n]}{\makecell{(D:\X{m}{n}) \\ (d:\framep[m][n][p] \D)}}{:}{\U{l}}
 
   \eqnline{\layer[m][n][p]}{D~d}{\defeq}{\Pi \omega, \filler[m][n-1][p] \hdD\tlD(\restrf[m][\omega][p][n][p] \D \d)}
 
   \\
 
-  \eqnline{\filler[m][n][p][p \leq n]}{\makecell{(D:\X{l}{n}) \\(E:\Xcomp{l}{n} \D) \\ (d:\framep[m][n][p] \D)}}{:}{\U{l}}
+  \eqnline{\filler[m][n][p][p \leq n]}{\makecell{(D:\X{m}{n}) \\(E:\Xcomp{m}{n} \D) \\ (d:\framep[m][n][p] \D)}}{:}{\U{l}}
 
   \eqnline{\filler[m][n][p][p = n]}{D~E~d}{\defeq}{E \d}
 
