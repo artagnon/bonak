@@ -49,7 +49,7 @@
   end
 \end{luacode*}
 
-\newcommandx{\joinargs}[4][1=,2=,3=,4=]{\directlua{tex.sprint(join_with_comma({"\luaescapestring{#1}";"\luaescapestring{#2}";"\luaescapestring{#3}";"\luaescapestring{#4}"}))}}
+\newcommandx{\joinargs}[5][1=,2=,3=,4=,5=]{\directlua{tex.sprint(join_with_comma({"\luaescapestring{#1}";"\luaescapestring{#2}";"\luaescapestring{#3}";"\luaescapestring{#4}";"\luaescapestring{#5}"}))}}
 
 
 % Restriction for frame, layer, and filler
@@ -59,9 +59,10 @@
 \newcommandx{\restrc}[6][1=,2=,3=,4=,5=,6=]{\restr{filler}[#1][#2][#3][#4][#5][#6]}
 
 % Coherence conditions for frame, layer, and filler
-\newcommand{\cohframe}[2]{\ensuremath{\mathsf{cohframe}_{#1}^{#2}}}
-\newcommand{\cohlayer}[2]{\ensuremath{\mathsf{cohlayer}_{#1}^{#2}}}
-\newcommand{\cohfiller}[2]{\ensuremath{\mathsf{cohfiller}_{#1}^{#2}}}
+\newcommandx{\coh}[9][2=,3=,4=,5=,6=,7=,8=,9=]{\ensuremath{\mathsf{#1}_{\joinargs[#2][#3][#4][#5][#6]}^{\joinargs[#7][#8][#9]}}}
+\newcommandx{\cohframe}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{cohframe}[#1][#2][#3][#4][#5][#6][#7][#8]}
+\newcommandx{\cohlayer}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{cohlayer}[#1][#2][#3][#4][#5][#6][#7][#8]}
+\newcommandx{\cohfiller}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{cohfiller}[#1][#2][#3][#4][#5][#6][#7][#8]}
 
 % Logical implication
 \newcommand{\imp}{\ensuremath{\rightarrow}}
@@ -497,7 +498,7 @@ sets as the coinductive limit (see table \ref{tab:coind}) of a
 construction of truncated semi-cubical sets.
 
 \subsection{Truncated sets}
-The definition is dispatched over tables \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces} and \ref{tab:coh}. It describes the structure of the underlying higher-dimensional relations on which cubes and boxes are built, together with the definition of homogeneous $n$-boxes, homogeneous $n$-cubes, together with face operations on boxes and cubes, together with commutation properties of the face operations. All are mutually defined as types of the target language ETT. Note that such relational structure, cubes and boxes are relative to a universe. Note the presence of a coherence condition $\cohframe{l}{}$ to ensuring that both sides of the equality in $\restrl[l]$ and $\restrc[l]$ are in the same type. The proof of $\cohframe{l}{}$ itself requires an higher-dimensional coherence condition which we obtain by working here in ETT where all proofs of an equality are identified (principle of Unicity of Identity Proofs). Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory). Note also that for a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\restrf[l]$ nor $\cohframe{l}{}$ anymore.
+The definition is dispatched over tables \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces} and \ref{tab:coh}. It describes the structure of the underlying higher-dimensional relations on which cubes and boxes are built, together with the definition of homogeneous $n$-boxes, homogeneous $n$-cubes, together with face operations on boxes and cubes, together with commutation properties of the face operations. All are mutually defined as types of the target language ETT. Note that such relational structure, cubes and boxes are relative to a universe. Note the presence of a coherence condition $\cohframe[l]$ to ensuring that both sides of the equality in $\restrl[l]$ and $\restrc[l]$ are in the same type. The proof of $\cohframe[l]$ itself requires an higher-dimensional coherence condition which we obtain by working here in ETT where all proofs of an equality are identified (principle of Unicity of Identity Proofs). Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory). Note also that for a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\restrf[l]$ nor $\cohframe[l]$ anymore.
 
 When reflexivities are excepted, we call the structure thus defined \emph{bare truncated sets}: \emph{bare} because it can be seen as defining semi-cubical sets corresponding to semi-simplicial sets with only faces as part of the structure; \emph{truncated} because we consider only such cubical sets up to some fixed dimension.
 
@@ -550,7 +551,7 @@ When reflexivities are excepted, we call the structure thus defined \emph{bare t
 
   \eqnline{\restrl[l][\epsilon][q][n][p][p \leq q \leq n - 2]}{\makecell{(D:\X{l}{n}) \\ (d:\framep{l}{n,p} \D) \\ (b:\layer{l}{n,p} \D \d)}}{:}{\layer{l}{n-1,p}\hdD(\restrf[l][\epsilon][q+1][n][p] \D \d)}
 
-  \eqnline{\restrl[l][\epsilon][q][n,p]}{D~d~c}{\defeq}{\makecell{(\overright{\cohframe{l,\epsilon,L,q,p}{n,p} \D \d}(\restrc[l][\epsilon][q][n-1][p]\hdD\tlD(\restrf[l][L][p][n][p] \D \d)(c_L)), \\ \;\overright{\cohframe{l,\epsilon,R,q,p}{n,p} \D \d}(\restrc[l][\epsilon][q][n-1][p]\hdD\tlD(\restrf[l][R][p][n][p] \D\d)(c_R)))}}
+  \eqnline{\restrl[l][\epsilon][q][n,p]}{D~d~c}{\defeq}{\makecell{(\overright{\cohframe[l][\epsilon][L][q][p][n][p] \D \d}(\restrc[l][\epsilon][q][n-1][p]\hdD\tlD(\restrf[l][L][p][n][p] \D \d)(c_L)), \\ \;\overright{\cohframe[l][\epsilon][R][q][p][n][p] \D \d}(\restrc[l][\epsilon][q][n-1][p]\hdD\tlD(\restrf[l][R][p][n][p] \D\d)(c_R)))}}
 
   \\
 
@@ -563,25 +564,25 @@ When reflexivities are excepted, we call the structure thus defined \emph{bare t
 
 \begin{eqntable}{Commutation of $q$-th projection and $r$-th projection, or coherence conditions\label{tab:coh}}
 
-  \eqnline{\cohframe{l,\epsilon,\omega,q,r}{n,p,[p \leq r \leq q \leq n - 2]}}{\makecell{(D:\X{l}{n}) \\ (d:\framep{l}{n,p} \D)}}{:}{\makecell{\restrf[l][\epsilon][q][n-1][p]\hdD(\restrf[l][\omega][r][n][p] \D \d) \\ \eqett \restrf{l,\omega,r}{n-1,p}\hdD(\restrf[l][\epsilon][q+1][n][p] \D \d)}}
+  \eqnline{\cohframe[l][\epsilon][\omega][q][r][n][p][p \leq r \leq q \leq n - 2]}{\makecell{(D:\X{l}{n}) \\ (d:\framep{l}{n,p} \D)}}{:}{\makecell{\restrf[l][\epsilon][q][n-1][p] \hdD(\restrf[l][\omega][r][n][p] \D \d) \\ \eqett \restrf[l][\omega][r][n-1][p] \hdD(\restrf[l][\epsilon][q+1][n][p] \D \d)}}
 
-  \eqnline{\cohframe{l,\epsilon,\omega,q,r}{n,0}}{D~\unitpoint}{\defeq}{\reflett(\unitpoint)}
+  \eqnline{\cohframe[l][\epsilon][\omega][q][r][n][0]}{D~\unitpoint}{\defeq}{\reflett(\unitpoint)}
 
-  \eqnline{\cohframe{l,\epsilon,\omega,q,r}{n,p'+1}}{D~(d,c)}{\defeq}{(\cohframe{l,\epsilon,\omega,q,r}{n,p'} \D\d,\cohlayer{l,\epsilon,\omega,q,r}{n,p'} \D\d\c)}
-
-  \\
-
-  \eqnline{\cohlayer{l,\epsilon,\omega,q,r}{n,p,[p < r \leq q \leq n - 2]}}{\makecell{(D:\X{l}{n}) \\ (d:\framep{l}{n,p} \D) \\(b:\layer{l}{n,p} \D \d)}}{:}{\makecell{\overright{\cohframe{l,\epsilon,\omega,q+1,r+1}{n,p} \D \d}(\restrl[l][\epsilon][q][n-1][p]\hdD(\restrf[l][\omega][r][n][p] \D \d)(\restrl[l][\omega][r][n][p] \D \d(b))) \\ \eqett \restrl[l][\omega][r][n-1][p]\hdD(\restrf[l][\epsilon][q+1][n][p] \D \d)(\restrl[l][\epsilon][q+1][n][p] \D \d(b))}}
-
-  \eqnline{\cohlayer{l,\epsilon,\omega,q,r}{n,p}}{D~d~c}{\defeq}{\makecell{(\cohfiller{l,\epsilon,\omega,q-1,r-1}{n-1,p}\hdD\tlD(\restrf[l][L][p][n][p] \D \d)(c_L), \\ \;\cohfiller{l,\epsilon,\omega,q-1,r-1}{n-1,p}\hdD\tlD(\restrf[l][R][p][n][p] \D \d)(c_R))}}
+  \eqnline{\cohframe[l][\epsilon][\omega][q][r][n][p'+1]}{D~(d,c)}{\defeq}{(\cohframe[l][\epsilon][\omega][q][r][n][p'] \D\d,\cohlayer[l][\epsilon][\omega][q][r][n][p'] \D\d\c)}
 
   \\
 
-  \eqnline{\cohfiller{l,\epsilon,\omega,q,r}{n,p,[p \leq r \leq q \leq n - 2]}}{\makecell{(D:\X{l}{n}) \\ (E:\Xcomp{l}{n} \D) \\ (d:\framep{l}{n,p} \D) \\ (b:\filler{l}{n,p} \D\E \d)}}{:}{\makecell{\overright{\cohframe{l,\epsilon,\omega,q+1,r+1}{n,p} \D \d}(\restrc[l][\epsilon][q][n-1][p]\hdD\tlD(\restrf[l][\omega][r][n][p] \D \d)(\restrc[l][\omega][r][n][p] \D\E \d(b))) \\ \eqett \restrc[l][\omega][r][n-1][p]\hdD\tlD(\restrf[l][\epsilon][q+1][n][p] \D \d)(\restrc[l][\epsilon][q+1][n][p] \D\E \d(b))}}
+  \eqnline{\cohlayer[l][\epsilon][\omega][q][r][n][p][p < r \leq q \leq n - 2]}{\makecell{(D:\X{l}{n}) \\ (d:\framep{l}{n,p} \D) \\(b:\layer{l}{n,p} \D \d)}}{:}{\makecell{\overright{\cohframe[l][\epsilon][\omega][q+1][r+1][n][p] \D \d}(\restrl[l][\epsilon][q][n-1][p]\hdD(\restrf[l][\omega][r][n][p] \D \d)(\restrl[l][\omega][r][n][p] \D \d(b))) \\ \eqett \restrl[l][\omega][r][n-1][p]\hdD(\restrf[l][\epsilon][q+1][n][p] \D \d)(\restrl[l][\epsilon][q+1][n][p] \D \d(b))}}
 
-  \eqnline{\cohfiller{l,\epsilon,\omega,q,r}{n,p,[p=r]}}{D~E~d~(b,\_)}{\defeq}{\reflett(\restrc[l][\epsilon][q-1][n-1][p]\hdD\tlD(\restrf[l][\omega][p][n][p] \D \d)(b_{\epsilon}))}
+  \eqnline{\cohlayer[l][\epsilon][\omega][q][r][n][p]}{D~d~c}{\defeq}{\makecell{(\cohfiller[l][\epsilon][\omega][q-1][r-1][n-1][p]\hdD\tlD(\restrf[l][L][p][n][p] \D \d)(c_L), \\ \;\cohfiller[l][\epsilon][\omega][q-1][r-1][n-1][p] \hdD\tlD(\restrf[l][R][p][n][p] \D \d)(c_R))}}
 
-  \eqnline{\cohfiller{l,\epsilon,\omega,q,r}{n,p,[p<r]}}{D~E~d~(b,c)}{\defeq}{(\cohlayer{l,\epsilon,\omega,q,r}{n,p} \D \d(b),\;\cohfiller{l,\epsilon,\omega,q,r}{n,p+1} \D\E(d,b)\c)}
+  \\
+
+  \eqnline{\cohfiller[l][\epsilon][\omega][q][r][n][p][p \leq r \leq q \leq n - 2]}{\makecell{(D:\X{l}{n}) \\ (E:\Xcomp{l}{n} \D) \\ (d:\framep{l}{n,p} \D) \\ (b:\filler{l}{n,p} \D\E \d)}}{:}{\makecell{\overright{\cohframe[l][\epsilon][\omega][q+1][r+1][n][p] \D \d}(\restrc[l][\epsilon][q][n-1][p]\hdD\tlD(\restrf[l][\omega][r][n][p] \D \d)(\restrc[l][\omega][r][n][p] \D\E \d(b))) \\ \eqett \restrc[l][\omega][r][n-1][p]\hdD\tlD(\restrf[l][\epsilon][q+1][n][p] \D \d)(\restrc[l][\epsilon][q+1][n][p] \D\E \d(b))}}
+
+  \eqnline{\cohfiller[l][\epsilon][\omega][q][r][n][p][p=r]}{D~E~d~(b,\_)}{\defeq}{\reflett(\restrc[l][\epsilon][q-1][n-1][p]\hdD\tlD(\restrf[l][\omega][p][n][p] \D \d)(b_{\epsilon}))}
+
+  \eqnline{\cohfiller[l][\epsilon][\omega][q][r][n][p][p<r]}{D~E~d~(b,c)}{\defeq}{(\cohlayer[l][\epsilon][\omega][q][r][n][p] \D \d(b),\;\cohfiller[l][\epsilon][\omega][q][r][n][p+1] \D\E(d,b)\c)}
 \end{eqntable}
 
 \begin{eqntable}{Coinductive structure\label{tab:coind}}
