@@ -56,7 +56,7 @@
 \newcommandx{\restr}[7][2=,3=,4=,5=,6=,7=]{\ensuremath{\mathsf{\color{russian-green}{restr}}_{\mathsf{\color{indian-yellow}{#1}}, \joinargs[#2][#3][#4]}^{\joinargs[#5][#6][#7]}}}
 
 % Coherence conditions for frame, layer, and filler: the general macro
-\newcommandx{\coh}[9][2=,3=,4=,5=,6=,7=,8=,9=]{\ensuremath{\mathsf{\color{chestnut}{#1}}_{\joinargs[#2][#3][#4][#5][#6]}^{\joinargs[#7][#8][#9]}}}
+\newcommandx{\coh}[9][2=,3=,4=,5=,6=,7=,8=,9=]{\ensuremath{\mathsf{\color{chestnut}{coh}}_{\mathsf{\color{indian-yellow}{#1}}, \joinargs[#2][#3][#4][#5][#6]}^{\joinargs[#7][#8][#9]}}}
 
 % Logical implication
 \newcommand{\imp}{\ensuremath{\rightarrow}}
@@ -504,9 +504,9 @@ as a coinductive limit.
 \newcommandx{\restrc}[6][1=,2=,3=,4=,5=,6=]{\restr{filler}[][#2][][#4][#5][#6]}
 
 % Coherence conditions for frame, layer, and filler
-\newcommandx{\cohframe}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{cohframe}[][#2][#3][][][][][#8]}
-\newcommandx{\cohlayer}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{cohlayer}[#1][#2][#3][#4][#5][#6][#7][#8]}
-\newcommandx{\cohfiller}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{cohfiller}[#1][#2][#3][#4][#5][#6][#7][#8]}
+\newcommandx{\cohframe}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{frame}[][#2][#3][][][][][#8]}
+\newcommandx{\cohlayer}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{layer}[#1][#2][#3][#4][#5][#6][#7][#8]}
+\newcommandx{\cohfiller}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{filler}[#1][#2][#3][#4][#5][#6][#7][#8]}
 
 The definition is dispatched over tables \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces} and \ref{tab:coh}. It describes the structure of the underlying higher-dimensional relations on which fillers are built. Note the presence of a coherence condition $\cohframe[l]$ to ensuring that both sides of the equality in $\restrl[l]$ and $\restrc[l]$ are in the same type. The proof of $\cohframe[l]$ itself requires an higher-dimensional coherence condition which we obtain by working in \mintinline{coq}{HSet}. Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory). Note also that for a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\restrf[l]$ nor $\cohframe[l]$ anymore.
 
@@ -522,9 +522,9 @@ When reflexivities are excluded, we call the structure thus defined \emph{bare t
 \renewcommandx{\restrc}[6][1=,2=,3=,4=,5=,6=]{\restr{filler}[][#2][#3][#4][#5][#6]}
 
 % Coherence conditions for frame, layer, and filler
-\renewcommandx{\cohframe}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{cohframe}[][][][#4][#5][][#7][#8]}
-\renewcommandx{\cohlayer}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{cohlayer}[][][][#4][#5][][#7][#8]}
-\renewcommandx{\cohfiller}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{cohfiller}[][][][#4][#5][][#7][#8]}
+\renewcommandx{\cohframe}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{frame}[][][][#4][#5][][#7][#8]}
+\renewcommandx{\cohlayer}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{layer}[][][][#4][#5][][#7][#8]}
+\renewcommandx{\cohfiller}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{filler}[][][][#4][#5][][#7][#8]}
 
 \input{tab-coh.tex}
 \input{tab-coind.tex}
