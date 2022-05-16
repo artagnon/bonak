@@ -50,7 +50,7 @@
 \newcommandx{\prim}[5][2=,3=,4=,5=]{\ensuremath{\mathsf{\color{indian-yellow}{#1}}_{#2}^{\joinargs[#3][#4][#5]}}}
 
 % Full frame
-\newcommand{\fullframe}[2]{\ensuremath{\mathsf{\color{indian-yellow}{fullframe}}_{#1}^{#2}}}
+\newcommandx{\fullframe}[2][1=,2=]{\ensuremath{\mathsf{\color{indian-yellow}{fullframe}}^{#2}}}
 
 % Restriction for frame, layer, and filler: the general macro
 \newcommandx{\restr}[7][2=,3=,4=,5=,6=,7=]{\ensuremath{\mathsf{\color{russian-green}{restr}}_{\mathsf{\color{indian-yellow}{#1}}, \joinargs[#2][#3][#4]}^{\joinargs[#5][#6][#7]}}}
@@ -132,7 +132,7 @@
 \thispagestyle{empty}
 \maketitle
 \begin{abstract}
-  A proposed model of \emph{homotopy type theory} built via a \emph{reverse iterated Grothendieck construction} process formalizing semi-simplicial and semi-cubical sets in dependent type theory with \emph{extensional equality}. The accompanying artifact is a Coq formalization that uses highly sophisticated rewriting techniques and pushes the boundary of proof assistant technology.
+  A model of \emph{homotopy type theory}, that formalizes \emph{truncated} $n$-types in dependent type theory. The accompanying artifact is an axiomless Coq formalization~\footnote{Technically speaking, we use some axioms related to functional extensionality, but the requirement arises only from our generalization to truncated $n$-types; if one were to instantiate our development for a particular type (say, augmented simplicial types), this requirement vanishes.} that uses sophisticated rewriting techniques and pushes the boundary of proof assistant technology.
 \end{abstract}
 \tableofcontents
 \newpage
@@ -140,7 +140,7 @@
 \section{Overture}
 Cubical type theory~\cite{Bezem14}~\cite{Cohen16}~\cite{Angiuli17} is an extension of dependent type theory that provides a computational interpretation of Voevodsky's \emph{univalence axiom}, in a field known as \emph{homotopy type theory}, or HoTT. Two real-world projects that implement cubical type theory are worthy of mention: an experimental branch of Agda, known as \emph{Cubical Agda}~\cite{Vezzosi21}, and the Arend theorem prover~\footnote{\href{https://arend-lang.github.io}{arend-lang.github.io}}. Cubical type theory is usually modeled as cubical sets, in the set-theoretic setting. Efforts to model cubical type theory have been ongoing since 2014, and many of these efforts are in the set-theoretic setting.
 
-Our contribution is to model the core of semi-simplicial and semi-cubical types, truncated sets, in type theory, using an indexed representation, in contrast to previous efforts that use a fibered representation. We use an \emph{iterated reverse-Grothendieck} construction as the basis of our formalization, which we expound on in \ref{sec:grothendieckconstr}. Our work is, in principle axiom-free, although the accompanying artifact uses functional extensionality in order to generalize our work to $n$-truncated sets.
+Our contribution is to model the core of semi-cubical sets that naturally generalizes to augmented simplicial sets in type theory, and we call our generalization \emph{truncated $n$-sets}. In contrast to previous efforts that use a fibered representation, we use an indexed representation, that can be derived from the fibered one using a \emph{iterated reverse-Grothendieck} construction. Our work is, in principle axiom-free, although the accompanying artifact uses functional extensionality in order to generalize our work to $n$-truncated sets.
 
 \begin{table}[H]
   \begin{tabularx}{\linewidth}{p{.3\linewidth}|p{.3\linewidth}|p{.3\linewidth}}
@@ -154,11 +154,13 @@ Our contribution is to model the core of semi-simplicial and semi-cubical types,
   \end{tabularx}
 \end{table}
 
+The outline of the paper is as follows. First, we take the opportunity to familize the reader with simplicial sets, as it appears in mathematical literature, along with a short section on semi-cubical sets. We then proceed to explain our construction, with the help of diagrams. Before spelling out the details of our formalization in type-theoretic language, we have a section on the unicity of identity proofs (UIP), since the use of \mintinline{coq}{SProp} has greatly eased our Coq formalization.
+
 \section{Simplicial sets}
-Simplicial sets are powerful mathematical objects, that form the basis of much of modern homotopy theory. Their power derives from the fact that their homotopy category is exceptionally well-behaved, and different model structures on them, as we will see in the following chapter. Unlike CW-complexes that rely on pure topological notions like spheres and disks to ``tame'' a topological space, the definition of simplicial sets is purely categorical, and exist independent of topological spaces. The geometric realization and singular complex functors facilitate travelling back-and-forth between simplicial sets and topological spaces, and these are non-trivial constructions. As such, simplicial sets exist purely in the imagination of the mathematician; each simplicial set has an infinite number of degenerate simplices, and they are not particularly well-suited to machine-based representation.
+Simplicial sets are powerful mathematical objects, that form the basis of much of modern homotopy theory. Their power derives from the fact that their homotopy category is exceptionally well-behaved, and that there are multiple model structures defined on them. Unlike CW-complexes that rely on pure topological notions like spheres and disks to ``tame'' a topological space, the definition of simplicial sets is purely categorical, and exist independent of topological spaces. The \emph{geometric realization} and \emph{singular complex} functors facilitate travelling back-and-forth between simplicial sets and topological spaces, and these are non-trivial constructions. As such, simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices.
 
 \subsection{\texorpdfstring{\SSet}{The category of simplicial sets}}
-There exists vast mathematical literature on the subject, and we refer the uninitiated reader to \cite{Friedman08} for a gentle introduction with excellent intutions. With these intuitions in place, we proceed with a purely categorical treatment. Emily Riehl's \cite{Riehl11} is a well-written manuscript on the subject.
+There exists vast mathematical literature on the subject, and we refer the uninitiated reader to \cite{Friedman08} for a gentle introduction with excellent intutions. With these intuitions in place, we proceed with a purely categorical treatment. Emily Riehl's \cite{Riehl11} is an especially well-written manuscript on the subject.
 
 \begin{definition}[\sq{n}]
   $\sq{n}$ is used to denote a totally-ordered set of natural numbers less than or equal to $n$, ordered by magnitude.
@@ -324,8 +326,8 @@ As is clear from the above definitions, simplicial sets have an infinite number 
   $$
 \end{example}
 
-\subsection{Motivation for \texorpdfstring{\DeltaHat}{delta sets}}
-As hinted earlier, simplicial sets are ill-suited for machine-based representation, due to the infinite number of degenerate simplices that are uninteresting from the point of view of cubical type theory. To remedy this problem, let us instead use \DeltaHat, and proceed towards building, what is called \emph{semi-cubical sets} in literature. $\DeltaHat$ is identical to \Simplex{}, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are \emph{strictly} order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. In mathematical literature, there is little interest in studying \DeltaHat, since delta maps are not well-defined, and constructing a $\Set^{\op{\DeltaHat}}$ is inelegant.
+\subsection{\texorpdfstring{\DeltaHat}{Delta sets}}
+As a first step towards formalizing simplicial sets, we restrict outselves to representing \emph{augmented simplicial sets}, which are described roughly as delta-sets in mathematical literature, which forgets about the degeneracies. We now proceed to describe \DeltaHat, which is identical to \Simplex{}, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are \emph{strictly} order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. In mathematical literature, there is little interest in studying \DeltaHat, since maps between delta sets are not well-defined, and it is therefore not possible to construct a category of delta sets.
 
 \subsection{Semi-cubical sets}
 We might naively attempt to define $\Cube{}$ identically to \DeltaHat, but let us briefly explain why this wouldn't work, motivating the definition of semi-cubical sets as in \cite{Antolini00}. If there were morphisms from every $\sq{m}$ to \sq{n}, we would end up with:
@@ -486,18 +488,15 @@ Then, proof irrelevance can be stated as:
   \forall x y, \forall p q : x =_{\textrm{SET}} y, p = q
 \end{align*}
 
-\section{Semi-cubical sets}
-In this section, we give the core of the definition of semi-cubical
-sets as the coinductive limit (see table \ref{tab:coind}) of a
-construction of truncated semi-cubical sets.
+\section{Trunacated $n$-sets}
+In this section, we give the core of the definition of truncated $n$-sets
+as a coinductive limit.
 
-\subsection{Truncated sets}
 % Now, we write the type theory bit, and input the abbreviated tables
-
 % Frame, layer, and filler
-\newcommandx{\framep}[4][1=,2=,3=,4=]{\prim{frame}[#1][#2][#3][#4]}
-\newcommandx{\layer}[4][1=,2=,3=,4=]{\prim{layer}[#1][#2][#3][#4]}
-\newcommandx{\filler}[4][1=,2=,3=,4=]{\prim{filler}[#1][#2][#3][#4]}
+\newcommandx{\framep}[4][1=,2=,3=,4=]{\prim{frame}[][#2][#3][#4]}
+\newcommandx{\layer}[4][1=,2=,3=,4=]{\prim{layer}[][#2][#3][#4]}
+\newcommandx{\filler}[4][1=,2=,3=,4=]{\prim{filler}[][#2][#3][#4]}
 
 % Restriction for frame, layer, and filler
 \newcommandx{\restrf}[6][1=,2=,3=,4=,5=,6=]{\restr{frame}[][#2][][#4][#5][#6]}
@@ -509,9 +508,9 @@ construction of truncated semi-cubical sets.
 \newcommandx{\cohlayer}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{cohlayer}[#1][#2][#3][#4][#5][#6][#7][#8]}
 \newcommandx{\cohfiller}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{cohfiller}[#1][#2][#3][#4][#5][#6][#7][#8]}
 
-The definition is dispatched over tables \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces} and \ref{tab:coh}. It describes the structure of the underlying higher-dimensional relations on which cubes and boxes are built, together with the definition of homogeneous $n$-boxes, homogeneous $n$-cubes, together with face operations on boxes and cubes, together with commutation properties of the face operations. All are mutually defined as types of the target language ETT. Note that such relational structure, cubes and boxes are relative to a universe. Note the presence of a coherence condition $\cohframe[l]$ to ensuring that both sides of the equality in $\restrl[l]$ and $\restrc[l]$ are in the same type. The proof of $\cohframe[l]$ itself requires an higher-dimensional coherence condition which we obtain by working here in ETT where all proofs of an equality are identified (principle of Unicity of Identity Proofs). Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory). Note also that for a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\restrf[l]$ nor $\cohframe[l]$ anymore.
+The definition is dispatched over tables \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces} and \ref{tab:coh}. It describes the structure of the underlying higher-dimensional relations on which fillers are built. Note the presence of a coherence condition $\cohframe[l]$ to ensuring that both sides of the equality in $\restrl[l]$ and $\restrc[l]$ are in the same type. The proof of $\cohframe[l]$ itself requires an higher-dimensional coherence condition which we obtain by working in \mintinline{coq}{HSet}. Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory). Note also that for a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\restrf[l]$ nor $\cohframe[l]$ anymore.
 
-When reflexivities are excepted, we call the structure thus defined \emph{bare truncated sets}: \emph{bare} because it can be seen as defining semi-cubical sets corresponding to semi-simplicial sets with only faces as part of the structure; \emph{truncated} because we consider only such cubical sets up to some fixed dimension.
+When reflexivities are excluded, we call the structure thus defined \emph{bare truncated sets}: \emph{bare} because it can be seen as defining truncated $n$-sets corresponding to simplical sets with only faces as part of the structure.
 
 \input{tab-core.tex}
 \input{tab-frames.tex}
@@ -530,14 +529,17 @@ When reflexivities are excepted, we call the structure thus defined \emph{bare t
 \input{tab-coh.tex}
 \input{tab-coind.tex}
 
-\newpage
+\section{Future work}
 
+\newpage
 \appendix
 \section{Tables in full detail}
 % Frame, layer, and filler
 \renewcommandx{\framep}[4][1=,2=,3=,4=]{\prim{frame}[#1][#2][#3][#4]}
 \renewcommandx{\layer}[4][1=,2=,3=,4=]{\prim{layer}[#1][#2][#3][#4]}
 \renewcommandx{\filler}[4][1=,2=,3=,4=]{\prim{filler}[#1][#2][#3][#4]}
+
+\renewcommandx{\fullframe}[2][1=,2=]{\ensuremath{\mathsf{\color{indian-yellow}{fullframe}}_{#1}^{#2}}}
 
 % Restriction for frame, layer, and filler
 \renewcommandx{\restrf}[6][1=,2=,3=,4=,5=,6=]{\restr{frame}[#1][#2][#3][#4][#5][#6]}
@@ -555,6 +557,7 @@ When reflexivities are excepted, we call the structure thus defined \emph{bare t
 \input{tab-coh.tex}
 \input{tab-coind.tex}
 
+\newpage
 
 \begin{thebibliography}{10}
   \bibitem[Bez]{Bezem14}

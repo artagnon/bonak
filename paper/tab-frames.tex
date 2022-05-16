@@ -1,7 +1,7 @@
 \begin{eqntable}{frame, layer, and filler\label{tab:frames}}
   \mc{Full $n$-frames}
-  \eqnline{\fullframe{l}{n}}{(D:\X{l}{n})}{:}{\U{l}}
-  \eqnline{\fullframe{l}{n}}{D}{\defeq}{\framep[l][n][n] \D}
+  \eqnline{\fullframe[l][n]}{(D:\X{l}{n})}{:}{\U{l}}
+  \eqnline{\fullframe[l][n]}{D}{\defeq}{\framep[l][n][n] \D}
 
   \\
 
@@ -14,13 +14,13 @@
 
   \eqnline{\layer[l][n][p][p < n]}{\makecell{(D:\X{l}{n}) \\ (d:\framep[l][n][p] \D)}}{:}{\U{l}}
 
-  \eqnline{\layer[l][n][p]}{D~d}{\defeq}{\makecell{\filler[l][n-1][p] \hdD\tlD(\restrf[l][L][p][n][p] \D \d) \\ \times\;\filler[l][n-1][p] \hdD\tlD(\restrf[l][R][p][n][p] \D \d)}}
+  \eqnline{\layer[l][n][p]}{D~d}{\defeq}{\Pi \omega, \filler[l][n-1][p] \hdD\tlD(\restrf[l][\omega][p][n][p] \D \d)}
 
   \\
 
   \eqnline{\filler[l][n][p][p \leq n]}{\makecell{(D:\X{l}{n}) \\(E:\Xcomp{l}{n} \D) \\ (d:\framep[l][n][p] \D)}}{:}{\U{l}}
 
-  \eqnline{\filler[l][n][p][p = n]}{D~E~d}{\defeq}{\E \d}
+  \eqnline{\filler[l][n][p][p = n]}{D~E~d}{\defeq}{E \d}
 
   \eqnline{\filler[l][n][p][p < n]}{D~E~d}{\defeq}{\Sigma l:\layer[l][n][p] \D \d.\,\filler[l][n][p+1] \E(d,l)}
 \end{eqntable}

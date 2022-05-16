@@ -8,15 +8,15 @@
 
   \\
 
-  \eqnline{\cohlayer[l][\epsilon][\omega][q][r][n][p][p < r \leq q \leq n - 2]}{\makecell{(D:\X{l}{n}) \\ (d:\framep[l][n][p] \D) \\(b:\layer[l][n][p] \D \d)}}{:}{\makecell{\overright{\cohframe[l][\epsilon][\omega][q+1][r+1][n][p] \D \d}(\restrl[l][\epsilon][q][n-1][p]\hdD(\restrf[l][\omega][r][n][p] \D \d)(\restrl[l][\omega][r][n][p] \D \d(b))) \\ \eqett \restrl[l][\omega][r][n-1][p]\hdD(\restrf[l][\epsilon][q+1][n][p] \D \d)(\restrl[l][\epsilon][q+1][n][p] \D \d(b))}}
+  \eqnline{\cohlayer[l][\epsilon][\omega][q][r][n][p][p < r \leq q \leq n - 2]}{\makecell{(D:\X{l}{n}) \\ (d:\framep[l][n][p] \D) \\(l:\layer[l][n][p] \D \d)}}{:}{\makecell{\overright{\cohframe[l][\epsilon][\omega][q+1][r+1][n][p] \D \d}(\restrl[l][\epsilon][q][n-1][p]\hdD(\restrf[l][\omega][r][n][p] \D \d)(\restrl[l][\omega][r][n][p] \D \d(l))) \\ \eqett \restrl[l][\omega][r][n-1][p]\hdD(\restrf[l][\epsilon][q+1][n][p] \D \d)(\restrl[l][\epsilon][q+1][n][p] \D \d(l))}}
 
   \eqnline{\cohlayer[l][\epsilon][\omega][q][r][n][p]}{D~d~c}{\defeq}{\makecell{(\cohfiller[l][\epsilon][\omega][q-1][r-1][n-1][p]\hdD\tlD(\restrf[l][L][p][n][p] \D \d)(c_L), \\ \;\cohfiller[l][\epsilon][\omega][q-1][r-1][n-1][p] \hdD\tlD(\restrf[l][R][p][n][p] \D \d)(c_R))}}
 
   \\
 
-  \eqnline{\cohfiller[l][\epsilon][\omega][q][r][n][p][p \leq r \leq q \leq n - 2]}{\makecell{(D:\X{l}{n}) \\ (E:\Xcomp{l}{n} \D) \\ (d:\framep[l][n][p] \D) \\ (b:\filler[l][n][p] \D\E \d)}}{:}{\makecell{\overright{\cohframe[l][\epsilon][\omega][q+1][r+1][n][p] \D \d}(\restrc[l][\epsilon][q][n-1][p]\hdD\tlD(\restrf[l][\omega][r][n][p] \D \d)(\restrc[l][\omega][r][n][p] \D\E \d(b))) \\ \eqett \restrc[l][\omega][r][n-1][p]\hdD\tlD(\restrf[l][\epsilon][q+1][n][p] \D \d)(\restrc[l][\epsilon][q+1][n][p] \D\E \d(b))}}
+  \eqnline{\cohfiller[l][\epsilon][\omega][q][r][n][p][p \leq r \leq q \leq n - 2]}{\makecell{(D:\X{l}{n}) \\ (E:\Xcomp{l}{n} \D) \\ (d:\framep[l][n][p] \D) \\ (c:\filler[l][n][p] \D\E \d)}}{:}{\makecell{\overright{\cohframe[l][\epsilon][\omega][q+1][r+1][n][p] \D \d}(\restrc[l][\epsilon][q][n-1][p]\hdD\tlD(\restrf[l][\omega][r][n][p] \D \d)(\restrc[l][\omega][r][n][p] \D\E \d(c))) \\ \eqett \restrc[l][\omega][r][n-1][p]\hdD\tlD(\restrf[l][\epsilon][q+1][n][p] \D \d)(\restrc[l][\epsilon][q+1][n][p] \D\E \d(c))}}
 
-  \eqnline{\cohfiller[l][\epsilon][\omega][q][r][n][p][p=r]}{D~E~d~(b,\_)}{\defeq}{\reflett(\restrc[l][\epsilon][q-1][n-1][p]\hdD\tlD(\restrf[l][\omega][p][n][p] \D \d)(b_{\epsilon}))}
+  \eqnline{\cohfiller[l][\epsilon][\omega][q][r][n][p][p=r]}{D~E~d~(l,\_)}{\defeq}{\reflett(\restrc[l][\epsilon][q-1][n-1][p]\hdD\tlD(\restrf[l][\omega][p][n][p] \D \d)(l_{\epsilon}))}
 
-  \eqnline{\cohfiller[l][\epsilon][\omega][q][r][n][p][p<r]}{D~E~d~(b,c)}{\defeq}{(\cohlayer[l][\epsilon][\omega][q][r][n][p] \D \d(b),\;\cohfiller[l][\epsilon][\omega][q][r][n][p+1] \D\E(d,b)\c)}
+  \eqnline{\cohfiller[l][\epsilon][\omega][q][r][n][p][p<r]}{D~E~d~(l,c)}{\defeq}{(\cohlayer[l][\epsilon][\omega][q][r][n][p] \D \d(l),\;\cohfiller[l][\epsilon][\omega][q][r][n][p+1] \D\E(d,l)\c)}
 \end{eqntable}
