@@ -1,0 +1,22 @@
+\begin{eqntable}{Commutation of $q$-th projection and $r$-th projection, or coherence conditions\label{tab:coh}}
+
+  \eqnline{\cohframe[l][\epsilon][\omega][q][r][n][p][p \leq r \leq q \leq n - 2]}{\makecell{(D:\X{l}{n}) \\ (d:\framep[l][n][p] \D)}}{:}{\makecell{\restrf[l][\epsilon][q][n-1][p] \hdD(\restrf[l][\omega][r][n][p] \D \d) \\ \eqett \restrf[l][\omega][r][n-1][p] \hdD(\restrf[l][\epsilon][q+1][n][p] \D \d)}}
+
+  \eqnline{\cohframe[l][\epsilon][\omega][q][r][n][0]}{D~\unitpoint}{\defeq}{\reflett(\unitpoint)}
+
+  \eqnline{\cohframe[l][\epsilon][\omega][q][r][n][p'+1]}{D~(d,c)}{\defeq}{(\cohframe[l][\epsilon][\omega][q][r][n][p'] \D\d,\cohlayer[l][\epsilon][\omega][q][r][n][p'] \D\d\c)}
+
+  \\
+
+  \eqnline{\cohlayer[l][\epsilon][\omega][q][r][n][p][p < r \leq q \leq n - 2]}{\makecell{(D:\X{l}{n}) \\ (d:\framep[l][n][p] \D) \\(b:\layer[l][n][p] \D \d)}}{:}{\makecell{\overright{\cohframe[l][\epsilon][\omega][q+1][r+1][n][p] \D \d}(\restrl[l][\epsilon][q][n-1][p]\hdD(\restrf[l][\omega][r][n][p] \D \d)(\restrl[l][\omega][r][n][p] \D \d(b))) \\ \eqett \restrl[l][\omega][r][n-1][p]\hdD(\restrf[l][\epsilon][q+1][n][p] \D \d)(\restrl[l][\epsilon][q+1][n][p] \D \d(b))}}
+
+  \eqnline{\cohlayer[l][\epsilon][\omega][q][r][n][p]}{D~d~c}{\defeq}{\makecell{(\cohfiller[l][\epsilon][\omega][q-1][r-1][n-1][p]\hdD\tlD(\restrf[l][L][p][n][p] \D \d)(c_L), \\ \;\cohfiller[l][\epsilon][\omega][q-1][r-1][n-1][p] \hdD\tlD(\restrf[l][R][p][n][p] \D \d)(c_R))}}
+
+  \\
+
+  \eqnline{\cohfiller[l][\epsilon][\omega][q][r][n][p][p \leq r \leq q \leq n - 2]}{\makecell{(D:\X{l}{n}) \\ (E:\Xcomp{l}{n} \D) \\ (d:\framep[l][n][p] \D) \\ (b:\filler[l][n][p] \D\E \d)}}{:}{\makecell{\overright{\cohframe[l][\epsilon][\omega][q+1][r+1][n][p] \D \d}(\restrc[l][\epsilon][q][n-1][p]\hdD\tlD(\restrf[l][\omega][r][n][p] \D \d)(\restrc[l][\omega][r][n][p] \D\E \d(b))) \\ \eqett \restrc[l][\omega][r][n-1][p]\hdD\tlD(\restrf[l][\epsilon][q+1][n][p] \D \d)(\restrc[l][\epsilon][q+1][n][p] \D\E \d(b))}}
+
+  \eqnline{\cohfiller[l][\epsilon][\omega][q][r][n][p][p=r]}{D~E~d~(b,\_)}{\defeq}{\reflett(\restrc[l][\epsilon][q-1][n-1][p]\hdD\tlD(\restrf[l][\omega][p][n][p] \D \d)(b_{\epsilon}))}
+
+  \eqnline{\cohfiller[l][\epsilon][\omega][q][r][n][p][p<r]}{D~E~d~(b,c)}{\defeq}{(\cohlayer[l][\epsilon][\omega][q][r][n][p] \D \d(b),\;\cohfiller[l][\epsilon][\omega][q][r][n][p+1] \D\E(d,b)\c)}
+\end{eqntable}
