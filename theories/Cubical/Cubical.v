@@ -19,429 +19,430 @@ Universe l.
 
 Parameter side: HSet.
 
-(* PartialBox consists of an 0-cells, and fillers which are the 1-cells,
-   2-cells, and 3-cells relating the different 0-cells on the cube. *)
-Class PartialBoxPrev (n: nat) (csp: Type@{l'}) := { (* csp: CubeSetPrefix *)
-  box' {p} (Hp: p.+1 <= n): csp -> HSet@{l};
-  box'' {p} (Hp: p.+2 <= n): csp -> HSet@{l};
-  subbox' {p q} {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) (ε: side) {D: csp}:
-    box' (↓ (Hpq ↕ Hq)) D -> box'' (Hpq ↕ Hq) D;
+(* PartialFrame consists of an 0-cells, and fillers which are the 1-cells,
+   2-cells, and 3-cells relating the different 0-cells on the filler. *)
+Class PartialFramePrev (n: nat) (csp: Type@{l'}) := { (* csp: CubeSetPrefix *)
+  frame' {p} (Hp: p.+1 <= n): csp -> HSet@{l};
+  frame'' {p} (Hp: p.+2 <= n): csp -> HSet@{l};
+  restrFrame' {p q} {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) (ε: side) {D: csp}:
+    frame' (↓ (Hpq ↕ Hq)) D -> frame'' (Hpq ↕ Hq) D;
 }.
 
-Arguments box' {n csp} _ {p} Hp D.
-Arguments box'' {n csp} _ {p} Hp D.
-Arguments subbox' {n csp} _ {p q Hpq} Hq ε {D} d.
+Arguments frame' {n csp} _ {p} Hp D.
+Arguments frame'' {n csp} _ {p} Hp D.
+Arguments restrFrame' {n csp} _ {p q Hpq} Hq ε {D} d.
 
-Class PartialBox (n p: nat) (csp: Type@{l'})
-  (BoxPrev: PartialBoxPrev n csp) := {
-  box (Hp: p <= n): csp -> HSet@{l};
-  subbox {q} {Hpq: p.+1 <= q.+1} (Hq: q.+1 <= n) (ε: side) {D: csp}:
-    box (↓ (Hpq ↕ Hq)) D -> BoxPrev.(box') (Hpq ↕ Hq) D;
-  cohbox {q r} {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
-    {ε: side} {ω: side} {D: csp} (d: box (↓ (⇓ Hpr ↕ (↓ (Hrq ↕ Hq)))) D):
-    BoxPrev.(subbox') (Hpq := Hpr ↕ Hrq) Hq ε
-      (subbox (Hpq := ⇓ Hpr) (↓ (Hrq ↕ Hq)) ω d) =
-    (BoxPrev.(subbox') (Hpq := Hpr) (Hrq ↕ Hq) ω
-      (subbox (Hpq := ↓ (Hpr ↕ Hrq)) Hq ε d));
+Class PartialFrame (n p: nat) (csp: Type@{l'})
+  (FramePrev: PartialFramePrev n csp) := {
+  frame (Hp: p <= n): csp -> HSet@{l};
+  restrFrame {q} {Hpq: p.+1 <= q.+1} (Hq: q.+1 <= n) (ε: side) {D: csp}:
+    frame (↓ (Hpq ↕ Hq)) D -> FramePrev.(frame') (Hpq ↕ Hq) D;
+  cohFrame {q r} {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
+    {ε: side} {ω: side} {D: csp} (d: frame (↓ (⇓ Hpr ↕ (↓ (Hrq ↕ Hq)))) D):
+    FramePrev.(restrFrame') (Hpq := Hpr ↕ Hrq) Hq ε
+      (restrFrame (Hpq := ⇓ Hpr) (↓ (Hrq ↕ Hq)) ω d) =
+    (FramePrev.(restrFrame') (Hpq := Hpr) (Hrq ↕ Hq) ω
+      (restrFrame (Hpq := ↓ (Hpr ↕ Hrq)) Hq ε d));
 }.
 
-Arguments box {n p csp BoxPrev} _ Hp D.
-Arguments subbox {n p csp BoxPrev} _ {q Hpq} Hq ε {D} d.
-Arguments cohbox {n p csp BoxPrev} _ {q r Hpr Hrq Hq ε ω D} d.
+Arguments frame {n p csp FramePrev} _ Hp D.
+Arguments restrFrame {n p csp FramePrev} _ {q Hpq} Hq ε {D} d.
+Arguments cohFrame {n p csp FramePrev} _ {q r Hpr Hrq Hq ε ω D} d.
 (* We want ε and ω to be printed, but have them inferred;
    Coq doesn't support this. *)
 
-(* We build cubes using an iterated construction: a cube at level n depends
-   on cubes at level n-1 and n-2; just as we have box' and box'', we have
-   cube' and cube''. *)
-Class PartialCubePrev (n: nat) (csp: Type@{l'})
-  (BoxPrev : PartialBoxPrev n (@csp)) := {
-  cube' {p} {Hp: p.+1 <= n} {D: csp}: BoxPrev.(box') Hp D -> HSet@{l};
-  cube'' {p} {Hp: p.+2 <= n} {D: csp}: BoxPrev.(box'') Hp D -> HSet@{l};
-  subcube' {p q} {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) (ε: side) {D: csp}
-    {d : BoxPrev.(box') (↓ (Hpq ↕ Hq)) D}:
-    cube' d -> cube'' (BoxPrev.(subbox') Hq ε d);
+(* We build fillers using an iterated construction: a filler at level n depends
+   on cubes at level n-1 and n-2; just as we have frame' and frame'', we have
+   filler' and filler''. *)
+Class PartialFillerPrev (n: nat) (csp: Type@{l'})
+  (FramePrev : PartialFramePrev n (@csp)) := {
+  filler' {p} {Hp: p.+1 <= n} {D: csp}: FramePrev.(frame') Hp D -> HSet@{l};
+  filler'' {p} {Hp: p.+2 <= n} {D: csp}: FramePrev.(frame'') Hp D -> HSet@{l};
+  restrFiller' {p q} {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) (ε: side) {D: csp}
+    {d : FramePrev.(frame') (↓ (Hpq ↕ Hq)) D}:
+    filler' d -> filler'' (FramePrev.(restrFrame') Hq ε d);
 }.
 
-Arguments cube' {n csp BoxPrev} _ {p Hp D} d.
-Arguments cube'' {n csp BoxPrev} _ {p Hp D} d.
-Arguments subcube' {n csp BoxPrev} _ {p q Hpq} Hq ε {D} [d] b.
+Arguments filler' {n csp FramePrev} _ {p Hp D} d.
+Arguments filler'' {n csp FramePrev} _ {p Hp D} d.
+Arguments restrFiller' {n csp FramePrev} _ {p q Hpq} Hq ε {D} [d] b.
 
-(* Cube consists of cube, subcube, and coherence conditions between them *)
-Class PartialCube (n: nat) (csp: Type@{l'})
-  {BoxPrev: PartialBoxPrev n (@csp)}
-  (CubePrev: PartialCubePrev n csp BoxPrev)
-  (Box: forall {p}, PartialBox n p (@csp) BoxPrev) := {
-  cube {p} {Hp: p <= n} {D: csp}:
-    (Box.(box) (¹ n) D -> HSet@{l}) -> Box.(box) Hp D -> HSet@{l};
-  subcube {p q} {Hpq: p.+1 <= q.+1}
-    (Hq: q.+1 <= n) (ε: side) {D : csp} {E : Box.(box) (¹ n) D -> HSet@{l}}
-    {d : Box.(box) (↓ (Hpq ↕ Hq)) D} (c : cube E d):
-    CubePrev.(cube') (Box.(subbox) Hq ε d);
-  cohcube {p q r} {Hpr: p.+2 <= r.+2}
+(* Cube consists of filler, restrFiller, and coherence conditions between them *)
+Class PartialFiller (n: nat) (csp: Type@{l'})
+  {FramePrev: PartialFramePrev n (@csp)}
+  (FillerPrev: PartialFillerPrev n csp FramePrev)
+  (Frame: forall {p}, PartialFrame n p (@csp) FramePrev) := {
+  filler {p} {Hp: p <= n} {D: csp}:
+    (Frame.(frame) (¹ n) D -> HSet@{l}) -> Frame.(frame) Hp D -> HSet@{l};
+  restrFiller {p q} {Hpq: p.+1 <= q.+1}
+    (Hq: q.+1 <= n) (ε: side) {D : csp} {E : Frame.(frame) (¹ n) D -> HSet@{l}}
+    {d : Frame.(frame) (↓ (Hpq ↕ Hq)) D} (c : filler E d):
+    FillerPrev.(filler') (Frame.(restrFrame) Hq ε d);
+  cohFiller {p q r} {Hpr: p.+2 <= r.+2}
     {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
-    (ε: side) (ω : side) {D: csp} (E: Box.(box) (¹ n) D -> HSet@{l})
-    (d: Box.(box) (↓ (⇓ Hpr ↕ (↓ (Hrq ↕ Hq)))) D) (c: cube E d):
-    rew [CubePrev.(cube'')] (Box.(cohbox) d) in
-    CubePrev.(subcube') (Hpq := Hpr ↕ Hrq) Hq
-    ε (subcube (Hpq := ⇓ Hpr) (↓ (Hrq ↕ Hq)) ω c) =
-      (CubePrev.(subcube') (Hpq := Hpr) (Hrq ↕ Hq)
-      ω (subcube (Hpq := ↓ (Hpr ↕ Hrq)) Hq ε c));
+    (ε: side) (ω : side) {D: csp} (E: Frame.(frame) (¹ n) D -> HSet@{l})
+    (d: Frame.(frame) (↓ (⇓ Hpr ↕ (↓ (Hrq ↕ Hq)))) D) (c: filler E d):
+    rew [FillerPrev.(filler'')] (Frame.(cohFrame) d) in
+    FillerPrev.(restrFiller') (Hpq := Hpr ↕ Hrq) Hq
+    ε (restrFiller (Hpq := ⇓ Hpr) (↓ (Hrq ↕ Hq)) ω c) =
+      (FillerPrev.(restrFiller') (Hpq := Hpr) (Hrq ↕ Hq)
+      ω (restrFiller (Hpq := ↓ (Hpr ↕ Hrq)) Hq ε c));
 }.
 
-Arguments cube {n csp BoxPrev CubePrev Box} _ {p Hp D} E.
-Arguments subcube {n csp BoxPrev CubePrev Box} _ {p q Hpq Hq ε D E} [d] c.
-Arguments cohcube {n csp BoxPrev CubePrev Box} _ {p q r Hpr Hrq Hq ε ω D E d} c.
+Arguments filler {n csp FramePrev FillerPrev Frame} _ {p Hp D} E.
+Arguments restrFiller {n csp FramePrev FillerPrev Frame} _ {p q Hpq Hq ε D E} [d] c.
+Arguments cohFiller {n csp FramePrev FillerPrev Frame} _ {p q r Hpr Hrq Hq ε ω D E d} c.
 
 (* Cube consists of CubeSetPrefix, a box built out of partial boxes,
-  a cube built out of partial cubes, and some axioms related to our
+  a filler built out of partial cubes, and some axioms related to our
   construction. *)
 Class Cubical (n : nat) := {
   csp: Type@{l'};
-  BoxPrev: PartialBoxPrev n csp;
-  Box {p}: PartialBox n p csp BoxPrev;
-  CubePrev: PartialCubePrev n csp BoxPrev;
-  Cube: PartialCube n csp CubePrev (@Box);
+  FramePrev: PartialFramePrev n csp;
+  Frame {p}: PartialFrame n p csp FramePrev;
+  FillerPrev: PartialFillerPrev n csp FramePrev;
+  Cube: PartialFiller n csp FillerPrev (@Frame);
 
   (* Abbreviations corresponding to coherence conditions in Box *)
-  Layer' {p} {Hp: p.+1 <= n} {D: csp} (d: Box.(box) (↓ Hp) D) :=
-    hforall ε, CubePrev.(cube') (Box.(subbox) Hp ε d);
-  Layer'' {p} {Hp: p.+2 <= n} {D: csp} (d: BoxPrev.(box') (↓ Hp) D) :=
-    hforall ε, CubePrev.(cube'') (BoxPrev.(subbox') Hp ε d);
+  Layer' {p} {Hp: p.+1 <= n} {D: csp} (d: Frame.(frame) (↓ Hp) D) :=
+    hforall ε, FillerPrev.(filler') (Frame.(restrFrame) Hp ε d);
+  Layer'' {p} {Hp: p.+2 <= n} {D: csp} (d: FramePrev.(frame') (↓ Hp) D) :=
+    hforall ε, FillerPrev.(filler'') (FramePrev.(restrFrame') Hp ε d);
   SubLayer' {p q ε} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D: csp}
-    (d: Box.(box) (↓ ↓ (Hpq ↕ Hq)) D) (l: Layer' d):
-      Layer'' (Box.(subbox) Hq ε d) :=
-  fun ω => rew [CubePrev.(cube'')] Box.(cohbox) (Hrq := Hpq) d in CubePrev.(subcube') Hq ε (l ω);
+    (d: Frame.(frame) (↓ ↓ (Hpq ↕ Hq)) D) (l: Layer' d):
+      Layer'' (Frame.(restrFrame) Hq ε d) :=
+  fun ω => rew [FillerPrev.(filler'')] Frame.(cohFrame) (Hrq := Hpq) d in FillerPrev.(restrFiller') Hq ε (l ω);
 
   (* We can't create htt: hunit, so we have to resort to this *)
-  eqBox0 {len0: 0 <= n} {D: csp}: (Box.(box) len0 D).(Dom) = unit;
-  eqBox0' {len1: 1 <= n} {D: csp}: (BoxPrev.(box') len1 D).(Dom) = unit;
-  eqBoxSp {p} {Hp: p.+1 <= n} {D: csp}:
-    Box.(box) Hp D = {d: Box.(box) (↓ Hp) D & Layer' d} :> Type;
-  eqBoxSp' {p} {Hp: p.+2 <= n} {D: csp}:
-    BoxPrev.(box') Hp D = {d : BoxPrev.(box') (↓ Hp) D & Layer'' d} :> Type;
-  eqSubbox0 {q} {Hpq: 1 <= q.+1} {Hq: q.+1 <= n} {ε: side} {D: csp}:
-    Box.(subbox) (Hpq := Hpq) Hq ε (rew <- [id] eqBox0 (D := D) in tt) =
-      (rew <- [id] eqBox0' in tt);
-  eqSubboxSp {ε p q} {D: csp} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n}
-    {d: Box.(box) (↓ ↓ (Hpq ↕ Hq)) D}
+  eqFrame0 {len0: 0 <= n} {D: csp}: (Frame.(frame) len0 D).(Dom) = unit;
+  eqFrame0' {len1: 1 <= n} {D: csp}: (FramePrev.(frame') len1 D).(Dom) = unit;
+  eqFrameSp {p} {Hp: p.+1 <= n} {D: csp}:
+    Frame.(frame) Hp D = {d: Frame.(frame) (↓ Hp) D & Layer' d} :> Type;
+  eqFrameSp' {p} {Hp: p.+2 <= n} {D: csp}:
+    FramePrev.(frame') Hp D = {d : FramePrev.(frame') (↓ Hp) D & Layer'' d} :> Type;
+  eqRestrFrame0 {q} {Hpq: 1 <= q.+1} {Hq: q.+1 <= n} {ε: side} {D: csp}:
+    Frame.(restrFrame) (Hpq := Hpq) Hq ε (rew <- [id] eqFrame0 (D := D) in tt) =
+      (rew <- [id] eqFrame0' in tt);
+  eqRestrFrameSp {ε p q} {D: csp} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n}
+    {d: Frame.(frame) (↓ ↓ (Hpq ↕ Hq)) D}
     {l: Layer' (Hp := ↓ (Hpq ↕ Hq)) d}:
-    Box.(subbox) Hq ε (rew <- [id] eqBoxSp in (d; l)) =
-      rew <- [id] eqBoxSp' in (Box.(subbox) Hq ε d; SubLayer' d l);
-  eqCubeSp {p} {Hp: p.+1 <= n} {D: csp} {E d}:
-    Cube.(cube) (Hp := ↓ Hp) E d = {l: Layer' d &
-      Cube.(cube) (D := D) E (rew <- [id] eqBoxSp in (d; l))} :> Type;
-  eqCubeSp' {p} {Hp: p.+2 <= n} {D: csp} {d}:
-    CubePrev.(cube') (Hp := ↓ Hp) d = {b : Layer'' d &
-      CubePrev.(cube') (rew <- [id] eqBoxSp' (D := D) in (d; b))} :> Type;
-  eqSubcube0 {p} {Hp: p.+1 <= n} {D: csp} {E} {d} {ε: side}
-    {l: Layer' d} {Q: Cube.(cube) (D := D) E (rew <- eqBoxSp in (d; l))}:
-      l ε = Cube.(subcube) (Hq := Hp) (rew <- [id] eqCubeSp in (l; Q));
-  eqSubcubeSp {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D: csp} {E} {d}
+    Frame.(restrFrame) Hq ε (rew <- [id] eqFrameSp in (d; l)) =
+      rew <- [id] eqFrameSp' in (Frame.(restrFrame) Hq ε d; SubLayer' d l);
+  eqFillerSp {p} {Hp: p.+1 <= n} {D: csp} {E d}:
+    Cube.(filler) (Hp := ↓ Hp) E d = {l: Layer' d &
+      Cube.(filler) (D := D) E (rew <- [id] eqFrameSp in (d; l))} :> Type;
+  eqFillerSp' {p} {Hp: p.+2 <= n} {D: csp} {d}:
+    FillerPrev.(filler') (Hp := ↓ Hp) d = {b : Layer'' d &
+      FillerPrev.(filler') (rew <- [id] eqFrameSp' (D := D) in (d; b))} :> Type;
+  eqRestrFiller0 {p} {Hp: p.+1 <= n} {D: csp} {E} {d} {ε: side}
+    {l: Layer' d} {Q: Cube.(filler) (D := D) E (rew <- eqFrameSp in (d; l))}:
+      l ε = Cube.(restrFiller) (Hq := Hp) (rew <- [id] eqFillerSp in (l; Q));
+  eqRestrFillerSp {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D: csp} {E} {d}
     {ε: side} {l: Layer' (Hp := ↓ (Hpq ↕ Hq)) d}
-    {Q: Cube.(cube) (D := D) E (rew <- eqBoxSp in (d; l))}:
-    Cube.(subcube) (Hpq := ↓ Hpq) (ε := ε) (rew <- [id] eqCubeSp in (l; Q)) = rew <- [id] eqCubeSp' (Hp := Hpq ↕ Hq) in
-      (SubLayer' d l; rew [CubePrev.(cube')] eqSubboxSp in Cube.(subcube) Q);
+    {Q: Cube.(filler) (D := D) E (rew <- eqFrameSp in (d; l))}:
+    Cube.(restrFiller) (Hpq := ↓ Hpq) (ε := ε) (rew <- [id] eqFillerSp in (l; Q)) = rew <- [id] eqFillerSp' (Hp := Hpq ↕ Hq) in
+      (SubLayer' d l; rew [FillerPrev.(filler')] eqRestrFrameSp in Cube.(restrFiller) Q);
 }.
 
 Arguments csp {n} _.
-Arguments BoxPrev {n} _.
-Arguments CubePrev {n} _.
-Arguments Box {n} _ {p}.
+Arguments FramePrev {n} _.
+Arguments FillerPrev {n} _.
+Arguments Frame {n} _ {p}.
 Arguments Cube {n} _.
 Arguments Layer' {n} _ {p Hp D} d.
 Arguments Layer'' {n} _ {p Hp D} d.
 Arguments SubLayer' {n} _ {p q} ε {Hpq Hq D d} l.
-Arguments eqBox0 {n} _ {len0 D}.
-Arguments eqBox0' {n} _ {len1 D}.
-Arguments eqBoxSp {n} _ {p Hp D}.
-Arguments eqBoxSp' {n} _ {p Hp D}.
-Arguments eqSubbox0 {n} _ {q Hpq Hq ε D}.
-Arguments eqSubboxSp {n} _ {ε p q D Hpq Hq d l}.
-Arguments eqCubeSp {n} _ {p Hp D E d}.
-Arguments eqCubeSp' {n} _ {p Hp D d}.
-Arguments eqSubcube0 {n} _ {p Hp D E d ε l Q}.
-Arguments eqSubcubeSp {n} _ {p q Hpq Hq D E d ε l Q}.
+Arguments eqFrame0 {n} _ {len0 D}.
+Arguments eqFrame0' {n} _ {len1 D}.
+Arguments eqFrameSp {n} _ {p Hp D}.
+Arguments eqFrameSp' {n} _ {p Hp D}.
+Arguments eqRestrFrame0 {n} _ {q Hpq Hq ε D}.
+Arguments eqRestrFrameSp {n} _ {ε p q D Hpq Hq d l}.
+Arguments eqFillerSp {n} _ {p Hp D E d}.
+Arguments eqFillerSp' {n} _ {p Hp D d}.
+Arguments eqRestrFiller0 {n} _ {p Hp D E d ε l Q}.
+Arguments eqRestrFillerSp {n} _ {p q Hpq Hq D E d ε l Q}.
 
 (* The csp at universe l' *)
 Definition mkcsp {n} {C: Cubical n}: Type@{l'} :=
-  sigT (fun D : C.(csp) => C.(Box).(box) (¹ n) D -> HSet@{l}).
+  sigT (fun D : C.(csp) => C.(Frame).(frame) (¹ n) D -> HSet@{l}).
 
 (* The previous level of Box *)
-Definition mkBoxPrev {n} {C: Cubical n}: PartialBoxPrev n.+1 mkcsp := {|
-  box' (p: nat) (Hp: p.+1 <= n.+1) (D: mkcsp) := C.(Box).(box) (⇓ Hp) D.1;
-  box'' (p: nat) (Hp: p.+2 <= n.+1) (D: mkcsp) :=
-    C.(BoxPrev).(box') (⇓ Hp) D.1;
-  subbox' (p q: nat) (Hpq: p.+2 <= q.+2) (Hq: q.+2 <= n.+1) (ε: side)
+Definition mkFramePrev {n} {C: Cubical n}: PartialFramePrev n.+1 mkcsp := {|
+  frame' (p: nat) (Hp: p.+1 <= n.+1) (D: mkcsp) := C.(Frame).(frame) (⇓ Hp) D.1;
+  frame'' (p: nat) (Hp: p.+2 <= n.+1) (D: mkcsp) :=
+    C.(FramePrev).(frame') (⇓ Hp) D.1;
+  restrFrame' (p q: nat) (Hpq: p.+2 <= q.+2) (Hq: q.+2 <= n.+1) (ε: side)
     (D: mkcsp) (d: _) :=
-    C.(Box).(subbox) (Hpq := ⇓ Hpq) (⇓ Hq) ε d;
+    C.(Frame).(restrFrame) (Hpq := ⇓ Hpq) (⇓ Hq) ε d;
 |}.
 
 (* The coherence conditions that Box needs to satisfy to build the next level
-   of Box. These will be used in the proof script of mkBox. *)
+   of Frame. These will be used in the proof script of mkFrame. *)
 
 Definition mkLayer {n p} {Hp: p.+1 <= n.+1} {C: Cubical n} {D: mkcsp}
-  {Box: PartialBox n.+1 p mkcsp mkBoxPrev} {d: Box.(box) (↓ Hp) D}: HSet :=
-  hforall ε, C.(Cube).(cube) D.2 (Box.(subbox) (Hpq := ¹ _) Hp ε d).
+  {Frame: PartialFrame n.+1 p mkcsp mkFramePrev} {d: Frame.(frame) (↓ Hp) D}: HSet :=
+  hforall ε, C.(Cube).(filler) D.2 (Frame.(restrFrame) (Hpq := ¹ _) Hp ε d).
 
 Definition mkSubLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
-  {C: Cubical n} {D: mkcsp} {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
-  (d: Box.(box) (↓ ↓ (Hpq ↕ Hq)) D)
-  (l: mkLayer): C.(Layer') (Box.(subbox) Hq ε d) :=
-  fun ω => rew [C.(CubePrev).(cube')] Box.(cohbox) d in
-    C.(Cube).(subcube) (Hpq := ⇓ Hpq) (l ω).
+  {C: Cubical n} {D: mkcsp} {Frame: PartialFrame n.+1 p mkcsp mkFramePrev}
+  (d: Frame.(frame) (↓ ↓ (Hpq ↕ Hq)) D)
+  (l: mkLayer): C.(Layer') (Frame.(restrFrame) Hq ε d) :=
+  fun ω => rew [C.(FillerPrev).(filler')] Frame.(cohFrame) d in
+    C.(Cube).(restrFiller) (Hpq := ⇓ Hpq) (l ω).
 
-Definition cohBoxSnHyp {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
+Definition cohFrameSnHyp {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
-  {Box': PartialBox n.+1 p mkcsp mkBoxPrev}
-  {d: Box'.(box) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D}:
-  C.(Box).(subbox) (Hpq := ↓ ⇓ (Hpr ↕ Hrq)) (⇓ Hq) ε
-    (Box'.(subbox) (Hpq := ↓ ⇓ Hpr) (↓ (Hrq ↕ Hq)) ω d) =
-  C.(Box).(subbox) (Hpq := ↓ ⇓ Hpr) (⇓ (Hrq ↕ Hq)) ω
-    (Box'.(subbox) Hq ε d) :=
-  Box'.(cohbox) (Hpr := ↓ Hpr) (Hrq := Hrq) (Hq := Hq) d.
+  {frame': PartialFrame n.+1 p mkcsp mkFramePrev}
+  {d: frame'.(frame) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D}:
+  C.(Frame).(restrFrame) (Hpq := ↓ ⇓ (Hpr ↕ Hrq)) (⇓ Hq) ε
+    (frame'.(restrFrame) (Hpq := ↓ ⇓ Hpr) (↓ (Hrq ↕ Hq)) ω d) =
+  C.(Frame).(restrFrame) (Hpq := ↓ ⇓ Hpr) (⇓ (Hrq ↕ Hq)) ω
+    (frame'.(restrFrame) Hq ε d) :=
+  frame'.(cohFrame) (Hpr := ↓ Hpr) (Hrq := Hrq) (Hq := Hq) d.
 
 Definition mkCohLayer {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: Cubical n} {D: mkcsp}
-  {Box: PartialBox n.+1 p mkcsp mkBoxPrev}
-  {d: Box.(box) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D} (l: mkLayer):
+  {Frame: PartialFrame n.+1 p mkcsp mkFramePrev}
+  {d: Frame.(frame) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D} (l: mkLayer):
   let sl := C.(SubLayer') (Hpq := ⇓ (Hpr ↕ Hrq)) ε
               (mkSubLayer (Hpq := ⇓ Hpr) d l) in
   let sl' := C.(SubLayer') (Hpq := ⇓ Hpr) ω
                (mkSubLayer (Hpq := ↓ (Hpr ↕ Hrq)) d l) in
-  rew [C.(Layer'')] cohBoxSnHyp in sl = sl'.
+  rew [C.(Layer'')] cohFrameSnHyp in sl = sl'.
 Proof.
   intros *.
   subst sl sl'; apply functional_extensionality_dep; intros 𝛉; unfold Layer''.
   rewrite <- map_subst_app with
-    (P := fun 𝛉 x => C.(CubePrev).(cube'') (C.(BoxPrev).(subbox') _ 𝛉 x))
+    (P := fun 𝛉 x => C.(FillerPrev).(filler'') (C.(FramePrev).(restrFrame') _ 𝛉 x))
     (f := C.(SubLayer') _ (mkSubLayer d l))
-    (H := cohBoxSnHyp).
-  unfold SubLayer', cohBoxSnHyp, mkSubLayer.
-  rewrite <- map_subst with (f := C.(CubePrev).(subcube') (⇓ Hq) ε).
-  rewrite <- map_subst with (f := C.(CubePrev).(subcube') (⇓ (Hrq ↕ Hq)) ω).
+    (H := cohFrameSnHyp).
+  unfold SubLayer', cohFrameSnHyp, mkSubLayer.
+  rewrite <- map_subst with (f := C.(FillerPrev).(restrFiller') (⇓ Hq) ε).
+  rewrite <- map_subst with (f := C.(FillerPrev).(restrFiller') (⇓ (Hrq ↕ Hq)) ω).
   rewrite rew_map with
-    (P := fun x => (C.(CubePrev).(cube'') x).(Dom))
-    (f := fun x => C.(BoxPrev).(subbox') (⇓ (Hpr ↕ Hrq) ↕ ⇓ Hq) 𝛉 x).
+    (P := fun x => (C.(FillerPrev).(filler'') x).(Dom))
+    (f := fun x => C.(FramePrev).(restrFrame') (⇓ (Hpr ↕ Hrq) ↕ ⇓ Hq) 𝛉 x).
   rewrite rew_map with
-    (P := fun x => (C.(CubePrev).(cube'') x).(Dom))
-    (f := fun x => C.(BoxPrev).(subbox') (⇓ Hq) ε x).
+    (P := fun x => (C.(FillerPrev).(filler'') x).(Dom))
+    (f := fun x => C.(FramePrev).(restrFrame') (⇓ Hq) ε x).
   rewrite rew_map with
-    (P := fun x => (C.(CubePrev).(cube'') x).(Dom))
-    (f := fun x => (C.(BoxPrev).(subbox') (⇓ (Hrq ↕ Hq)) ω x)).
-  rewrite <- (C.(Cube).(cohcube) (Hrq := ⇓ Hrq) (Hq := ⇓ Hq)).
+    (P := fun x => (C.(FillerPrev).(filler'') x).(Dom))
+    (f := fun x => (C.(FramePrev).(restrFrame') (⇓ (Hrq ↕ Hq)) ω x)).
+  rewrite <- (C.(Cube).(cohFiller) (Hrq := ⇓ Hrq) (Hq := ⇓ Hq)).
   repeat rewrite rew_compose.
-  apply rew_swap with (P := fun x => (C.(CubePrev).(cube'') x).(Dom)).
-  rewrite rew_app. now reflexivity. now apply C.(BoxPrev).(box'').
+  apply rew_swap with (P := fun x => (C.(FillerPrev).(filler'') x).(Dom)).
+  rewrite rew_app. now reflexivity. now apply C.(FramePrev).(frame'').
 Qed.
 
 #[local]
-Instance mkCubePrev {n} {C: Cubical n} : PartialCubePrev n.+1 mkcsp mkBoxPrev :=
+Instance mkCubePrev {n} {C: Cubical n} : PartialFillerPrev n.+1 mkcsp mkFramePrev :=
 {|
-  cube' (p: nat) (Hp: p.+1 <= n.+1) (D: mkcsp) := C.(Cube).(cube) D.2:
-    mkBoxPrev.(box') Hp D -> HSet; (* Bug? *)
-  cube'' (p: nat) (Hp: p.+2 <= n.+1) (D: mkcsp)
-    (d : mkBoxPrev.(box'') Hp D) :=
-    C.(CubePrev).(cube') d;
-  subcube' (p q: nat) (Hpq: p.+2 <= q.+2) (Hq: q.+2 <= n.+1) (ε: side)
-    (D: mkcsp) (d : _) (b : _) := C.(Cube).(subcube) (Hpq := ⇓ Hpq)
+  filler' (p: nat) (Hp: p.+1 <= n.+1) (D: mkcsp) := C.(Cube).(filler) D.2:
+    mkFramePrev.(frame') Hp D -> HSet; (* Bug? *)
+  filler'' (p: nat) (Hp: p.+2 <= n.+1) (D: mkcsp)
+    (d : mkFramePrev.(frame'') Hp D) :=
+    C.(FillerPrev).(filler') d;
+  restrFiller' (p q: nat) (Hpq: p.+2 <= q.+2) (Hq: q.+2 <= n.+1) (ε: side)
+    (D: mkcsp) (d : _) (b : _) := C.(Cube).(restrFiller) (Hpq := ⇓ Hpq)
     (Hq := ⇓ Hq) (E := D.2) b;
 |}.
 
 (* The box at level n.+1 with p = O *)
 #[local]
-Instance mkBox0 {n} {C: Cubical n}: PartialBox n.+1 O mkcsp mkBoxPrev.
+Instance mkFrame0 {n} {C: Cubical n}: PartialFrame n.+1 O mkcsp mkFramePrev.
   unshelve esplit.
   * intros; now exact hunit. (* boxSn *)
-  * simpl; intros; rewrite C.(eqBox0). now exact tt. (* subboxSn *)
+  * simpl; intros; rewrite C.(eqFrame0). now exact tt. (* restrFrameSn *)
   * simpl; intros. (* cohboxp *)
-    now rewrite eqSubbox0 with (Hpq := ⇓ Hpr),
-                eqSubbox0 with (Hpq := ⇓ (Hpr ↕ Hrq)).
+    now rewrite eqRestrFrame0 with (Hpq := ⇓ Hpr),
+                eqRestrFrame0 with (Hpq := ⇓ (Hpr ↕ Hrq)).
 Defined.
 
 (* The box at level n.+1 with p = S _ *)
 #[local]
-Instance mkBoxSp {n p} {C: Cubical n} {Box: PartialBox n.+1 p mkcsp mkBoxPrev}:
-  PartialBox n.+1 p.+1 mkcsp mkBoxPrev.
+Instance mkFrameSp {n p} {C: Cubical n} {Frame: PartialFrame n.+1 p mkcsp mkFramePrev}:
+  PartialFrame n.+1 p.+1 mkcsp mkFramePrev.
   unshelve esplit.
-  * intros Hp D; exact {d : Box.(box) (↓ Hp) D & mkLayer (d := d)}.
-  * simpl; intros * ε * (d, l); invert_le Hpq. (* subboxp *)
-    now exact (rew <- [id] C.(eqBoxSp) in
-      (Box.(subbox) Hq ε d; mkSubLayer d l)).
+  * intros Hp D; exact {d : Frame.(frame) (↓ Hp) D & mkLayer (d := d)}.
+  * simpl; intros * ε * (d, l); invert_le Hpq. (* restrFramep *)
+    now exact (rew <- [id] C.(eqFrameSp) in
+      (Frame.(restrFrame) Hq ε d; mkSubLayer d l)).
   * simpl; intros q r Hpr Hrq Hq ε ω D (d, l). (* cohboxp *)
     invert_le Hpr; invert_le Hrq.
 
-    (* A roundabout way to simplify the proof of mkCohCube_step *)
-    etransitivity. apply (C.(eqSubboxSp) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq)).
+    (* A roundabout way to simplify the proof of mkCohFiller_step *)
+    etransitivity. apply (C.(eqRestrFrameSp) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq)).
     etransitivity.
-    2: symmetry; apply (C.(eqSubboxSp) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq))).
+    2: symmetry; apply (C.(eqRestrFrameSp) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq))).
 
-    apply f_equal with (B := C.(BoxPrev).(box') _ D.1)
-      (f := fun x => rew <- (C.(eqBoxSp') (Hp := ⇓ (Hpr ↕ Hrq) ↕ ⇓ Hq)) in x).
-    now exact (= (cohBoxSnHyp (Hpr := Hpr) (Hrq := Hrq)); mkCohLayer l).
+    apply f_equal with (B := C.(FramePrev).(frame') _ D.1)
+      (f := fun x => rew <- (C.(eqFrameSp') (Hp := ⇓ (Hpr ↕ Hrq) ↕ ⇓ Hq)) in x).
+    now exact (= (cohFrameSnHyp (Hpr := Hpr) (Hrq := Hrq)); mkCohLayer l).
     (* Bug? Coq being too smart for its own good. *)
 Defined.
 
-(* Finally, we can define mkBox *)
+(* Finally, we can define mkFrame *)
 #[local]
-Instance mkBox {n} {C: Cubical n} p: PartialBox n.+1 p mkcsp mkBoxPrev.
+Instance mkFrame {n} {C: Cubical n} p: PartialFrame n.+1 p mkcsp mkFramePrev.
   induction p.
-  + now exact mkBox0. (* p = O *)
-  + now exact (mkBoxSp (Box := IHp)). (* p = S _ *)
+  + now exact mkFrame0. (* p = O *)
+  + now exact (mkFrameSp (Frame := IHp)). (* p = S _ *)
 Defined.
 
-(* For Cube, we take a different strategy. We first define mkcube, mksubcube,
-  and lemmas corresponding to their computational properties *)
-(* Fist, for cube *)
+(* For Cube, we take a different strategy. We first define mkfiller,
+   mkRestrFiller, and lemmas corresponding to their computational properties *)
+(* Fist, for filler *)
 
-Definition mkcube {n p} {C: Cubical n} {Hp: p <= n.+1} {D: mkcsp}
-  (E: (mkBox n.+1).(box) (¹ n.+1) D -> HSet)
-  (d: (mkBox p).(box) Hp D): HSet.
+Definition mkfiller {n p} {C: Cubical n} {Hp: p <= n.+1} {D: mkcsp}
+  (E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet)
+  (d: (mkFrame p).(frame) Hp D): HSet.
   revert d; apply le_induction with (Hp := Hp); clear p Hp. (* cubeSn *)
   + now exact E. (* p = n *)
   + intros p Hp IH d; exact {l : mkLayer & IH (d; l)}. (* p = S n *)
 Defined.
 
-Lemma mkcube_computes {n p} {C: Cubical n} {Hp: p.+1 <= n.+1} {D: mkcsp}
-  {E: (mkBox n.+1).(box) (¹ n.+1) D -> HSet} {d}:
-  mkcube (Hp := ↓ Hp) E d = {l : mkLayer & mkcube (Hp := Hp) E (d; l)} :> Type.
+Lemma mkfiller_computes {n p} {C: Cubical n} {Hp: p.+1 <= n.+1} {D: mkcsp}
+  {E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet} {d}:
+  mkfiller (Hp := ↓ Hp) E d = {l : mkLayer & mkfiller (Hp := Hp) E (d; l)} :> Type.
 Proof.
-  unfold mkcube; now rewrite le_induction_step_computes.
+  unfold mkfiller; now rewrite le_induction_step_computes.
 Qed.
 
-(* Now, subcube, and the corresponding computational properties. *)
+(* Now, restrFiller, and the corresponding computational properties. *)
 
-Definition mksubcube {n} {C: Cubical n} {p q} {Hpq: p.+1 <= q.+1}
+Definition mkRestrFiller {n} {C: Cubical n} {p q} {Hpq: p.+1 <= q.+1}
   {Hq: q.+1 <= n.+1} {ε: side} {D}
-  (E: (mkBox n.+1).(box) (¹ n.+1) D -> HSet)
-  (d: (mkBox p).(box) (↓ (Hpq ↕ Hq)) D)
-  (Cube: mkcube (Hp := ↓ (Hpq ↕ Hq)) E d):
-    mkCubePrev.(cube') ((mkBox p).(subbox) Hq ε d).
+  (E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet)
+  (d: (mkFrame p).(frame) (↓ (Hpq ↕ Hq)) D)
+  (Cube: mkfiller (Hp := ↓ (Hpq ↕ Hq)) E d):
+    mkCubePrev.(filler') ((mkFrame p).(restrFrame) Hq ε d).
 Proof.
   intros *; revert d Cube; simpl. (* subcubeSn *)
   pattern p, Hpq. (* Bug? Why is this needed? *)
   apply le_induction'.
-  + intros d c; rewrite mkcube_computes in c. destruct c as (l, _).
+  + intros d c; rewrite mkfiller_computes in c. destruct c as (l, _).
     now exact (l ε).
   + clear p Hpq; intros p Hpq IH d c; invert_le Hpq.
-    rewrite mkcube_computes in c; destruct c as (l, c).
-    change (⇓ (↓ ?Hpq ↕ ?Hq)) with (↓ ⇓ (Hpq ↕ Hq)); rewrite C.(eqCubeSp).
+    rewrite mkfiller_computes in c; destruct c as (l, c).
+    change (⇓ (↓ ?Hpq ↕ ?Hq)) with (↓ ⇓ (Hpq ↕ Hq)); rewrite C.(eqFillerSp).
     apply IH in c.
     now exact (mkSubLayer d l; c).
 Defined.
 
-Lemma mksubcube_base_computes {p n} {C: Cubical n} {Hp: p.+1 <= n.+1}
-  {ε: side} {D E} {d: (mkBox p).(box) _ D} {c}:
-  mksubcube (Hq := Hp) E d c =
-  match (rew [id] mkcube_computes in c) with
+Lemma mkRestrFiller_base_computes {p n} {C: Cubical n} {Hp: p.+1 <= n.+1}
+  {ε: side} {D E} {d: (mkFrame p).(frame) _ D} {c}:
+  mkRestrFiller (Hq := Hp) E d c =
+  match (rew [id] mkfiller_computes in c) with
   | (l; _) => l ε
   end.
 Proof.
-  unfold mksubcube; now rewrite le_induction'_base_computes.
+  unfold mkRestrFiller; now rewrite le_induction'_base_computes.
 Qed.
 
-Lemma mksubcube_step_computes {q r n} {C: Cubical n} {Hq: q.+2 <= n.+1}
-  {Hrq: r.+2 <= q.+2} {ε: side} {D E} {d: (mkBox r).(box) _ D} {c}:
-  mksubcube (Hpq := ↓ Hrq) (Hq := Hq) (ε := ε) E d c =
-  match (rew [id] mkcube_computes in c) with
-  | (l; c) => rew <- [id] C.(eqCubeSp) in
-    (mkSubLayer d l; mksubcube (Hpq := Hrq) E (d; l) c)
+Lemma mkRestrFiller_step_computes {q r n} {C: Cubical n} {Hq: q.+2 <= n.+1}
+  {Hrq: r.+2 <= q.+2} {ε: side} {D E} {d: (mkFrame r).(frame) _ D} {c}:
+  mkRestrFiller (Hpq := ↓ Hrq) (Hq := Hq) (ε := ε) E d c =
+  match (rew [id] mkfiller_computes in c) with
+  | (l; c) => rew <- [id] C.(eqFillerSp) in
+    (mkSubLayer d l; mkRestrFiller (Hpq := Hrq) E (d; l) c)
   end.
 Proof.
-  unfold mksubcube; now rewrite le_induction'_step_computes.
+  unfold mkRestrFiller; now rewrite le_induction'_step_computes.
 Qed.
 
 (* Now, for the last part of the proof: proving coherence conditions
-  on cohcube *)
+  on cohFiller *)
 
 (* The base case is easily discharged *)
-Definition mkCohCube_base {q r n} {ε ω: side} {C: Cubical n} {D: mkcsp}
+Definition mkCohFiller_base {q r n} {ε ω: side} {C: Cubical n} {D: mkcsp}
   {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n.+1}
-  {E: (mkBox n.+1).(box) (¹ n.+1) D -> HSet}
-  (d: (mkBox r).(box) (↓ ↓ (Hrq ↕ Hq)) D)
-  (c: mkcube E d):
-  rew [mkCubePrev.(cube'')] (mkBox r).(cohbox) (Hpr := ¹ _) d in
-    mkCubePrev.(subcube') (Hpq := Hrq) Hq ε
-      (mksubcube (ε := ω) (Hpq := ¹ _) (Hq := ↓ (Hrq ↕ Hq)) E d c) =
-  mkCubePrev.(subcube') (Hpq := ¹ _) (Hrq ↕ Hq) ω
-    (mksubcube (ε := ε) (Hpq := ↓ Hrq) (Hq := Hq) E d c).
+  {E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet}
+  (d: (mkFrame r).(frame) (↓ ↓ (Hrq ↕ Hq)) D)
+  (c: mkfiller E d):
+  rew [mkCubePrev.(filler'')] (mkFrame r).(cohFrame) (Hpr := ¹ _) d in
+    mkCubePrev.(restrFiller') (Hpq := Hrq) Hq ε
+      (mkRestrFiller (ε := ω) (Hpq := ¹ _) (Hq := ↓ (Hrq ↕ Hq)) E d c) =
+  mkCubePrev.(restrFiller') (Hpq := ¹ _) (Hrq ↕ Hq) ω
+    (mkRestrFiller (ε := ε) (Hpq := ↓ Hrq) (Hq := Hq) E d c).
   change (¹ _ ↕ ?H) with H; change (⇓ ¹ _ ↕ ?H) with H.
-  rewrite mksubcube_base_computes, mksubcube_step_computes.
-  destruct (rew [id] mkcube_computes in c) as (l, c'); clear c.
-  now refine (C.(eqSubcube0)
-    (Q := mksubcube (Hpq := Hrq) E (_; _) c')).
+  rewrite mkRestrFiller_base_computes, mkRestrFiller_step_computes.
+  destruct (rew [id] mkfiller_computes in c) as (l, c'); clear c.
+  now refine (C.(eqRestrFiller0)
+    (Q := mkRestrFiller (Hpq := Hrq) E (_; _) c')).
 Qed.
 
 (* A small abbreviation *)
-Definition mkCohCube p {q r n} {ε ω: side} {C: Cubical n} {D: mkcsp}
+Definition mkCohFiller p {q r n} {ε ω: side} {C: Cubical n} {D: mkcsp}
   (Hpr: p.+2 <= r.+3) {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
-  {E: (mkBox n.+1).(box) (¹ n.+1) D -> HSet}
-  (d: (mkBox p).(box) (↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D)
-  (c: mkcube E d) :=
-  rew [mkCubePrev.(cube'')] (mkBox p).(cohbox) (Hrq := Hrq) d in
-  C.(Cube).(subcube) (ε := ε) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq)
-    (mksubcube (ε := ω) (Hpq := (⇓ Hpr)) (Hq := ↓ (Hrq ↕ Hq)) E d c) =
-  C.(Cube).(subcube) (ε := ω) (Hpq := (⇓ Hpr)) (Hq := ⇓ (Hrq ↕ Hq))
-    (mksubcube (ε := ε) (Hpq := ↓ (Hpr ↕ Hrq)) (Hq := Hq) E d c).
+  {E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet}
+  (d: (mkFrame p).(frame) (↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D)
+  (c: mkfiller E d) :=
+  rew [mkCubePrev.(filler'')] (mkFrame p).(cohFrame) (Hrq := Hrq) d in
+  C.(Cube).(restrFiller) (ε := ε) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq)
+    (mkRestrFiller (ε := ω) (Hpq := (⇓ Hpr)) (Hq := ↓ (Hrq ↕ Hq)) E d c) =
+  C.(Cube).(restrFiller) (ε := ω) (Hpq := (⇓ Hpr)) (Hq := ⇓ (Hrq ↕ Hq))
+    (mkRestrFiller (ε := ε) (Hpq := ↓ (Hpr ↕ Hrq)) (Hq := Hq) E d c).
 
 (* The step case is discharged as (mkCohLayer; IHP) *)
-Definition mkCohCube_step {p q r n} {ε ω: side} {C: Cubical n} {D: mkcsp}
+Definition mkCohFiller_step {p q r n} {ε ω: side} {C: Cubical n} {D: mkcsp}
   {Hpr: p.+3 <= r.+3} {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
-  {E: (mkBox n.+1).(box) (¹ n.+1) D -> HSet}
-  {d: (mkBox p).(box) (↓ ↓ (↓ Hpr ↕ Hrq ↕ Hq)) D}
-  {c: mkcube E d}
-  {IHP: forall (d: (mkBox p.+1).(box) (↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D) (c: mkcube E d),
-        mkCohCube p.+1 Hpr (ε := ε) (ω := ω) d c}:
-        mkCohCube p (↓ Hpr) (ε := ε) (ω := ω) d c.
-  unfold mkCohCube in *; simpl projT1 in *; simpl projT2 in *.
+  {E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet}
+  {d: (mkFrame p).(frame) (↓ ↓ (↓ Hpr ↕ Hrq ↕ Hq)) D}
+  {c: mkfiller E d}
+  {IHP: forall (d: (mkFrame p.+1).(frame) (↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D) (c: mkfiller E d),
+        mkCohFiller p.+1 Hpr (ε := ε) (ω := ω) d c}:
+        mkCohFiller p (↓ Hpr) (ε := ε) (ω := ω) d c.
+  unfold mkCohFiller in *; simpl projT1 in *; simpl projT2 in *.
   change (⇓ (↓ ?Hpr)) with (↓ (⇓ Hpr)).
-  do 2 rewrite mksubcube_step_computes.
-  destruct (rew [id] mkcube_computes in c) as (l, c'); clear c.
-  rewrite (C.(eqSubcubeSp) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq)).
-  rewrite (C.(eqSubcubeSp) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq))).
+  do 2 rewrite mkRestrFiller_step_computes.
+  destruct (rew [id] mkfiller_computes in c) as (l, c'); clear c.
+  rewrite (C.(eqRestrFillerSp) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq)).
+  rewrite (C.(eqRestrFillerSp) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq))).
   change ((fun _ (x : leR _ ?y) => x) ↕ ?z) with z.
   change (⇓ ?x ↕ ⇓ ?y) with (⇓ (x ↕ y)).
-  rewrite <- rew_permute with (H := @eqCubeSp' _ _ _ (⇓ _) _)
-                              (H' := (mkBox p).(cohbox) _).
+  rewrite <- rew_permute with (H := @eqFillerSp' _ _ _ (⇓ _) _)
+                              (H' := (mkFrame p).(cohFrame) _).
   change (↓ ?Hpr ↕ ?Hrq) with (↓ (Hpr ↕ Hrq)).
   f_equal.
   unshelve eapply (rew_existT_curried (P := C.(Layer''))
-  (Q := fun x => C.(CubePrev).(cube') (rew <- [id] C.(eqBoxSp') in x))
-  (H := (mkBox p).(cohbox) (Hpr := ↓ Hpr) (Hrq := Hrq) (Hq := Hq) (ε := ε)
+  (Q := fun x => C.(FillerPrev).(filler') (rew <- [id] C.(eqFrameSp') in x))
+  (H := (mkFrame p).(cohFrame) (Hpr := ↓ Hpr) (Hrq := Hrq) (Hq := Hq) (ε := ε)
         (ω := ω) (D := D) d)
   (u := C.(SubLayer') (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq) (D := D.1) ε
           (mkSubLayer (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq)) (C := C) (D := D)
-          (Box := mkBox p) (ε := ω) d l))
-  (v := rew [C.(CubePrev).(cube')] C.(eqSubboxSp) in
-    C.(Cube).(subcube) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq) (ε := ε)
+          (Frame := mkFrame p) (ε := ω) d l))
+  (v := rew [C.(FillerPrev).(filler')] C.(eqRestrFrameSp) in
+    C.(Cube).(restrFiller) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq) (ε := ε)
                        (D := D.1) (E := D.2)
-                       (mksubcube (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq))
+                       (mkRestrFiller (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq))
                        (D := D) (ε := ω) E (d; l) c'))).
   now exact (mkCohLayer (Hpr := Hpr) (Hrq := Hrq) (Hq := Hq) l).
   rewrite <- IHP with (d := (d; l)) (c := c').
-  simpl (mkBox p.+1). unfold mkCubePrev, cube''.
-  change (fun x => C.(CubePrev).(cube') (Hp := ?Hp) (D := ?D) x) with
-    (C.(CubePrev).(cube') (Hp := Hp) (D := D)).
-  unfold mkBoxSp; unfold cohbox at -1.
-  rewrite rew_map with (P := fun x => (C.(CubePrev).(cube') x).(Dom))
-                       (f := fun x => rew <- [id] C.(eqBoxSp') in x).
+  simpl (mkFrame p.+1). unfold mkCubePrev, filler''.
+  change (fun x => C.(FillerPrev).(filler') (Hp := ?Hp) (D := ?D) x) with
+    (C.(FillerPrev).(filler') (Hp := Hp) (D := D)).
+  unfold mkFrameSp; unfold cohFrame at -1.
+  rewrite rew_map with (P := fun x => (C.(FillerPrev).(filler') x).(Dom))
+                       (f := fun x => rew <- [id] C.(eqFrameSp') in x).
   repeat rewrite rew_compose.
   set (FEQ := f_equal _ _); simpl in FEQ; clearbody FEQ.
   repeat rewrite <- eq_trans_assoc.
   now rewrite eq_trans_sym_inv_l, eq_trans_refl_r.
 Qed.
 
-(* Build a PartialCube n.+1 using what we just defined *)
+(* Build a PartialFiller n.+1 using what we just defined *)
 #[local]
-Instance mkCube {n} {C: Cubical n}: PartialCube n.+1 mkcsp mkCubePrev mkBox.
+Instance mkFiller {n} {C: Cubical n}:
+  PartialFiller n.+1 mkcsp mkCubePrev mkFrame.
   unshelve esplit; intros p.
-  - intros *; now exact mkcube.
-  - intros q Hpq Hq ε d; now exact mksubcube.
+  - intros *; now exact mkfiller.
+  - intros q Hpq Hq ε d; now exact mkRestrFiller.
   - intros *. revert d c. pattern p, Hpr. apply le_induction''.
-    + now exact mkCohCube_base.
-    + clear p Hpr; unfold mkCubePrev, subcube'; cbv beta iota;
+    + now exact mkCohFiller_base.
+    + clear p Hpr; unfold mkCubePrev, restrFiller'; cbv beta iota;
       intros p Hpr IHP d c; invert_le Hpr; invert_le Hrq.
-      now exact (mkCohCube_step (IHP := IHP)).
+      now exact (mkCohFiller_step (IHP := IHP)).
 Defined.
 
 #[local]
@@ -481,24 +482,24 @@ Defined.
 Instance mkCubicalSn {n} {C: Cubical n}: Cubical n.+1.
   unshelve esplit.
   - (* csp *) now exact mkcsp.
-  - (* BoxPrev *) now exact mkBoxPrev.
-  - (* Box *) now exact mkBox.
-  - (* CubePrev *) now exact mkCubePrev.
-  - (* Cube *) now exact mkCube.
-  - (* eqBox0 *) now intros *.
-  - (* eqBox0' *) intros *; now apply C.(eqBox0).
-  - (* eqBoxSp *) now intros *.
-  - (* eqBoxSp' *) intros *; now refine C.(eqBoxSp).
-  - (* eqSubbox0 *) now intros *.
-  - (* eqSubboxSp *) intros *; simpl; now rewrite mkcube_computes.
-  - (* eqCubeSp *) intros *; now refine C.(eqCubeSp).
-  - (* eqCubeSp' *) now intros *.
-  - (* eqSubcube0 *) intros *.
+  - (* FramePrev *) now exact mkFramePrev.
+  - (* Box *) now exact mkFrame.
+  - (* FillerPrev *) now exact mkCubePrev.
+  - (* Cube *) now exact mkFiller.
+  - (* eqFrame0 *) now intros *.
+  - (* eqFrame0' *) intros *; now apply C.(eqFrame0).
+  - (* eqFrameSp *) now intros *.
+  - (* eqFrameSp' *) intros *; now refine C.(eqFrameSp).
+  - (* eqRestrFrame0 *) now intros *.
+  - (* eqRestrFrameSp *) intros *; simpl; now rewrite mkfiller_computes.
+  - (* eqFillerSp *) intros *; now refine C.(eqFillerSp).
+  - (* eqFillerSp' *) now intros *.
+  - (* eqRestrFiller0 *) intros *.
     change (fun _ (_: leR _ ?q) => _) with (¹ q); simpl.
-    rewrite mksubcube_base_computes.
+    rewrite mkRestrFiller_base_computes.
     now rewrite eq_ind_r_refl, rew_rew'.
-  - (* eqSubcubeSp *) intros *; simpl.
-    now rewrite eq_ind_r_refl, mksubcube_step_computes, rew_rew'.
+  - (* eqRestrFillerSp *) intros *; simpl.
+    now rewrite eq_ind_r_refl, mkRestrFiller_step_computes, rew_rew'.
 Defined.
 
 Definition CubicalAt: forall n, Cubical n.
@@ -508,7 +509,7 @@ Definition CubicalAt: forall n, Cubical n.
 Defined.
 
 CoInductive CubeUniverse n (X: (CubicalAt n).(csp)): Type@{l'} := cons {
-  this: (CubicalAt n).(Box).(box) (¹ n) X -> HSet@{l};
+  this: (CubicalAt n).(Frame).(frame) (¹ n) X -> HSet@{l};
   next: CubeUniverse n.+1 (X; this);
 }.
 
