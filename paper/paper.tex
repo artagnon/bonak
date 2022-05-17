@@ -40,11 +40,8 @@
 \newcommand{\eqett}{\ensuremath{\equiv_{\mathit{ETT}}}}
 \newcommand{\reflett}{\ensuremath{\mathsf{refl}_{\mathit{ETT}}}}
 
-% Truncated sets, otherwise referred to as X
-\newcommand{\Xp}[1]{\ensuremath{\mathsf{\color{carolina}{X}}_{#1}}}
-\newcommand{\X}[2]{\ensuremath{\mathsf{\color{carolina}{X}}_{#1}^{<#2}}}
-\newcommand{\Xcomp}[2]{\ensuremath{\mathsf{\color{carolina}{X}}_{#1}^{=#2}}}
-\newcommand{\Xfrom}[2]{\ensuremath{\mathsf{\color{carolina}{X}}_{#1}^{\geq#2}}}
+% Truncated sets, otherwise referred to as X: the general macro
+\newcommandx{\X}[2][1=,2=]{\ensuremath{\mathsf{\color{carolina}{X}}_{#1}^{#2}}}
 
 % Frame, layer, and filler: the general macro
 \newcommandx{\prim}[5][2=,3=,4=,5=]{\ensuremath{\mathsf{\color{indian-yellow}{#1}}_{#2}^{\joinargs[#3][#4][#5]}}}
@@ -489,6 +486,13 @@ In this section, we give the core of the definition of truncated $n$-sets
 as a coinductive limit.
 
 % Now, we write the type theory bit, and input the abbreviated tables
+
+% Truncated sets, otherwise referred to as X
+\newcommandx{\Xp}[1]{\X[#1][]}
+\newcommandx{\Xto}[2]{\X[#1][<#2]}
+\newcommandx{\Xcomp}[2]{\X[#1][=#2]}
+\newcommandx{\Xfrom}[2]{\X[#1][\geq#2]}
+
 % Frame, layer, and filler
 \newcommandx{\framep}[4][1=,2=,3=,4=]{\prim{frame}[][#2][#3][#4]}
 \newcommandx{\layer}[4][1=,2=,3=,4=]{\prim{layer}[][#2][#3][#4]}
@@ -511,6 +515,13 @@ When reflexivities are excluded, we call the structure thus defined \emph{bare t
 
 \input{tab-core.tex}
 \input{tab-frames.tex}
+
+% Truncated sets, otherwise referred to as X
+\renewcommandx{\Xp}[1]{\X[][]}
+\renewcommandx{\Xto}[2]{\X[][<#2]}
+\renewcommandx{\Xcomp}[2]{\X[][=#2]}
+\renewcommandx{\Xfrom}[2]{\X[][\geq#2]}
+
 \input{tab-faces.tex}
 
 % Restriction for frame, layer, and filler
@@ -524,6 +535,13 @@ When reflexivities are excluded, we call the structure thus defined \emph{bare t
 \renewcommandx{\cohc}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{filler}[][][][#4][#5][][#7][#8]}
 
 \input{tab-coh.tex}
+
+% Truncated sets, otherwise referred to as X
+\renewcommandx{\Xp}[1]{\X[#1][]}
+\renewcommandx{\Xto}[2]{\X[#1][<#2]}
+\renewcommandx{\Xcomp}[2]{\X[#1][=#2]}
+\renewcommandx{\Xfrom}[2]{\X[#1][\geq#2]}
+
 \input{tab-coind.tex}
 
 \section{Future work}
@@ -531,6 +549,12 @@ When reflexivities are excluded, we call the structure thus defined \emph{bare t
 \newpage
 \appendix
 \section{Tables in full detail}
+% Truncated sets, otherwise referred to as X
+\renewcommandx{\Xp}[1]{\X[#1][]}
+\renewcommandx{\Xto}[2]{\X[#1][<#2]}
+\renewcommandx{\Xcomp}[2]{\X[#1][=#2]}
+\renewcommandx{\Xfrom}[2]{\X[#1][\geq#2]}
+
 % Frame, layer, and filler
 \renewcommandx{\framep}[4][1=,2=,3=,4=]{\prim{frame}[#1][#2][#3][#4]}
 \renewcommandx{\layer}[4][1=,2=,3=,4=]{\prim{layer}[#1][#2][#3][#4]}
@@ -554,7 +578,6 @@ When reflexivities are excluded, we call the structure thus defined \emph{bare t
 \input{tab-coind.tex}
 
 \newpage
-
 \begin{thebibliography}{10}
   \bibitem[Bez]{Bezem14}
   Bezem, M., Coquand, T., \& Huber, S. (2014, July). A model of type theory in cubical sets. \textit{In 19th International Conference on Types for Proofs and Programs (TYPES 2013)} (Vol. 26, pp. 107-128). Wadern, Germany: Schloss Dagstuhl–Leibniz Zentrum fuer Informatik.
