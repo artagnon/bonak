@@ -488,56 +488,63 @@ as a coinductive limit.
 % Now, we write the type theory bit, and input the abbreviated tables
 
 % Truncated sets, otherwise referred to as X
+% Keep all arguments
 \newcommandx{\Xp}[1]{\X[#1][]}
 \newcommandx{\Xto}[2]{\X[#1][<#2]}
 \newcommandx{\Xcomp}[2]{\X[#1][=#2]}
 \newcommandx{\Xfrom}[2]{\X[#1][\geq#2]}
 
 % Frame, layer, and filler
+% Drop the universe letter
 \newcommandx{\framep}[4][1=,2=,3=,4=]{\prim{frame}[][#2][#3][#4]}
 \newcommandx{\layer}[4][1=,2=,3=,4=]{\prim{layer}[][#2][#3][#4]}
 \newcommandx{\filler}[4][1=,2=,3=,4=]{\prim{filler}[][#2][#3][#4]}
-\newcommandx{\fullframe}[2][1=,2=]{\prim{fullframe}[][#2][][]}
 
 % Restriction for frame, layer, and filler
+% Drop the unviverse letter and q
 \newcommandx{\restrf}[6][1=,2=,3=,4=,5=,6=]{\restr{frame}[][#2][][#4][#5][#6]}
 \newcommandx{\restrl}[6][1=,2=,3=,4=,5=,6=]{\restr{layer}[][#2][][#4][#5][#6]}
 \newcommandx{\restrc}[6][1=,2=,3=,4=,5=,6=]{\restr{filler}[][#2][][#4][#5][#6]}
 
 % Coherence conditions for frame, layer, and filler
-\newcommandx{\cohf}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{frame}[][#2][#3][][][][][#8]}
-\newcommandx{\cohl}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{layer}[][#2][#3][][][][][#8]}
-\newcommandx{\cohc}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{filler}[][#2][#3][][][][][#8]}
+% Keep only ε, ω; n, p; proposition on n and p
+\newcommandx{\cohf}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{frame}[][#2][#3][][][#6][#7][#8]}
+\newcommandx{\cohl}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{layer}[][#2][#3][][][#6][#7][#8]}
+\newcommandx{\cohc}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{filler}[][#2][#3][][][#6][#7][#8]}
 
 The definition is dispatched over tables \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces} and \ref{tab:coh}. It describes the structure of the underlying higher-dimensional relations on which fillers are built. Note the presence of a coherence condition $\cohf[l]$ to ensuring that both sides of the equality in $\restrl[l]$ and $\restrc[l]$ are in the same type. The proof of $\cohf[l]$ itself requires an higher-dimensional coherence condition which we obtain by working in \mintinline{coq}{HSet}. Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory). Note also that for a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\restrf[l]$ nor $\cohf[l]$ anymore.
 
 When reflexivities are excluded, we call the structure thus defined \emph{bare truncated sets}: \emph{bare} because it can be seen as defining truncated $n$-sets corresponding to simplical sets with only faces as part of the structure.
 
+% For just the first table, keep the universe letter in fullframe
+\newcommandx{\fullframe}[2][1=,2=]{\prim{fullframe}[#1][#2][][]}
 \input{tab-core.tex}
+
+% Drop the universe letter in fullframe for all remaining tables
+\renewcommandx{\fullframe}[2][1=,2=]{\prim{fullframe}[][#2][][]}
 \input{tab-frames.tex}
 
 % Truncated sets, otherwise referred to as X
-\renewcommandx{\Xp}[1]{\X[][]}
+% Drop the universe letter for the third and fourth tables
 \renewcommandx{\Xto}[2]{\X[][<#2]}
 \renewcommandx{\Xcomp}[2]{\X[][=#2]}
 \renewcommandx{\Xfrom}[2]{\X[][\geq#2]}
-
 \input{tab-faces.tex}
 
 % Restriction for frame, layer, and filler
+% Drop just the universe letter for the coh table
 \renewcommandx{\restrf}[6][1=,2=,3=,4=,5=,6=]{\restr{frame}[][#2][#3][#4][#5][#6]}
 \renewcommandx{\restrl}[6][1=,2=,3=,4=,5=,6=]{\restr{layer}[][#2][#3][#4][#5][#6]}
 \renewcommandx{\restrc}[6][1=,2=,3=,4=,5=,6=]{\restr{filler}[][#2][#3][#4][#5][#6]}
 
 % Coherence conditions for frame, layer, and filler
-\renewcommandx{\cohf}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{frame}[][][][#4][#5][][#7][#8]}
-\renewcommandx{\cohl}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{layer}[][][][#4][#5][][#7][#8]}
-\renewcommandx{\cohc}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{filler}[][][][#4][#5][][#7][#8]}
-
+% Drop universe letter, ε, and ω
+\renewcommandx{\cohf}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{frame}[][][][#4][#5][#6][#7][#8]}
+\renewcommandx{\cohl}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{layer}[][][][#4][#5][#6][#7][#8]}
+\renewcommandx{\cohc}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{filler}[][][][#4][#5][#6][#7][#8]}
 \input{tab-coh.tex}
 
 % Truncated sets, otherwise referred to as X
-\renewcommandx{\Xp}[1]{\X[#1][]}
 \renewcommandx{\Xto}[2]{\X[#1][<#2]}
 \renewcommandx{\Xcomp}[2]{\X[#1][=#2]}
 \renewcommandx{\Xfrom}[2]{\X[#1][\geq#2]}
@@ -549,12 +556,6 @@ When reflexivities are excluded, we call the structure thus defined \emph{bare t
 \newpage
 \appendix
 \section{Tables in full detail}
-% Truncated sets, otherwise referred to as X
-\renewcommandx{\Xp}[1]{\X[#1][]}
-\renewcommandx{\Xto}[2]{\X[#1][<#2]}
-\renewcommandx{\Xcomp}[2]{\X[#1][=#2]}
-\renewcommandx{\Xfrom}[2]{\X[#1][\geq#2]}
-
 % Frame, layer, and filler
 \renewcommandx{\framep}[4][1=,2=,3=,4=]{\prim{frame}[#1][#2][#3][#4]}
 \renewcommandx{\layer}[4][1=,2=,3=,4=]{\prim{layer}[#1][#2][#3][#4]}

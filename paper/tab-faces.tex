@@ -7,7 +7,7 @@
 
   \eqnline{\restrl[m][\epsilon][q][n][p][p \leq q \leq n - 2]}{\makecell{(D:\Xto{m}{n}) \\ (d:\framep[m][n][p] \D) \\ (l:\layer[m][n][p] \D \d)}}{:}{\layer[m][n-1][p] \hdD(\restrf[m][\epsilon][q+1][n][p] \D \d)}
 
-  \eqnline{\restrl[m][\epsilon][q][n,p]}{D~d~l}{\defeq}{\makecell{\omega \imp (\overright{\cohf[m][\epsilon][m][q][p][n][p] \D \d}(\restrc[m][\epsilon][q][n-1][p]\hdD\tlD(\restrc[m][\omega][p][n][p] \D \d)(l_\omega)))}}
+  \eqnline{\restrl[m][\epsilon][q][n,p]}{D~d~l}{\defeq}{\makecell{\omega \imp (\overright{\cohf[m][\epsilon][\omega][q][p][n][p] \D \d}(\restrc[m][\epsilon][q][n-1][p]\hdD\tlD(\restrc[m][\omega][p][n][p] \D \d)(l_\omega)))}}
 
   \\
 
@@ -15,5 +15,5 @@
 
   \eqnline{\restrc[m][\epsilon][q][n][p][p=q]}{D~E~d~(l,\_)}{\defeq}{l_\epsilon}
 
-  \eqnline{\restrc[m][\epsilon][q][n][p][p<q]}{D~E~d~(l,c)}{\defeq}{(\restrl[m][\epsilon][q][n][p] \D \d(b),\restrc[m][\epsilon][q][n][p+1] \D\E(d,b)\c)}
+  \eqnline{\restrc[m][\epsilon][q][n][p][p<q]}{D~E~d~(l,c)}{\defeq}{(\restrl[m][\epsilon][q][n][p] \D \d\l,\restrc[m][\epsilon][q][n][p+1] \D\E(d,l)\c)}
 \end{eqntable}
