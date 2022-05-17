@@ -75,8 +75,8 @@ Class PartialFiller (n: nat) (csp: Type@{m'})
   filler {p} {Hp: p <= n} {D: csp}:
     (Frame.(frame) (¹ n) D -> HSet@{m}) -> Frame.(frame) Hp D -> HSet@{m};
   restrFiller {p q} {Hpq: p.+1 <= q.+1}
-    (Hq: q.+1 <= n) (ε: side) {D : csp} {E : Frame.(frame) (¹ n) D -> HSet@{m}}
-    {d : Frame.(frame) (↓ (Hpq ↕ Hq)) D} (c : filler E d):
+    (Hq: q.+1 <= n) (ε: side) {D : csp} {E: Frame.(frame) (¹ n) D -> HSet@{m}}
+    {d: Frame.(frame) (↓ (Hpq ↕ Hq)) D} (c: filler E d):
     FillerPrev.(filler') (Frame.(restrFrame) Hq ε d);
   cohFiller {p q r} {Hpr: p.+2 <= r.+2}
     {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
@@ -375,7 +375,7 @@ Definition mkCohFiller_base {q r n} {ε ω: side} {C: NType n} {D: mkcsp}
 Qed.
 
 (* A small abbreviation *)
-Definition mkCohFiller p {q r n} {ε ω: side} {C: NType n} {D: mkcsp}
+Definition mkCohFillerHyp p {q r n} {ε ω: side} {C: NType n} {D: mkcsp}
   (Hpr: p.+2 <= r.+3) {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
   {E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet}
   (d: (mkFrame p).(frame) (↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D)
@@ -392,10 +392,10 @@ Definition mkCohFiller_step {p q r n} {ε ω: side} {C: NType n} {D: mkcsp}
   {E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet}
   {d: (mkFrame p).(frame) (↓ ↓ (↓ Hpr ↕ Hrq ↕ Hq)) D}
   {c: mkfiller E d}
-  {IHP: forall (d: (mkFrame p.+1).(frame) (↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D) (c: mkfiller E d),
-        mkCohFiller p.+1 Hpr (ε := ε) (ω := ω) d c}:
-        mkCohFiller p (↓ Hpr) (ε := ε) (ω := ω) d c.
-  unfold mkCohFiller in *; simpl projT1 in *; simpl projT2 in *.
+  {IHP: forall (d: (mkFrame p.+1).(frame) (↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D)
+        (c: mkfiller E d), mkCohFillerHyp p.+1 Hpr (ε := ε) (ω := ω) d c}:
+        mkCohFillerHyp p (↓ Hpr) (ε := ε) (ω := ω) d c.
+  unfold mkCohFillerHyp in *; simpl projT1 in *; simpl projT2 in *.
   change (⇓ (↓ ?Hpr)) with (↓ (⇓ Hpr)).
   do 2 rewrite mkRestrFiller_step_computes.
   destruct (rew [id] mkfiller_computes in c) as (l, c'); clear c.

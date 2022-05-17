@@ -37,8 +37,8 @@
 
 % Definitional and extensional equality
 \newcommand{\defeq}{\ensuremath{\triangleq}}
-\newcommand{\eqett}{\ensuremath{\equiv_{\mathit{ETT}}}}
-\newcommand{\reflett}{\ensuremath{\mathsf{refl}_{\mathit{ETT}}}}
+\newcommand{\eqHSet}{\ensuremath{\equiv_{\mathit{HSet}}}}
+\newcommand{\reflHSet}{\ensuremath{\mathsf{refl}_{\mathit{HSet}}}}
 
 % Truncated sets, otherwise referred to as X: the general macro
 \newcommandx{\X}[2][1=,2=]{\ensuremath{\mathsf{\color{carolina}{X}}_{#1}^{#2}}}
@@ -537,6 +537,12 @@ When reflexivities are excluded, we call the structure thus defined \emph{bare t
 \renewcommandx{\restrl}[6][1=,2=,3=,4=,5=,6=]{\restr{layer}[][#2][#3][#4][#5][#6]}
 \renewcommandx{\restrc}[6][1=,2=,3=,4=,5=,6=]{\restr{filler}[][#2][#3][#4][#5][#6]}
 
+% Frame, layer, and filler
+% Drop all arguments for coh table; they're not present in coind table.
+\renewcommandx{\framep}[4][1=,2=,3=,4=]{\prim{frame}[][][][]}
+\renewcommandx{\layer}[4][1=,2=,3=,4=]{\prim{layer}[][][][]}
+\renewcommandx{\filler}[4][1=,2=,3=,4=]{\prim{filler}[][][][]}
+
 % Coherence conditions for frame, layer, and filler
 % Drop universe letter, ε, and ω
 \renewcommandx{\cohf}[8][1=,2=,3=,4=,5=,6=,7=,8=]{\coh{frame}[][][][#4][#5][#6][#7][#8]}
@@ -545,6 +551,7 @@ When reflexivities are excluded, we call the structure thus defined \emph{bare t
 \input{tab-coh.tex}
 
 % Truncated sets, otherwise referred to as X
+% Keep universe letter for last table
 \renewcommandx{\Xto}[2]{\X[#1][<#2]}
 \renewcommandx{\Xcomp}[2]{\X[#1][=#2]}
 \renewcommandx{\Xfrom}[2]{\X[#1][\geq#2]}
@@ -556,6 +563,7 @@ When reflexivities are excluded, we call the structure thus defined \emph{bare t
 \newpage
 \appendix
 \section{Tables in full detail}
+% Keep all arguments for all macros
 % Frame, layer, and filler
 \renewcommandx{\framep}[4][1=,2=,3=,4=]{\prim{frame}[#1][#2][#3][#4]}
 \renewcommandx{\layer}[4][1=,2=,3=,4=]{\prim{layer}[#1][#2][#3][#4]}
