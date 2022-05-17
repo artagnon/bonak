@@ -15,12 +15,16 @@
     end
     return tbl
   end
-  function join_with_comma(tbl)
-    return table.concat(remove_empty(tbl), ",")
+  function join_with_comma(prefix, tbl)
+    str = table.concat(remove_empty(tbl), ",")
+    if str == "" then
+      return str
+    end
+    return prefix .. str
   end
 \end{luacode*}
 
-\newcommandx{\joinargs}[5][1=,2=,3=,4=,5=]{\directlua{tex.sprint(join_with_comma({"\luaescapestring{#1}";"\luaescapestring{#2}";"\luaescapestring{#3}";"\luaescapestring{#4}";"\luaescapestring{#5}"}))}}
+\newcommandx{\joinargs}[6][2=,3=,4=,5=,6=]{\directlua{tex.sprint(join_with_comma("#1", {"\luaescapestring{#2}";"\luaescapestring{#3}";"\luaescapestring{#4}";"\luaescapestring{#5}";"\luaescapestring{#6}"}))}}
 
 % Simplicial and Cubical sets
 \newcommand{\DeltaHat}{\ensuremath{\hat{\boldsymbol{\Delta}}}}
@@ -44,13 +48,13 @@
 \newcommandx{\X}[2][1=,2=]{\ensuremath{\mathsf{\color{carolina}{X}}_{#1}^{#2}}}
 
 % Frame, layer, and filler: the general macro
-\newcommandx{\prim}[5][2=,3=,4=,5=]{\ensuremath{\mathsf{\color{indian-yellow}{#1}}_{#2}^{\joinargs[#3][#4][#5]}}}
+\newcommandx{\prim}[5][2=,3=,4=,5=]{\ensuremath{\mathsf{\color{indian-yellow}{#1}}_{#2}^{\joinargs{}[#3][#4][#5]}}}
 
 % Restriction for frame, layer, and filler: the general macro
-\newcommandx{\restr}[7][2=,3=,4=,5=,6=,7=]{\ensuremath{\mathsf{\color{russian-green}{restr}}_{\mathsf{\color{indian-yellow}{#1}}, \joinargs[#2][#3][#4]}^{\joinargs[#5][#6][#7]}}}
+\newcommandx{\restr}[7][2=,3=,4=,5=,6=,7=]{\ensuremath{\mathsf{\color{russian-green}{restr}}_{\mathsf{\color{indian-yellow}{#1}}\joinargs{,}[#2][#3][#4]}^{\joinargs{}[#5][#6][#7]}}}
 
 % Coherence conditions for frame, layer, and filler: the general macro
-\newcommandx{\coh}[9][2=,3=,4=,5=,6=,7=,8=,9=]{\ensuremath{\mathsf{\color{chestnut}{coh}}_{\mathsf{\color{indian-yellow}{#1}}, \joinargs[#2][#3][#4][#5][#6]}^{\joinargs[#7][#8][#9]}}}
+\newcommandx{\coh}[9][2=,3=,4=,5=,6=,7=,8=,9=]{\ensuremath{\mathsf{\color{chestnut}{coh}}_{\mathsf{\color{indian-yellow}{#1}}\joinargs{,}[#2][#3][#4][#5][#6]}^{\joinargs{}[#7][#8][#9]}}}
 
 
 % Some abbreviations
@@ -125,7 +129,7 @@
 \thispagestyle{empty}
 \maketitle
 \begin{abstract}
-  A model of \emph{homotopy type theory}, that formalizes \emph{truncated} $n$-types in dependent type theory. The accompanying artifact is an axiomless Coq formalization~\footnote{Technically speaking, we use some axioms related to functional extensionality, but the requirement arises only from our generalization to truncated $n$-types; if one were to instantiate our development for a particular type (say, augmented simplicial types), this requirement vanishes.} that uses sophisticated rewriting techniques and pushes the boundary of proof assistant technology.
+  A model of \emph{homotopy type theory}, that formalizes \emph{truncated} $n$-types in dependent type theory. The accompanying artifact is an axiomless Coq formalization~\footnote{Technically speaking, we use some axioms related to functional extensionality, but the requirement arises only from our generalization to truncated $n$-types; if one were to instantiate our development for a particular type (say, semi-simplicial types), this requirement vanishes.} that uses sophisticated rewriting techniques and pushes the boundary of proof assistant technology.
 \end{abstract}
 \tableofcontents
 \newpage
@@ -133,7 +137,7 @@
 \section{Overture}
 Cubical type theory~\cite{Bezem14}~\cite{Cohen16}~\cite{Angiuli17} is an extension of dependent type theory that provides a computational interpretation of Voevodsky's \emph{univalence axiom}, in a field known as \emph{homotopy type theory}, or HoTT. Two real-world projects that implement cubical type theory are worthy of mention: an experimental branch of Agda, known as \emph{Cubical Agda}~\cite{Vezzosi21}, and the Arend theorem prover~\footnote{\href{https://arend-lang.github.io}{arend-lang.github.io}}. Cubical type theory is usually modeled as cubical sets, in the set-theoretic setting. Efforts to model cubical type theory have been ongoing since 2014, and many of these efforts are in the set-theoretic setting.
 
-Our contribution is to model the core of semi-cubical sets that naturally generalizes to augmented simplicial sets in type theory, and we call our generalization \emph{truncated $n$-sets}. In contrast to previous efforts that use a fibered representation, we use an indexed representation, that can be derived from the fibered one using a \emph{iterated reverse-Grothendieck} construction. Our work is, in principle axiom-free, although the accompanying artifact uses functional extensionality in order to generalize our work to $n$-truncated sets.
+Our contribution is to model the core of semi-cubical sets that naturally generalizes to semi-simplicial sets in type theory, and we call our generalization \emph{truncated $n$-sets}. In contrast to previous efforts that use a fibered representation, we use an indexed representation, that can be derived from the fibered one using a \emph{iterated reverse-Grothendieck} construction. Our work is, in principle axiom-free, although the accompanying artifact uses functional extensionality in order to generalize our work to $n$-truncated sets.
 
 \begin{table}[H]
   \begin{tabularx}{\linewidth}{p{.3\linewidth}|p{.3\linewidth}|p{.3\linewidth}}
@@ -320,7 +324,7 @@ As is clear from the above definitions, simplicial sets have an infinite number 
 \end{example}
 
 \subsection{\texorpdfstring{\DeltaHat}{Delta sets}}
-As a first step towards formalizing simplicial sets, we restrict outselves to representing \emph{augmented simplicial sets}, which are described roughly as delta-sets in mathematical literature, which forgets about the degeneracies. We now proceed to describe \DeltaHat, which is identical to \Simplex{}, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are \emph{strictly} order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. In mathematical literature, there is little interest in studying \DeltaHat, since maps between delta sets are not well-defined, and it is therefore not possible to construct a category of delta sets.
+The first step towards formalizing simplicial sets is to forget about the degeneracies, and we restrict ourselves to representing \emph{augmented simplicial sets}, otherwise known as delta-sets in mathematical literature. We now proceed to describe \DeltaHat, which is identical to \Simplex{}, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are \emph{strictly} order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. In mathematical literature, there is little interest in studying \DeltaHat, since maps between delta sets are not well-defined, and it is therefore not possible to construct a category of delta sets.
 
 \subsection{Semi-cubical sets}
 We might naively attempt to define $\Cube{}$ identically to \DeltaHat, but let us briefly explain why this wouldn't work, motivating the definition of semi-cubical sets as in \cite{Antolini00}. If there were morphisms from every $\sq{m}$ to \sq{n}, we would end up with:
@@ -410,11 +414,10 @@ Or, in terms of objects and morphisms:
 
 \begin{theorem}
   $\CSet$ does not admit degeneracies.
+  \begin{proof}
+    The reader is advised to refer to \cite{Antolini00} for the proof.
+  \end{proof}
 \end{theorem}
-
-\begin{proof}
-  The reader is advised to refer to \cite{Antolini00} for the proof.
-\end{proof}
 
 \section{Grothendieck construction\label{sec:grothendieckconstr}}
 The Grothendieck construction provides a correspondence between a fibered representation, and an indexed representation.
