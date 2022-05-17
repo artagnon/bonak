@@ -1,4 +1,4 @@
-# Bonak
+# Bonak ![logo](assets/bonak.png)
 
 Bonak is a research project that formalizes semi-cubical types in Coq. Prior to the start of the project, Hugo had worked out the rough type-theory of semi-cubical types on pen-and-paper, and hypothesized that it could be formalized in Coq. The project started when Hugo and Ram met to test the hypothesis. They then met once a week for the next 2.5 years, to commit time to work on the project. The first commit was made on August 15, 2019, and the formalization was completed on 22 February 2022. Indeed, it has been quite an adventure.
 
