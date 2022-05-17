@@ -515,4 +515,4 @@ CoInductive NTypeUniverse n (X: (NTypeAt n).(csp)): Type@{m'} := cons {
   next: NTypeUniverse n.+1 (X; this);
 }.
 
-Definition CubeInfinity := NTypeUniverse 0 tt.
+Definition NTypes := NTypeUniverse 0 tt.
