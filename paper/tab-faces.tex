@@ -5,13 +5,13 @@
 
   \\
 
-  \eqnline{\restrl[m][\epsilon][q][n][p][p \leq q \leq n - 2]}{\makecell{(D:\Xto{m}{n}) \\ (d:\framep[m][n][p][][D=\D]) \\ (l:\layer[m][n][p][][D=\D, d=\d])}}{:}{\layer[m][n-1][p][][D=\hdD](\restrf[m][\epsilon][q+1][n][p][][D=\D, d=\d])}
+  \eqnline{\restrl[m][\epsilon][q][n][p][p \leq q \leq n - 2]}{\makecell{(D:\Xto{m}{n}) \\ (d:\framep[m][n][p][][D=\D]) \\ (l:\layer[m][n][p][][D=\D, d=\d])}}{:}{\layer[m][n-1][p][][D=\hdD, d={\restrf[m][\epsilon][q+1][n][p][][D=\D, d=\d]}]}
 
-  \eqnline{\restrl[m][\epsilon][q][n,p]}{\D~\d~\l}{\defeq}{\lambda \omega.(\cohf[m][\epsilon][\omega][q][p][n][p][][D=\D, d=\d](\restrc[m][\epsilon][q][n-1][p][][D=\hdD, d=\tlD](\restrf[m][\omega][p][n][p][][D=\D, d=\d])(l_\omega)))}
+  \eqnline{\restrl[m][\epsilon][q][n,p]}{\D~\d~\l}{\defeq}{\lambda \omega.(\cohf[m][\epsilon][\omega][q][p][n][p][][D=\D, d=\d](\restrc[m][\epsilon][q][n-1][p][][D=\hdD, E=\tlD, d={\restrf[m][\omega][p][n][p][][D=\D, d=\d]}, c={\l_\omega}]))}
 
   \\
 
-  \eqnline{\restrc[m][\epsilon][q][n][p][p \leq q \leq n - 1]}{\makecell{(D:\Xto{m}{n}) \\ (E:\Xcomp{m}{n}[D=\D]) \\(d:\framep[m][n][p][][D=\D]) \\ (c:\filler[m][n][p][][D=\D, E=\E, d=\d])}}{:}{\filler[m][n-1][p][][D=\hdD, d=\tlD](\restrf[m][\epsilon][q+1][n][p][][D=\D, d=\d])}
+  \eqnline{\restrc[m][\epsilon][q][n][p][p \leq q \leq n - 1]}{\makecell{(D:\Xto{m}{n}) \\ (E:\Xcomp{m}{n}[D=\D]) \\(d:\framep[m][n][p][][D=\D]) \\ (c:\filler[m][n][p][][D=\D, E=\E, d=\d])}}{:}{\filler[m][n-1][p][][D=\hdD, E=\tlD, d={\restrf[m][\epsilon][q+1][n][p][][D=\D, d=\d]}]}
 
   \eqnline{\restrc[m][\epsilon][q][n][p][p=q]}{\D~\E~\d~(\pair{l}{\_})}{\defeq}{\l_\epsilon}
 
