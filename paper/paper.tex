@@ -49,21 +49,42 @@
 
 % Magic with xkeyval to go over the 9-argument limit of LaTeX
 \makeatletter
-\define@key{Ex}{D}{#1}
-\define@key{Ex}{d}{#1}
-\define@key{Ex}{E}{#1}
-\define@key{Ex}{l}{#1}
-\define@key{Ex}{c}{#1}
+\define@cmdkey{prim-frame}{D}{#1}
+\define@cmdkey{prim-layer}{D}{#1}
+\define@cmdkey{prim-layer}{d}{#1}
+\define@cmdkey{prim-filler}{D}{#1}
+\define@cmdkey{prim-filler}{E}{#1}
+\define@cmdkey{prim-filler}{d}{#1}
+
+\define@cmdkey{restr-frame}{D}{#1}
+\define@cmdkey{restr-frame}{d}{#1}
+\define@cmdkey{restr-layer}{D}{#1}
+\define@cmdkey{restr-layer}{d}{#1}
+\define@cmdkey{restr-layer}{l}{#1}
+\define@cmdkey{restr-filler}{D}{#1}
+\define@cmdkey{restr-filler}{E}{#1}
+\define@cmdkey{restr-filler}{d}{#1}
+\define@cmdkey{restr-filler}{c}{#1}
+
+\define@cmdkey{coh-frame}{D}{#1}
+\define@cmdkey{coh-frame}{d}{#1}
+\define@cmdkey{coh-layer}{D}{#1}
+\define@cmdkey{coh-layer}{d}{#1}
+\define@cmdkey{coh-layer}{l}{#1}
+\define@cmdkey{coh-filler}{D}{#1}
+\define@cmdkey{coh-filler}{E}{#1}
+\define@cmdkey{coh-filler}{d}{#1}
+\define@cmdkey{coh-filler}{c}{#1}
 \makeatother
 
 % Frame, layer, and filler: the general macro
 \makeatletter
-\newcommandx{\prim}[6][2=,3=,4=,5=,6=]{\ensuremath{\mathsf{\color{indian-yellow}{#1}}_{#2}^{\joinargs{}[#3][#4][#5]}}\@ifstar{}{\setkeys*{Ex}{#6}}}
+\newcommandx{\prim}[6][2=,3=,4=,5=,6=]{\ensuremath{\mathsf{\color{indian-yellow}{#1}}_{#2}^{\joinargs{}[#3][#4][#5]}}\@ifstar{}{\setkeys*{prim-#1}{#6}}}
 \makeatother
 
 % Restriction for frame, layer, and filler: the general macro
 \makeatletter
-\newcommandx{\restr}[8][2=,3=,4=,5=,6=,7=,8=]{\ensuremath{\mathsf{\color{russian-green}{restr}}_{\mathsf{\color{indian-yellow}{#1}}\joinargs{,}[#2][#3][#4]}^{\joinargs{}[#5][#6][#7]}}\@ifstar{}{\setkeys*{Ex}{#8}}}
+\newcommandx{\restr}[8][2=,3=,4=,5=,6=,7=,8=]{\ensuremath{\mathsf{\color{russian-green}{restr}}_{\mathsf{\color{indian-yellow}{#1}}\joinargs{,}[#2][#3][#4]}^{\joinargs{}[#5][#6][#7]}}\@ifstar{}{\setkeys*{restr-#1}{#8}}}
 \makeatother
 
 % Coherence conditions for frame, layer, and filler: the general macro
@@ -72,7 +93,7 @@
 % xkeyval, but this is not possible. The only possible compromise is to join
 % #7, and #8 by hand in usage of \coh, by hand.
 \makeatletter
-\newcommandx{\coh}[9][2=,3=,4=,5=,6=,7=,8=,9=]{\ensuremath{\mathsf{\color{chestnut}{coh}}_{\mathsf{\color{indian-yellow}{#1}}\joinargs{,}[#2][#3][#4][#5][#6]}^{\joinargs{}[#7][#8]}}\@ifstar{}{\setkeys*{Ex}{#9}}}
+\newcommandx{\coh}[9][2=,3=,4=,5=,6=,7=,8=,9=]{\ensuremath{\mathsf{\color{chestnut}{coh}}_{\mathsf{\color{indian-yellow}{#1}}\joinargs{,}[#2][#3][#4][#5][#6]}^{\joinargs{}[#7][#8]}}\@ifstar{}{\setkeys*{coh-#1}{#9}}}
 \makeatother
 
 % Some abbreviations
@@ -600,9 +621,9 @@ When reflexivities are excluded, we call the structure thus defined \emph{bare t
 \renewcommandx{\restrc}[7][1=,2=,3=,4=,5=,6=,7=]{\restr{filler}[#1][#2][#3][#4][#5][#6][#7]}
 
 % Coherence conditions for frame, layer, and filler
-\renewcommandx{\cohf}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{cohframe}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohl}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{cohlayer}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohc}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{cohfiller}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohf}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{frame}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohl}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{layer}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohc}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{filler}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
 
 \input{tab-core.tex}
 \input{tab-frames.tex}
