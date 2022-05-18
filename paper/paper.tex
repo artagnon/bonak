@@ -44,69 +44,66 @@
 \newcommand{\eqHSet}{\ensuremath{\equiv_{\mathit{HSet}}}}
 \newcommand{\reflHSet}{\ensuremath{\mathsf{refl}_{\mathit{HSet}}}}
 
-% Truncated sets, otherwise referred to as X: the general macro
-\newcommandx{\X}[2][1=,2=]{\ensuremath{\mathsf{\color{carolina}{X}}_{#1}^{#2}}}
-
 % Magic with xkeyval to go over the 9-argument limit of LaTeX
 \makeatletter
-\define@cmdkey{prim-frame}{D}{#1}
-\define@cmdkey{prim-layer}{D}{#1}
-\define@cmdkey{prim-layer}{d}{#1}
-\define@cmdkey{prim-filler}{D}{#1}
-\define@cmdkey{prim-filler}{E}{#1}
-\define@cmdkey{prim-filler}{d}{#1}
+\define@cmdkey{X}{D}{(#1)}
 
-\define@cmdkey{restr-frame}{D}{#1}
-\define@cmdkey{restr-frame}{d}{#1}
-\define@cmdkey{restr-layer}{D}{#1}
-\define@cmdkey{restr-layer}{d}{#1}
-\define@cmdkey{restr-layer}{l}{#1}
-\define@cmdkey{restr-filler}{D}{#1}
-\define@cmdkey{restr-filler}{E}{#1}
-\define@cmdkey{restr-filler}{d}{#1}
-\define@cmdkey{restr-filler}{c}{#1}
+\define@cmdkey[prim]{frame}{D}{(#1)}
+\define@cmdkey[prim]{layer}{D}{(#1)}
+\define@cmdkey[prim]{layer}{d}{(#1)}
+\define@cmdkey[prim]{filler}{D}{(#1)}
+\define@cmdkey[prim]{filler}{E}{(#1)}
+\define@cmdkey[prim]{filler}{d}{(#1)}
+\define@cmdkey[prim]{fullframe}{D}{(#1)}
 
-\define@cmdkey{coh-frame}{D}{#1}
-\define@cmdkey{coh-frame}{d}{#1}
-\define@cmdkey{coh-layer}{D}{#1}
-\define@cmdkey{coh-layer}{d}{#1}
-\define@cmdkey{coh-layer}{l}{#1}
-\define@cmdkey{coh-filler}{D}{#1}
-\define@cmdkey{coh-filler}{E}{#1}
-\define@cmdkey{coh-filler}{d}{#1}
-\define@cmdkey{coh-filler}{c}{#1}
+\define@cmdkey[restr]{frame}{D}{(#1)}
+\define@cmdkey[restr]{frame}{d}{(#1)}
+\define@cmdkey[restr]{layer}{D}{(#1)}
+\define@cmdkey[restr]{layer}{d}{(#1)}
+\define@cmdkey[restr]{layer}{l}{(#1)}
+\define@cmdkey[restr]{filler}{D}{(#1)}
+\define@cmdkey[restr]{filler}{E}{(#1)}
+\define@cmdkey[restr]{filler}{d}{(#1)}
+\define@cmdkey[restr]{filler}{c}{(#1)}
+
+\define@cmdkey[coh]{frame}{D}{(#1)}
+\define@cmdkey[coh]{frame}{d}{(#1)}
+\define@cmdkey[coh]{layer}{D}{(#1)}
+\define@cmdkey[coh]{layer}{d}{(#1)}
+\define@cmdkey[coh]{layer}{l}{(#1)}
+\define@cmdkey[coh]{filler}{D}{(#1)}
+\define@cmdkey[coh]{filler}{E}{(#1)}
+\define@cmdkey[coh]{filler}{d}{(#1)}
+\define@cmdkey[coh]{filler}{c}{(#1)}
 \makeatother
+
+% Truncated sets, otherwise referred to as X: the general macro
+\newcommandx{\X}[3][1=,2=,3=]{\ensuremath{\mathsf{\color{carolina}{X}}_{#1}^{#2}{\setkeys*{X}{#3}}}}
 
 % Frame, layer, and filler: the general macro
-\makeatletter
-\newcommandx{\prim}[6][2=,3=,4=,5=,6=]{\ensuremath{\mathsf{\color{indian-yellow}{#1}}_{#2}^{\joinargs{}[#3][#4][#5]}}\@ifstar{}{\setkeys*{prim-#1}{#6}}}
-\makeatother
+\newcommandx{\prim}[6][2=,3=,4=,5=,6=]{\ensuremath{\mathsf{\color{indian-yellow}{#1}}_{#2}^{\joinargs{}[#3][#4][#5]}{\setkeys*[prim]{#1}{#6}}}}
 
 % Restriction for frame, layer, and filler: the general macro
-\makeatletter
-\newcommandx{\restr}[8][2=,3=,4=,5=,6=,7=,8=]{\ensuremath{\mathsf{\color{russian-green}{restr}}_{\mathsf{\color{indian-yellow}{#1}}\joinargs{,}[#2][#3][#4]}^{\joinargs{}[#5][#6][#7]}}\@ifstar{}{\setkeys*{restr-#1}{#8}}}
-\makeatother
+\newcommandx{\restr}[8][2=,3=,4=,5=,6=,7=,8=]{\ensuremath{\mathsf{\color{russian-green}{restr}}_{\mathsf{\color{indian-yellow}{#1}}\joinargs{,}[#2][#3][#4]}^{\joinargs{}[#5][#6][#7]}{\setkeys*[restr]{#1}{#8}}}}
 
 % Coherence conditions for frame, layer, and filler: the general macro
 
 % Hack: we'd like \coh to take 10 arguments, with the 10th being passed to
 % xkeyval, but this is not possible. The only possible compromise is to join
-% #7, and #8 by hand in usage of \coh, by hand.
-\makeatletter
-\newcommandx{\coh}[9][2=,3=,4=,5=,6=,7=,8=,9=]{\ensuremath{\mathsf{\color{chestnut}{coh}}_{\mathsf{\color{indian-yellow}{#1}}\joinargs{,}[#2][#3][#4][#5][#6]}^{\joinargs{}[#7][#8]}}\@ifstar{}{\setkeys*{coh-#1}{#9}}}
-\makeatother
+% #7 and #8 by hand in usage of \coh: it's now #7 or '#6,#7' in \cohfoo commands
+\newcommandx{\coh}[9][2=,3=,4=,5=,6=,7=,8=,9=]{\ensuremath{\mathsf{\color{chestnut}{coh}}_{\mathsf{\color{indian-yellow}{#1}}\joinargs{,}[#2][#3][#4][#5][#6]}^{\joinargs{}[#7][#8]}{\setkeys*[coh]{#1}{#9}}}}
 
 % Some abbreviations
 \newcommand{\imp}{\ensuremath{\rightarrow}}
 \newcommand{\overright}[1]{\ensuremath{\overrightarrow{#1}}}
-\renewcommand{\D}{\ensuremath{(D)}}
-\newcommand{\hdD}{\ensuremath{(D.1)}}
-\newcommand{\tlD}{\ensuremath{(D.2)}}
-\renewcommand{\d}{\ensuremath{(d)}}
-\newcommand{\E}{\ensuremath{(E)}}
-\renewcommand{\l}{\ensuremath{(l)}}
-\renewcommand{\c}{\ensuremath{(c)}}
-\newcommand{\pair}[2]{\ensuremath{(#1, #2)}}
+\renewcommand{\D}{\ensuremath{D}}
+\newcommand{\hdD}{\ensuremath{D.1}}
+\newcommand{\tlD}{\ensuremath{D.2}}
+\renewcommand{\d}{\ensuremath{d}}
+\newcommand{\E}{\ensuremath{E}}
+\renewcommand{\l}{\ensuremath{l}}
+\renewcommand{\c}{\ensuremath{c}}
+\newcommand{\pair}[2]{\ensuremath{#1, #2}}
 
 % Fancy headers
 \pagestyle{fancy}
@@ -559,11 +556,11 @@ The definition is dispatched over tables \ref{tab:core}, \ref{tab:frames}, \ref{
 When reflexivities are excluded, we call the structure thus defined \emph{bare truncated sets}: \emph{bare} because it can be seen as defining truncated $n$-sets corresponding to simplical sets with only faces as part of the structure.
 
 % For just the first table, keep the universe letter in fullframe
-\newcommandx{\fullframe}[2][1=,2=]{\prim{fullframe}[#1][#2][][]}
+\newcommandx{\fullframe}[3][1=,2=,3=]{\prim{fullframe}[#1][#2][][][#3]}
 \input{tab-core.tex}
 
 % Drop the universe letter in fullframe for all remaining tables
-\renewcommandx{\fullframe}[2][1=,2=]{\prim{fullframe}[][#2][][]}
+\renewcommandx{\fullframe}[3][1=,2=,3=]{\prim{fullframe}[][#2][][][#3]}
 \input{tab-frames.tex}
 
 % Truncated sets, otherwise referred to as X
@@ -584,9 +581,9 @@ When reflexivities are excluded, we call the structure thus defined \emph{bare t
 
 % Frame, layer, and filler
 % Drop all arguments for coh table; they're not present in coind table.
-\renewcommandx{\framep}[5][1=,2=,3=,4=,5=]{\prim{frame}[][][][][]}
-\renewcommandx{\layer}[5][1=,2=,3=,4=,5=]{\prim{layer}[][][][][]}
-\renewcommandx{\filler}[5][1=,2=,3=,4=,5=]{\prim{filler}[][][][][]}
+\renewcommandx{\framep}[5][1=,2=,3=,4=,5=]{\prim{frame}[][][][][#5]}
+\renewcommandx{\layer}[5][1=,2=,3=,4=,5=]{\prim{layer}[][][][][#5]}
+\renewcommandx{\filler}[5][1=,2=,3=,4=,5=]{\prim{filler}[][][][][#5]}
 
 % Coherence conditions for frame, layer, and filler
 % Drop universe letter, ε, and ω
@@ -613,7 +610,7 @@ When reflexivities are excluded, we call the structure thus defined \emph{bare t
 \renewcommandx{\framep}[5][1=,2=,3=,4=,5=]{\prim{frame}[#1][#2][#3][#4][#5]}
 \renewcommandx{\layer}[5][1=,2=,3=,4=,5=]{\prim{layer}[#1][#2][#3][#4][#5]}
 \renewcommandx{\filler}[5][1=,2=,3=,4=,5=]{\prim{filler}[#1][#2][#3][#4][#5]}
-\renewcommandx{\fullframe}[2][1=,2=]{\prim{fullframe}[#1][#2][][]}
+\renewcommandx{\fullframe}[3][1=,2=,3=]{\prim{fullframe}[#1][#2][][][#3]}
 
 % Restriction for frame, layer, and filler
 \renewcommandx{\restrf}[7][1=,2=,3=,4=,5=,6=,7=]{\restr{frame}[#1][#2][#3][#4][#5][#6][#7]}

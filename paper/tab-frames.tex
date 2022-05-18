@@ -18,9 +18,9 @@
 
   \\
 
-  \eqnline{\filler[m][n][p][p \leq n]}{\makecell{(D:\Xto{m}{n}) \\(E:\Xcomp{m}{n} \D) \\ (d:\framep[m][n][p] \D)}}{:}{\U{m}}
+  \eqnline{\filler[m][n][p][p \leq n]}{\makecell{(D:\Xto{m}{n}) \\(E:\Xcomp{m}{n}[D=\D]) \\ (d:\framep[m][n][p][][D=\D])}}{:}{\U{m}}
 
-  \eqnline{\filler[m][n][p][p = n]}{D~E~d}{\defeq}{E \d}
+  \eqnline{\filler[m][n][p][p = n]}{\D~\E~\d}{\defeq}{\E(\d)}
 
-  \eqnline{\filler[m][n][p][p < n]}{D~E~d}{\defeq}{\Sigma l:\layer[m][n][p][][D=\D, d=\d].\,\filler[m][n][p+1][][E=\E, d=\pair{d}{l}]}
+  \eqnline{\filler[m][n][p][p < n]}{\D~\E~\d}{\defeq}{\Sigma l:\layer[m][n][p][][D=\D, d=\d].\,\filler[m][n][p+1][][E=\E, d=\pair{\d}{\l}]}
 \end{eqntable}
