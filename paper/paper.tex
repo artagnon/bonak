@@ -58,12 +58,12 @@
 
 % Frame, layer, and filler: the general macro
 \makeatletter
-\newcommandx{\prim}[6][2=,3=,4=,5=,6=]{\ensuremath{\mathsf{\color{indian-yellow}{#1}}_{#2}^{\joinargs{}[#3][#4][#5]}\@ifstar{}{\setkeys*{Ex}{#6}}}}
+\newcommandx{\prim}[6][2=,3=,4=,5=,6=]{\ensuremath{\mathsf{\color{indian-yellow}{#1}}_{#2}^{\joinargs{}[#3][#4][#5]}}\@ifstar{}{\setkeys*{Ex}{#6}}}
 \makeatother
 
 % Restriction for frame, layer, and filler: the general macro
 \makeatletter
-\newcommandx{\restr}[8][2=,3=,4=,5=,6=,7=,8=]{\ensuremath{\mathsf{\color{russian-green}{restr}}_{\mathsf{\color{indian-yellow}{#1}}\joinargs{,}[#2][#3][#4]}^{\joinargs{}[#5][#6][#7]}\@ifstar{}{\setkeys*{Ex}{#8}}}}
+\newcommandx{\restr}[8][2=,3=,4=,5=,6=,7=,8=]{\ensuremath{\mathsf{\color{russian-green}{restr}}_{\mathsf{\color{indian-yellow}{#1}}\joinargs{,}[#2][#3][#4]}^{\joinargs{}[#5][#6][#7]}}\@ifstar{}{\setkeys*{Ex}{#8}}}
 \makeatother
 
 % Coherence conditions for frame, layer, and filler: the general macro
@@ -72,7 +72,7 @@
 % xkeyval, but this is not possible. The only possible compromise is to join
 % #7, and #8 by hand in usage of \coh, by hand.
 \makeatletter
-\newcommandx{\coh}[9][2=,3=,4=,5=,6=,7=,8=,9=]{\ensuremath{\mathsf{\color{chestnut}{coh}}_{\mathsf{\color{indian-yellow}{#1}}\joinargs{,}[#2][#3][#4][#5][#6]}^{\joinargs{}[#7][#8]}\@ifstar{}{\setkeys*{Ex}{#9}}}}
+\newcommandx{\coh}[9][2=,3=,4=,5=,6=,7=,8=,9=]{\ensuremath{\mathsf{\color{chestnut}{coh}}_{\mathsf{\color{indian-yellow}{#1}}\joinargs{,}[#2][#3][#4][#5][#6]}^{\joinargs{}[#7][#8]}}\@ifstar{}{\setkeys*{Ex}{#9}}}
 \makeatother
 
 % Some abbreviations
@@ -85,7 +85,7 @@
 \newcommand{\E}{\ensuremath{(E)}}
 \renewcommand{\l}{\ensuremath{(l)}}
 \renewcommand{\c}{\ensuremath{(c)}}
-
+\newcommand{\pair}[2]{\ensuremath{(#1, #2)}}
 
 % Fancy headers
 \pagestyle{fancy}
