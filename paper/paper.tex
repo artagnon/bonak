@@ -77,25 +77,35 @@
 \define@cmdkey[coh]{filler}{c}{(#1)}
 \makeatother
 
-% More magic: we extend xkeyval with a \appendmask macro to pass to \setkeys
+% More magic: we patch xkeyval's \setkeys to use a mask to ignore keys
 \makeatletter
-% The global that stores our mask in prefix@family@key format
+% Our global mask
 \def\bonak@mask{}
+\def\bonak@na{}
 
 % First we define \appendmask
-\def\bonak@appendmask[#1]{
-  \XKV@addtolist@n\bonak@mask{\XKV@header#1}
+\long\def\bonak@appendmask[#1]{
+  \XKV@for@eo\XKV@fams\XKV@tfam{
+    \def\bonak@hdr{\XKV@prefix\XKV@tfam @}
+    \XKV@for@o{#1}\XKV@tempa{
+      \XKV@addtolist@x\bonak@mask{\bonak@hdr\XKV@tempa}
+    }
+  }
 }
 \def\appendmask{\XKV@testopta{\XKV@testoptc\bonak@appendmask}}
 
 % Now we patch \XKV@setkeys
 \xpretocmd{\XKV@setkeys}{
-  \XKV@for@n{\bonak@mask}\XKV@tempa{
-    \IfBeginWith{\XKV@tempa}{\XKV@header}{
-      \XKV@addtolist@n\XKV@na{\StrBehind{\XKV@tempa}{\XKV@header}}}{}
+  \XKV@for@eo\XKV@fams\XKV@tfam{
+    \def\bonak@hdr{\XKV@prefix\XKV@tfam @}
+    \XKV@for@eo{\bonak@mask}\XKV@tempa{
+      \IfBeginWith{\XKV@tempa}{\bonak@hdr}{
+        \def\XKV@tempb{\StrBehind{\XKV@tempa}{\bonak@hdr}}
+        \XKV@addtolist@o\bonak@na{\XKV@tempb}}{}
+    }
   }
 }{\tracingpatches}{\tracingpatches}
-\xpatchcmd{\XKV@setkeys}{#1}{\XKV@na}{\tracingpatches}{\tracingpatches}
+\xpatchcmd{\XKV@setkeys}{#1}{\bonak@na}{\tracingpatches}{\tracingpatches}
 \makeatother
 
 % Truncated sets, otherwise referred to as X: the general macro
@@ -439,7 +449,7 @@ When reflexivities are excluded, we call the structure thus defined \emph{bare t
 % From the third table onwards, make the {D, E} arguments of prims implicit
 \appendmask[prim]{frame}[D]
 \appendmask[prim]{layer}[D]
-\appendmask[prim]{filler}[D, E]
+\appendmask[prim]{filler}[D,E]
 
 % Truncated sets, otherwise referred to as X
 % Drop the universe letter for the third and fourth tables
