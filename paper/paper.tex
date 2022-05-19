@@ -1,6 +1,6 @@
 \documentclass[10pt]{art}
 
-\usepackage{multirow, minted, tabularx, booktabs, setspace, makecell, caption, xstring, pdflscape}
+\usepackage{multirow, minted, tabularx, booktabs, setspace, makecell, caption, xkeyval, xstring, xpatch, pdflscape}
 \usepackage[a4paper, inner=25mm, outer=25mm, top=25mm, bottom=25mm]{geometry}
 
 % Some lua magic to join a variable number of arguments with commas
@@ -77,41 +77,37 @@
 \define@cmdkey[coh]{filler}{c}{(#1)}
 \makeatother
 
-% More magic: we extend xkeyval with a \appendmask macro to pass to \bonaksetkeys
+% More magic: we extend xkeyval with a \appendmask macro to pass to \setkeys
 \makeatletter
+% The global that stores our mask in prefix@family@key format
 \def\bonak@mask{}
 
 \def\bonak@appendmask[#1]{
   \XKV@addtolist@n\bonak@mask{\g@addto@macro{\XKV@prefix\XKV@tfam}{@}#1}
 }
 \def\appendmask{\XKV@testopta{\XKV@testoptc\bonak@appendmask}}
-\makeatother
 
-% Now we create \bonaksetkeys
-\makeatletter
-\def\bonaksetkeys#1[#2]#3[#4]#5{
+% Now we patch \XKV@setkeys
+\xpretobibmacro{\XKV@setkeys}{
   \def\bonak@pfx{\g@addto@macro{\XKV@prefix\XKV@tfam}{@}}
   \XKV@for@n{\bonak@mask}\bonak@tempa{
     \IfBeginWith{\bonak@tempa}{\bonak@pfx}{
       \XKV@addtolist@n\XKV@na{\StrBehind{\bonak@tempa}{\bonak@pfx}}}{}
   }
-  % Finally, call XKV@setkeys
-  \let\bonak@tempa{\XKV@testopta{\XKV@testoptc\XKV@setkeys}}
-  \expandafter\bonak@tempa\expandafter\XKV@na
-}
+}{}{}
 \makeatother
 
 % Truncated sets, otherwise referred to as X: the general macro
 \newcommandx*{\X}[3][1=,2=,3=]{
   \ensuremath{\mathsf{\color{carolina}{X}}_{#1}^{#2}}
-  \bonaksetkeys*{X}{#3}
+  \setkeys*{X}{#3}
 }
 
 % Frame, layer, and filler: the general macro
 \newcommandx*{\prim}[6][2=,3=,4=,5=,6=]{
   \ensuremath{\mathsf{\color{indian-yellow}{#1}}_{#2}^{
     \joinargs{}[#3][#4][#5]}}
-  \bonaksetkeys*[prim]{#1}{#6}
+  \setkeys*[prim]{#1}{#6}
 }
 
 % Restriction for frame, layer, and filler: the general macro
@@ -119,7 +115,7 @@
   \ensuremath{\mathsf{\color{russian-green}{restr}}_{
     \mathsf{\color{indian-yellow}{#1}}
     \joinargs{,}[#2][#3][#4]}^{\joinargs{}[#5][#6][#7]}}
-  \bonaksetkeys*[restr]{#1}{#8}
+  \setkeys*[restr]{#1}{#8}
 }
 
 % Coherence conditions for frame, layer, and filler: the general macro
@@ -131,7 +127,7 @@
   \ensuremath{\mathsf{\color{chestnut}{coh}}_{
     \mathsf{\color{indian-yellow}{#1}}
     \joinargs{,}[#2][#3][#4][#5][#6]}^{\joinargs{}[#7][#8]}}
-  \bonaksetkeys*[coh]{#1}{#9}
+  \setkeys*[coh]{#1}{#9}
 }
 
 % Some abbreviations
