@@ -83,18 +83,18 @@
 \def\bonak@mask{}
 
 \def\bonak@appendmask[#1]{
-  \XKV@addtolist@n\bonak@mask{\g@addto@macro{\XKV@prefix\XKV@tfam}{@}#1}
+  \XKV@addtolist@n\bonak@mask{\XKV@header#1}
 }
 \def\appendmask{\XKV@testopta{\XKV@testoptc\bonak@appendmask}}
 
 % Now we patch \XKV@setkeys
-\xpretobibmacro{\XKV@setkeys}{
-  \def\bonak@pfx{\g@addto@macro{\XKV@prefix\XKV@tfam}{@}}
-  \XKV@for@n{\bonak@mask}\bonak@tempa{
-    \IfBeginWith{\bonak@tempa}{\bonak@pfx}{
-      \XKV@addtolist@n\XKV@na{\StrBehind{\bonak@tempa}{\bonak@pfx}}}{}
+\xpretocmd{\XKV@setkeys}{
+  \XKV@for@n{\bonak@mask}\XKV@tempa{
+    \IfBeginWith{\XKV@tempa}{\XKV@header}{
+      \XKV@addtolist@n\XKV@na{\StrBehind{\XKV@tempa}{\XKV@header}}}{}
   }
-}{}{}
+}{\tracingpatches}{\tracingpatches}
+\xpatchcmd{\XKV@setkeys}{{#1}}{{\XKV@na}}{\tracingpatches}{\tracingpatches}
 \makeatother
 
 % Truncated sets, otherwise referred to as X: the general macro
