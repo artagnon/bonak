@@ -1,6 +1,6 @@
 \documentclass[10pt]{art}
 
-\usepackage{multirow, minted, tabularx, booktabs, setspace, makecell, caption, pdflscape}
+\usepackage{multirow, minted, tabularx, booktabs, setspace, makecell, caption, xstring, pdflscape}
 \usepackage[a4paper, inner=25mm, outer=25mm, top=25mm, bottom=25mm]{geometry}
 
 % Some lua magic to join a variable number of arguments with commas
@@ -75,6 +75,32 @@
 \define@cmdkey[coh]{filler}{E}{(#1)}
 \define@cmdkey[coh]{filler}{d}{(#1)}
 \define@cmdkey[coh]{filler}{c}{(#1)}
+\makeatother
+
+% More magic: we extend xkeyval with a \appendmask macro to pass to \setkeys
+\makeatletter
+\edef\bonak@mask{}
+
+\def\bonak@appendmask[#1]{
+  \XKV@addtolist@n\bonak@mask{\g@addto@macro{\XKV@prefix\XKV@tfam}{@}#1}
+}
+\def\appendmask{\XKV@testopta{\XKV@testoptc\bonak@appendmask}}
+\makeatother
+
+% Now we patch XKV@setkeys
+\makeatletter
+\let\XKV@setkeys@alt\XKV@setkeys
+\long\def\XKV@setkeys[#1]#2{
+  \edef\bonak@pfx{\g@addto@macro{\XKV@prefix\XKV@tfam}{@}}
+  \edef\bonak@tempa\@empty
+  \edef\bonak@keys{}
+  \XKV@for@n{\bonak@mask}\bonak@tempa{
+    \IfBeginWith{\bonak@tempa}{\bonak@pfx}{
+      \XKV@addtolist@n\bonak@keys{\StrBehind{\bonak@tempa}{\bonak@pfx}}}{}
+  }
+  % Finally, call the real function
+  \XKV@setkeys@alt[\bonak@keys]{#2}
+}
 \makeatother
 
 % Truncated sets, otherwise referred to as X: the general macro
@@ -414,6 +440,11 @@ When reflexivities are excluded, we call the structure thus defined \emph{bare t
 % Drop the universe letter in fullframe for all remaining tables
 \renewcommandx{\fullframe}[3][1=,2=,3=]{\prim{fullframe}[][#2][][][#3]}
 \input{tab-frames.tex}
+
+% From the third table onwards, make the {D, E} arguments of prims implicit
+\appendmask[prim]{frame}[D]
+\appendmask[prim]{layer}[D]
+\appendmask[prim]{filler}[D, E]
 
 % Truncated sets, otherwise referred to as X
 % Drop the universe letter for the third and fourth tables
