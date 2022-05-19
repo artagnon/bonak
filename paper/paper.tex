@@ -77,9 +77,9 @@
 \define@cmdkey[coh]{filler}{c}{(#1)}
 \makeatother
 
-% More magic: we extend xkeyval with a \appendmask macro to pass to \setkeys
+% More magic: we extend xkeyval with a \appendmask macro to pass to \bonaksetkeys
 \makeatletter
-\edef\bonak@mask{}
+\def\bonak@mask{}
 
 \def\bonak@appendmask[#1]{
   \XKV@addtolist@n\bonak@mask{\g@addto@macro{\XKV@prefix\XKV@tfam}{@}#1}
@@ -87,33 +87,31 @@
 \def\appendmask{\XKV@testopta{\XKV@testoptc\bonak@appendmask}}
 \makeatother
 
-% Now we patch XKV@setkeys
+% Now we create \bonaksetkeys
 \makeatletter
-\let\XKV@setkeys@alt\XKV@setkeys
-\long\def\XKV@setkeys[#1]#2{
-  \edef\bonak@pfx{\g@addto@macro{\XKV@prefix\XKV@tfam}{@}}
-  \edef\bonak@tempa\@empty
-  \edef\bonak@keys{}
+\def\bonaksetkeys#1[#2]#3[#4]#5{
+  \def\bonak@pfx{\g@addto@macro{\XKV@prefix\XKV@tfam}{@}}
   \XKV@for@n{\bonak@mask}\bonak@tempa{
     \IfBeginWith{\bonak@tempa}{\bonak@pfx}{
-      \XKV@addtolist@n\bonak@keys{\StrBehind{\bonak@tempa}{\bonak@pfx}}}{}
+      \XKV@addtolist@n\XKV@na{\StrBehind{\bonak@tempa}{\bonak@pfx}}}{}
   }
-  % Finally, call the real function
-  \XKV@setkeys@alt[\bonak@keys]{#2}
+  % Finally, call XKV@setkeys
+  \let\bonak@tempa{\XKV@testopta{\XKV@testoptc\XKV@setkeys}}
+  \expandafter\bonak@tempa\expandafter\XKV@na
 }
 \makeatother
 
 % Truncated sets, otherwise referred to as X: the general macro
 \newcommandx*{\X}[3][1=,2=,3=]{
   \ensuremath{\mathsf{\color{carolina}{X}}_{#1}^{#2}}
-  \setkeys*{X}{#3}
+  \bonaksetkeys*{X}{#3}
 }
 
 % Frame, layer, and filler: the general macro
 \newcommandx*{\prim}[6][2=,3=,4=,5=,6=]{
   \ensuremath{\mathsf{\color{indian-yellow}{#1}}_{#2}^{
     \joinargs{}[#3][#4][#5]}}
-  \setkeys*[prim]{#1}{#6}
+  \bonaksetkeys*[prim]{#1}{#6}
 }
 
 % Restriction for frame, layer, and filler: the general macro
@@ -121,7 +119,7 @@
   \ensuremath{\mathsf{\color{russian-green}{restr}}_{
     \mathsf{\color{indian-yellow}{#1}}
     \joinargs{,}[#2][#3][#4]}^{\joinargs{}[#5][#6][#7]}}
-  \setkeys*[restr]{#1}{#8}
+  \bonaksetkeys*[restr]{#1}{#8}
 }
 
 % Coherence conditions for frame, layer, and filler: the general macro
@@ -133,7 +131,7 @@
   \ensuremath{\mathsf{\color{chestnut}{coh}}_{
     \mathsf{\color{indian-yellow}{#1}}
     \joinargs{,}[#2][#3][#4][#5][#6]}^{\joinargs{}[#7][#8]}}
-  \setkeys*[coh]{#1}{#9}
+  \bonaksetkeys*[coh]{#1}{#9}
 }
 
 % Some abbreviations
