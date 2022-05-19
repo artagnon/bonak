@@ -82,6 +82,7 @@
 % The global that stores our mask in prefix@family@key format
 \def\bonak@mask{}
 
+% First we define \appendmask
 \def\bonak@appendmask[#1]{
   \XKV@addtolist@n\bonak@mask{\XKV@header#1}
 }
@@ -94,7 +95,7 @@
       \XKV@addtolist@n\XKV@na{\StrBehind{\XKV@tempa}{\XKV@header}}}{}
   }
 }{\tracingpatches}{\tracingpatches}
-\xpatchcmd{\XKV@setkeys}{{#1}}{{\XKV@na}}{\tracingpatches}{\tracingpatches}
+\xpatchcmd{\XKV@setkeys}{#1}{\XKV@na}{\tracingpatches}{\tracingpatches}
 \makeatother
 
 % Truncated sets, otherwise referred to as X: the general macro
