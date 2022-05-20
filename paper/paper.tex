@@ -370,8 +370,8 @@ Then, proof irrelevance can be stated as:
   \forall x y, \forall p q : x =_{\textrm{SET}} y, p = q
 \end{align*}
 
-\section{Trunacated \texorpdfstring{$n$}{n}-sets}
-In this section, we give the core of the definition of truncated $n$-sets
+\section{Reasoning on \texorpdfstring{$\nu$}{nu}-sets}
+In this section, we give the core of the definition of truncated $\nu$-sets
 as a coinductive limit.
 
 % Now, we write the type theory bit, and input the abbreviated tables
@@ -405,7 +405,9 @@ The definition is dispatched over tables \ref{tab:core}, \ref{tab:frames}, \ref{
 
 When reflexivities are excluded, we call the structure thus defined \emph{bare truncated sets}: \emph{bare} because it can be seen as defining truncated $n$-sets corresponding to simplical sets with only faces as part of the structure.
 
-% For just the first table, keep the universe letter in fullframe
+\input{tab-coind.tex}
+
+% For just the second table, keep the universe letter in fullframe
 \newcommandx{\fullframe}[3][1=,2=,3=]{\prim{fullframe}[#1][#2][][][#3]}
 \input{tab-core.tex}
 
@@ -442,14 +444,6 @@ When reflexivities are excluded, we call the structure thus defined \emph{bare t
 \renewcommandx{\cohc}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{filler}[][][][#4][#5][#6,#7][#8][#9]}
 \input{tab-coh.tex}
 
-% Truncated sets, otherwise referred to as X
-% Keep universe letter for last table
-\renewcommandx{\Xto}[2]{\X[#1][<#2]}
-\renewcommandx{\Xcomp}[2]{\X[#1][=#2]}
-\renewcommandx{\Xfrom}[2]{\X[#1][\geq#2]}
-
-\input{tab-coind.tex}
-
 \section{Future work}
 
 \newpage
@@ -472,11 +466,11 @@ When reflexivities are excluded, we call the structure thus defined \emph{bare t
 \renewcommandx{\cohl}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{layer}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohc}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{filler}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
 
+\input{tab-coind.tex}
 \input{tab-core.tex}
 \input{tab-frames.tex}
 \input{tab-faces.tex}
 \input{tab-coh.tex}
-\input{tab-coind.tex}
 
 \newpage
 \begin{thebibliography}{10}
