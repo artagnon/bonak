@@ -1,7 +1,7 @@
 \documentclass[10pt]{art}
 
-\usepackage{multirow, minted, tabularx, booktabs, setspace, makecell, caption}
-\usepackage[hmargin=0.4in, vmargin=0.8in, headheight=10pt]{geometry}
+\usepackage{multirow, minted, tabularx, booktabs, setspace, makecell, caption, pdflscape}
+\usepackage[a4paper, inner=25mm, outer=25mm, top=25mm, bottom=25mm]{geometry}
 
 % Some lua magic to join a variable number of arguments with commas
 % Comma-separeated optional arguments
@@ -139,8 +139,8 @@
 \setlength{\bibitemsep}{.2\baselineskip plus .05\baselineskip minus .05\baselineskip}
 
 % The eqntable environment, displaying the various
-\NewDocumentEnvironment{eqntable}{m}{\table[H]\small
-\tabularx{\textwidth}{@{} l c c >{\centering\arraybackslash}X @{}}\toprule}
+\NewDocumentEnvironment{eqntable}{m}{\table[H]\small\hrule\vspace{0.5em}
+\tabularx{\textwidth}{@{} l c c >{\centering\arraybackslash}X @{}}}
 {\endtabularx\vspace{0.3em}\hrule\vspace{0.5em}\caption{#1}\endtable}
 
 % A block in the eqntable environment
@@ -168,11 +168,11 @@
 
 \title{An indexed construction of semi-simplicial and semi-cubical types}
 \author{
-  \textcolor{gray80}{Hugo Herbelin} \\
-  \itshape \textcolor{gray80}{IRIF}
-  \and
   \textcolor{gray80}{Ramkumar Ramachandra} \\
-  \itshape \textcolor{gray80}{Université de Paris}
+  \itshape \textcolor{gray80}{Université Paris-Cité}
+  \and
+  \textcolor{gray80}{Hugo Herbelin} \\
+  \itshape \textcolor{gray80}{Instit de Recherche en Informatique Fondamentale}
 }
 \date{}
 
@@ -182,7 +182,7 @@
 \thispagestyle{empty}
 \maketitle
 \begin{abstract}
-  A model of \emph{homotopy type theory}, that formalizes \emph{truncated} $n$-types in dependent type theory. The accompanying artifact is an axiomless Coq formalization~\footnote{Technically speaking, we use some axioms related to functional extensionality, but the requirement arises only from our generalization to truncated $n$-types; if one were to instantiate our development for a particular type (say, semi-simplicial types), this requirement vanishes.} that uses sophisticated rewriting techniques and pushes the boundary of proof assistant technology.
+  A model of homotopy type theory, that formalizes augmented semi-simplicial sets that naturally generalizes to semi-cubical sets as well, in dependent type theory. The accompanying artifact is an axiomless~\footnote{Technically speaking, we use some axioms related to functional extensionality, but the requirement arises only from our generalization to $\nu$-types; if $\nu$ is finite (say, unit type corresponding to augmented semi-simplicial types), this requirement vanishes.} Coq formalization that uses sophisticated rewriting techniques and pushes the boundaries of proof assistant technology.
 \end{abstract}
 \tableofcontents
 \newpage
@@ -206,10 +206,10 @@ Our contribution is to model the core of semi-cubical sets that naturally genera
 
 The outline of the paper is as follows. First, we take the opportunity to familize the reader with simplicial sets, as it appears in mathematical literature, along with a short section on semi-cubical sets. We then proceed to explain our construction, with the help of diagrams. Before spelling out the details of our formalization in type-theoretic language, we have a section on the unicity of identity proofs (UIP), since the use of \mintinline{coq}{SProp} has greatly eased our Coq formalization.
 
-\section{Simplicial sets}
+\section{\texorpdfstring{$\nu$}{nu}-sets}
 Simplicial sets are powerful mathematical objects, that form the basis of much of modern homotopy theory. Their power derives from the fact that their homotopy category is exceptionally well-behaved, and that there are multiple model structures defined on them. Unlike CW-complexes that rely on pure topological notions like spheres and disks to ``tame'' a topological space, the definition of simplicial sets is purely categorical, and exist independent of topological spaces. The \emph{geometric realization} and \emph{singular complex} functors facilitate travelling back-and-forth between simplicial sets and topological spaces, and these are non-trivial constructions. As such, simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices.
 
-\subsection{\texorpdfstring{\DeltaHat}{Delta sets}}
+\subsection{Augmented semi-simplicial sets}
 The first step towards formalizing simplicial sets is to forget about the degeneracies, and we restrict ourselves to representing \emph{augmented simplicial sets}, otherwise known as delta-sets in mathematical literature. We now proceed to describe \DeltaHat, which is identical to \Simplex{}, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are \emph{strictly} order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. In mathematical literature, there is little interest in studying \DeltaHat, since maps between delta sets are not well-defined, and it is therefore not possible to construct a category of delta sets.
 
 \subsection{Semi-cubical sets}
@@ -305,7 +305,7 @@ Or, in terms of objects and morphisms:
   \end{proof}
 \end{theorem}
 
-\section{Grothendieck construction\label{sec:grothendieckconstr}}
+\section{Our construction}
 The Grothendieck construction provides a correspondence between a fibered representation, and an indexed representation.
 
 $$
@@ -321,7 +321,7 @@ $$
   \ldots
 \end{align*}
 
-\section{Unicity of identity proofs\label{sec:uip}}
+\section{Reasoning about sets in type theory}
 We dedicate this section to discussing UIP in different settings, and supply intuitions into this notion.
 
 UIP is a flavor of proof-irrelevance:
@@ -370,7 +370,7 @@ Then, proof irrelevance can be stated as:
   \forall x y, \forall p q : x =_{\textrm{SET}} y, p = q
 \end{align*}
 
-\section{Reasoning on \texorpdfstring{$\nu$}{nu}-sets}
+\section{Type-theoretic construction of \texorpdfstring{$\nu$}{nu}-sets}
 In this section, we give the core of the definition of truncated $\nu$-sets
 as a coinductive limit.
 
@@ -469,8 +469,11 @@ When reflexivities are excluded, we call the structure thus defined \emph{bare t
 \input{tab-coind.tex}
 \input{tab-core.tex}
 \input{tab-frames.tex}
-\input{tab-faces.tex}
-\input{tab-coh.tex}
+
+\begin{landscape}
+  \input{tab-faces.tex}
+  \input{tab-coh.tex}
+\end{landscape}
 
 \newpage
 \begin{thebibliography}{10}
