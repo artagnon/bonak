@@ -176,7 +176,7 @@
 
 % A block in the eqntable environment
 \newcommand{\eqnline}[4]{$#1$ & $#2$ & $#3$ & $#4$ \\}
-\newcommand{\mc}[1]{\multicolumn{4}{c}{\textit{#1}} \\\\}
+\newcommand{\mc}[1]{\multicolumn{4}{c}{\emph{#1}} \\\\}
 
 % Table caption set up
 \DeclareCaptionFormat{hfillstart}{\hfill#1#2#3\par}
@@ -213,7 +213,7 @@
 \thispagestyle{empty}
 \maketitle
 \begin{abstract}
-  A model of homotopy type theory, that formalizes augmented semi-simplicial sets that naturally generalizes to semi-cubical sets as well, in dependent type theory. The accompanying artifact is an axiomless~\footnote{Technically speaking, we use some axioms related to functional extensionality, but the requirement arises only from our generalization to $\nu$-types; if $\nu$ is finite (say, unit type corresponding to augmented semi-simplicial types), this requirement vanishes.} Coq formalization that uses sophisticated rewriting techniques and pushes the boundaries of proof assistant technology.
+  A model of homotopy type theory, formalizing augmented semi-simplicial sets, that naturally generalizes to semi-cubical sets as well, in dependent type theory. The accompanying artifact is an axiom-less~\footnote{Technically speaking, we use some axioms related to functional extensionality, but the requirement arises only from our generalization to $\nu$-types; if $\nu$ is finite (say, unit type corresponding to augmented semi-simplicial types), this requirement vanishes.} Coq formalization that uses sophisticated rewriting techniques and pushes the boundaries of proof assistant technology.
 \end{abstract}
 \tableofcontents
 \newpage
@@ -235,7 +235,7 @@ Our contribution is to model the core of semi-cubical sets that naturally genera
   \end{tabularx}
 \end{table}
 
-The outline of the paper is as follows. First, we take the opportunity to familize the reader with simplicial sets, as it appears in mathematical literature, along with a short section on semi-cubical sets. We then proceed to explain our construction, with the help of diagrams. Before spelling out the details of our formalization in type-theoretic language, we have a section on the unicity of identity proofs (UIP), since the use of \mintinline{coq}{SProp} has greatly eased our Coq formalization.
+The outline of the paper is as follows. First, we take the opportunity to familize the reader with simplicial sets, as it appears in mathematical literature, along with a short section on semi-cubical sets. We then proceed to explain our construction, with the help of diagrams. Before spelling out the details of our formalization in type-theoretic language, we have a section on reasoning in sets, in which we spell out \texttt{HSet}.
 
 \section{\texorpdfstring{$\nu$}{nu}-sets}
 Simplicial sets are powerful mathematical objects, that form the basis of much of modern homotopy theory. Their power derives from the fact that their homotopy category is exceptionally well-behaved, and that there are multiple model structures defined on them. Unlike CW-complexes that rely on pure topological notions like spheres and disks to ``tame'' a topological space, the definition of simplicial sets is purely categorical, and exist independent of topological spaces. The \emph{geometric realization} and \emph{singular complex} functors facilitate travelling back-and-forth between simplicial sets and topological spaces, and these are non-trivial constructions. As such, simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices.
@@ -337,14 +337,15 @@ Or, in terms of objects and morphisms:
 \end{theorem}
 
 \section{Our construction}
-The Grothendieck construction provides a correspondence between a fibered representation, and an indexed representation.
+The fibered representation:
 
-$$
+\begin{equation*}
   \begin{tikzcd}
     X_0 : \U{} & X_1 : \U{} \arrow[l, "\delta^\epsilon_0" description, shift left=2] \arrow[l, "\delta^\omega_0" description, shift right=2] & X_2 : \U{} \arrow[l, "\delta^\epsilon_1" description, shift left=6] \arrow[l, "\delta^\epsilon_0" description, shift left=2] \arrow[l, "\delta^\omega_0" description, shift right=2] \arrow[l, "\delta^\omega_1" description, shift right=6] & \ldots
   \end{tikzcd}
-$$
+\end{equation*}
 
+The indexed representation:
 \begin{align*}
   X_0 & : \U{}                                                                                                      \\
   X_1 & : X_0 \times X_0 \rightarrow \U{}                                                                           \\
@@ -364,42 +365,6 @@ UIP is a flavor of proof-irrelevance:
 which is to say that any two proofs of \emph{equality} of the same two types are \emph{equal}. In other words, the proofs cannot be distinguished from one another.
 
 Proof irrelevance is an inherent part of set theory and first-order logic, although the property cannot be stated in the language of natural deductions. Intuititively, what it means is that a tree of deductions converges to a result, with no memory of the proof route; the tree itself is forgotten once the final result is obtained.
-
-One way of formalising set theory in type theory is via Aczel sets [ref]. It can be written down as an inductive as follows:
-
-\begin{listing}[H]
-  \begin{minted}[mathescape]{coq}
-    Inductive SET : Type :=
-      node : ~$\forall$~A : Type, (A -> SET) -> SET
-      ~$=_\textrm{SET}$~ : ...
-  \end{minted}
-\end{listing}
-
-\mintinline{coq}{(A -> SET) -> SET} can be drawn as:
-
-\begin{equation*}
-  \begin{tikzcd}
-    \{0\} \arrow[dr] & \\
-    & \{\} \\
-  \end{tikzcd}
-  \begin{tikzcd}
-    & \{0, 1\} \arrow[dr]\arrow[dl] & \\
-    \{0\} & & \{1\} \\
-  \end{tikzcd}
-  \begin{tikzcd}
-    & & \{0, 1, 2\} \arrow[dr]\arrow[dl] & \\
-    & \{0, 1\} \arrow[dl]\arrow[dr] & & \{2\} \\
-    \{0\} & & \{1\} & \\
-  \end{tikzcd}
-\end{equation*}
-
-In general, \mintinline{coq}{SET} can have an $n$-ary branching structure, splitting out the various subsets until we get to the leaves.
-
-Then, proof irrelevance can be stated as:
-
-\begin{align*}
-  \forall x y, \forall p q : x =_{\textrm{SET}} y, p = q
-\end{align*}
 
 \section{Type-theoretic construction of \texorpdfstring{$\nu$}{nu}-sets}
 In this section, we give the core of the definition of truncated $\nu$-sets
@@ -432,9 +397,9 @@ as a coinductive limit.
 \newcommandx{\cohl}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{layer}[][#2][#3][][][][][#9]}
 \newcommandx{\cohc}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{filler}[][#2][#3][][][][][#9]}
 
-The definition is dispatched over tables \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces} and \ref{tab:coh}. It describes the structure of the underlying higher-dimensional relations on which fillers are built. Note the presence of a coherence condition $\cohf[l]$ to ensuring that both sides of the equality in $\restrl[l]$ and $\restrc[l]$ are in the same type. The proof of $\cohf[l]$ itself requires an higher-dimensional coherence condition which we obtain by working in \mintinline{coq}{HSet}. Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory). Note also that for a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\restrf[l]$ nor $\cohf[l]$ anymore.
+The definition is dispatched over tables \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces} and \ref{tab:coh}. It describes the structure of the underlying higher-dimensional relations on which fillers are built. Note the presence of a coherence condition $\cohf$ to ensuring that both sides of the equality in $\restrl$ and $\restrc$ are in the same type. The proof of $\cohf$ itself requires an higher-dimensional coherence condition which we obtain by working in HSet. Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory). Note also that for a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\restrf$ nor $\cohf$ anymore.
 
-When reflexivities are excluded, we call the structure thus defined \emph{bare truncated sets}: \emph{bare} because it can be seen as defining truncated $n$-sets corresponding to simplical sets with only faces as part of the structure.
+We call the structure thus defined \emph{bare truncated sets}: \emph{bare} because it can be seen as defining truncated $\nu$-sets corresponding to simplical sets with only faces as part of the structure.
 
 \input{tab-coind.tex}
 
@@ -514,31 +479,31 @@ When reflexivities are excluded, we call the structure thus defined \emph{bare t
 \newpage
 \begin{thebibliography}{10}
   \bibitem[Bez]{Bezem14}
-  Bezem, M., Coquand, T., \& Huber, S. (2014, July). A model of type theory in cubical sets. \textit{In 19th International Conference on Types for Proofs and Programs (TYPES 2013)} (Vol. 26, pp. 107-128). Wadern, Germany: Schloss Dagstuhl–Leibniz Zentrum fuer Informatik.
+  Bezem, M., Coquand, T., \& Huber, S. (2014, July). A model of type theory in cubical sets. \emph{In 19th International Conference on Types for Proofs and Programs (TYPES 2013)} (Vol. 26, pp. 107-128). Wadern, Germany: Schloss Dagstuhl–Leibniz Zentrum fuer Informatik.
 
   \bibitem[CubAgda]{Vezzosi21}
-  Vezzosi, A., Mörtberg, A., \& Abel, A. (2021). Cubical Agda: a dependently typed programming language with univalence and higher inductive types. \textit{Journal of Functional Programming, 31}.
+  Vezzosi, A., Mörtberg, A., \& Abel, A. (2021). Cubical Agda: a dependently typed programming language with univalence and higher inductive types. \emph{Journal of Functional Programming, 31}.
 
   \bibitem[CohCoq]{Cohen16}
-  Cohen, C., Coquand, T., Huber, S., \& Mörtberg, A. (2016). Cubical type theory: a constructive interpretation of the univalence axiom. arXiv preprint arXiv:1611.02108.
+  Cohen, C., Coquand, T., Huber, S., \& Mörtberg, A. (2016). Cubical type theory: a constructive interpretation of the univalence axiom. \emph{arXiv preprint arXiv:1611.02108}.
 
   \bibitem[Angiuli]{Angiuli17}
   Carlo Angiuli, Guillaume Brunerie, Thierry Coquand, Kuen-Bang Hou (Favonia), Robert Harper, \& Daniel R. Licata. arXiv preprint.
 
   \bibitem[Fri]{Friedman08}
-  Friedman, G. (2008). An elementary illustrated introduction to simplicial sets. \textit{arXiv preprint arXiv:0809.4221}.
+  Friedman, G. (2008). An elementary illustrated introduction to simplicial sets. \emph{arXiv preprint arXiv:0809.4221}.
 
   \bibitem[Rie]{Riehl11}
-  Riehl, E. (2011). A leisurely introduction to simplicial sets. \textit{Unpublished expository article available online from the author's web page}.
+  Riehl, E. (2011). A leisurely introduction to simplicial sets. \emph{Unpublished expository article available online from the author's web page}.
 
   \bibitem[CubSet]{Antolini00}
-  Antolini, R. (2000). Cubical structures, homotopy theory. \textit{Annali di Matematica pura ed applicata, 178}(1), 317-324.
+  Antolini, R. (2000). Cubical structures, homotopy theory. \emph{Annali di Matematica pura ed applicata, 178}(1), 317-324.
 
   \bibitem[Her]{Herbelin15}
-  Herbelin, H. (2015). A dependently-typed construction of semi-simplicial types. \textit{Mathematical Structures in Computer Science, 25}(5), 1116-1131.
+  Herbelin, H. (2015). A dependently-typed construction of semi-simplicial types. \emph{Mathematical Structures in Computer Science, 25}(5), 1116-1131.
 
   \bibitem[CoqInCoq]{Barras97}
-  Barras, B., \& Werner, B. (1997). Coq in coq. \textit{Available on the WWW.}
+  Barras, B., \& Werner, B. (1997). Coq in coq. \emph{Available on the WWW.}
 \end{thebibliography}
 
 \end{document}
