@@ -81,7 +81,6 @@
 \makeatletter
 % Our global mask
 \def\bonak@mask{}
-\def\bonak@na{}
 
 % First we define \appendmask
 \long\def\bonak@appendmask[#1]{
@@ -96,16 +95,15 @@
 
 % Now we patch \XKV@setkeys
 \xpretocmd{\XKV@setkeys}{
-  \XKV@for@eo\XKV@fams\XKV@tfam{
+  \XKV@for@o\XKV@fams\XKV@tfam{
     \def\bonak@hdr{\XKV@prefix\XKV@tfam @}
-    \XKV@for@eo{\bonak@mask}\XKV@tempa{
+    \XKV@for@o{\bonak@mask}\XKV@tempa{
       \IfBeginWith{\XKV@tempa}{\bonak@hdr}{
-        \def\XKV@tempb{\StrBehind{\XKV@tempa}{\bonak@hdr}}
-        \XKV@addtolist@o\bonak@na{\XKV@tempb}}{}
+        \def\XKV@tempb{\StrBehind{\XKV@tempa}{\bonak@hdr}}}
+        \XKV@addtolist@o#1{\XKV@tempb}{}
     }
   }
 }{\tracingpatches}{\tracingpatches}
-\xpatchcmd{\XKV@setkeys}{#1}{\bonak@na}{\tracingpatches}{\tracingpatches}
 \makeatother
 
 % Truncated sets, otherwise referred to as X: the general macro
