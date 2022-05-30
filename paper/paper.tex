@@ -414,6 +414,21 @@ We call the structure thus defined \emph{bare truncated sets}: \emph{bare} becau
 \appendmask[prim]{layer}[D]
 \appendmask[prim]{filler}[D,E]
 
+% Debugging starts
+\makeatletter
+\def\XKV@fams{frame,layer,filler}
+\def\bonak@tempc{D=D,E=E,d=d}
+\XKV@for@o\XKV@fams\XKV@tfam{
+  \def\bonak@hdr{\protect\XKV@prefix\XKV@tfam @}
+  \XKV@for@o{\bonak@mask}\XKV@tempa{
+    \IfBeginWith{\XKV@tempa}{\bonak@hdr}{
+      \XKV@delete\bonak@tempc{\StrBehind{\XKV@tempa}{\bonak@hdr}}\XKV@getkeyname}{}
+  }
+}
+\bonak@tempc
+\makeatother
+% Debugging ends
+
 % Truncated sets, otherwise referred to as X
 % Drop the universe letter for the third and fourth tables
 \renewcommandx{\Xto}[2]{\X[][<#2]}
