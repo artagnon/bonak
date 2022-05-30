@@ -88,19 +88,19 @@
     \def\bonak@hdr{\XKV@prefix\XKV@tfam @}
     \XKV@for@o{#1}\XKV@tempa{
       \XKV@addtolist@x\bonak@mask{\bonak@hdr\XKV@tempa}
-    }
-  }
+      }
+      }
 }
 \def\appendmask{\XKV@testopta{\XKV@testoptc\bonak@appendmask}}
 
 % Now we patch \XKV@setkeys
 \xpretocmd{\XKV@setkeys}{
+  \def\@nil\@empty
   \XKV@for@o\XKV@fams\XKV@tfam{
     \def\bonak@hdr{\XKV@prefix\XKV@tfam @}
     \XKV@for@o{\bonak@mask}\XKV@tempa{
       \IfBeginWith{\XKV@tempa}{\bonak@hdr}{
-        \def\XKV@tempb{\StrBehind{\XKV@tempa}{\bonak@hdr}}}
-        \XKV@addtolist@o#1{\XKV@tempb}{}
+        \XKV@delete#2{\StrBehind{\XKV@tempa}{\bonak@hdr}}\XKV@getkeyname}{}
     }
   }
 }{\tracingpatches}{\tracingpatches}
