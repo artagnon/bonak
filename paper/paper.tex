@@ -1,6 +1,6 @@
 \documentclass[10pt]{art}
 
-\usepackage{multirow, minted, tabularx, booktabs, setspace, makecell, caption, xkeyval, xstring, xpatch, stringstrings, pdflscape}
+\usepackage{multirow, minted, tabularx, environ, booktabs, setspace, makecell, caption, xkeyval, xstring, xpatch, stringstrings, pdflscape}
 \usepackage[a4paper, inner=25mm, outer=25mm, top=25mm, bottom=25mm]{geometry}
 
 % Some lua magic to join a variable number of arguments with commas
@@ -185,13 +185,21 @@
 \setlength{\bibitemsep}{.2\baselineskip plus .05\baselineskip minus .05\baselineskip}
 
 % The eqntable environment, displaying the various
-\NewDocumentEnvironment{eqntable}{m}{\table[H]\small\hrule\vspace{0.5em}
-\tabularx{\textwidth}{@{} l c c >{\centering\arraybackslash}X @{}}}
-{\endtabularx\vspace{0.3em}\hrule\vspace{0.5em}\caption{#1}\endtable}
+\NewEnviron{eqntable}[1]{
+  \begin{table}[H]
+    \small
+    \begin{tabularx}{\textwidth}{@{}>{$}l<{$} >{$}c<{$} >{$}c<{$} >{\centering\arraybackslash}X @{}}
+      \toprule
+      \BODY
+      \bottomrule
+    \end{tabularx}
+    \caption{#1}
+  \end{table}
+}
 
 % A block in the eqntable environment
-\newcommand{\eqnline}[4]{$#1$ & $#2$ & $#3$ & $#4$ \\}
-\newcommand{\mc}[1]{\multicolumn{4}{c}{\emph{#1}} \\\\}
+\NewDocumentCommand{\eqnline}{m m m m}{#1 & #2 & #3 & \ensuremath{#4} \\}
+\newcommandx*{\mc}[1]{\multicolumn{4}{c}{\emph{#1}} \\\\}
 
 % Table caption set up
 \DeclareCaptionFormat{hfillstart}{\hfill#1#2#3\par}
@@ -427,9 +435,9 @@ We call the structure thus defined \emph{bare truncated sets}: \emph{bare} becau
 \input{tab-frames.tex}
 
 % From the third table onwards, make the {D, E} arguments of prims implicit
-\appendmask[prim]{frame}[D]
-\appendmask[prim]{layer}[D]
-\appendmask[prim]{filler}[D,E]
+% \appendmask[prim]{frame}[D]
+% \appendmask[prim]{layer}[D]
+% \appendmask[prim]{filler}[D,E]
 
 % Truncated sets, otherwise referred to as X
 % Drop the universe letter for the third and fourth tables
