@@ -24,7 +24,7 @@
   end
 \end{luacode*}
 
-\newcommandx{\joinargs}[6][2=,3=,4=,5=,6=]{\directlua{tex.sprint(join_with_comma("#1", {"\luaescapestring{#2}";"\luaescapestring{#3}";"\luaescapestring{#4}";"\luaescapestring{#5}";"\luaescapestring{#6}"}))}}
+\newcommandx{\joinargs}[6][2,3,4,5,6]{\directlua{tex.sprint(join_with_comma("#1", {"\luaescapestring{#2}";"\luaescapestring{#3}";"\luaescapestring{#4}";"\luaescapestring{#5}";"\luaescapestring{#6}"}))}}
 
 % Simplicial and Cubical sets
 \newcommand{\DeltaHat}{\ensuremath{\hat{\boldsymbol{\Delta}}}}
@@ -46,7 +46,7 @@
 
 % Magic with xkeyval to go over the 9-argument limit of LaTeX
 \makeatletter
-\define@cmdkey[base]{X}{D}{(#1)}
+\define@cmdkey[univ]{X}{D}{(#1)}
 
 \define@cmdkey[prim]{frame}{D}{(#1)}
 \define@cmdkey[prim]{layer}{D}{(#1)}
@@ -95,11 +95,12 @@
 
 % A small utility helper, since \XKV@delete isn't suitable
 \long\def\bonak@delete#1#2#3{
-  \let\XKV@tempb#1
+  \XKV@checksanitizea{#1}\XKV@tempb
   \let#1\@empty
+  \let\XKV@tempd#2
   \XKV@for@o\XKV@tempb\XKV@tempb{
     #3\XKV@tempb\XKV@tempc
-    \ifx \XKV@tempc #2
+    \ifx\XKV@tempc\XKV@tempd
     \else
       \XKV@addtolist@o#1\XKV@tempb
     \fi
@@ -124,20 +125,20 @@
 \makeatother
 
 % Truncated sets, otherwise referred to as X: the general macro
-\newcommandx*{\X}[3][1=,2=,3=]{
+\newcommandx{\X}[3][1,2,3]{
   \ensuremath{\mathsf{\color{carolina}{X}}_{#1}^{#2}}
-  \setkeys*[base]{X}{#3}
+  \setkeys*[univ]{X}{#3}
 }
 
 % Frame, layer, and filler: the general macro
-\newcommandx*{\prim}[6][2=,3=,4=,5=,6=]{
+\newcommandx{\prim}[6][2,3,4,5,6]{
   \ensuremath{\mathsf{\color{indian-yellow}{#1}}_{#2}^{
     \joinargs{}[#3][#4][#5]}}
   \setkeys*[prim]{#1}{#6}
 }
 
 % Restriction for frame, layer, and filler: the general macro
-\newcommandx*{\restr}[8][2=,3=,4=,5=,6=,7=,8=]{
+\newcommandx{\restr}[8][2,3,4,5,6,7,8]{
   \ensuremath{\mathsf{\color{russian-green}{restr}}_{
     \mathsf{\color{indian-yellow}{#1}}
     \joinargs{,}[#2][#3][#4]}^{\joinargs{}[#5][#6][#7]}}
@@ -149,7 +150,7 @@
 % Hack: we'd like \coh to take 10 arguments, with the 10th being passed to
 % xkeyval, but this is not possible. The only possible compromise is to join
 % #7 and #8 by hand in usage of \coh: it's now #7 or '#6,#7' in \cohfoo commands
-\newcommandx*{\coh}[9][2=,3=,4=,5=,6=,7=,8=,9=]{
+\newcommandx{\coh}[9][2,3,4,5,6,7,8,9]{
   \ensuremath{\mathsf{\color{chestnut}{coh}}_{
     \mathsf{\color{indian-yellow}{#1}}
     \joinargs{,}[#2][#3][#4][#5][#6]}^{\joinargs{}[#7][#8]}}
@@ -404,21 +405,21 @@ as a coinductive limit.
 
 % Frame, layer, and filler
 % Drop the universe letter
-\newcommandx{\framep}[5][1=,2=,3=,4=,5=]{\prim{frame}[][#2][#3][#4][#5]}
-\newcommandx{\layer}[5][1=,2=,3=,4=,5=]{\prim{layer}[][#2][#3][#4][#5]}
-\newcommandx{\filler}[5][1=,2=,3=,4=,5=]{\prim{filler}[][#2][#3][#4][#5]}
+\newcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[][#2][#3][#4][#5]}
+\newcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[][#2][#3][#4][#5]}
+\newcommandx{\filler}[5][1,2,3,4,5]{\prim{filler}[][#2][#3][#4][#5]}
 
 % Restriction for frame, layer, and filler
 % Drop the unviverse letter and q
-\newcommandx{\restrf}[7][1=,2=,3=,4=,5=,6=,7=]{\restr{frame}[][#2][][#4][#5][#6][#7]}
-\newcommandx{\restrl}[7][1=,2=,3=,4=,5=,6=,7=]{\restr{layer}[][#2][][#4][#5][#6][#7]}
-\newcommandx{\restrc}[7][1=,2=,3=,4=,5=,6=,7=]{\restr{filler}[][#2][][#4][#5][#6][#7]}
+\newcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][][#4][#5][#6][#7]}
+\newcommandx{\restrl}[7][1,2,3,4,5,6,7]{\restr{layer}[][#2][][#4][#5][#6][#7]}
+\newcommandx{\restrc}[7][1,2,3,4,5,6,7]{\restr{filler}[][#2][][#4][#5][#6][#7]}
 
 % Coherence conditions for frame, layer, and filler
 % Keep only ε, ω; n, p; proposition on n and p
-\newcommandx{\cohf}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{frame}[][#2][#3][][][][][#9]}
-\newcommandx{\cohl}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{layer}[][#2][#3][][][][][#9]}
-\newcommandx{\cohc}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{filler}[][#2][#3][][][][][#9]}
+\newcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][][][#9]}
+\newcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][][][][][#9]}
+\newcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][#2][#3][][][][][#9]}
 
 The definition is dispatched over tables \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces} and \ref{tab:coh}. It describes the structure of the underlying higher-dimensional relations on which fillers are built. Note the presence of a coherence condition $\cohf$ to ensuring that both sides of the equality in $\restrl$ and $\restrc$ are in the same type. The proof of $\cohf$ itself requires an higher-dimensional coherence condition which we obtain by working in HSet. Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory). Note also that for a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\restrf$ nor $\cohf$ anymore.
 
@@ -427,11 +428,11 @@ We call the structure thus defined \emph{bare truncated sets}: \emph{bare} becau
 \input{tab-coind.tex}
 
 % For just the second table, keep the universe letter in fullframe
-\newcommandx{\fullframe}[3][1=,2=,3=]{\prim{fullframe}[#1][#2][][][#3]}
+\newcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[#1][#2][][][#3]}
 \input{tab-core.tex}
 
 % Drop the universe letter in fullframe for all remaining tables
-\renewcommandx{\fullframe}[3][1=,2=,3=]{\prim{fullframe}[][#2][][][#3]}
+\renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[][#2][][][#3]}
 \input{tab-frames.tex}
 
 % From the third table onwards, make the {D, E} arguments of prims implicit
@@ -441,31 +442,31 @@ We call the structure thus defined \emph{bare truncated sets}: \emph{bare} becau
 
 % Truncated sets, otherwise referred to as X
 % Drop the universe letter for the third and fourth tables
-\renewcommandx{\Xto}[3][3=]{\X[][<#2][#3]}
-\renewcommandx{\Xcomp}[3][3=]{\X[][=#2][#3]}
-\renewcommandx{\Xfrom}[3][3=]{\X[][\geq#2][#3]}
+\renewcommandx{\Xto}[3][3]{\X[][<#2][#3]}
+\renewcommandx{\Xcomp}[3][3]{\X[][=#2][#3]}
+\renewcommandx{\Xfrom}[3][3]{\X[][\geq#2][#3]}
 
 % The third table mentions cohframe; keep ε, ω in this instance
-\renewcommandx{\cohf}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{frame}[][#2][#3][][][#6,#7][#8][#9]}
+\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][#6,#7][#8][#9]}
 \input{tab-faces.tex}
 
 % Restriction for frame, layer, and filler
 % Drop just the universe letter for the coh table
-\renewcommandx{\restrf}[7][1=,2=,3=,4=,5=,6=,7=]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
-\renewcommandx{\restrl}[7][1=,2=,3=,4=,5=,6=,7=]{\restr{layer}[][#2][#3][#4][#5][#6][#7]}
-\renewcommandx{\restrc}[7][1=,2=,3=,4=,5=,6=,7=]{\restr{filler}[][#2][#3][#4][#5][#6][#7]}
+\renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
+\renewcommandx{\restrl}[7][1,2,3,4,5,6,7]{\restr{layer}[][#2][#3][#4][#5][#6][#7]}
+\renewcommandx{\restrc}[7][1,2,3,4,5,6,7]{\restr{filler}[][#2][#3][#4][#5][#6][#7]}
 
 % Frame, layer, and filler
 % Drop all arguments for coh table; they're not present in coind table.
-\renewcommandx{\framep}[5][1=,2=,3=,4=,5=]{\prim{frame}[][][][][#5]}
-\renewcommandx{\layer}[5][1=,2=,3=,4=,5=]{\prim{layer}[][][][][#5]}
-\renewcommandx{\filler}[5][1=,2=,3=,4=,5=]{\prim{filler}[][][][][#5]}
+\renewcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[][][][][#5]}
+\renewcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[][][][][#5]}
+\renewcommandx{\filler}[5][1,2,3,4,5]{\prim{filler}[][][][][#5]}
 
 % Coherence conditions for frame, layer, and filler
 % Drop universe letter, ε, and ω
-\renewcommandx{\cohf}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{frame}[][][][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohl}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{layer}[][][][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohc}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{filler}[][][][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][][][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][][][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][][][#4][#5][#6,#7][#8][#9]}
 \input{tab-coh.tex}
 
 \section{Future work}
@@ -475,20 +476,20 @@ We call the structure thus defined \emph{bare truncated sets}: \emph{bare} becau
 \section{Tables in full detail}
 % Keep all arguments for all macros
 % Frame, layer, and filler
-\renewcommandx{\framep}[5][1=,2=,3=,4=,5=]{\prim{frame}[#1][#2][#3][#4][#5]}
-\renewcommandx{\layer}[5][1=,2=,3=,4=,5=]{\prim{layer}[#1][#2][#3][#4][#5]}
-\renewcommandx{\filler}[5][1=,2=,3=,4=,5=]{\prim{filler}[#1][#2][#3][#4][#5]}
-\renewcommandx{\fullframe}[3][1=,2=,3=]{\prim{fullframe}[#1][#2][][][#3]}
+\renewcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[#1][#2][#3][#4][#5]}
+\renewcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[#1][#2][#3][#4][#5]}
+\renewcommandx{\filler}[5][1,2,3,4,5]{\prim{filler}[#1][#2][#3][#4][#5]}
+\renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[#1][#2][][][#3]}
 
 % Restriction for frame, layer, and filler
-\renewcommandx{\restrf}[7][1=,2=,3=,4=,5=,6=,7=]{\restr{frame}[#1][#2][#3][#4][#5][#6][#7]}
-\renewcommandx{\restrl}[7][1=,2=,3=,4=,5=,6=,7=]{\restr{layer}[#1][#2][#3][#4][#5][#6][#7]}
-\renewcommandx{\restrc}[7][1=,2=,3=,4=,5=,6=,7=]{\restr{filler}[#1][#2][#3][#4][#5][#6][#7]}
+\renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[#1][#2][#3][#4][#5][#6][#7]}
+\renewcommandx{\restrl}[7][1,2,3,4,5,6,7]{\restr{layer}[#1][#2][#3][#4][#5][#6][#7]}
+\renewcommandx{\restrc}[7][1,2,3,4,5,6,7]{\restr{filler}[#1][#2][#3][#4][#5][#6][#7]}
 
 % Coherence conditions for frame, layer, and filler
-\renewcommandx{\cohf}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{frame}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohl}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{layer}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohc}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{filler}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
 
 \input{tab-coind.tex}
 \input{tab-core.tex}
