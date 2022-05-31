@@ -1,6 +1,6 @@
 \documentclass[10pt]{art}
 
-\usepackage{multirow, minted, tabularx, environ, booktabs, setspace, makecell, caption, xkeyval, xstring, xpatch, stringstrings, ifthen, pdflscape}
+\usepackage{multirow, minted, tabularx, environ, booktabs, setspace, makecell, caption, xkeyval, xstring, stringstrings, ifthen, pdflscape}
 \usepackage[a4paper, inner=25mm, outer=25mm, top=25mm, bottom=25mm]{geometry}
 
 % Some lua magic to join a variable number of arguments with commas
@@ -31,18 +31,6 @@
 \newcommand{\Cube}[1]{\ensuremath{\boldsymbol{\square^{#1}}}}
 \renewcommand{\I}[1]{\ensuremath{\mathsf{I}^{#1}}}
 \newcommand{\CSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\square}}}}
-
-% Universe, referred to as U
-\newcommand{\U}[1]{\ensuremath{\mathsf{\color{spanish-blue}{U}}_{#1}}}
-
-% The unit type
-\newcommand{\unittype}{\ensuremath{\mathsf{unit}}}
-\newcommand{\unitpoint}{\ensuremath{\star}}
-
-% Definitional and extensional equality
-\newcommand{\defeq}{\ensuremath{\triangleq}}
-\newcommand{\eqHSet}{\ensuremath{\equiv_{\mathit{HSet}}}}
-\newcommand{\reflHSet}{\ensuremath{\mathsf{refl}_{\mathit{HSet}}}}
 
 % Magic with xkeyval to go over the 9-argument limit of LaTeX
 \makeatletter
@@ -94,7 +82,7 @@
 \def\appendmask{\XKV@testopta{\XKV@testoptc\bonak@appendmask}}
 
 % Now we patch \XKV@setkeys
-\xpatchcmd{\XKV@setkeys}{\XKV@checksanitizea{#2}\XKV@resb}{
+\def\XKV@setkeys[#1]#2{
   \XKV@checksanitizea{#2}\XKV@resb
   \XKV@for@o\XKV@fams\XKV@tfam{
     \def\bonak@hdr{bonak@ \XKV@tfam @}
@@ -106,36 +94,40 @@
         \let\XKV@tempb\XKV@resb
         \let\KXV@resb\@empty
         \XKV@for@o\XKV@tempb\XKV@tempb{
-          \XKV@getkeyname\XKV@tempb\XKV@tempc
-          \ifthenelse{\equal{\XKV@tempc}{\thestring}}{}{
-            % Unmasked
-            \XKV@addtolist@o\XKV@resb\XKV@tempb
-          }
+          \expandafter\XKV@g@tkeyname\XKV@tempb=\@nil\XKV@tempc
+          \ifx\XKV@tempc\thestring
+          \else
+            % Unmasked keys
+            \XKV@addtolist@x\XKV@resb\XKV@tempc
+          \fi
         }
+        \ifnum\XKV@depth=\z@\let\XKV@rm\@empty\fi
       }
-    }
+      }
   }
-}{}{}
+  \expandafter\XKV@s@tkeys\expandafter{\XKV@resb}{#1}
+  \let\CurrentOption\@empty
+}
 \makeatother
 
 % Truncated sets, otherwise referred to as X: the general macro
 \newcommandx{\X}[3][1,2,3]{
-  \ensuremath{\mathsf{\color{carolina}{X}}_{#1}^{#2}}
+  \mathsf{\color{carolina}{X}}_{#1}^{#2}
   \setkeys*[bonak]{X}{#3}
 }
 
 % Frame, layer, and filler: the general macro
 \newcommandx{\prim}[6][2,3,4,5,6]{
-  \ensuremath{\mathsf{\color{indian-yellow}{#1}}_{#2}^{
-    \joinargs{}[#3][#4][#5]}}
+  \mathsf{\color{indian-yellow}{#1}}_{#2}^{
+    \joinargs{}[#3][#4][#5]}
   \setkeys*[bonak]{#1}{#6}
 }
 
 % Restriction for frame, layer, and filler: the general macro
 \newcommandx{\restr}[8][2,3,4,5,6,7,8]{
-  \ensuremath{\mathsf{\color{russian-green}{restr}}_{
+  \mathsf{\color{russian-green}{restr}}_{
     \mathsf{\color{indian-yellow}{#1}}
-    \joinargs{,}[#2][#3][#4]}^{\joinargs{}[#5][#6][#7]}}
+    \joinargs{,}[#2][#3][#4]}^{\joinargs{}[#5][#6][#7]}
   \setkeys*[bonak]{restr#1}{#8}
 }
 
@@ -145,23 +137,35 @@
 % xkeyval, but this is not possible. The only possible compromise is to join
 % #7 and #8 by hand in usage of \coh: it's now #7 or '#6,#7' in \cohfoo commands
 \newcommandx{\coh}[9][2,3,4,5,6,7,8,9]{
-  \ensuremath{\mathsf{\color{chestnut}{coh}}_{
+  \mathsf{\color{chestnut}{coh}}_{
     \mathsf{\color{indian-yellow}{#1}}
-    \joinargs{,}[#2][#3][#4][#5][#6]}^{\joinargs{}[#7][#8]}}
+    \joinargs{,}[#2][#3][#4][#5][#6]}^{\joinargs{}[#7][#8]}
   \setkeys*[bonak]{coh#1}{#9}
 }
 
+% Universe, referred to as U
+\newcommand{\U}[1]{\mathsf{\color{spanish-blue}{U}}_{#1}}
+
+% The unit type
+\newcommand{\unittype}{\mathsf{unit}}
+\newcommand{\unitpoint}{\star}
+
+% Definitional and extensional equality
+\newcommand{\defeq}{\triangleq}
+\newcommand{\eqHSet}{\ensuremath{\equiv_{\mathit{HSet}}}}
+\newcommand{\reflHSet}{\ensuremath{\mathsf{refl}_{\mathit{HSet}}}}
+
 % Some abbreviations
-\newcommand{\imp}{\ensuremath{\rightarrow}}
-\newcommand{\overright}[1]{\ensuremath{\overrightarrow{#1}}}
-\renewcommand{\D}{\ensuremath{D}}
-\newcommand{\hdD}{\ensuremath{D.1}}
-\newcommand{\tlD}{\ensuremath{D.2}}
-\renewcommand{\d}{\ensuremath{d}}
-\newcommand{\E}{\ensuremath{E}}
-\renewcommand{\l}{\ensuremath{l}}
-\renewcommand{\c}{\ensuremath{c}}
-\newcommand{\pair}[2]{\ensuremath{#1, #2}}
+\newcommand{\imp}{\rightarrow}
+\newcommand{\overright}[1]{\overrightarrow{#1}}
+\renewcommand{\D}{D}
+\newcommand{\hdD}{D.1}
+\newcommand{\tlD}{D.2}
+\renewcommand{\d}{d}
+\newcommand{\E}{E}
+\renewcommand{\l}{l}
+\renewcommand{\c}{c}
+\newcommand{\pair}[2]{#1, #2}
 
 % Fancy headers
 \pagestyle{fancy}
@@ -180,10 +184,11 @@
 \setlength{\bibitemsep}{.2\baselineskip plus .05\baselineskip minus .05\baselineskip}
 
 % The eqntable environment, displaying the various
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
 \NewEnviron{eqntable}[1]{
   \begin{table}[H]
     \small
-    \begin{tabularx}{\textwidth}{@{}>{$}l<{$} >{$}c<{$} >{$}c<{$} >{\centering\arraybackslash}X @{}}
+    \begin{tabularx}{\textwidth}{@{}>{$}l<{$} >{$}c<{$} >{$}c<{$} >{$}Y<{$} @{}}
       \toprule
       \BODY
       \bottomrule
@@ -193,7 +198,7 @@
 }
 
 % A block in the eqntable environment
-\NewDocumentCommand{\eqnline}{m m m m}{#1 & #2 & #3 & \ensuremath{#4} \\}
+\NewDocumentCommand{\eqnline}{m m m m}{#1 & #2 & #3 & #4 \\}
 \newcommandx*{\mc}[1]{\multicolumn{4}{c}{\emph{#1}} \\\\}
 
 % Table caption set up
