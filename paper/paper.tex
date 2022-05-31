@@ -108,6 +108,7 @@
 
 % Now we patch \XKV@setkeys
 \xpretocmd{\XKV@setkeys}{
+  \XKV@checksanitizea{#2}\XKV@resb
   \XKV@for@o\XKV@fams\XKV@tfam{
     \def\bonak@hdr{\XKV@prefix\XKV@tfam @}
     \XKV@for@o{\bonak@mask}\XKV@tempa{
@@ -115,7 +116,7 @@
       \ifx \theresult 0
       \else
         \substring[q]{\XKV@tempa}{$}{$}
-        \bonak@delete#2\thestring\XKV@getkeyname
+        \bonak@delete\XKV@resb\thestring\XKV@getkeyname
       \fi
     }
   }
