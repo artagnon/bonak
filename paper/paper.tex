@@ -94,8 +94,8 @@
 \def\appendmask{\XKV@testopta{\XKV@testoptc\bonak@appendmask}}
 
 % A small utility helper, since \XKV@delete isn't suitable
-\long\def\bonak@delete#1#2#3{
-  \XKV@checksanitizea{#1}\XKV@tempb
+\newcommand{\bonak@delete}[3]{
+  \let\XKV@tempb#1
   \let#1\@empty
   \let\XKV@tempd#2
   \XKV@for@o\XKV@tempb\XKV@tempb{
@@ -108,7 +108,7 @@
 }
 
 % Now we patch \XKV@setkeys
-\xpretocmd{\XKV@setkeys}{
+\xpatchcmd{\XKV@setkeys}{\XKV@checksanitizea{#2}\XKV@resb}{
   \XKV@checksanitizea{#2}\XKV@resb
   \XKV@for@o\XKV@fams\XKV@tfam{
     \def\bonak@hdr{\XKV@prefix\XKV@tfam @}
@@ -117,7 +117,7 @@
       \ifx \theresult 0
       \else
         \substring[q]{\XKV@tempa}{$}{$}
-        \bonak@delete\XKV@resb\thestring\XKV@getkeyname
+        \bonak@delete{\XKV@resb}{\thestring}{\XKV@getkeyname}
       \fi
     }
   }
