@@ -95,7 +95,6 @@
 
 % Now we patch \XKV@setkeys
 \xpretocmd{\XKV@setkeys}{
-  \def\@nil\@empty
   \XKV@for@o\XKV@fams\XKV@tfam{
     \def\bonak@hdr{\XKV@prefix\XKV@tfam @}
     \XKV@for@o{\bonak@mask}\XKV@tempa{
@@ -414,19 +413,37 @@ We call the structure thus defined \emph{bare truncated sets}: \emph{bare} becau
 \appendmask[prim]{layer}[D]
 \appendmask[prim]{filler}[D,E]
 
-% Debugging starts
 \makeatletter
 \def\XKV@fams{frame,layer,filler}
-\def\bonak@tempc{D=D,E=E,d=d}
-\XKV@for@o\XKV@fams\XKV@tfam{
-  \def\bonak@hdr{\protect\XKV@prefix\XKV@tfam @}
-  \XKV@for@o{\bonak@mask}\XKV@tempa{
-    \IfBeginWith{\XKV@tempa}{\bonak@hdr}{
-      \XKV@delete\bonak@tempc{\StrBehind{\XKV@tempa}{\bonak@hdr}}\XKV@getkeyname}{}
+\def\bonak@keys{D=D,E=E,d=d}
+
+\def\ifmember#1#2{%
+  \in@{#1}{#2}%
+  \ifin@
+    \expandafter\@firstoftwo
+  \else
+    \expandafter\@secondoftwo
+  \fi
+}
+\long\def\bonak@delete#1#2#3{
+  \XKV@checksanitizeb{#2}\XKV@tempa
+  \let\XKV@tempb#1
+  \let#1\@empty
+  \XKV@for@o\XKV@tempb\XKV@tempb{
+    #3\XKV@tempb\XKV@tempc
+    \ifmember{,\XKV@tempc,}{,\XKV@tempa,}{}{\XKV@addtolist@o#1\XKV@tempb}
   }
 }
-\bonak@tempc
+\XKV@for@o\XKV@fams\XKV@tfam{
+  \def\bonak@hdr{\XKV@prefix\XKV@tfam @}
+  \XKV@for@o{\bonak@mask}\XKV@tempc{
+    \IfBeginWith{\XKV@tempc}{\bonak@hdr}{
+      \bonak@delete\bonak@keys{\StrBehind{\XKV@tempc}{\bonak@hdr}} \XKV@getkeyname
+    }{}
+  }
+}
 \makeatother
+\end{document}
 % Debugging ends
 
 % Truncated sets, otherwise referred to as X
