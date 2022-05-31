@@ -1,6 +1,6 @@
 \documentclass[10pt]{art}
 
-\usepackage{multirow, minted, tabularx, environ, booktabs, setspace, makecell, caption, xkeyval, xstring, xpatch, stringstrings, pdflscape}
+\usepackage{multirow, minted, tabularx, environ, booktabs, setspace, makecell, caption, xkeyval, xstring, xpatch, stringstrings, ifthen, pdflscape}
 \usepackage[a4paper, inner=25mm, outer=25mm, top=25mm, bottom=25mm]{geometry}
 
 % Some lua magic to join a variable number of arguments with commas
@@ -100,21 +100,19 @@
     \def\bonak@hdr{bonak@ \XKV@tfam @}
     \XKV@for@o\bonak@mask\XKV@tempa{
       \whereisword[q]{\XKV@tempa}{\bonak@hdr}
-      \ifx\theresult0
-      \else
+      \ifthenelse{\equal{\theresult}{0}}{}
+      {
         \substring[q]{\XKV@tempa}{$}{$}
         \let\XKV@tempb\XKV@resb
         \let\KXV@resb\@empty
         \XKV@for@o\XKV@tempb\XKV@tempb{
           \XKV@getkeyname\XKV@tempb\XKV@tempc
-          \ifx\XKV@tempc\thestring
-            % Masked
-          \else
+          \ifthenelse{\equal{\XKV@tempc}{\thestring}}{}{
             % Unmasked
             \XKV@addtolist@o\XKV@resb\XKV@tempb
-          \fi
+          }
         }
-      \fi
+      }
     }
   }
 }{}{}
