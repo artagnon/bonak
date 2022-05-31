@@ -46,35 +46,35 @@
 
 % Magic with xkeyval to go over the 9-argument limit of LaTeX
 \makeatletter
-\define@cmdkey[univ]{X}{D}{(#1)}
+\define@cmdkey[bonak]{X}{D}{(#1)}
 
-\define@cmdkey[prim]{frame}{D}{(#1)}
-\define@cmdkey[prim]{layer}{D}{(#1)}
-\define@cmdkey[prim]{layer}{d}{(#1)}
-\define@cmdkey[prim]{filler}{D}{(#1)}
-\define@cmdkey[prim]{filler}{E}{(#1)}
-\define@cmdkey[prim]{filler}{d}{(#1)}
-\define@cmdkey[prim]{fullframe}{D}{(#1)}
+\define@cmdkey[bonak]{frame}{D}{(#1)}
+\define@cmdkey[bonak]{layer}{D}{(#1)}
+\define@cmdkey[bonak]{layer}{d}{(#1)}
+\define@cmdkey[bonak]{filler}{D}{(#1)}
+\define@cmdkey[bonak]{filler}{E}{(#1)}
+\define@cmdkey[bonak]{filler}{d}{(#1)}
+\define@cmdkey[bonak]{fullframe}{D}{(#1)}
 
-\define@cmdkey[restr]{frame}{D}{(#1)}
-\define@cmdkey[restr]{frame}{d}{(#1)}
-\define@cmdkey[restr]{layer}{D}{(#1)}
-\define@cmdkey[restr]{layer}{d}{(#1)}
-\define@cmdkey[restr]{layer}{l}{(#1)}
-\define@cmdkey[restr]{filler}{D}{(#1)}
-\define@cmdkey[restr]{filler}{E}{(#1)}
-\define@cmdkey[restr]{filler}{d}{(#1)}
-\define@cmdkey[restr]{filler}{c}{(#1)}
+\define@cmdkey[bonak]{restrframe}{D}{(#1)}
+\define@cmdkey[bonak]{restrframe}{d}{(#1)}
+\define@cmdkey[bonak]{restrlayer}{D}{(#1)}
+\define@cmdkey[bonak]{restrlayer}{d}{(#1)}
+\define@cmdkey[bonak]{restrlayer}{l}{(#1)}
+\define@cmdkey[bonak]{restrfiller}{D}{(#1)}
+\define@cmdkey[bonak]{restrfiller}{E}{(#1)}
+\define@cmdkey[bonak]{restrfiller}{d}{(#1)}
+\define@cmdkey[bonak]{restrfiller}{c}{(#1)}
 
-\define@cmdkey[coh]{frame}{D}{(#1)}
-\define@cmdkey[coh]{frame}{d}{(#1)}
-\define@cmdkey[coh]{layer}{D}{(#1)}
-\define@cmdkey[coh]{layer}{d}{(#1)}
-\define@cmdkey[coh]{layer}{l}{(#1)}
-\define@cmdkey[coh]{filler}{D}{(#1)}
-\define@cmdkey[coh]{filler}{E}{(#1)}
-\define@cmdkey[coh]{filler}{d}{(#1)}
-\define@cmdkey[coh]{filler}{c}{(#1)}
+\define@cmdkey[bonak]{cohframe}{D}{(#1)}
+\define@cmdkey[bonak]{cohframe}{d}{(#1)}
+\define@cmdkey[bonak]{cohlayer}{D}{(#1)}
+\define@cmdkey[bonak]{cohlayer}{d}{(#1)}
+\define@cmdkey[bonak]{cohlayer}{l}{(#1)}
+\define@cmdkey[bonak]{cohfiller}{D}{(#1)}
+\define@cmdkey[bonak]{cohfiller}{E}{(#1)}
+\define@cmdkey[bonak]{cohfiller}{d}{(#1)}
+\define@cmdkey[bonak]{cohfiller}{c}{(#1)}
 \makeatother
 
 % More magic: we patch xkeyval's \setkeys to use a mask to ignore keys
@@ -84,40 +84,36 @@
 
 % First we define \appendmask
 \long\def\bonak@appendmask[#1]{
-  \XKV@for@eo\XKV@fams\XKV@tfam{
-    \def\bonak@hdr{\XKV@prefix\XKV@tfam @}
+  \XKV@for@o\XKV@fams\XKV@tfam{
+    \def\bonak@hdr{bonak@ \XKV@tfam @}
     \XKV@for@o{#1}\XKV@tempa{
       \XKV@addtolist@x\bonak@mask{\bonak@hdr\XKV@tempa}
-      }
+    }
   }
 }
 \def\appendmask{\XKV@testopta{\XKV@testoptc\bonak@appendmask}}
-
-% A small utility helper, since \XKV@delete isn't suitable
-\newcommand{\bonak@delete}[3]{
-  \let\XKV@tempb#1
-  \let#1\@empty
-  \let\XKV@tempd#2
-  \XKV@for@o\XKV@tempb\XKV@tempb{
-    #3\XKV@tempb\XKV@tempc
-    \ifx\XKV@tempc\XKV@tempd
-    \else
-      \XKV@addtolist@o#1\XKV@tempb
-    \fi
-  }
-}
 
 % Now we patch \XKV@setkeys
 \xpatchcmd{\XKV@setkeys}{\XKV@checksanitizea{#2}\XKV@resb}{
   \XKV@checksanitizea{#2}\XKV@resb
   \XKV@for@o\XKV@fams\XKV@tfam{
-    \def\bonak@hdr{\XKV@prefix\XKV@tfam @}
-    \XKV@for@o{\bonak@mask}\XKV@tempa{
+    \def\bonak@hdr{bonak@ \XKV@tfam @}
+    \XKV@for@o\bonak@mask\XKV@tempa{
       \whereisword[q]{\XKV@tempa}{\bonak@hdr}
-      \ifx \theresult 0
+      \ifx\theresult0
       \else
         \substring[q]{\XKV@tempa}{$}{$}
-        \bonak@delete{\XKV@resb}{\thestring}{\XKV@getkeyname}
+        \let\XKV@tempb\XKV@resb
+        \let\KXV@resb\@empty
+        \XKV@for@o\XKV@tempb\XKV@tempb{
+          \XKV@getkeyname\XKV@tempb\XKV@tempc
+          \ifx\XKV@tempc\thestring
+            % Masked
+          \else
+            % Unmasked
+            \XKV@addtolist@o\XKV@resb\XKV@tempb
+          \fi
+        }
       \fi
     }
   }
@@ -127,14 +123,14 @@
 % Truncated sets, otherwise referred to as X: the general macro
 \newcommandx{\X}[3][1,2,3]{
   \ensuremath{\mathsf{\color{carolina}{X}}_{#1}^{#2}}
-  \setkeys*[univ]{X}{#3}
+  \setkeys*[bonak]{X}{#3}
 }
 
 % Frame, layer, and filler: the general macro
 \newcommandx{\prim}[6][2,3,4,5,6]{
   \ensuremath{\mathsf{\color{indian-yellow}{#1}}_{#2}^{
     \joinargs{}[#3][#4][#5]}}
-  \setkeys*[prim]{#1}{#6}
+  \setkeys*[bonak]{#1}{#6}
 }
 
 % Restriction for frame, layer, and filler: the general macro
@@ -142,7 +138,7 @@
   \ensuremath{\mathsf{\color{russian-green}{restr}}_{
     \mathsf{\color{indian-yellow}{#1}}
     \joinargs{,}[#2][#3][#4]}^{\joinargs{}[#5][#6][#7]}}
-  \setkeys*[restr]{#1}{#8}
+  \setkeys*[bonak]{restr#1}{#8}
 }
 
 % Coherence conditions for frame, layer, and filler: the general macro
@@ -154,7 +150,7 @@
   \ensuremath{\mathsf{\color{chestnut}{coh}}_{
     \mathsf{\color{indian-yellow}{#1}}
     \joinargs{,}[#2][#3][#4][#5][#6]}^{\joinargs{}[#7][#8]}}
-  \setkeys*[coh]{#1}{#9}
+  \setkeys*[bonak]{coh#1}{#9}
 }
 
 % Some abbreviations
@@ -436,9 +432,9 @@ We call the structure thus defined \emph{bare truncated sets}: \emph{bare} becau
 \input{tab-frames.tex}
 
 % From the third table onwards, make the {D, E} arguments of prims implicit
-% \appendmask[prim]{frame}[D]
-% \appendmask[prim]{layer}[D]
-% \appendmask[prim]{filler}[D,E]
+% \appendmask[bonak]{frame}[D]
+% \appendmask[bonak]{layer}[D]
+% \appendmask[bonak]{filler}[D,E]
 
 % Truncated sets, otherwise referred to as X
 % Drop the universe letter for the third and fourth tables
