@@ -1,6 +1,6 @@
 \documentclass[10pt]{art}
 
-\usepackage{multirow, minted, tabularx, booktabs, setspace, makecell, caption, xkeyval, xstring, xpatch, pdflscape}
+\usepackage{multirow, minted, tabularx, booktabs, setspace, makecell, caption, xkeyval, xstring, xpatch, stringstrings, pdflscape}
 \usepackage[a4paper, inner=25mm, outer=25mm, top=25mm, bottom=25mm]{geometry}
 
 % Some lua magic to join a variable number of arguments with commas
@@ -417,31 +417,29 @@ We call the structure thus defined \emph{bare truncated sets}: \emph{bare} becau
 \def\XKV@fams{frame,layer,filler}
 \def\bonak@keys{D=D,E=E,d=d}
 
-\def\ifmember#1#2{%
-  \in@{#1}{#2}%
-  \ifin@
-    \expandafter\@firstoftwo
-  \else
-    \expandafter\@secondoftwo
-  \fi
-}
 \long\def\bonak@delete#1#2#3{
-  \XKV@checksanitizeb{#2}\XKV@tempa
   \let\XKV@tempb#1
   \let#1\@empty
   \XKV@for@o\XKV@tempb\XKV@tempb{
     #3\XKV@tempb\XKV@tempc
-    \ifmember{,\XKV@tempc,}{,\XKV@tempa,}{}{\XKV@addtolist@o#1\XKV@tempb}
+    \ifx \XKV@tempc #2
+    \else
+      \XKV@addtolist@o#1\XKV@tempb
+    \fi
   }
 }
 \XKV@for@o\XKV@fams\XKV@tfam{
   \def\bonak@hdr{\XKV@prefix\XKV@tfam @}
   \XKV@for@o{\bonak@mask}\XKV@tempc{
-    \IfBeginWith{\XKV@tempc}{\bonak@hdr}{
-      \bonak@delete\bonak@keys{\StrBehind{\XKV@tempc}{\bonak@hdr}} \XKV@getkeyname
-    }{}
+    \whereisword[q]{\XKV@tempc}{\bonak@hdr}
+    \ifx \theresult 0
+    \else
+      \substring[q]{\XKV@tempc}{$}{$}
+      \bonak@delete\bonak@keys{\thestring}\XKV@getkeyname
+    \fi
   }
 }
+\bonak@keys
 \makeatother
 \end{document}
 % Debugging ends
