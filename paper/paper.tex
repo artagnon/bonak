@@ -389,10 +389,10 @@ as a coinductive limit.
 
 % Truncated sets, otherwise referred to as X
 % Keep all arguments
-\newcommandx{\Xp}[1]{\X[#1][]}
-\newcommandx{\Xto}[2]{\X[#1][<#2]}
-\newcommandx{\Xcomp}[2]{\X[#1][=#2]}
-\newcommandx{\Xfrom}[2]{\X[#1][\geq#2]}
+\newcommandx{\Xp}[1]{\X[#1][][]}
+\newcommandx{\Xto}[3][3=]{\X[#1][<#2][#3]}
+\newcommandx{\Xcomp}[3][3=]{\X[#1][=#2][#3]}
+\newcommandx{\Xfrom}[3][3=]{\X[#1][\geq#2][#3]}
 
 % Frame, layer, and filler
 % Drop the universe letter
@@ -433,9 +433,9 @@ We call the structure thus defined \emph{bare truncated sets}: \emph{bare} becau
 
 % Truncated sets, otherwise referred to as X
 % Drop the universe letter for the third and fourth tables
-\renewcommandx{\Xto}[2]{\X[][<#2]}
-\renewcommandx{\Xcomp}[2]{\X[][=#2]}
-\renewcommandx{\Xfrom}[2]{\X[][\geq#2]}
+\renewcommandx{\Xto}[3][3=]{\X[][<#2][#3]}
+\renewcommandx{\Xcomp}[3][3=]{\X[][=#2][#3]}
+\renewcommandx{\Xfrom}[3][3=]{\X[][\geq#2][#3]}
 
 % The third table mentions cohframe; keep ε, ω in this instance
 \renewcommandx{\cohf}[9][1=,2=,3=,4=,5=,6=,7=,8=,9=]{\coh{frame}[][#2][#3][][][#6,#7][#8][#9]}
