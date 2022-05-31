@@ -46,7 +46,7 @@
 
 % Magic with xkeyval to go over the 9-argument limit of LaTeX
 \makeatletter
-\define@cmdkey{X}{D}{(#1)}
+\define@cmdkey[base]{X}{D}{(#1)}
 
 \define@cmdkey[prim]{frame}{D}{(#1)}
 \define@cmdkey[prim]{layer}{D}{(#1)}
@@ -93,22 +93,39 @@
 }
 \def\appendmask{\XKV@testopta{\XKV@testoptc\bonak@appendmask}}
 
+% A small utility helper, since \XKV@delete isn't suitable
+\long\def\bonak@delete#1#2#3{
+  \let\XKV@tempb#1
+  \let#1\@empty
+  \XKV@for@o\XKV@tempb\XKV@tempb{
+    #3\XKV@tempb\XKV@tempc
+    \ifx \XKV@tempc #2
+    \else
+      \XKV@addtolist@o#1\XKV@tempb
+    \fi
+  }
+}
+
 % Now we patch \XKV@setkeys
 \xpretocmd{\XKV@setkeys}{
   \XKV@for@o\XKV@fams\XKV@tfam{
     \def\bonak@hdr{\XKV@prefix\XKV@tfam @}
     \XKV@for@o{\bonak@mask}\XKV@tempa{
-      \IfBeginWith{\XKV@tempa}{\bonak@hdr}{
-        \XKV@delete#2{\StrBehind{\XKV@tempa}{\bonak@hdr}}\XKV@getkeyname}{}
+      \whereisword[q]{\XKV@tempa}{\bonak@hdr}
+      \ifx \theresult 0
+      \else
+        \substring[q]{\XKV@tempa}{$}{$}
+        \bonak@delete#2\thestring\XKV@getkeyname
+      \fi
     }
   }
-}{\tracingpatches}{\tracingpatches}
+}{}{}
 \makeatother
 
 % Truncated sets, otherwise referred to as X: the general macro
 \newcommandx*{\X}[3][1=,2=,3=]{
   \ensuremath{\mathsf{\color{carolina}{X}}_{#1}^{#2}}
-  \setkeys*{X}{#3}
+  \setkeys*[base]{X}{#3}
 }
 
 % Frame, layer, and filler: the general macro
@@ -412,37 +429,6 @@ We call the structure thus defined \emph{bare truncated sets}: \emph{bare} becau
 \appendmask[prim]{frame}[D]
 \appendmask[prim]{layer}[D]
 \appendmask[prim]{filler}[D,E]
-
-\makeatletter
-\def\XKV@fams{frame,layer,filler}
-\def\bonak@keys{D=D,E=E,d=d}
-
-\long\def\bonak@delete#1#2#3{
-  \let\XKV@tempb#1
-  \let#1\@empty
-  \XKV@for@o\XKV@tempb\XKV@tempb{
-    #3\XKV@tempb\XKV@tempc
-    \ifx \XKV@tempc #2
-    \else
-      \XKV@addtolist@o#1\XKV@tempb
-    \fi
-  }
-}
-\XKV@for@o\XKV@fams\XKV@tfam{
-  \def\bonak@hdr{\XKV@prefix\XKV@tfam @}
-  \XKV@for@o{\bonak@mask}\XKV@tempc{
-    \whereisword[q]{\XKV@tempc}{\bonak@hdr}
-    \ifx \theresult 0
-    \else
-      \substring[q]{\XKV@tempc}{$}{$}
-      \bonak@delete\bonak@keys{\thestring}\XKV@getkeyname
-    \fi
-  }
-}
-\bonak@keys
-\makeatother
-\end{document}
-% Debugging ends
 
 % Truncated sets, otherwise referred to as X
 % Drop the universe letter for the third and fourth tables
