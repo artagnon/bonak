@@ -81,7 +81,7 @@
 }
 \def\appendmask{\XKV@testopta{\XKV@testoptc\bonak@appendmask}}
 
-% Now we patch \XKV@setkeys
+% Now we override the definition of \XKV@setkeys
 \def\XKV@setkeys[#1]#2{
   \XKV@checksanitizea{#2}\XKV@resb
   \XKV@for@o\XKV@fams\XKV@tfam{
@@ -98,7 +98,7 @@
           \ifx\XKV@tempc\thestring
           \else
             % Unmasked keys
-            \XKV@addtolist@x\XKV@resb\XKV@tempc
+            \XKV@addtolist@x\XKV@resb\XKV@tempb
           \fi
         }
         \ifnum\XKV@depth=\z@\let\XKV@rm\@empty\fi
