@@ -1,30 +1,7 @@
 \documentclass[10pt]{art}
 
-\usepackage{multirow, minted, tabularx, environ, booktabs, setspace, makecell, caption, xkeyval, colortbl, pdflscape}
+\usepackage{multirow, minted, tabularx, environ, booktabs, setspace, makecell, caption, xkeymask, joinargs, colortbl, pdflscape, ct, sset}
 \usepackage[a4paper, inner=25mm, outer=25mm, top=25mm, bottom=25mm]{geometry}
-
-% Some lua magic to join a variable number of arguments with commas
-% Comma-separeated optional arguments
-\begin{luacode*}
-  function remove_empty(tbl)
-    for i, v in ipairs(tbl) do
-        if v == "" then
-          table.remove(tbl, i)
-          return remove_empty(tbl)
-        end
-    end
-    return tbl
-  end
-  function join_with_comma(prefix, tbl)
-    str = table.concat(remove_empty(tbl), ",")
-    if str == "" then
-      return str
-    end
-    return prefix .. str
-  end
-\end{luacode*}
-
-\newcommandx{\joinargs}[6][2,3,4,5,6]{\directlua{tex.sprint(join_with_comma("#1", {"\luaescapestring{#2}";"\luaescapestring{#3}";"\luaescapestring{#4}";"\luaescapestring{#5}";"\luaescapestring{#6}"}))}}
 
 % Simplicial and Cubical sets
 \newcommand{\DeltaHat}{\ensuremath{\hat{\boldsymbol{\Delta}}}}
@@ -63,62 +40,6 @@
 \define@cmdkey[bonak]{cohfiller}{E}{(#1)}
 \define@cmdkey[bonak]{cohfiller}{d}{(#1)}
 \define@cmdkey[bonak]{cohfiller}{c}{(#1)}
-\makeatother
-
-% More magic: we patch xkeyval's \setkeys to use a mask to ignore keys
-\makeatletter
-% Our global mask
-\def\bonak@mask{}
-
-% First we define \appendmask
-\long\def\bonak@appendmask[#1]{
-  \XKV@for@o\XKV@fams\XKV@tfam{
-    \xdef\bonak@hdr{\XKV@prefix\XKV@tfam @}
-    \XKV@for@o{#1}\XKV@tempa{
-      % Remove spaces around key name
-      \expandafter\KV@@sp@def\expandafter\XKV@tempa\expandafter{\XKV@tempa}
-      \XKV@addtolist@x\bonak@mask{\bonak@hdr\XKV@tempa}
-    }
-  }
-}
-\def\appendmask{\XKV@testopta{\XKV@testoptc\bonak@appendmask}}
-
-% A quick way to clear the mask
-\def\clearmask{\global\let\bonak@mask\@empty}
-
-% Now we override the definition of \XKV@setkeys
-\long\def\bonak@setkeys[#1]#2{
-  \XKV@checksanitizea{#2}\XKV@resb
-  \let\XKV@resa\@empty
-  \XKV@for@o\XKV@fams\XKV@tfam{
-    \XKV@for@o\XKV@resb\XKV@tempb{
-      \expandafter\XKV@g@tkeyname\XKV@tempb=\@nil\XKV@tempc
-      % Remove spaces around key name
-      \expandafter\KV@@sp@def\expandafter\XKV@tempc\expandafter{\XKV@tempc}
-      \xdef\XKV@tempd{\XKV@prefix\XKV@tfam @\XKV@tempc}
-      % If \XKV@tempd is in \bonak@mask,
-      % remove the corresponding kv from \XKV@resb
-      \@expandtwoargs\in@\XKV@tempd\bonak@mask
-      \ifin@\else\XKV@addtolist@o\XKV@resa\XKV@tempb\fi
-    }
-  }
-  \ifnum\XKV@depth=\z@\let\XKV@rm\@empty\fi
-  \expandafter\XKV@s@tkeys\expandafter{\XKV@resa}{#1}
-  \let\CurrentOption\@empty
-}
-
-% A dispatcher to \bonak@setkeys or \XKV@setkeys
-\long\def\bonak@setkeys@dispatch{
-  \def\XKV@tempa{bonak@}
-  \ifx\XKV@prefix\XKV@tempa
-    \expandafter\bonak@setkeys
-  \else
-    \expandafter\XKV@setkeys
-  \fi
-}
-
-% Finally, override \setkeys itself to call the dispatcher
-\def\setkeys{\XKV@testopta{\XKV@testoptc\bonak@setkeys@dispatch}}
 \makeatother
 
 % Truncated sets, otherwise referred to as X: the general macro

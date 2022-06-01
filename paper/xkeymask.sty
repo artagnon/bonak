@@ -1,0 +1,57 @@
+\RequirePackage{xkeyval}
+
+% We patch xkeyval's \setkeys to use a mask to ignore keys
+\makeatletter
+% Our global mask
+\def\bonak@mask{}
+
+% First we define \appendmask
+\long\def\bonak@appendmask[#1]{
+  \XKV@for@o\XKV@fams\XKV@tfam{
+    \xdef\bonak@hdr{\XKV@prefix\XKV@tfam @}
+    \XKV@for@o{#1}\XKV@tempa{
+      % Remove spaces around key name
+      \expandafter\KV@@sp@def\expandafter\XKV@tempa\expandafter{\XKV@tempa}
+      \XKV@addtolist@x\bonak@mask{\bonak@hdr\XKV@tempa}
+    }
+  }
+}
+\def\appendmask{\XKV@testopta{\XKV@testoptc\bonak@appendmask}}
+
+% A quick way to clear the mask
+\def\clearmask{\global\let\bonak@mask\@empty}
+
+% Now we override the definition of \XKV@setkeys
+\long\def\bonak@setkeys[#1]#2{
+  \XKV@checksanitizea{#2}\XKV@resb
+  \let\XKV@resa\@empty
+  \XKV@for@o\XKV@fams\XKV@tfam{
+    \XKV@for@o\XKV@resb\XKV@tempb{
+      \expandafter\XKV@g@tkeyname\XKV@tempb=\@nil\XKV@tempc
+      % Remove spaces around key name
+      \expandafter\KV@@sp@def\expandafter\XKV@tempc\expandafter{\XKV@tempc}
+      \xdef\XKV@tempd{\XKV@prefix\XKV@tfam @\XKV@tempc}
+      % If \XKV@tempd is in \bonak@mask,
+      % remove the corresponding kv from \XKV@resb
+      \@expandtwoargs\in@\XKV@tempd\bonak@mask
+      \ifin@\else\XKV@addtolist@o\XKV@resa\XKV@tempb\fi
+    }
+  }
+  \ifnum\XKV@depth=\z@\let\XKV@rm\@empty\fi
+  \expandafter\XKV@s@tkeys\expandafter{\XKV@resa}{#1}
+  \let\CurrentOption\@empty
+}
+
+% A dispatcher to \bonak@setkeys or \XKV@setkeys
+\long\def\bonak@setkeys@dispatch{
+  \def\XKV@tempa{bonak@}
+  \ifx\XKV@prefix\XKV@tempa
+    \expandafter\bonak@setkeys
+  \else
+    \expandafter\XKV@setkeys
+  \fi
+}
+
+% Finally, override \setkeys itself to call the dispatcher
+\def\setkeys{\XKV@testopta{\XKV@testoptc\bonak@setkeys@dispatch}}
+\makeatother

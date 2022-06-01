@@ -1,0 +1,24 @@
+\RequirePackage{luacode, xargs}
+
+% Some lua magic to join a variable number of arguments with commas
+% Comma-separeated optional arguments
+\begin{luacode*}
+  function remove_empty(tbl)
+    for i, v in ipairs(tbl) do
+        if v == "" then
+          table.remove(tbl, i)
+          return remove_empty(tbl)
+        end
+    end
+    return tbl
+  end
+  function join_with_comma(prefix, tbl)
+    str = table.concat(remove_empty(tbl), ",")
+    if str == "" then
+      return str
+    end
+    return prefix .. str
+  end
+\end{luacode*}
+
+\newcommandx{\joinargs}[6][2,3,4,5,6]{\directlua{tex.sprint(join_with_comma("#1", {"\luaescapestring{#2}";"\luaescapestring{#3}";"\luaescapestring{#4}";"\luaescapestring{#5}";"\luaescapestring{#6}"}))}}
