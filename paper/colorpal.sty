@@ -1,25 +1,15 @@
-% The lua code to transform ('FFFFFFF', 0) into 255
-\begin{luacode}
-function rgbcomponents(hexstr, i)
-    return tonumber(string.sub(hexstr, i * 2 + 1, i * 2 + 2), 16) / 255
-end
-\end{luacode}
-
-\newcommand{\definehexcolor}[2]{
-\definecolor{#1}{rgb}{\directlua{tex.write(rgbcomponents("#2", 0))}, \directlua{tex.write(rgbcomponents("#2", 1))}, \directlua{tex.write(rgbcomponents("#2", 2))}}
-}
-
 % Color palette
-\definehexcolor{white}{FFFFFF}
+\definecolor{white}{HTML}{FFFFFF}
 \definecolor{gray80}{rgb}{0.2, 0.2, 0.2}
 \definecolor{gray65}{rgb}{0.35, 0.35, 0.35}
-\definehexcolor{raspeberry}{BF3343}
-\definehexcolor{strawberry}{D86E7A}
-\definehexcolor{hlcolor}{FBEFF1}
+\definecolor{gray30}{rgb}{0.70, 0.70, 0.70}
+\definecolor{raspeberry}{HTML}{BF3343}
+\definecolor{strawberry}{HTML}{D86E7A}
+\definecolor{hlcolor}{HTML}{FBEFF1}
 
 % Color palette 2
-\definehexcolor{russian-green}{69995D}
-\definehexcolor{chestnut}{98473E}
-\definehexcolor{indian-yellow}{DB9D47}
-\definehexcolor{carolina}{009FFD}
-\definehexcolor{spanish-blue}{296EB4}
+\definecolor{russian-green}{HTML}{69995D}
+\definecolor{chestnut}{HTML}{98473E}
+\definecolor{indian-yellow}{HTML}{DB9D47}
+\definecolor{carolina}{HTML}{009FFD}
+\definecolor{spanish-blue}{HTML}{296EB4}

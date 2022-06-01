@@ -1,6 +1,6 @@
 \documentclass[10pt]{art}
 
-\usepackage{multirow, minted, tabularx, environ, booktabs, setspace, makecell, caption, xkeyval, pdflscape}
+\usepackage{multirow, minted, tabularx, environ, booktabs, setspace, makecell, caption, xkeyval, colortbl, pdflscape}
 \usepackage[a4paper, inner=25mm, outer=25mm, top=25mm, bottom=25mm]{geometry}
 
 % Some lua magic to join a variable number of arguments with commas
@@ -199,7 +199,7 @@
 \NewEnviron{eqntable}[1]{
   \begin{table}[H]
     \small
-    \begin{tabularx}{\textwidth}{@{}>{$}l<{$} >{$}c<{$} >{$}c<{$} >{$}Y<{$} @{}}
+    \begin{tabularx}{\linewidth}{@{}>{$}l<{$} >{$}c<{$} >{$}c<{$} >{$}Y<{$} @{}}
       \toprule
       \BODY
       \bottomrule
@@ -207,6 +207,12 @@
     \caption{#1}
   \end{table}
 }
+
+% The label, since we're including twice
+\newcommand*{\lab}{}
+
+% \midrule color
+\def\graymidrule{\arrayrulecolor{gray30}\midrule\arrayrulecolor{gray65}}
 
 % A block in the eqntable environment
 \NewDocumentCommand{\eqnline}{m m m m}{#1 & #2 & #3 & #4 \\}
@@ -261,9 +267,9 @@ Our contribution is to model the core of semi-cubical sets that naturally genera
   \begin{tabularx}{\linewidth}{p{.3\linewidth}|p{.3\linewidth}|p{.3\linewidth}}
     \toprule
             & Set theory & Type theory \\
-    \midrule
+    \graymidrule
     Fibered & CCHM       &             \\
-    \midrule
+    \graymidrule
     Indexed &            & Our work    \\
     \bottomrule
   \end{tabularx}
@@ -435,20 +441,26 @@ The definition is dispatched over tables \ref{tab:core}, \ref{tab:frames}, \ref{
 
 We call the structure thus defined \emph{bare truncated sets}: \emph{bare} because it can be seen as defining truncated $\nu$-sets corresponding to simplical sets with only faces as part of the structure.
 
+\renewcommand*{\lab}{tab:coind}
 \input{tab-coind.tex}
 
 % For just the second table, keep the universe letter in fullframe
 \newcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[#1][#2][][][#3]}
+\renewcommand*{\lab}{tab:core}
 \input{tab-core.tex}
 
 % Drop the universe letter in fullframe for all remaining tables
 \renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[][#2][][][#3]}
+\renewcommand*{\lab}{tab:frames}
 \input{tab-frames.tex}
 
-% For the last two tables, make the {D, E} arguments of prims implicit
+% For the last two tables
 \appendmask[bonak]{frame}[D]
 \appendmask[bonak]{layer}[D]
 \appendmask[bonak]{filler}[D, E]
+\appendmask[bonak]{restrframe}[D]
+\appendmask[bonak]{restrlayer}[D, d]
+\appendmask[bonak]{restrfiller}[D, d]
 
 % Truncated sets, otherwise referred to as X
 % Drop the universe letter for the third and fourth tables
@@ -458,14 +470,12 @@ We call the structure thus defined \emph{bare truncated sets}: \emph{bare} becau
 
 % The third table mentions cohframe; keep ε, ω in this instance
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][#6,#7][#8][#9]}
+\renewcommand*{\lab}{tab:faces}
 \input{tab-faces.tex}
 
 % For the last table,
-% (1) make the {D, E, d} arguments of restr implicit
+% (1) make the {d} arguments of restr implicit
 % (2) make the {D, E} arguments of coh implicit
-\appendmask[bonak]{restrframe}[D]
-\appendmask[bonak]{restrlayer}[D, d]
-\appendmask[bonak]{restrfiller}[D, E, d]
 \appendmask[bonak]{cohframe}[D]
 \appendmask[bonak]{cohlayer}[D]
 \appendmask[bonak]{cohfiller}[D, E]
@@ -487,6 +497,7 @@ We call the structure thus defined \emph{bare truncated sets}: \emph{bare} becau
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][][][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][][][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][][][#4][#5][#6,#7][#8][#9]}
+\renewcommand*{\lab}{tab:coh}
 \input{tab-coh.tex}
 
 \section{Future work}
@@ -494,7 +505,7 @@ We call the structure thus defined \emph{bare truncated sets}: \emph{bare} becau
 \newpage
 \appendix
 \section{Tables in full detail}
-% First clear the mask
+% Clear the mask and label
 \clearmask
 
 % Keep all arguments for all macros
@@ -514,12 +525,17 @@ We call the structure thus defined \emph{bare truncated sets}: \emph{bare} becau
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
 
+\renewcommand*{\lab}{fulltab:coind}
 \input{tab-coind.tex}
+\renewcommand*{\lab}{fulltab:core}
 \input{tab-core.tex}
+\renewcommand*{\lab}{fulltab:frames}
 \input{tab-frames.tex}
 
 \begin{landscape}
+  \renewcommand*{\lab}{fulltab:faces}
   \input{tab-faces.tex}
+  \renewcommand*{\lab}{fulltab:coh}
   \input{tab-coh.tex}
 \end{landscape}
 
