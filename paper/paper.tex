@@ -1,6 +1,6 @@
 \documentclass[10pt]{art}
 
-\usepackage{multirow, minted, tabularx, environ, booktabs, setspace, makecell, caption, xkeyval, xstring, stringstrings, pdflscape}
+\usepackage{multirow, minted, tabularx, environ, booktabs, setspace, makecell, caption, xkeyval, pdflscape}
 \usepackage[a4paper, inner=25mm, outer=25mm, top=25mm, bottom=25mm]{geometry}
 
 % Some lua magic to join a variable number of arguments with commas
@@ -34,35 +34,35 @@
 
 % Magic with xkeyval to go over the 9-argument limit of LaTeX
 \makeatletter
-\define@cmdkey[bonak]{X}{D}{#1}
+\define@cmdkey[bonak]{X}{D}{(#1)}
 
-\define@cmdkey[bonak]{frame}{D}{#1}
-\define@cmdkey[bonak]{layer}{D}{#1}
-\define@cmdkey[bonak]{layer}{d}{#1}
-\define@cmdkey[bonak]{filler}{D}{#1}
-\define@cmdkey[bonak]{filler}{E}{#1}
-\define@cmdkey[bonak]{filler}{d}{#1}
-\define@cmdkey[bonak]{fullframe}{D}{#1}
+\define@cmdkey[bonak]{frame}{D}{(#1)}
+\define@cmdkey[bonak]{layer}{D}{(#1)}
+\define@cmdkey[bonak]{layer}{d}{(#1)}
+\define@cmdkey[bonak]{filler}{D}{(#1)}
+\define@cmdkey[bonak]{filler}{E}{(#1)}
+\define@cmdkey[bonak]{filler}{d}{(#1)}
+\define@cmdkey[bonak]{fullframe}{D}{(#1)}
 
-\define@cmdkey[bonak]{restrframe}{D}{#1}
-\define@cmdkey[bonak]{restrframe}{d}{#1}
-\define@cmdkey[bonak]{restrlayer}{D}{#1}
-\define@cmdkey[bonak]{restrlayer}{d}{#1}
-\define@cmdkey[bonak]{restrlayer}{l}{#1}
-\define@cmdkey[bonak]{restrfiller}{D}{#1}
-\define@cmdkey[bonak]{restrfiller}{E}{#1}
-\define@cmdkey[bonak]{restrfiller}{d}{#1}
+\define@cmdkey[bonak]{restrframe}{D}{(#1)}
+\define@cmdkey[bonak]{restrframe}{d}{(#1)}
+\define@cmdkey[bonak]{restrlayer}{D}{(#1)}
+\define@cmdkey[bonak]{restrlayer}{d}{(#1)}
+\define@cmdkey[bonak]{restrlayer}{l}{(#1)}
+\define@cmdkey[bonak]{restrfiller}{D}{(#1)}
+\define@cmdkey[bonak]{restrfiller}{E}{(#1)}
+\define@cmdkey[bonak]{restrfiller}{d}{(#1)}
 \define@cmdkey[bonak]{restrfiller}{c}{#1}
 
-\define@cmdkey[bonak]{cohframe}{D}{#1}
-\define@cmdkey[bonak]{cohframe}{d}{#1}
-\define@cmdkey[bonak]{cohlayer}{D}{#1}
-\define@cmdkey[bonak]{cohlayer}{d}{#1}
-\define@cmdkey[bonak]{cohlayer}{l}{#1}
-\define@cmdkey[bonak]{cohfiller}{D}{#1}
-\define@cmdkey[bonak]{cohfiller}{E}{#1}
-\define@cmdkey[bonak]{cohfiller}{d}{#1}
-\define@cmdkey[bonak]{cohfiller}{c}{#1}
+\define@cmdkey[bonak]{cohframe}{D}{(#1)}
+\define@cmdkey[bonak]{cohframe}{d}{(#1)}
+\define@cmdkey[bonak]{cohlayer}{D}{(#1)}
+\define@cmdkey[bonak]{cohlayer}{d}{(#1)}
+\define@cmdkey[bonak]{cohlayer}{l}{(#1)}
+\define@cmdkey[bonak]{cohfiller}{D}{(#1)}
+\define@cmdkey[bonak]{cohfiller}{E}{(#1)}
+\define@cmdkey[bonak]{cohfiller}{d}{(#1)}
+\define@cmdkey[bonak]{cohfiller}{c}{(#1)}
 \makeatother
 
 % More magic: we patch xkeyval's \setkeys to use a mask to ignore keys
@@ -73,8 +73,10 @@
 % First we define \appendmask
 \long\def\bonak@appendmask[#1]{
   \XKV@for@o\XKV@fams\XKV@tfam{
-    \def\bonak@hdr{\XKV@prefix\XKV@tfam @}
+    \edef\bonak@hdr{\XKV@prefix\XKV@tfam @}
     \XKV@for@o{#1}\XKV@tempa{
+      % Remove spaces around key name
+      \expandafter\KV@@sp@def\expandafter\XKV@tempa\expandafter{\XKV@tempa}
       \XKV@addtolist@x\bonak@mask{\bonak@hdr\XKV@tempa}
     }
   }
@@ -84,21 +86,18 @@
 % Now we override the definition of \XKV@setkeys
 \long\def\bonak@setkeys[#1]#2{
   \XKV@checksanitizea{#2}\XKV@resb
-  \let\XKV@na\XKV@resb
+  \let\XKV@resa\XKV@resb
   \let\XKV@resb\@empty
-  \XKV@for@o\XKV@fams\XKV@tfam{
-    % Execute even if \bonak@mask is empty
-    \XKV@for@eo\bonak@mask\XKV@tempa{
-      \substring[e]{\XKV@tempa}{$}{$}
-      \XKV@for@o\XKV@na\XKV@tempb{
-        \expandafter\XKV@g@tkeyname\XKV@tempb=\@nil\XKV@tempc
-        \ifx\XKV@tempc\thestring
-        \else
-            % Add only the unmasked keys to \XKV@resb
-            \XKV@addtolist@o\XKV@resb\XKV@tempb
-        \fi
-      }
-    }
+  % \substring[e]{\XKV@tempa}{$}{$}
+  \XKV@for@o\XKV@resa\XKV@tempb{
+    \expandafter\XKV@g@tkeyname\XKV@tempb=\@nil\XKV@tempc
+    % Remove spaces around key name
+    \expandafter\KV@@sp@def\expandafter\XKV@tempc\expandafter{\XKV@tempc}
+    \edef\XKV@tempd{\XKV@header\XKV@tempc}
+    % Store the keys already set in \XKV@naa
+    % Finally, add only
+    \@expandtwoargs\in@{,\XKV@tempd,}{,\bonak@mask,}
+    \ifin@\else\XKV@addtolist@o\XKV@resb\XKV@tempb\fi
   }
   \ifnum\XKV@depth=\z@\let\XKV@rm\@empty\fi
   \expandafter\XKV@s@tkeys\expandafter{\XKV@resb}{#1}
@@ -446,7 +445,7 @@ We call the structure thus defined \emph{bare truncated sets}: \emph{bare} becau
 % From the third table onwards, make the {D, E} arguments of prims implicit
 \appendmask[bonak]{frame}[D]
 \appendmask[bonak]{layer}[D]
-\appendmask[bonak]{filler}[D,E]
+\appendmask[bonak]{filler}[D, E]
 
 % Truncated sets, otherwise referred to as X
 % Drop the universe letter for the third and fourth tables
@@ -457,7 +456,7 @@ We call the structure thus defined \emph{bare truncated sets}: \emph{bare} becau
 % The third table mentions cohframe; keep ε, ω in this instance
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][#6,#7][#8][#9]}
 \input{tab-faces.tex}
-\end{document}
+
 % Restriction for frame, layer, and filler
 % Drop just the universe letter for the coh table
 \renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
