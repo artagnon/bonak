@@ -86,18 +86,21 @@
 % Now we override the definition of \XKV@setkeys
 \long\def\bonak@setkeys[#1]#2{
   \XKV@checksanitizea{#2}\XKV@resb
-  \XKV@for@o\XKV@resb\XKV@tempb{
-    \expandafter\XKV@g@tkeyname\XKV@tempb=\@nil\XKV@tempc
-    % Remove spaces around key name
-    \expandafter\KV@@sp@def\expandafter\XKV@tempc\expandafter{\XKV@tempc}
-    \xdef\XKV@tempd{\XKV@header\XKV@tempc}
-    % If \XKV@tempd is in \bonak@mask,
-    % remove the corresponding kv from \XKV@resb
-    \@expandtwoargs\in@\XKV@tempd\bonak@mask
-    \ifin@\@expandtwoargs\@removeelement\XKV@tempb\XKV@resb\XKV@resb\else\fi
+  \let\XKV@resa\@empty
+  \XKV@for@o\XKV@fams\XKV@tfam{
+    \XKV@for@o\XKV@resb\XKV@tempb{
+      \expandafter\XKV@g@tkeyname\XKV@tempb=\@nil\XKV@tempc
+      % Remove spaces around key name
+      \expandafter\KV@@sp@def\expandafter\XKV@tempc\expandafter{\XKV@tempc}
+      \xdef\XKV@tempd{\XKV@prefix\XKV@tfam @\XKV@tempc}
+      % If \XKV@tempd is in \bonak@mask,
+      % remove the corresponding kv from \XKV@resb
+      \@expandtwoargs\in@\XKV@tempd\bonak@mask
+      \ifin@\else\XKV@addtolist@o\XKV@resa\XKV@tempb\fi
+    }
   }
   \ifnum\XKV@depth=\z@\let\XKV@rm\@empty\fi
-  \expandafter\XKV@s@tkeys\expandafter{\XKV@resb}{#1}
+  \expandafter\XKV@s@tkeys\expandafter{\XKV@resa}{#1}
   \let\CurrentOption\@empty
 }
 
@@ -429,22 +432,21 @@ The definition is dispatched over tables \ref{tab:core}, \ref{tab:frames}, \ref{
 
 We call the structure thus defined \emph{bare truncated sets}: \emph{bare} because it can be seen as defining truncated $\nu$-sets corresponding to simplical sets with only faces as part of the structure.
 
-% \input{tab-coind.tex}
+\input{tab-coind.tex}
 
 % For just the second table, keep the universe letter in fullframe
 \newcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[#1][#2][][][#3]}
-% \input{tab-core.tex}
+\input{tab-core.tex}
 
 % Drop the universe letter in fullframe for all remaining tables
 \renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[][#2][][][#3]}
-% \input{tab-frames.tex}
+\input{tab-frames.tex}
 
 % From the third table onwards, make the {D, E} arguments of prims implicit
 \appendmask[bonak]{frame}[D]
 \appendmask[bonak]{layer}[D]
 \appendmask[bonak]{filler}[D, E]
-\layer[m][n-1][p][][D=\hdD, d={\restrf[m][\epsilon][q+1][n][p][][D=\D, d=\d]}]
-\end{document}
+
 % Truncated sets, otherwise referred to as X
 % Drop the universe letter for the third and fourth tables
 \renewcommandx{\Xto}[3][3]{\X[][<#2][#3]}
