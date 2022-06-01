@@ -83,6 +83,9 @@
 }
 \def\appendmask{\XKV@testopta{\XKV@testoptc\bonak@appendmask}}
 
+% A quick way to clear the mask
+\def\clearmask{\global\let\bonak@mask\@empty}
+
 % Now we override the definition of \XKV@setkeys
 \long\def\bonak@setkeys[#1]#2{
   \XKV@checksanitizea{#2}\XKV@resb
@@ -442,7 +445,7 @@ We call the structure thus defined \emph{bare truncated sets}: \emph{bare} becau
 \renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[][#2][][][#3]}
 \input{tab-frames.tex}
 
-% From the third table onwards, make the {D, E} arguments of prims implicit
+% For the last two tables, make the {D, E} arguments of prims implicit
 \appendmask[bonak]{frame}[D]
 \appendmask[bonak]{layer}[D]
 \appendmask[bonak]{filler}[D, E]
@@ -456,6 +459,16 @@ We call the structure thus defined \emph{bare truncated sets}: \emph{bare} becau
 % The third table mentions cohframe; keep ε, ω in this instance
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][#6,#7][#8][#9]}
 \input{tab-faces.tex}
+
+% For the last table,
+% (1) make the {D, E, d} arguments of restr implicit
+% (2) make the {D, E} arguments of coh implicit
+\appendmask[bonak]{restrframe}[D]
+\appendmask[bonak]{restrlayer}[D, d]
+\appendmask[bonak]{restrfiller}[D, E, d]
+\appendmask[bonak]{cohframe}[D]
+\appendmask[bonak]{cohlayer}[D]
+\appendmask[bonak]{cohfiller}[D, E]
 
 % Restriction for frame, layer, and filler
 % Drop just the universe letter for the coh table
@@ -481,6 +494,9 @@ We call the structure thus defined \emph{bare truncated sets}: \emph{bare} becau
 \newpage
 \appendix
 \section{Tables in full detail}
+% First clear the mask
+\clearmask
+
 % Keep all arguments for all macros
 % Frame, layer, and filler
 \renewcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[#1][#2][#3][#4][#5]}
