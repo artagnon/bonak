@@ -1,19 +1,19 @@
 \providecommand*{\lab}{}
 \begin{eqntable}{frame, layer, and filler\label{\lab}}
-  \eqnline{\fullframe[m][n]}{(D:\Xto{m}{n})}{:}{\U{m}}
+  \eqnline{\fullframe[m][n]}{\eqnarg{fullframe}{D}{\Xto{m}{n}}}{:}{\U{m}}
   \eqnline{\fullframe[m][n]}{D}{\defeq}{\framep[m][n][n][][D=\D]}
   \graymidrule
 
-  \eqnline{\framep[m][n][p][p \leq n]}{(D:\Xto{m}{n})}{:}{\U{m}}
+  \eqnline{\framep[m][n][p][p \leq n]}{\eqnarg{frame}{D}{\Xto{m}{n}}}{:}{\U{m}}
   \eqnline{\framep[m][n][0]}{D}{\defeq}{\unittype}
   \eqnline{\framep[m][n][p'+1]}{D}{\defeq}{\Sigma d:\framep[m][n][p'][][D=\D].\,\layer[m][n][p'][][D=\D, d=\d]}
   \graymidrule
 
-  \eqnline{\layer[m][n][p][p < n]}{\makecell{(D:\Xto{m}{n}) \\ (d:\framep[m][n][p][][D=\D])}}{:}{\U{m}}
+  \eqnline{\layer[m][n][p][p < n]}{\makecell{\eqnarg{layer}{D}{\Xto{m}{n}} \\ \eqnarg{layer}{d}{\framep[m][n][p][][D=\D]}}}{:}{\U{m}}
   \eqnline{\layer[m][n][p]}{D~d}{\defeq}{\Pi \omega.\filler[m][n-1][p][][D=\hdD, E=\tlD, d={\restrf[m][\omega][p][n][p][][D=\D, d=\d]}]}
   \graymidrule
 
-  \eqnline{\filler[m][n][p][p \leq n]}{\makecell{(D:\Xto{m}{n}) \\(E:\Xcomp{m}{n}[D=\D]) \\ (d:\framep[m][n][p][][D=\D])}}{:}{\U{m}}
+  \eqnline{\filler[m][n][p][p \leq n]}{\makecell{\eqnarg{filler}{D}{\Xto{m}{n}} \\ \eqnarg{filler}{E}{\Xcomp{m}{n}[D=\D]} \\ \eqnarg{filler}{d}{\framep[m][n][p][][D=\D]}}}{:}{\U{m}}
   \eqnline{\filler[m][n][p][p = n]}{\D~\E~\d}{\defeq}{\E(\d)}
   \eqnline{\filler[m][n][p][p < n]}{\D~\E~\d}{\defeq}{\Sigma l:\layer[m][n][p][][D=\D, d=\d].\,\filler[m][n][p+1][][D=\D, E=\E, d=\pair{\d}{\l}]}
 \end{eqntable}

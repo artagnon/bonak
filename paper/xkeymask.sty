@@ -26,6 +26,24 @@
   }
   \def\appendmask{\XKV@testopta{\XKV@testoptc\XKM@appendmask}}
 
+  % Query the mask for a key
+  \long\def\XKM@ifinmask[#1]#2#3{
+    \XKV@checksanitizea{#1}\XKV@tempc
+    \XKV@for@o\XKV@fams\XKV@tfam{
+      \XKV@for@o\XKV@tempc\XKV@tempb{
+        \xdef\XKM@hdr{\XKV@prefix\XKV@tfam @}
+        \xdef\XKV@tempd{\XKV@prefix\XKV@tfam @\XKV@tempb}
+        \@expandtwoargs\in@\XKV@tempd\XKM@mask
+        \ifin@
+          #2
+        \else
+          #3
+        \fi
+      }
+    }
+  }
+  \def\ifinmask{\XKV@testopta{\XKV@testoptc\XKM@ifinmask}}
+
   % A quick way to clear the mask
   \def\clearmask{\global\let\XKM@mask\@empty}
 

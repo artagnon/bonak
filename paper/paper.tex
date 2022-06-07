@@ -140,6 +140,10 @@
 \NewDocumentCommand{\eqnline}{m m m m}{#1 & #2 & #3 & #4 \\}
 \newcommandx*{\mc}[1]{\multicolumn{4}{c}{\emph{#1}} \\\\}
 
+% eqnarg is slightly more involved: output ( ... ) if not in mask,
+% and { ... } if in mask
+\newcommandx*{\eqnarg}[3]{\ifinmask[bonak]{#1}[#2]{\{#2:#3\}}{(#2:#3)}}
+
 % Table caption set up
 \DeclareCaptionFormat{hfillstart}{\hfill#1#2#3\par}
 \DeclareCaptionFont{mdit}{\mdseries\itshape}
