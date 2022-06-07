@@ -183,7 +183,7 @@
 \section{Overture}
 Cubical type theory~\cite{Bezem14}~\cite{Cohen16}~\cite{Angiuli17} is an extension of dependent type theory that provides a computational interpretation of Voevodsky's \emph{univalence axiom}, in a field known as \emph{homotopy type theory}, or HoTT. Two real-world projects that implement cubical type theory are worthy of mention: an experimental branch of Agda, known as \emph{Cubical Agda}~\cite{Vezzosi21}, and the Arend theorem prover~\footnote{\href{https://arend-lang.github.io}{arend-lang.github.io}}. Cubical type theory is usually modeled as cubical sets, in the set-theoretic setting. Efforts to model cubical type theory have been ongoing since 2014, and many of these efforts are in the set-theoretic setting.
 
-Our contribution is to model the core of semi-cubical sets that naturally generalizes to semi-simplicial sets in type theory, and we call our generalization \emph{truncated $n$-sets}. In contrast to previous efforts that use a fibered representation, we use an indexed representation, that can be derived from the fibered one using a \emph{iterated reverse-Grothendieck} construction. Our work is, in principle axiom-free, although the accompanying artifact uses functional extensionality in order to generalize our work to $n$-truncated sets.
+Our contribution is the following. We have modelled the core of semi-cubical sets in a way that naturally generalizes to semi-simplicial sets in type theory, and we call our generalization \emph{$\nu$-sets}. In contrast to previous efforts that use a fibered representation, we use an indexed representation. Our work is, in principle axiom-free, although the accompanying artifact uses functional extensionality, and this requires disappears if $\nu$ is finite.
 
 \begin{table}[H]
   \begin{tabularx}{\linewidth}{p{.3\linewidth}|p{.3\linewidth}|p{.3\linewidth}}
@@ -197,13 +197,13 @@ Our contribution is to model the core of semi-cubical sets that naturally genera
   \end{tabularx}
 \end{table}
 
-The outline of the paper is as follows. First, we take the opportunity to familize the reader with simplicial sets, as it appears in mathematical literature, along with a short section on semi-cubical sets. We then proceed to explain our construction, with the help of diagrams. Before spelling out the details of our formalization in type-theoretic language, we have a section on reasoning in sets, in which we spell out \texttt{HSet}.
+The outline of the paper is as follows. First, we briefly describe semi-simplicial and semi-cubical sets, as it appears in mathematical literature. We then proceed to explain our construction, with the help of diagrams. Before spelling out the details of our formalization in type-theoretic language, we have a section on reasoning in sets, in which we spell out \texttt{HSet}.
 
 \section{\texorpdfstring{$\nu$}{nu}-sets}
-Simplicial sets are powerful mathematical objects, that form the basis of much of modern homotopy theory. Their power derives from the fact that their homotopy category is exceptionally well-behaved, and that there are multiple model structures defined on them. Unlike CW-complexes that rely on pure topological notions like spheres and disks to ``tame'' a topological space, the definition of simplicial sets is purely categorical, and exist independent of topological spaces. The \emph{geometric realization} and \emph{singular complex} functors facilitate travelling back-and-forth between simplicial sets and topological spaces, and these are non-trivial constructions. As such, simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices.
+Simplicial sets are powerful mathematical objects, that form the basis of much of modern homotopy theory. Their power derives from the fact that their homotopy category is exceptionally well-behaved, and that there are multiple model structures defined on them. Unlike CW-complexes that rely on pure topological notions like spheres and disks to ``tame'' a topological space, the definition of simplicial sets is purely categorical, and exist independent of topological spaces. As such, simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices. What we have formalized is \emph{augmented} semi-simplicial sets, and semi-cubical sets, which is to say that they are the usual simplicial sets and cubical sets, minus the degeneracies.
 
 \subsection{Augmented semi-simplicial sets}
-The first step towards formalizing simplicial sets is to forget about the degeneracies, and we restrict ourselves to representing \emph{augmented simplicial sets}, otherwise known as delta-sets in mathematical literature. We now proceed to describe \DeltaHat, which is identical to \Simplex{}, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are \emph{strictly} order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. In mathematical literature, there is little interest in studying \DeltaHat, since maps between delta sets are not well-defined, and it is therefore not possible to construct a category of delta sets.
+Semi-simplicial sets are otherwise known as \emph{delta-sets} in mathematical literature. Since they are of little interest to the mathematician, we briefly describe \DeltaHat, which is identical to \Simplex{}, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are \emph{strictly} order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. There is little interest in studying \DeltaHat, since maps between delta sets are not well-defined, and it is therefore not possible to construct a category of delta sets.
 
 \subsection{Semi-cubical sets}
 We might naively attempt to define $\Cube{}$ identically to \DeltaHat, but let us briefly explain why this wouldn't work, motivating the definition of semi-cubical sets as in \cite{Antolini00}. If there were morphisms from every $\sq{m}$ to \sq{n}, we would end up with:
@@ -299,15 +299,14 @@ Or, in terms of objects and morphisms:
 \end{theorem}
 
 \section{Our construction}
-The fibered representation:
-
+The fibered representation can be drawn as:
 \begin{equation*}
   \begin{tikzcd}
     X_0 : \U{} & X_1 : \U{} \arrow[l, "\delta^\epsilon_0" description, shift left=2] \arrow[l, "\delta^\omega_0" description, shift right=2] & X_2 : \U{} \arrow[l, "\delta^\epsilon_1" description, shift left=6] \arrow[l, "\delta^\epsilon_0" description, shift left=2] \arrow[l, "\delta^\omega_0" description, shift right=2] \arrow[l, "\delta^\omega_1" description, shift right=6] & \ldots
   \end{tikzcd}
 \end{equation*}
 
-The indexed representation:
+The indexed representation can be drawn as:
 \begin{align*}
   X_0 & : \U{}                                                                                                      \\
   X_1 & : X_0 \times X_0 \rightarrow \U{}                                                                           \\
