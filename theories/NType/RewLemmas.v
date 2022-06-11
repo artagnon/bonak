@@ -1,3 +1,5 @@
+(** A few rewriting lemmas not in the standard library *)
+
 Import Logic.EqNotations.
 Require Import Aux.
 
@@ -61,7 +63,7 @@ Qed.
 Lemma rew_sigT {A x} {P : A -> Type} (Q : forall a, P a -> Type)
   (u : { p : P x & Q x p }) {y} (H: x = y)
     : rew [fun x => { p : P x & Q x p }] H in u
-      = existT (Q y) (rew H in u.1) (rew dependent H in u.2).
+      = (rew H in u.1; rew dependent H in u.2 :> Q y).
 Proof.
   now destruct H, u.
 Qed.
@@ -70,8 +72,8 @@ Lemma rew_triple {A x} {P P': A -> Type}
   (Q: forall a, (P a * P' a)%type -> Type)
   (u: { p: (P x * P' x)%type & Q x p }) {y} (H: x = y)
     : rew [fun x => { p : (P x * P' x)%type & Q x p }] H in u
-      = existT (Q y) (rew [fun x => (P x * P' x)%type] H in u.1)
-        (rew dependent H in u.2).
+      = (rew [fun x => (P x * P' x)%type] H in u.1;
+         rew dependent H in u.2 :> Q y).
 Proof.
   now destruct H, u.
 Qed.
