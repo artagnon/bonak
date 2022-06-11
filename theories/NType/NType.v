@@ -318,7 +318,8 @@ Proof.
   rewrite <- (C.(Filler).(cohFiller) (Hrq := ⇓ Hrq) (Hq := ⇓ Hq)).
   repeat rewrite rew_compose.
   apply rew_swap with (P := fun x => (C.(FillerPrev).(filler'') x).(Dom)).
-  rewrite rew_app. now reflexivity. now apply C.(FramePrev).(frame'').
+  rewrite rew_app. now reflexivity.
+  now apply (C.(FramePrev).(frame'') _ _).(UIP).
 Qed.
 
 (* The Frame at level n.+1 with p = O *)
