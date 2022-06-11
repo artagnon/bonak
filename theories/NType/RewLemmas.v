@@ -18,41 +18,6 @@ Lemma rew_context {A} {x y : A} (eq: x = y) {P} {a: P x}
   now destruct eq.
 Qed.
 
-Lemma eq_over_rew {A A'} {a: A} {a': A'} {H} (H0: a =_{H} a') : rew H in a = a'.
-Proof.
-  now destruct H, H0.
-Qed.
-
-Lemma rew_over: forall {T U} {t u} {H: T = U} (P: T -> Type) (Q: U -> Type)
-  (H': forall x y (H'': x =_{H} y), P x = Q y), t =_{H} u -> P t -> Q u.
-Proof.
-  intros; now destruct H0, (H' t t).
-Qed.
-
-Lemma rew_over_rl: forall {T U t u} {H: T = U} (P: T -> Type),
-  t =_{H} u -> P (rew <- H in u) -> P t.
-Proof.
-  intros; now destruct H, H0.
-Qed.
-
-Lemma rew_over_rl': forall {T U t u} {H: T = U} (P: U -> Type),
-  t =_{H} u -> P u -> P (rew H in t).
-Proof.
-  intros; now destruct H0.
-Qed.
-
-Lemma rew_over_lr: forall {T U t u} {H: T = U} (P: T -> Type),
-  t =_{H} u -> P t -> P (rew <- H in u).
-Proof.
-  intros; now destruct H, H0.
-Qed.
-
-Lemma rew_over_lr': forall {T U t u} {H: T = U} (P: U -> Type),
-  t =_{H} u -> P (rew H in t) -> P u.
-Proof.
-  intros; now destruct H0.
-Qed.
-
 Lemma rew_pair : forall A {a} (P Q: A -> Type) (x: P a) (y: Q a)
   {b} (H: a = b), (rew H in x, rew H in y) =
                    rew [fun a => (P a * Q a)%type] H in (x, y).

@@ -17,12 +17,6 @@ Notation "'rew' <- [ P ] H 'in' H'" := (eq_rect_r P H' H)
     (at level 10, H' at level 10,
     format "'[' 'rew'  <-  [ P ]  '/    ' H  in  '/' H' ']'").
 
-(* eq_over: ... ={ H } ... *)
-Reserved Notation "x =_{ H } y" (at level 70, format "'[' x  '/ ' =_{ H }  '/' y ']'").
-Inductive eq_over {A} (x: A) : forall {B} (y: B), A = B -> Prop :=
-eq_over_refl : x =_{eq_refl} x
-where "x =_{ H } y" := (eq_over x y H).
-
 (* eq_existT_curried *)
 Notation "(= u ; v )" := (eq_existT_curried u v)
 (at level 0, format "(= u ;  '/  ' v )").
