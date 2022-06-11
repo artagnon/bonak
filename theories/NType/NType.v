@@ -1,3 +1,7 @@
+(** An "indexed" construction of N-parametric sets
+    For N=1, this builds augmented semi-simplicial sets
+    For N=2, this builds semi-cubical sets *)
+
 Import Logic.EqNotations.
 Require Import Logic.FunctionalExtensionality.
 Require Import Aux.
@@ -14,73 +18,137 @@ Set Keyed Unification.
 Remove Printing Let sigT.
 Remove Printing Let prod.
 
-Universe m'.
+(** The universe where the N-parametric sets live *)
 Universe m.
 
+(** The universe where the type of N-parametric sets live *)
+Universe m'.
+
+(** The arity [N] of parametric sets *)
 Parameter side: HSet.
 
-(* PartialFrame consists of an 0-cells, and fillers which are the 1-cells,
-   2-cells, and 3-cells relating the different 0-cells on the filler. *)
-Class PartialFramePrev (n: nat) (csp: Type@{m'}) := { (* csp: CubeSetPrefix *)
-  frame' {p} (Hp: p.+1 <= n): csp -> HSet@{m};
-  frame'' {p} (Hp: p.+2 <= n): csp -> HSet@{m};
-  restrFrame' {p q} {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) (ε: side) {D: csp}:
+(*********************************************)
+(** A N-parametric set is a family of sets obtained by iterating
+    Reynolds' parametricity translation.
+
+    For N=1: this is a collection of colors, of points depending on a
+    color, of lines connecting two points of the same color, of
+    triangles filling a frame made of three connected lines, of
+    tetrahedra filling a frame made of four glued triangles, etc.
+    Intuitively, this is:
+      X₀ : hSet                                                                colors
+      X₁ : X₀ → hSet                                                           points
+      X₂ : Πx₀:X₀. X₁x₀ × X₁x₀ → hSet                                          lines
+      X₃ : Πx₀:X₀. Πy₀y₁y₂:X₁x₀. X₂x₀(y₀,y₁) × X₂x₀(y₀,y₂) × X₂x₀(y₁y₂) → hSet triangles
+    ...
+    Formally, following the recursive recipe defined in the file,
+    this is equivalently defined as:
+      X₀ : unit → hSet                                                  colors
+      X₁ : Σ⋆:unit.X₀⋆ → hSet                                           points
+      X₂ : Σx₁:(Σx₀:(Σ⋆:unit.X₀⋆).X₁x₀).X₁(x₁.1) → hSet                 lines
+      X₃ : Σx₂':(Σx₂:(Σx₁':(Σx₁:(Σx₀:(Σ⋆:unit.X₀⋆).X₁x₀).X₁(x₁.1)).X₂(x₁')).
+                 Σx₁:X₁(x₂.1.1).X₂(x₂.1,x₁)).
+           X₂((x₂'.1.1.1.1,x₂'.1.1.2),x₂'.2.1) → hSet                   triangles
+
+      where each Xₙ has generically a type Xₙ : frameₙₙ(X₀,...,Xₙ₋₁) → hSet
+
+      Above, frameₙₙ has type pspₙ → hSet, where psp, standing for
+      "parametric set prefix", represents an initial sequence
+      X₀,...,Xₙ₋₁ of parametric sets.
+
+      Also, arguments of each Xᵢ in a frame are computed from
+      previous arguments using "restrictions". These restrictions
+      themselves obey coherence rules.
+
+    For N=2: this is a collection of points, of lines connecting two
+    points, of squares filling a frame made of four lines, of cubes
+    filling a frame made of six squares, etc.
+    Intuitively, this is:
+      X₀ : hSet                                                                points
+      X₁ : X₀×X₀ → hSet                                                        lines
+      X₂ : Πx₀₀x₀₁x₁₀x₁₁:X₀. X₁x₀₀x₁₀ × X₁x₁₀x₁₁ × X₁x₀₀x₀₁ × X₁x₁₀x₁₁ → hSet  squares
+
+    Formally, it is built on a variant of frame that takes 2 copies of each X instead of 1.
+
+    The construction mutually builds the type of frames, frame
+    restrictions and coherence conditions on frame restrictions.
+*)
+
+(***********)
+(** Frames *)
+
+(** The construction maintains at each step of the induction the three
+    last levels of frames (called [frame''], [frame'], [frame]), the
+    two restrictions between them (called [restrFrame'] and
+    [restrFrame]) and the coherence between these two restrictions
+    (called [cohFrame]). *)
+
+(** [PartialFramePrev] consists of the levels we remember before the
+    current one and for each such previous data, [PartialFrame]
+    consists of the data to maintain at the current level. *)
+Class PartialFramePrev (n: nat) (prefix: Type@{m'}) := {
+  frame' {p} (Hp: p.+1 <= n): prefix -> HSet@{m};
+  frame'' {p} (Hp: p.+2 <= n): prefix -> HSet@{m};
+  restrFrame' {p q} {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) (ε: side) {D: prefix}:
     frame' (↓ (Hpq ↕ Hq)) D -> frame'' (Hpq ↕ Hq) D;
 }.
 
-Arguments frame' {n csp} _ {p} Hp D.
-Arguments frame'' {n csp} _ {p} Hp D.
-Arguments restrFrame' {n csp} _ {p q Hpq} Hq ε {D} d.
+Arguments frame' {n prefix} _ {p} Hp D.
+Arguments frame'' {n prefix} _ {p} Hp D.
+Arguments restrFrame' {n prefix} _ {p q Hpq} Hq ε {D} d.
 
-Class PartialFrame (n p: nat) (csp: Type@{m'})
-  (FramePrev: PartialFramePrev n csp) := {
-  frame (Hp: p <= n): csp -> HSet@{m};
-  restrFrame {q} {Hpq: p.+1 <= q.+1} (Hq: q.+1 <= n) (ε: side) {D: csp}:
+Class PartialFrame (n p: nat) (prefix: Type@{m'})
+  (FramePrev: PartialFramePrev n prefix) := {
+  frame (Hp: p <= n): prefix -> HSet@{m};
+  restrFrame {q} {Hpq: p.+1 <= q.+1} (Hq: q.+1 <= n) (ε: side) {D: prefix}:
     frame (↓ (Hpq ↕ Hq)) D -> FramePrev.(frame') (Hpq ↕ Hq) D;
   cohFrame {q r} {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
-    {ε: side} {ω: side} {D: csp} (d: frame (↓ (⇓ Hpr ↕ (↓ (Hrq ↕ Hq)))) D):
+    {ε: side} {ω: side} {D: prefix} (d: frame (↓ (⇓ Hpr ↕ (↓ (Hrq ↕ Hq)))) D):
     FramePrev.(restrFrame') (Hpq := Hpr ↕ Hrq) Hq ε
       (restrFrame (Hpq := ⇓ Hpr) (↓ (Hrq ↕ Hq)) ω d) =
     (FramePrev.(restrFrame') (Hpq := Hpr) (Hrq ↕ Hq) ω
       (restrFrame (Hpq := ↓ (Hpr ↕ Hrq)) Hq ε d));
 }.
 
-Arguments frame {n p csp FramePrev} _ Hp D.
-Arguments restrFrame {n p csp FramePrev} _ {q Hpq} Hq ε {D} d.
-Arguments cohFrame {n p csp FramePrev} _ {q r Hpr Hrq Hq ε ω D} d.
+Arguments frame {n p prefix FramePrev} _ Hp D.
+Arguments restrFrame {n p prefix FramePrev} _ {q Hpq} Hq ε {D} d.
+Arguments cohFrame {n p prefix FramePrev} _ {q r Hpr Hrq Hq ε ω D} d.
 (* We want ε and ω to be printed, but have them inferred;
    Coq doesn't support this. *)
 
-(* We build fillers using an iterated construction: a filler at level n depends
-   on cubes at level n-1 and n-2; just as we have frame' and frame'', we have
-   filler' and filler''. *)
-Class PartialFillerPrev (n: nat) (csp: Type@{m'})
-  (FramePrev : PartialFramePrev n (@csp)) := {
-  filler' {p} {Hp: p.+1 <= n} {D: csp}: FramePrev.(frame') Hp D -> HSet@{m};
-  filler'' {p} {Hp: p.+2 <= n} {D: csp}: FramePrev.(frame'') Hp D -> HSet@{m};
-  restrFiller' {p q} {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) (ε: side) {D: csp}
+(************)
+(** Fillers *)
+
+(** We build fillers using an iterated construction: a filler at level n depends
+    on fillers at level n-1 and n-2; just as we have frame' and frame'', we have
+    filler' and filler''. *)
+Class PartialFillerPrev (n: nat) (prefix: Type@{m'})
+  (FramePrev : PartialFramePrev n (@prefix)) := {
+  filler' {p} {Hp: p.+1 <= n} {D: prefix}: FramePrev.(frame') Hp D -> HSet@{m};
+  filler'' {p} {Hp: p.+2 <= n} {D: prefix}: FramePrev.(frame'') Hp D -> HSet@{m};
+  restrFiller' {p q} {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) (ε: side) {D: prefix}
     {d : FramePrev.(frame') (↓ (Hpq ↕ Hq)) D}:
     filler' d -> filler'' (FramePrev.(restrFrame') Hq ε d);
 }.
 
-Arguments filler' {n csp FramePrev} _ {p Hp D} d.
-Arguments filler'' {n csp FramePrev} _ {p Hp D} d.
-Arguments restrFiller' {n csp FramePrev} _ {p q Hpq} Hq ε {D} [d] b.
+Arguments filler' {n prefix FramePrev} _ {p Hp D} d.
+Arguments filler'' {n prefix FramePrev} _ {p Hp D} d.
+Arguments restrFiller' {n prefix FramePrev} _ {p q Hpq} Hq ε {D} [d] b.
 
 (* Filler consists of filler, restrFiller, and coherence conditions between them *)
-Class PartialFiller (n: nat) (csp: Type@{m'})
-  {FramePrev: PartialFramePrev n (@csp)}
-  (FillerPrev: PartialFillerPrev n csp FramePrev)
-  (Frame: forall {p}, PartialFrame n p (@csp) FramePrev) := {
-  filler {p} {Hp: p <= n} {D: csp}:
+Class PartialFiller (n: nat) (prefix: Type@{m'})
+  {FramePrev: PartialFramePrev n (@prefix)}
+  (FillerPrev: PartialFillerPrev n prefix FramePrev)
+  (Frame: forall {p}, PartialFrame n p (@prefix) FramePrev) := {
+  filler {p} {Hp: p <= n} {D: prefix}:
     (Frame.(frame) (¹ n) D -> HSet@{m}) -> Frame.(frame) Hp D -> HSet@{m};
   restrFiller {p q} {Hpq: p.+1 <= q.+1}
-    (Hq: q.+1 <= n) (ε: side) {D : csp} {E: Frame.(frame) (¹ n) D -> HSet@{m}}
+    (Hq: q.+1 <= n) (ε: side) {D : prefix} {E: Frame.(frame) (¹ n) D -> HSet@{m}}
     {d: Frame.(frame) (↓ (Hpq ↕ Hq)) D} (c: filler E d):
     FillerPrev.(filler') (Frame.(restrFrame) Hq ε d);
   cohFiller {p q r} {Hpr: p.+2 <= r.+2}
     {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
-    (ε: side) (ω : side) {D: csp} (E: Frame.(frame) (¹ n) D -> HSet@{m})
+    (ε: side) (ω : side) {D: prefix} (E: Frame.(frame) (¹ n) D -> HSet@{m})
     (d: Frame.(frame) (↓ (⇓ Hpr ↕ (↓ (Hrq ↕ Hq)))) D) (c: filler E d):
     rew [FillerPrev.(filler'')] (Frame.(cohFrame) d) in
     FillerPrev.(restrFiller') (Hpq := Hpr ↕ Hrq) Hq
@@ -89,56 +157,69 @@ Class PartialFiller (n: nat) (csp: Type@{m'})
       ω (restrFiller (Hpq := ↓ (Hpr ↕ Hrq)) Hq ε c));
 }.
 
-Arguments filler {n csp FramePrev FillerPrev Frame} _ {p Hp D} E.
-Arguments restrFiller {n csp FramePrev FillerPrev Frame} _ {p q Hpq Hq ε D E} [d] c.
-Arguments cohFiller {n csp FramePrev FillerPrev Frame} _ {p q r Hpr Hrq Hq ε ω D E d} c.
+Arguments filler {n prefix FramePrev FillerPrev Frame} _ {p Hp D} E.
+Arguments restrFiller {n prefix FramePrev FillerPrev Frame} _ {p q Hpq Hq ε D E} [d] c.
+Arguments cohFiller {n prefix FramePrev FillerPrev Frame} _ {p q r Hpr Hrq Hq ε ω D E d} c.
 
-(* Filler consists of CubeSetPrefix, a box built out of partial boxes,
-  a filler built out of partial cubes, and some axioms related to our
-  construction. *)
+(* An N-parametric type truncated at level [n] consists of:
+
+  - a [prefix] of parametric types up to dimension [n],
+  - a type of frames with their restrictions and coherence of
+    restrictions [Frame] (depending on their values are dimension [n]-1
+    and [n]-2) that are Σ-types of length [n] that is recursively built
+    out by induction on some [p] ranging from 0 to [n]
+  - a type of fillers (with their restrictions and coherence of
+    restrictions) [Filler] (depending on their values [FillerPrev] at
+    dimensions [n]-1 and [n]-2) that are also recursively built out from
+    partial fillers
+  - axioms characterizing the definition of [Frame] and [Filler] in
+    the previous dimensions, so that the induction can be carried
+*)
+
 Class NType (n : nat) := {
-  csp: Type@{m'};
-  FramePrev: PartialFramePrev n csp;
-  Frame {p}: PartialFrame n p csp FramePrev;
-  FillerPrev: PartialFillerPrev n csp FramePrev;
-  Filler: PartialFiller n csp FillerPrev (@Frame);
+  prefix: Type@{m'};
+  FramePrev: PartialFramePrev n prefix;
+  Frame {p}: PartialFrame n p prefix FramePrev;
+  FillerPrev: PartialFillerPrev n prefix FramePrev;
+  Filler: PartialFiller n prefix FillerPrev (@Frame);
 
-  (* Abbreviations corresponding to coherence conditions in Box *)
-  Layer' {p} {Hp: p.+1 <= n} {D: csp} (d: Frame.(frame) (↓ Hp) D) :=
+  (** Abbreviations for [N]-family of previous fillers, one for
+      each [ϵ]-restriction of the previous frame (ϵ∈N) *)
+  Layer' {p} {Hp: p.+1 <= n} {D: prefix} (d: Frame.(frame) (↓ Hp) D) :=
     hforall ε, FillerPrev.(filler') (Frame.(restrFrame) Hp ε d);
-  Layer'' {p} {Hp: p.+2 <= n} {D: csp} (d: FramePrev.(frame') (↓ Hp) D) :=
+  Layer'' {p} {Hp: p.+2 <= n} {D: prefix} (d: FramePrev.(frame') (↓ Hp) D) :=
     hforall ε, FillerPrev.(filler'') (FramePrev.(restrFrame') Hp ε d);
-  RestrLayer' {p q ε} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D: csp}
+  RestrLayer' {p q ε} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D: prefix}
     (d: Frame.(frame) (↓ ↓ (Hpq ↕ Hq)) D) (l: Layer' d):
       Layer'' (Frame.(restrFrame) Hq ε d) :=
   fun ω => rew [FillerPrev.(filler'')] Frame.(cohFrame) (Hrq := Hpq) d in FillerPrev.(restrFiller') Hq ε (l ω);
 
   (* We can't create htt: hunit, so we have to resort to this *)
-  eqFrame0 {len0: 0 <= n} {D: csp}: (Frame.(frame) len0 D).(Dom) = unit;
-  eqFrame0' {len1: 1 <= n} {D: csp}: (FramePrev.(frame') len1 D).(Dom) = unit;
-  eqFrameSp {p} {Hp: p.+1 <= n} {D: csp}:
+  eqFrame0 {len0: 0 <= n} {D: prefix}: (Frame.(frame) len0 D).(Dom) = unit;
+  eqFrame0' {len1: 1 <= n} {D: prefix}: (FramePrev.(frame') len1 D).(Dom) = unit;
+  eqFrameSp {p} {Hp: p.+1 <= n} {D: prefix}:
     Frame.(frame) Hp D = {d: Frame.(frame) (↓ Hp) D & Layer' d} :> Type;
-  eqFrameSp' {p} {Hp: p.+2 <= n} {D: csp}:
+  eqFrameSp' {p} {Hp: p.+2 <= n} {D: prefix}:
     FramePrev.(frame') Hp D = {d : FramePrev.(frame') (↓ Hp) D & Layer'' d}
       :> Type;
-  eqRestrFrame0 {q} {Hpq: 1 <= q.+1} {Hq: q.+1 <= n} {ε: side} {D: csp}:
+  eqRestrFrame0 {q} {Hpq: 1 <= q.+1} {Hq: q.+1 <= n} {ε: side} {D: prefix}:
     Frame.(restrFrame) (Hpq := Hpq) Hq ε (rew <- [id] eqFrame0 (D := D) in tt) =
       (rew <- [id] eqFrame0' in tt);
-  eqRestrFrameSp {ε p q} {D: csp} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n}
+  eqRestrFrameSp {ε p q} {D: prefix} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n}
     {d: Frame.(frame) (↓ ↓ (Hpq ↕ Hq)) D}
     {l: Layer' (Hp := ↓ (Hpq ↕ Hq)) d}:
     Frame.(restrFrame) Hq ε (rew <- [id] eqFrameSp in (d; l)) =
       rew <- [id] eqFrameSp' in (Frame.(restrFrame) Hq ε d; RestrLayer' d l);
-  eqFillerSp {p} {Hp: p.+1 <= n} {D: csp} {E d}:
+  eqFillerSp {p} {Hp: p.+1 <= n} {D: prefix} {E d}:
     Filler.(filler) (Hp := ↓ Hp) E d = {l: Layer' d &
       Filler.(filler) (D := D) E (rew <- [id] eqFrameSp in (d; l))} :> Type;
-  eqFillerSp' {p} {Hp: p.+2 <= n} {D: csp} {d}:
+  eqFillerSp' {p} {Hp: p.+2 <= n} {D: prefix} {d}:
     FillerPrev.(filler') (Hp := ↓ Hp) d = {b : Layer'' d &
       FillerPrev.(filler') (rew <- [id] eqFrameSp' (D := D) in (d; b))} :> Type;
-  eqRestrFiller0 {p} {Hp: p.+1 <= n} {D: csp} {E} {d} {ε: side}
+  eqRestrFiller0 {p} {Hp: p.+1 <= n} {D: prefix} {E} {d} {ε: side}
     {l: Layer' d} {Q: Filler.(filler) (D := D) E (rew <- eqFrameSp in (d; l))}:
       l ε = Filler.(restrFiller) (Hq := Hp) (rew <- [id] eqFillerSp in (l; Q));
-  eqRestrFillerSp {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D: csp} {E} {d}
+  eqRestrFillerSp {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D: prefix} {E} {d}
     {ε: side} {l: Layer' (Hp := ↓ (Hpq ↕ Hq)) d}
     {Q: Filler.(filler) (D := D) E (rew <- eqFrameSp in (d; l))}:
     Filler.(restrFiller) (Hpq := ↓ Hpq) (ε := ε) (rew <- [id] eqFillerSp in (l; Q)) = rew <- [id] eqFillerSp' (Hp := Hpq ↕ Hq) in
@@ -146,7 +227,7 @@ Class NType (n : nat) := {
         Filler.(restrFiller) Q);
 }.
 
-Arguments csp {n} _.
+Arguments prefix {n} _.
 Arguments FramePrev {n} _.
 Arguments FillerPrev {n} _.
 Arguments Frame {n} _ {p}.
@@ -165,37 +246,40 @@ Arguments eqFillerSp' {n} _ {p Hp D d}.
 Arguments eqRestrFiller0 {n} _ {p Hp D E d ε l Q}.
 Arguments eqRestrFillerSp {n} _ {p q Hpq Hq D E d ε l Q}.
 
-(* The csp at universe l' *)
-Definition mkcsp {n} {C: NType n}: Type@{m'} :=
-  sigT (fun D : C.(csp) => C.(Frame).(frame) (¹ n) D -> HSet@{m}).
+(***************************************************)
+(** The construction of [NType n+1] from [NType n] *)
 
-(* The previous level of Box *)
-Definition mkFramePrev {n} {C: NType n}: PartialFramePrev n.+1 mkcsp := {|
-  frame' (p: nat) (Hp: p.+1 <= n.+1) (D: mkcsp) := C.(Frame).(frame) (⇓ Hp) D.1;
-  frame'' (p: nat) (Hp: p.+2 <= n.+1) (D: mkcsp) :=
+(** Extending the initial prefix *)
+Definition mkprefix {n} {C: NType n}: Type@{m'} :=
+  sigT (fun D : C.(prefix) => C.(Frame).(frame) (¹ n) D -> HSet@{m}).
+
+(** Memoizing the previous levels of [Frame] *)
+Definition mkFramePrev {n} {C: NType n}: PartialFramePrev n.+1 mkprefix := {|
+  frame' (p: nat) (Hp: p.+1 <= n.+1) (D: mkprefix) := C.(Frame).(frame) (⇓ Hp) D.1;
+  frame'' (p: nat) (Hp: p.+2 <= n.+1) (D: mkprefix) :=
     C.(FramePrev).(frame') (⇓ Hp) D.1;
   restrFrame' (p q: nat) (Hpq: p.+2 <= q.+2) (Hq: q.+2 <= n.+1) (ε: side)
-    (D: mkcsp) (d: _) :=
+    (D: mkprefix) (d: _) :=
     C.(Frame).(restrFrame) (Hpq := ⇓ Hpq) (⇓ Hq) ε d;
 |}.
 
-(* The coherence conditions that Box needs to satisfy to build the next level
+(** The coherence conditions that Frame needs to satisfy to build the next level
    of Frame. These will be used in the proof script of mkFrame. *)
 
-Definition mkLayer {n p} {Hp: p.+1 <= n.+1} {C: NType n} {D: mkcsp}
-  {Frame: PartialFrame n.+1 p mkcsp mkFramePrev} {d: Frame.(frame) (↓ Hp) D}: HSet :=
+Definition mkLayer {n p} {Hp: p.+1 <= n.+1} {C: NType n} {D: mkprefix}
+  {Frame: PartialFrame n.+1 p mkprefix mkFramePrev} {d: Frame.(frame) (↓ Hp) D}: HSet :=
   hforall ε, C.(Filler).(filler) D.2 (Frame.(restrFrame) (Hpq := ¹ _) Hp ε d).
 
 Definition mkRestrLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
-  {C: NType n} {D: mkcsp} {Frame: PartialFrame n.+1 p mkcsp mkFramePrev}
+  {C: NType n} {D: mkprefix} {Frame: PartialFrame n.+1 p mkprefix mkFramePrev}
   (d: Frame.(frame) (↓ ↓ (Hpq ↕ Hq)) D)
   (l: mkLayer): C.(Layer') (Frame.(restrFrame) Hq ε d) :=
   fun ω => rew [C.(FillerPrev).(filler')] Frame.(cohFrame) d in
     C.(Filler).(restrFiller) (Hpq := ⇓ Hpq) (l ω).
 
 Definition cohFrameSnHyp {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
-  {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: NType n} {D: mkcsp}
-  {frame': PartialFrame n.+1 p mkcsp mkFramePrev}
+  {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: NType n} {D: mkprefix}
+  {frame': PartialFrame n.+1 p mkprefix mkFramePrev}
   {d: frame'.(frame) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D}:
   C.(Frame).(restrFrame) (Hpq := ↓ ⇓ (Hpr ↕ Hrq)) (⇓ Hq) ε
     (frame'.(restrFrame) (Hpq := ↓ ⇓ Hpr) (↓ (Hrq ↕ Hq)) ω d) =
@@ -204,8 +288,8 @@ Definition cohFrameSnHyp {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
   frame'.(cohFrame) (Hpr := ↓ Hpr) (Hrq := Hrq) (Hq := Hq) d.
 
 Definition mkCohLayer {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
-  {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: NType n} {D: mkcsp}
-  {Frame: PartialFrame n.+1 p mkcsp mkFramePrev}
+  {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: NType n} {D: mkprefix}
+  {Frame: PartialFrame n.+1 p mkprefix mkFramePrev}
   {d: Frame.(frame) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D} (l: mkLayer):
   let sl := C.(RestrLayer') (Hpq := ⇓ (Hpr ↕ Hrq)) ε
               (mkRestrLayer (Hpq := ⇓ Hpr) d l) in
@@ -237,40 +321,27 @@ Proof.
   rewrite rew_app. now reflexivity. now apply C.(FramePrev).(frame'').
 Qed.
 
+(* The Frame at level n.+1 with p = O *)
 #[local]
-Instance mkCubePrev {n} {C: NType n} : PartialFillerPrev n.+1 mkcsp mkFramePrev :=
-{|
-  filler' (p: nat) (Hp: p.+1 <= n.+1) (D: mkcsp) := C.(Filler).(filler) D.2:
-    mkFramePrev.(frame') Hp D -> HSet; (* Bug? *)
-  filler'' (p: nat) (Hp: p.+2 <= n.+1) (D: mkcsp)
-    (d : mkFramePrev.(frame'') Hp D) :=
-    C.(FillerPrev).(filler') d;
-  restrFiller' (p q: nat) (Hpq: p.+2 <= q.+2) (Hq: q.+2 <= n.+1) (ε: side)
-    (D: mkcsp) (d : _) (b : _) := C.(Filler).(restrFiller) (Hpq := ⇓ Hpq)
-    (Hq := ⇓ Hq) (E := D.2) b;
-|}.
-
-(* The box at level n.+1 with p = O *)
-#[local]
-Instance mkFrame0 {n} {C: NType n}: PartialFrame n.+1 O mkcsp mkFramePrev.
+Instance mkFrame0 {n} {C: NType n}: PartialFrame n.+1 O mkprefix mkFramePrev.
   unshelve esplit.
-  * intros; now exact hunit. (* boxSn *)
+  * intros; now exact hunit. (* FrameSn *)
   * simpl; intros; rewrite C.(eqFrame0). now exact tt. (* restrFrameSn *)
-  * simpl; intros. (* cohboxp *)
+  * simpl; intros. (* cohFramep *)
     now rewrite eqRestrFrame0 with (Hpq := ⇓ Hpr),
                 eqRestrFrame0 with (Hpq := ⇓ (Hpr ↕ Hrq)).
 Defined.
 
-(* The box at level n.+1 with p = S _ *)
+(* The Frame at level n.+1 for S p knowing the Frame at level n.+1 for p *)
 #[local]
-Instance mkFrameSp {n p} {C: NType n} {Frame: PartialFrame n.+1 p mkcsp mkFramePrev}:
-  PartialFrame n.+1 p.+1 mkcsp mkFramePrev.
+Instance mkFrameSp {n p} {C: NType n} {Frame: PartialFrame n.+1 p mkprefix mkFramePrev}:
+  PartialFrame n.+1 p.+1 mkprefix mkFramePrev.
   unshelve esplit.
   * intros Hp D; exact {d : Frame.(frame) (↓ Hp) D & mkLayer (d := d)}.
   * simpl; intros * ε * (d, l); invert_le Hpq. (* restrFramep *)
     now exact (rew <- [id] C.(eqFrameSp) in
       (Frame.(restrFrame) Hq ε d; mkRestrLayer d l)).
-  * simpl; intros q r Hpr Hrq Hq ε ω D (d, l). (* cohboxp *)
+  * simpl; intros q r Hpr Hrq Hq ε ω D (d, l). (* cohframep *)
     invert_le Hpr; invert_le Hrq.
 
     (* A roundabout way to simplify the proof of mkCohFiller_step *)
@@ -284,51 +355,66 @@ Instance mkFrameSp {n p} {C: NType n} {Frame: PartialFrame n.+1 p mkcsp mkFrameP
     (* Bug? Coq being too smart for its own good. *)
 Defined.
 
-(* Finally, we can define mkFrame *)
+(* Finally, we can define mkFrame at level n.+1 for all p *)
 #[local]
-Instance mkFrame {n} {C: NType n} p: PartialFrame n.+1 p mkcsp mkFramePrev.
+Instance mkFrame {n} {C: NType n} p: PartialFrame n.+1 p mkprefix mkFramePrev.
   induction p.
   + now exact mkFrame0. (* p = O *)
   + now exact (mkFrameSp (Frame := IHp)). (* p = S _ *)
 Defined.
 
-(* For Filler, we take a different strategy. We first define mkfiller,
-   mkRestrFiller, and lemmas corresponding to their computational properties *)
-(* Fist, for filler *)
+(** For [Filler], we take a different strategy. We first define [mkfiller],
+    [mkRestrFiller], and lemmas corresponding to their computational properties *)
 
-Definition mkfiller {n p} {C: NType n} {Hp: p <= n.+1} {D: mkcsp}
+(** First, memoizing the previous levels of [Filler] *)
+#[local]
+Instance mkFillerPrev {n} {C: NType n} : PartialFillerPrev n.+1 mkprefix mkFramePrev :=
+{|
+  filler' (p: nat) (Hp: p.+1 <= n.+1) (D: mkprefix) := C.(Filler).(filler) D.2:
+    mkFramePrev.(frame') Hp D -> HSet; (* Bug? *)
+  filler'' (p: nat) (Hp: p.+2 <= n.+1) (D: mkprefix)
+    (d : mkFramePrev.(frame'') Hp D) :=
+    C.(FillerPrev).(filler') d;
+  restrFiller' (p q: nat) (Hpq: p.+2 <= q.+2) (Hq: q.+2 <= n.+1) (ε: side)
+    (D: mkprefix) (d : _) (b : _) := C.(Filler).(restrFiller) (Hpq := ⇓ Hpq)
+    (Hq := ⇓ Hq) (E := D.2) b;
+|}.
+
+(** Then, the component [filler] of [Filler], built by upwards induction from [p] to [n] *)
+
+Definition mkfiller {n p} {C: NType n} {Hp: p <= n.+1} {D: mkprefix}
   (E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet)
   (d: (mkFrame p).(frame) Hp D): HSet.
-  revert d; apply le_induction with (Hp := Hp); clear p Hp. (* cubeSn *)
+  revert d; apply le_induction with (Hp := Hp); clear p Hp.
   + now exact E. (* p = n *)
-  + intros p Hp IH d; exact {l : mkLayer & IH (d; l)}. (* p = S n *)
+  + intros p Hp mkfillerSp d; exact {l : mkLayer & mkfillerSp (d; l)}. (* p = S n *)
 Defined.
 
-Lemma mkfiller_computes {n p} {C: NType n} {Hp: p.+1 <= n.+1} {D: mkcsp}
+Lemma mkfiller_computes {n p} {C: NType n} {Hp: p.+1 <= n.+1} {D: mkprefix}
   {E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet} {d}:
   mkfiller (Hp := ↓ Hp) E d = {l : mkLayer & mkfiller (Hp := Hp) E (d; l)} :> Type.
 Proof.
   unfold mkfiller; now rewrite le_induction_step_computes.
 Qed.
 
-(* Now, restrFiller, and the corresponding computational properties. *)
+(** Now, [restrFiller], and the corresponding computational properties. *)
 
 Definition mkRestrFiller {n} {C: NType n} {p q} {Hpq: p.+1 <= q.+1}
   {Hq: q.+1 <= n.+1} {ε: side} {D}
   (E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet)
   (d: (mkFrame p).(frame) (↓ (Hpq ↕ Hq)) D)
   (Filler: mkfiller (Hp := ↓ (Hpq ↕ Hq)) E d):
-    mkCubePrev.(filler') ((mkFrame p).(restrFrame) Hq ε d).
+    mkFillerPrev.(filler') ((mkFrame p).(restrFrame) Hq ε d).
 Proof.
-  intros *; revert d Filler; simpl. (* subcubeSn *)
+  intros *; revert d Filler; simpl. (* subfillerSn *)
   pattern p, Hpq. (* Bug? Why is this needed? *)
   apply le_induction'.
   + intros d c; rewrite mkfiller_computes in c. destruct c as (l, _).
     now exact (l ε).
-  + clear p Hpq; intros p Hpq IH d c; invert_le Hpq.
+  + clear p Hpq; intros p Hpq mkRestrFillerSp d c; invert_le Hpq.
     rewrite mkfiller_computes in c; destruct c as (l, c).
     change (⇓ (↓ ?Hpq ↕ ?Hq)) with (↓ ⇓ (Hpq ↕ Hq)); rewrite C.(eqFillerSp).
-    apply IH in c.
+    apply mkRestrFillerSp in c.
     now exact (mkRestrLayer d l; c).
 Defined.
 
@@ -353,19 +439,19 @@ Proof.
   unfold mkRestrFiller; now rewrite le_induction'_step_computes.
 Qed.
 
-(* Now, for the last part of the proof: proving coherence conditions
-  on cohFiller *)
+(** Now, for the last part of the proof: proving coherence conditions
+  on [cohFiller] *)
 
 (* The base case is easily discharged *)
-Definition mkCohFiller_base {q r n} {ε ω: side} {C: NType n} {D: mkcsp}
+Definition mkCohFiller_base {q r n} {ε ω: side} {C: NType n} {D: mkprefix}
   {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n.+1}
   {E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet}
   (d: (mkFrame r).(frame) (↓ ↓ (Hrq ↕ Hq)) D)
   (c: mkfiller E d):
-  rew [mkCubePrev.(filler'')] (mkFrame r).(cohFrame) (Hpr := ¹ _) d in
-    mkCubePrev.(restrFiller') (Hpq := Hrq) Hq ε
+  rew [mkFillerPrev.(filler'')] (mkFrame r).(cohFrame) (Hpr := ¹ _) d in
+    mkFillerPrev.(restrFiller') (Hpq := Hrq) Hq ε
       (mkRestrFiller (ε := ω) (Hpq := ¹ _) (Hq := ↓ (Hrq ↕ Hq)) E d c) =
-  mkCubePrev.(restrFiller') (Hpq := ¹ _) (Hrq ↕ Hq) ω
+  mkFillerPrev.(restrFiller') (Hpq := ¹ _) (Hrq ↕ Hq) ω
     (mkRestrFiller (ε := ε) (Hpq := ↓ Hrq) (Hq := Hq) E d c).
   change (¹ _ ↕ ?H) with H; change (⇓ ¹ _ ↕ ?H) with H.
   rewrite mkRestrFiller_base_computes, mkRestrFiller_step_computes.
@@ -375,19 +461,19 @@ Definition mkCohFiller_base {q r n} {ε ω: side} {C: NType n} {D: mkcsp}
 Qed.
 
 (* A small abbreviation *)
-Definition mkCohFillerHyp p {q r n} {ε ω: side} {C: NType n} {D: mkcsp}
+Definition mkCohFillerHyp p {q r n} {ε ω: side} {C: NType n} {D: mkprefix}
   (Hpr: p.+2 <= r.+3) {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
   {E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet}
   (d: (mkFrame p).(frame) (↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D)
   (c: mkfiller E d) :=
-  rew [mkCubePrev.(filler'')] (mkFrame p).(cohFrame) (Hrq := Hrq) d in
+  rew [mkFillerPrev.(filler'')] (mkFrame p).(cohFrame) (Hrq := Hrq) d in
   C.(Filler).(restrFiller) (ε := ε) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq)
     (mkRestrFiller (ε := ω) (Hpq := (⇓ Hpr)) (Hq := ↓ (Hrq ↕ Hq)) E d c) =
   C.(Filler).(restrFiller) (ε := ω) (Hpq := (⇓ Hpr)) (Hq := ⇓ (Hrq ↕ Hq))
     (mkRestrFiller (ε := ε) (Hpq := ↓ (Hpr ↕ Hrq)) (Hq := Hq) E d c).
 
 (* The step case is discharged as (mkCohLayer; IHP) *)
-Definition mkCohFiller_step {p q r n} {ε ω: side} {C: NType n} {D: mkcsp}
+Definition mkCohFiller_step {p q r n} {ε ω: side} {C: NType n} {D: mkprefix}
   {Hpr: p.+3 <= r.+3} {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
   {E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet}
   {d: (mkFrame p).(frame) (↓ ↓ (↓ Hpr ↕ Hrq ↕ Hq)) D}
@@ -421,7 +507,7 @@ Definition mkCohFiller_step {p q r n} {ε ω: side} {C: NType n} {D: mkcsp}
                        (D := D) (ε := ω) E (d; l) c'))).
   now exact (mkCohLayer (Hpr := Hpr) (Hrq := Hrq) (Hq := Hq) l).
   rewrite <- IHP with (d := (d; l)) (c := c').
-  simpl (mkFrame p.+1). unfold mkCubePrev, filler''.
+  simpl (mkFrame p.+1). unfold mkFillerPrev, filler''.
   change (fun x => C.(FillerPrev).(filler') (Hp := ?Hp) (D := ?D) x) with
     (C.(FillerPrev).(filler') (Hp := Hp) (D := D)).
   unfold mkFrameSp; unfold cohFrame at -1.
@@ -433,19 +519,21 @@ Definition mkCohFiller_step {p q r n} {ε ω: side} {C: NType n} {D: mkcsp}
   now rewrite eq_trans_sym_inv_l, eq_trans_refl_r.
 Qed.
 
-(* Build a PartialFiller n.+1 using what we just defined *)
+(** Build a [PartialFiller n.+1] using what we just defined *)
 #[local]
 Instance mkFiller {n} {C: NType n}:
-  PartialFiller n.+1 mkcsp mkCubePrev mkFrame.
+  PartialFiller n.+1 mkprefix mkFillerPrev mkFrame.
   unshelve esplit; intros p.
   - intros *; now exact mkfiller.
   - intros q Hpq Hq ε d; now exact mkRestrFiller.
   - intros *. revert d c. pattern p, Hpr. apply le_induction''.
     + now exact mkCohFiller_base.
-    + clear p Hpr; unfold mkCubePrev, restrFiller'; cbv beta iota;
+    + clear p Hpr; unfold mkFillerPrev, restrFiller'; cbv beta iota;
       intros p Hpr IHP d c; invert_le Hpr; invert_le Hrq.
       now exact (mkCohFiller_step (IHP := IHP)).
 Defined.
+
+(** The base case of a N-parametric set (truncated at dimension 0) *)
 
 #[local]
 Instance mkNType0: NType 0.
@@ -479,14 +567,14 @@ Instance mkNType0: NType 0.
   - intros *; exfalso; clear -Hq; now apply leY_contra in Hq.
 Defined.
 
-(* We are now ready to build a NType *)
+(** We are now ready to build an [NType n.+1] from an [NType n] *)
 #[local]
 Instance mkNTypeSn {n} {C: NType n}: NType n.+1.
   unshelve esplit.
-  - (* csp *) now exact mkcsp.
+  - (* prefix *) now exact mkprefix.
   - (* FramePrev *) now exact mkFramePrev.
-  - (* Box *) now exact mkFrame.
-  - (* FillerPrev *) now exact mkCubePrev.
+  - (* Frame *) now exact mkFrame.
+  - (* FillerPrev *) now exact mkFillerPrev.
   - (* Filler *) now exact mkFiller.
   - (* eqFrame0 *) now intros *.
   - (* eqFrame0' *) intros *; now apply C.(eqFrame0).
@@ -504,15 +592,18 @@ Instance mkNTypeSn {n} {C: NType n}: NType n.+1.
     now rewrite eq_ind_r_refl, mkRestrFiller_step_computes, rew_rew'.
 Defined.
 
+(** An [NType] truncated up to dimension [n] *)
 Definition NTypeAt: forall n, NType n.
   induction n.
   - now exact mkNType0.
   - now exact mkNTypeSn.
 Defined.
 
-CoInductive NTypeUniverse n (X: (NTypeAt n).(csp)): Type@{m'} := cons {
+(** The coinductive suffix of an [NType] beyhond level [n] *)
+CoInductive NTypeFrom n (X: (NTypeAt n).(prefix)): Type@{m'} := cons {
   this: (NTypeAt n).(Frame).(frame) (¹ n) X -> HSet@{m};
-  next: NTypeUniverse n.+1 (X; this);
+  next: NTypeFrom n.+1 (X; this);
 }.
 
-Definition NTypes := NTypeUniverse 0 tt.
+(** The final construction *)
+Definition NTypes := NTypeFrom 0 tt.
