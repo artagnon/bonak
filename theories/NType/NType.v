@@ -277,16 +277,6 @@ Definition mkRestrLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1
   fun ω => rew [C.(FillerPrev).(filler')] Frame.(cohFrame) d in
     C.(Filler).(restrFiller) (Hpq := ⇓ Hpq) (l ω).
 
-Definition cohFrameSnHyp {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
-  {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: NType n} {D: mkprefix}
-  {frame': PartialFrame n.+1 p mkprefix mkFramePrev}
-  {d: frame'.(frame) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D}:
-  C.(Frame).(restrFrame) (Hpq := ↓ ⇓ (Hpr ↕ Hrq)) (⇓ Hq) ε
-    (frame'.(restrFrame) (Hpq := ↓ ⇓ Hpr) (↓ (Hrq ↕ Hq)) ω d) =
-  C.(Frame).(restrFrame) (Hpq := ↓ ⇓ Hpr) (⇓ (Hrq ↕ Hq)) ω
-    (frame'.(restrFrame) Hq ε d) :=
-  frame'.(cohFrame) (Hpr := ↓ Hpr) (Hrq := Hrq) (Hq := Hq) d.
-
 Definition mkCohLayer {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: NType n} {D: mkprefix}
   {Frame: PartialFrame n.+1 p mkprefix mkFramePrev}
@@ -295,15 +285,14 @@ Definition mkCohLayer {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
               (mkRestrLayer (Hpq := ⇓ Hpr) d l) in
   let sl' := C.(RestrLayer') (Hpq := ⇓ Hpr) ω
                (mkRestrLayer (Hpq := ↓ (Hpr ↕ Hrq)) d l) in
-  rew [C.(Layer'')] cohFrameSnHyp in sl = sl'.
+  rew [C.(Layer'')] Frame.(cohFrame) (Hpr := ↓ Hpr) (Hrq := Hrq) (Hq := Hq) d in sl = sl'.
 Proof.
   intros *.
   subst sl sl'; apply functional_extensionality_dep; intros 𝛉; unfold Layer''.
   rewrite <- map_subst_app with
     (P := fun 𝛉 x => C.(FillerPrev).(filler'') (C.(FramePrev).(restrFrame') _ 𝛉 x))
-    (f := C.(RestrLayer') _ (mkRestrLayer d l))
-    (H := cohFrameSnHyp).
-  unfold RestrLayer', cohFrameSnHyp, mkRestrLayer.
+    (f := C.(RestrLayer') _ (mkRestrLayer d l)).
+  unfold RestrLayer', mkRestrLayer.
   rewrite <- map_subst with (f := C.(FillerPrev).(restrFiller') (⇓ Hq) ε).
   rewrite <- map_subst with (f := C.(FillerPrev).(restrFiller') (⇓ (Hrq ↕ Hq)) ω).
   rewrite rew_map with
@@ -352,7 +341,7 @@ Instance mkFrameSp {n p} {C: NType n} {Frame: PartialFrame n.+1 p mkprefix mkFra
 
     apply f_equal with (B := C.(FramePrev).(frame') _ D.1)
       (f := fun x => rew <- (C.(eqFrameSp') (Hp := ⇓ (Hpr ↕ Hrq) ↕ ⇓ Hq)) in x).
-    now exact (= (cohFrameSnHyp (Hpr := Hpr) (Hrq := Hrq)); mkCohLayer l).
+    now exact (= Frame.(cohFrame) (Hrq := Hrq) d; mkCohLayer l).
     (* Bug? Coq being too smart for its own good. *)
 Defined.
 
