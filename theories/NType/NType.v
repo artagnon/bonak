@@ -123,7 +123,7 @@ Arguments cohFrame {n p prefix FramePrev} _ {q r Hpr Hrq Hq ε ω D} d.
     on fillers at level n-1 and n-2; just as we have frame' and frame'', we have
     filler' and filler''. *)
 Class PartialFillerPrev (n: nat) (prefix: Type@{m'})
-  (FramePrev : PartialFramePrev n (@prefix)) := {
+  (FramePrev : PartialFramePrev n prefix) := {
   filler' {p} {Hp: p.+1 <= n} {D: prefix}: FramePrev.(frame') Hp D -> HSet@{m};
   filler'' {p} {Hp: p.+2 <= n} {D: prefix}: FramePrev.(frame'') Hp D -> HSet@{m};
   restrFiller' {p q} {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) (ε: side) {D: prefix}
@@ -137,9 +137,9 @@ Arguments restrFiller' {n prefix FramePrev} _ {p q Hpq} Hq ε {D} [d] b.
 
 (* Filler consists of filler, restrFiller, and coherence conditions between them *)
 Class PartialFiller (n: nat) (prefix: Type@{m'})
-  {FramePrev: PartialFramePrev n (@prefix)}
+  {FramePrev: PartialFramePrev n prefix}
   (FillerPrev: PartialFillerPrev n prefix FramePrev)
-  (Frame: forall {p}, PartialFrame n p (@prefix) FramePrev) := {
+  (Frame: forall {p}, PartialFrame n p prefix FramePrev) := {
   filler {p} {Hp: p <= n} {D: prefix}:
     (Frame.(frame) (¹ n) D -> HSet@{m}) -> Frame.(frame) Hp D -> HSet@{m};
   restrFiller {p q} {Hpq: p.+1 <= q.+1}
