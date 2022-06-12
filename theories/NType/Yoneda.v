@@ -30,7 +30,7 @@ Infix "<=" := leY : nat_scope.
 Inductive eqsprop {A : SProp} (x : A) : A -> Prop := eqsprop_refl : eqsprop x x.
 Infix "=S" := eqsprop (at level 70) : type_scope.
 
-Theorem le_irrelevance : forall {n m} (H H' : n <= m), H =S H'.
+Theorem leY_irrelevance : forall {n m} (H H' : n <= m), H =S H'.
   now reflexivity.
 Qed.
 
@@ -60,7 +60,7 @@ Qed.
 Definition leY_refl n : n <= n :=
   fun _ x => x. (* Coq bug! *)
 
-Notation "¹" := leY_refl (at level 0).
+Notation "♢" := leY_refl (at level 0).
 
 (* Transitivity in leY *)
 Definition leY_trans {n m p} (Hnm : n <= m) (Hmp : m <= p) : n <= p :=
@@ -148,7 +148,7 @@ Defined.
 (* A couple of properties of the two connections, asserting the equality
  * of morphisms *)
 
-Lemma leI_refl_morphism n: leI_of_leY (¹ n) = leI_refl _.
+Lemma leI_refl_morphism n: leI_of_leY (♢ n) = leI_refl _.
 Proof.
   induction n. now simpl.
   change (leI_refl n.+1) with (leI_raise_both (leI_refl n)). now rewrite <- IHn.
@@ -170,33 +170,33 @@ Defined.
 
 (* An inductive on leY *)
 Inductive leYind n : forall p, p <= n -> Type :=
-| leYind_refl : leYind n n (¹ n)
+| leYind_refl : leYind n n (♢ n)
 | leYind_down p Hp : leYind n p.+1 Hp -> leYind n p (↓ Hp).
 
 (* A constructor of leYind *)
 Lemma leYind_construct {n p} Hp: leYind n p Hp.
 Proof.
   intros; induction (leI_of_leY Hp).
-  - rewrite (le_irrelevance Hp (¹ n)). (* should not be needed *)
+  - rewrite (leY_irrelevance Hp (♢ n)). (* should not be needed *)
     exact (leYind_refl _).
-  - rewrite (le_irrelevance Hp (↓ (leY_of_leI l))).
+  - rewrite (leY_irrelevance Hp (↓ (leY_of_leI l))).
     apply leYind_down, IHl.
 Defined.
 
 (* le_induction along with a couple of computational properties *)
 
 Theorem le_induction {n p} (Hp : p <= n) (P: forall p (Hp: p <= n), Type)
-  (H_base: P n (¹ n))
+  (H_base: P n (♢ n))
   (H_step: forall p (Hp: p.+1 <= n) (H: P p.+1 Hp), P p (↓ Hp)): P p Hp.
 Proof.
   induction (leYind_construct Hp); now auto.
 Defined.
 
 Lemma le_induction_base_computes {n P H_base H_step}:
-  le_induction (¹ n) P H_base H_step = H_base.
+  le_induction (♢ n) P H_base H_step = H_base.
 Proof.
   unfold le_induction, leYind_construct. rewrite leI_refl_morphism; simpl.
-  now destruct le_irrelevance.
+  now destruct leY_irrelevance.
 Qed.
 
 Lemma le_induction_step_computes {n p P H_base H_step} {Hp: p.+1 <= n}:
@@ -204,27 +204,27 @@ Lemma le_induction_step_computes {n p P H_base H_step} {Hp: p.+1 <= n}:
     H_step p Hp (le_induction Hp P H_base H_step).
 Proof.
   invert_le Hp. unfold le_induction, leYind_construct.
-  rewrite leI_down_morphism; simpl. now destruct le_irrelevance.
+  rewrite leI_down_morphism; simpl. now destruct leY_irrelevance.
 Qed.
 
 (* Some helper-abbreviations *)
 
 Definition le_induction' {n p} (Hp: p.+1 <= n.+1)
   (P: forall p (Hp: p.+1 <= n.+1), Type)
-  (H_base: P n (¹ n.+1))
+  (H_base: P n (♢ n.+1))
   (H_step: forall p (H : p.+2 <= n.+1), P p.+1 H -> P p (↓ H)): P p Hp :=
   le_induction (⇓ Hp) (fun p Hp => P p (⇑ Hp)) H_base
     (fun q Hq => H_step q (⇑ Hq)).
 
 Definition le_induction'' {n p} (Hp : p.+2 <= n.+2)
   (P : forall p (Hp: p.+2 <= n.+2), Type)
-  (H_base: P n (¹ n.+2))
+  (H_base: P n (♢ n.+2))
   (H_step: forall p (H : p.+3 <= n.+2), P p.+1 H -> P p (↓ H)): P p Hp :=
   le_induction' (⇓ Hp) (fun p Hp => P p (⇑ Hp)) H_base
     (fun q Hq => H_step q (⇑ Hq)).
 
 Definition le_induction'_base_computes {n P H_base H_step}:
-  le_induction' (¹ n.+1) P H_base H_step = H_base :=
+  le_induction' (♢ n.+1) P H_base H_step = H_base :=
   le_induction_base_computes.
 
 Definition le_induction'_step_computes {n p P H_base H_step} {Hp: p.+2 <= n.+1}:
