@@ -141,14 +141,14 @@ Class PartialFiller (n: nat) (prefix: Type@{m'})
   (FillerPrev: PartialFillerPrev n prefix FramePrev)
   (Frame: forall {p}, PartialFrame n p prefix FramePrev) := {
   filler {p} {Hp: p <= n} {D: prefix}:
-    (Frame.(frame) (¹ n) D -> HSet@{m}) -> Frame.(frame) Hp D -> HSet@{m};
+    (Frame.(frame) (♢ _) D -> HSet@{m}) -> Frame.(frame) Hp D -> HSet@{m};
   restrFiller {p q} {Hpq: p.+1 <= q.+1}
-    (Hq: q.+1 <= n) (ε: side) {D : prefix} {E: Frame.(frame) (¹ n) D -> HSet@{m}}
+    (Hq: q.+1 <= n) (ε: side) {D : prefix} {E: Frame.(frame) (♢ _) D -> HSet@{m}}
     {d: Frame.(frame) (↓ (Hpq ↕ Hq)) D} (c: filler E d):
     FillerPrev.(filler') (Frame.(restrFrame) Hq ε d);
   cohFiller {p q r} {Hpr: p.+2 <= r.+2}
     {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
-    (ε: side) (ω : side) {D: prefix} (E: Frame.(frame) (¹ n) D -> HSet@{m})
+    (ε: side) (ω : side) {D: prefix} (E: Frame.(frame) (♢ _) D -> HSet@{m})
     (d: Frame.(frame) (↓ (⇓ Hpr ↕ (↓ (Hrq ↕ Hq)))) D) (c: filler E d):
     rew [FillerPrev.(filler'')] (Frame.(cohFrame) d) in
     FillerPrev.(restrFiller') (Hpq := Hpr ↕ Hrq) Hq
@@ -251,7 +251,7 @@ Arguments eqRestrFillerSp {n} _ {p q Hpq Hq D E d ε l Q}.
 
 (** Extending the initial prefix *)
 Definition mkprefix {n} {C: NType n}: Type@{m'} :=
-  sigT (fun D : C.(prefix) => C.(Frame).(frame) (¹ n) D -> HSet@{m}).
+  sigT (fun D : C.(prefix) => C.(Frame).(frame) (♢ _) D -> HSet@{m}).
 
 (** Memoizing the previous levels of [Frame] *)
 Definition mkFramePrev {n} {C: NType n}: PartialFramePrev n.+1 mkprefix := {|
@@ -268,7 +268,7 @@ Definition mkFramePrev {n} {C: NType n}: PartialFramePrev n.+1 mkprefix := {|
 
 Definition mkLayer {n p} {Hp: p.+1 <= n.+1} {C: NType n} {D: mkprefix}
   {Frame: PartialFrame n.+1 p mkprefix mkFramePrev} {d: Frame.(frame) (↓ Hp) D}: HSet :=
-  hforall ε, C.(Filler).(filler) D.2 (Frame.(restrFrame) (Hpq := ¹ _) Hp ε d).
+  hforall ε, C.(Filler).(filler) D.2 (Frame.(restrFrame) (Hpq := ♢ _) Hp ε d).
 
 Definition mkRestrLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
   {C: NType n} {D: mkprefix} {Frame: PartialFrame n.+1 p mkprefix mkFramePrev}
@@ -373,7 +373,7 @@ Instance mkFillerPrev {n} {C: NType n} : PartialFillerPrev n.+1 mkprefix mkFrame
 (** Then, the component [filler] of [Filler], built by upwards induction from [p] to [n] *)
 
 Definition mkfiller {n p} {C: NType n} {Hp: p <= n.+1} {D: mkprefix}
-  (E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet)
+  (E: (mkFrame n.+1).(frame) (♢ _) D -> HSet)
   (d: (mkFrame p).(frame) Hp D): HSet.
   revert d; apply le_induction with (Hp := Hp); clear p Hp.
   + now exact E. (* p = n *)
@@ -381,7 +381,7 @@ Definition mkfiller {n p} {C: NType n} {Hp: p <= n.+1} {D: mkprefix}
 Defined.
 
 Lemma mkfiller_computes {n p} {C: NType n} {Hp: p.+1 <= n.+1} {D: mkprefix}
-  {E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet} {d}:
+  {E: (mkFrame n.+1).(frame) (♢ _) D -> HSet} {d}:
   mkfiller (Hp := ↓ Hp) E d = {l : mkLayer & mkfiller (Hp := Hp) E (d; l)} :> Type.
 Proof.
   unfold mkfiller; now rewrite le_induction_step_computes.
@@ -391,7 +391,7 @@ Qed.
 
 Definition mkRestrFiller {n} {C: NType n} {p q} {Hpq: p.+1 <= q.+1}
   {Hq: q.+1 <= n.+1} {ε: side} {D}
-  (E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet)
+  (E: (mkFrame n.+1).(frame) (♢ _) D -> HSet)
   (d: (mkFrame p).(frame) (↓ (Hpq ↕ Hq)) D)
   (Filler: mkfiller (Hp := ↓ (Hpq ↕ Hq)) E d):
     mkFillerPrev.(filler') ((mkFrame p).(restrFrame) Hq ε d).
@@ -435,15 +435,15 @@ Qed.
 (* The base case is easily discharged *)
 Definition mkCohFiller_base {q r n} {ε ω: side} {C: NType n} {D: mkprefix}
   {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n.+1}
-  {E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet}
+  {E: (mkFrame n.+1).(frame) (♢ _) D -> HSet}
   (d: (mkFrame r).(frame) (↓ ↓ (Hrq ↕ Hq)) D)
   (c: mkfiller E d):
-  rew [mkFillerPrev.(filler'')] (mkFrame r).(cohFrame) (Hpr := ¹ _) d in
+  rew [mkFillerPrev.(filler'')] (mkFrame r).(cohFrame) (Hpr := ♢ _) d in
     mkFillerPrev.(restrFiller') (Hpq := Hrq) Hq ε
-      (mkRestrFiller (ε := ω) (Hpq := ¹ _) (Hq := ↓ (Hrq ↕ Hq)) E d c) =
-  mkFillerPrev.(restrFiller') (Hpq := ¹ _) (Hrq ↕ Hq) ω
+      (mkRestrFiller (ε := ω) (Hpq := ♢ _) (Hq := ↓ (Hrq ↕ Hq)) E d c) =
+  mkFillerPrev.(restrFiller') (Hpq := ♢ _) (Hrq ↕ Hq) ω
     (mkRestrFiller (ε := ε) (Hpq := ↓ Hrq) (Hq := Hq) E d c).
-  change (¹ _ ↕ ?H) with H; change (⇓ ¹ _ ↕ ?H) with H.
+  change (♢ _ ↕ ?H) with H; change (⇓ (♢ _) ↕ ?H) with H.
   rewrite mkRestrFiller_base_computes, mkRestrFiller_step_computes.
   destruct (rew [id] mkfiller_computes in c) as (l, c'); clear c.
   now refine (C.(eqRestrFiller0)
@@ -453,7 +453,7 @@ Qed.
 (* A small abbreviation *)
 Definition mkCohFillerHyp p {q r n} {ε ω: side} {C: NType n} {D: mkprefix}
   (Hpr: p.+2 <= r.+3) {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
-  {E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet}
+  {E: (mkFrame n.+1).(frame) (♢ _) D -> HSet}
   (d: (mkFrame p).(frame) (↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D)
   (c: mkfiller E d) :=
   rew [mkFillerPrev.(filler'')] (mkFrame p).(cohFrame) (Hrq := Hrq) d in
@@ -465,7 +465,7 @@ Definition mkCohFillerHyp p {q r n} {ε ω: side} {C: NType n} {D: mkprefix}
 (* The step case is discharged as (mkCohLayer; IHP) *)
 Definition mkCohFiller_step {p q r n} {ε ω: side} {C: NType n} {D: mkprefix}
   {Hpr: p.+3 <= r.+3} {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
-  {E: (mkFrame n.+1).(frame) (¹ n.+1) D -> HSet}
+  {E: (mkFrame n.+1).(frame) (♢ _) D -> HSet}
   {d: (mkFrame p).(frame) (↓ ↓ (↓ Hpr ↕ Hrq ↕ Hq)) D}
   {c: mkfiller E d}
   {IHP: forall (d: (mkFrame p.+1).(frame) (↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D)
@@ -575,7 +575,7 @@ Instance mkNTypeSn {n} {C: NType n}: NType n.+1.
   - (* eqFillerSp *) intros *; now refine C.(eqFillerSp).
   - (* eqFillerSp' *) now intros *.
   - (* eqRestrFiller0 *) intros *.
-    change (fun _ (_: leR _ ?q) => _) with (¹ q); simpl.
+    change (fun _ (_: leR _ ?q) => _) with (♢ q); simpl.
     rewrite mkRestrFiller_base_computes.
     now rewrite eq_ind_r_refl, rew_rew'.
   - (* eqRestrFillerSp *) intros *; simpl.
@@ -591,7 +591,7 @@ Defined.
 
 (** The coinductive suffix of an [NType] beyhond level [n] *)
 CoInductive NTypeFrom n (X: (NTypeAt n).(prefix)): Type@{m'} := cons {
-  this: (NTypeAt n).(Frame).(frame) (¹ n) X -> HSet@{m};
+  this: (NTypeAt n).(Frame).(frame) (♢ n) X -> HSet@{m};
   next: NTypeFrom n.+1 (X; this);
 }.
 
