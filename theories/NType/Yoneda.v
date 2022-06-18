@@ -1,3 +1,5 @@
+(** Recursive definition of "less than or equalf" + "less than or equal" with "Yoneda trick", all in SProp *)
+
 Require Import Aux.
 
 Set Warnings "-notation-overridden".

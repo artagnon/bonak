@@ -1,3 +1,5 @@
+(** Miscellaneous notations and lemmas *)
+
 Notation "( a ; b )" := (existT _ a b).
 Notation "x .1" := (projT1 x) (at level 1, left associativity, format "x .1").
 Notation "x .2" := (projT2 x) (at level 1, left associativity, format "x .2").
