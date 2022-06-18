@@ -1,5 +1,4 @@
 Notation "( a ; b )" := (existT _ a b).
-Notation "( a ; b :> P )" := (existT P a b).
 Notation "x .1" := (projT1 x) (at level 1, left associativity, format "x .1").
 Notation "x .2" := (projT2 x) (at level 1, left associativity, format "x .2").
 Notation "x .+1" := (S x) (at level 1, left associativity, format "x .+1").

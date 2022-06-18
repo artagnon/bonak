@@ -28,17 +28,7 @@ Qed.
 Lemma rew_sigT {A x} {P : A -> Type} (Q : forall a, P a -> Type)
   (u : { p : P x & Q x p }) {y} (H: x = y)
     : rew [fun x => { p : P x & Q x p }] H in u
-      = (rew H in u.1; rew dependent H in u.2 :> Q y).
-Proof.
-  now destruct H, u.
-Qed.
-
-Lemma rew_triple {A x} {P P': A -> Type}
-  (Q: forall a, (P a * P' a)%type -> Type)
-  (u: { p: (P x * P' x)%type & Q x p }) {y} (H: x = y)
-    : rew [fun x => { p : (P x * P' x)%type & Q x p }] H in u
-      = (rew [fun x => (P x * P' x)%type] H in u.1;
-         rew dependent H in u.2 :> Q y).
+      = (rew H in u.1; rew dependent [fun x H => Q x (rew H in u.1)] H in u.2).
 Proof.
   now destruct H, u.
 Qed.
