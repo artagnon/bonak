@@ -1,3 +1,5 @@
+(** This file defines HSet and provides unit, sigT and forall on HSet *)
+
 Require Import Logic.FunctionalExtensionality.
 Require Import Logic.Eqdep_dec. (* UIP_refl_unit *)
 Require Import Aux.
@@ -9,6 +11,8 @@ Record HSet := {
   UIP {x y: Dom} {h g: x = y}: h = g;
 }.
 
+(** [unit] seen as an [HSet] *)
+
 Lemma unit_UIP (x y: unit) (h g: x = y): h = g.
 Proof.
   destruct g, x. now apply UIP_refl_unit.
@@ -18,6 +22,8 @@ Definition hunit@{m}: HSet@{m} := {|
   Dom := unit;
   UIP := unit_UIP;
 |}.
+
+(** [sigT] seen as a type constructor on [HSet] *)
 
 Lemma sigT_eq {A: Type} {B} {x y: {a: A & B a}}:
   (x.1; x.2) = (y.1; y.2) -> x = y.
@@ -54,6 +60,8 @@ Set Warnings "-notation-overridden".
 
 Notation "{ x & P }" := (hsigT (fun x => P)): type_scope.
 Notation "{ x : A & P }" := (hsigT (A := A) (fun x => P)): type_scope.
+
+(** [forall] defined over an [HSet] codomain *)
 
 (* Bug! equal_f_dep is unnecessarily opaque in Coq *)
 Lemma equal_f_dep: forall {A B} {f g: forall (x: A), B x},
