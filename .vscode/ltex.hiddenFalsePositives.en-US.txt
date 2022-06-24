@@ -1,0 +1,5 @@
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QTechnically speaking, we use some axioms related to functional extensionality, but the requirement arises only from our generalization to \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q-types; if \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q is finite (say, unit type corresponding to augmented semi-simplicial types), this requirement vanishes.\\E$"}
+{"rule":"WHITESPACE_RULE","sentence":"^\\QThe accompanying artifact is an axiom-less  Coq formalization that uses sophisticated rewriting techniques and pushes the boundaries of proof assistant technology.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QThe accompanying artifact is an axiom-less  Coq formalization that uses sophisticated rewriting techniques and pushes the boundaries of proof assistant technology.\\E$"}
+{"rule":"COMMA_PARENTHESIS_WHITESPACE","sentence":"^\\QJust as in , we define semi-cubical sets as the functor category:\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qorder-preserving.\\E$"}

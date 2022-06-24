@@ -1,3 +1,10 @@
 semi-simplicial
 fibered
 parametricity
+bonak
+fullframe
+univalence
+extensionality
+degeneracies
+simplicial
+Agda

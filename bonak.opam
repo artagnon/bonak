@@ -8,7 +8,7 @@ authors: [ "Ramkumar Ramachandra <r@artagnon.com>"
 license: "MIT"
 homepage: "https://github.com/artagnon/bonak"
 bug-reports: "https://github.com/artagnon/bonak/issues"
-dev-repo: "https://github.com/artagnon/bonak"
+dev-repo: "git://github.com/artagnon/bonak"
 depends: [
   "coq"  { >= "8.15.1" }
   "dune" { >= "2.9.1" }
