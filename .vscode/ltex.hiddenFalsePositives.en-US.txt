@@ -3,3 +3,10 @@
 {"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QThe accompanying artifact is an axiom-less  Coq formalization that uses sophisticated rewriting techniques and pushes the boundaries of proof assistant technology.\\E$"}
 {"rule":"COMMA_PARENTHESIS_WHITESPACE","sentence":"^\\QJust as in , we define semi-cubical sets as the functor category:\\E$"}
 {"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qorder-preserving.\\E$"}
+{"rule":"NON_STANDARD_WORD","sentence":"^\\Q.m m m m.#1 #2 #3 #4 .\\E$"}
+{"rule":"DOUBLE_PUNCTUATION","sentence":"^\\QWe have modelled the core of semi-cubical sets in a way that naturally generalizes to augmented semi-simplicial sets in type theory, and we call our generalization \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q-sets..\\E$"}
+{"rule":"DOUBLE_PUNCTUATION","sentence":"^\\QarXiv preprint arXiv:1611.02108..\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QAnnali di Matematica pura ed applicata, 178.(1), 317-324.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\Q[CubSet]Antolini00.\\E$"}
+{"rule":"DOUBLE_PUNCTUATION","sentence":"^\\QUnpublished expository article available online from the author's web page..\\E$"}
+{"rule":"EN_DIACRITICS_REPLACE","sentence":"^\\QInstitut de Recherche en Informatique Fondamentale.\\E$"}

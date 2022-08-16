@@ -163,7 +163,7 @@
 \setmonofont{Source Code Pro}
 \defaultfontfeatures{Ligatures=TeX, Scale=MatchUppercase}
 
-\title{An indexed construction of semi-simplicial and semi-cubical types}
+\title{A mechanization of Kan complexes in the calculus of inductive constructions}
 \author{
   \textcolor{gray80}{Ramkumar Ramachandra} \\
   \itshape \textcolor{gray80}{Université Paris-Cité}
@@ -468,7 +468,7 @@ For a given $n$, the coherence conditions evaluate to a reflexivity proof, so th
 % Hack to remove , in \cohf
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][][][#9]}
 
-The proof of $\cohf$ require an higher-dimensional coherence condition which we obtain by working in \texttt{HSet}. If the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory).
+The proof of $\cohf$ require a higher-dimensional coherence condition which we obtain by working in \texttt{HSet}. If the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory).
 
 % Coherence conditions for frame, layer, and filler
 % Drop universe letter, ε, and ω
@@ -529,7 +529,10 @@ The proof of $\cohf$ require an higher-dimensional coherence condition which we 
   \bibitem[CubAgda]{Vezzosi21}
   Vezzosi, A., Mörtberg, A., \& Abel, A. (2021). Cubical Agda: a dependently typed programming language with univalence and higher inductive types. \emph{Journal of Functional Programming, 31}.
 
-  \bibitem[CohCoq]{Cohen16}
+  \bibitem[Takeuti–Gandy]{Barras15}
+  Barras, B., Coquand, T., \& Huber, S. (2015). A generalization of the Takeuti–Gandy interpretation. \emph{Mathematical structures in computer science}, 25(5), 1071-1099.
+
+  \bibitem[CCHM]{Cohen16}
   Cohen, C., Coquand, T., Huber, S., \& Mörtberg, A. (2016). Cubical type theory: a constructive interpretation of the univalence axiom. \emph{arXiv preprint arXiv:1611.02108}.
 
   \bibitem[Angiuli]{Angiuli17}
