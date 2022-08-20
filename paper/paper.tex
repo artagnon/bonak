@@ -216,6 +216,30 @@ It is well-known that simplicial sets exist purely in the imagination of the mat
 \subsection{Semi-simplicial sets}
 Semi-simplicial sets are otherwise known as \emph{delta-sets} in mathematical literature. We briefly describe \DeltaHat, which is identical to \Simplex{}, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are \emph{strictly} order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. The core of the definition of $\SSet$ is precisely what we have constructed.
 
+\begin{example}[$\DeltaHat^0$, $\DeltaHat^1$, $\DeltaHat^2$]
+  $\DeltaHat^0$ can be drawn as:
+  \begin{equation*}
+    \begin{tikzcd}
+      \bullet
+    \end{tikzcd}
+  \end{equation*}
+
+  $\DeltaHat^1$ can be drawn as:
+  \begin{equation*}
+    \begin{tikzcd}
+      \bullet \arrow[r, dash] & \bullet
+    \end{tikzcd}
+  \end{equation*}
+
+  $\DeltaHat^2$ can be drawn as:
+  \begin{equation*}
+    \begin{tikzcd}
+      & \bullet\arrow[dr, dash] & \\
+      \bullet\arrow[rr, dash]\arrow[ur, dash] && \bullet
+    \end{tikzcd}
+  \end{equation*}
+\end{example}
+
 \subsection{Semi-cubical sets}
 We might naively attempt to define $\Cube{}$ identically to \DeltaHat, but let us briefly explain why this wouldn't work, motivating the definition of semi-cubical sets as in \cite{Antolini00}. If there were morphisms from every $\sq{m}$ to \sq{n}, we would end up with:
 
@@ -245,20 +269,22 @@ where the filling conditions are conflated with the cube itself. $\Simplex{n}$ c
 
   $\Cube{1}$ can be drawn as:
 
-  $$
+  \begin{equation*}
     \begin{tikzcd}
       0 \arrow[r, dash] & 1
     \end{tikzcd}
-  $$
+  \end{equation*}
+
 
   and $\Cube{2}$ can be drawn as:
 
-  $$
+
+  \begin{equation*}
     \begin{tikzcd}
       (0, 1) \arrow[r, dash] & (1, 1) \arrow[d, dash] \\
       (0, 0) \arrow[u, dash] & (1, 0) \arrow[l, dash]
     \end{tikzcd}
-  $$
+  \end{equation*}
 \end{example}
 
 Here, $\I{n}$ serves the purpose of \sq{n}, but this change will cascade into other definitions. In view of defining a category \CSet, we will restrict the morphisms in \Cube{}.
