@@ -600,6 +600,6 @@ CoInductive NTypeFrom n (X: (NTypeAt n).(prefix)): Type@{m'} := cons {
 Definition NTypes := NTypeFrom 0 tt.
 End NType.
 
-Definition AugmentedSemiSimplicial := NType unit.
-Definition SemiSimplicial := NTypeFrom 1 (tt; fun _ => unit).
+Definition AugmentedSemiSimplicial := NType hunit.
+Definition SemiSimplicial := NTypeFrom hunit 1 (tt; fun _ => hunit).
 Definition SemiCubical := NType bool.

@@ -76,6 +76,13 @@
   \setkeys*[bonak]{coh#1}{#9}
 }
 
+\newcommandx{\cohtwo}[9][2,3,4,5,6,7,8,9]{
+  \ensuremath{\mathsf{\color{chestnut}{coh2}}_{
+    \mathsf{\color{indian-yellow}{#1}}
+    \joinargs{,}[#2][#3][#4][#5][#6]}^{\joinargs{}[#7][#8]}}
+  \setkeys*[bonak]{coh#1}{#9}
+}
+
 % Universe, referred to as U
 \newcommand{\U}[1]{\mathsf{\color{spanish-blue}{U}}_{#1}}
 
@@ -163,13 +170,13 @@
 \setmonofont{Source Code Pro}
 \defaultfontfeatures{Ligatures=TeX, Scale=MatchUppercase}
 
-\title{A mechanization of Kan complexes in the calculus of inductive constructions}
+\title{A mechanization of semi-simplicial and semi-cubical sets in the calculus of inductive constructions}
 \author{
   \textcolor{gray80}{Ramkumar Ramachandra} \\
   \itshape \textcolor{gray80}{Université Paris-Cité}
   \and
   \textcolor{gray80}{Hugo Herbelin} \\
-  \itshape \textcolor{gray80}{Institut de Recherche en Informatique Fondamentale}
+  \itshape \textcolor{gray80}{IRIF/Inria/Université Paris-Cité}
 }
 \date{}
 
@@ -179,15 +186,13 @@
 \thispagestyle{empty}
 \maketitle
 \begin{abstract}
-  A model of homotopy type theory, formalizing augmented semi-simplicial sets, that naturally generalizes to semi-cubical sets as well, in dependent type theory. The accompanying artifact is an axiom-less~\footnote{Technically speaking, we use some axioms related to functional extensionality, but the requirement arises only from our generalization to $\nu$-types; if $\nu$ is finite (say, unit type corresponding to augmented semi-simplicial types), this requirement vanishes.} Coq formalization that uses sophisticated rewriting techniques and pushes the boundaries of proof assistant technology.
+  We present a parametricity-based construction of semi-simplicial sets, that naturally generalizes to semi-cubical sets as well, in the calculus of inductive constructions. The accompanying artifact is an axiom-less~\footnote{Technically speaking, we use some axioms related to functional extensionality, but the requirement arises only from our generalization to $\nu$-types; if $\nu$ is finite (say, unit type corresponding to augmented semi-simplicial types), this requirement vanishes.} Coq formalization that uses sophisticated rewriting techniques and pushes the boundaries of proof assistant technology.
 \end{abstract}
 \tableofcontents
 \newpage
 
 \section{Overture}
-Cubical type theory~\cite{Bezem14}~\cite{Cohen16}~\cite{Angiuli17} is an extension of dependent type theory that provides a computational interpretation of Voevodsky's \emph{univalence axiom}, in a field known as \emph{homotopy type theory}, or HoTT. The most significant implementation of cubical type theory in the real world is an experimental branch of Agda, known as \emph{Cubical Agda}~\cite{Vezzosi21}. Cubical type theory is usually modeled as cubical sets, in the set-theoretic setting.
-
-Our contribution is the following. We have modelled the core of semi-cubical sets in a way that naturally generalizes to augmented semi-simplicial sets in type theory, and we call our generalization \emph{$\nu$-sets}. In contrast to previous efforts that use a fibered representation, we use an indexed representation. Our work is, in principle axiom-free, although the accompanying artifact uses functional extensionality, and this requires disappears if $\nu$ is finite.
+Our contribution is the following. We have modelled the core of semi-simplicial sets in a way that naturally generalizes to semi-cubical sets in type theory, and we call our generalization \emph{$\nu$-sets}. In contrast to previous efforts that use a fibered representation, we use an indexed representation. Our work is, in principle axiom-free, although the accompanying artifact uses functional extensionality, and this requires disappears if $\nu$ is finite.
 
 \begin{table}[H]
   \begin{tabularx}{\linewidth}{p{.3\linewidth}|p{.3\linewidth}|p{.3\linewidth}}
@@ -201,13 +206,15 @@ Our contribution is the following. We have modelled the core of semi-cubical set
   \end{tabularx}
 \end{table}
 
-The outline of the paper is as follows. First, we briefly describe augmented semi-simplicial and semi-cubical sets, as it appears in mathematical literature, and our generalization to $\nu$-sets. We then proceed to explain our construction, with the help of diagrams. Before spelling out the details of our formalization in type-theoretic language, we have a section on reasoning in sets.
+Cubical type theory~\cite{Bezem14}~\cite{Cohen16}~\cite{Angiuli17} is an extension of dependent type theory that provides a computational interpretation of Voevodsky's \emph{univalence axiom}, in a field known as \emph{homotopy type theory}, or HoTT. The most significant implementation of cubical type theory in the real world is an branch of Agda, known as \emph{Cubical Agda}~\cite{Vezzosi21}. Cubical type theory is usually modeled as cubical sets, in the set-theoretic setting.
+
+The outline of the paper is as follows. First, we briefly describe semi-simplicial and semi-cubical sets, as it appears in mathematical literature, and our generalization to $\nu$-sets. We then proceed to explain our construction, with the help of diagrams. Before spelling out the details of our formalization in type-theoretic language, we have a section on reasoning in sets.
 
 \section{Mathematical treatment of \texorpdfstring{$\nu$}{nu}-sets}
-It is well-known that simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices. What we have formalized is \emph{augmented} semi-simplicial sets, and semi-cubical sets, which is to say that they are the usual simplicial sets and cubical sets, minus the degeneracies. Since they're not of particular interest, and indeed, we plan to extend our work to do degeneracies in the future, we briefly explain the mathematical objects we have formalized.
+It is well-known that simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices. What we have formalized is \emph{semi-simplicial} sets, and semi-cubical sets, which is to say that they are the usual simplicial sets and cubical sets, minus the degeneracies. Since they're not of particular interest, and indeed, we plan to extend our work to do degeneracies in the future, we briefly explain the mathematical objects we have formalized.
 
-\subsection{Augmented semi-simplicial sets}
-Semi-simplicial sets are otherwise known as \emph{delta-sets} in mathematical literature. Since they are of little interest to the mathematician, we briefly describe \DeltaHat, which is identical to \Simplex{}, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are \emph{strictly} order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. There is little interest in studying \DeltaHat, since maps between delta sets are not well-defined, and it is therefore not possible to construct a category of delta sets.
+\subsection{Semi-simplicial sets}
+Semi-simplicial sets are otherwise known as \emph{delta-sets} in mathematical literature. We briefly describe \DeltaHat, which is identical to \Simplex{}, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are \emph{strictly} order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. The core of the definition of $\SSet$ is precisely what we have constructed.
 
 \subsection{Semi-cubical sets}
 We might naively attempt to define $\Cube{}$ identically to \DeltaHat, but let us briefly explain why this wouldn't work, motivating the definition of semi-cubical sets as in \cite{Antolini00}. If there were morphisms from every $\sq{m}$ to \sq{n}, we would end up with:
@@ -307,9 +314,9 @@ Or, in terms of objects and morphisms:
 \begin{table}[H]
   \begin{tabularx}{\linewidth}{p{.2\linewidth}|p{.4\linewidth}|p{.3\linewidth}}
     \toprule
-    Value of $\nu$ & 1                               & 2                  \\
+    Value of $\nu$ & 1                     & 2                  \\
     \graymidrule
-    Interpretation & Augmented semi-simplicial types & Semi-cubical types \\
+    Interpretation & Semi-simplicial types & Semi-cubical types \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -471,10 +478,10 @@ For a given $n$, the coherence conditions evaluate to a reflexivity proof, so th
 The proof of $\cohf$ require a higher-dimensional coherence condition which we obtain by working in \texttt{HSet}. If the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory).
 
 % Coherence conditions for frame, layer, and filler
-% Drop universe letter, ε, and ω
-\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][][][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][][][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][][][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\newcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 
 \renewcommand*{\lab}{tab:coh}
 \input{tab-coh.tex}
@@ -506,6 +513,7 @@ The proof of $\cohf$ require a higher-dimensional coherence condition which we o
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
 
 \renewcommand*{\lab}{fulltab:coind}
 \input{tab-coind.tex}

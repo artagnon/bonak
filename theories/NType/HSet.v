@@ -18,9 +18,19 @@ Proof.
   destruct g, x. now apply UIP_refl_unit.
 Qed.
 
+Lemma bool_UIP (x y: bool) (h g: x = y): h = g.
+Proof.
+  destruct g, x. all: now apply UIP_refl_bool.
+Qed.
+
 Definition hunit@{m}: HSet@{m} := {|
   Dom := unit;
   UIP := unit_UIP;
+|}.
+
+Definition hbool@{m}: HSet@{m} := {|
+  Dom := bool;
+  UIP := bool_UIP;
 |}.
 
 (** [sigT] seen as a type constructor on [HSet] *)
