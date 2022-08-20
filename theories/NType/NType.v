@@ -24,8 +24,9 @@ Universe m.
 (** The universe where the type of N-parametric sets live *)
 Universe m'.
 
+Section NType.
 (** The arity [N] of parametric sets *)
-Parameter side: HSet.
+Variable side: HSet.
 
 (*********************************************)
 (** A N-parametric set is a family of sets obtained by iterating
@@ -597,3 +598,8 @@ CoInductive NTypeFrom n (X: (NTypeAt n).(prefix)): Type@{m'} := cons {
 
 (** The final construction *)
 Definition NTypes := NTypeFrom 0 tt.
+End NType.
+
+Definition AugmentedSemiSimplicial := NType unit.
+Definition SemiSimplicial := NTypeFrom 1 (tt; fun _ => unit).
+Definition SemiCubical := NType bool.
