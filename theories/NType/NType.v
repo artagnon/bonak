@@ -602,4 +602,4 @@ End NType.
 
 Definition AugmentedSemiSimplicial := NType hunit.
 Definition SemiSimplicial := NTypeFrom hunit 1 (tt; fun _ => hunit).
-Definition SemiCubical := NType bool.
+Definition SemiCubical := NType hbool.
