@@ -21,4 +21,4 @@
   end
 \end{luacode*}
 
-\newcommandx{\joinargs}[6][2,3,4,5,6]{\directlua{tex.sprint(join_with_comma("#1", {"\luaescapestring{#2}";"\luaescapestring{#3}";"\luaescapestring{#4}";"\luaescapestring{#5}";"\luaescapestring{#6}"}))}}
+\newcommandx{\joinargs}[7][2,3,4,5,6,7]{\directlua{tex.sprint(join_with_comma("#1", {"\luaescapestring{#2}";"\luaescapestring{#3}";"\luaescapestring{#4}";"\luaescapestring{#5}";"\luaescapestring{#6}","\luaescapestring{#7}"}))}}

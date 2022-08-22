@@ -79,7 +79,7 @@
 \newcommandx{\cohtwo}[9][2,3,4,5,6,7,8,9]{
   \ensuremath{\mathsf{\color{chestnut}{coh2}}_{
     \mathsf{\color{indian-yellow}{#1}}
-    \joinargs{,}[#2][#3][#4][#5][#6]}^{\joinargs{}[#7][#8]}}
+    \joinargs{,}[#2][#3][#4][#5][#6][#7]}^{\joinargs{}[#8]}}
   \setkeys*[bonak]{coh#1}{#9}
 }
 
@@ -508,7 +508,7 @@ The proof of $\cohf$ require a higher-dimensional coherence condition which we o
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][#2][#3][#4][#5][#6,#7][#8][#9]}
-\newcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\newcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
 
 \renewcommand*{\lab}{tab:coh}
 \input{tab-coh.tex}
