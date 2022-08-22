@@ -207,11 +207,11 @@ Our contribution is the following. We have modelled the core of semi-simplicial 
   \end{tabularx}
 \end{table}
 
-Cubical type theory~\cite{Bezem14}~\cite{Cohen16}~\cite{Angiuli17} is an extension of dependent type theory that provides a computational interpretation of Voevodsky's \emph{univalence axiom}, in a field known as \emph{homotopy type theory}, or HoTT. The most significant implementation of cubical type theory in the real world is an branch of Agda, known as \emph{Cubical Agda}~\cite{Vezzosi21}. Cubical type theory is usually modeled as cubical sets, in the set-theoretic setting.
+Cubical type theory~\cite{Bezem14}~\cite{Cohen16}~\cite{Angiuli17} is an extension of dependent type theory that provides a computational interpretation of Voevodsky's \emph{univalence axiom}, in a field known as \emph{homotopy type theory}, or HoTT. The most significant implementation of cubical type theory in the real world is a branch of Agda, known as \emph{Cubical Agda}~\cite{Vezzosi21}. Cubical type theory is usually modeled as cubical sets, in the set-theoretic setting.
 
 The outline of the paper is as follows. First, we briefly describe semi-simplicial and semi-cubical sets, as it appears in mathematical literature, and our generalization to $\nu$-sets. We then proceed to explain our construction, with the help of diagrams. Before spelling out the details of our formalization in type-theoretic language, we have a section on reasoning in sets.
 
-\section{Mathematical treatment of \texorpdfstring{$\nu$}{nu}-sets}
+\section{Mathematical treatment of \texorpdfstring{$\nu$}{𝜈}-sets}
 It is well-known that simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices. What we have formalized is \emph{semi-simplicial} sets, and semi-cubical sets, which is to say that they are the usual simplicial sets and cubical sets, minus the degeneracies. Since they're not of particular interest, and indeed, we plan to extend our work to do degeneracies in the future, we briefly explain the mathematical objects we have formalized.
 
 \subsection{Semi-simplicial sets}
