@@ -91,7 +91,7 @@
 \newcommand{\unitpoint}{\star}
 
 % Definitional and extensional equality
-\newcommand{\defeq}{\triangleq}
+\newcommand{\defeq}{\ensuremath{\triangleq}}
 \newcommand{\eqHSet}{\ensuremath{\equiv_{\mathit{HSet}}}}
 \newcommand{\reflHSet}{\ensuremath{\mathsf{refl}_{\mathit{HSet}}}}
 
@@ -388,8 +388,8 @@ which is to say that any two proofs of \emph{equality} of the same two types are
 In type theory, UIP can be proved on the unit type:
 
 \begin{align*}
-  \mathsf{eq\_refl}        & : \forall x, x = x                               \\
-  \mathsf{UIP\_refl\_unit} & : \forall x : \top = \top, x = \mathsf{eq\_refl}
+  \mathsf{eq\_refl}        & : \forall x, x = x                                           \\
+  \mathsf{UIP\_refl\_unit} & : \forall x : \unitpoint = \unitpoint, x = \mathsf{eq\_refl}
 \end{align*}
 
 \subsection{HSet}
