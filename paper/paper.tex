@@ -372,6 +372,34 @@ The indexed representation can be illustrated as:
 One way to obtain one construction from the other is via the \emph{Grothendieck construction}, although this is not relevant to our work.
 
 \subsection{Iterated parametricity}
+A full 2-cube is made of two full 1-cubes connected by a lifted 1-cube made of two lines connecting the former points and a square connecting the former lines:
+\begin{equation*}
+  \begin{array}{lll}
+    \mbox{\textit{squares}}     \\
+    [1mm]\mbox{\textit{lines}}  \\
+    [1mm]\mbox{\textit{points}} \\
+    [1mm]\end{array}
+  \framebox{$\begin{array}{lll}
+        \framebox{$
+            \begin{array}{ll}
+               & \framebox{$a_{0\star}$}              \\
+              \framebox{$a_{00}$}~\framebox{$a_{01}$} \\
+            \end{array}
+          $}~
+        \framebox{$
+            \begin{array}{ll}
+               & \framebox{$a_{1\unitpoint}$}         \\
+              \framebox{$a_{10}$}~\framebox{$a_{11}$} \\
+            \end{array}
+          $}~
+        \raisebox{4.8mm}{$\framebox{$
+                \begin{array}{ll}
+                   & \framebox{$a_{\unitpoint\unitpoint}$}                    \\
+                  \framebox{$a_{\unitpoint 0}$}~\framebox{$a_{\unitpoint 1}$} \\
+                \end{array}
+              $}$}
+      \end{array}$}
+\end{equation*}
 
 \section{Reasoning about sets in type theory}
 Since proof irrelevance is an inherent part of set theory and first-order logic, and proof irrelevance is \emph{extensional} in type theory, we work in a universe known as \texttt{HSet}, which we describe shortly.

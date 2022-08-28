@@ -596,7 +596,7 @@ derivations in the target, two of them typing points and the third one
 typing a proof, seen as a line, together with the fact that these two points are related (as
 in ordinary parametricity), while a typing derivation with $n$
 declarations of an axis shall be interpreted as a $3^n$ derivations,
-split into $2^n$ derivations of points, 
+split into $2^n$ derivations of points,
 $2^{n-1}\times\left(\begin{array}{c}1\\n\end{array}\right)$ derivations of lines
 between those points, $2^{n-2}\times\left(\begin{array}{c}2\\n\end{array}\right)$
 derivations of squares between those lines, etc. until having a single
@@ -606,7 +606,7 @@ the same context as the lines which connect them: a variable of some
 type in the source context is interpreted as a variable of the same
 type in the derivation of a point but as a variable of line over
 points in this type for the derivation of the line. This difference of
-typing context in each component of the so-obtained $n$-cube 
+typing context in each component of the so-obtained $n$-cube
 gives to parametricity a semantic flavor. In the presence of transport, we
 suspect that a more purely syntactic form of parametricity where all components of
 the $n$-cube are typed in the same context is possible. Then, an
@@ -776,7 +776,7 @@ $$
 and, iterating and generalizing the process, we have actually:
 $$
 \mycube{}^{n+1,p} \defeq (\mycube{}^{n,p} \times \mycube{}^{n,p}) \times \mycube{}^{n+1,p+1}
-$$ 
+$$
 Now, the third cube (of dimension $((n+1)-(p+1))$, i.e. $n-p$) connects the first two
 $(n-p)$-cubes, so it has to depend on them. So, the equation is rather
 something of the form:
@@ -784,7 +784,7 @@ $$
 \mycube{}^{n+1,p} \defeq \Sigma a:(\mycube{}^{n,p} \times \mycube{}^{n,p}).\, \mycube{}^{n+1,p+1}(a)
 $$
 Then, by iterating, we obtain:
-$$ 
+$$
 \mycube{}^{n+1,p} \defeq \Sigma a:(\mycube{}^{n,p} \times \mycube{}^{n,p}).\,
  \Sigma b:(\mycube{}^{n,p+1}(a) \times \mycube{}^{n,p+1}(a)). \, \mycube{}^{n+1,p+2}(a,b)
 $$
@@ -907,7 +907,7 @@ $\sort{l+1}$ to be its type. Let also $\unittype$ be the canonical
 type with a single distinguished inhabitant $\unitpoint$. This type
 lives in the first universe and, by cumulativity, also in all other
 universes. We write $\hd(l)$ for the first component of a
-$\Sigma$-type. We write $\times$ for the non-dependent case of a 
+$\Sigma$-type. We write $\times$ for the non-dependent case of a
 $\Sigma$-type and may sometimes also use the notation $p_0$ and $p_1$
 for the two projections from a non-dependent $\Sigma$-types. We write
 $\overrightarrow{p}$ for the rewriting operator along an equality
@@ -990,7 +990,7 @@ ensuring that both sides of the equality in $\downlayer{l}{}$ and $\downcube{l}{
 are in the same type. The proof of $\cohbox{l}{}$ itself requires
 an higher-dimensional coherence condition which we obtain by
 working here in ETT where all proofs of an
-equality are identified (principle of Unicity of Identity Proofs). Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many 
+equality are identified (principle of Unicity of Identity Proofs). Note that if the proofs of the same equality were not equated, there would be a need for arbitrary many
 higher-dimensional coherences (see e.g.~\cite{Herbelin15} for a
 discussion on the de facto need for recursive higher-dimensional
 coherence conditions in formulating higher-dimensional structures in
@@ -1572,7 +1572,7 @@ $\hd(G_1)(\star,(a_1,a_2))$ (A FAIRE PRÉCISÉMENT).
 &&& \mathsf{hassymcubset} ~:~ \issymcubset^n(D)(R);\\
 &&& \overrightarrow{\cdot} ~:~ \coercivelr^n(D)(R);\\
 &&& \overleftarrow{\cdot} ~:~ \coerciverl^n(D)(R);\\
-%&&& \overleftarrow{\cdot} : 
+%&&& \overleftarrow{\cdot} :
 % \Pi a:\left(\begin{array}{c}
 %          \Sigma a_0:\left(\begin{array}{c}\mybox{l}^{n,n-1}(D)\\ \times\\ \mybox{l}^{n,n-1}(D)\end{array}\right).a^{00}=a^{01}\\
 %          \times\\
@@ -1678,7 +1678,7 @@ $$
 \semsort{l}^{0,2} & \defeq & \Sigma (A,=_A):(\Sigma A:\sort{l}.\,A\imp A \imp \sort{l}).\,\Pi a_{00}.\,\Pi a_{01}:A.\, a_{00} =_A a_{01} \imp \Pi a_{00}:A.\,\Pi a_{11}:A.\, a_{10} =_A a_{11} \imp a_{00} =_A a_{10} \imp a_{01} =_A a_{11} \imp \sort\
 {l};\\
 \semsort{l}^{1,0} & \defeq & \{\\
-& & 
+& &
 \begin{array}{lll}
 (A_0,=_{0}) &:& \semsort{l}^{0,1};\\
 (A_1,=_{1}) &:& \semsort{l}^{0,1};\\
@@ -1691,7 +1691,7 @@ $$
 \end{array}\\
 &&\}\\
 \semsort{l}^{2,0} & \defeq & \{\\
-& & 
+& &
 \begin{array}{l}
 (((A_{00},=_{00},=_{=_{00}}),(A_{01},=_{01},=_{=_{01}})),(=_{0\star},\leftrightarrow_{0\star},\Leftrightarrow_{0\star})) : \semsort{l}^{1,1};\\
 (((A_{10},=_{10},=_{=_{10}}),(A_{11},=_{11},=_{=_{11}})),(=_{1\star},\leftrightarrow_{1\star},\Leftrightarrow_{1\star})) : \semsort{l}^{1,1};\\
@@ -1955,7 +1955,7 @@ $$
 \begin{array}{lcll}
 \semtypenew{\sigma}{A} & \defeq & \elt{\#\sigma}{\semnew{\sigma}{A}}\\
 \elt{0}{B} & \defeq & B\\
-\elt{n+1}{(B_0,B_1,B_\star)} & \defeq & 
+\elt{n+1}{(B_0,B_1,B_\star)} & \defeq &
   \Sigma b_0:\elt{n}{B_0}.
   \Sigma b_1:\elt{n}{B_1}.
   b_0 =_{B_\star} b_1\\
@@ -2001,7 +2001,7 @@ types. Similarly, the clause for $t =_\epsilon u$ is actually derivable
 as a projection from the $\Sigma$-type used to define an equivalence.
 
 The reflexivity $\refltermn{}{}{t}$ remains to be made more precise.
- 
+
 \subsection{``Syntactic'' version of the translation}
 
 We believe that it would be possible to define a variant of the
@@ -2108,11 +2108,11 @@ $$
   \end{array}\right)\\
 \\
 \lift{t} & \defeq & (t,t,\refl{t})\\
-\liftlr{t} & \defeq & 
+\liftlr{t} & \defeq &
      (t,
       \overrightarrow{\elt{\sigma}{\pi_\star \semnew{\sigma}{A}}}(t),
       \overrightarrow{\overrightarrow{\elt{\sigma}{\pi_\star \semnew{\sigma}{A}}}}(t))\\
-\liftrl{t} & \defeq & 
+\liftrl{t} & \defeq &
      (\overleftarrow{\elt{\sigma}{\pi_\star \semnew{\sigma}{A}}}(t),
       t,
       \overleftarrow{\overleftarrow{\elt{\sigma}{\pi_\star \semnew{\sigma}{A}}}}(t))\\
@@ -2343,7 +2343,7 @@ t⋆⋆ : (t₀⋆ =_(Πa⋆⋆:A⋆⋆.B⋆⋆) t₁⋆) ≡
 
 = = = = = = =
 
-Mq π...π(t) π...π(u) : 
+Mq π...π(t) π...π(u) :
 
 ((λa:A₀₀.t₀₀),(λa:A₀₁.t₀₁),(λa:A₀₀.λa:A₀₁.λa⋆:a₀₀=a₀₁.t₀⋆.)),(...,...,(≃,λx.x,...)),((≃,λx.x,...),(≃,λx.x,...),(≃_2,λx.x,...))
 
@@ -2374,7 +2374,7 @@ Mq π...π(t) π...π(u) :
                         avec σ' préfixe de σ avant i)
   ⇑σ =ⁿ_Ν     ≜ (=ⁿ_Ν,=ⁿ_N,(=ⁿ⁺¹_,λx.x,...))   (9 composantes dans la 3e composante)
   ⇑σ 0ⁿ       ≜ (0ⁿ,0ⁿ,0ⁿ⁺¹)             (où 0ⁿ⁺¹ prouve Γ ⊢ 0ⁿ =ⁿ⁺¹_N 0ⁿ)
-  ⇑σ (Sⁿ t)   ≜ (Sⁿ (⇑σt)₀,Sⁿ (⇑σt)₁,Sⁿ⁺¹ (⇑σt)⋆) 
+  ⇑σ (Sⁿ t)   ≜ (Sⁿ (⇑σt)₀,Sⁿ (⇑σt)₁,Sⁿ⁺¹ (⇑σt)⋆)
                     (où Sⁿ⁺¹ prouve Γ ⊢ (Sⁿ n) =ⁿ⁺¹_N (Sⁿ m) à partir de Γ ⊢ n =ⁿ_N m)
   ⇑σ (λi.t)   ≜ (⇑(σ,i)t)⋆
   ⇑σ (t i)    ≜ ⇑(σ\i) t ???
