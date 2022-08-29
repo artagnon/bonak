@@ -106,9 +106,9 @@
 \renewcommand{\l}{l}
 \renewcommand{\c}{c}
 \newcommand{\pair}[2]{#1, #2}
-\newcommandx{\myframe}[2][1,2]{\prim{frame}[][#1][#2][][]}
-\newcommandx{\mylayer}[2][1,2]{\prim{layer}[][#1][#2][][]}
-\newcommandx{\myfiller}[2][1,2]{\prim{filler}[][#1][#2][][]}
+\newcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
+\newcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
+\newcommandx{\filler}[2][1,2]{\prim{filler}[][#1][#2][][]}
 
 % The eqntable environment, displaying the various
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
@@ -170,7 +170,7 @@
 
 \section{Overture}
 
-In the context of typed functional programming, Reynolds' parametricity~\cite{} interprets types as relations characterizing the observational equality of programs of this type. Parametricity can be iterated and it has been noted that iterated Reynolds' parametricity has a cubical flavor~\cite{}. We obtain a \emph{unary} variant of Reynolds' \emph{binary} parametricity by using predicates instead of relations, in which case we obtain a form of (Kreisel) realizability~\cite{}. It has then be noted that iterated unary parametricity has an augmented simplicial flavor\footnote{Observation from Hugo Moeneclaey}.
+In the context of typed functional programming, Reynolds' parametricity~\cite{} interprets types as relations characterizing the observational equality of programs of this type. Parametricity can be iterated and it has been noted that iterated Reynolds' parametricity has a cubical flavor~\cite{}. We obtain a \emph{unary} variant of Reynolds' \emph{binary} parametricity by using predicates instead of relations, in which case we obtain a form of (Kreisel) realizability~\cite{}. It has then be noted that iterated unary parametricity has an augmented simplicial flavor~\footnote{Observation from Hugo Moeneclaey}.
 
 We exploit the connection between iterated unary parametricity and augmented simplicial sets and between binary parametricity and cubical sets to present a uniform construction of both semi-simplicial semi-cubical sets obtained by applying simple rules iterating parametricity.  In contrast to the presheaf presentation of semi-simplicial and semi-cubical sets, our uniform construction, which we call \emph{$\nu$-sets}, is \emph{indexed}. That is, instead of having the set of semi-simplices or semi-cubes in dimension $n+1$
 \emph{fibered} over the set of semi-simplices or semi-cubes in dimension $n$, we consider families of semi-simplices and semi-cubes indexed over their faces.
@@ -196,7 +196,7 @@ Cubical type theory~\cite{Bezem14}~\cite{Cohen16}~\cite{Angiuli17} is an extensi
 The outline of the paper is as follows. First, we briefly describe semi-simplicial and semi-cubical sets, as it appears in mathematical literature, and our generalization to $\nu$-sets. We then proceed to explain our construction, with the help of diagrams. Before spelling out the details of our formalization in type-theoretic language, we have a section on reasoning in sets.
 
 \section{Mathematical treatment of \texorpdfstring{$\nu$}{𝜈}-sets}
-It is well-known that simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices. What we have formalized is \emph{semi-simplicial} sets, and semi-cubical sets, which is to say that they are the usual simplicial sets and cubical sets, minus the degeneracies. Since they're not of particular interest, and indeed, we plan to extend our work to do degeneracies in the future, we briefly explain the mathematical objects we have formalized.
+It is well-known that simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices. What we have formalized is \emph{semi-simplicial} sets, and \emph{semi-cubical} sets, which is to say that they are the usual simplicial sets and cubical sets, minus the degeneracies. Indeed, we plan to extend our work to do degeneracies in the future, but let us briefly explain the mathematical objects we have formalized.
 
 \subsection{Semi-simplicial sets}
 Semi-simplicial sets are otherwise known as \emph{delta-sets} in mathematical literature. We briefly describe \DeltaHat, which is identical to \Simplex{}, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are \emph{strictly} order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. The core of the definition of $\SSet$ is precisely what we have constructed.
@@ -370,48 +370,48 @@ A full 2-cube is made of two full 1-cubes connected by a lifted 1-cube made of t
       [1mm]\end{array}
     \framebox{$\begin{array}{lll}
                      \overbrace{\raisebox{0.05cm}{\framebox{$
-                           \begin{array}{ll}
-                  \raisebox{0cm}{\hspace{.5cm}{\mylayer[1][0]}} & \framebox{$a_{0\unitpoint}$} \\
+                \begin{array}{ll}
+                  \raisebox{0cm}{\hspace{.5cm}{\layer[1][0]}} & \framebox{$a_{0\unitpoint}$} \\
                   [1mm]\overbrace{\framebox{$a_{00}$}~\framebox{$a_{01}$}}   &
-                  \raisebox{-0.1cm}{\hspace{0.1cm}\myfiller[1][0]\!\!\!\!\!\!\!\!}
+                  \raisebox{-0.1cm}{\hspace{0.1cm}\filler[1][0]\!\!\!\!\!\!\!\!}
                   \\
                 \end{array}
                          $}}~
                      {\raisebox{0.05cm}{\framebox{$
-                           \begin{array}{ll}
-                  \raisebox{0cm}{\hspace{.5cm}{\mylayer[1][0]}} & \framebox{$a_{1\unitpoint}$} \\
+                \begin{array}{ll}
+                  \raisebox{0cm}{\hspace{.5cm}{\layer[1][0]}} & \framebox{$a_{1\unitpoint}$} \\
                   [1mm]\overbrace{\framebox{$a_{10}$}~\framebox{$a_{11}$}}   &
-                  \raisebox{-0.1cm}{\myfiller[1][0]\!\!\!\!\!\!\!\!}
+                  \raisebox{-0.1cm}{\filler[1][0]\!\!\!\!\!\!\!\!}
                 \end{array}
-                         $}}}}^{\mylayer[2][0]}~\stackrel{\raisebox{9.5mm}{$\framebox{$
-                               \begin{array}{ll}
-                      \raisebox{0cm}{\hspace{.5cm}{$\mylayer[2][1]$}}                   & \framebox{$a_{\unitpoint\unitpoint}$} \\
+                         $}}}}^{\layer[2][0]}~\stackrel{\raisebox{9.5mm}{$\framebox{$
+                    \begin{array}{ll}
+                      \raisebox{0cm}{\hspace{.5cm}{$\layer[2][1]$}}                   & \framebox{$a_{\unitpoint\unitpoint}$} \\
                       [1mm]\overbrace{\framebox{$a_{\unitpoint 0}$}~\framebox{$a_{\unitpoint 1}$}} &
-                      \raisebox{-0.1cm}{ \hspace{0.1cm}\myfiller[2][1]\!\!\!\!\!\!\!\!}
+                      \raisebox{-0.1cm}{ \hspace{0.1cm}\filler[2][1]\!\!\!\!\!\!\!\!}
                     \end{array}$}$}}
-                     {\raisebox{-0.4cm}{\hspace{2.5cm}\myfiller[2][0]\!\!\!\!\!\!\!}}
-                   \end{array}$}
-    ~~~\parbox{2cm}{{\it additionally, each atomic component at dimension $n$ is a \myfiller[n][n]}} \\\\
+                     {\raisebox{-0.4cm}{\hspace{2.5cm}\filler[2][0]\!\!\!\!\!\!\!}}
+          \end{array}$}
+    ~~~\parbox{2cm}{{\it additionally, each atomic component at dimension $n$ is a \filler[n][n]}} \\\\
     [-1mm]\qquad\qquad\quad~~
     \begin{tikzcd}[column sep=5.2em, row sep=1em]
       \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
     \end{tikzcd}
-    \mbox{\myframe[1][1]}
+    \mbox{\framep[1][1]}
     \qquad
     \begin{tikzcd}[column sep=5.2em, row sep=1em]
       \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
     \end{tikzcd}
-    \mbox{\myframe[1][1]} \\
+    \mbox{\framep[1][1]} \\
     \qquad\qquad~~
     \begin{tikzcd}[column sep=32em, row sep=1em]
       \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
     \end{tikzcd}
-    \mbox{\myframe[2][1]} \\
+    \mbox{\framep[2][1]} \\
     \qquad\qquad~~
     \begin{tikzcd}[column sep=39em, row sep=1em]
       \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
     \end{tikzcd}
-    \mbox{\myframe[2][2]} \\
+    \mbox{\framep[2][2]} \\
   \end{array}
 \end{equation*}
 }
@@ -478,9 +478,9 @@ In the \texttt{HSet} universe, three properties hold:
 
 % Frame, layer, and filler
 % Drop the universe letter
-\newcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[][#2][#3][#4][#5]}
-\newcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[][#2][#3][#4][#5]}
-\newcommandx{\filler}[5][1,2,3,4,5]{\prim{filler}[][#2][#3][#4][#5]}
+\renewcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[][#2][#3][#4][#5]}
+\renewcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[][#2][#3][#4][#5]}
+\renewcommandx{\filler}[5][1,2,3,4,5]{\prim{filler}[][#2][#3][#4][#5]}
 
 % Restriction for frame, layer, and filler
 % Drop the unviverse letter
