@@ -106,6 +106,9 @@
 \renewcommand{\l}{l}
 \renewcommand{\c}{c}
 \newcommand{\pair}[2]{#1, #2}
+\newcommandx{\myframe}[2][1,2]{\prim{frame}[][#1][#2][#2][]}
+\newcommandx{\mylayer}[2][1,2]{\prim{layer}[][#1][#2][][]}
+\newcommandx{\myfiller}[2][1,2]{\prim{filler}[][#1][#2][][]}
 
 % The eqntable environment, displaying the various
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
@@ -136,7 +139,7 @@
 \newcommandx*{\eqnarg}[3]{\ifinmask[bonak]{#1}[#2]{\{#2:#3\}}{(#2:#3)}}
 
 % Table caption set up
-\DeclareCaptionFormat{hfillstart}{\hfill#1#2#3\par}
+\DeclareCaptionFormat{hfillunittypet}{\hfill#1#2#3\par}
 \DeclareCaptionFont{mdit}{\mdseries\itshape}
 \captionsetup[table]{
   justification=centering,
@@ -224,7 +227,7 @@ $$
   \end{tikzcd}
 $$
 
-where the filling conditions are conflated with the cube itself. $\Simplex{n}$ can be defined quite simply as the convex hull of $n$ points, but even defining the standard $n$-cube becomes a problem if we start with $\sq{n}$, but the situation becomes much more amenable if we define:
+where the filling conditions are conflated with the cube itself. $\Simplex{n}$ can be defined quite simply as the convex hull of $n$ points, but even defining the standard $n$-cube becomes a problem if we unittypet with $\sq{n}$, but the situation becomes much more amenable if we define:
 
 \begin{definition}[\Cube{n}]
   \begin{equation*}
@@ -336,9 +339,9 @@ The fibered representation can be illustrated as:
 The indexed representation can be illustrated as:
 
 \begin{align*}
-  X_0 & : \U{}                                                                                                      \\
-  X_1 & : X_0 \times X_0 \rightarrow \U{}                                                                           \\
-  X_2 & : \forall a b c d, X_1 : ab \rightarrow X_1 : bc \rightarrow X_1 : cd \rightarrow X_1 : da \rightarrow \U{} \\
+  X_0 & : \U{}                                                                                                              \\
+  X_1 & : X_0 \times X_0 \rightarrow \U{}                                                                                   \\
+  X_2 & : \forall a b c d, X_1 (a, b) \rightarrow X_1 (a, c) \rightarrow X_1 (b, d) \rightarrow X_1 (c, d) \rightarrow \U{} \\
   \ldots
 \end{align*}
 
@@ -347,31 +350,57 @@ One way to obtain one construction from the other is via the \emph{Grothendieck 
 \subsection{Iterated parametricity}
 A full 2-cube is made of two full 1-cubes connected by a lifted 1-cube made of two lines connecting the former points and a square connecting the former lines:
 \begin{equation*}
-  \begin{array}{lll}
-    \mbox{\textit{squares}}     \\
-    [1mm]\mbox{\textit{lines}}  \\
-    [1mm]\mbox{\textit{points}} \\
-    [1mm]\end{array}
-  \framebox{$\begin{array}{lll}
-        \framebox{$
-            \begin{array}{ll}
-               & \framebox{$a_{0\star}$}              \\
-              \framebox{$a_{00}$}~\framebox{$a_{01}$} \\
-            \end{array}
-          $}~
-        \framebox{$
-            \begin{array}{ll}
-               & \framebox{$a_{1\unitpoint}$}         \\
-              \framebox{$a_{10}$}~\framebox{$a_{11}$} \\
-            \end{array}
-          $}~
-        \raisebox{4.8mm}{$\framebox{$
-                \begin{array}{ll}
-                   & \framebox{$a_{\unitpoint\unitpoint}$}                    \\
-                  \framebox{$a_{\unitpoint 0}$}~\framebox{$a_{\unitpoint 1}$} \\
+  \begin{array}{l}
+    \begin{array}{lll}
+      \mbox{\textit{squares}}     \\
+      [3mm]\mbox{\textit{lines}}  \\
+      [3mm]\mbox{\textit{points}} \\
+      [1mm]\end{array}
+    \framebox{$\begin{array}{lll}
+                     \overbrace{\raisebox{0.05cm}{\framebox{$
+                           \begin{array}{ll}
+                  \raisebox{0cm}{\hspace{.5cm}{\scriptsize$\mylayer[1][0]$}} & \framebox{$a_{0\unitpoint}$} \\
+                  [1mm]\overbrace{\framebox{$a_{00}$}~\framebox{$a_{01}$}}   &
+                  \raisebox{-0.1cm}{{\scriptsize \hspace{0.1cm}$\myfiller[1][0]\!\!\!\!\!\!\!\!$}}
+                  \\
                 \end{array}
-              $}$}
-      \end{array}$}
+                         $}}~
+                     {\raisebox{0.05cm}{\framebox{$
+                           \begin{array}{ll}
+                  \raisebox{0cm}{\hspace{.5cm}{\scriptsize$\mylayer[1][0]$}} & \framebox{$a_{1\unitpoint}$} \\
+                  [1mm]\overbrace{\framebox{$a_{10}$}~\framebox{$a_{11}$}}   &
+                  \raisebox{-0.1cm}{{\scriptsize \hspace{0.1cm}$\myfiller[1][0]\!\!\!\!\!\!\!\!$}}
+                \end{array}
+                         $}}}}^{\mylayer[2][0]}~\stackrel{\raisebox{9.5mm}{$\framebox{$
+                               \begin{array}{ll}
+                      \raisebox{0cm}{\hspace{.5cm}{\scriptsize$\mylayer[2][1]$}}                   & \framebox{$a_{\unitpoint\unitpoint}$} \\
+                      [1mm]\overbrace{\framebox{$a_{\unitpoint 0}$}~\framebox{$a_{\unitpoint 1}$}} &
+                      \raisebox{-0.1cm}{{\scriptsize \hspace{0.1cm}$\myfiller[2][1]\!\!\!\!\!\!\!\!$}}
+                    \end{array}$}$}}
+                     {\raisebox{-0.4cm}{{\scriptsize \hspace{2.5cm}$\myfiller[2][0]\!\!\!\!\!\!\!$}}}
+                   \end{array}$}
+    ~~~\parbox{3.5cm}{{\it additionally, each atomic component at dimension $n$ is a $\myfiller[n][n]$}} \\
+    [-1mm]\qquad\qquad~~
+    \begin{tikzcd}
+      \bullet\arrow[r, leftrightarrow] & \bullet\\
+    \end{tikzcd}
+    \mbox{\normalsize $\myframe[1][1]$}
+    \quad~~
+    \begin{tikzcd}
+      \bullet\arrow[r, leftrightarrow] & \bullet \\
+    \end{tikzcd}
+    \mbox{\normalsize $\myframe[1][1]$}                                                                  \\
+    [-2mm]\qquad\qquad
+    \begin{tikzcd}
+     \bullet\arrow[r, leftrightarrow] & \bullet\\
+    \end{tikzcd}
+    \mbox{\normalsize$\myframe[2][1]$}                                                                   \\
+    [-2mm]\qquad\qquad
+    \begin{tikzcd}
+      \bullet\arrow[r, leftrightarrow] & \bullet\\
+    \end{tikzcd}
+    \mbox{\normalsize$\myframe[2][2]$}                                                                   \\
+  \end{array}
 \end{equation*}
 
 \section{Reasoning about sets in type theory}
