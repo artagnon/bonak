@@ -14,7 +14,7 @@ Some features of this project:
 Our axioms are:
 
 ```text
-STrue relies on definitional UIP.
+STrue relies on definitional UIP. (* Bug *)
 side : HSet
 functional_extensionality_dep
   : forall (A : Type) (B : A -> Type) (f g : forall x : A, B x),
