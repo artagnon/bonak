@@ -108,13 +108,6 @@
 \renewcommand{\c}{c}
 \newcommand{\pair}[2]{#1, #2}
 
-% Fancy headers
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[R]{\footnotesize\textcolor{gray80}{{\thepage / \pageref{LastPage}}}}
-\renewcommand{\sectionmark}[1]{\markboth{}{\thesection.\ #1}}
-\fancyhead[L]{\footnotesize\textcolor{gray80}{{\MakeUppercase{\rightmark}}}}
-
 % The eqntable environment, displaying the various
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 \NewEnviron{eqntable}[1]{
