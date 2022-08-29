@@ -352,6 +352,7 @@ One step of parametricity can be seen as interpreting a point by a line. Iterati
 typing derivation with $n$ axis declarations as an $n$-cube of typing derivations in the target. For instance, a typing derivation with exactly one declaration of an axis will be interpreted by 3 typing derivations in the target, two of them typing points and the third one typing a proof, seen as a line, together with the fact that these two points are related (as in ordinary parametricity), while a typing derivation with $n$ declarations of an axis shall be interpreted as a $3^n$ derivations, split into $2^n$ derivations of points.
 
 A full 2-cube is made of two full 1-cubes connected by a lifted 1-cube made of two lines connecting the former points and a square connecting the former lines:
+{\scriptsize
 \begin{equation*}
   \begin{array}{l}
     \begin{array}{lll}
@@ -362,49 +363,50 @@ A full 2-cube is made of two full 1-cubes connected by a lifted 1-cube made of t
     \framebox{$\begin{array}{lll}
                      \overbrace{\raisebox{0.05cm}{\framebox{$
                            \begin{array}{ll}
-                  \raisebox{0cm}{\hspace{.5cm}{\scriptsize$\mylayer[1][0]$}} & \framebox{$a_{0\unitpoint}$} \\
+                  \raisebox{0cm}{\hspace{.5cm}{\mylayer[1][0]}} & \framebox{$a_{0\unitpoint}$} \\
                   [1mm]\overbrace{\framebox{$a_{00}$}~\framebox{$a_{01}$}}   &
-                  \raisebox{-0.1cm}{{\scriptsize \hspace{0.1cm}$\myfiller[1][0]\!\!\!\!\!\!\!\!$}}
+                  \raisebox{-0.1cm}{\hspace{0.1cm}\myfiller[1][0]\!\!\!\!\!\!\!\!}
                   \\
                 \end{array}
                          $}}~
                      {\raisebox{0.05cm}{\framebox{$
                            \begin{array}{ll}
-                  \raisebox{0cm}{\hspace{.5cm}{\scriptsize$\mylayer[1][0]$}} & \framebox{$a_{1\unitpoint}$} \\
+                  \raisebox{0cm}{\hspace{.5cm}{\mylayer[1][0]}} & \framebox{$a_{1\unitpoint}$} \\
                   [1mm]\overbrace{\framebox{$a_{10}$}~\framebox{$a_{11}$}}   &
-                  \raisebox{-0.1cm}{{\scriptsize \hspace{0.1cm}$\myfiller[1][0]\!\!\!\!\!\!\!\!$}}
+                  \raisebox{-0.1cm}{\myfiller[1][0]\!\!\!\!\!\!\!\!}
                 \end{array}
                          $}}}}^{\mylayer[2][0]}~\stackrel{\raisebox{9.5mm}{$\framebox{$
                                \begin{array}{ll}
-                      \raisebox{0cm}{\hspace{.5cm}{\scriptsize$\mylayer[2][1]$}}                   & \framebox{$a_{\unitpoint\unitpoint}$} \\
+                      \raisebox{0cm}{\hspace{.5cm}{$\mylayer[2][1]$}}                   & \framebox{$a_{\unitpoint\unitpoint}$} \\
                       [1mm]\overbrace{\framebox{$a_{\unitpoint 0}$}~\framebox{$a_{\unitpoint 1}$}} &
-                      \raisebox{-0.1cm}{{\scriptsize \hspace{0.1cm}$\myfiller[2][1]\!\!\!\!\!\!\!\!$}}
+                      \raisebox{-0.1cm}{ \hspace{0.1cm}\myfiller[2][1]\!\!\!\!\!\!\!\!}
                     \end{array}$}$}}
-                     {\raisebox{-0.4cm}{{\scriptsize \hspace{2.5cm}$\myfiller[2][0]\!\!\!\!\!\!\!$}}}
+                     {\raisebox{-0.4cm}{\hspace{2.5cm}\myfiller[2][0]\!\!\!\!\!\!\!}}
                    \end{array}$}
-    ~~~\parbox{3.5cm}{{\it additionally, each atomic component at dimension $n$ is a $\myfiller[n][n]$}} \\
-    [-1mm]\qquad\qquad~~
-    \begin{tikzcd}
-      \bullet\arrow[r, leftrightarrow] & \bullet\\
+    ~~~\parbox{2cm}{{\it additionally, each atomic component at dimension $n$ is a \myfiller[n][n]}} \\\\
+    [-1mm]\qquad\qquad\quad~~
+    \begin{tikzcd}[column sep=5.2em, row sep=1em]
+      \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
     \end{tikzcd}
-    \mbox{\normalsize $\myframe[1][1]$}
-    \quad~~
-    \begin{tikzcd}
-      \bullet\arrow[r, leftrightarrow] & \bullet \\
+    \mbox{\myframe[1][1]}
+    \qquad
+    \begin{tikzcd}[column sep=5.2em, row sep=1em]
+      \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
     \end{tikzcd}
-    \mbox{\normalsize $\myframe[1][1]$}                                                                  \\
-    [-2mm]\qquad\qquad
-    \begin{tikzcd}
-      \bullet\arrow[r, leftrightarrow] & \bullet\\
+    \mbox{\myframe[1][1]} \\
+    \qquad\qquad~~
+    \begin{tikzcd}[column sep=32em, row sep=1em]
+      \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
     \end{tikzcd}
-    \mbox{\normalsize$\myframe[2][1]$}                                                                   \\
-    [-2mm]\qquad\qquad
-    \begin{tikzcd}
-      \bullet\arrow[r, leftrightarrow] & \bullet\\
+    \mbox{\myframe[2][1]} \\
+    \qquad\qquad~~
+    \begin{tikzcd}[column sep=39em, row sep=1em]
+      \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
     \end{tikzcd}
-    \mbox{\normalsize$\myframe[2][2]$}                                                                   \\
+    \mbox{\myframe[2][2]} \\
   \end{array}
 \end{equation*}
+}
 
 \section{Reasoning about sets in type theory}
 Since proof irrelevance is an inherent part of set theory and first-order logic, and proof irrelevance is \emph{extensional} in type theory, we work in a universe known as \texttt{HSet}, which we describe shortly.
