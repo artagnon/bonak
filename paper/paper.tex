@@ -115,10 +115,6 @@
 \renewcommand{\sectionmark}[1]{\markboth{}{\thesection.\ #1}}
 \fancyhead[L]{\footnotesize\textcolor{gray80}{{\MakeUppercase{\rightmark}}}}
 
-% Pack enumerate items and bibitems
-\setlist{nolistsep}
-\setlength{\bibitemsep}{.2\baselineskip plus .05\baselineskip minus .05\baselineskip}
-
 % The eqntable environment, displaying the various
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 \NewEnviron{eqntable}[1]{
@@ -155,11 +151,6 @@
   font=bf,
   labelfont=mdit,
 }
-
-% Fonts
-\setmainfont{Avenir Next}
-\setmonofont{Source Code Pro}
-\defaultfontfeatures{Ligatures=TeX, Scale=MatchUppercase}
 
 \title{A mechanization of semi-simplicial and semi-cubical sets in the calculus of inductive constructions}
 \author{
