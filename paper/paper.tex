@@ -106,7 +106,7 @@
 \renewcommand{\l}{l}
 \renewcommand{\c}{c}
 \newcommand{\pair}[2]{#1, #2}
-\newcommandx{\myframe}[2][1,2]{\prim{frame}[][#1][#2][#2][]}
+\newcommandx{\myframe}[2][1,2]{\prim{frame}[][#1][#2][][]}
 \newcommandx{\mylayer}[2][1,2]{\prim{layer}[][#1][#2][][]}
 \newcommandx{\myfiller}[2][1,2]{\prim{filler}[][#1][#2][][]}
 
@@ -348,6 +348,9 @@ The indexed representation can be illustrated as:
 One way to obtain one construction from the other is via the \emph{Grothendieck construction}, although this is not relevant to our work.
 
 \subsection{Iterated parametricity}
+One step of parametricity can be seen as interpreting a point by a line. Iterating parametricity shall lead to map terms typed in a context with $n$ declarations of an axis as $n$-cubes. We shall interpret a
+typing derivation with $n$ axis declarations as an $n$-cube of typing derivations in the target. For instance, a typing derivation with exactly one declaration of an axis will be interpreted by 3 typing derivations in the target, two of them typing points and the third one typing a proof, seen as a line, together with the fact that these two points are related (as in ordinary parametricity), while a typing derivation with $n$ declarations of an axis shall be interpreted as a $3^n$ derivations, split into $2^n$ derivations of points.
+
 A full 2-cube is made of two full 1-cubes connected by a lifted 1-cube made of two lines connecting the former points and a square connecting the former lines:
 \begin{equation*}
   \begin{array}{l}
@@ -392,7 +395,7 @@ A full 2-cube is made of two full 1-cubes connected by a lifted 1-cube made of t
     \mbox{\normalsize $\myframe[1][1]$}                                                                  \\
     [-2mm]\qquad\qquad
     \begin{tikzcd}
-     \bullet\arrow[r, leftrightarrow] & \bullet\\
+      \bullet\arrow[r, leftrightarrow] & \bullet\\
     \end{tikzcd}
     \mbox{\normalsize$\myframe[2][1]$}                                                                   \\
     [-2mm]\qquad\qquad
@@ -418,8 +421,9 @@ which is to say that any two proofs of \emph{equality} of the same two types are
 In type theory, UIP can be proved on the unit type:
 
 \begin{align*}
-  \mathsf{eq\_refl}        & : \forall x, x = x                                           \\
-  \mathsf{UIP\_refl\_unit} & : \forall x : \unitpoint = \unitpoint, x = \mathsf{eq\_refl}
+  \mathsf{eq\_refl}        & : \forall x, x = x                                                    \\
+  \mathsf{UIP\_refl\_unit} & : \forall x : \unitpoint = \unitpoint, x = \mathsf{eq\_refl}          \\
+  \mathsf{UIP\_refl\_bool} & : \forall b : \mathsf{bool}, \forall x : b = b, x = \mathsf{eq\_refl} \\
 \end{align*}
 
 \subsection{HSet}
