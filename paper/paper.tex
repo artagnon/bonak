@@ -177,21 +177,19 @@ We exploit the connection between iterated unary parametricity and augmented sim
 
 \iffalse
   Our contribution is the following. We have modelled the core of semi-simplicial sets in a way that naturally generalizes to semi-cubical sets in type theory, and we call our generalization \emph{$\nu$-sets}. In contrast to the presheaf presentation of semi-cubical -based where the set of  that use a fibered representation, we use an indexed representation. Our work is, in principle axiom-free, although the accompanying artifact uses functional extensionality, and this requires disappears if $\nu$ is finite.
-
-  \begin{table}[H]
-    \begin{tabularx}{\linewidth}{p{.3\linewidth}|p{.3\linewidth}|p{.3\linewidth}}
-      \toprule
-              & Set theory & Type theory \\
-      \graymidrule
-      Fibered & CCHM       &             \\
-      \graymidrule
-      Indexed &            & Our work    \\
-      \bottomrule
-    \end{tabularx}
-  \end{table}
-
-  Cubical type theory~\cite{Bezem14}~\cite{Cohen16}~\cite{Angiuli17} is an extension of dependent type theory that provides a computational interpretation of Voevodsky's \emph{univalence axiom}, in a field known as \emph{homotopy type theory}, or HoTT. The most significant implementation of cubical type theory in the real world is a branch of Agda, known as \emph{Cubical Agda}~\cite{Vezzosi21}. Cubical type theory is usually modeled as cubical sets, in the set-theoretic setting.
 \fi
+
+\begin{table}[H]
+  \begin{tabularx}{\linewidth}{p{.3\linewidth}|p{.3\linewidth}|p{.3\linewidth}}
+    \toprule
+            & Set theory     & Type theory \\
+    \graymidrule
+    Fibered & \cite{Cohen16} &             \\
+    \graymidrule
+    Indexed &                & Our work    \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
 
 The outline of the paper is as follows. First, we briefly describe semi-simplicial and semi-cubical sets, as it appears in mathematical literature, and our generalization to $\nu$-sets. We then proceed to explain our construction, with the help of diagrams. Before spelling out the details of our formalization in type-theoretic language, we have a section on reasoning in sets.
 
