@@ -224,17 +224,6 @@ Semi-simplicial sets are otherwise known as \emph{delta-sets} in mathematical li
 \end{example}
 
 \subsection{Semi-cubical sets}
-We might naively attempt to define $\Cube{}$ identically to \DeltaHat, but let us briefly explain why this wouldn't work, motivating the definition of semi-cubical sets as in \cite{Antolini00}. If there were morphisms from every $\sq{m}$ to \sq{n}, we would end up with:
-
-$$
-  \begin{tikzcd}
-    \bullet \arrow[r] \arrow[dr] \arrow[d] & \bullet \arrow[d] \\
-    \bullet \arrow[r] \arrow[ur] & \bullet
-  \end{tikzcd}
-$$
-
-where the filling conditions are conflated with the cube itself. $\Simplex{n}$ can be defined quite simply as the convex hull of $n$ points, but even defining the standard $n$-cube becomes a problem if we unittypet with $\sq{n}$, but the situation becomes much more amenable if we define:
-
 \begin{definition}[\Cube{n}]
   \begin{equation*}
     \Cube{n} := \I{n} = \sq{0, 1}^n
@@ -554,6 +543,18 @@ The proof of $\cohf$ require a higher-dimensional coherence condition which we o
 
 \renewcommand*{\lab}{tab:coh}
 \input{tab-coh.tex}
+
+
+where $\cohtwo{frame}$ is:
+
+\begin{align*}
+  \cohf[m][\omega][\theta][r][p][n][p][][d = {\restrf[m][\epsilon][q+2][n][p][][d = \d, D = \D]}, D = \D]\;\bullet         \\
+  \ap (\restrf[m][\omega][r][n][p][][d = {\cohf[m][\epsilon][\theta][q+1][p][n][p][][d = \d, D = \D]}, D = \D]\;\bullet    \\
+  \cohf[m][\epsilon][\omega][q][r][n][p][][d = {\restrf[m][\theta][p][n][p][][d = \d, D = \D]}, D = \D] =                  \\
+  \ap (\restrf[m][\theta][p][n][p][][d = {\cohf[m][\epsilon][\omega][q+1][r+1][n][p][][d = \d, D = \D]}, D = \D])\;\bullet \\
+  \cohf[m][\epsilon][\theta][q][p][n][p][][d = {\restrf[m][\omega][r+1][n][p][][d = \d, D = \D]}, D = \D]\;\bullet         \\
+  \ap (\restrf[m][\epsilon][q][n][p][][d = {\cohf[m][\omega][\theta][r][p][n][p][][d = \d, D = \D]}, D = \D])
+\end{align*}
 
 \newpage
 \section{Future work}
