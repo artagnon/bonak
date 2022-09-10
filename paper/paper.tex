@@ -78,7 +78,7 @@
 
 % Simplicial and Cubical sets
 \newcommand{\DeltaPlus}{\ensuremath{\boldsymbol{\Delta}_+}}
-\newcommand{\Cube}[1]{\ensuremath{\boldsymbol{\square^{#1}}}}
+\newcommand{\Cube}{\ensuremath{\boldsymbol{\square}}}
 \renewcommand{\I}[1]{\ensuremath{\mathsf{I}^{#1}}}
 \newcommand{\CSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\square}}}}
 
@@ -208,6 +208,14 @@ We consider the category of augmented semi-simplices, which can be written in di
   \end{align*}
 \end{definition}
 
+\begin{definition}[$\Set_{\DeltaPlus}$]
+  We define the category of augmented semi-simplicial sets as the functor category:
+
+  \begin{equation*}
+    \Set_{\DeltaPlus} := \Set^{\op{\DeltaPlus}}
+  \end{equation*}
+\end{definition}
+
 \begin{example}[$\DeltaPlus^0$, $\DeltaPlus^1$]
   $\DeltaPlus^0$ can be drawn as:
 
@@ -228,15 +236,24 @@ We consider the category of augmented semi-simplices, which can be written in di
 \end{example}
 
 \subsection{Semi-cubical sets}
-\begin{definition}[\Cube{}]
+\begin{definition}[\Cube]
   \begin{align*}
-    \obj(\Cube{}) & := \Nat                                                                                                             \\
-    \hom(p, n)    & := \{(i_{p + 1}, \epsilon_{p + 1}) \ldots, (i_n, \epsilon_n) \mid p < i_{p + 1} < i_{p + 2} < \ldots < i_n \leq n\}
+    \obj(\Cube) & := \Nat                                                                                                             \\
+    \hom(p, n)  & := \{(i_{p + 1}, \epsilon_{p + 1}) \ldots, (i_n, \epsilon_n) \mid p < i_{p + 1} < i_{p + 2} < \ldots < i_n \leq n\} \\
+    f \circ g   & := \text{concatenation of the sequences $f$ and $g$}
   \end{align*}
 \end{definition}
 
-\begin{example}[$\Cube{0}$, $\Cube{1}$ and $\Cube{2}$]
-  $\Cube{0}$ can be drawn as:
+\begin{definition}[\CSet]
+  We define the category of semi-cubical sets as the functor category:
+
+  \begin{equation*}
+    \CSet := \Set^{\op{\Cube}}
+  \end{equation*}
+\end{definition}
+
+\begin{example}[$\Cube^0$, $\Cube^1$ and $\Cube^2$]
+  $\Cube^0$ can be drawn as:
 
   \begin{equation*}
     \begin{tikzcd}
@@ -244,7 +261,7 @@ We consider the category of augmented semi-simplices, which can be written in di
     \end{tikzcd}
   \end{equation*}
 
-  $\Cube{1}$ can be drawn as:
+  $\Cube^1$ can be drawn as:
 
   \begin{equation*}
     \begin{tikzcd}
@@ -253,7 +270,7 @@ We consider the category of augmented semi-simplices, which can be written in di
   \end{equation*}
 
 
-  and $\Cube{2}$ can be drawn as a filled square:
+  and $\Cube^2$ can be drawn as a filled square:
 
 
   \begin{equation*}
@@ -264,46 +281,9 @@ We consider the category of augmented semi-simplices, which can be written in di
   \end{equation*}
 \end{example}
 
-Here, $\I{n}$ serves the purpose of \sq{n}, but this change will cascade into other definitions. In view of defining a category \CSet, we will restrict the morphisms in \Cube{}.
-
-\begin{definition}[\Cube{}]
-  \begin{align*}
-    \obj(\Cube{}) & := \I{n}                                           \\
-    \mor(\Cube{}) & := \delta^\epsilon_i : \I{n + 1} \rightarrow \I{n}
-  \end{align*}
-
-  where $\delta^\epsilon_i$ must satisfy the corresponding face map condition:
-
-  \begin{equation*}
-    \delta^\epsilon_i \delta^\omega_j = \delta^\omega_{j - 1} \delta^\epsilon_i
-  \end{equation*}
-
-  where $\epsilon$ and $\omega$ correspond to opposite faces.
-\end{definition}
-
-\begin{definition}[\CSet]
-  Just as in \SSet, we define semi-cubical sets as the functor category:
-
-  \begin{equation*}
-    \CSet := \Set^{\Cube{}^{op}}
-  \end{equation*}
-\end{definition}
+Here, $\I{n}$ serves the purpose of \sq{n}, but this change will cascade into other definitions. In view of defining a category \CSet, we will restrict the morphisms in \Cube.
 
 Or, in terms of objects and morphisms:
-
-\begin{definition}[$\CSet$ in terms of objects and morphisms]
-  \begin{align*}
-    \obj(\CSet) & := X_n                                                   \\
-    \mor(\CSet) & := X_\lambda, \text{where $\lambda$ is \Cube{}-morphism}
-  \end{align*}
-
-  where we term $X_n$ as the $n$-cubex, and $X_\lambda$ as the ``face map'', defined similarly:
-
-  \begin{align*}
-    X_n       & := X(\I{n}), \text{where X is the semi-cubical set} \\
-    X_\lambda & := X(\lambda)
-  \end{align*}
-\end{definition}
 
 \begin{theorem}
   $\CSet$ does not admit degeneracies.
