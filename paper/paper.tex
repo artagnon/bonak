@@ -77,7 +77,7 @@
 }
 
 % Simplicial and Cubical sets
-\newcommand{\DeltaHat}{\ensuremath{\hat{\boldsymbol{\Delta}}}}
+\newcommand{\DeltaPlus}{\ensuremath{\boldsymbol{\Delta}_+}}
 \newcommand{\Cube}[1]{\ensuremath{\boldsymbol{\square^{#1}}}}
 \renewcommand{\I}[1]{\ensuremath{\mathsf{I}^{#1}}}
 \newcommand{\CSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\square}}}}
@@ -196,48 +196,53 @@ The outline of the paper is as follows. First, we briefly describe semi-simplici
 \section{Mathematical treatment of \texorpdfstring{$\nu$}{𝜈}-sets}
 It is well-known that simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices. What we have formalized is \emph{semi-simplicial} sets, and \emph{semi-cubical} sets, which is to say that they are the usual simplicial sets and cubical sets, minus the degeneracies. Indeed, we plan to extend our work to do degeneracies in the future, but let us briefly explain the mathematical objects we have formalized.
 
-\subsection{Semi-simplicial sets}
-Semi-simplicial sets are otherwise known as \emph{delta-sets} in mathematical literature. We briefly describe \DeltaHat, which is identical to \Simplex{}, but for the fact that the maps $\sq{m} \rightarrow \sq{n}$ are \emph{strictly} order-preserving. The degeneracies then vanish, and we're left with the task of defining gluing conditions solely on the basis of face maps. The core of the definition of $\SSet$ is precisely what we have constructed.
+\subsection{Augmented semi-simplicial sets}
+We consider the category of augmented semi-simplices, which can be written in different ways, up to equivalence. We proceed to describe to combinatorial definition.
+\begin{definition}[\DeltaPlus]
+  The category of augmented semi-simplices is defined in terms of objects and morphisms:
 
-\begin{example}[$\DeltaHat^0$, $\DeltaHat^1$, $\DeltaHat^2$]
-  $\DeltaHat^0$ can be drawn as:
+  \begin{align*}
+    \obj(\DeltaPlus) & := \Nat                                                                            \\
+    \hom(p, n)       & := \{i_{p + 1}, \ldots, i_n \mid p < i_{p + 1} < i_{p + 2} < \ldots < i_n \leq n\} \\
+    f \circ g        & := \text{concatenation of the sequences $f$ and $g$}
+  \end{align*}
+\end{definition}
+
+\begin{example}[$\DeltaPlus^0$, $\DeltaPlus^1$]
+  $\DeltaPlus^0$ can be drawn as:
+
   \begin{equation*}
     \begin{tikzcd}
-      \bullet
+      0 \arrow[r, dash] & 1
     \end{tikzcd}
   \end{equation*}
 
-  $\DeltaHat^1$ can be drawn as:
-  \begin{equation*}
-    \begin{tikzcd}
-      \bullet \arrow[r, dash] & \bullet
-    \end{tikzcd}
-  \end{equation*}
+  $\DeltaPlus^1$ can be drawn as a filled triangle:
 
-  $\DeltaHat^2$ can be drawn as:
   \begin{equation*}
     \begin{tikzcd}
-      & \bullet\arrow[dr, dash] & \\
-      \bullet\arrow[rr, dash]\arrow[ur, dash] && \bullet
+      & 2 \arrow[dr, dash] & \\
+      0 \arrow[rr, dash]\arrow[ur, dash] && 1
     \end{tikzcd}
   \end{equation*}
 \end{example}
 
 \subsection{Semi-cubical sets}
-\begin{definition}[\Cube{n}]
-  \begin{equation*}
-    \Cube{n} := \I{n} = \sq{0, 1}^n
-  \end{equation*}
+\begin{definition}[\Cube{}]
+  \begin{align*}
+    \obj(\Cube{}) & := \Nat                                                                                                             \\
+    \hom(p, n)    & := \{(i_{p + 1}, \epsilon_{p + 1}) \ldots, (i_n, \epsilon_n) \mid p < i_{p + 1} < i_{p + 2} < \ldots < i_n \leq n\}
+  \end{align*}
 \end{definition}
 
 \begin{example}[$\Cube{0}$, $\Cube{1}$ and $\Cube{2}$]
   $\Cube{0}$ can be drawn as:
 
-  $$
+  \begin{equation*}
     \begin{tikzcd}
       0 \equiv 1
     \end{tikzcd}
-  $$
+  \end{equation*}
 
   $\Cube{1}$ can be drawn as:
 
@@ -248,7 +253,7 @@ Semi-simplicial sets are otherwise known as \emph{delta-sets} in mathematical li
   \end{equation*}
 
 
-  and $\Cube{2}$ can be drawn as:
+  and $\Cube{2}$ can be drawn as a filled square:
 
 
   \begin{equation*}
