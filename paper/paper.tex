@@ -197,14 +197,20 @@ The outline of the paper is as follows. First, we briefly describe semi-simplici
 It is well-known that simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices. What we have formalized is \emph{semi-simplicial} sets, and \emph{semi-cubical} sets, which is to say that they are the usual simplicial sets and cubical sets, minus the degeneracies. Indeed, we plan to extend our work to do degeneracies in the future, but let us briefly explain the mathematical objects we have formalized.
 
 \subsection{Augmented semi-simplicial sets}
-We consider the category of augmented semi-simplices, which can be written in different ways, up to equivalence. We proceed to describe to combinatorial definition.
+We consider the category of augmented semi-simplices, which can be written in different ways, up to equivalence. Here, we describe the combinatorial definition.
+
+\begin{notation}[Sequences of integers]
+  We write $\{i_1, \ldots i_n\}$ for (ordered) sequences of integers. In particular, the empty sequence is written $\{\}$.
+\end{notation}
+
 \begin{definition}[\DeltaPlus]
   The category of augmented semi-simplices is defined in terms of objects and morphisms:
 
   \begin{align*}
-    \obj(\DeltaPlus) & := \Nat                                                                            \\
-    \hom(p, n)       & := \{i_{p + 1}, \ldots, i_n \mid p < i_{p + 1} < i_{p + 2} < \ldots < i_n \leq n\} \\
-    f \circ g        & := \text{concatenation of the sequences $f$ and $g$}
+    \obj(\DeltaPlus)   & := \Nat                                                                                    \\
+    \hom(p, n)         & := \{i_{p + 1}, \ldots, i_n \mid 0 < i_{p + 1} < \ldots < i_n \leq n\}                     \\
+    g \circ f          & := \{i_{j_{p + 1}}, \ldots, i_{j_n} \mid j_0 < i_{j_{p + 1}} < \ldots < i_{j_n} \leq j_n\} \\
+    \id \in \hom(n, n) & := \{\}                                                                                    \\
   \end{align*}
 \end{definition}
 
@@ -236,11 +242,16 @@ We consider the category of augmented semi-simplices, which can be written in di
 \end{example}
 
 \subsection{Semi-cubical sets}
+\begin{notation}[Faces of cube]
+  We use $\epsilon$ to indicate opposite faces of a cube; it takes values $+$ or $-$.
+\end{notation}
+
 \begin{definition}[\Cube]
   \begin{align*}
-    \obj(\Cube) & := \Nat                                                                                                             \\
-    \hom(p, n)  & := \{(i_{p + 1}, \epsilon_{p + 1}) \ldots, (i_n, \epsilon_n) \mid p < i_{p + 1} < i_{p + 2} < \ldots < i_n \leq n\} \\
-    f \circ g   & := \text{concatenation of the sequences $f$ and $g$}
+    \obj(\Cube)        & := \Nat                                                                                                             \\
+    \hom(p, n)         & := \{(i_{p + 1}, \epsilon_{p + 1}) \ldots, (i_n, \epsilon_n) \mid p < i_{p + 1} < i_{p + 2} < \ldots < i_n \leq n\} \\
+    g \circ f          & :=                                                                                                                  \\
+    \id \in \hom(n, n) & := \{\}                                                                                                             \\
   \end{align*}
 \end{definition}
 

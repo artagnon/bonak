@@ -16,3 +16,5 @@
 {"rule":"ENGLISH_WORD_REPEAT_RULE","sentence":"^\\Qm n  : m+1 m 0   m n'+1   D:m n'. m n'[D=] m n X D m n : m m n D  [m][n][D=] m\\E$"}
 {"rule":"WHITESPACE_RULE","sentence":"^\\Qm  : m+1 m   m 0[D=] m n X D m n : m+1 m n D  R:m n[D=]. m n+1[D=D R]\\E$"}
 {"rule":"ENGLISH_WORD_REPEAT_RULE","sentence":"^\\Q[m][n][p][p < n] layer D m n layer d [m][n][p][][D=] : m [m][n][p] D d  .[m][n-1][p][][D=, E=, d=[m][][p][n][p][][D=, d=]]\\E$"}
+{"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QWe write \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q for sequences of integers.\\E$"}
+{"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QWe write \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q for (ordered) sequences of integers.\\E$"}
