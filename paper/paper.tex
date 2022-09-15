@@ -38,7 +38,7 @@
 
 % Truncated sets, otherwise referred to as X: the general macro
 \newcommandx{\X}[3][1,2,3]{
-  \mathsf{\color{carolina}{X}}_{#1}^{#2}
+  \ensuremath{\mathsf{\color{carolina}{X}}_{#1}^{#2}}
   \setkeys*[bonak]{X}{#3}
 }
 
@@ -83,11 +83,11 @@
 \newcommand{\CSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\square}}}}
 
 % Universe, referred to as U
-\newcommand{\U}[1]{\mathsf{\color{spanish-blue}{HSet}}_{#1}}
+\newcommand{\U}[1]{\ensuremath{\mathsf{\color{spanish-blue}{HSet}}_{#1}}}
 
 % The unit type
-\newcommand{\unittype}{\mathsf{unit}}
-\newcommand{\unitpoint}{\star}
+\newcommand{\unittype}{\ensuremath{\mathsf{unit}}}
+\newcommand{\unitpoint}{\ensuremath{\star}}
 
 % Definitional and extensional equality
 \newcommand{\defeq}{\ensuremath{\triangleq}}
@@ -109,6 +109,7 @@
 \newcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
 \newcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
 \newcommandx{\filler}[2][1,2]{\prim{filler}[][#1][#2][][]}
+\newcommandx{\restrf}[1][1]{\restr{frame}[][#1][][][][][]}
 
 % The eqntable environment, displaying the various
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
@@ -335,7 +336,57 @@ One way to obtain one construction from the other is via the \emph{Grothendieck 
 One step of parametricity can be seen as interpreting a point by a line. Iterating parametricity shall lead to map terms typed in a context with $n$ declarations of an axis as $n$-cubes. We shall interpret a
 typing derivation with $n$ axis declarations as an $n$-cube of typing derivations in the target. For instance, a typing derivation with exactly one declaration of an axis will be interpreted by 3 typing derivations in the target, two of them typing points and the third one typing a proof, seen as a line, together with the fact that these two points are related (as in ordinary parametricity), while a typing derivation with $n$ declarations of an axis shall be interpreted as a $3^n$ derivations, split into $2^n$ derivations of points.
 
+The characterization of homogeneous $n$-boxes and full $n$-cubes can be obtained by a recursive definition reminiscent from parametricity: a full $(n+1)$-cube is obtained by taking two full $n$-cubes plus a third full $n$-cube connecting the two full $n$-cubes. Since it connects full $n$-cubes, the third full $n$-cube is actually a full $n$-cube over lines, so it is shifted by one relatively to the underlying relational structure. Let us write $\filler[n][p]$ for a full $(n-p)$-cube over points which are full $p$-cubes. Working informally, we thus have the equation:
+
+\begin{equation*}
+  \filler[n+1][0] \defeq (\filler[n][0] \times \filler[n][0]) \times \filler[n+1][1]
+\end{equation*}
+
+and, iterating and generalizing the process, we have actually:
+
+\begin{equation*}
+  \filler[n+1][p] \defeq (\filler[n][p] \times \filler[n][p]) \times \filler[n+1][p+1]
+\end{equation*}
+
+Now, the third cube (of dimension $((n+1)-(p+1))$, i.e. $n-p$) connects the first two $(n-p)$-cubes, so it has to depend on them. So, the equation is rather something of the form:
+
+\begin{equation*}
+  \filler[n+1][p] \defeq \Sigma a:(\filler[n][p] \times \filler[n][p]).\, \filler[n+1][p+1](a)
+\end{equation*}
+
+Then, by iterating, we obtain:
+
+\begin{equation*}
+  \filler[n+1][p] \defeq \Sigma a:(\filler[n][p] \times \filler[n][p]).\,
+  \Sigma b:(\filler[n][p+1](a) \times \filler[n][p+1](a)). \, \filler[n+1][p+2](a,b)
+\end{equation*}
+
+and so on. Thus, we need first to make the definition of $\filler[n][p]$ dependent over the part of the full cube built up to this point and secondly to accumulate this information. At the end of the accumulation of the process, i.e. at the time of building $\filler[n+1][n]$, a complete $n$-box will have been built. So, let us call $\filler[n][p]$ the partial $n$-box built up to the stage $p$ of the construction. Thus, we refine our definition into something like:
+
+\begin{equation*}
+  \begin{array}{lll}
+    \framep[n][0]                    & \defeq & \unittype                                                                       \\
+    \framep[n][p+1]                  & \defeq & \Sigma d:\framep[n][p] .\,(\filler[n][p](d) \times \filler[n][p](d))            \\
+    \\
+    \filler[n+1][p](d:\framep[n][p]) & \defeq & $\Sigma$ a:(\filler[n][p](d) \times \filler[n][p](d)) .\,\filler[n+1][p+1](d,a)
+  \end{array}
+\end{equation*}
+
+where $\unittype$ is a canonical singleton type used to initiate the
+construction of a list of pairs of $n$-cubes.
+
+Now, the two cubes $\filler[n][p](d)$ and $\filler[n][p](d)$ cannot be any cubes. They have to represent two opposite cubes, and we need a way to express this. The answer is simple. The partial box has two faces and these two cubes have to respectively fill the left face and the right face of the partial box. We thus have to rely on operations $\restrf[L]$ and $\restrf[R]$ which extract the sides of a box, leading to the refined definition:
+
+\begin{equation*}
+  \begin{array}{lll}
+    \filler[n+1][p](d:\framep[n][p]) & \defeq & \Sigma a:(\filler[n][p](\restrf[L](d)) \times \filler[n][p](\restrf[R](d))) .\, \filler[n+1][p+1](d,a)
+  \end{array}
+\end{equation*}
+
+The full explicit definition shall be given in the next sections but, to give an idea, let us show the structure of an $n$-cube for the first three dimensions.
+
 A full 2-cube is made of two full 1-cubes connected by a lifted 1-cube made of two lines connecting the former points and a square connecting the former lines:
+
 {\scriptsize
 \begin{equation*}
   \begin{array}{l}
@@ -460,7 +511,7 @@ In the \texttt{HSet} universe, three properties hold:
 
 % Restriction for frame, layer, and filler
 % Drop the unviverse letter
-\newcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
+\renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
 \newcommandx{\restrl}[7][1,2,3,4,5,6,7]{\restr{layer}[][#2][#3][#4][#5][#6][#7]}
 \newcommandx{\restrc}[7][1,2,3,4,5,6,7]{\restr{filler}[][#2][#3][#4][#5][#6][#7]}
 

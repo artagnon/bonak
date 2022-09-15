@@ -588,28 +588,15 @@ semi-simplicial sets in type theory~\cite{Herbelin14} to a semi-strict
 One step of parametricity can be seen as interpreting a point by a
 line. Iterating parametricity shall lead to map terms typed in a
 context with $n$ declarations of an axis as $n$-cubes. We shall
-interpret a
-typing derivation with $n$ axis declarations as an $n$-cube of typing
-derivations in the target. For instance, a typing derivation with
+interpret a typing derivation with $n$ axis declarations as an $n$-cube of typing derivations in the target. For instance, a typing derivation with
 exactly one declaration of an axis will be interpreted by 3 typing
 derivations in the target, two of them typing points and the third one
-typing a proof, seen as a line, together with the fact that these two points are related (as
-in ordinary parametricity), while a typing derivation with $n$
+typing a proof, seen as a line, together with the fact that these two points are related (as in ordinary parametricity), while a typing derivation with $n$
 declarations of an axis shall be interpreted as a $3^n$ derivations,
-split into $2^n$ derivations of points,
-$2^{n-1}\times\left(\begin{array}{c}1\\n\end{array}\right)$ derivations of lines
-between those points, $2^{n-2}\times\left(\begin{array}{c}2\\n\end{array}\right)$
-derivations of squares between those lines, etc. until having a single
-(i.e. $2^{n-n}\times \left(\begin{array}{c}n\\n\end{array}\right)$)
-$n$-cube connecting the whole. Note that the points are not typed in
-the same context as the lines which connect them: a variable of some
-type in the source context is interpreted as a variable of the same
-type in the derivation of a point but as a variable of line over
-points in this type for the derivation of the line. This difference of
+split into $2^n$ derivations of points, $2^{n-1}\times\left(\begin{array}{c}1\\n\end{array}\right)$ derivations of lines between those points, $2^{n-2}\times\left(\begin{array}{c}2\\n\end{array}\right)$ derivations of squares between those lines, etc. until having a single (i.e. $2^{n-n}\times \left(\begin{array}{c}n\\n\end{array}\right)$) $n$-cube connecting the whole. Note that the points are not typed in the same context as the lines which connect them: a variable of some type in the source context is interpreted as a variable of the same type in the derivation of a point but as a variable of line over points in this type for the derivation of the line. This difference of
 typing context in each component of the so-obtained $n$-cube
 gives to parametricity a semantic flavor. In the presence of transport, we
-suspect that a more purely syntactic form of parametricity where all components of
-the $n$-cube are typed in the same context is possible. Then, an
+suspect that a more purely syntactic form of parametricity where all components of the $n$-cube are typed in the same context is possible. Then, an
 $n$-cube of derivations in the same context is isomorphic to the
 single derivation of the tupling of all components of the $n$-cubes as
 an inhabitant of a $\Sigma$-type iterated $n$ times.
