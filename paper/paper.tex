@@ -333,10 +333,10 @@ The indexed representation can be illustrated as:
 One way to obtain one construction from the other is via the \emph{Grothendieck construction}, although this is not relevant to our work.
 
 \subsection{Iterated parametricity}
-One step of parametricity can be seen as interpreting a point by a line. Iterating parametricity shall lead to map terms typed in a context with $n$ declarations of an axis as $n$-cubes. We shall interpret a
-typing derivation with $n$ axis declarations as an $n$-cube of typing derivations in the target. For instance, a typing derivation with exactly one declaration of an axis will be interpreted by 3 typing derivations in the target, two of them typing points and the third one typing a proof, seen as a line, together with the fact that these two points are related (as in ordinary parametricity), while a typing derivation with $n$ declarations of an axis shall be interpreted as a $3^n$ derivations, split into $2^n$ derivations of points.
+One step of parametricity can be seen as interpreting a point by a line. Iterating parametricity shall lead to map terms typed in a context with $n$ declarations of an axis as $n$-fillers. We shall interpret a
+typing derivation with $n$ axis declarations as an $n$-filler of typing derivations in the target. For instance, a typing derivation with exactly one declaration of an axis will be interpreted by 3 typing derivations in the target, two of them typing points and the third one typing a proof, seen as a line, together with the fact that these two points are related (as in ordinary parametricity), while a typing derivation with $n$ declarations of an axis shall be interpreted as a $3^n$ derivations, split into $2^n$ derivations of points.
 
-The characterization of homogeneous $n$-boxes and full $n$-cubes can be obtained by a recursive definition reminiscent from parametricity: a full $(n+1)$-cube is obtained by taking two full $n$-cubes plus a third full $n$-cube connecting the two full $n$-cubes. Since it connects full $n$-cubes, the third full $n$-cube is actually a full $n$-cube over lines, so it is shifted by one relatively to the underlying relational structure. Let us write $\filler[n][p]$ for a full $(n-p)$-cube over points which are full $p$-cubes. Working informally, we thus have the equation:
+The characterization of homogeneous $n$-frame and full $n$-fillers can be obtained by a recursive definition reminiscent from parametricity: a full $(n+1)$-filler is obtained by taking two full $n$-fillers plus a third full $n$-filler connecting the two full $n$-fillers. Since it connects full $n$-fillers, the third full $n$-filler is actually a full $n$-filler over lines, so it is shifted by one relatively to the underlying relational structure. Let us write $\filler[n][p]$ for a full $(n-p)$-filler over points which are full $p$-fillers. Working informally, we thus have the equation:
 
 \begin{equation*}
   \filler[n+1][0] \defeq (\filler[n][0] \times \filler[n][0]) \times \filler[n+1][1]
@@ -348,7 +348,7 @@ and, iterating and generalizing the process, we have actually:
   \filler[n+1][p] \defeq (\filler[n][p] \times \filler[n][p]) \times \filler[n+1][p+1]
 \end{equation*}
 
-Now, the third cube (of dimension $((n+1)-(p+1))$, i.e. $n-p$) connects the first two $(n-p)$-cubes, so it has to depend on them. So, the equation is rather something of the form:
+Now, the third filler (of dimension $n - p$) connects the first two $(n - p)$-fillers, so it has to depend on them. So, the equation is rather something of the form:
 
 \begin{equation*}
   \filler[n+1][p] \defeq \Sigma a:(\filler[n][p] \times \filler[n][p]).\, \filler[n+1][p+1](a)
@@ -361,7 +361,7 @@ Then, by iterating, we obtain:
   \Sigma b:(\filler[n][p+1](a) \times \filler[n][p+1](a)). \, \filler[n+1][p+2](a,b)
 \end{equation*}
 
-and so on. Thus, we need first to make the definition of $\filler[n][p]$ dependent over the part of the full cube built up to this point and secondly to accumulate this information. At the end of the accumulation of the process, i.e. at the time of building $\filler[n+1][n]$, a complete $n$-box will have been built. So, let us call $\filler[n][p]$ the partial $n$-box built up to the stage $p$ of the construction. Thus, we refine our definition into something like:
+and so on. Thus, we need first to make the definition of $\filler[n][p]$ dependent over the part of the full filler built up to this point and secondly to accumulate this information. At the end of the accumulation of the process, i.e. at the time of building $\filler[n+1][n]$, a complete $n$-frame will have been built. So, let us call $\filler[n][p]$ the partial $n$-frame built up to the stage $p$ of the construction. Thus, we refine our definition into something like:
 
 \begin{equation*}
   \begin{array}{lll}
@@ -373,9 +373,9 @@ and so on. Thus, we need first to make the definition of $\filler[n][p]$ depende
 \end{equation*}
 
 where $\unittype$ is a canonical singleton type used to initiate the
-construction of a list of pairs of $n$-cubes.
+construction of a list of pairs of $n$-fillers.
 
-Now, the two cubes $\filler[n][p](d)$ and $\filler[n][p](d)$ cannot be any cubes. They have to represent two opposite cubes, and we need a way to express this. The answer is simple. The partial box has two faces and these two cubes have to respectively fill the left face and the right face of the partial box. We thus have to rely on operations $\restrf[L]$ and $\restrf[R]$ which extract the sides of a box, leading to the refined definition:
+Now, the two fillers $\filler[n][p](d)$ and $\filler[n][p](d)$ cannot be any fillers. They have to represent two opposite fillers, and we need a way to express this. The answer is simple. The partial frame has two faces and these two fillers have to respectively fill the left face and the right face of the partial frame. We thus have to rely on operations $\restrf[L]$ and $\restrf[R]$ which extract the sides of a frame, leading to the refined definition:
 
 \begin{equation*}
   \begin{array}{lll}
@@ -383,9 +383,9 @@ Now, the two cubes $\filler[n][p](d)$ and $\filler[n][p](d)$ cannot be any cubes
   \end{array}
 \end{equation*}
 
-The full explicit definition shall be given in the next sections but, to give an idea, let us show the structure of an $n$-cube for the first three dimensions.
+The full explicit definition shall be given in the next sections but, to give an idea, let us show the structure of an $n$-filler for the first three dimensions.
 
-A full 2-cube is made of two full 1-cubes connected by a lifted 1-cube made of two lines connecting the former points and a square connecting the former lines:
+A full $2$-filler is made of two full $1$-fillers connected by a lifted $1$-filler made of two lines connecting the former points and a square connecting the former lines:
 
 {\scriptsize
 \begin{equation*}
