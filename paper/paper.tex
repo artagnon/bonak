@@ -247,8 +247,9 @@ We now illustrate the standard augmented $n$-semi-simplices for dimensions $1$, 
 \begin{example}[$\DeltaPlus^3$]
   \begin{equation*}
     \begin{tikzcd}
-      & 00\star \arrow[dr, dash, "0\star\star"] & \\
-      \star00 \arrow[rr, dash, "\star\star0"]\arrow[ur, dash, "\star0\star"] && 0\star0
+      & |[alias=F]|00\star \arrow[dr, dash, "0\star\star"] & \\
+      \star00 \arrow[rr, dash, "\star\star0"{name=T, below}]\arrow[ur, dash, "\star0\star"] && 0\star0 \\
+      \arrow[rightarrow, from=F, to=T, phantom, "\star\star\star" description]
     \end{tikzcd}
   \end{equation*}
 \end{example}
@@ -302,8 +303,9 @@ We now illustrate the standard $n$-semi-cubes for dimensions $0$, $1$, and $2$.
 \begin{example}[$\Cube^2$]
   \begin{equation*}
     \begin{tikzcd}
-      (0, 1) \arrow[r, dash] & (1, 1) \arrow[d, dash] \\
-      (0, 0) \arrow[u, dash] & (1, 0) \arrow[l, dash]
+      (0, 1) \arrow[r, dash, "\star1"{name=F}] \arrow[d, dash, "0\star" left] & (1, 1) \arrow[d, dash, "1\star"] \\
+      (0, 0) \arrow[r, dash, "\star0"{name=T, below}] & (1, 0) \\
+      \arrow[rightarrow, from=F, to=T, phantom, "\star\star" description]
     \end{tikzcd}
   \end{equation*}
 \end{example}
