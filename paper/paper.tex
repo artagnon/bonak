@@ -112,6 +112,9 @@
 \newcommandx{\filler}[2][1,2]{\prim{filler}[][#1][#2][][]}
 \newcommandx{\restrf}[1][1]{\restr{frame}[][#1][][][][][]}
 
+% Kerning for star
+\newcommand{\kstar}{{\star}}
+
 % The eqntable environment, displaying the various
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 \NewEnviron{eqntable}[1]{
@@ -239,7 +242,7 @@ We now illustrate the standard augmented $n$-semi-simplices for dimensions $1$, 
 \begin{example}[$\DeltaPlus^2$]
   \begin{equation*}
     \begin{tikzcd}
-      \star0 \arrow[r, dash, "\star\star"] & 0\star
+      \kstar0 \arrow[r, dash, "\kstar\kstar"] & 0\kstar
     \end{tikzcd}
   \end{equation*}
 \end{example}
@@ -247,9 +250,9 @@ We now illustrate the standard augmented $n$-semi-simplices for dimensions $1$, 
 \begin{example}[$\DeltaPlus^3$]
   \begin{equation*}
     \begin{tikzcd}
-      & |[alias=F]|00\star \arrow[dr, dash, "0\star\star"] & \\
-      \star00 \arrow[rr, dash, "\star\star0"{name=T, below}]\arrow[ur, dash, "\star0\star"] && 0\star0 \\
-      \arrow[rightarrow, from=F, to=T, phantom, "\star\star\star" description]
+      & |[alias=F]|00\kstar \arrow[dr, dash, "0\kstar\kstar"] & \\
+      \kstar00 \arrow[rr, dash, "\kstar\kstar0"{name=T, below}]\arrow[ur, dash, "\kstar0\kstar"] && 0\kstar0 \\
+      \arrow[rightarrow, from=F, to=T, phantom, "\kstar\kstar\kstar" description]
     \end{tikzcd}
   \end{equation*}
 \end{example}
@@ -295,7 +298,7 @@ We now illustrate the standard $n$-semi-cubes for dimensions $0$, $1$, and $2$.
 \begin{example}[$\Cube^1$]
   \begin{equation*}
     \begin{tikzcd}
-      0 \arrow[r, "\star", dash] & 1
+      0 \arrow[r, "\kstar", dash] & 1
     \end{tikzcd}
   \end{equation*}
 \end{example}
@@ -303,9 +306,9 @@ We now illustrate the standard $n$-semi-cubes for dimensions $0$, $1$, and $2$.
 \begin{example}[$\Cube^2$]
   \begin{equation*}
     \begin{tikzcd}
-      (0, 1) \arrow[r, dash, "\star1"{name=F}] \arrow[d, dash, "0\star" left] & (1, 1) \arrow[d, dash, "1\star"] \\
-      (0, 0) \arrow[r, dash, "\star0"{name=T, below}] & (1, 0) \\
-      \arrow[rightarrow, from=F, to=T, phantom, "\star\star" description]
+      (0, 1) \arrow[r, dash, "\kstar1"{name=F}] \arrow[d, dash, "0\kstar" left] & (1, 1) \arrow[d, dash, "1\kstar"] \\
+      (0, 0) \arrow[r, dash, "\kstar0"{name=T, below}] & (1, 0) \\
+      \arrow[rightarrow, from=F, to=T, phantom, "\kstar\kstar" description]
     \end{tikzcd}
   \end{equation*}
 \end{example}
