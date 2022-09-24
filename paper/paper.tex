@@ -197,6 +197,16 @@ The outline of the paper is as follows. First, we briefly describe semi-simplici
 \section{Mathematical treatment of \texorpdfstring{$\nu$}{𝜈}-sets}
 It is well-known that simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices. What we have formalized is \emph{semi-simplicial} sets, and \emph{semi-cubical} sets, which is to say that they are the usual simplicial sets and cubical sets, minus the degeneracies. Indeed, we plan to extend our work to do degeneracies in the future, but let us briefly explain the mathematical objects we have formalized.
 
+\begin{table}[H]
+  \begin{tabularx}{\linewidth}{p{.2\linewidth}|p{.4\linewidth}|p{.3\linewidth}}
+    \toprule
+    Value of $\nu$ & 1                               & 2                  \\
+    \graymidrule
+    Interpretation & Augmented semi-simplicial types & Semi-cubical types \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
 \subsection{Augmented semi-simplicial sets}
 We consider the category of augmented semi-simplices, which can be written in different ways, up to equivalence. Here, we describe the combinatorial definition.
 
@@ -317,17 +327,6 @@ We now illustrate the standard $n$-semi-cubes for dimensions $0$, $1$, and $2$.
   \end{equation*}
 \end{example}
 
-\subsection{Generalization to \texorpdfstring{$\nu$}{nu}}
-\begin{table}[H]
-  \begin{tabularx}{\linewidth}{p{.2\linewidth}|p{.4\linewidth}|p{.3\linewidth}}
-    \toprule
-    Value of $\nu$ & 1                     & 2                  \\
-    \graymidrule
-    Interpretation & Semi-simplicial types & Semi-cubical types \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
 \section{Our construction}
 In this section, we briefly explain the difference between the fibered and indexed representations, and illustrate our approach to the construction, with the help of some figures.
 
@@ -352,8 +351,7 @@ The indexed representation can be illustrated as:
 One way to obtain one construction from the other is via the \emph{Grothendieck construction}, although this is not relevant to our work.
 
 \subsection{Iterated parametricity}
-One step of parametricity can be seen as interpreting a point by a line. Iterating parametricity shall lead to map terms typed in a context with $n$ declarations of an axis as $n$-fillers. We shall interpret a
-typing derivation with $n$ axis declarations as an $n$-filler of typing derivations in the target. For instance, a typing derivation with exactly one declaration of an axis will be interpreted by 3 typing derivations in the target, two of them typing points and the third one typing a proof, seen as a line, together with the fact that these two points are related (as in ordinary parametricity), while a typing derivation with $n$ declarations of an axis shall be interpreted as a $3^n$ derivations, split into $2^n$ derivations of points.
+One step of parametricity can be seen as interpreting a point by a line. Iterating parametricity shall lead to map terms typed in a context with $n$ declarations of an axis as $n$-fillers. We shall interpret a typing derivation with $n$ axis declarations as an $n$-filler of typing derivations in the target. For instance, a typing derivation with exactly one declaration of an axis will be interpreted by 3 typing derivations in the target, two of them typing points and the third one typing a proof, seen as a line, together with the fact that these two points are related (as in ordinary parametricity), while a typing derivation with $n$ declarations of an axis shall be interpreted as a $3^n$ derivations, split into $2^n$ derivations of points.
 
 The characterization of homogeneous $n$-frame and full $n$-fillers can be obtained by a recursive definition reminiscent from parametricity: a full $(n+1)$-filler is obtained by taking two full $n$-fillers plus a third full $n$-filler connecting the two full $n$-fillers. Since it connects full $n$-fillers, the third full $n$-filler is actually a full $n$-filler over lines, so it is shifted by one relatively to the underlying relational structure. Let us write $\filler[n][p]$ for a full $(n-p)$-filler over points which are full $p$-fillers. Working informally, we thus have the equation:
 
