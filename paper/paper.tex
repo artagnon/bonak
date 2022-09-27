@@ -80,7 +80,6 @@
 % Simplicial and Cubical sets
 \newcommand{\DeltaPlus}{\ensuremath{\boldsymbol{\Delta}_+}}
 \newcommand{\Cube}{\ensuremath{\boldsymbol{\square}}}
-\renewcommand{\I}[1]{\ensuremath{\mathsf{I}^{#1}}}
 \newcommand{\CSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\square}}}}
 
 % Universe, referred to as U
@@ -107,6 +106,9 @@
 \renewcommand{\l}{l}
 \renewcommand{\c}{c}
 \newcommand{\pair}[2]{#1, #2}
+
+% These are renewed in tables, but let's define them now for in-document
+% typesetting
 \newcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
 \newcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
 \newcommandx{\filler}[2][1,2]{\prim{filler}[][#1][#2][][]}
@@ -165,7 +167,6 @@
 \color{gray65}
 
 \begin{document}
-\thispagestyle{empty}
 \maketitle
 \begin{abstract}
   We present a parametricity-based construction of semi-simplicial sets and semi-cubical sets in indexed form, in the calculus of inductive constructions. The accompanying artifact is an axiom-less~\footnote{Technically speaking, we use some axioms related to functional extensionality, but the requirement arises only from our generalization to $\nu$-types; if $\nu$ is finite (say, unit type corresponding to augmented semi-simplicial types), this requirement vanishes.} Coq formalization that uses sophisticated rewriting techniques and pushes the boundaries of proof assistant technology.
@@ -174,7 +175,6 @@
 \newpage
 
 \section{Overture}
-
 In the context of typed functional programming, Reynolds' parametricity~\cite{reynolds72} interprets types as relations characterizing the observational equality of programs of this type. Parametricity can be iterated, and it has been noted that iterated Reynolds' parametricity has a cubical flavor~\cite{johann17,altenkirch14,moulin16}. We obtain a \emph{unary} variant of Reynolds' \emph{binary} parametricity by using predicates instead of relations, in which case we obtain a form of (Kreisel) realizability~\cite{bernardy12,moulin16}. It has then been noted that iterated unary parametricity has an augmented simplicial flavor~\footnote{Observation from Hugo Moeneclaey}.
 
 We exploit the connection between iterated unary parametricity and augmented simplicial sets, and between iterated binary parametricity and cubical sets to present a uniform construction of both semi-simplicial semi-cubical sets obtained by applying simple rules iterating parametricity.  In contrast to the presheaf presentation of semi-simplicial and semi-cubical sets, our uniform construction, which we call \emph{$\nu$-sets}, is \emph{indexed}. That is, instead of having the set of semi-simplices or semi-cubes in dimension $n+1$
@@ -490,8 +490,8 @@ In type theory, UIP can be proved on the unit type and bool type:
 \texttt{HSet} provides us a restricted setting of UIP, and our implementation of \texttt{HSet} is a straightforward packaging of two fields:
 
 \begin{align*}
-  \mathsf{Dom} & : \mathsf{Type}                                          \\
-  \mathsf{UIP} & : \forall x y : \mathsf{Dom}, \forall p q : x = y, p = q
+  \textsf{Dom} & : \textsf{Type}                                          \\
+  \textsf{UIP} & : \forall x y : \textsf{Dom}, \forall p q : x = y, p = q
 \end{align*}
 
 In the \texttt{HSet} universe, three properties hold:
