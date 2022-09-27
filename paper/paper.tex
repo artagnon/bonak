@@ -228,15 +228,31 @@ While semi-simplicial sets are presheaves over the semi-simplex category $\hat{\
     \hom(p, n)       & := \{\{i_{p + 1}, \ldots, i_n\} \mid 0 < i_{p + 1} < \ldots < i_n \leq n\} \\
     g \circ f        & :=
     \begin{cases}
-      g                          & \text{if f = \{\}}                                    \\
-      f                          & \text{if g = \{\}}                                    \\
-      b :: (g \circ f')          & \text{if g = (a :: g'), f = (b :: f'), with b < a}    \\
-      a :: (g' \circ \uparrow f) & \text{if g = (a :: g'), f = (b :: f'), with b \geq a} \\
-    \end{cases}            \\
+      g                          & \text{if f = \{\}}                                          \\
+      f                          & \text{if g = \{\}}                                          \\
+      b :: (g \circ f')          & \text{if $g = (a :: g')$, $f = (b :: f')$, with $b < a$}    \\
+      a :: (g' \circ \uparrow f) & \text{if $g = (a :: g')$, $f = (b :: f')$, with $b \geq a$} \\
+    \end{cases}      \\
     \id              & := \{\}
   \end{align*}
 
-  Composition can be shown to be associative.
+  Evidently, $\id$ is neutral. Further, composition can be shown to be associative.
+\end{definition}
+
+\begin{definition}[Alternative definition of $\DeltaPlus$]
+  \begin{align*}
+    \obj(\DeltaPlus) & := \Nat                                                                     \\
+    \hom(p, n)       & := \{l \in \{0, \kstar\}^n \mid \text{number of $\kstar$ in l = p}\}        \\
+    g \circ f        & :=
+    \begin{cases}
+      f                  & \text{if $g = \{\}$}                                                      \\
+      0 :: (g' \circ f)  & \text{if $g = (0 :: g')$}                                                 \\
+      a :: (g' \circ f') & \text{if $g = (\star :: g')$, $f = (a :: f')$, where $a = 0$ or $\kstar$} \\
+    \end{cases} \\
+    \id              & := \{\kstar, \ldots, \kstar\} \text{ $n$ times}
+  \end{align*}
+
+  Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
 \end{definition}
 
 \begin{definition}[$\Set_{\DeltaPlus}$]
@@ -260,17 +276,17 @@ While semi-simplicial sets are presheaves over the semi-simplex category $\hat{\
 The standard $0$-semi-simplex is just the set of colors. Standard augmented $n$-semi-simplices have a geometric interpretation for dimensions $1$, $2$, and $3$, and we illustrate them now.
 
 \begin{example}[$\DeltaPlus^1$]
-  In dimension $1$, the standard augmented semi-simplex is simply the unit type:
+  In dimension $1$, the standard augmented semi-simplex can be pictured as a point, where the color is kept implicit. This point is the identity in $\Hom(1, 1)$; it is hence shown as a singleton $\kstar$:
 
   \begin{equation*}
     \begin{tikzcd}
-      \star
+      \kstar
     \end{tikzcd}
   \end{equation*}
 \end{example}
 
 \begin{example}[$\DeltaPlus^2$]
-  In dimension $2$, it is
+  In dimension $2$,
   \begin{equation*}
     \begin{tikzcd}
       \kstar0 \arrow[r, dash, "\kstar\kstar"] & 0\kstar
@@ -289,16 +305,19 @@ The standard $0$-semi-simplex is just the set of colors. Standard augmented $n$-
 \end{example}
 
 \subsection{Semi-cubical sets}
-\begin{notation}[Faces of cube]
-  We use $\epsilon$ to indicate opposite faces of a cube; it takes values $+$ or $-$.
-\end{notation}
-
 \begin{definition}[\Cube]
+  $\Cube$ is defined similarly to $\DeltaPlus$, except that we take $0$, $1$ and $\star$, instead of $0$ and $\kstar$. We use $0$ and $1$ to indicate opposite faces of a cube.
+
   \begin{align*}
-    \obj(\Cube)        & := \Nat                                                                                                             \\
-    \hom(p, n)         & := \{(i_{p + 1}, \epsilon_{p + 1}) \ldots, (i_n, \epsilon_n) \mid p < i_{p + 1} < i_{p + 2} < \ldots < i_n \leq n\} \\
-    g \circ f          & :=                                                                                                                  \\
-    \id \in \hom(n, n) & := \{\}                                                                                                             \\
+    \obj(\DeltaPlus) & := \Nat                                                                     \\
+    \hom(p, n)       & := \{l \in \{0, 1, \kstar\}^n \mid \text{number of $\kstar$ in l = p}\}     \\
+    g \circ f        & :=
+    \begin{cases}
+      f                  & \text{if $g = \{\}$}                                                      \\
+      0 :: (g' \circ f)  & \text{if $g = (0 :: g')$}                                                 \\
+      a :: (g' \circ f') & \text{if $g = (\star :: g')$, $f = (a :: f')$, where $a = 0$ or $\kstar$} \\
+    \end{cases} \\
+    \id              & := \{\kstar, \ldots, \kstar\} \text{ $n$ times}
   \end{align*}
 \end{definition}
 
@@ -327,7 +346,7 @@ The standard $0$-semi-simplex is just the set of colors. Standard augmented $n$-
 Standard $n$-semi-cubes have a geometric interpreation, for dimensions $0$, $1$, and $2$, and we illustrate them now.
 
 \begin{example}[$\Cube^0$]
-  $\Cube^0$ is the empty set:
+  $\Cube^0$ is $\Hom(0, 0)$, or the empty set:
 
   \begin{equation*}
     \begin{tikzcd}
@@ -337,6 +356,7 @@ Standard $n$-semi-cubes have a geometric interpreation, for dimensions $0$, $1$,
 \end{example}
 
 \begin{example}[$\Cube^1$]
+  $\Cube^1$ is two points and a line:
   \begin{equation*}
     \begin{tikzcd}
       0 \arrow[r, "\kstar", dash] & 1
