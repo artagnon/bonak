@@ -197,16 +197,6 @@ The outline of the paper is as follows. First, we briefly describe semi-simplici
 \section{Mathematical treatment of \texorpdfstring{$\nu$}{𝜈}-sets}
 It is well-known that simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices. What we have formalized is \emph{augmented semi-simplicial} sets, and \emph{semi-cubical} sets. We will proceed to explain the mathematical objects we have formalized.
 
-\begin{table}[H]
-  \begin{tabularx}{\linewidth}{p{.2\linewidth}|p{.4\linewidth}|p{.3\linewidth}}
-    \toprule
-    Value of $\nu$ & 1                               & 2                  \\
-    \graymidrule
-    Interpretation & Augmented semi-simplicial types & Semi-cubical types \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
 \subsection{Augmented semi-simplicial sets}
 Augmented semi-simplicial sets are defined similarly to semi-simplicial sets, except that the points are additionally dependent on a ``color''. Conversely, semi-simplicial sets can be seen as augmented semi-simplicial sets over a singleton set of colors.
 
@@ -386,11 +376,73 @@ Standard $n$-semi-cubes have a geometric interpretion, which we illustrate for d
   \end{equation*}
 \end{example}
 
+\subsection{Generalization to \texorpdfstring{$\nu$}{ν}-sets}
+Let us call $\nu$-sets, the straightforward generalization of augmented semi-simplicial sets and semi-cubical sets to an arbirary arity, where morphisms are sequences of elements of an arbirary set $\nu$, extended with $\kstar$. Then, we observe:
+
+\begin{table}[H]
+  \begin{tabularx}{\linewidth}{p{.2\linewidth}|p{.4\linewidth}|p{.3\linewidth}}
+    \toprule
+    Value of $\nu$ & 1                               & 2                  \\
+    \graymidrule
+    Interpretation & Augmented semi-simplicial types & Semi-cubical types \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
 \section{Our construction}
 In this section, we briefly explain the difference between the fibered and indexed representations, and illustrate our approach to the construction, with the help of some figures.
 
+\subsection{Homotopy type theory}
+Homotopy type theory (HoTT) is a logical foundation based on Martin-Löf type theory and the univalence axiom~\cite{hottbook}. HoTT is based on the notion of a basic \textsf{Type}, and the notion of sets can be recovered as \textsf{HSet}, where \texttt{HSet} is a straightforward packaging of two fields:
+
+\begin{align*}
+  \textsf{Dom} & : \textsf{Type}                                          \\
+  \textsf{UIP} & : \forall x y : \textsf{Dom}, \forall p q : x = y, p = q
+\end{align*}
+
+In the \texttt{HSet} universe, three properties hold:
+
+\begin{enumerate}
+  \item[(i)] UIP holds on the unit type.
+  \item[(ii)] UIP propagates to $\Sigma$-types.
+  \item[(iii)] UIP propagates to $\Pi$-types, with some additional functional extensionality axioms.
+\end{enumerate}
+
+\textsf{HSet} provides us a form of unicity of identity of proofs (UIP), which is a form of proof irrelevance:
+
+\begin{align*}
+  \forall x y, \forall p q : x = y, p = q
+\end{align*}
+
+which is to say that any two proofs of \emph{equality} of the same two types are \emph{equal}. In other words, the proofs cannot be distinguished from one another.
+
+An equivalent defintion of UIP is given by \textsf{UIP\_refl}:
+
+\begin{align*}
+  \textsf{UIP\_refl} & : \forall x, \forall p : x = x, p = \textsf{eq\_refl } x
+\end{align*}
+
+In type theory, UIP can be proved on the unit type and bool type:
+
+\begin{align*}
+  \textsf{eq\_refl}        & : \forall x, x = x                                                    \\
+  \textsf{UIP\_refl\_unit} & : \forall u : \textsf{unit}, \forall x : u = u, x = \textsf{eq\_refl} \\
+  \textsf{UIP\_refl\_bool} & : \forall b : \textsf{bool}, \forall x : b = b, x = \textsf{eq\_refl} \\
+\end{align*}
+
+
 \subsection{Fibered versus indexed representation}
-The fibered representation can be illustrated as:
+It is well-known in set theory, that families of small sets can be represented in a fibered or indexed way. In the fibered way, a family over $T$ is represented a pair of a set $S$, and a function $S \rightarrow T$. The function classifies the original set into fibers. In contrast, in the indexed way, a family over $T$ is represented as a functional relation with domain $T$, which itself, by replacement axiom, is a set.
+
+In category theory, the correspondence between fibered and indexed way, manifests as the correspondence between Grothendieck fibrations and pseudofunctors, of which a particular instance is the correspondence between discrete fibrations and presheaves, or even between discrete fibrations over sets and families of sets.
+
+In HoTT, the latter correspondence can be expressed, for $T: \textsf{Type}$, as an equivalence between $\Sigma S: \textsf{Type}\;.\;S \rightarrow T$ and $T \rightarrow \textsf{Type}$, which can be proved using univalence. This correspondence also holds on \textsf{HSet}, for $T: \textsf{HSet}$:
+
+\begin{equation*}
+  \Sigma S: \textsf{HSet}\;.\;S\rightarrow T \simeq T \rightarrow \textsf{HSet}
+\end{equation*}
+
+Let us now come back to cubical sets. A cubical set can be represented as a sequence of fibrations, together with appropriate coherence conditions:
 
 \begin{equation*}
   \begin{tikzcd}
@@ -398,7 +450,7 @@ The fibered representation can be illustrated as:
   \end{tikzcd}
 \end{equation*}
 
-The indexed representation can be illustrated as:
+We can iteratively apply the above correspondence to obtain an indexed representation of cubical sets:
 
 \begin{align*}
   X_0 & : \U{}                                                                                                              \\
@@ -407,7 +459,7 @@ The indexed representation can be illustrated as:
   \ldots
 \end{align*}
 
-One way to obtain one construction from the other is via the \emph{Grothendieck construction}, although this is not relevant to our work.
+The focus of our work has been to formally define such an indexed presentation of not just semi-cubical, but more generally, $\nu$-sets.
 
 \subsection{Iterated parametricity}
 One step of parametricity can be seen as interpreting a point by a line. Iterating parametricity shall lead to map terms typed in a context with $n$ declarations of an axis as $n$-fillers. We shall interpret a typing derivation with $n$ axis declarations as an $n$-filler of typing derivations in the target. For instance, a typing derivation with exactly one declaration of an axis will be interpreted by 3 typing derivations in the target, two of them typing points and the third one typing a proof, seen as a line, together with the fact that these two points are related (as in ordinary parametricity), while a typing derivation with $n$ declarations of an axis shall be interpreted as a $3^n$ derivations, split into $2^n$ derivations of points.
@@ -519,48 +571,6 @@ A full $2$-filler is made of two full $1$-fillers connected by a lifted $1$-fill
 \end{equation*}
 }
 
-\section{Reasoning about sets in type theory}
-Since proof irrelevance is an inherent part of set theory and first-order logic, and proof irrelevance is \emph{extensional} in type theory, we work in a universe known as \texttt{HSet}, which we describe shortly.
-
-\subsection{Unicity of identity proofs}
-UIP is a flavor of proof-irrelevance:
-
-\begin{align*}
-  \forall x y, \forall p q : x = y, p = q
-\end{align*}
-
-which is to say that any two proofs of \emph{equality} of the same two types are \emph{equal}. In other words, the proofs cannot be distinguished from one another.
-
-An equivalent defintion of UIP is given by \textsf{UIP\_refl}:
-
-\begin{align*}
-  \textsf{UIP\_refl} & : \forall x, \forall p : x = x, p = \textsf{eq\_refl } x
-\end{align*}
-
-In type theory, UIP can be proved on the unit type and bool type:
-
-\begin{align*}
-  \textsf{eq\_refl}        & : \forall x, x = x                                                    \\
-  \textsf{UIP\_refl\_unit} & : \forall u : \textsf{unit}, \forall x : u = u, x = \textsf{eq\_refl} \\
-  \textsf{UIP\_refl\_bool} & : \forall b : \textsf{bool}, \forall x : b = b, x = \textsf{eq\_refl} \\
-\end{align*}
-
-\subsection{HSet}
-\texttt{HSet} provides us a restricted setting of UIP, and our implementation of \texttt{HSet} is a straightforward packaging of two fields:
-
-\begin{align*}
-  \textsf{Dom} & : \textsf{Type}                                          \\
-  \textsf{UIP} & : \forall x y : \textsf{Dom}, \forall p q : x = y, p = q
-\end{align*}
-
-In the \texttt{HSet} universe, three properties hold:
-
-\begin{enumerate}
-  \item[(i)] UIP holds on the unit type.
-  \item[(ii)] UIP propagates to $\Sigma$-types.
-  \item[(iii)] UIP propagates to $\Pi$-types, with some additional functional extensionality axioms.
-\end{enumerate}
-
 \section{Type-theoretic construction of \texorpdfstring{$\nu$}{nu}-sets}
 % Abbreviated tables in this section
 %
@@ -638,7 +648,7 @@ For a given $n$, the coherence conditions evaluate to a reflexivity proof, so th
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][#6,#7][#8][#9]}
 
 \renewcommand*{\lab}{tab:faces}
-\input{tab-faces.tex}
+\input{tab-faces-ett.tex}
 
 % Restriction for frame, layer, and filler
 % Drop just the universe letter for the coh table
@@ -664,7 +674,7 @@ The proof of $\cohf$ require a higher-dimensional coherence condition which we o
 \newcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
 
 \renewcommand*{\lab}{tab:coh}
-\input{tab-coh.tex}
+\input{tab-coh-ett.tex}
 
 
 where $\cohtwo{frame}$ is:
