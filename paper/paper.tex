@@ -195,7 +195,7 @@ We exploit the connection between iterated unary parametricity and augmented sim
 The outline of the paper is as follows. First, we briefly describe semi-simplicial and semi-cubical sets, as it appears in mathematical literature, and our generalization to $\nu$-sets. We then proceed to explain our construction, with the help of diagrams. Before spelling out the details of our formalization in type-theoretic language, we have a section on reasoning in sets.
 
 \section{Mathematical treatment of \texorpdfstring{$\nu$}{𝜈}-sets}
-It is well-known that simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices. What we have formalized is \emph{semi-simplicial} sets, and \emph{semi-cubical} sets, which is to say that they are the usual simplicial sets and cubical sets, minus the degeneracies. Indeed, we plan to extend our work to do degeneracies in the future, but let us briefly explain the mathematical objects we have formalized.
+It is well-known that simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices. What we have formalized is \emph{augmented semi-simplicial} sets, and \emph{semi-cubical} sets. We will proceed to explain the mathematical objects we have formalized.
 
 \begin{table}[H]
   \begin{tabularx}{\linewidth}{p{.2\linewidth}|p{.4\linewidth}|p{.3\linewidth}}
@@ -212,12 +212,20 @@ Augmented semi-simplicial sets are defined similarly to semi-simplicial sets, ex
 
 Let us associate dimension $0$ to colors; then, points are dimension $1$, lines are dimension $2$, and so on. There is hence a shift by one when compared to semi-simplicial sets. We can then draw augmented semi-simplicial sets like semi-simplicial sets, except for this shift by one.
 
-While semi-simplicial sets are presheaves over the semi-simplex category $\hat{\Delta}$, augmented semi-simplicial sets are presheaves over, what we will define as $\DeltaPlus$. There are different ways to define $\DeltaPlus$, upto equivalence, and we use a combinatorial definition; the reason for our choice is that this definition has a straightforward extension to semi-cubical sets.
+While ordinary semi-simplicial sets are presheaves over the semi-simplex category $\hat{\Delta}$, augmented semi-simplicial sets are presheaves over, what we will define as $\DeltaPlus$. There are different ways to define $\DeltaPlus$, upto equivalence, and we use a combinatorial definition; the reason for our choice is that this definition has a straightforward extension to semi-cubical sets.
 
 \begin{notation}[Sequences of integers]
   We write $\{i_1, \ldots i_n\}$ for sequences of integers. In particular, the empty sequence is written $\{\}$.
+\end{notation}
 
-  Additionally, we define $i :: \{j_1, \ldots, j_n\}$ to be $\{i, j_1, \ldots, j_n\}$, and $\uparrow \{i_1, \ldots, i_n\}$ to be $\{i_1 + 1, \ldots, i_n + 1\}$.
+We introduce two additional notations for working with sequences of integers.
+
+\begin{notation}[::]
+  We define $i :: \{j_1, \ldots, j_n\}$ to be $\{i, j_1, \ldots, j_n\}$.
+\end{notation}
+
+\begin{notation}[$\uparrow$]
+  Let us write $\uparrow \{i_1, \ldots, i_n\}$ to denote $\{i_1 + 1, \ldots, i_n + 1\}$.
 \end{notation}
 
 \begin{definition}[\DeltaPlus]
@@ -273,10 +281,10 @@ While semi-simplicial sets are presheaves over the semi-simplex category $\hat{\
   \end{align*}
 \end{definition}
 
-The standard $0$-semi-simplex is just the set of colors. Standard augmented $n$-semi-simplices have a geometric interpretation for dimensions $1$, $2$, and $3$, and we illustrate them now.
+The standard augmented $0$-semi-simplex is a singleton of one color. Standard augmented $n$-semi-simplices have a geometric interpretation, and we illustrate them for dimensions $1$, $2$, and $3$.
 
 \begin{example}[$\DeltaPlus^1$]
-  In dimension $1$, the standard augmented semi-simplex can be pictured as a point, where the color is kept implicit. This point is the identity in $\Hom(1, 1)$; it is hence shown as a singleton $\kstar$:
+  In dimension $1$, the standard augmented semi-simplex can be pictured as a point, where the unique color is kept implicit; the unique morphism in $\Hom(0, 1)$ is not pictured. This point is the identity in $\Hom(1, 1)$; it is hence shown as a singleton $\kstar$:
 
   \begin{equation*}
     \begin{tikzcd}
@@ -286,7 +294,8 @@ The standard $0$-semi-simplex is just the set of colors. Standard augmented $n$-
 \end{example}
 
 \begin{example}[$\DeltaPlus^2$]
-  In dimension $2$,
+  In dimension $2$, the standard augmented semi-simplex is drawn as two points, given by $\Hom(1, 2)$, along with a line connecting them, given by $\Hom(2, 2)$. Again, the unique morphim in $\Hom(0, 2)$ is not pictured.
+
   \begin{equation*}
     \begin{tikzcd}
       \kstar0 \arrow[r, dash, "\kstar\kstar"] & 0\kstar
@@ -295,6 +304,8 @@ The standard $0$-semi-simplex is just the set of colors. Standard augmented $n$-
 \end{example}
 
 \begin{example}[$\DeltaPlus^3$]
+  $\DeltaPlus^3$ is drawn as three points, given by $\Hom(1, 3)$, three lines connecting them, given by $\Hom(2, 3)$, and a filler given by $\Hom(3, 3)$.
+
   \begin{equation*}
     \begin{tikzcd}
       & |[alias=F]|00\kstar \arrow[ddr, dash, "0\kstar\kstar"] & \\\\
@@ -306,19 +317,21 @@ The standard $0$-semi-simplex is just the set of colors. Standard augmented $n$-
 
 \subsection{Semi-cubical sets}
 \begin{definition}[\Cube]
-  $\Cube$ is defined similarly to $\DeltaPlus$, except that we take $0$, $1$ and $\star$, instead of $0$ and $\kstar$. We use $0$ and $1$ to indicate opposite faces of a cube.
+  $\Cube$ is defined similarly to $\DeltaPlus$, except that we take sequences of $0$, $1$ and $\star$, instead of sequences of $0$ and $\kstar$. We use $0$ and $1$ to indicate opposite faces of a cube.
 
   \begin{align*}
-    \obj(\DeltaPlus) & := \Nat                                                                     \\
-    \hom(p, n)       & := \{l \in \{0, 1, \kstar\}^n \mid \text{number of $\kstar$ in l = p}\}     \\
-    g \circ f        & :=
+    \obj(\Cube) & := \Nat                                                                                \\
+    \hom(p, n)  & := \{l \in \{0, 1, \kstar\}^n \mid \text{number of $\kstar$ in $l = p$}\}              \\
+    g \circ f   & :=
     \begin{cases}
-      f                  & \text{if $g = \{\}$}                                                      \\
-      0 :: (g' \circ f)  & \text{if $g = (0 :: g')$}                                                 \\
-      a :: (g' \circ f') & \text{if $g = (\star :: g')$, $f = (a :: f')$, where $a = 0$ or $\kstar$} \\
+      f                  & \text{if $g = \{\}$}                                                            \\
+      a :: (g' \circ f)  & \text{if $g = (a :: g')$}, \text{where $a = 0$ or $1$}                          \\
+      a :: (g' \circ f') & \text{if $g = (\star :: g')$, $f = (a :: f')$, where $a = 0$, $1$, or $\kstar$} \\
     \end{cases} \\
-    \id              & := \{\kstar, \ldots, \kstar\} \text{ $n$ times}
+    \id         & := \{\kstar, \ldots, \kstar\} \text{ $n$ times}
   \end{align*}
+
+  Again, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
 \end{definition}
 
 \begin{definition}[\CSet]
@@ -328,10 +341,6 @@ The standard $0$-semi-simplex is just the set of colors. Standard augmented $n$-
     \CSet := \Set^{\op{\Cube}}
   \end{equation*}
 \end{definition}
-
-\begin{remark}
-  $\CSet$ does not admit degeneracies.
-\end{remark}
 
 \begin{definition}[$\Cube^n$]
   The standard semi-cube $\Cube^n$ is defined as:
@@ -343,10 +352,10 @@ The standard $0$-semi-simplex is just the set of colors. Standard augmented $n$-
   \end{align*}
 \end{definition}
 
-Standard $n$-semi-cubes have a geometric interpreation, for dimensions $0$, $1$, and $2$, and we illustrate them now.
+Standard $n$-semi-cubes have a geometric interpretion, which we illustrate for dimensions $0$, $1$, and $2$.
 
 \begin{example}[$\Cube^0$]
-  $\Cube^0$ is $\Hom(0, 0)$, or the empty set:
+  $\Cube^0$ is $\Hom(0, 0)$, or the singleton set of the empty sequence:
 
   \begin{equation*}
     \begin{tikzcd}
@@ -356,7 +365,8 @@ Standard $n$-semi-cubes have a geometric interpreation, for dimensions $0$, $1$,
 \end{example}
 
 \begin{example}[$\Cube^1$]
-  $\Cube^1$ is two points and a line:
+  $\Cube^1$ is two points, given by $\Hom(0, 1)$ and a line, given by $\Hom(1, 1)$:
+
   \begin{equation*}
     \begin{tikzcd}
       0 \arrow[r, "\kstar", dash] & 1
@@ -365,10 +375,12 @@ Standard $n$-semi-cubes have a geometric interpreation, for dimensions $0$, $1$,
 \end{example}
 
 \begin{example}[$\Cube^2$]
+  $\Cube^2$ is four points, given by $\Hom(0, 2)$, four lines connecting the four points, given by $\Hom(1, 2)$, and a filler, given by $\Hom(2, 2)$:
+
   \begin{equation*}
     \begin{tikzcd}
-      (0, 1) \arrow[r, dash, "\kstar1"{name=F}] \arrow[d, dash, "0\kstar" left] & (1, 1) \arrow[d, dash, "1\kstar"] \\
-      (0, 0) \arrow[r, dash, "\kstar0"{name=T, below}] & (1, 0) \\
+      01 \arrow[r, dash, "\kstar1"{name=F}] \arrow[d, dash, "0\kstar" left] & 11 \arrow[d, dash, "1\kstar"] \\
+      00 \arrow[r, dash, "\kstar0"{name=T, below}] & 10 \\
       \arrow[rightarrow, from=F, to=T, phantom, "\kstar\kstar" description]
     \end{tikzcd}
   \end{equation*}
