@@ -393,14 +393,14 @@ Let us call $\nu$-sets, the straightforward generalization of augmented semi-sim
 In this section, we briefly explain the difference between the fibered and indexed representations, and illustrate our approach to the construction, with the help of some figures.
 
 \subsection{Homotopy type theory}
-Homotopy type theory (HoTT) is a logical foundation based on Martin-Löf type theory and the univalence axiom~\cite{hottbook}. HoTT is based on the notion of a basic \textsf{Type}, and the notion of sets can be recovered as \textsf{HSet}, where \texttt{HSet} is a straightforward packaging of two fields:
+Homotopy type theory (HoTT) is a logical foundation based on Martin-Löf type theory and the univalence axiom~\cite{hottbook}. HoTT is based on the notion of a basic \textsf{Type}, and the notion of sets can be recovered as \textsf{HSet}, where \textsf{HSet} is a straightforward packaging of two fields:
 
 \begin{align*}
   \textsf{Dom} & : \textsf{Type}                                          \\
   \textsf{UIP} & : \forall x y : \textsf{Dom}, \forall p q : x = y, p = q
 \end{align*}
 
-In the \texttt{HSet} universe, three properties hold:
+In the \textsf{HSet} universe, three properties hold:
 
 \begin{enumerate}
   \item[(i)] UIP holds on the unit type.
@@ -436,7 +436,7 @@ It is well-known in set theory, that families of small sets can be represented i
 
 In category theory, the correspondence between fibered and indexed way, manifests as the correspondence between Grothendieck fibrations and pseudofunctors, of which a particular instance is the correspondence between discrete fibrations and presheaves, or even between discrete fibrations over sets and families of sets.
 
-In HoTT, the latter correspondence can be expressed, for $T: \textsf{Type}$, as an equivalence between $\Sigma S: \textsf{Type}\;.\;S \rightarrow T$ and $T \rightarrow \textsf{Type}$, which can be proved using univalence. This correspondence also holds on \textsf{HSet}, for $T: \textsf{HSet}$:
+The latter correspondence can be expressed in HoTT, for $T: \textsf{Type}$, as an equivalence between $\Sigma S: \textsf{Type}\;.\;S \rightarrow T$ and $T \rightarrow \textsf{Type}$, which can be proved using univalence. This correspondence also holds on \textsf{HSet}, for $T: \textsf{HSet}$:
 
 \begin{equation*}
   \Sigma S: \textsf{HSet}\;.\;S\rightarrow T \simeq T \rightarrow \textsf{HSet}
