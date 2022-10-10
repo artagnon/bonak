@@ -83,7 +83,7 @@
 \newcommand{\CSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\square}}}}
 
 % Universe, referred to as U
-\newcommand{\U}[1]{\ensuremath{\mathsf{\color{spanish-blue}{HSet}}_{#1}}}
+\newcommand{\U}[1][]{\ensuremath{\mathsf{\color{spanish-blue}{HSet}}_{#1}}}
 
 % The unit type
 \newcommand{\unittype}{\ensuremath{\mathsf{unit}}}
@@ -106,6 +106,9 @@
 \renewcommand{\l}{l}
 \renewcommand{\c}{c}
 \newcommand{\pair}[2]{#1, #2}
+\newcommand{\Type}{\textsf{Type}}
+\newcommand{\Dom}{\textsf{Dom}}
+\newcommand{\UIP}{\textsf{UIP}}
 
 % These are renewed in tables, but let's define them now for in-document
 % typesetting
@@ -393,14 +396,14 @@ Let us call $\nu$-sets, the straightforward generalization of augmented semi-sim
 In this section, we briefly explain the difference between the fibered and indexed representations, and illustrate our approach to the construction, with the help of some figures.
 
 \subsection{Homotopy type theory}
-Homotopy type theory (HoTT) is a logical foundation based on Martin-Löf type theory and the univalence axiom~\cite{hottbook}. HoTT is based on the notion of a basic \textsf{Type}, and the notion of sets can be recovered as \textsf{HSet}, where \textsf{HSet} is a straightforward packaging of two fields:
+Homotopy type theory (HoTT) is a logical foundation based on Martin-Löf type theory and the univalence axiom~\cite{hottbook}. HoTT is based on the notion of a basic Type, and the notion of sets can be recovered as \U, where $\U$ is a straightforward packaging of two fields:
 
 \begin{align*}
-  \textsf{Dom} & : \textsf{Type}                                          \\
-  \textsf{UIP} & : \forall x y : \textsf{Dom}, \forall p q : x = y, p = q
+  \Dom & : \Type                                          \\
+  \UIP & : \forall x y : \Dom, \forall p q : x = y, p = q
 \end{align*}
 
-In the \textsf{HSet} universe, three properties hold:
+In the $\U$ universe, three properties hold:
 
 \begin{enumerate}
   \item[(i)] UIP holds on the unit type.
@@ -408,7 +411,7 @@ In the \textsf{HSet} universe, three properties hold:
   \item[(iii)] UIP propagates to $\Pi$-types, with some additional functional extensionality axioms.
 \end{enumerate}
 
-\textsf{HSet} provides us a form of unicity of identity of proofs (UIP), which is a form of proof irrelevance:
+$\U$ provides us a form of unicity of identity of proofs (UIP), which is a form of proof irrelevance:
 
 \begin{align*}
   \forall x y, \forall p q : x = y, p = q
@@ -436,26 +439,26 @@ It is well-known in set theory, that families of small sets can be represented i
 
 In category theory, the correspondence between fibered and indexed way, manifests as the correspondence between Grothendieck fibrations and pseudofunctors, of which a particular instance is the correspondence between discrete fibrations and presheaves, or even between discrete fibrations over sets and families of sets.
 
-The latter correspondence can be expressed in HoTT, for $T: \textsf{Type}$, as an equivalence between $\Sigma S: \textsf{Type}\;.\;S \rightarrow T$ and $T \rightarrow \textsf{Type}$, which can be proved using univalence. This correspondence also holds on \textsf{HSet}, for $T: \textsf{HSet}$:
+The latter correspondence can be expressed in HoTT, for $T: \Type$, as an equivalence between $\Sigma S: \Type\;.\;S \rightarrow T$ and $T \rightarrow \Type$, which can be proved using univalence. This correspondence also holds on \U, for $T: \U$:
 
 \begin{equation*}
-  \Sigma S: \textsf{HSet}\;.\;S\rightarrow T \simeq T \rightarrow \textsf{HSet}
+  \Sigma S: \U\;.\;S\rightarrow T \simeq T \rightarrow \U
 \end{equation*}
 
-Let us now come back to cubical sets. A cubical set can be represented as a sequence of fibrations, together with appropriate coherence conditions:
+Let us now come back to cubical sets. A cubical set can be represented as a sequence of fibrations, together with appropriate coherence conditions.
 
 \begin{equation*}
   \begin{tikzcd}
-    X_0 : \U{} & X_1 : \U{} \arrow[l, "\delta^\epsilon_0" description, shift left=2] \arrow[l, "\delta^\omega_0" description, shift right=2] & X_2 : \U{} \arrow[l, "\delta^\epsilon_1" description, shift left=6] \arrow[l, "\delta^\epsilon_0" description, shift left=2] \arrow[l, "\delta^\omega_0" description, shift right=2] \arrow[l, "\delta^\omega_1" description, shift right=6] & \ldots
+    X_0 : \U & X_1 : \U \arrow[l, "\delta^\epsilon_0" description, shift left=2] \arrow[l, "\delta^\omega_0" description, shift right=2] & X_2 : \U \arrow[l, "\delta^\epsilon_1" description, shift left=6] \arrow[l, "\delta^\epsilon_0" description, shift left=2] \arrow[l, "\delta^\omega_0" description, shift right=2] \arrow[l, "\delta^\omega_1" description, shift right=6] & \ldots
   \end{tikzcd}
 \end{equation*}
 
-We can iteratively apply the above correspondence to obtain an indexed representation of cubical sets:
+We can iteratively apply the above correspondence to obtain an indexed representation of cubical sets.
 
 \begin{align*}
-  X_0 & : \U{}                                                                                                              \\
-  X_1 & : X_0 \times X_0 \rightarrow \U{}                                                                                   \\
-  X_2 & : \forall a b c d, X_1 (a, b) \rightarrow X_1 (a, c) \rightarrow X_1 (b, d) \rightarrow X_1 (c, d) \rightarrow \U{} \\
+  X_0 & : \U                                                                                                              \\
+  X_1 & : X_0 \times X_0 \rightarrow \U                                                                                   \\
+  X_2 & : \forall a b c d, X_1 (a, b) \rightarrow X_1 (a, c) \rightarrow X_1 (b, d) \rightarrow X_1 (c, d) \rightarrow \U \\
   \ldots
 \end{align*}
 
@@ -665,7 +668,7 @@ For a given $n$, the coherence conditions evaluate to a reflexivity proof, so th
 % Hack to remove , in \cohf
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][][][#9]}
 
-The proof of $\cohf$ require a higher-dimensional coherence condition which we obtain by working in \texttt{HSet}. If the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory).
+The proof of $\cohf$ require a higher-dimensional coherence condition which we obtain by working in \U. If the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory).
 
 % Coherence conditions for frame, layer, and filler
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
