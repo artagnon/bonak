@@ -466,21 +466,17 @@ We can iteratively apply the above correspondence to obtain an indexed represent
 The focus of our work has been to formally define such an indexed presentation of not just semi-cubical, but more generally, $\nu$-sets.
 
 \subsection{Intuition for our formal construction}
-To assign $X_0$, $X_1$, $X_2$, $\ldots$ in the above indexed representation types, we need to exhibit a recursive definition over our building blocks, which we will call $\framep$, $\layer$, and $\filler$. As a first step, we assign every $X_n$ the type $\fullframe[n] \rightarrow \U$, which is a form of uncurrification (i.e. the isomorphism between $A \rightarrow B \rightarrow C$ and $A \times B \rightarrow C$). The question is then to find the recursive recipe defining $\fullframe[n]$. First, $\fullframe[n]$ depends on all $X_i$ upto $n - 1$. So, we need to package up $X_i$, for $i < n$, into a type, which we call $\X[][<n][]$. This allows us to give the type $\X[][<n][] \rightarrow \U$ to $\fullframe[n]$. For $D: \X[][<n][]$, the initial prefix of $\X[][0][]$ to $\X[][n - 1][]$, $\X[][n][]$ has type $\fullframe[n](D) \rightarrow \U$. We shall give the full definition of $\fullframe[n]$ shortly, but first assuming $\fullframe[n]$ is defined, we are able to take the coinductive limit of the $\X[][<n][]$, as shown in \ref{tab:coind}, therefore fully characterizing the indexed definition of $\nu$-sets.
+To assign $X_0, X_1, X_2, \ldots$ in the above indexed representation types, we need to exhibit a recursive definition over our building blocks, which we will call $\framep$, $\layer$, and $\filler$. A $\framep$ is a boundary of a standard form (simplex, cube, etc.), a $\filler$ is a filled $\framep$; both of them can be decomposed into $\layer$.
 
-The characterization of homogeneous $n$-frame and full $n$-fillers can be obtained by a recursive definition reminiscent from parametricity: a full $(n+1)$-filler is obtained by taking two full $n$-fillers plus a third full $n$-filler connecting the two full $n$-fillers. Since it connects full $n$-fillers, the third full $n$-filler is actually a full $n$-filler over lines, so it is shifted by one relatively to the underlying relational structure. Let us write $\filler[n][p]$ for a full $(n-p)$-filler over points which are full $p$-fillers. Working informally, we thus have the equation:
+As a first step, we assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applying the isomorphism between $A \rightarrow B \rightarrow C$ and $A \times B \rightarrow C$, or between $\Pi a : A, (B a \rightarrow C)$ and $(\Sigma a : A, B a) \rightarrow C$. The question is then to find the recursive recipe defining $\fullframe[n]$. First, $\fullframe[n]$ depends on all $X_i$ upto $n - 1$. So, we need to package up $X_i$, for $i < n$, into a type, which we call $\X[][<n][]$. This allows us to give the type $\X[][<n][] \rightarrow \U$ to $\fullframe[n]$. Then, for $D: \X[][<n][]$, representing an initial prefix of $X_0, X_1, \ldots X_{n - 1}$, the indexed set $X_n$ has type $\fullframe[n](D) \rightarrow \U$. We shall give the full definition of $\fullframe[n]$ shortly, but first, assuming $\fullframe[n]$ is defined, we are able to take the coinductive limit of the $\X[][<n][]$, as shown in \ref{tab:coind}, therefore fully characterizing the indexed definition of $\nu$-sets.
 
-\begin{equation*}
-  \filler[n+1][0] \defeq (\filler[n][0] \times \filler[n][0]) \times \filler[n+1][1]
-\end{equation*}
-
-and, iterating and generalizing the process, we have actually:
+The characterization of $\framep[n]$ and $\filler[n]$ can be obtained by a recursive definition reminiscent from parametricity translation \cite{reynolds72}: a $\filler[n+1]$ is obtained by taking two $\filler[n]$ plus a third $\filler[n]$ connecting the two full $\filler[n]$. Since it connects $\filler[n]$, the third $\filler[n]$ is actually a $\filler[n]$ over lines, so it is shifted by one relatively to the underlying relational structure. Let us write $\filler[n][p]$ for a $\filler[n - p]$ over points which are $\filler[p]$. Working informally, we thus have the equation:
 
 \begin{equation*}
   \filler[n+1][p] \defeq (\filler[n][p] \times \filler[n][p]) \times \filler[n+1][p+1]
 \end{equation*}
 
-Now, the third filler (of dimension $n - p$) connects the first two $(n - p)$-fillers, so it has to depend on them. So, the equation is rather something of the form:
+Now, the third filler (of dimension $n - p$) connects the first two $\filler[n-p]$, so it has to depend on them. So, the equation is rather something of the form:
 
 \begin{equation*}
   \filler[n+1][p] \defeq \Sigma a:(\filler[n][p] \times \filler[n][p]).\, \filler[n+1][p+1](a)
@@ -493,7 +489,7 @@ Then, by iterating, we obtain:
   \Sigma b:(\filler[n][p+1](a) \times \filler[n][p+1](a)). \, \filler[n+1][p+2](a,b)
 \end{equation*}
 
-and so on. Thus, we need first to make the definition of $\filler[n][p]$ dependent over the part of the full filler built up to this point and secondly to accumulate this information. At the end of the accumulation of the process, i.e. at the time of building $\filler[n+1][n]$, a complete $n$-frame will have been built. So, let us call $\framep[n][p]$ the partial $n$-frame built up to the stage $p$ of the construction. Thus, we refine our definition into something like:
+and so on. Thus, we need first to make the definition of $\filler[n][p]$ dependent over the part of the filler built up to this point and secondly to accumulate this information. At the end of the accumulation of the process, i.e. at the time of building $\filler[n+1][n]$, a complete $\framep[n]$ will have been built. So, let us call $\framep[n][p]$ the partial $\framep[n]$ built up to the stage $p$ of the construction. Thus, we refine our definition into something like:
 
 \begin{equation*}
   \begin{array}{lll}
