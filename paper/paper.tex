@@ -470,7 +470,7 @@ To assign $X_0, X_1, X_2, \ldots$ in the above indexed representation types, we 
 
 As a first step, we assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applying the isomorphism between $A \rightarrow B \rightarrow C$ and $A \times B \rightarrow C$, or between $\Pi a : A, (B a \rightarrow C)$ and $(\Sigma a : A, B a) \rightarrow C$. The question is then to find the recursive recipe defining $\fullframe[n]$. First, $\fullframe[n]$ depends on all $X_i$ upto $n - 1$. So, we need to package up $X_i$, for $i < n$, into a type, which we call $\X[][<n][]$. This allows us to give the type $\X[][<n][] \rightarrow \U$ to $\fullframe[n]$. Then, for $D: \X[][<n][]$, representing an initial prefix of $X_0, X_1, \ldots X_{n - 1}$, the indexed set $X_n$ has type $\fullframe[n](D) \rightarrow \U$. We shall give the full definition of $\fullframe[n]$ shortly, but first, assuming $\fullframe[n]$ is defined, we are able to take the coinductive limit of the $\X[][<n][]$, as shown in \ref{tab:coind}, therefore fully characterizing the indexed definition of $\nu$-sets.
 
-The characterization of $\framep[n]$ and $\filler[n]$ can be obtained by a recursive definition reminiscent from parametricity translation \cite{reynolds72}: a $\filler[n+1]$ is obtained by taking two $\filler[n]$ plus a third $\filler[n]$ connecting the two full $\filler[n]$. Since it connects $\filler[n]$, the third $\filler[n]$ is actually a $\filler[n]$ over lines, so it is shifted by one relatively to the underlying relational structure. Let us write $\filler[n][p]$ for a $\filler[n - p]$ over points which are $\filler[p]$. Working informally, we thus have the equation:
+The characterization of $\framep[n]$ and $\filler[n]$ can be obtained by a recursive definition reminiscent from parametricity translation \cite{reynolds72}: a $\filler[n+1]$ is obtained by taking two $\filler[n]$ plus a third $\filler[n]$ connecting the two $\filler[n]$. Since it connects $\filler[n]$, the third $\filler[n]$ is actually a $\filler[n]$ over lines, so it is shifted by one relatively to the underlying relational structure. Let us write $\filler[n][p]$ for a $\filler[n - p]$ over points which are $\filler[p]$. Working informally, we thus have the equation:
 
 \begin{equation*}
   \filler[n+1][p] \defeq (\filler[n][p] \times \filler[n][p]) \times \filler[n+1][p+1]
@@ -511,65 +511,65 @@ Now, the two fillers $\filler[n][p](d)$ and $\filler[n][p](d)$ cannot be any fil
   \end{array}
 \end{equation*}
 
-The full explicit definition shall be given in the next sections but, to give an idea, let us show the structure of an $n$-filler for the first three dimensions.
+The full explicit definition shall be given in the next sections but, to give an idea, let us show the structure of a $\filler[n]$ for the first three dimensions.
 
-A full $2$-filler is made of two full $1$-fillers connected by a lifted $1$-filler made of two lines connecting the former points and a square connecting the former lines:
+A $\filler[2]$ is made of two $\filler[1]$ connected by a lifted $\filler[1]$ made of two lines connecting the former points and a square connecting the former lines.
 
-{\scriptsize
-\begin{equation*}
-  \begin{array}{l}
-    \begin{array}{lll}
-      \mbox{\textit{squares}}     \\
-      [3mm]\mbox{\textit{lines}}  \\
-      [3mm]\mbox{\textit{points}} \\
-      [1mm]\end{array}
-    \framebox{$\begin{array}{lll}
-                     \overbrace{\raisebox{0.05cm}{\framebox{$
-                           \begin{array}{ll}
-                  \raisebox{0cm}{\hspace{.5cm}{\layer[1][0]}}              & \framebox{$a_{0\unitpoint}$} \\
-                  [1mm]\overbrace{\framebox{$a_{00}$}~\framebox{$a_{01}$}} &
-                  \raisebox{-0.1cm}{\hspace{0.1cm}\filler[1][0]\!\!\!\!\!\!\!\!}
-                  \\
-                \end{array}
-                         $}}~
-                     {\raisebox{0.05cm}{\framebox{$
-                           \begin{array}{ll}
-                  \raisebox{0cm}{\hspace{.5cm}{\layer[1][0]}}              & \framebox{$a_{1\unitpoint}$} \\
-                  [1mm]\overbrace{\framebox{$a_{10}$}~\framebox{$a_{11}$}} &
-                  \raisebox{-0.1cm}{\filler[1][0]\!\!\!\!\!\!\!\!}
-                \end{array}
-                         $}}}}^{\layer[2][0]}~\stackrel{\raisebox{9.5mm}{$\framebox{$
+  {\scriptsize
+    \begin{equation*}
+      \begin{array}{l}
+        \begin{array}{lll}
+          \mbox{\textit{squares}}     \\
+          [3mm]\mbox{\textit{lines}}  \\
+          [3mm]\mbox{\textit{points}} \\
+          [1mm]\end{array}
+        \framebox{$\begin{array}{lll}
+                         \overbrace{\raisebox{0.05cm}{\framebox{$
                                \begin{array}{ll}
-                      \raisebox{0cm}{\hspace{.5cm}{$\layer[2][1]$}}                                & \framebox{$a_{\unitpoint\unitpoint}$} \\
-                      [1mm]\overbrace{\framebox{$a_{\unitpoint 0}$}~\framebox{$a_{\unitpoint 1}$}} &
-                      \raisebox{-0.1cm}{ \hspace{0.1cm}\filler[2][1]\!\!\!\!\!\!\!\!}
-                    \end{array}$}$}}
-                     {\raisebox{-0.4cm}{\hspace{2.5cm}\filler[2][0]\!\!\!\!\!\!\!}}
-                   \end{array}$}
-    ~~~\parbox{2cm}{additionally, each atomic component at dimension $n$ is a \filler[n][n]} \\\\
-    [-1mm]\qquad\qquad\quad~~
-    \begin{tikzcd}[column sep=5.2em, row sep=1em]
-      \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
-    \end{tikzcd}
-    \mbox{\framep[1][1]}
-    \qquad
-    \begin{tikzcd}[column sep=5.2em, row sep=1em]
-      \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
-    \end{tikzcd}
-    \mbox{\framep[1][1]}                                                                     \\
-    \qquad\qquad~~
-    \begin{tikzcd}[column sep=32em, row sep=1em]
-      \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
-    \end{tikzcd}
-    \mbox{\framep[2][1]}                                                                     \\
-    \qquad\qquad~~
-    \begin{tikzcd}[column sep=39em, row sep=1em]
-      \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
-    \end{tikzcd}
-    \mbox{\framep[2][2]}                                                                     \\
-  \end{array}
-\end{equation*}
-}
+                      \raisebox{0cm}{\hspace{.5cm}{\layer[1][0]}}              & \framebox{$a_{0\unitpoint}$} \\
+                      [1mm]\overbrace{\framebox{$a_{00}$}~\framebox{$a_{01}$}} &
+                      \raisebox{-0.1cm}{\hspace{0.1cm}\filler[1][0]\!\!\!\!\!\!\!\!}
+                      \\
+                    \end{array}
+                             $}}~
+                         {\raisebox{0.05cm}{\framebox{$
+                               \begin{array}{ll}
+                      \raisebox{0cm}{\hspace{.5cm}{\layer[1][0]}}              & \framebox{$a_{1\unitpoint}$} \\
+                      [1mm]\overbrace{\framebox{$a_{10}$}~\framebox{$a_{11}$}} &
+                      \raisebox{-0.1cm}{\filler[1][0]\!\!\!\!\!\!\!\!}
+                    \end{array}
+                             $}}}}^{\layer[2][0]}~\stackrel{\raisebox{9.5mm}{$\framebox{$
+                                   \begin{array}{ll}
+                          \raisebox{0cm}{\hspace{.5cm}{$\layer[2][1]$}}                                & \framebox{$a_{\unitpoint\unitpoint}$} \\
+                          [1mm]\overbrace{\framebox{$a_{\unitpoint 0}$}~\framebox{$a_{\unitpoint 1}$}} &
+                          \raisebox{-0.1cm}{ \hspace{0.1cm}\filler[2][1]\!\!\!\!\!\!\!\!}
+                        \end{array}$}$}}
+                         {\raisebox{-0.4cm}{\hspace{2.5cm}\filler[2][0]\!\!\!\!\!\!\!}}
+                       \end{array}$}
+        ~~~\parbox{2cm}{additionally, each atomic component at dimension $n$ is a \filler[n][n]} \\\\
+        [-1mm]\qquad\qquad\quad~~
+        \begin{tikzcd}[column sep=5.2em, row sep=1em]
+          \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
+        \end{tikzcd}
+        \mbox{\framep[1][1]}
+        \qquad
+        \begin{tikzcd}[column sep=5.2em, row sep=1em]
+          \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
+        \end{tikzcd}
+        \mbox{\framep[1][1]}                                                                     \\
+        \qquad\qquad~~
+        \begin{tikzcd}[column sep=32em, row sep=1em]
+          \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
+        \end{tikzcd}
+        \mbox{\framep[2][1]}                                                                     \\
+        \qquad\qquad~~
+        \begin{tikzcd}[column sep=39em, row sep=1em]
+          \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
+        \end{tikzcd}
+        \mbox{\framep[2][2]}                                                                     \\
+      \end{array}
+    \end{equation*}
+  }
 
 \subsection{Formal construction of \texorpdfstring{$\nu$}{nu}-sets}
 % Abbreviated tables in this section
