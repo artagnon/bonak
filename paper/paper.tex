@@ -478,40 +478,40 @@ As a first step, we assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ u
 
 \begin{equation*}
   \begin{array}{llll}
-    X_0                                & :              & \unittype                                               & \rightarrow \U \\
+    X_0                                & :              & \unittype                                                    & \rightarrow \U \\
     X_1                                & :              & \Sigma \kstar: \unittype. \underbrace{\left(
     \begin{array}{c}
         X_0 \kstar
         \\ \times \\
         X_0 \kstar
-      \end{array}\right)}_{\layer[1][1]} & \rightarrow \U                                                                            \\
-    X_2                                & :              & \Sigma a: (\Sigma \kstar: \unittype. \underbrace{\left(
+      \end{array}\right)}_{\layer[1][1]} & \rightarrow \U                                                                                 \\
+    X_2                                & :              & \Sigma a: \left(\Sigma \kstar: \unittype. \underbrace{\left(
       \begin{array}{c}
-        \Sigma c: \left(
+        \Sigma b: \left(
         \begin{array}{c}X_0 \kstar
             \\ \times \\
             X_0 \kstar
           \end{array}
-        \right). (X_1 (\kstar, c)
+        \right).\; X_1 (\kstar, b)
         \\ \times \\
-        \Sigma c: \left(
-        \begin{array}{l}
+        \Sigma b: \left(
+        \begin{array}{c}
             X_0 \kstar
             \\ \times \\
             X_0 \kstar
           \end{array}
-        \right). (X_1 (\kstar, c)
+        \right).\; X_1 (\kstar, b)
       \end{array}
-      \right)}_{\layer[2][1]}.\underbrace{\left(
+      \right)}_{\layer[2][1]}\right).\underbrace{\left(
       \begin{array}{c}
-        X_1 \left(\kstar, \left(
+        X_1 \left(a.\hd, \left(
           \begin{array}{c}
               a.\tl.0.\hd.0, \\
               a.\tl.1.\hd.0
             \end{array}
           \right)\right)
         \\ \times \\
-        X_1 \left(\kstar, \left(
+        X_1 \left(a.\hd, \left(
           \begin{array}{c}
               a.\tl.0.\hd.1, \\
               a.\tl.1.\hd.1
@@ -519,12 +519,12 @@ As a first step, we assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ u
           \right)\right)
       \end{array}
       \right)}_{\layer[2][2]}
-                                       & \rightarrow \U                                                                            \\
+                                       & \rightarrow \U                                                                                 \\
     \ldots
   \end{array}
 \end{equation*}
 
-Then, $\fullframe[n]$ is a nesting of $n$ $\Sigma$-types, of which each component is called a $\layer[n]$.
+$\fullframe[n]$ is a nesting of $n$ $\Sigma$-types, of which each component is called a $\layer[n]$.
 
 The question is then to find the recursive recipe defining $\fullframe[n]$. First, $\fullframe[n]$ depends on all $X_i$ upto $n - 1$. So, we need to package up $X_i$, for $i < n$, into a type, which we call $\X[][<n][]$. This allows us to give the type $\X[][<n][] \rightarrow \U$ to $\fullframe[n]$. Then, for $D: \X[][<n][]$, representing an initial prefix of $X_0, X_1, \ldots X_{n - 1}$, the indexed set $X_n$ has type $\fullframe[n](D) \rightarrow \U$. We shall give the full definition of $\fullframe[n]$ shortly, but first, assuming $\fullframe[n]$ is defined, we are able to take the coinductive limit of the $\X[][<n][]$, as shown in \ref{tab:coind}, therefore fully characterizing the indexed definition of $\nu$-sets.
 
