@@ -472,21 +472,21 @@ The focus of our work has been to formally define such an indexed presentation o
   In the prose that follows, we assume the existence of $\Sigma$-types with projections $\hd$ and $\tl$.
 \end{notation}
 
-To assign $X_0, X_1, X_2, \ldots$ in the above indexed representation types, we need to exhibit a recursive definition over our building blocks, which we will call $\framep$, $\layer$, and $\filler$. A $\framep$ is a boundary of a standard form (simplex, cube, etc.), a $\filler$ is a filled $\framep$; both of them can be decomposed into $\layer$.
+To assign $X_0, X_1, X_2, \ldots$ in the above indexed representation types, we need to exhibit a recursive definition over our building blocks, which we will call $\framep$, $\layer$, and $\filler$. A $\framep$ is a boundary of a standard form (simplex, cube, etc.), a $\filler$ is a filled $\framep$.
 
-As a first step, we assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applying the isomorphism between $A \rightarrow B \rightarrow C$ and $A \times B \rightarrow C$, or between $\Pi a : A, (B a \rightarrow C)$ and $(\Sigma a : A, B a) \rightarrow C$. The question is then to find the recursive recipe defining $\fullframe[n]$. First, $\fullframe[n]$ depends on all $X_i$ upto $n - 1$. So, we need to package up $X_i$, for $i < n$, into a type, which we call $\X[][<n][]$. This allows us to give the type $\X[][<n][] \rightarrow \U$ to $\fullframe[n]$. Then, for $D: \X[][<n][]$, representing an initial prefix of $X_0, X_1, \ldots X_{n - 1}$, the indexed set $X_n$ has type $\fullframe[n](D) \rightarrow \U$. We shall give the full definition of $\fullframe[n]$ shortly, but first, assuming $\fullframe[n]$ is defined, we are able to take the coinductive limit of the $\X[][<n][]$, as shown in \ref{tab:coind}, therefore fully characterizing the indexed definition of $\nu$-sets. Let us illustrate how we will build $\fullframe[n]$ by refining types of $X_0, X_1, \ldots, X_{n - 1}$ so that they have the form $\fullframe[n] \rightarrow \U$. To begin, let us set $\fullframe[0] = \unittype$, so that the type $\U$ of $X_0$ can be equivalently formulated as $\unittype \rightarrow \U$. The rest of the construction follows.
+As a first step, we assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applying the isomorphism between $A \rightarrow B \rightarrow C$ and $A \times B \rightarrow C$, or between $\Pi a : A, (B a \rightarrow C)$ and $(\Sigma a : A, B a) \rightarrow C$. Let us illustrate how we will build $\fullframe[n]$ by refining types of $X_0, X_1, \ldots, X_{n - 1}$ so that they have the form $\fullframe[n] \rightarrow \U$. To begin, let us set $\fullframe[0] = \unittype$, so that the type $\U$ of $X_0$ can be equivalently formulated as $\unittype \rightarrow \U$. The rest of the construction follows.
 
 \begin{equation*}
   \begin{array}{llll}
-    X_0                & :              & \unittype                                   & \rightarrow \U \\
-    X_1                & :              & \Sigma \kstar: \unittype. \left(
+    X_0                                & :              & \unittype                                               & \rightarrow \U \\
+    X_1                                & :              & \Sigma \kstar: \unittype. \underbrace{\left(
     \begin{array}{c}
         X_0 \kstar
         \\ \times \\
         X_0 \kstar
-      \end{array}\right) & \rightarrow \U                                                                \\
-    X_2                & :              & \Sigma a: (\Sigma \kstar: \unittype. \left(
-    \begin{array}{c}
+      \end{array}\right)}_{\layer[1][1]} & \rightarrow \U                                                                            \\
+    X_2                                & :              & \Sigma a: (\Sigma \kstar: \unittype. \underbrace{\left(
+      \begin{array}{c}
         \Sigma c: \left(
         \begin{array}{c}X_0 \kstar
             \\ \times \\
@@ -502,8 +502,8 @@ As a first step, we assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ u
           \end{array}
         \right). (X_1 (\kstar, c)
       \end{array}
-    \right).\left(
-    \begin{array}{c}
+      \right)}_{\layer[2][1]}.\underbrace{\left(
+      \begin{array}{c}
         X_1 \left(\kstar, \left(
           \begin{array}{c}
               a.\tl.0.\hd.0, \\
@@ -518,11 +518,15 @@ As a first step, we assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ u
             \end{array}
           \right)\right)
       \end{array}
-    \right)
-                       & \rightarrow \U                                                                \\
+      \right)}_{\layer[2][2]}
+                                       & \rightarrow \U                                                                            \\
     \ldots
   \end{array}
 \end{equation*}
+
+Then, $\fullframe[n]$ is a nesting of $n$ $\Sigma$-types, of which each component is called a $\layer[n]$.
+
+The question is then to find the recursive recipe defining $\fullframe[n]$. First, $\fullframe[n]$ depends on all $X_i$ upto $n - 1$. So, we need to package up $X_i$, for $i < n$, into a type, which we call $\X[][<n][]$. This allows us to give the type $\X[][<n][] \rightarrow \U$ to $\fullframe[n]$. Then, for $D: \X[][<n][]$, representing an initial prefix of $X_0, X_1, \ldots X_{n - 1}$, the indexed set $X_n$ has type $\fullframe[n](D) \rightarrow \U$. We shall give the full definition of $\fullframe[n]$ shortly, but first, assuming $\fullframe[n]$ is defined, we are able to take the coinductive limit of the $\X[][<n][]$, as shown in \ref{tab:coind}, therefore fully characterizing the indexed definition of $\nu$-sets.
 
 The characterization of $\framep[n]$ and $\filler[n]$ can be obtained by a recursive definition reminiscent from parametricity translation \cite{reynolds72}: a $\filler[n+1]$ is obtained by taking two $\filler[n]$ plus a third $\filler[n]$ connecting the two $\filler[n]$. Since it connects $\filler[n]$, the third $\filler[n]$ is actually a $\filler[n]$ over lines, so it is shifted by one relatively to the underlying relational structure. Let us write $\filler[n][p]$ for a $\filler[n - p]$ over points which are $\filler[p]$. Working informally, we thus have the equation:
 
