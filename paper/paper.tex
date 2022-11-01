@@ -87,7 +87,7 @@
 
 % The unit type
 \newcommand{\unittype}{\ensuremath{\mathsf{unit}}}
-\newcommand{\unitpoint}{\ensuremath{\star}}
+\newcommand{\unitpoint}{\ensuremath{\ast}}
 
 % Definitional and extensional equality
 \newcommand{\defeq}{\ensuremath{\triangleq}}
@@ -117,7 +117,7 @@
 \newcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
 \newcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
 \newcommandx{\filler}[2][1,2]{\prim{filler}[][#1][#2][][]}
-\newcommandx{\restrf}[1][1]{\restr{frame}[][#1][][][][][]}
+\newcommandx{\restrf}[3][1,2,3]{\restr{frame}[][#3][][#1][#2][][]}
 \newcommandx{\fullframe}[1][1]{\prim{fullframe}[][#1][][][]}
 
 % Kerning for star
@@ -313,16 +313,16 @@ The standard augmented $0$-semi-simplex is a singleton of one color. Standard au
 
 \subsection{Semi-cubical sets}
 \begin{definition}[\Cube]
-  $\Cube$ is defined similarly to $\DeltaPlus$, except that we take sequences of $0$, $1$ and $\star$, instead of sequences of $0$ and $\kstar$. We use $0$ and $1$ to indicate opposite faces of a cube.
+  $\Cube$ is defined similarly to $\DeltaPlus$, except that we take sequences of $L$, $R$ and $\star$, instead of sequences of $0$ and $\kstar$. We use $L$ and $R$ to indicate opposite faces of a cube.
 
   \begin{align*}
     \obj(\Cube) & := \Nat                                                                                \\
-    \hom(p, n)  & := \{l \in \{0, 1, \kstar\}^n \mid \text{number of $\kstar$ in $l = p$}\}              \\
+    \hom(p, n)  & := \{l \in \{L, R, \kstar\}^n \mid \text{number of $\kstar$ in $l = p$}\}              \\
     g \circ f   & :=
     \begin{cases}
       f                  & \text{if $g = \{\}$}                                                            \\
-      a :: (g' \circ f)  & \text{if $g = (a :: g')$}, \text{where $a = 0$ or $1$}                          \\
-      a :: (g' \circ f') & \text{if $g = (\star :: g')$, $f = (a :: f')$, where $a = 0$, $1$, or $\kstar$} \\
+      a :: (g' \circ f)  & \text{if $g = (a :: g')$}, \text{where $a = L$ or $R$}                          \\
+      a :: (g' \circ f') & \text{if $g = (\star :: g')$, $f = (a :: f')$, where $a = L$, $R$, or $\kstar$} \\
     \end{cases} \\
     \id         & := \{\kstar, \ldots, \kstar\} \text{ $n$ times}
   \end{align*}
@@ -383,7 +383,7 @@ Standard $n$-semi-cubes have a geometric interpretion, which we illustrate for d
 \end{example}
 
 \subsection{Generalization to \texorpdfstring{$\nu$}{ν}-sets}
-Let us call $\nu$-sets, the straightforward generalization of augmented semi-simplicial sets and semi-cubical sets to an arbirary arity, where morphisms are sequences of elements of an arbirary set $\nu$, extended with $\kstar$. Then, we observe:
+Let us call $\nu$-sets, the straightforward generalization of augmented semi-simplicial sets and semi-cubical sets to an arbitrary cardinal, where morphisms are sequences of elements of an arbitrary set $\nu$, extended with $\kstar$. Then, we observe:
 
 \begin{table}[H]
   \begin{tabularx}{\linewidth}{p{.2\linewidth}|p{.4\linewidth}|p{.3\linewidth}}
@@ -478,48 +478,49 @@ As a first step, we assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ u
 
 \begin{equation*}
   \begin{array}{llll}
-    X_0                                : & \unittype                                                    & \rightarrow \U \\
-    X_1                                : & \Sigma \kstar: \unittype. \underbrace{\left(
+    X_0                                :                & \underbrace{\unittype}_{\framep[0][0]}                                                   & \rightarrow \U \\
+    X_1                                :                & \underbrace{\Sigma \unitpoint: \unittype. \underbrace{\left(
     \begin{array}{c}
-        X_0 \kstar
+        \underbrace{X_0(\unitpoint)}_{\filler[0][0]}
         \\ \times \\
-        X_0 \kstar
-      \end{array}\right)}_{\layer[1][1]}   & \rightarrow \U                                                                \\
-    X_2                                : & \Sigma a: \left(\Sigma \kstar: \unittype. \underbrace{\left(
-      \begin{array}{c}
-        \Sigma b: \left(
-        \begin{array}{c}X_0 \kstar
-            \\ \times \\
-            X_0 \kstar
-          \end{array}
-        \right).\; X_1 (\kstar, b)
-        \\ \times \\
-        \Sigma b: \left(
+        \underbrace{X_0(\unitpoint)}_{\filler[0][0]}
+      \end{array}\right)}_{\layer[1][0]}}_{\framep[1][1]} & \rightarrow \U                                                                                            \\
+    X_2                                :                & \underbrace{\Sigma a: \underbrace{\left(\Sigma \unitpoint: \unittype. \underbrace{\left(
         \begin{array}{c}
-            X_0 \kstar
-            \\ \times \\
-            X_0 \kstar
-          \end{array}
-        \right).\; X_1 (\kstar, b)
-      \end{array}
-      \right)}_{\layer[2][1]}\right).\underbrace{\left(
+          \underbrace{\Sigma b: \left(
+          \begin{array}{c}
+              X_0(\unitpoint)
+              \\ \times \\
+              X_0(\unitpoint)
+            \end{array}
+          \right).\; \underbrace{X_1 (\unitpoint, b)}_{\filler[1][1]}}_{\filler[1][0]}
+          \\ \times \\
+          \underbrace{\Sigma b: \left(
+          \begin{array}{c}
+              X_0(\unitpoint)
+              \\ \times \\
+              X_0(\unitpoint)
+            \end{array}
+          \right).\; \underbrace{X_1 (\unitpoint, b)}_{\filler[1][1]}}_{\filler[1][0]}
+        \end{array}
+        \right)}_{\layer[2][0]}\right)}_{\framep[2][1]}.\underbrace{\left(
       \begin{array}{c}
-        X_1 \left(a.\hd, \left(
+        \underbrace{X_1 \underbrace{\left(a.\hd, \left(
           \begin{array}{c}
-              a.\tl.0.\hd.0, \\
-              a.\tl.1.\hd.0
-            \end{array}
-          \right)\right)
+            a.\tl.L.\hd.L, \\
+            a.\tl.R.\hd.L
+          \end{array}
+          \right)\right)}_{\restrf[2][1][L]}}_{\filler[1][1]}
         \\ \times \\
-        X_1 \left(a.\hd, \left(
+        \underbrace{X_1 \underbrace{\left(a.\hd, \left(
           \begin{array}{c}
-              a.\tl.0.\hd.1, \\
-              a.\tl.1.\hd.1
-            \end{array}
-          \right)\right)
+            a.\tl.L.\hd.R, \\
+            a.\tl.R.\hd.R
+          \end{array}
+          \right)\right)}_{\restrf[2][1][R]}}_{\filler[1][1]}
       \end{array}
-      \right)}_{\layer[2][2]}
-                                         & \rightarrow \U                                                                \\
+      \right)}_{\layer[2][1]}}_{\framep[2][2]}
+                                                        & \rightarrow \U                                                                                            \\
     \ldots
   \end{array}
 \end{equation*}
@@ -561,73 +562,17 @@ and so on. Thus, we need first to make the definition of $\filler[n][p]$ depende
 where $\unittype$ is a canonical singleton type used to initiate the
 construction of a list of pairs of $n$-fillers.
 
-Now, the two fillers $\filler[n][p](d)$ and $\filler[n][p](d)$ cannot be any fillers. They have to represent two opposite fillers, and we need a way to express this. The answer is simple. The partial frame has two faces and these two fillers have to respectively fill the left face and the right face of the partial frame. We thus have to rely on operations $\restrf[L]$ and $\restrf[R]$ which extract the sides of a frame, leading to the refined definition:
+Now, the two fillers $\filler[n][p](d)$ and $\filler[n][p](d)$ cannot be any fillers. They have to represent two opposite fillers, and we need a way to express this. The answer is simple. The partial frame has two faces and these two fillers have to respectively fill the left face and the right face of the partial frame. We thus have to rely on operations $\restrf[n][p][L]$ and $\restrf[n][p][R]$ which extract the sides of a frame, leading to the refined definition:
 
 \begin{equation*}
   \begin{array}{lll}
-    \filler[n+1][p](d:\framep[n][p]) & \defeq & \Sigma a:(\filler[n][p](\restrf[L](d)) \times \filler[n][p](\restrf[R](d))) .\, \filler[n+1][p+1](d,a)
+    \filler[n+1][p](d:\framep[n][p]) & \defeq & \Sigma a:(\filler[n][p](\restrf[n][p][L](d)) \times \filler[n][p](\restrf[n][p][R](d))) .\, \filler[n+1][p+1](d,a)
   \end{array}
 \end{equation*}
 
 The full explicit definition shall be given in the next sections but, to give an idea, let us show the structure of a $\filler[n]$ for the first three dimensions.
 
 A $\filler[2]$ is made of two $\filler[1]$ connected by a lifted $\filler[1]$ made of two lines connecting the former points and a square connecting the former lines.
-
-  {\scriptsize
-    \begin{equation*}
-      \begin{array}{l}
-        \begin{array}{lll}
-          \mbox{\textit{squares}}     \\
-          [3mm]\mbox{\textit{lines}}  \\
-          [3mm]\mbox{\textit{points}} \\
-          [1mm]\end{array}
-        \framebox{$\begin{array}{lll}
-                         \overbrace{\raisebox{0.05cm}{\framebox{$
-                               \begin{array}{ll}
-                      \raisebox{0cm}{\hspace{.5cm}{\layer[1][0]}}              & \framebox{$a_{0\unitpoint}$} \\
-                      [1mm]\overbrace{\framebox{$a_{00}$}~\framebox{$a_{01}$}} &
-                      \raisebox{-0.1cm}{\hspace{0.1cm}\filler[1][0]\!\!\!\!\!\!\!\!}
-                      \\
-                    \end{array}
-                             $}}~
-                         {\raisebox{0.05cm}{\framebox{$
-                               \begin{array}{ll}
-                      \raisebox{0cm}{\hspace{.5cm}{\layer[1][0]}}              & \framebox{$a_{1\unitpoint}$} \\
-                      [1mm]\overbrace{\framebox{$a_{10}$}~\framebox{$a_{11}$}} &
-                      \raisebox{-0.1cm}{\filler[1][0]\!\!\!\!\!\!\!\!}
-                    \end{array}
-                             $}}}}^{\layer[2][0]}~\stackrel{\raisebox{9.5mm}{$\framebox{$
-                                   \begin{array}{ll}
-                          \raisebox{0cm}{\hspace{.5cm}{$\layer[2][1]$}}                                & \framebox{$a_{\unitpoint\unitpoint}$} \\
-                          [1mm]\overbrace{\framebox{$a_{\unitpoint 0}$}~\framebox{$a_{\unitpoint 1}$}} &
-                          \raisebox{-0.1cm}{ \hspace{0.1cm}\filler[2][1]\!\!\!\!\!\!\!\!}
-                        \end{array}$}$}}
-                         {\raisebox{-0.4cm}{\hspace{2.5cm}\filler[2][0]\!\!\!\!\!\!\!}}
-                       \end{array}$}
-        ~~~\parbox{2cm}{additionally, each atomic component at dimension $n$ is a \filler[n][n]} \\\\
-        [-1mm]\qquad\qquad\quad~~
-        \begin{tikzcd}[column sep=5.2em, row sep=1em]
-          \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
-        \end{tikzcd}
-        \mbox{\framep[1][1]}
-        \qquad
-        \begin{tikzcd}[column sep=5.2em, row sep=1em]
-          \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
-        \end{tikzcd}
-        \mbox{\framep[1][1]}                                                                     \\
-        \qquad\qquad~~
-        \begin{tikzcd}[column sep=32em, row sep=1em]
-          \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
-        \end{tikzcd}
-        \mbox{\framep[2][1]}                                                                     \\
-        \qquad\qquad~~
-        \begin{tikzcd}[column sep=39em, row sep=1em]
-          \phantom{\bullet}\arrow[r, leftrightarrow] & \phantom{\bullet}
-        \end{tikzcd}
-        \mbox{\framep[2][2]}                                                                     \\
-      \end{array}
-    \end{equation*}
-  }
 
 \subsection{Formal construction of \texorpdfstring{$\nu$}{nu}-sets}
 % Abbreviated tables in this section
