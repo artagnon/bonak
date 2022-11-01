@@ -365,7 +365,7 @@ Standard $n$-semi-cubes have a geometric interpretion, which we illustrate for d
 
   \begin{equation*}
     \begin{tikzcd}
-      0 \arrow[r, "\kstar", dash] & 1
+      L \arrow[r, "\kstar", dash] & R
     \end{tikzcd}
   \end{equation*}
 \end{example}
@@ -375,8 +375,8 @@ Standard $n$-semi-cubes have a geometric interpretion, which we illustrate for d
 
   \begin{equation*}
     \begin{tikzcd}
-      01 \arrow[r, dash, "\kstar1"{name=F}] \arrow[d, dash, "0\kstar" left] & 11 \arrow[d, dash, "1\kstar"] \\
-      00 \arrow[r, dash, "\kstar0"{name=T, below}] & 10 \\
+      LR \arrow[r, dash, "\kstar R"{name=F}] \arrow[d, dash, "L\kstar" left] & RR \arrow[d, dash, "R\kstar"] \\
+      LL \arrow[r, dash, "\kstar L"{name=T, below}] & RL \\
       \arrow[rightarrow, from=F, to=T, phantom, "\kstar\kstar" description]
     \end{tikzcd}
   \end{equation*}
