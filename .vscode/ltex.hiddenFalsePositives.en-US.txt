@@ -18,3 +18,4 @@
 {"rule":"ENGLISH_WORD_REPEAT_RULE","sentence":"^\\Q[m][n][p][p < n] layer D m n layer d [m][n][p][][D=] : m [m][n][p] D d  .[m][n-1][p][][D=, E=, d=[m][][p][n][p][][D=, d=]]\\E$"}
 {"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QWe write \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q for sequences of integers.\\E$"}
 {"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QWe write \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q for (ordered) sequences of integers.\\E$"}
+{"rule":"KIND_OF_A","sentence":"^\\QThen, \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q is made of one layer, so that it can be written as a \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q type of an inhabitant of the \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q and \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q.\\E$"}
