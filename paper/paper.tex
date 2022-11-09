@@ -525,9 +525,7 @@ We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applyin
   \end{array}
 \end{equation*}
 
-Let us then make explicit the recursive recipe defining $\fullframe[n]$. First, $\fullframe[n]$ depends on all $X_i$ upto $n - 1$. So, we need to package up $X_i$, for $i < n$, into a type, which we call $\X[][<n][]$. This allows us to give the type $\X[][<n][] \rightarrow \U$ to $\fullframe[n]$. Then, for $D: \X[][<n][]$, representing an initial prefix of $X_0, X_1, \ldots X_{n - 1}$, the indexed set $X_n$ has type $\fullframe[n](D) \rightarrow \U$. We shall give the full definition of $\fullframe[n]$ shortly, but first, assuming $\fullframe[n]$ is defined, we are able to take the coinductive limit of the $\X[][<n][]$, as shown in \ref{tab:coind}, therefore fully characterizing the indexed definition of $\nu$-sets.
-
-A $\fullframe[n]$ is a sequence of $\layer[n][p]$, and we write $\framep[n][p]$ for the $p$ first layers of a $\fullframe[n]$, so that $\fullframe[n]$ is a $\framep[n][n]$. If $\nu = 2$, a $\layer[n][p]$ is a product of two $\filler[n - 1][p]$. Let us illustrate the construction of frames in dimension $3$, and $\nu = 2$:
+A $\fullframe[n]$ is a sequence of $\layer[n][p]$, and we write $\framep[n][p]$ for the $p$ first layers of a $\fullframe[n]$, so that $\fullframe[n]$ is a $\framep[n][n]$. Let us illustrate the construction of frames in dimension $3$, and $\nu = 2$:
 
 \begin{figure}[H]
   \centering
@@ -542,6 +540,7 @@ A $\fullframe[n]$ is a sequence of $\layer[n][p]$, and we write $\framep[n][p]$ 
     \draw[raspeberry, pattern=dots] (1.1, 1.1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1.1, 0.1) -- (1.1, 1.1);
     \draw[raspeberry] (1.3, 1.3) -- (1.3, 0.3);
     \draw[raspeberry, pattern=dots] (0.1, 1.1) -- (0.5, 1.5) -- (0.5, 1.1);
+    \draw[raspeberry] (0.3, 1.3) -- (0.3, 1.1);
   \end{tikzpicture}
   \;\;
   \begin{tikzpicture}[scale=2]
@@ -554,6 +553,24 @@ A $\fullframe[n]$ is a sequence of $\layer[n][p]$, and we write $\framep[n][p]$ 
     \filldraw[russian-green] (0.8, 1.3) circle (0.6pt);
   \end{tikzpicture}
 \end{figure}
+
+The figure on the left is $\framep[3][1]$, in the middle is $\framep[3][2]$, and on the right is $\framep[3][3]$. Further, $\layer[3][0]$ is shown in blue, $\layer[3][1]$ is shown in red, $\layer[3][2]$ is shown in green. In general, a $\layer[n][p]$ is a product of $\nu$ $\filler[n - 1][p]$. Then, a $\filler[n][p]$ is an $n$-dimensional object obtained by stretching a $(n - p)$-dimensional frame in $p$ directions. For instance, each of the two $\filler[2][0]$ of $\layer[3][0]$ is a filled blue square, each of the two $\filler[2][1]$ of $\layer[3][1]$ is the line shown in red, stretched into a square, and each of the two $\filler[2][2]$ of $\layer[3][2]$ is a point shown in green, stretched into a square. Note that a filler, which extends a frame with an element depending on it, shown as an element of $X_n$ below. As filler extends a frame, it also has layer components, but the layers are associated on the right that is opposite to the way they're associated in frames.
+
+\begin{align*}
+  \framep[n][p] & = \Sigma a_n : (\ldots (\Sigma \unitpoint : \unittype .\; \layer[n][0]) \ldots) .\; \layer[n][p] \\
+  \filler[n][p] & = \Sigma l_p : \layer[n][p] . (\ldots (\Sigma l_n : \layer[n][n - 1] .\; X_n) \ldots)
+\end{align*}
+
+Up to now, we haven't paid attention to the fact that we have a dependent type, shown as a $\Sigma$. Let us be more precise about this requirement. First, $\fullframe[n]$ depends on all $X_i$ upto $n - 1$. So, we need to package up $X_i$, for $i < n$, into a type, which we call $\X[][<n][]$. This allows us to give the type $\X[][<n][] \rightarrow \U$ to $\fullframe[n]$. Then, for $D: \X[][<n][]$, representing an initial prefix of $X_0, X_1, \ldots X_{n - 1}$, the indexed set $X_n$ has type $\fullframe[n](D) \rightarrow \U$. Thus, $\framep[n][p]$, $\layer[n][p]$ and $\filler[n][p]$ also depend on $D$. We can then refine the previous equation by showing the dependencies on $D$. In particular, $X_n$ is just $D.\tl$.
+
+\begin{align*}
+  \framep[n][p](D) & = \Sigma a_n : (\ldots (\Sigma \unitpoint : \unittype .\; \layer[n][0]) \ldots) .\; \layer[n][p](D) \\
+  \filler[n][p](D) & = \Sigma l_p : \layer[n][p] . (\ldots (\Sigma l_n : \layer[n][n - 1](D) .\; D.\tl) \ldots)
+\end{align*}
+
+So far, we haven't paid attention to the fact that each addition of a layer has to be glued onto the border of the previous layer. So, each $\layer[n][p]$ has to depend on $\layer[n][p - 1]$. We also need a way to characterize the border of a filler of a layer, and this is $\restrf[n][p][\epsilon]$, for all $\epsilon < \nu$. For instance, the left $\filler[2][1]$ needs to glue onto the left borders of the two blue boxes $c_{\textsf{front}}$ and $c_{\textsf{back}}$, extracted as $\restrf[2][1][L](D)(d_\textsf{front})$ and $\restrf[2][1][L](D)(d_\textsf{back})$, where $d_\textsf{front}$ and $d_\textsf{back}$ are the underlying fullframes in $c_\textsf{front}$ $c_\textsf{back}$.
+
+We shall give the full definition of $\fullframe[n]$ shortly, but first, assuming $\fullframe[n]$ is defined, we are able to take the coinductive limit of the $\X[][<n][]$, as shown in \ref{tab:coind}, therefore fully characterizing the indexed definition of $\nu$-sets.
 
 Since it connects $\filler[n]$, the third $\filler[n]$ is actually a $\filler[n]$ over lines, so it is shifted by one relatively to the underlying relational structure. Let us write $\filler[n][p]$ for a $\filler[n - p]$ over points which are $\filler[p]$. Working informally, we thus have the equation:
 
