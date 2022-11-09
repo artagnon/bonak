@@ -3,6 +3,7 @@
 \usepackage{multirow, float, tabularx, environ, booktabs, setspace, makecell, caption, art.cls/joinargs, colortbl, pdflscape}
 \usepackage[prefix=bonak]{art.cls/xkeymask}
 \usepackage[skip=0.4em]{parskip}
+\usetikzlibrary{patterns}
 
 % Magic with xkeyval to go over the 9-argument limit of LaTeX
 \makeatletter
@@ -526,7 +527,35 @@ We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applyin
 
 Let us then make explicit the recursive recipe defining $\fullframe[n]$. First, $\fullframe[n]$ depends on all $X_i$ upto $n - 1$. So, we need to package up $X_i$, for $i < n$, into a type, which we call $\X[][<n][]$. This allows us to give the type $\X[][<n][] \rightarrow \U$ to $\fullframe[n]$. Then, for $D: \X[][<n][]$, representing an initial prefix of $X_0, X_1, \ldots X_{n - 1}$, the indexed set $X_n$ has type $\fullframe[n](D) \rightarrow \U$. We shall give the full definition of $\fullframe[n]$ shortly, but first, assuming $\fullframe[n]$ is defined, we are able to take the coinductive limit of the $\X[][<n][]$, as shown in \ref{tab:coind}, therefore fully characterizing the indexed definition of $\nu$-sets.
 
-The characterization of $\framep[n]$ and $\filler[n]$ can be obtained by a recursive definition reminiscent from parametricity translation \cite{reynolds72}: a $\filler[n+1]$ is obtained by taking two $\filler[n]$ plus a third $\filler[n]$ connecting the two $\filler[n]$. Since it connects $\filler[n]$, the third $\filler[n]$ is actually a $\filler[n]$ over lines, so it is shifted by one relatively to the underlying relational structure. Let us write $\filler[n][p]$ for a $\filler[n - p]$ over points which are $\filler[p]$. Working informally, we thus have the equation:
+A $\fullframe[n]$ is a sequence of $\layer[n][p]$, and we write $\framep[n][p]$ for the $p$ first layers of a $\fullframe[n]$, so that $\fullframe[n]$ is a $\framep[n][n]$. If $\nu = 2$, a $\layer[n][p]$ is a product of two $\filler[n - 1][p]$. Let us illustrate the construction of frames in dimension $3$, and $\nu = 2$:
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[scale=2]
+    \draw[spanish-blue, fill=spanish-blue] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
+    \draw[spanish-blue, fill=spanish-blue, nearly transparent] (0.6, 1) -- (0.6, 1.6) -- (1.6, 1.6) -- (1.6, 0.6) -- (1, 0.6);
+  \end{tikzpicture}
+  \;\;
+  \begin{tikzpicture}[scale=2]
+    \draw[spanish-blue, fill=spanish-blue] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
+    \draw[spanish-blue, fill=spanish-blue, nearly transparent] (0.6, 1) -- (0.6, 1.6) -- (1.6, 1.6) -- (1.6, 0.6) -- (1.0, 0.6);
+    \draw[raspeberry, pattern=dots] (1.1, 1.1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1.1, 0.1) -- (1.1, 1.1);
+    \draw[raspeberry] (1.3, 1.3) -- (1.3, 0.3);
+    \draw[raspeberry, pattern=dots] (0.1, 1.1) -- (0.5, 1.5) -- (0.5, 1.1);
+  \end{tikzpicture}
+  \;\;
+  \begin{tikzpicture}[scale=2]
+    \draw[spanish-blue, fill=spanish-blue] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
+    \draw[spanish-blue, fill=spanish-blue, nearly transparent] (0.6, 1) -- (0.6, 1.6) -- (1.6, 1.6) -- (1.6, 0.6) -- (1.0, 0.6);
+    \draw[raspeberry, pattern=dots] (1.1, 1.1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1.1, 0.1) -- (1.1, 1.1);
+    \draw[raspeberry] (1.3, 1.3) -- (1.3, 0.3);
+    \draw[raspeberry] (0.1, 1.1) -- (0.5, 1.5);
+    \draw[russian-green, pattern=dots] (0.2, 1.1) -- (1.0, 1.1) -- (1.4, 1.5) -- (0.6, 1.5) -- (0.2, 1.1);
+    \filldraw[russian-green] (0.8, 1.3) circle (0.6pt);
+  \end{tikzpicture}
+\end{figure}
+
+Since it connects $\filler[n]$, the third $\filler[n]$ is actually a $\filler[n]$ over lines, so it is shifted by one relatively to the underlying relational structure. Let us write $\filler[n][p]$ for a $\filler[n - p]$ over points which are $\filler[p]$. Working informally, we thus have the equation:
 
 \begin{equation*}
   \filler[n+1][p] \defeq (\filler[n][p] \times \filler[n][p]) \times \filler[n+1][p+1]
