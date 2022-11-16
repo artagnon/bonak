@@ -121,6 +121,9 @@
 \newcommandx{\restrf}[3][1,2,3]{\restr{frame}[][#3][][#1][#2][][]}
 \newcommandx{\restrl}[3][1,2,3]{\restr{layer}[][#3][][#1][#2][][]}
 \newcommandx{\restrc}[3][1,2,3]{\restr{filler}[][#3][][#1][#2][][]}
+\newcommandx{\cohf}{\coh{frame}[][][][][][][][]}
+\newcommandx{\cohl}{\coh{layer}[][][][][][][][]}
+\newcommandx{\cohc}{\coh{filler}[][][][][][][][]}
 \newcommandx{\fullframe}[1][1]{\prim{fullframe}[][#1][][][]}
 
 % Kerning for star
@@ -584,54 +587,27 @@ Let us recall that a layer is made of two fillers. This can now be made precise 
   \layer[n][p](D)(d) & \defeq \filler[n-1][p](D.\hd)(\restrf[n][p][L](d)) \times \filler[n-1][p](D.\hd)(\restrf[n][p][R](d))
 \end{align*}
 
-We now define $\restrf[n][p][\epsilon]$ by recursion on the structure of a frame, which necessitates definitions of $\restrl[n][p][\epsilon]$ and $\restrc[n][p][\epsilon]$.
+We now define $\restrf[n][p][\epsilon](d)$ by recursion on the structure of a frame $d$, which necessitates definitions of $\restrl[n][p][\epsilon](d)(l)$ and $\restrc[n][p][\epsilon](d)(c)$, for $l$ a layer and $c$ a filler. The key case is $\restrc[n][n-1][\epsilon](d)(c)$, where $c$, a $\filler[n][n-1]$, has necessarily the form of $((c_L, c_R), \_)$: $\restrc[n][n-1][L]$ picks out $c_L$, a $\filler[n][n]$, $\restrc[n][n-1][R]$ picks out the $c_R$, also a $\filler[n][n]$, and $\_$ is discarded. There is one more difficulty, which we illustrate by writing down expected and actual types.
 
-We shall give the full definition of $\fullframe[n]$ shortly, but first, assuming $\fullframe[n]$ is defined, we are able to take the coinductive limit of the $\X[][<n][]$, as shown in \ref{tab:coind}, therefore fully characterizing the indexed definition of $\nu$-sets.
-
-Since it connects $\filler[n]$, the third $\filler[n]$ is actually a $\filler[n]$ over lines, so it is shifted by one relatively to the underlying relational structure. Let us write $\filler[n][p]$ for a $\filler[n - p]$ over points which are $\filler[p]$. Working informally, we thus have the equation:
+Given $c_\omega$ of type
 
 \begin{align*}
-  \filler[n+1][p] & \defeq (\filler[n][p] \times \filler[n][p]) \times \filler[n+1][p+1]
+  c_\omega & : \filler[n-1][p](D.\hd)(\restrf[n-1][p][\omega](d))
 \end{align*}
 
-Now, the third filler (of dimension $n - p$) connects the first two $\filler[n-p]$, so it has to depend on them. So, the equation is rather something of the form:
+$\restrl[n][p][\epsilon](d)(c_L, c_R)$ produces a layer, of which $\omega$-component has the type
 
 \begin{equation*}
-  \filler[n+1][p] \defeq \Sigma a:(\filler[n][p] \times \filler[n][p]).\, \filler[n+1][p+1](a)
+  \filler[n-2][p](D.\hd.\hd)(\restrf[n-1][p][\epsilon](\restrf[n][p][\omega](d)))
 \end{equation*}
 
-Then, by iterating, we obtain:
+while we expect a term of type
 
 \begin{equation*}
-  \filler[n+1][p] \defeq \Sigma a:(\filler[n][p] \times \filler[n][p]).\,
-  \Sigma b:(\filler[n][p+1](a) \times \filler[n][p+1](a)). \, \filler[n+1][p+2](a,b)
+  \filler[n-2][p](D.\hd.\hd)(\restrf[n-1][p][\omega](\restrf[n][p][\epsilon](d)))
 \end{equation*}
 
-and so on. Thus, we need first to make the definition of $\filler[n][p]$ dependent over the part of the filler built up to this point and secondly to accumulate this information. At the end of the accumulation of the process, i.e. at the time of building $\filler[n+1][n]$, a complete $\framep[n]$ will have been built. So, let us call $\framep[n][p]$ the partial $\framep[n]$ built up to the stage $p$ of the construction. Thus, we refine our definition into something like:
-
-\begin{equation*}
-  \begin{array}{lll}
-    \framep[n][0]                    & \defeq & \unittype                                                                       \\
-    \framep[n][p+1]                  & \defeq & \Sigma d:\framep[n][p] .\,(\filler[n][p](d) \times \filler[n][p](d))            \\
-    \\
-    \filler[n+1][p](d:\framep[n][p]) & \defeq & $\Sigma$ a:(\filler[n][p](d) \times \filler[n][p](d)) .\,\filler[n+1][p+1](d,a)
-  \end{array}
-\end{equation*}
-
-where $\unittype$ is a canonical singleton type used to initiate the
-construction of a list of pairs of $n$-fillers.
-
-Now, the two fillers $\filler[n][p](d)$ and $\filler[n][p](d)$ cannot be any fillers. They have to represent two opposite fillers, and we need a way to express this. The answer is simple. The partial frame has two faces and these two fillers have to respectively fill the left face and the right face of the partial frame. We thus have to rely on operations $\restrf[n][p][L]$ and $\restrf[n][p][R]$ which extract the sides of a frame, leading to the refined definition:
-
-\begin{equation*}
-  \begin{array}{lll}
-    \filler[n+1][p](d:\framep[n][p]) & \defeq & \Sigma a:(\filler[n][p](\restrf[n][p][L](d)) \times \filler[n][p](\restrf[n][p][R](d))) .\, \filler[n+1][p+1](d,a)
-  \end{array}
-\end{equation*}
-
-The full explicit definition shall be given in the next sections but, to give an idea, let us show the structure of a $\filler[n]$ for the first three dimensions.
-
-A $\filler[2]$ is made of two $\filler[1]$ connected by a lifted $\filler[1]$ made of two lines connecting the former points and a square connecting the former lines.
+Hence, we need a coherence condition to commute the $\restrf[n][p][\epsilon]$ and $\restrf[n][p][\omega]$. Coherence conditions similar to this necessitate, what are shown as, $\cohf$, $\cohl$ and $\cohc$ in tables in the next section.
 
 \subsection{Formal construction of \texorpdfstring{$\nu$}{nu}-sets}
 % Abbreviated tables in this section
@@ -671,9 +647,9 @@ A $\filler[2]$ is made of two $\filler[1]$ connected by a lifted $\filler[1]$ ma
 
 % Coherence conditions for frame, layer, and filler
 % Keep only ε, ω; n, p; proposition on n and p
-\newcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][][][#9]}
-\newcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][][][][][#9]}
-\newcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][#2][#3][][][][][#9]}
+\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][][][#9]}
+\renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][][][][][#9]}
+\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][#2][#3][][][][][#9]}
 
 The definition in \ref{tab:coind}, the coinductive limit, is dispatched over tables \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces} and \ref{tab:coh}. They describe the structure of the underlying higher-dimensional relations on which fillers are built.
 
