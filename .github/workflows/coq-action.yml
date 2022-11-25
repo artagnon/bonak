@@ -5,15 +5,10 @@ on:
     branches: [master]
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        coq_version: ["8.15"]
-      fail-fast: false
+    runs-on: "ubuntu-latest"
     steps:
       - uses: "actions/checkout@v2"
       - name: "Docker Coq action"
         uses: "coq-community/docker-coq-action@v1"
         with:
-          coq_version: ${{ matrix.coq_version }}
+          coq_version: "latest"
