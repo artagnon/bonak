@@ -105,7 +105,7 @@
 \newcommand{\tlD}{D.2}
 \renewcommand{\d}{d}
 \renewcommand{\E}{E}
-\newcommand{\ap}{\mathsf{ap}}
+\newcommand{\ap}{\mathsf{ap}\;}
 \renewcommand{\l}{l}
 \renewcommand{\c}{c}
 \newcommand{\pair}[2]{#1, #2}
@@ -118,12 +118,13 @@
 \newcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
 \newcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
 \newcommandx{\filler}[2][1,2]{\prim{filler}[][#1][#2][][]}
-\newcommandx{\restrf}[3][1,2,3]{\restr{frame}[][#3][][#1][#2][][]}
-\newcommandx{\restrl}[3][1,2,3]{\restr{layer}[][#3][][#1][#2][][]}
-\newcommandx{\restrc}[3][1,2,3]{\restr{filler}[][#3][][#1][#2][][]}
+\newcommandx{\restrf}[4][1,2,3,4]{\restr{frame}[][#3][#4][#1][#2][][]}
+\newcommandx{\restrl}[4][1,2,3,4]{\restr{layer}[][#3][#4][#1][#2][][]}
+\newcommandx{\restrc}[4][1,2,3,4]{\restr{filler}[][#3][#4][#1][#2][][]}
 \newcommandx{\cohf}{\coh{frame}[][][][][][][][]}
 \newcommandx{\cohl}{\coh{layer}[][][][][][][][]}
 \newcommandx{\cohc}{\coh{filler}[][][][][][][][]}
+\newcommandx{\coht}{\cohtwo{frame}[][][][][][][][]}
 \newcommandx{\fullframe}[1][1]{\prim{fullframe}[][#1][][][]}
 
 % Kerning for star
@@ -584,30 +585,47 @@ So far, we haven't paid attention to the fact that each addition of a layer has 
 Let us recall that a layer is made of two fillers. This can now be made precise as illustrated below.
 
 \begin{align*}
-  \layer[n][p](D)(d) & \defeq \filler[n-1][p](D.\hd)(\restrf[n][p][L](d)) \times \filler[n-1][p](D.\hd)(\restrf[n][p][R](d))
+  \layer[n][p](D)(d) & \defeq \filler[n-1][p](D.\hd)(\restrf[n][p][L][p](d)) \times \filler[n-1][p](D.\hd)(\restrf[n][p][R][p](d))
 \end{align*}
 
-We now define $\restrf[n][p][\epsilon](d)$ by recursion on the structure of a frame $d$, which necessitates definitions of $\restrl[n][p][\epsilon](d)(l)$ and $\restrc[n][p][\epsilon](d)(c)$, for $l$ a layer and $c$ a filler. The key case is $\restrc[n][n-1][\epsilon](d)(c)$, where $c$, a $\filler[n][n-1]$, has necessarily the form of $((c_L, c_R), \_)$: $\restrc[n][n-1][L]$ picks out $c_L$, a $\filler[n][n]$, $\restrc[n][n-1][R]$ picks out the $c_R$, also a $\filler[n][n]$, and $\_$ is discarded. There is one more difficulty, which we illustrate by writing down expected and actual types.
+$\restrf[n][p][\epsilon][q]$ indicates restriction on $q$ layers of a frame, and the induction is on $p$, going from $0$ to $q$. In particular, $\restrf[n][p][\epsilon][p]$ is a ``full restriction''. We define $\restrf[n][p][\epsilon][p](d)$ by recursion on the structure of a frame $d$, which necessitates definitions of $\restrl[n][p][\epsilon][q](d)(l)$ and $\restrc[n][p][\epsilon][q](d)(c)$, for $l$ a layer and $c$ a filler. The key case is $\restrc[n][p][\epsilon][p](d)(c)$, where $c$, a $\filler[n][p]$, has necessarily the form of $((c_L, c_R), \_)$: $\restrc[n][p][L][p]$ picks out $c_L$, a $\filler[n-1][p]$, $\restrc[n][p][R][p]$ picks out the $c_R$, also a $\filler[n-1][p]$, and $\_$, a $\filler[n][p+1]$, is discarded. There is one more difficulty, which we illustrate by writing down expected and actual types.
 
 Given $c_\omega$ of type
 
 \begin{align*}
-  c_\omega & : \filler[n-1][p](D.\hd)(\restrf[n-1][p][\omega](d))
+  c_\omega & : \filler[n-1][p](D.\hd)(\restrf[n-1][p][\omega][q](d))
 \end{align*}
 
 $\restrl[n][p][\epsilon](d)(c_L, c_R)$ produces a layer, of which $\omega$-component has the type
 
 \begin{equation*}
-  \filler[n-2][p](D.\hd.\hd)(\restrf[n-1][p][\epsilon](\restrf[n][p][\omega](d)))
+  \filler[n-2][p](D.\hd.\hd)(\restrf[n-1][p][\epsilon][q](\restrf[n][p][\omega][p](d)))
 \end{equation*}
 
 while we expect a term of type
 
 \begin{equation*}
-  \filler[n-2][p](D.\hd.\hd)(\restrf[n-1][p][\omega](\restrf[n][p][\epsilon](d)))
+  \filler[n-2][p](D.\hd.\hd)(\restrf[n-1][p][\omega][p](\restrf[n][p][\epsilon][q+1](d)))
 \end{equation*}
 
-Hence, we need a coherence condition to commute the $\restrf[n][p][\epsilon]$ and $\restrf[n][p][\omega]$. Coherence conditions similar to this necessitate, what are shown as, $\cohf$, $\cohl$ and $\cohc$ in tables in the next section.
+Hence, we need a coherence condition to commute the terms. Coherence conditions similar to this necessitate, what are shown as, $\cohf$, $\cohl$ and $\cohc$ in tables in the next section. These are by induction on the structure of $\framep$, $\layer$ and $\filler$. In particular, for $\cohl$, we need a $2$-dimensional coherence condition called $\coht$.
+
+\renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
+\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
+
+\begin{align*}
+  \cohf[m][\omega][\theta][r][p][n][p][][d = {\restrf[m][\epsilon][q+2][n][p][][d = \d]}]\;\bullet     \\
+  \ap \restrf[m][\omega][r][n][p][][]\;(\cohf[m][\epsilon][\theta][q+1][p][n][p][][d = \d])\;\bullet   \\
+  \cohf[m][\epsilon][\omega][q][r][n][p][][d = {\restrf[m][\theta][p][n][p][][d = \d]}] =              \\
+  \ap \restrf[m][\theta][p][n][p][][]\;(\cohf[m][\epsilon][\omega][q+1][r+1][n][p][][d = \d])\;\bullet \\
+  \cohf[m][\epsilon][\theta][q][p][n][p][][d = {\restrf[m][\omega][r+1][n][p][][d = \d]}]\;\bullet     \\
+  \ap \restrf[m][\epsilon][q][n][p][]\;(\cohf[m][\omega][\theta][r][p][n][p][][d = \d])
+\end{align*}
+
+where $\mathsf{ap}$ applies a function on two sides of an equality, and $\bullet$ is transitivity of equality. This property of equality proofs holds in \U.
 
 \subsection{Formal construction of \texorpdfstring{$\nu$}{nu}-sets}
 % Abbreviated tables in this section
@@ -709,25 +727,23 @@ The proof of $\cohf$ require a higher-dimensional coherence condition which we o
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][#2][#3][#4][#5][#6,#7][#8][#9]}
-\newcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
+\renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
 
 \renewcommand*{\lab}{tab:coh}
 \input{tab-coh-ett.tex}
 
+\section{Details on the mechanization}
+\renewcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
+\renewcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
+\renewcommandx{\filler}[2][1,2]{\prim{filler}[][#1][#2][][]}
+\renewcommandx{\restrf}[4][1,2,3,4]{\restr{frame}[][#3][#4][#1][#2][][]}
+\renewcommandx{\restrl}[4][1,2,3,4]{\restr{layer}[][#3][#4][#1][#2][][]}
+\renewcommandx{\restrc}[4][1,2,3,4]{\restr{filler}[][#3][#4][#1][#2][][]}
+\renewcommandx{\cohf}[1][1]{\coh{frame}[][][][][][][#1][]}
+\renewcommandx{\cohl}[1][1]{\coh{layer}[][][][][][][#1][]}
+\renewcommandx{\cohc}[1][1]{\coh{filler}[][][][][][][#1][]}
 
-where $\cohtwo{frame}$ is:
-
-\begin{align*}
-  \cohf[m][\omega][\theta][r][p][n][p][][d = {\restrf[m][\epsilon][q+2][n][p][][d = \d, D = \D]}, D = \D]\;\bullet         \\
-  \ap (\restrf[m][\omega][r][n][p][][d = {\cohf[m][\epsilon][\theta][q+1][p][n][p][][d = \d, D = \D]}, D = \D]\;\bullet    \\
-  \cohf[m][\epsilon][\omega][q][r][n][p][][d = {\restrf[m][\theta][p][n][p][][d = \d, D = \D]}, D = \D] =                  \\
-  \ap (\restrf[m][\theta][p][n][p][][d = {\cohf[m][\epsilon][\omega][q+1][r+1][n][p][][d = \d, D = \D]}, D = \D])\;\bullet \\
-  \cohf[m][\epsilon][\theta][q][p][n][p][][d = {\restrf[m][\omega][r+1][n][p][][d = \d, D = \D]}, D = \D]\;\bullet         \\
-  \ap (\restrf[m][\epsilon][q][n][p][][d = {\cohf[m][\omega][\theta][r][p][n][p][][d = \d, D = \D]}, D = \D])
-\end{align*}
-
-\newpage
-\section{Future work}
+The construction is obviously on induction on $n$, but $\restrf[n]$ depends on $\framep[n]$ and $\framep[n-1]$, while $\cohf[n]$ depends on $\framep[n]$, $\framep[n-1]$, and $\framep[n-2]$. A priori, this necessitates well-founded induction. Due to technical difficulties experienced with Coq, we chose a different route; in practice, since we only need to keep track of three levels, we built separate data structures for the levels, with dependencies.
 
 \newpage
 \appendix
