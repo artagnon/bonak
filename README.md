@@ -14,7 +14,10 @@ Some features of this project:
 Our axioms are:
 
 ```text
+Section Variables:
 side : HSet
+Axioms:
+STrue relies on definitional UIP. (* bug: coq/coq#16427 *)
 functional_extensionality_dep
   : forall (A : Type) (B : A -> Type) (f g : forall x : A, B x),
 	(forall x : A, f x = g x) -> f = g
