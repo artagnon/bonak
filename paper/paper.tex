@@ -89,7 +89,7 @@
 
 % Definitional and extensional equality
 \newcommand{\defeq}{\ensuremath{\triangleq}}
-\newcommand{\eqHSet}{\ensuremath{\equiv_{\mathit{HSet}}}}
+\newcommand{\eqHSet}{\ensuremath{{=}_{\mathit{HSet}\;}}}
 \newcommand{\reflHSet}{\ensuremath{\mathsf{refl}_{\mathit{HSet}}}}
 
 % Some abbreviations
@@ -123,6 +123,11 @@
 \newcommandx{\cohc}{\coh{filler}[][][][][][][][]}
 \newcommandx{\coht}{\cohtwo{frame}[][][][][][][][]}
 \newcommandx{\fullframe}[1][1]{\prim{fullframe}[][#1][][][]}
+
+% For typesetting type theory rules
+\newcommand \seqr[3]
+  {\shortstack{$#2$ \\ \mbox{}\\
+                   \mbox{}\hrulefill\mbox{}\\ \mbox{}\\ $#3$} \raisebox{2ex}{$\;\;\mbox{$#1$}$}}
 
 % Kerning for star
 \newcommand{\kstar}{{\star}}
@@ -666,17 +671,25 @@ where $\mathsf{ap}$ applies a function on two sides of an equality, and $\bullet
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][][][][][#9]}
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][#2][#3][][][][][#9]}
 
-We now present the formal construction in \emph{extensional} type theory. For a presentation in \emph{intensional} type theory, see \ref{appendix:A}.
+We now formally present the construction in \emph{extensional} type theory; i.e. in a type theory with the following reflection rule, where $=$ is propositional equality in some type and $\equiv$ is definitional equality:
 
-The definition in \ref{tab:coind}, the coinductive limit, is dispatched over tables \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces} and \ref{tab:coh}. They describe the structure of the underlying higher-dimensional relations on which fillers are built.
+\begin{equation*}
+  \seqr{}{\Gamma \vdash p : t = u}{\Gamma \vdash t \equiv u}
+\end{equation*}
+
+For the presentation corresponding to the formalization in \emph{intensional} type theory, see \ref{appendix:A}.
+
+The definition is dispatched over tables \ref{tab:coind}, \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces} and \ref{tab:coh}. Table \ref{tab:coind} describes a $\nu$-set in indexed form, as a coinductive limit of $n$-truncated $\nu$-sets. $n$-truncated $\nu$-sets are themselves described in \ref{tab:core}. The $n$th component is a family over a $\fullframe$. $\fullframe$ is recursively defined in \ref{tab:frames}, using the auxiliary definitions of $\layer$ and $\filler$. $\layer$ and $\filler$ are dependent over $\restrf$, and these restrictions are defined on \ref{tab:faces}. These restrictions are defined using auxiliary definitions of $\restrl$ and $\restrc$.
+
+Notably, the definition of $\restrl$ relies on a definitional equality expressing the commutation of the composition of $\restrf$. This is apriori undecidable, and we have to prove the commutation propositionally before using the reflection rule. Proving this itself requires an induction on the dimension, and on the structure of $\framep$, $\layer$, and $\filler$. This is what $\cohf$ proves, as shown in the table \ref{tab:coh}. Even though it looks independent of the other tables, it has to proved mutually with the definitions of $\framep$, $\layer$, $\filler$, and their corresponding restrictions.
+
+Remark: For a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\restrf$ nor $\cohf$ anymore.
 
 \renewcommand*{\lab}{tab:coind}
 \input{tab-coind.tex}
 
 % For just the second table, keep the universe letter in fullframe
 \renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[#1][#2][][][#3]}
-
-We now describe \emph{bare truncated sets}: \emph{bare} because it can be seen as defining truncated $\nu$-sets without face maps, and \emph{truncated} because it is $n$-truncated.
 
 \renewcommand*{\lab}{tab:core}
 \input{tab-core.tex}
@@ -694,10 +707,6 @@ We now describe \emph{bare truncated sets}: \emph{bare} because it can be seen a
 
 % Hack to remove , in \cohf
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][][][#9]}
-
-In the way we have chosen to formlate these tables, there is, for instance, coherence condition $\cohf$ both sides of the equality in $\restrl$ and $\restrc$, to ensure that they are the same type.
-
-For a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\restrf$ nor $\cohf$ anymore.
 
 % The third table mentions cohframe; keep ε, ω in this instance
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][#6,#7][#8][#9]}
@@ -719,8 +728,6 @@ For a given $n$, the coherence conditions evaluate to a reflexivity proof, so th
 
 % Hack to remove , in \cohf
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][][][#9]}
-
-The proof of $\cohf$ require a higher-dimensional coherence condition which we obtain by working in \U. If the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory).
 
 % Coherence conditions for frame, layer, and filler
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
@@ -780,6 +787,9 @@ The construction is obviously on induction on $n$, but $\restrf[n]$ depends on $
 \begin{landscape}
   \renewcommand*{\lab}{fulltab:faces}
   \input{tab-faces.tex}
+
+  The proof of $\cohf$ requires a higher-dimensional coherence condition which we obtain by working in \U. If the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory).
+
   \renewcommand*{\lab}{fulltab:coh}
   \input{tab-coh.tex}
 \end{landscape}
