@@ -209,7 +209,7 @@ We exploit the connection between iterated unary parametricity and augmented sim
 
 The outline of the paper is as follows. First, we briefly describe semi-simplicial and semi-cubical sets, and our generalization to $\nu$-sets. We then proceed to explain our construction, with the help of diagrams. Before spelling out the details of our formalization in type-theoretic language, we have a section on reasoning in sets.
 
-\section{Mathematical treatment of \texorpdfstring{$\nu$}{𝜈}-sets}
+\section{Semi-simplicial and semi-cubical sets}
 It is well-known that simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices. What we have formalized is \emph{augmented semi-simplicial} sets, and \emph{semi-cubical} sets. We will proceed to explain the mathematical objects we have formalized.
 
 \subsection{Augmented semi-simplicial sets}
@@ -610,26 +610,9 @@ while we expect a term of type
   \filler[n-2][p](D.\hd.\hd)(\restrf[n-1][p][\omega][p](\restrf[n][p][\epsilon][q+1](d)))
 \end{equation*}
 
-Hence, we need a coherence condition to commute the terms. Coherence conditions similar to this necessitate, what are shown as, $\cohf$, $\cohl$ and $\cohc$ in tables in the next section. These are by induction on the structure of $\framep$, $\layer$ and $\filler$. In particular, for $\cohl$, we need a $2$-dimensional coherence condition called $\coht$.
+Hence, we need a coherence condition to commute the terms. Coherence conditions similar to this necessitate, what are shown as, $\cohf$, $\cohl$ and $\cohc$ in tables in the next section. These are by induction on the structure of $\framep$, $\layer$ and $\filler$. Note that, for the construction in \ref{sec:itt}, we further need a $2$-dimensional coherence condition, $\coht$, for $\cohl$.
 
-\renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
-\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
-
-\begin{align*}
-  \cohf[m][\omega][\theta][r][p][n][p][][d = {\restrf[m][\epsilon][q+2][n][p][][d = \d]}]\;\bullet     \\
-  \ap \restrf[m][\omega][r][n][p][][]\;(\cohf[m][\epsilon][\theta][q+1][p][n][p][][d = \d])\;\bullet   \\
-  \cohf[m][\epsilon][\omega][q][r][n][p][][d = {\restrf[m][\theta][p][n][p][][d = \d]}] =              \\
-  \ap \restrf[m][\theta][p][n][p][][]\;(\cohf[m][\epsilon][\omega][q+1][r+1][n][p][][d = \d])\;\bullet \\
-  \cohf[m][\epsilon][\theta][q][p][n][p][][d = {\restrf[m][\omega][r+1][n][p][][d = \d]}]\;\bullet     \\
-  \ap \restrf[m][\epsilon][q][n][p][]\;(\cohf[m][\omega][\theta][r][p][n][p][][d = \d])
-\end{align*}
-
-where $\mathsf{ap}$ applies a function on two sides of an equality, and $\bullet$ is transitivity of equality. This property of equality proofs holds in \U.
-
-\subsection{Formal construction of \texorpdfstring{$\nu$}{nu}-sets}
+\subsection{Formal construction in extensional type theory}
 % Abbreviated tables in this section
 %
 % The rule for implicit arguments for each table:
@@ -677,11 +660,13 @@ We now formally present the construction in \emph{extensional} type theory; i.e.
   \seqr{}{\Gamma \vdash p : t = u}{\Gamma \vdash t \equiv u}
 \end{equation*}
 
-For the presentation corresponding to the formalization in \emph{intensional} type theory, see \ref{appendix:A}.
+For the presentation corresponding to the formalization in \emph{intensional} type theory, see \ref{sec:itt}.
 
 The definition is dispatched over tables \ref{tab:coind}, \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces} and \ref{tab:coh}. Table \ref{tab:coind} describes a $\nu$-set in indexed form, as a coinductive limit of $n$-truncated $\nu$-sets. $n$-truncated $\nu$-sets are themselves described in \ref{tab:core}. The $n$th component is a family over a $\fullframe$. $\fullframe$ is recursively defined in \ref{tab:frames}, using the auxiliary definitions of $\layer$ and $\filler$. $\layer$ and $\filler$ are dependent over $\restrf$, and these restrictions are defined on \ref{tab:faces}. These restrictions are defined using auxiliary definitions of $\restrl$ and $\restrc$.
 
-Notably, the definition of $\restrl$ relies on a definitional equality expressing the commutation of the composition of $\restrf$. This is apriori undecidable, and we have to prove the commutation propositionally before using the reflection rule. Proving this itself requires an induction on the dimension, and on the structure of $\framep$, $\layer$, and $\filler$. This is what $\cohf$ proves, as shown in the table \ref{tab:coh}. Even though it looks independent of the other tables, it has to proved mutually with the definitions of $\framep$, $\layer$, $\filler$, and their corresponding restrictions.
+Notably, the definition of $\restrl$ relies on a definitional equality expressing the commutation of the composition of $\restrf$. This is apriori undecidable, and we have to prove the commutation propositionally before using the reflection rule. Proving this itself requires an induction on the dimension, and on the structure of $\framep$, $\layer$, and $\filler$. This is what $\cohf$ proves, as shown in the table \ref{tab:coh}, using auxiliary definitions $\cohl$ and $\cohc$. Even though it looks independent of the other tables, it has to proved mutually with the definitions of $\framep$, $\layer$, $\filler$, and their corresponding restrictions.
+
+Note that in $\cohf$ and $\cohc$, we use the reflection rule to identify equalities of pairs with a conjuction of two equalities. Note also that in $\cohl$, we use the reflection rule to identify equality of functions with pointwise equality.
 
 Remark: For a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\restrf$ nor $\cohf$ anymore.
 
@@ -738,22 +723,27 @@ Remark: For a given $n$, the coherence conditions evaluate to a reflexivity proo
 \renewcommand*{\lab}{tab:coh}
 \input{tab-coh-ett.tex}
 
-\section{Details on the mechanization}
-\renewcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
-\renewcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
-\renewcommandx{\filler}[2][1,2]{\prim{filler}[][#1][#2][][]}
-\renewcommandx{\restrf}[4][1,2,3,4]{\restr{frame}[][#3][#4][#1][#2][][]}
-\renewcommandx{\restrl}[4][1,2,3,4]{\restr{layer}[][#3][#4][#1][#2][][]}
-\renewcommandx{\restrc}[4][1,2,3,4]{\restr{filler}[][#3][#4][#1][#2][][]}
-\renewcommandx{\cohf}[1][1]{\coh{frame}[][][][][][#1][][]}
-\renewcommandx{\cohl}[1][1]{\coh{layer}[][][][][][#1][][]}
-\renewcommandx{\cohc}[1][1]{\coh{filler}[][][][][][#1][][]}
+\subsection{Formal construction in intensional type theory\label{sec:itt}}
+We now present the tables in \emph{intensional} type theory, leaving implict some details, which we will soon explain.
 
-The construction is obviously on induction on $n$, but $\restrf[n]$ depends on $\framep[n]$ and $\framep[n-1]$, while $\cohf[n]$ depends on $\framep[n]$, $\framep[n-1]$, and $\framep[n-2]$. A priori, this necessitates well-founded induction. Due to technical difficulties experienced with Coq, we chose a different route; in practice, since we only need to keep track of three levels, we built separate data structures for the levels, with dependencies.
+\renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
+\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
 
-\newpage
-\appendix
-\section{Tables in full detail\label{appendix:A}}
+\begin{align*}
+  \cohf[m][\omega][\theta][r][p][n][p][][d = {\restrf[m][\epsilon][q+2][n][p][][d = \d]}]\;\bullet     \\
+  \ap \restrf[m][\omega][r][n][p][][]\;(\cohf[m][\epsilon][\theta][q+1][p][n][p][][d = \d])\;\bullet   \\
+  \cohf[m][\epsilon][\omega][q][r][n][p][][d = {\restrf[m][\theta][p][n][p][][d = \d]}] =              \\
+  \ap \restrf[m][\theta][p][n][p][][]\;(\cohf[m][\epsilon][\omega][q+1][r+1][n][p][][d = \d])\;\bullet \\
+  \cohf[m][\epsilon][\theta][q][p][n][p][][d = {\restrf[m][\omega][r+1][n][p][][d = \d]}]\;\bullet     \\
+  \ap \restrf[m][\epsilon][q][n][p][]\;(\cohf[m][\omega][\theta][r][p][n][p][][d = \d])
+\end{align*}
+
+where $\mathsf{ap}$ applies a function on two sides of an equality, and $\bullet$ is transitivity of equality. This property of equality proofs holds in \U.
+
+
 % Full tables in this section
 %
 % Clear the mask and label
@@ -793,6 +783,21 @@ The construction is obviously on induction on $n$, but $\restrf[n]$ depends on $
   \renewcommand*{\lab}{fulltab:coh}
   \input{tab-coh.tex}
 \end{landscape}
+
+\subsection{Details on the mechanization}
+\renewcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
+\renewcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
+\renewcommandx{\filler}[2][1,2]{\prim{filler}[][#1][#2][][]}
+\renewcommandx{\restrf}[4][1,2,3,4]{\restr{frame}[][#3][#4][#1][#2][][]}
+\renewcommandx{\restrl}[4][1,2,3,4]{\restr{layer}[][#3][#4][#1][#2][][]}
+\renewcommandx{\restrc}[4][1,2,3,4]{\restr{filler}[][#3][#4][#1][#2][][]}
+\renewcommandx{\cohf}[1][1]{\coh{frame}[][][][][][#1][][]}
+\renewcommandx{\cohl}[1][1]{\coh{layer}[][][][][][#1][][]}
+\renewcommandx{\cohc}[1][1]{\coh{filler}[][][][][][#1][][]}
+
+Our formalization is done in the intensional type theory flavor of the calculus of inductive constructions. Working in intensional type theory necessitates explicitly supplying a number of type equalities, which hold definitionally in extensional type theory.
+
+The construction is obviously on induction on $n$, but $\restrf[n]$ depends on $\framep[n]$ and $\framep[n-1]$, while $\cohf[n]$ depends on $\framep[n]$, $\framep[n-1]$, and $\framep[n-2]$. A priori, this necessitates well-founded induction. Due to technical difficulties experienced with Coq, we chose a different route; in practice, since we only need to keep track of three levels, we built separate data structures for the levels, with dependencies.
 
 \bibliographystyle{alpha}
 \bibliography{paper}
