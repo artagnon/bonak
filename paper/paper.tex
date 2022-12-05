@@ -724,7 +724,11 @@ Remark: For a given $n$, the coherence conditions evaluate to a reflexivity proo
 \input{tab-coh-ett.tex}
 
 \subsection{Formal construction in intensional type theory\label{sec:itt}}
-We now present the tables in \emph{intensional} type theory, leaving implict some details, which we will soon explain.
+\renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
+
+We now present the tables in \emph{intensional} type theory, leaving implict some details, which we will explain shortly.
+
+The proof of $\cohf$ requires a higher-dimensional coherence condition which we obtain by working in \U. If the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory).
 
 \renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
@@ -778,8 +782,6 @@ where $\mathsf{ap}$ applies a function on two sides of an equality, and $\bullet
   \renewcommand*{\lab}{fulltab:faces}
   \input{tab-faces.tex}
 
-  The proof of $\cohf$ requires a higher-dimensional coherence condition which we obtain by working in \U. If the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory).
-
   \renewcommand*{\lab}{fulltab:coh}
   \input{tab-coh.tex}
 \end{landscape}
@@ -799,6 +801,7 @@ Our formalization is done in the intensional type theory flavor of the calculus 
 
 The construction is obviously on induction on $n$, but $\restrf[n]$ depends on $\framep[n]$ and $\framep[n-1]$, while $\cohf[n]$ depends on $\framep[n]$, $\framep[n-1]$, and $\framep[n-2]$. A priori, this necessitates well-founded induction. Due to technical difficulties experienced with Coq, we chose a different route; in practice, since we only need to keep track of three levels, we built separate data structures for the levels, with dependencies.
 
+\newpage
 \bibliographystyle{alpha}
 \bibliography{paper}
 
