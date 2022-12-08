@@ -186,45 +186,45 @@ Class NType (n : nat) := {
 
   (** Abbreviations for [N]-family of previous fillers, one for
       each [ϵ]-restriction of the previous frame (ϵ∈N) *)
-  Layer' {p} {Hp: p.+1 <= n} {D: prefix} (d: Frame.(frame) (↓ Hp) D) :=
+  Layer {p} {Hp: p.+1 <= n} {D: prefix} (d: Frame.(frame) (↓ Hp) D) :=
     hforall ε, FillerPrev.(filler') (Frame.(restrFrame) Hp ε d);
-  Layer'' {p} {Hp: p.+2 <= n} {D: prefix} (d: FramePrev.(frame') (↓ Hp) D) :=
+  Layer' {p} {Hp: p.+2 <= n} {D: prefix} (d: FramePrev.(frame') (↓ Hp) D) :=
     hforall ε, FillerPrev.(filler'') (FramePrev.(restrFrame') Hp ε d);
-  RestrLayer' {p q ε} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D: prefix}
-    (d: Frame.(frame) (↓ ↓ (Hpq ↕ Hq)) D) (l: Layer' d):
-      Layer'' (Frame.(restrFrame) Hq ε d) :=
+  RestrLayer {p q ε} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D: prefix}
+    (d: Frame.(frame) (↓ ↓ (Hpq ↕ Hq)) D) (l: Layer d):
+      Layer' (Frame.(restrFrame) Hq ε d) :=
   fun ω => rew [FillerPrev.(filler'')] Frame.(cohFrame) (Hrq := Hpq) d in FillerPrev.(restrFiller') Hq ε (l ω);
 
   (* We can't create htt: hunit, so we have to resort to this *)
   eqFrame0 {len0: 0 <= n} {D: prefix}: (Frame.(frame) len0 D).(Dom) = unit;
   eqFrame0' {len1: 1 <= n} {D: prefix}: (FramePrev.(frame') len1 D).(Dom) = unit;
   eqFrameSp {p} {Hp: p.+1 <= n} {D: prefix}:
-    Frame.(frame) Hp D = {d: Frame.(frame) (↓ Hp) D & Layer' d} :> Type;
+    Frame.(frame) Hp D = {d: Frame.(frame) (↓ Hp) D & Layer d} :> Type;
   eqFrameSp' {p} {Hp: p.+2 <= n} {D: prefix}:
-    FramePrev.(frame') Hp D = {d : FramePrev.(frame') (↓ Hp) D & Layer'' d}
+    FramePrev.(frame') Hp D = {d : FramePrev.(frame') (↓ Hp) D & Layer' d}
       :> Type;
   eqRestrFrame0 {q} {Hpq: 1 <= q.+1} {Hq: q.+1 <= n} {ε: side} {D: prefix}:
     Frame.(restrFrame) (Hpq := Hpq) Hq ε (rew <- [id] eqFrame0 (D := D) in tt) =
       (rew <- [id] eqFrame0' in tt);
   eqRestrFrameSp {ε p q} {D: prefix} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n}
     {d: Frame.(frame) (↓ ↓ (Hpq ↕ Hq)) D}
-    {l: Layer' (Hp := ↓ (Hpq ↕ Hq)) d}:
+    {l: Layer (Hp := ↓ (Hpq ↕ Hq)) d}:
     Frame.(restrFrame) Hq ε (rew <- [id] eqFrameSp in (d; l)) =
-      rew <- [id] eqFrameSp' in (Frame.(restrFrame) Hq ε d; RestrLayer' d l);
+      rew <- [id] eqFrameSp' in (Frame.(restrFrame) Hq ε d; RestrLayer d l);
   eqFillerSp {p} {Hp: p.+1 <= n} {D: prefix} {E d}:
-    Filler.(filler) (Hp := ↓ Hp) E d = {l: Layer' d &
+    Filler.(filler) (Hp := ↓ Hp) E d = {l: Layer d &
       Filler.(filler) (D := D) E (rew <- [id] eqFrameSp in (d; l))} :> Type;
   eqFillerSp' {p} {Hp: p.+2 <= n} {D: prefix} {d}:
-    FillerPrev.(filler') (Hp := ↓ Hp) d = {b : Layer'' d &
+    FillerPrev.(filler') (Hp := ↓ Hp) d = {b : Layer' d &
       FillerPrev.(filler') (rew <- [id] eqFrameSp' (D := D) in (d; b))} :> Type;
   eqRestrFiller0 {p} {Hp: p.+1 <= n} {D: prefix} {E} {d} {ε: side}
-    {l: Layer' d} {Q: Filler.(filler) (D := D) E (rew <- eqFrameSp in (d; l))}:
+    {l: Layer d} {Q: Filler.(filler) (D := D) E (rew <- eqFrameSp in (d; l))}:
       l ε = Filler.(restrFiller) (Hq := Hp) (rew <- [id] eqFillerSp in (l; Q));
   eqRestrFillerSp {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D: prefix} {E} {d}
-    {ε: side} {l: Layer' (Hp := ↓ (Hpq ↕ Hq)) d}
+    {ε: side} {l: Layer (Hp := ↓ (Hpq ↕ Hq)) d}
     {Q: Filler.(filler) (D := D) E (rew <- eqFrameSp in (d; l))}:
     Filler.(restrFiller) (Hpq := ↓ Hpq) (ε := ε) (rew <- [id] eqFillerSp in (l; Q)) = rew <- [id] eqFillerSp' (Hp := Hpq ↕ Hq) in
-      (RestrLayer' d l; rew [FillerPrev.(filler')] eqRestrFrameSp in
+      (RestrLayer d l; rew [FillerPrev.(filler')] eqRestrFrameSp in
         Filler.(restrFiller) Q);
 }.
 
@@ -233,9 +233,9 @@ Arguments FramePrev {n} _.
 Arguments FillerPrev {n} _.
 Arguments Frame {n} _ {p}.
 Arguments Filler {n} _.
+Arguments Layer {n} _ {p Hp D} d.
 Arguments Layer' {n} _ {p Hp D} d.
-Arguments Layer'' {n} _ {p Hp D} d.
-Arguments RestrLayer' {n} _ {p q} ε {Hpq Hq D d} l.
+Arguments RestrLayer {n} _ {p q} ε {Hpq Hq D d} l.
 Arguments eqFrame0 {n} _ {len0 D}.
 Arguments eqFrame0' {n} _ {len1 D}.
 Arguments eqFrameSp {n} _ {p Hp D}.
@@ -274,7 +274,7 @@ Definition mkLayer {n p} {Hp: p.+1 <= n.+1} {C: NType n} {D: mkprefix}
 Definition mkRestrLayer {n p q} {ε: side} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
   {C: NType n} {D: mkprefix} {Frame: PartialFrame n.+1 p mkprefix mkFramePrev}
   (d: Frame.(frame) (↓ ↓ (Hpq ↕ Hq)) D)
-  (l: mkLayer): C.(Layer') (Frame.(restrFrame) Hq ε d) :=
+  (l: mkLayer): C.(Layer) (Frame.(restrFrame) Hq ε d) :=
   fun ω => rew [C.(FillerPrev).(filler')] Frame.(cohFrame) d in
     C.(Filler).(restrFiller) (Hpq := ⇓ Hpq) (l ω).
 
@@ -282,18 +282,18 @@ Definition mkCohLayer {n p q r} {ε ω: side} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {C: NType n} {D: mkprefix}
   {Frame: PartialFrame n.+1 p mkprefix mkFramePrev}
   {d: Frame.(frame) (↓ ↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D} (l: mkLayer):
-  let sl := C.(RestrLayer') (Hpq := ⇓ (Hpr ↕ Hrq)) ε
+  let sl := C.(RestrLayer) (Hpq := ⇓ (Hpr ↕ Hrq)) ε
               (mkRestrLayer (Hpq := ⇓ Hpr) d l) in
-  let sl' := C.(RestrLayer') (Hpq := ⇓ Hpr) ω
+  let sl' := C.(RestrLayer) (Hpq := ⇓ Hpr) ω
                (mkRestrLayer (Hpq := ↓ (Hpr ↕ Hrq)) d l) in
-  rew [C.(Layer'')] Frame.(cohFrame) (Hpr := ↓ Hpr) (Hrq := Hrq) (Hq := Hq) d in sl = sl'.
+  rew [C.(Layer')] Frame.(cohFrame) (Hpr := ↓ Hpr) (Hrq := Hrq) (Hq := Hq) d in sl = sl'.
 Proof.
   intros *.
-  subst sl sl'; apply functional_extensionality_dep; intros 𝛉; unfold Layer''.
+  subst sl sl'; apply functional_extensionality_dep; intros 𝛉; unfold Layer'.
   rewrite <- map_subst_app with
     (P := fun 𝛉 x => C.(FillerPrev).(filler'') (C.(FramePrev).(restrFrame') _ 𝛉 x))
-    (f := C.(RestrLayer') _ (mkRestrLayer d l)).
-  unfold RestrLayer', mkRestrLayer.
+    (f := C.(RestrLayer) _ (mkRestrLayer d l)).
+  unfold RestrLayer, mkRestrLayer.
   rewrite <- map_subst with (f := C.(FillerPrev).(restrFiller') (⇓ Hq) ε).
   rewrite <- map_subst with (f := C.(FillerPrev).(restrFiller') (⇓ (Hrq ↕ Hq)) ω).
   rewrite rew_map with
@@ -484,11 +484,11 @@ Definition mkCohFiller_step {p q r n} {ε ω: side} {C: NType n} {D: mkprefix}
                               (H' := (mkFrame p).(cohFrame) _).
   change (↓ ?Hpr ↕ ?Hrq) with (↓ (Hpr ↕ Hrq)).
   f_equal.
-  unshelve eapply (rew_existT_curried (P := C.(Layer''))
+  unshelve eapply (rew_existT_curried (P := C.(Layer'))
   (Q := fun x => C.(FillerPrev).(filler') (rew <- [id] C.(eqFrameSp') in x))
   (H := (mkFrame p).(cohFrame) (Hpr := ↓ Hpr) (Hrq := Hrq) (Hq := Hq) (ε := ε)
         (ω := ω) (D := D) d)
-  (u := C.(RestrLayer') (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq) (D := D.1) ε
+  (u := C.(RestrLayer) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq) (D := D.1) ε
           (mkRestrLayer (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq)) (C := C) (D := D)
           (Frame := mkFrame p) (ε := ω) d l))
   (v := rew [C.(FillerPrev).(filler')] C.(eqRestrFrameSp) in
