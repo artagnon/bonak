@@ -560,28 +560,27 @@ Defined.
 
 (** We are now ready to build an [NType n.+1] from an [NType n] *)
 #[local]
-Instance mkNTypeSn {n} {C: NType n}: NType n.+1.
-  unshelve esplit.
-  - (* prefix *) now exact mkprefix.
-  - (* FramePrev *) now exact mkFramePrev.
-  - (* Frame *) now exact mkFrame.
-  - (* FillerPrev *) now exact mkFillerPrev.
-  - (* Filler *) now exact mkFiller.
-  - (* eqFrame0 *) now intros *.
-  - (* eqFrame0' *) intros *; now apply C.(eqFrame0).
-  - (* eqFrameSp *) now intros *.
-  - (* eqFrameSp' *) intros *; now refine C.(eqFrameSp).
-  - (* eqRestrFrame0 *) now intros *.
-  - (* eqRestrFrameSp *) intros *; simpl; now rewrite mkfiller_computes.
-  - (* eqFillerSp *) intros *; now refine C.(eqFillerSp).
-  - (* eqFillerSp' *) now intros *.
-  - (* eqRestrFiller0 *) intros *.
-    change (fun _ (_: leR _ ?q) => _) with (♢ q); simpl.
-    rewrite mkRestrFiller_base_computes.
-    now rewrite eq_ind_r_refl, rew_rew'.
-  - (* eqRestrFillerSp *) intros *; simpl.
-    now rewrite eq_ind_r_refl, mkRestrFiller_step_computes, rew_rew'.
-Defined.
+Instance mkNTypeSn {n} {C: NType n}: NType n.+1 :=
+{|
+    prefix := mkprefix;
+    FramePrev := mkFramePrev;
+    Frame := mkFrame;
+    FillerPrev := mkFillerPrev;
+    Filler := mkFiller;
+    eqFrame0 := ltac:(now intros *);
+    eqFrame0' := ltac:(intros *; now apply C.(eqFrame0));
+    eqFrameSp := ltac:(now intros *);
+    eqFrameSp' := ltac:(intros *; now refine C.(eqFrameSp));
+    eqRestrFrame0 := ltac:(now intros *);
+    eqRestrFrameSp := ltac:(now intros *);
+    eqFillerSp := ltac:(intros *; simpl; now refine mkfiller_computes);
+    eqFillerSp' := ltac:(intros *; now refine C.(eqFillerSp));
+    eqRestrFiller0 := ltac:(intros *;
+      change (fun _ (_: leR _ ?q) => _) with (♢ q); simpl;
+      now rewrite mkRestrFiller_base_computes, rew_rew');
+    eqRestrFillerSp := ltac:(intros *; simpl;
+      now rewrite mkRestrFiller_step_computes, rew_rew');
+|}.
 
 (** An [NType] truncated up to dimension [n] *)
 Definition NTypeAt: forall n, NType n.
