@@ -82,6 +82,9 @@
 
 % Universe, referred to as U
 \newcommandx{\U}[1][1=]{\ensuremath{\mathsf{\color{spanish-blue}{HSet}}_{#1}}}
+\newcommandx{\HGpd}[1][1=]{\ensuremath{\mathsf{\color{spanish-blue}{HGpd}}_{#1}}}
+\newcommand{\Type}{\ensuremath{\mathsf{\color{spanish-blue}{Type}}}}
+
 
 % The unit type
 \newcommand{\unittype}{\ensuremath{\mathsf{unit}}}
@@ -106,7 +109,6 @@
 \renewcommand{\l}{l}
 \renewcommand{\c}{c}
 \newcommand{\pair}[2]{#1, #2}
-\newcommand{\Type}{\textsf{Type}}
 \newcommand{\Dom}{\textsf{Dom}}
 \newcommand{\UIP}{\textsf{UIP}}
 
@@ -666,8 +668,6 @@ The definition is dispatched over tables \ref{tab:coind}, \ref{tab:core}, \ref{t
 
 Notably, the definition of $\restrl$ relies on a definitional equality expressing the commutation of the composition of $\restrf$. This is apriori undecidable, and we have to prove the commutation propositionally before using the reflection rule. Proving this itself requires an induction on the dimension, and on the structure of $\framep$, $\layer$, and $\filler$. This is what $\cohf$ proves, as shown in the table \ref{tab:coh}, using auxiliary definitions $\cohl$ and $\cohc$. Even though it looks independent of the other tables, it has to proved mutually with the definitions of $\framep$, $\layer$, $\filler$, and their corresponding restrictions.
 
-Note that in $\cohf$ and $\cohc$, we use the reflection rule to identify equalities of pairs with a conjuction of two equalities. Note also that in $\cohl$, we use the reflection rule to identify equality of functions with pointwise equality.
-
 Remark: For a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\restrf$ nor $\cohf$ anymore.
 
 \renewcommand*{\lab}{tab:coind}
@@ -726,27 +726,39 @@ Remark: For a given $n$, the coherence conditions evaluate to a reflexivity proo
 \subsection{Formal construction in intensional type theory\label{sec:itt}}
 \renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
 
-We now present the tables in \emph{intensional} type theory, leaving implict some details, which we will explain shortly.
+Since we have formalized the proof in the Coq proof assistant, which works in intensional type theory, we now present the tables in \emph{intensional} type theory, leaving implicit some details, which we will explain shortly.
 
-The proof of $\cohf$ requires a higher-dimensional coherence condition which we obtain by working in \U. If the proofs of the same equality were not equated, there would be a need for arbitrary many higher-dimensional coherences (see e.g.~\cite{herbelin15} for a discussion on the de facto need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory).
+Tables \ref{fulltab:coind}, \ref{fulltab:core}, and \ref{fulltab:frames} are unchanged, except that we make explicit all arguments, including those that can be inferred from the context. The need for transport along a proof of commutation of $\restrf$ in the definition of $\restrl$ is made explicit as shown in table \ref{fulltab:faces}, where the arrow over $\cohf$ indicates the direction of rewrite. The proof of $\cohf$ is described on \ref{fulltab:coh}, and it requires explication of several equalities which were implicit in extensional type theory. The commutation of $\restrl$ lives in a type referring to $\cohf$, so we need a transport along the commutation of $\restrf$ in the statement of $\cohl$. The proof of $\cohl$ is the most involved proof in the construction. This is where the higher-dimensional coherence condition is needed. The exact formulation of this coherence condition is as follows.
 
 \renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
 
 \begin{align*}
   \cohf[m][\omega][\theta][r][p][n][p][][d = {\restrf[m][\epsilon][q+2][n][p][][d = \d]}]\;\bullet     \\
   \ap \restrf[m][\omega][r][n][p][][]\;(\cohf[m][\epsilon][\theta][q+1][p][n][p][][d = \d])\;\bullet   \\
-  \cohf[m][\epsilon][\omega][q][r][n][p][][d = {\restrf[m][\theta][p][n][p][][d = \d]}] =              \\
+  \cohf[m][\epsilon][\omega][q][r][n][p][][d = {\restrf[m][\theta][p][n][p][][d = \d]}] =_{HProp}      \\
   \ap \restrf[m][\theta][p][n][p][][]\;(\cohf[m][\epsilon][\omega][q+1][r+1][n][p][][d = \d])\;\bullet \\
   \cohf[m][\epsilon][\theta][q][p][n][p][][d = {\restrf[m][\omega][r+1][n][p][][d = \d]}]\;\bullet     \\
   \ap \restrf[m][\epsilon][q][n][p][]\;(\cohf[m][\omega][\theta][r][p][n][p][][d = \d])
 \end{align*}
 
-where $\mathsf{ap}$ applies a function on two sides of an equality, and $\bullet$ is transitivity of equality. This property of equality proofs holds in \U.
+\renewcommandx{\coht}{\cohtwo{frame}[][][][][][][][]}
+\renewcommandx{\restrf}{\restr{frame}[][][][][][][]}
+\renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
+\renewcommandx{\cohl}{\coh{layer}[][][][][][][][]}
+\renewcommandx{\cohc}{\coh{filler}[][][][][][][][]}
 
+where $\mathsf{ap}$ applies a function on two sides of an equality, and $\bullet$ is transitivity of equality. This property of equality proofs holds in \U, and since our formalization is done in \U, the term is trivially discharged.
+
+Notice that each $\restrl$ in the type of $\cohl$ is hiding a $\cohf$ rewrite: this makes a sum total of three $\cohf$ rewrites on the left-hand side, and two $\cohf$ rewrites on the right-hand side. In the proof term of $\cohl$, $\cohc$ has one $\cohf$ rewrite on its left-hand side and zero on the right-hand side. This combined with the two terms of the form $\ap \cohf$ matches our expectation of three $\cohf$ on the left-hand side and two $\cohf$ on the right-hand side. $\coht$ can roughly be seen as a commutation of these $\cohf$ terms.
+
+Finally, let us explain $\cohc$. The base case $p = r$ is the key case of the commutation of $\restrf$, when one of the $\restrc$ collapses, and the remaining equation holds trivially. The case of $p < r$ follows the structure of $\restrc$ by induction.
+
+There are a few more subtleties. In $\cohf$ and $\cohc$, we use the reflection rule to identify equalities of pairs with a conjunction of two equalities. In $\cohl$, we use the reflection rule to identify equality of functions with pointwise equality. We additionally rely heavily on basic properties of the groupoid transport, which we don't detail.
+
+Remark: If we weren't working in \U, but in \HGpd, we would need to prove one more higher-dimensional coherence, and if we were working in \Type, we would need to prove arbitarily many higher-dimensional coherences. For the unfamiliar reader, $\HGpd$ is the subset of types $A$ such that for all $x$ and $y$ in $A$, $x =_{HGpd} y$ is in \U. See \cite{herbelin15} for a discussion on the need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory.
 
 % Full tables in this section
 %

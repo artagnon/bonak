@@ -19,3 +19,4 @@
 {"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QWe write \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q for sequences of integers.\\E$"}
 {"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QWe write \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q for (ordered) sequences of integers.\\E$"}
 {"rule":"KIND_OF_A","sentence":"^\\QThen, \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q is made of one layer, so that it can be written as a \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q type of an inhabitant of the \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q and \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q.\\E$"}
+{"rule":"A_UNCOUNTABLE","sentence":"^\\QThe commutation of \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q lives in a type referring to \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q, so we need a transport along the commutation of \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q in the statement of \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q.\\E$"}
