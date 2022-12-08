@@ -1,6 +1,6 @@
 \documentclass[10pt]{art.cls/art}
 
-\usepackage{multirow, float, tabularx, environ, booktabs, setspace, makecell, caption, art.cls/joinargs, colortbl, pdflscape}
+\usepackage{multirow, float, tabularx, environ, booktabs, setspace, makecell, caption, art.cls/joinargs, colortbl, pdflscape, minted}
 \usepackage[prefix=bonak]{art.cls/xkeymask}
 \usepackage[skip=0.4em]{parskip}
 \usetikzlibrary{patterns}
@@ -758,7 +758,9 @@ Finally, let us explain $\cohc$. The base case $p = r$ is the key case of the co
 
 There are a few more subtleties. In $\cohf$ and $\cohc$, we use the reflection rule to identify equalities of pairs with a conjunction of two equalities. In $\cohl$, we use the reflection rule to identify equality of functions with pointwise equality. We additionally rely heavily on basic properties of the groupoid transport, which we don't detail.
 
-Remark: If we weren't working in \U, but in \HGpd, we would need to prove one more higher-dimensional coherence, and if we were working in \Type, we would need to prove arbitarily many higher-dimensional coherences. For the unfamiliar reader, $\HGpd$ is the subset of types $A$ such that for all $x$ and $y$ in $A$, $x =_{HGpd} y$ is in \U. See \cite{herbelin15} for a discussion on the need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory.
+For a fixed $n$, $\framep$, $\restrf$, and $\cohf$ have to be mutually defined by induction on $p$. Each of them rely on $\filler$, $\restrf$, and $\cohc$ at lower $n$, so they are well-founded. Finally, each of $\filler$, $\restrf$, and $\cohf$ are by induction from $p$ to $n$.
+
+Remark: If we weren't working in \U, but in \HGpd, we would need to prove one more higher-dimensional coherence, and if we were working in \Type, we would need to prove arbitarily many higher-dimensional coherences. For the unfamiliar reader, $\HGpd$ is the subset of types $A$ such that for all $x$ and $y$ in $A$, $x =_{\mathit{HGpd}} y$ is in \U. See \cite{herbelin15} for a discussion on the need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory.
 
 % Full tables in this section
 %
@@ -809,9 +811,7 @@ Remark: If we weren't working in \U, but in \HGpd, we would need to prove one mo
 \renewcommandx{\cohl}[1][1]{\coh{layer}[][][][][][#1][][]}
 \renewcommandx{\cohc}[1][1]{\coh{filler}[][][][][][#1][][]}
 
-Our formalization is done in the intensional type theory flavor of the calculus of inductive constructions. Working in intensional type theory necessitates explicitly supplying a number of type equalities, which hold definitionally in extensional type theory.
-
-The construction is obviously on induction on $n$, but $\restrf[n]$ depends on $\framep[n]$ and $\framep[n-1]$, while $\cohf[n]$ depends on $\framep[n]$, $\framep[n-1]$, and $\framep[n-2]$. A priori, this necessitates well-founded induction. Due to technical difficulties experienced with Coq, we chose a different route; in practice, since we only need to keep track of three levels, we built separate data structures for the levels, with dependencies.
+Since the construction shown in the previous sections are by induction on $n$, and dependencies are on lower $n$ and $p < n$, one would imagine formalizing this using well-founded induction in the calculus of inductive constructions. We initially tried this approach: we had terms dependent on the proofs of the case distinction of $n' \leq n$ implies $n' < n$ or $n' = n$, and these proofs were didn't have definitional computational rule; it was necessary to reason proposionally on the computational property of the case distinction, and it even turned out to be unmanageable. Hence, we chose a different route: in practice, since $\restrf[n]$ depends on $\framep[n]$ and $\framep[n-1]$, while $\cohf[n]$ depends on $\framep[n]$, $\framep[n-1]$, and $\framep[n-2]$, we only need to keep track of three ``levels'', and we built separate data structures for the levels, with dependencies. More concretely, we build the ten definitions shown in the tables by induction, and this is part of the definition of a larger record. Other fields in the record are necessary because we need copies of $\framep$, $\layer$, $\filler$ at levels $n - 1$ and $n - 2$, $\restrf$, $\restrl$, and $\restrc$ at level $n - 1$, and equations to recall the definitions of these objects at lower levels. We hence have what looks like the following.
 
 \newpage
 \bibliographystyle{alpha}
