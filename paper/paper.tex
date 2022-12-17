@@ -811,7 +811,44 @@ Remark: If we weren't working in \U, but in \HGpd, we would need to prove one mo
 \renewcommandx{\cohl}[1][1]{\coh{layer}[][][][][][#1][][]}
 \renewcommandx{\cohc}[1][1]{\coh{filler}[][][][][][#1][][]}
 
-Since the construction shown in the previous sections are by induction on $n$, and dependencies are on lower $n$ and $p < n$, one would imagine formalizing this using well-founded induction in the calculus of inductive constructions. We initially tried this approach: we had terms dependent on the proofs of the case distinction of $n' \leq n$ implies $n' < n$ or $n' = n$, and these proofs were didn't have definitional computational rule; it was necessary to reason proposionally on the computational property of the case distinction, and it even turned out to be unmanageable. Hence, we chose a different route: in practice, since $\restrf[n]$ depends on $\framep[n]$ and $\framep[n-1]$, while $\cohf[n]$ depends on $\framep[n]$, $\framep[n-1]$, and $\framep[n-2]$, we only need to keep track of three ``levels'', and we built separate data structures for the levels, with dependencies. More concretely, we build the ten definitions shown in the tables by induction, and this is part of the definition of a larger record. Other fields in the record are necessary because we need copies of $\framep$, $\layer$, $\filler$ at levels $n - 1$ and $n - 2$, $\restrf$, $\restrl$, and $\restrc$ at level $n - 1$, and equations to recall the definitions of these objects at lower levels. We hence have what looks like the following.
+Since the construction shown in the previous sections are by induction on $n$, and dependencies are on lower $n$ and $p < n$, one would imagine formalizing this using well-founded induction in the calculus of inductive constructions. We initially tried this approach: we had terms dependent on the proofs of the case distinction of $n' \leq n$ implies $n' < n$ or $n' = n$, and these proofs were didn't have definitional computational rule; it was necessary to reason proposionally on the computational property of the case distinction, and it even turned out to be unmanageable. Hence, we chose a different route: in practice, since $\restrf[n]$ depends on $\framep[n]$ and $\framep[n-1]$, while $\cohf[n]$ depends on $\framep[n]$, $\framep[n-1]$, and $\framep[n-2]$, we only need to keep track of three ``levels'', and we built separate data structures for the levels, with dependencies. More concretely, we build the ten definitions shown in the tables by induction, and this is part of the definition of a larger record. Other fields in the record are necessary because we need copies of $\framep$, $\layer$, $\filler$ at levels $n - 1$ and $n - 2$, $\restrf$, $\restrl$, and $\restrc$ at level $n - 1$, and equations to recall the definitions of these objects at lower levels.
+
+The entire construction relies on inequalities over natural numbers, and we have three different definitions of $\leq$ addressing different concerns, and conversions betwen them. First, we have what we call the ``recusive variant'', phrased as:
+
+\begin{minted}{coq}
+  Fixpoint leR (n m : nat) : SProp :=
+  match n, m with
+  | O, _ => STrue
+  | S n, O => SFalse
+  | S n, S m => leR n m
+  end.
+\end{minted}
+
+The upside of this definition is that all inequalities of the form $m \leq n$ are equivalent, definitionally. By placing the definition in \texttt{SProp}, we have definitional equality of inequality proofs. For the purpose of unification, however, this definition doesn't go far enough. Consider the unification problems:
+
+\begin{minted}{coq}
+  le_trans ?p le_refl = ?p
+  le_trans le_refl ?p = ?p
+\end{minted}
+
+where \texttt{le\_trans} is transitivity, \texttt{le\_refl} is reflexivity, and \texttt{?p} is an existential variable. These two problems definitionally hold in \texttt{SProp}, but equalizing them does not solve the existential. For unification to be useful in inferring existentials, we present our next definition, which we dub as the ``Yoneda variant'':
+
+\begin{minted}{coq}
+  Definition leY n m := forall p, leR p n -> leR p m.
+\end{minted}
+
+\texttt{leY} is an improvement over \texttt{leR} since reflexivity is now definitionally the neutral elemement of transitivity, and associativity of transitivity also holds definitionally. Although it significantly eases our proof, there are some instances where unification is unable to solve for the existentials, and we have to provide them explicitly.
+
+Finally, we have the ``inductive variant'', phrased as:
+
+\begin{minted}{coq}
+  Inductive leI : nat -> nat -> Type :=
+  | leI_refl n : n <~ n
+  | leI_down {n p} : p.+1 <~ n -> p <~ n
+  where "n <~ m" := (leI n m) : nat_scope.
+\end{minted}
+
+Compared to \texttt{leY}, \texttt{leI} has no proof-irrelevance properties. This definition is specially crafted for $\filler$, where we have to reason inductively from $p \leq n$ to $n$. In our usage, we have lemmas \texttt{leY\_of\_leI} and \texttt{leI\_of\_leY} in order to equip \texttt{leY} with the induction scheme of \texttt{leI}. Then, together with computational rules stated propositionally, we reason about $\beta$-reduction of induction.
 
 \newpage
 \bibliographystyle{alpha}
