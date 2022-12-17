@@ -3,5 +3,13 @@
   "ocaml.sandbox": {
     "kind": "opam",
     "switch": "default"
-  }
+  },
+  "spellright.language": [
+    "en"
+  ],
+  "spellright.documentTypes": [
+    "markdown",
+    "latex",
+    "plaintext"
+  ]
 }
