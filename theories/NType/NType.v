@@ -28,7 +28,7 @@ Section NType.
 (** The arity [N] of parametric sets *)
 Variable side: HSet.
 
-(** *******************************************)
+(**********************************************)
 (** A N-parametric set is a family of sets obtained by iterating
     Reynolds' parametricity translation.
 
@@ -75,7 +75,7 @@ Variable side: HSet.
     restrictions and coherence conditions on frame restrictions.
 *)
 
-(** ********)
+(***********)
 (** Frames *)
 
 (** The construction maintains at each step of the induction the three
@@ -117,7 +117,7 @@ Arguments cohFrame {n p prefix FramePrev} _ {q r Hpr Hrq Hq ε ω D} d.
 (* We want ε and ω to be printed, but have them inferred;
    Coq doesn't support this. *)
 
-(** *********)
+(************)
 (** Fillers *)
 
 (** We build fillers using an iterated construction: a filler at level n depends
@@ -136,7 +136,7 @@ Arguments filler' {n prefix FramePrev} _ {p Hp D} d.
 Arguments filler'' {n prefix FramePrev} _ {p Hp D} d.
 Arguments restrFiller' {n prefix FramePrev} _ {p q Hpq} Hq ε {D} [d] b.
 
-(* Filler consists of filler, restrFiller, and coherence conditions between them *)
+(** Filler consists of filler, restrFiller, and coherence conditions between them *)
 Class PartialFiller (n: nat) (prefix: Type@{m'})
   {FramePrev: PartialFramePrev n prefix}
   (FillerPrev: PartialFillerPrev n prefix FramePrev)
@@ -162,7 +162,7 @@ Arguments filler {n prefix FramePrev FillerPrev Frame} _ {p Hp D} E.
 Arguments restrFiller {n prefix FramePrev FillerPrev Frame} _ {p q Hpq Hq ε D E} [d] c.
 Arguments cohFiller {n prefix FramePrev FillerPrev Frame} _ {p q r Hpr Hrq Hq ε ω D E d} c.
 
-(* An N-parametric type truncated at level [n] consists of:
+(** An N-parametric type truncated at level [n] consists of:
 
   - a [prefix] of parametric types up to dimension [n],
   - a type of frames with their restrictions and coherence of
@@ -247,7 +247,7 @@ Arguments eqFillerSp' {n} _ {p Hp D d}.
 Arguments eqRestrFiller0 {n} _ {p Hp D E d ε l Q}.
 Arguments eqRestrFillerSp {n} _ {p q Hpq Hq D E d ε l Q}.
 
-(** ************************************************)
+(***************************************************)
 (** The construction of [NType n+1] from [NType n] *)
 
 (** Extending the initial prefix *)
@@ -346,7 +346,7 @@ Instance mkFrameSp {n p} {C: NType n} {Frame: PartialFrame n.+1 p mkprefix mkFra
     (* Bug? Coq being too smart for its own good. *)
 Defined.
 
-(* Finally, we can define mkFrame at level n.+1 for all p *)
+(** Finally, we can define mkFrame at level n.+1 for all p *)
 #[local]
 Instance mkFrame {n} {C: NType n} p: PartialFrame n.+1 p mkprefix mkFramePrev.
   induction p.
@@ -433,7 +433,7 @@ Qed.
 (** Now, for the last part of the proof: proving coherence conditions
   on [cohFiller] *)
 
-(* The base case is easily discharged *)
+(** The base case is easily discharged *)
 Definition mkCohFiller_base {q r n} {ε ω: side} {C: NType n} {D: mkprefix}
   {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n.+1}
   {E: (mkFrame n.+1).(frame) (♢ _) D -> HSet}
@@ -451,7 +451,7 @@ Definition mkCohFiller_base {q r n} {ε ω: side} {C: NType n} {D: mkprefix}
     (Q := mkRestrFiller (Hpq := Hrq) E (_; _) c')).
 Qed.
 
-(* A small abbreviation *)
+(** A small abbreviation *)
 Definition mkCohFillerHyp p {q r n} {ε ω: side} {C: NType n} {D: mkprefix}
   (Hpr: p.+2 <= r.+3) {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
   {E: (mkFrame n.+1).(frame) (♢ _) D -> HSet}
@@ -463,7 +463,7 @@ Definition mkCohFillerHyp p {q r n} {ε ω: side} {C: NType n} {D: mkprefix}
   C.(Filler).(restrFiller) (ε := ω) (Hpq := (⇓ Hpr)) (Hq := ⇓ (Hrq ↕ Hq))
     (mkRestrFiller (ε := ε) (Hpq := ↓ (Hpr ↕ Hrq)) (Hq := Hq) E d c).
 
-(* The step case is discharged as (mkCohLayer; IHP) *)
+(** The step case is discharged as (mkCohLayer; IHP) *)
 Definition mkCohFiller_step {p q r n} {ε ω: side} {C: NType n} {D: mkprefix}
   {Hpr: p.+3 <= r.+3} {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
   {E: (mkFrame n.+1).(frame) (♢ _) D -> HSet}
