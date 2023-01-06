@@ -28,7 +28,7 @@ Section NType.
 (** The arity [N] of parametric sets *)
 Variable side: HSet.
 
-(*********************************************)
+(** *******************************************)
 (** A N-parametric set is a family of sets obtained by iterating
     Reynolds' parametricity translation.
 
@@ -75,7 +75,7 @@ Variable side: HSet.
     restrictions and coherence conditions on frame restrictions.
 *)
 
-(***********)
+(** ********)
 (** Frames *)
 
 (** The construction maintains at each step of the induction the three
@@ -117,7 +117,7 @@ Arguments cohFrame {n p prefix FramePrev} _ {q r Hpr Hrq Hq ε ω D} d.
 (* We want ε and ω to be printed, but have them inferred;
    Coq doesn't support this. *)
 
-(************)
+(** *********)
 (** Fillers *)
 
 (** We build fillers using an iterated construction: a filler at level n depends
@@ -247,7 +247,7 @@ Arguments eqFillerSp' {n} _ {p Hp D d}.
 Arguments eqRestrFiller0 {n} _ {p Hp D E d ε l Q}.
 Arguments eqRestrFillerSp {n} _ {p q Hpq Hq D E d ε l Q}.
 
-(***************************************************)
+(** ************************************************)
 (** The construction of [NType n+1] from [NType n] *)
 
 (** Extending the initial prefix *)
@@ -312,7 +312,7 @@ Proof.
   now apply (C.(FramePrev).(frame'') _ _).(UIP).
 Qed.
 
-(* The Frame at level n.+1 with p = O *)
+(** The Frame at level n.+1 with p = O *)
 #[local]
 Instance mkFrame0 {n} {C: NType n}: PartialFrame n.+1 O mkprefix mkFramePrev.
   unshelve esplit.
@@ -323,7 +323,7 @@ Instance mkFrame0 {n} {C: NType n}: PartialFrame n.+1 O mkprefix mkFramePrev.
                 eqRestrFrame0 with (Hpq := ⇓ (Hpr ↕ Hrq)).
 Defined.
 
-(* The Frame at level n.+1 for S p knowing the Frame at level n.+1 for p *)
+(** The Frame at level n.+1 for S p knowing the Frame at level n.+1 for p *)
 #[local]
 Instance mkFrameSp {n p} {C: NType n} {Frame: PartialFrame n.+1 p mkprefix mkFramePrev}:
   PartialFrame n.+1 p.+1 mkprefix mkFramePrev.
