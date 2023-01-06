@@ -221,30 +221,7 @@ We introduce two additional notations for working with sequences of integers.
   We define $i :: \{j_1, \ldots, j_n\}$ to be $\{i, j_1, \ldots, j_n\}$.
 \end{notation}
 
-\begin{notation}[$\uparrow$]
-  Let us write $\uparrow \{i_1, \ldots, i_n\}$ to denote $\{i_1 + 1, \ldots, i_n + 1\}$.
-\end{notation}
-
-\begin{definition}[\DeltaPlus]
-  The category of augmented semi-simplices is defined in terms of objects, morphisms, composition, and identity.
-
-  \begin{align*}
-    \obj(\DeltaPlus) & := \Nat                                                                    \\
-    \hom(p, n)       & := \{\{i_{p + 1}, \ldots, i_n\} \mid 0 < i_{p + 1} < \ldots < i_n \leq n\} \\
-    g \circ f        & :=
-    \begin{cases}
-      g                          & \text{if f = \{\}}                                          \\
-      f                          & \text{if g = \{\}}                                          \\
-      b :: (g \circ f')          & \text{if $g = (a :: g')$, $f = (b :: f')$, with $b < a$}    \\
-      a :: (g' \circ \uparrow f) & \text{if $g = (a :: g')$, $f = (b :: f')$, with $b \geq a$} \\
-    \end{cases}      \\
-    \id              & := \{\}
-  \end{align*}
-
-  Evidently, $\id$ is neutral. Further, composition can be shown to be associative.
-\end{definition}
-
-\begin{definition}[Alternative definition of $\DeltaPlus$]
+\begin{definition}[$\DeltaPlus$]
   \begin{align*}
     \obj(\DeltaPlus) & := \Nat                                                                     \\
     \hom(p, n)       & := \{l \in \{0, \kstar\}^n \mid \text{number of $\kstar$ in l = p}\}        \\
