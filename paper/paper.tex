@@ -171,7 +171,7 @@
   labelfont=mdit,
 }
 
-\title{A mechanization of semi-simplicial and semi-cubical sets in the calculus of inductive constructions}
+\title{A formalization of semi-simplicial and semi-cubical sets}
 \author{
   \textcolor{gray80}{Hugo Herbelin} \\
   \itshape \textcolor{gray80}{Université Paris-Cité, Inria, CNRS, IRIF, Paris}
@@ -186,7 +186,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-  We present a parametricity-based construction of semi-simplicial sets and semi-cubical sets in indexed form, in the calculus of inductive constructions. The accompanying artifact is an axiom-less~\footnote{Technically speaking, we use some axioms related to functional extensionality, but the requirement arises only from our generalization to $\nu$-types; if $\nu$ is finite (say, unit type corresponding to augmented semi-simplicial types), this requirement vanishes.} Coq formalization that uses sophisticated rewriting techniques and pushes the boundaries of proof assistant technology.
+  We present a parametricity-based construction of semi-simplicial sets and semi-cubical sets in indexed form, formulated in dependent type theory. The accompanying artifact is an axiom-less~\footnote{Technically speaking, we use some axioms related to functional extensionality, but the requirement arises only from our generalization to $\nu$-types; if $\nu$ is finite (say, unit type corresponding to augmented semi-simplicial types), this requirement vanishes.} Coq formalization that uses sophisticated rewriting techniques and pushes the boundaries of proof assistant technology.
 \end{abstract}
 \tableofcontents
 \newpage
@@ -209,7 +209,9 @@ We exploit the connection between iterated unary parametricity and augmented sim
   \end{tabularx}
 \end{table}
 
-The outline of the paper is as follows. First, we briefly describe semi-simplicial and semi-cubical sets, and our generalization to $\nu$-sets. We then proceed to explain our construction, with the help of diagrams. Before spelling out the details of our formalization in type-theoretic language, we have a section on reasoning in sets.
+The outline of the paper is as follows. First, we briefly describe semi-simplicial and semi-cubical sets, and our generalization to $\nu$-sets. We then proceed to explain our construction, with the help of diagrams. Before spelling out the details of our formalization in type-theoretic language, we have a section on reasoning in sets. We end with some of the finer details of our mechanization.
+
+Our precise mechanization in Coq is available at \href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak}.
 
 \section{Semi-simplicial and semi-cubical sets}
 It is well-known that simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices. What we have formalized is \emph{augmented semi-simplicial} sets, and \emph{semi-cubical} sets. We will proceed to explain the mathematical objects we have formalized.
@@ -433,7 +435,7 @@ $\U$ provides us a form of unicity of identity of proofs (UIP), which is a form 
 
 which is to say that any two proofs of \emph{equality} of the same two types are \emph{equal}. In other words, the proofs cannot be distinguished from one another.
 
-An equivalent defintion of UIP is given by \textsf{UIP\_refl}:
+An equivalent definition of UIP is given by \textsf{UIP\_refl}:
 
 \begin{align*}
   \textsf{UIP\_refl} & : \forall x, \forall p : x = x, p = \textsf{eq\_refl } x
@@ -645,7 +647,7 @@ Hence, we need a coherence condition to commute the terms. Coherence conditions 
 \renewcommandx{\filler}[5][1,2,3,4,5]{\prim{filler}[][#2][#3][#4][#5]}
 
 % Restriction for frame, layer, and filler
-% Drop the unviverse letter
+% Drop the universe letter
 \renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
 \renewcommandx{\restrl}[7][1,2,3,4,5,6,7]{\restr{layer}[][#2][#3][#4][#5][#6][#7]}
 \renewcommandx{\restrc}[7][1,2,3,4,5,6,7]{\restr{filler}[][#2][#3][#4][#5][#6][#7]}
@@ -656,7 +658,7 @@ Hence, we need a coherence condition to commute the terms. Coherence conditions 
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][][][][][#9]}
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][#2][#3][][][][][#9]}
 
-We now formally present the construction in \emph{extensional} type theory; i.e. in a type theory with the following reflection rule, where $=$ is propositional equality in some type and $\equiv$ is definitional equality:
+We now present the construction in \emph{extensional} type theory; i.e. in a type theory with the following reflection rule, where $=$ is propositional equality in some type and $\equiv$ is definitional equality:
 
 \begin{equation*}
   \seqr{}{\Gamma \vdash p : t = u}{\Gamma \vdash t \equiv u}
@@ -667,6 +669,8 @@ For the presentation corresponding to the formalization in \emph{intensional} ty
 The definition is dispatched over tables \ref{tab:coind}, \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces} and \ref{tab:coh}. Table \ref{tab:coind} describes a $\nu$-set in indexed form, as a coinductive limit of $n$-truncated $\nu$-sets. $n$-truncated $\nu$-sets are themselves described in \ref{tab:core}. The $n$th component is a family over a $\fullframe$. $\fullframe$ is recursively defined in \ref{tab:frames}, using the auxiliary definitions of $\layer$ and $\filler$. $\layer$ and $\filler$ are dependent over $\restrf$, and these restrictions are defined on \ref{tab:faces}. These restrictions are defined using auxiliary definitions of $\restrl$ and $\restrc$.
 
 Notably, the definition of $\restrl$ relies on a definitional equality expressing the commutation of the composition of $\restrf$. This is a priori undecidable, and we have to prove the commutation propositionally before using the reflection rule. Proving this itself requires an induction on the dimension, and on the structure of $\framep$, $\layer$, and $\filler$. This is what $\cohf$ proves, as shown in the table \ref{tab:coh}, using auxiliary definitions $\cohl$ and $\cohc$. Even though it looks independent of the other tables, it has to proved mutually with the definitions of $\framep$, $\layer$, $\filler$, and their corresponding restrictions.
+
+Most components of the construction takes inequality constraints as parameters, and we have left implicit that they are satisfied in the table. Comparison of inequality proofs depends on the definition of inequality, which we leave implicit, and assume that we can pick a definition for which inequality proofs are definitionally equal.
 
 Remark: For a given $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\restrf$ nor $\cohf$ anymore.
 
@@ -726,7 +730,7 @@ Remark: For a given $n$, the coherence conditions evaluate to a reflexivity proo
 \subsection{Formal construction in intensional type theory\label{sec:itt}}
 \renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
 
-Since we have formalized the proof in the Coq proof assistant, which works in intensional type theory, we now present the tables in \emph{intensional} type theory, leaving implicit some details, which we will explain shortly.
+Since we have formalized the proof in the Coq proof assistant, which works in intensional type theory, we now present the tables in \emph{intensional} type theory, leaving implicit some details, which we will explain here, and other details, which we will explain in \ref{sec:mech}.
 
 Tables \ref{fulltab:coind}, \ref{fulltab:core}, and \ref{fulltab:frames} are unchanged, except that we make explicit all arguments, including those that can be inferred from the context. The need for transport along a proof of commutation of $\restrf$ in the definition of $\restrl$ is made explicit as shown in table \ref{fulltab:faces}, where the arrow over $\cohf$ indicates the direction of rewrite. The proof of $\cohf$ is described on \ref{fulltab:coh}, and it requires explication of several equalities which were implicit in extensional type theory. The commutation of $\restrl$ lives in a type referring to $\cohf$, so we need a transport along the commutation of $\restrf$ in the statement of $\cohl$. The proof of $\cohl$ is the most involved proof in the construction. This is where the higher-dimensional coherence condition is needed. The exact formulation of this coherence condition is as follows.
 
@@ -800,7 +804,7 @@ Remark: If we weren't working in \U, but in \HGpd, we would need to prove one mo
   \input{tab-coh.tex}
 \end{landscape}
 
-\subsection{Details on the mechanization}
+\subsection{Details on the mechanization\label{sec:mech}}
 \renewcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
 \renewcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
 \renewcommandx{\filler}[2][1,2]{\prim{filler}[][#1][#2][][]}
