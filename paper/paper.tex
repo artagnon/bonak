@@ -202,7 +202,7 @@ The outline of the paper is as follows. First, we briefly describe semi-simplici
 Our precise mechanization in Coq is available at \href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak}.
 
 \section{Semi-simplicial and semi-cubical sets}
-It is well-known that simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices. What we have formalized is \emph{augmented semi-simplicial} sets, and \emph{semi-cubical} sets. We will proceed to explain the mathematical objects we have formalized.
+It is well-known that simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices. What we have formalized is \emph{augmented semi-simplicial} sets~\cite{fri08,riehl11}, and \emph{semi-cubical} sets~\cite{grandis03,buchholtz17}. We will proceed to explain the mathematical objects we have formalized.
 
 \subsection{Augmented semi-simplicial sets}
 Augmented semi-simplicial sets are defined similarly to semi-simplicial sets, except that the connected components are additionally dependent on a ``color''. Conversely, semi-simplicial sets can be seen as augmented semi-simplicial sets over a singleton set of colors.
@@ -623,7 +623,7 @@ Hence, we need a coherence condition to commute the terms. Coherence conditions 
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][][][][][#9]}
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][#2][#3][][][][][#9]}
 
-We now present the construction in \emph{extensional} type theory; i.e. in a type theory with the following reflection rule, where $=$ is propositional equality in some type and $\equiv$ is definitional equality:
+We now present the construction in \emph{extensional} type theory; i.e. in a type theory with the following reflection rule, where $=$ is propositional equality in some type and $\equiv$ is definitional equality~\cite{martinlof84}:
 
 \begin{equation*}
   \seqr{}{\Gamma \vdash p : t = u}{\Gamma \vdash t \equiv u}
