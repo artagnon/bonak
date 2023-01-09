@@ -1,6 +1,6 @@
 \documentclass[10pt]{art.cls/art}
 
-\usepackage{multirow, float, tabularx, environ, booktabs, setspace, makecell, caption, art.cls/joinargs, colortbl, pdflscape, minted}
+\usepackage{multirow, float, tabularx, environ, booktabs, setspace, makecell, caption, art.cls/joinargs, colortbl, multicol, pdflscape, minted}
 \usepackage[prefix=bonak]{art.cls/xkeymask}
 \usepackage[skip=0.4em]{parskip}
 \usetikzlibrary{patterns}
@@ -136,7 +136,7 @@
 
 % The eqntable environment, displaying the various
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
-\NewEnviron{eqntable}[1]{
+\NewEnviron{onecoltbl}[1]{
   \begin{table}[H]
     \small
     \begin{tabularx}{\linewidth}{@{}>{$}l<{$} >{$}c<{$} >{$}c<{$} >{$}Y<{$} @{}}
@@ -146,6 +146,18 @@
     \end{tabularx}
     \caption{#1}
   \end{table}
+}
+
+\NewEnviron{eqntable}[1]{
+  \begin{table*}[t!]
+    \small
+    \begin{tabularx}{\linewidth}{@{}>{$}l<{$} >{$}c<{$} >{$}c<{$} >{$}Y<{$} @{}}
+      \toprule
+      \BODY
+      \bottomrule
+    \end{tabularx}
+    \caption{#1}
+  \end{table*}
 }
 
 % The label, since we're including twice
@@ -173,11 +185,11 @@
 
 \title{A formalization of semi-simplicial and semi-cubical sets}
 \author{
-  \textcolor{gray80}{Hugo Herbelin} \\
-  \itshape \textcolor{gray80}{Université Paris Cité, Inria, CNRS, IRIF, Paris}
+  Hugo Herbelin \\
+  Université Paris Cité, Inria, CNRS, IRIF, Paris \\
   \and
-  \textcolor{gray80}{Ramkumar Ramachandra} \\
-  \itshape \textcolor{gray80}{Université Paris Cité, Inria, CNRS, IRIF, Paris}
+  Ramkumar Ramachandra \\
+  Université Paris Cité, Inria, CNRS, IRIF, Paris
 }
 \date{}
 
@@ -188,8 +200,6 @@
 \begin{abstract}
   We present a parametricity-based construction of semi-simplicial sets and semi-cubical sets in indexed form, formulated in dependent type theory. The accompanying artifact is an axiom-less~\footnote{Technically speaking, we use some axioms related to functional extensionality, but the requirement arises only from our generalization to $\nu$-types; if $\nu$ is finite (say, unit type corresponding to augmented semi-simplicial types), this requirement vanishes.} Coq formalization that uses sophisticated rewriting techniques and pushes the boundaries of proof assistant technology.
 \end{abstract}
-\tableofcontents
-\newpage
 
 \section{Overture}
 In the context of typed functional programming, Reynolds' parametricity~\cite{reynolds72} interprets types as relations characterizing the observational equality of programs of this type. Parametricity can be iterated, and it has been noted that iterated Reynolds' parametricity has a cubical flavor~\cite{johann17,altenkirch15,moulin16}. We obtain a \emph{unary} variant of Reynolds' \emph{binary} parametricity by using predicates instead of relations, in which case we obtain a form of realizability~\cite{bernardy12,moulin16}. It has then been noted that iterated unary parametricity has an augmented simplicial flavor~\footnote{Observation by Hugo Moeneclaey}.
@@ -222,19 +232,22 @@ We introduce two additional notations for working with sequences of integers.
 \end{notation}
 
 \begin{definition}[$\DeltaPlus$]
-  \begin{align*}
-    \obj(\DeltaPlus) & := \Nat                                                                     \\
-    \hom(p, n)       & := \{l \in \{0, \kstar\}^n \mid \text{number of $\kstar$ in l = p}\}        \\
-    g \circ f        & :=
-    \begin{cases}
-      f                  & \text{if $g = \{\}$}                                                      \\
-      0 :: (g' \circ f)  & \text{if $g = (0 :: g')$}                                                 \\
-      a :: (g' \circ f') & \text{if $g = (\star :: g')$, $f = (a :: f')$, where $a = 0$ or $\kstar$} \\
-    \end{cases} \\
-    \id              & := \{\kstar, \ldots, \kstar\} \text{ $n$ times}
-  \end{align*}
+  \begin{figure*}[!t]
+    \begin{align*}
+      \obj(\DeltaPlus) & := \Nat                                                                     \\
+      \hom(p, n)       & := \{l \in \{0, \kstar\}^n \mid \text{number of $\kstar$ in l = p}\}        \\
+      g \circ f        & :=
+      \begin{cases}
+        f                  & \text{if $g = \{\}$}                                                      \\
+        0 :: (g' \circ f)  & \text{if $g = (0 :: g')$}                                                 \\
+        a :: (g' \circ f') & \text{if $g = (\star :: g')$, $f = (a :: f')$, where $a = 0$ or $\kstar$} \\
+      \end{cases} \\
+      \id              & := \{\kstar, \ldots, \kstar\} \text{ $n$ times}
+    \end{align*}
+    \caption{Definition of \DeltaPlus}\label{fig:deltaplus}
+  \end{figure*}
 
-  Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
+  The definition of $\DeltaPlus$ is shown in Fig. \ref{fig:deltaplus}. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
 \end{definition}
 
 \begin{definition}[$\Set_{\DeltaPlus}$]
@@ -291,19 +304,22 @@ The standard augmented $0$-semi-simplex is a singleton of one color. Standard au
 
 \subsection{Semi-cubical sets}
 \begin{definition}[\Cube]
-  $\Cube$ is defined similarly to $\DeltaPlus$, except that we take sequences of $L$, $R$ and $\star$, instead of sequences of $0$ and $\kstar$. We use $L$ and $R$ to indicate opposite faces of a cube.
+  $\Cube$ is defined similarly to $\DeltaPlus$, except that we take sequences of $L$, $R$ and $\star$, instead of sequences of $0$ and $\kstar$. We use $L$ and $R$ to indicate opposite faces of a cube. The definition is shown in Fig. \ref{fig:cube}.
 
-  \begin{align*}
-    \obj(\Cube) & := \Nat                                                                                \\
-    \hom(p, n)  & := \{l \in \{L, R, \kstar\}^n \mid \text{number of $\kstar$ in $l = p$}\}              \\
-    g \circ f   & :=
-    \begin{cases}
-      f                  & \text{if $g = \{\}$}                                                            \\
-      a :: (g' \circ f)  & \text{if $g = (a :: g')$}, \text{where $a = L$ or $R$}                          \\
-      a :: (g' \circ f') & \text{if $g = (\star :: g')$, $f = (a :: f')$, where $a = L$, $R$, or $\kstar$} \\
-    \end{cases} \\
-    \id         & := \{\kstar, \ldots, \kstar\} \text{ $n$ times}
-  \end{align*}
+  \begin{figure*}[!t]
+    \begin{align*}
+      \obj(\Cube) & := \Nat                                                                                \\
+      \hom(p, n)  & := \{l \in \{L, R, \kstar\}^n \mid \text{number of $\kstar$ in $l = p$}\}              \\
+      g \circ f   & :=
+      \begin{cases}
+        f                  & \text{if $g = \{\}$}                                                            \\
+        a :: (g' \circ f)  & \text{if $g = (a :: g')$}, \text{where $a = L$ or $R$}                          \\
+        a :: (g' \circ f') & \text{if $g = (\star :: g')$, $f = (a :: f')$, where $a = L$, $R$, or $\kstar$} \\
+      \end{cases} \\
+      \id         & := \{\kstar, \ldots, \kstar\} \text{ $n$ times}
+    \end{align*}
+    \caption{Definition of \Cube}\label{fig:cube}
+  \end{figure*}
 
   Again, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
 \end{definition}
@@ -436,9 +452,10 @@ Let us now come back to cubical sets. A cubical set can be represented as a sequ
 We can iteratively apply the above correspondence to obtain an indexed representation of cubical sets.
 
 \begin{align*}
-  X_0 & : \U                                                                                                              \\
-  X_1 & : X_0 \times X_0 \rightarrow \U                                                                                   \\
-  X_2 & : \forall a b c d, X_1 (a, b) \rightarrow X_1 (a, c) \rightarrow X_1 (b, d) \rightarrow X_1 (c, d) \rightarrow \U \\
+  X_0 & : \U                                                                        \\
+  X_1 & : X_0 \times X_0 \rightarrow \U                                             \\
+  X_2 & : \forall a b c d, X_1 (a, b) \rightarrow X_1 (a, c) \rightarrow X_1 (b, d) \\
+      & \rightarrow X_1 (c, d) \rightarrow \U                                       \\
   \ldots
 \end{align*}
 
@@ -451,56 +468,59 @@ The focus of our work has been to formally define such an indexed presentation o
 
 To assign $X_0, X_1, X_2, \ldots$ in the above indexed representation types, we need to exhibit a recursive definition over our building blocks, which we will call $\framep$, $\layer$, and $\filler$. A $\framep$ is a boundary of a standard form (simplex, cube, etc.), which we decompose into $\layer$, and a $\filler$ is a filled $\framep$.
 
-We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applying the isomorphism between $A \rightarrow B \rightarrow C$ and $A \times B \rightarrow C$, or between $\Pi a : A, (B a \rightarrow C)$ and $(\Sigma a : A, B a) \rightarrow C$. Let us illustrate how we build $\fullframe[n]$ by refining types of $X_0, X_1, \ldots, X_{n - 1}$ so that they have the form $\fullframe[n] \rightarrow \U$. To begin, let us set $\fullframe[0] = \unittype$, so that the type $\U$ of $X_0$ can be equivalently formulated as $\unittype \rightarrow \U$. Each $\fullframe[n]$ is made of $n$-layers, written $\layer[n][p]$ with $p < n$, initialized with the $\unittype$ type. Then, $X_1$ is made of one layer, so that it can be written as a $\Sigma$-type of an inhabitant of the $\unittype$ and $\layer[1][0]$. The rest of the construction follows.
+We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applying the isomorphism between $A \rightarrow B \rightarrow C$ and $A \times B \rightarrow C$, or between $\Pi a : A, (B a \rightarrow C)$ and $(\Sigma a : A, B a) \rightarrow C$. Let us illustrate how we build $\fullframe[n]$ by refining types of $X_0, X_1, \ldots, X_{n - 1}$ so that they have the form $\fullframe[n] \rightarrow \U$. To begin, let us set $\fullframe[0] = \unittype$, so that the type $\U$ of $X_0$ can be equivalently formulated as $\unittype \rightarrow \U$. Each $\fullframe[n]$ is made of $n$-layers, written $\layer[n][p]$ with $p < n$, initialized with the $\unittype$ type. Then, $X_1$ is made of one layer, so that it can be written as a $\Sigma$-type of an inhabitant of the $\unittype$ and $\layer[1][0]$. The rest of the construction is shown in Fig. \ref{fig:intuition}
 
-\begin{equation*}
-  \begin{array}{ll}
-    X_0                                : \underbrace{\unittype}_{\framep[0][0]}                                                    \rightarrow \U \\
-    X_1                                : \underbrace{\Sigma \unitpoint: \unittype. \underbrace{\left(
-    \begin{array}{c}
-        \underbrace{X_0(\unitpoint)}_{\filler[0][0]}
-        \\ \times \\
-        \underbrace{X_0(\unitpoint)}_{\filler[0][0]}
-      \end{array}\right)}_{\layer[1][0]}}_{\framep[1][1]} \rightarrow \U                                                                            \\
-    X_2                                : \underbrace{\Sigma a: \underbrace{\left(\Sigma \unitpoint: \unittype. \underbrace{\left(
-        \begin{array}{c}
-          \underbrace{\Sigma b: \left(
-          \hspace{-0.4em}\begin{array}{c}
-                           X_0(\unitpoint)
-                           \\ \times \\
-                           X_0(\unitpoint)
-                         \end{array}\hspace{-0.4em}
-          \right).\; \underbrace{X_1 \underbrace{(\unitpoint, b)}_{\restrf[2][0][L]}}_{\filler[1][1]}}_{\filler[1][0]}
-          \\ \times \\
-          \underbrace{\Sigma b: \left(
-          \hspace{-0.4em}\begin{array}{c}
-                           X_0(\unitpoint)
-                           \\ \times \\
-                           X_0(\unitpoint)
-                         \end{array}\hspace{-0.4em}
-          \right).\; \underbrace{X_1 \underbrace{(\unitpoint, b)}_{\restrf[2][0][R]}}_{\filler[1][1]}}_{\filler[1][0]}
-        \end{array}
-        \right)}_{\layer[2][0]}\right)}_{\framep[2][1]}.\underbrace{\left(
+\begin{figure*}[!t]
+  \begin{equation*}
+    \begin{array}{ll}
+      X_0                                : \underbrace{\unittype}_{\framep[0][0]}                                                    \rightarrow \U \\
+      X_1                                : \underbrace{\Sigma \unitpoint: \unittype. \underbrace{\left(
       \begin{array}{c}
-        \underbrace{X_1 \underbrace{\left(a.\hd, \left(
+          \underbrace{X_0(\unitpoint)}_{\filler[0][0]}
+          \\ \times \\
+          \underbrace{X_0(\unitpoint)}_{\filler[0][0]}
+        \end{array}\right)}_{\layer[1][0]}}_{\framep[1][1]} \rightarrow \U                                                                            \\
+      X_2                                : \underbrace{\Sigma a: \underbrace{\left(\Sigma \unitpoint: \unittype. \underbrace{\left(
+          \begin{array}{c}
+            \underbrace{\Sigma b: \left(
             \hspace{-0.4em}\begin{array}{c}
-                             a.\tl.L.\hd.L, \\
-                             a.\tl.R.\hd.L
+                             X_0(\unitpoint)
+                             \\ \times \\
+                             X_0(\unitpoint)
                            \end{array}\hspace{-0.4em}
-            \right)\right)}_{\restrf[2][1][L]}}_{\filler[1][1]}
-        \\ \times \\
-        \underbrace{X_1 \underbrace{\left(a.\hd, \left(
+            \right).\; \underbrace{X_1 \underbrace{(\unitpoint, b)}_{\restrf[2][0][L]}}_{\filler[1][1]}}_{\filler[1][0]}
+            \\ \times \\
+            \underbrace{\Sigma b: \left(
             \hspace{-0.4em}\begin{array}{c}
-                             a.\tl.L.\hd.R, \\
-                             a.\tl.R.\hd.R
+                             X_0(\unitpoint)
+                             \\ \times \\
+                             X_0(\unitpoint)
                            \end{array}\hspace{-0.4em}
-            \right)\right)}_{\restrf[2][1][R]}}_{\filler[1][1]}
-      \end{array}
-      \right)}_{\layer[2][1]}}_{\framep[2][2]}
-    \rightarrow \U                                                                                                                                \\
-    \ldots
-  \end{array}
-\end{equation*}
+            \right).\; \underbrace{X_1 \underbrace{(\unitpoint, b)}_{\restrf[2][0][R]}}_{\filler[1][1]}}_{\filler[1][0]}
+          \end{array}
+          \right)}_{\layer[2][0]}\right)}_{\framep[2][1]}.\underbrace{\left(
+        \begin{array}{c}
+          \underbrace{X_1 \underbrace{\left(a.\hd, \left(
+              \hspace{-0.4em}\begin{array}{c}
+                               a.\tl.L.\hd.L, \\
+                               a.\tl.R.\hd.L
+                             \end{array}\hspace{-0.4em}
+              \right)\right)}_{\restrf[2][1][L]}}_{\filler[1][1]}
+          \\ \times \\
+          \underbrace{X_1 \underbrace{\left(a.\hd, \left(
+              \hspace{-0.4em}\begin{array}{c}
+                               a.\tl.L.\hd.R, \\
+                               a.\tl.R.\hd.R
+                             \end{array}\hspace{-0.4em}
+              \right)\right)}_{\restrf[2][1][R]}}_{\filler[1][1]}
+        \end{array}
+        \right)}_{\layer[2][1]}}_{\framep[2][2]}
+      \rightarrow \U                                                                                                                                \\
+      \ldots
+    \end{array}
+  \end{equation*}
+  \caption{Intuition for formal construction}\label{fig:intuition}
+\end{figure*}
 
 A $\fullframe[n]$ is a sequence of $\layer[n][p]$, and we write $\framep[n][p]$ for the $p$ first layers of a $\fullframe[n]$, so that $\fullframe[n]$ is a $\framep[n][n]$. Let us illustrate the construction of frames in dimension $3$, and $\nu = 2$:
 
@@ -519,7 +539,7 @@ A $\fullframe[n]$ is a sequence of $\layer[n][p]$, and we write $\framep[n][p]$ 
     \draw[raspeberry, pattern=dots] (0.1, 1.1) -- (0.5, 1.5) -- (0.5, 1.1);
     \draw[raspeberry] (0.3, 1.3) -- (0.3, 1.1);
   \end{tikzpicture}
-  \;\;
+  \newline\newline
   \begin{tikzpicture}[scale=2]
     \draw[spanish-blue, fill=spanish-blue] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
     \draw[spanish-blue, fill=spanish-blue, nearly transparent] (0.6, 1) -- (0.6, 1.6) -- (1.6, 1.6) -- (1.6, 0.6) -- (1.0, 0.6);
@@ -541,22 +561,29 @@ The figure on the left is $\framep[3][1]$, in the middle is $\framep[3][2]$, and
 Up to now, we haven't paid attention to the fact that we have a dependent type, shown as a $\Sigma$. Let us be more precise about this requirement. First, $\fullframe[n]$ depends on all $X_i$ upto $n - 1$. So, we need to package up $X_i$, for $i < n$, into a type, which we call $\X[][<n][]$. This allows us to give the type $\X[][<n][] \rightarrow \U$ to $\fullframe[n]$. Then, for $D: \X[][<n][]$, representing an initial prefix of $X_0, X_1, \ldots X_{n - 1}$, the indexed set $X_n$ has type $\fullframe[n](D) \rightarrow \U$. Thus, $\framep[n][p]$, $\layer[n][p]$ and $\filler[n][p]$ also depend on $D$. We can then refine the previous equation by showing the dependencies on $D$. In particular, $X_n$ is just $D.\tl$.
 
 \begin{align*}
-  \framep[n][p](D) & \defeq \Sigma a_n : (\ldots (\Sigma \unitpoint : \unittype .\; \layer[n][0](D)) \ldots) .\; \layer[n][p](D) \\
-  \filler[n][p](D) & \defeq \Sigma l_p : \layer[n][p](D) . (\ldots (\Sigma l_n : \layer[n][n - 1](D) .\; D.\tl) \ldots)
+  \framep[n][p](D) & \defeq & \Sigma a_n : (\ldots (\Sigma \unitpoint : \unittype .        \\
+                   &        & \layer[n][0](D)) \ldots) .\; \layer[n][p](D)                 \\
+  \filler[n][p](D) & \defeq & \Sigma l_p : \layer[n][p](D) .                               \\
+                   &        & (\ldots (\Sigma l_n : \layer[n][n - 1](D) .\; D.\tl) \ldots)
 \end{align*}
 
 So far, we haven't paid attention to the fact that each addition of a layer has to be glued onto the border of the previous layer. So, each $\layer[n][p]$ has to depend on $\layer[n][p - 1]$. We also need a way to characterize the border of a filler of a layer, and this is $\restrf[n][p][\epsilon]$, for all $\epsilon < \nu$. For instance, each of the $\filler[2][1]$, shown as the red boxes, is laid on the borders of the blue boxes, and hence needs to depend on $\framep[3][1]$. The left and right borders of the two blue boxes are extracted as $\restrf[2][1][L](D)(d)$ and $\restrf[2][1][R](D)(d)$. We can then refine the previous equation by showing the dependencies on $d$.
 
 \begin{align*}
-  \framep[n][p](D)    & \defeq \Sigma d : (\ldots (\Sigma \unitpoint : \unittype .\; \layer[n][0](D)(\unitpoint)) \ldots) .\; \layer[n][p](D)(d)                              \\
-  \filler[n][p](D)(d) & \defeq \Sigma l_p : \layer[n][p](D)(d) . (\ldots (\Sigma l_n : \layer[n][n - 1](D)(d, l_p, \ldots, l_{n - 1}) .\; D.\tl(d, l_p, \ldots, l_n)) \ldots) \\
-  \text{where}\;      & (d, l_p, \ldots, l_q) \text{ abbreviates } ((\ldots(d, l_p), \ldots), l_q)
+  \framep[n][p](D)    & \defeq & \Sigma d : (\ldots (\Sigma \unitpoint: \unittype .\; \layer[n][0](D)(\unitpoint)) \ldots) . \\
+                      &        & \layer[n][p](D)(d)                                                                          \\
+  \filler[n][p](D)(d) & \defeq & \Sigma l_p: \layer[n][p](D)(d) .                                                            \\
+                      &        & (\ldots (\Sigma l_n : \layer[n][n - 1](D)(d, l_p, \ldots, l_{n - 1}) .                      \\
+                      &        & D.\tl(d, l_p, \ldots, l_n)) \ldots)                                                         \\
+  \text{where}\;      &        & (d, l_p, \ldots, l_q) \text{ abbreviates }                                                  \\
+                      &        & ((\ldots(d, l_p), \ldots), l_q)
 \end{align*}
 
 Let us recall that a layer is made of two fillers. This can now be made precise as illustrated below.
 
 \begin{align*}
-  \layer[n][p](D)(d) & \defeq \filler[n-1][p](D.\hd)(\restrf[n][p][L][p](d)) \times \filler[n-1][p](D.\hd)(\restrf[n][p][R][p](d))
+  \layer[n][p](D)(d) & \defeq & \filler[n-1][p](D.\hd)(\restrf[n][p][L][p](d)) \times \\
+                     &        & \filler[n-1][p](D.\hd)(\restrf[n][p][R][p](d))
 \end{align*}
 
 $\restrf[n][p][\epsilon][q]$ indicates restriction on $q$ layers of a frame, and the induction is on $p$, going from $0$ to $q$. In particular, $\restrf[n][p][\epsilon][p]$ is a ``full restriction''. We define $\restrf[n][p][\epsilon][p](d)$ by recursion on the structure of a frame $d$, which necessitates definitions of $\restrl[n][p][\epsilon][q](d)(l)$ and $\restrc[n][p][\epsilon][q](d)(c)$, for $l$ a layer and $c$ a filler. The key case is $\restrc[n][p][\epsilon][p](d)(c)$, where $c$, a $\filler[n][p]$, has necessarily the form of $((c_L, c_R), \_)$: $\restrc[n][p][L][p]$ picks out $c_L$, a $\filler[n-1][p]$, $\restrc[n][p][R][p]$ picks out the $c_R$, also a $\filler[n-1][p]$, and $\_$, a $\filler[n][p+1]$, is discarded. There is one more difficulty, which we illustrate by writing down expected and actual types.
@@ -761,10 +788,10 @@ Remark: If we weren't working in \U, but in \HGpd, we would need to prove one mo
 \renewcommand*{\lab}{fulltab:frames}
 \input{tab-frames.tex}
 
-\begin{landscape}
-  \renewcommand*{\lab}{fulltab:faces}
-  \input{tab-faces.tex}
+\renewcommand*{\lab}{fulltab:faces}
+\input{tab-faces.tex}
 
+\begin{landscape}
   \renewcommand*{\lab}{fulltab:coh}
   \input{tab-coh.tex}
 \end{landscape}
@@ -803,7 +830,8 @@ The upside of this definition is that all inequalities of the form $m \leq n$ ar
 where \texttt{le\_trans} is transitivity, \texttt{le\_refl} is reflexivity, and \texttt{?p} is an existential variable. These two problems definitionally hold in \texttt{SProp}, but equalizing them does not solve the existential. For unification to be useful in inferring existentials, we present our next definition, which we dub as the ``Yoneda variant'':
 
 \begin{minted}{coq}
-  Definition leY n m := forall p, leR p n -> leR p m.
+  Definition leY n m :=
+    forall p, leR p n -> leR p m.
 \end{minted}
 
 \texttt{leY} is an improvement over \texttt{leR} since reflexivity is now definitionally the neutral element of transitivity, and associativity of transitivity also holds definitionally. Although it significantly eases our proof, there are some instances where unification is unable to solve for the existentials, and we have to provide them explicitly.
