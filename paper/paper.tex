@@ -385,7 +385,7 @@ Let us call $\nu$-sets, the straightforward generalization of augmented semi-sim
 In this section, we briefly explain the difference between the fibered and indexed representations, and illustrate our approach to the construction, with the help of some figures.
 
 \subsection{Homotopy type theory}
-Homotopy type theory (HoTT) is a logical foundation based on Martin-Löf type theory and the univalence axiom~\cite{hottbook}. HoTT is based on the notion of a basic Type, and the notion of sets can be recovered as \U, where $\U$ is a straightforward packaging of two fields:
+Homotopy type theory (HoTT) is a logical foundation based on Martin-Löf type theory and the univalence axiom~\cite{hottbook}. HoTT is based on the notion of a basic \Type, and the notion of sets can be recovered as \U, where $\U$ is a straightforward packaging of two fields:
 
 \begin{align*}
   \Dom & : \Type                                          \\
@@ -423,7 +423,7 @@ In type theory, UIP can be proved on the unit type and bool type:
 \end{align*}
 
 \subsection{Fibered versus indexed representation}
-It is well-known in set theory, that families of small sets can be represented in a fibered or indexed way. In the fibered way, a family over $T$ is represented a pair of a set $S$, and a function $S \rightarrow T$. The function classifies the original set into fibers. In contrast, in the indexed way, a family over $T$ is represented as a functional relation with domain $T$, which itself, by replacement axiom, is a set.
+It is well-known in set theory that families of small sets can be represented in a fibered or indexed way. In the fibered way, a family over $T$ is represented a pair of a set $S$, and a function $S \rightarrow T$. The function classifies the original set into fibers. In contrast, in the indexed way, a family over $T$ is represented as a functional relation with domain $T$, which itself, by replacement axiom, is a set.
 
 In category theory, the correspondence between the fibered and indexed way manifests as the correspondence between Grothendieck fibrations and pseudofunctors, of which a particular instance is the correspondence between discrete fibrations and presheaves, or even between discrete fibrations over sets and families of sets.
 
@@ -444,10 +444,10 @@ Let us now come back to cubical sets. A cubical set can be represented as a sequ
 We can iteratively apply the above correspondence to obtain an indexed representation of cubical sets.
 
 \begin{align*}
-  X_0 & : \U                                                                        \\
-  X_1 & : X_0 \times X_0 \rightarrow \U                                             \\
-  X_2 & : \forall a b c d, X_1 (a, b) \rightarrow X_1 (a, c) \rightarrow X_1 (b, d) \\
-      & \rightarrow X_1 (c, d) \rightarrow \U                                       \\
+  X_0 & :                             & \U                                            \\
+  X_1 & :                             & X_0 \times X_0 \rightarrow \U                 \\
+  X_2 & : \forall a b c d, X_1 (a, b) & \rightarrow X_1 (a, c) \rightarrow X_1 (b, d) \\
+      &                               & \rightarrow X_1 (c, d) \rightarrow \U         \\
   \ldots
 \end{align*}
 
@@ -553,9 +553,9 @@ The figure on the left is $\framep[3][1]$, in the middle is $\framep[3][2]$, and
 Up to now, we haven't paid attention to the fact that we have a dependent type, shown as a $\Sigma$. Let us be more precise about this requirement. First, $\fullframe[n]$ depends on all $X_i$ upto $n - 1$. So, we need to package up $X_i$, for $i < n$, into a type, which we call $\X[][<n][]$. This allows us to give the type $\X[][<n][] \rightarrow \U$ to $\fullframe[n]$. Then, for $D: \X[][<n][]$, representing an initial prefix of $X_0, X_1, \ldots X_{n - 1}$, the indexed set $X_n$ has type $\fullframe[n](D) \rightarrow \U$. Thus, $\framep[n][p]$, $\layer[n][p]$ and $\filler[n][p]$ also depend on $D$. We can then refine the previous equation by showing the dependencies on $D$. In particular, $X_n$ is just $D.\tl$.
 
 \begin{align*}
-  \framep[n][p](D) & \defeq & \Sigma a_n : (\ldots (\Sigma \unitpoint : \unittype .        \\
-                   &        & \layer[n][0](D)) \ldots) .\; \layer[n][p](D)                 \\
-  \filler[n][p](D) & \defeq & \Sigma l_p : \layer[n][p](D) .                               \\
+  \framep[n][p](D) & \defeq & \Sigma a_n : (\ldots (\Sigma \unitpoint : \unittype .\; \layer[n][0](D)) \ldots) . \\
+                   &        & \layer[n][p](D)                                                                    \\
+  \filler[n][p](D) & \defeq & \Sigma l_p : \layer[n][p](D) .                                                     \\
                    &        & (\ldots (\Sigma l_n : \layer[n][n - 1](D) .\; D.\tl) \ldots)
 \end{align*}
 
@@ -713,6 +713,7 @@ Remark: For a given $n$, the coherence conditions evaluate to a reflexivity proo
 
 \subsection{Formal construction in ITT\label{sec:itt}}
 \renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
+\renewcommandx{\cohl}{\coh{layer}[][][][][][][][]}
 
 Since we have formalized the proof in the Coq proof assistant, which works in intensional type theory, we now present the tables in \emph{intensional} type theory, leaving implicit some details, which we will explain here, and other details, which we will explain in \ref{sec:mech}.
 
