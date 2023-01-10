@@ -83,6 +83,7 @@
 \newcommandx{\U}[1][1=]{\ensuremath{\mathsf{\color{spanish-blue}{HSet}}_{#1}}}
 \newcommandx{\HGpd}[1][1=]{\ensuremath{\mathsf{\color{spanish-blue}{HGpd}}_{#1}}}
 \newcommand{\Type}{\ensuremath{\mathsf{\color{spanish-blue}{Type}}}}
+\newcommand{\SProp}{\ensuremath{\mathsf{\color{spanish-blue}{SProp}}}}
 
 
 % The unit type
@@ -148,7 +149,7 @@
 }
 
 \NewEnviron{eqntable}[1]{
-  \begin{table*}[t!]
+  \begin{table*}[!t]
     \small
     \begin{tabularx}{\linewidth}{@{}>{$}l<{$} >{$}c<{$} >{$}c<{$} >{$}Y<{$} @{}}
       \toprule
@@ -182,7 +183,7 @@
   labelfont=mdit,
 }
 
-\title{A formalization of semi-simplicial and semi-cubical sets}
+\title{A formalization of semi-simplicial and semi-cubical sets in dependent type theory}
 \author{\IEEEauthorblockN{Hugo Herbelin \\ and Ramkumar Ramachandra} \IEEEauthorblockA{Université Paris Cité, Inria, CNRS, IRIF, Paris}}
 
 \begin{document}
@@ -573,8 +574,8 @@ So far, we haven't paid attention to the fact that each addition of a layer has 
 Let us recall that a layer is made of two fillers. This can now be made precise as illustrated below.
 
 \begin{align*}
-  \layer[n][p](D)(d) & \defeq & \filler[n-1][p](D.\hd)(\restrf[n][p][L][p](d)) \times \\
-                     &        & \filler[n-1][p](D.\hd)(\restrf[n][p][R][p](d))
+  \layer[n][p](D)(d) & \defeq & \filler[n-1][p](D.\hd)(\restrf[n][p][L][p](d)) & \times \\
+                     &        & \filler[n-1][p](D.\hd)(\restrf[n][p][R][p](d)) &
 \end{align*}
 
 $\restrf[n][p][\epsilon][q]$ indicates restriction on $q$ layers of a frame, and the induction is on $p$, going from $0$ to $q$. In particular, $\restrf[n][p][\epsilon][p]$ is a ``full restriction''. We define $\restrf[n][p][\epsilon][p](d)$ by recursion on the structure of a frame $d$, which necessitates definitions of $\restrl[n][p][\epsilon][q](d)(l)$ and $\restrc[n][p][\epsilon][q](d)(c)$, for $l$ a layer and $c$ a filler. The key case is $\restrc[n][p][\epsilon][p](d)(c)$, where $c$, a $\filler[n][p]$, has necessarily the form of $((c_L, c_R), \_)$: $\restrc[n][p][L][p]$ picks out $c_L$, a $\filler[n-1][p]$, $\restrc[n][p][R][p]$ picks out the $c_R$, also a $\filler[n-1][p]$, and $\_$, a $\filler[n][p+1]$, is discarded. There is one more difficulty, which we illustrate by writing down expected and actual types.
@@ -723,11 +724,11 @@ Tables \ref{fulltab:coind}, \ref{fulltab:core}, and \ref{fulltab:frames} are unc
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 
 \begin{align*}
-  \cohf[m][\omega][\theta][r][p][n][p][][d = {\restrf[m][\epsilon][q+2][n][p][][d = \d]}]\;\bullet     \\
-  \ap \restrf[m][\omega][r][n][p][][]\;(\cohf[m][\epsilon][\theta][q+1][p][n][p][][d = \d])\;\bullet   \\
-  \cohf[m][\epsilon][\omega][q][r][n][p][][d = {\restrf[m][\theta][p][n][p][][d = \d]}] =_{HProp}      \\
-  \ap \restrf[m][\theta][p][n][p][][]\;(\cohf[m][\epsilon][\omega][q+1][r+1][n][p][][d = \d])\;\bullet \\
-  \cohf[m][\epsilon][\theta][q][p][n][p][][d = {\restrf[m][\omega][r+1][n][p][][d = \d]}]\;\bullet     \\
+  \cohf[m][\omega][\theta][r][p][n][p][][d = {\restrf[m][\epsilon][q+2][n][p][][d = \d]}]\;\bullet       \\
+  \ap \restrf[m][\omega][r][n][p][][]\;(\cohf[m][\epsilon][\theta][q+1][p][n][p][][d = \d])\;\bullet     \\
+  \cohf[m][\epsilon][\omega][q][r][n][p][][d = {\restrf[m][\theta][p][n][p][][d = \d]}] =_\mathit{HProp} \\
+  \ap \restrf[m][\theta][p][n][p][][]\;(\cohf[m][\epsilon][\omega][q+1][r+1][n][p][][d = \d])\;\bullet   \\
+  \cohf[m][\epsilon][\theta][q][p][n][p][][d = {\restrf[m][\omega][r+1][n][p][][d = \d]}]\;\bullet       \\
   \ap \restrf[m][\epsilon][q][n][p][]\;(\cohf[m][\omega][\theta][r][p][n][p][][d = \d])
 \end{align*}
 
@@ -809,14 +810,14 @@ The entire construction relies on inequalities over natural numbers, and we have
   end.
 \end{minted}
 
-The upside of this definition is that all inequalities of the form $m \leq n$ are equivalent, definitionally. By placing the definition in \texttt{SProp}, we have definitional equality of inequality proofs. For the purpose of unification, however, this definition doesn't go far enough. Consider the unification problems:
+The upside of this definition is that all inequalities of the form $m \leq n$ are equivalent, definitionally. By placing the definition in \SProp, we have definitional equality of inequality proofs. For the purpose of unification, however, this definition doesn't go far enough. Consider the unification problems:
 
 \begin{minted}{coq}
   le_trans ?p le_refl = ?p
   le_trans le_refl ?p = ?p
 \end{minted}
 
-where \texttt{le\_trans} is transitivity, \texttt{le\_refl} is reflexivity, and \texttt{?p} is an existential variable. These two problems definitionally hold in \texttt{SProp}, but equalizing them does not solve the existential. For unification to be useful in inferring existentials, we present our next definition, which we dub as the ``Yoneda variant'':
+where \texttt{le\_trans} is transitivity, \texttt{le\_refl} is reflexivity, and \texttt{?p} is an existential variable. These two problems definitionally hold in \SProp, but equalizing them does not solve the existential. For unification to be useful in inferring existentials, we present our next definition, which we dub as the ``Yoneda variant'':
 
 \begin{minted}{coq}
   Definition leY n m :=
