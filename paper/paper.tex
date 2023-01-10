@@ -1,6 +1,6 @@
 \documentclass[10pt]{art.cls/art}
 
-\usepackage{multirow, float, tabularx, environ, booktabs, setspace, makecell, caption, art.cls/joinargs, colortbl, multicol, pdflscape, minted}
+\usepackage{multirow, float, tabularx, environ, booktabs, setspace, makecell, caption, art.cls/joinargs, colortbl, multicol, minted, rotating}
 \usepackage[prefix=bonak]{art.cls/xkeymask}
 \usepackage[skip=0.4em]{parskip}
 \usetikzlibrary{patterns}
@@ -791,10 +791,8 @@ Remark: If we weren't working in \U, but in \HGpd, we would need to prove one mo
 \renewcommand*{\lab}{fulltab:faces}
 \input{tab-faces.tex}
 
-\begin{landscape}
-  \renewcommand*{\lab}{fulltab:coh}
-  \input{tab-coh.tex}
-\end{landscape}
+\renewcommand*{\lab}{fulltab:coh}
+\input{tab-coh.tex}
 
 \subsection{Details on the mechanization\label{sec:mech}}
 \renewcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
