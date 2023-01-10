@@ -2,7 +2,6 @@
 
 \usepackage{multirow, float, tabularx, environ, booktabs, setspace, makecell, caption, art.cls/joinargs, colortbl, multicol, minted, rotating}
 \usepackage[prefix=bonak]{art.cls/xkeymask}
-\usepackage[skip=0.4em]{parskip}
 \usetikzlibrary{patterns}
 
 % Magic with xkeyval to go over the 9-argument limit of LaTeX
@@ -184,16 +183,7 @@
 }
 
 \title{A formalization of semi-simplicial and semi-cubical sets}
-\author{
-  Hugo Herbelin \\
-  Université Paris Cité, Inria, CNRS, IRIF, Paris \\
-  \and
-  Ramkumar Ramachandra \\
-  Université Paris Cité, Inria, CNRS, IRIF, Paris
-}
-\date{}
-
-\color{gray65}
+\author{\IEEEauthorblockN{Hugo Herbelin \\ and Ramkumar Ramachandra} \IEEEauthorblockA{Université Paris Cité, Inria, CNRS, IRIF, Paris}}
 
 \begin{document}
 \maketitle
@@ -846,8 +836,7 @@ Finally, we have the ``inductive variant'', phrased as:
 
 Compared to \texttt{leY}, \texttt{leI} has no proof-irrelevance properties. This definition is specially crafted for $\filler$, where we have to reason inductively from $p \leq n$ to $n$. In our usage, we have lemmas \texttt{leY\_of\_leI} and \texttt{leI\_of\_leY} in order to equip \texttt{leY} with the induction scheme of \texttt{leI}. Then, together with computational rules stated propositionally, we reason about $\beta$-reduction of induction.
 
-\newpage
-\bibliographystyle{alpha}
+\bibliographystyle{IEEEtran}
 \bibliography{paper}
 
 \end{document}
