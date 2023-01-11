@@ -444,10 +444,10 @@ Let us now come back to cubical sets. A cubical set can be represented as a sequ
 We can iteratively apply the above correspondence to obtain an indexed representation of cubical sets.
 
 \begin{align*}
-  X_0 & :                             & \U                                            \\
-  X_1 & :                             & X_0 \times X_0 \rightarrow \U                 \\
-  X_2 & : \forall a b c d, X_1 (a, b) & \rightarrow X_1 (a, c) \rightarrow X_1 (b, d) \\
-      &                               & \rightarrow X_1 (c, d) \rightarrow \U         \\
+  X_0 & :                  & \U                                                       \\
+  X_1 & :                  & X_0 \times X_0 \rightarrow \U                            \\
+  X_2 & : \forall a b c d, & X_1 (a, b) \rightarrow X_1 (a, c) \rightarrow X_1 (b, d) \\
+      &                    & \rightarrow X_1 (c, d) \rightarrow \U                    \\
   \ldots
 \end{align*}
 
@@ -543,14 +543,14 @@ A $\fullframe[n]$ is a sequence of $\layer[n][p]$, and we write $\framep[n][p]$ 
   \end{tikzpicture}
 \end{figure}
 
-The figure on the left is $\framep[3][1]$, in the middle is $\framep[3][2]$, and on the right is $\framep[3][3]$. Further, $\framep[3][1]$ is made of one layer, $\layer[3][0]$, shown in blue, $\framep[3][2]$ is made of one additional layer, $\layer[3][1]$, shown in red, $\framep[3][3]$ is made of one more layer, $\layer[3][2]$, shown in green. In general, a $\layer[n][p]$ is a product of $\nu$ $\filler[n - 1][p]$. Then, a $\filler[n][p]$ is an $n$-dimensional object obtained by stretching a $(n - p)$-dimensional frame in $p$ directions. For instance, each of the two $\filler[2][0]$ of $\layer[3][0]$ is a filled blue square, each of the two $\filler[2][1]$ of $\layer[3][1]$ is the line shown in red, stretched into a square, and each of the two $\filler[2][2]$ of $\layer[3][2]$ is a point shown in green, stretched into a square. Note that a filler, which extends a frame with an element depending on it, shown as an element of $X_n$ below. As filler extends a frame, it also has layer components, but the layers are associated on the right that is opposite to the way they're associated in frames.
+The figure on the left is $\framep[3][1]$, on the right is $\framep[3][2]$, and on the bottom is $\framep[3][3]$. Further, $\framep[3][1]$ is made of one layer, $\layer[3][0]$, shown in blue, $\framep[3][2]$ is made of one additional layer, $\layer[3][1]$, shown in red, $\framep[3][3]$ is made of one more layer, $\layer[3][2]$, shown in green. In general, a $\layer[n][p]$ is a product of $\nu$ $\filler[n - 1][p]$. Then, a $\filler[n][p]$ is an $n$-dimensional object obtained by stretching a $(n - p)$-dimensional frame in $p$ directions. For instance, each of the two $\filler[2][0]$ of $\layer[3][0]$ is a filled blue square, each of the two $\filler[2][1]$ of $\layer[3][1]$ is the line shown in red, stretched into a square, and each of the two $\filler[2][2]$ of $\layer[3][2]$ is a point shown in green, stretched into a square. Note that a filler, which extends a frame with an element depending on it, shown as an element of $X_n$ below. As filler extends a frame, it also has layer components, but the layers are associated on the right that is opposite to the way they're associated in frames.
 
 \begin{align*}
   \framep[n][p] & \defeq \Sigma a_n : (\ldots (\Sigma \unitpoint : \unittype .\; \layer[n][0]) \ldots) .\; \layer[n][p] \\
   \filler[n][p] & \defeq \Sigma l_p : \layer[n][p] . (\ldots (\Sigma l_n : \layer[n][n - 1] .\; X_n) \ldots)
 \end{align*}
 
-Up to now, we haven't paid attention to the fact that we have a dependent type, shown as a $\Sigma$. Let us be more precise about this requirement. First, $\fullframe[n]$ depends on all $X_i$ upto $n - 1$. So, we need to package up $X_i$, for $i < n$, into a type, which we call $\X[][<n][]$. This allows us to give the type $\X[][<n][] \rightarrow \U$ to $\fullframe[n]$. Then, for $D: \X[][<n][]$, representing an initial prefix of $X_0, X_1, \ldots X_{n - 1}$, the indexed set $X_n$ has type $\fullframe[n](D) \rightarrow \U$. Thus, $\framep[n][p]$, $\layer[n][p]$ and $\filler[n][p]$ also depend on $D$. We can then refine the previous equation by showing the dependencies on $D$. In particular, $X_n$ is just $D.\tl$.
+So far, we haven't paid attention to the fact that we have a dependent type, shown as a $\Sigma$. Let us be more precise about this requirement. First, $\fullframe[n]$ depends on all $X_i$ upto $n - 1$. So, we need to package up $X_i$, for $i < n$, into a type, which we call $\X[][<n][]$. This allows us to give the type $\X[][<n][] \rightarrow \U$ to $\fullframe[n]$. Then, for $D: \X[][<n][]$, representing an initial prefix of $X_0, X_1, \ldots X_{n - 1}$, the indexed set $X_n$ has type $\fullframe[n](D) \rightarrow \U$. Thus, $\framep[n][p]$, $\layer[n][p]$ and $\filler[n][p]$ also depend on $D$. We can then refine the previous equation by showing the dependencies on $D$. In particular, $X_n$ is just $D.\tl$.
 
 \begin{align*}
   \framep[n][p](D) & \defeq & \Sigma a_n : (\ldots (\Sigma \unitpoint : \unittype .\; \layer[n][0](D)) \ldots) . \\
@@ -559,7 +559,7 @@ Up to now, we haven't paid attention to the fact that we have a dependent type, 
                    &        & (\ldots (\Sigma l_n : \layer[n][n - 1](D) .\; D.\tl) \ldots)
 \end{align*}
 
-So far, we haven't paid attention to the fact that each addition of a layer has to be glued onto the border of the previous layer. So, each $\layer[n][p]$ has to depend on $\layer[n][p - 1]$. We also need a way to characterize the border of a filler of a layer, and this is $\restrf[n][p][\epsilon]$, for all $\epsilon < \nu$. For instance, each of the $\filler[2][1]$, shown as the red boxes, is laid on the borders of the blue boxes, and hence needs to depend on $\framep[3][1]$. The left and right borders of the two blue boxes are extracted as $\restrf[2][1][L](D)(d)$ and $\restrf[2][1][R](D)(d)$. We can then refine the previous equation by showing the dependencies on $d$.
+An additional refinement arises from the fact that each addition of a layer has to be glued onto the border of the previous layer. So, each $\layer[n][p]$ has to depend on $\layer[n][p - 1]$. We also need a way to characterize the border of a filler of a layer, and this is $\restrf[n][p][\epsilon]$, for all $\epsilon < \nu$. For instance, each of the $\filler[2][1]$, shown as the red boxes, is laid on the borders of the blue boxes, and hence needs to depend on $\framep[3][1]$. The left and right borders of the two blue boxes are extracted as $\restrf[2][1][L](D)(d)$ and $\restrf[2][1][R](D)(d)$. We can then refine the previous equation by showing the dependencies on $d$.
 
 \begin{align*}
   \framep[n][p](D)    & \defeq & \Sigma d : (\ldots (\Sigma \unitpoint: \unittype .\; \layer[n][0](D)(\unitpoint)) \ldots) . \\
