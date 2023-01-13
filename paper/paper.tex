@@ -189,7 +189,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-  Constructions such as semi-simplicial and semi-cubical sets can be defined in the ``usual way'' as presheaves over respectively the semi-simplex or semi-cube category, which we shall call ``fibered'' definitions, but also, as done e.g. in Voevodsky~\cite{} and in previous work~\cite{} as an ``dependently-typed'', or, say, ``indexed'' construction.
+  Constructions such as semi-simplicial and semi-cubical sets can be defined in the ``usual way'' as presheaves over respectively the semi-simplex or semi-cube category, which we shall call \emph{fibered} definitions, but also, as done e.g. in Voevodsky~\cite{voevodsky12} and in previous work~\cite{herbelin15} as a dependently-typed, or, say, \emph{indexed} construction.
 
   This paper describes an alternative indexed construction of both augmented semi-simplicial and semi-cubical sets based on the property that they naturally arise as respectively unary and binary iterated parametricity-based constructions.
 
@@ -389,14 +389,16 @@ Let us call $\nu$-sets, the straightforward generalization of augmented semi-sim
 In this section,
 
 \subsection{Working with sets in type theory}
-Martin-Löf's Type theory~\cite{martinlof84,?} is a logical formalism based on the notion of $\Type$ rather than \Set. It is the core of several tools for the formalization of mathematics such as Coq~\cite{} or Lean~\cite{}. Type Theory is a flexible formalism supporting different models. One of this model interprets types as topological spaces, where equality is interpreted as path, and substitutivity of equality as transport, leading to the development of Homotopy Type Theory~\cite{hottbook}, a foundation of mathematics alternative to set theory. Conversely, a notion of sets can be recovered within Type Theory as \U, denoting the subtype of $\Type$ for which paths are degenerated, what can be expressed by the property of Uniqueness of Identity Proofs (UIP). Technically, this is expressed as a structure equipping a domain $\Dom$ with the property $\UIP$:
+Martin-Löf's Type theory~\cite{martinlof75,martinlof84} is a logical formalism based on the notion of a \emph{type} rather than that of a \emph{set}. It can be seen as a foundation of mathematics alternative to set theory and is the core of several tools for the formalization of mathematics such as Coq~\cite{coq22} or Lean~\cite{lean15}. Type theory is a flexible formalism supporting different models. One of this model interprets types as topological spaces, where equality is interpreted as path and substitutivity of equality as transport. This model supports the univalence principle stating that equality of types mimics equivalence of types, leading to the development of Homotopy Type Theory~\cite{hottbook}. In type theory, types are organized in a hierarchy of universes written $\Type_m$ for $m$ a natural number. Typical types in type theory are the types of dependent pairs, called $\Sigma$-types, with projections $\hd$ and $\tl$, the types of dependent functions, called $\Pi$-types, a distinguished singleton type called $\textsf{unit}$ type, the type of Boolean values, called $\textsf{bool}$, the type of natural numbers.
+
+A notion of sets can be recovered in each universe as $\U[m]$, denoting the subtype of $\Type_m$ for which paths are degenerated, what can be expressed by the property of Uniqueness of Identity Proofs (UIP). Technically, this is expressed as a structure equipping a domain $\Dom$ with the property $\UIP$:
 
 \begin{align*}
-  \Dom & : \Type                                          \\
+  \Dom & : \Type_m                                          \\
   \UIP & : \forall x y : \Dom, \forall p q : x = y, p = q
 \end{align*}
 
-In the $\U$ universe, the following properties hold:
+In $\U[m]$, the following properties hold:
 
 \begin{enumerate}
   \item[(i)] UIP holds on the unit and bool type:
@@ -417,6 +419,9 @@ Note that an equivalent definition of UIP is given by \textsf{UIP\_refl}:
   \textsf{UIP\_refl} & : \forall x:\Dom, \forall p : x = x, p = \textsf{eq\_refl } x
 \end{align*}
 
+Unless otherwise specified, we fix a universe level $m$ and abbreviate
+$\Type_m$ as $\Type$ and $\U[m]$ as $\U$.
+
 \subsection{Fibered versus indexed representation}
 It is well-known in set theory that families of small sets can be represented in a fibered or indexed way. In the fibered way, a family over $T$ is represented a pair of a set $S$, and a function from $S$ to $T$. The function classifies the original set into fibers. In contrast, in the indexed way, a family over $T$ is represented as a functional relation with domain $T$, which itself, by the replacement axiom, is a set.
 
@@ -425,7 +430,7 @@ In category theory, the correspondence between the fibered and indexed way manif
 The latter correspondence can be expressed in Homotopy Type Theory, for $T: \Type$, as an equivalence between $\Sigma S: \Type\;.\;S \rightarrow T$ and $T \rightarrow \Type$, which can be proved using univalence. This correspondence also holds on \U, for $T: \U$:
 
 \begin{equation*}
-  \Sigma S: \U\;.\;S\rightarrow T \simeq T \rightarrow \U
+  \Sigma S: \U\;.\;S\rightarrow T ~\simeq~ T \rightarrow \U
 \end{equation*}
 
 Let us now come back to semi-cubical sets. A semi-cubical set can be represented as a sequence of fibrations, together with appropriate coherence conditions.
@@ -436,7 +441,7 @@ Let us now come back to semi-cubical sets. A semi-cubical set can be represented
   \end{tikzcd}
 \end{equation*}
 
-We can iteratively apply the above correspondence to obtain an indexed representation of cubical sets.
+We can iteratively apply the above correspondence to obtain an indexed representation of semi-cubical sets.
 
 \begin{align*}
   X_0 & :                  & \U                                                       \\
