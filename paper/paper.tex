@@ -386,15 +386,15 @@ Let us call $\nu$-sets, the straightforward generalization of augmented semi-sim
 \end{table}
 
 \section{Our setting}
-In this section,
+In this section, we explain how we recover the notion of sets in type theory, and briefly explain the difference between the fibered and indexed representations.
 
 \subsection{Working with sets in type theory}
-Martin-Löf's Type theory~\cite{martinlof75,martinlof84} is a logical formalism based on the notion of a \emph{type} rather than that of a \emph{set}. It can be seen as a foundation of mathematics alternative to set theory and is the core of several tools for the formalization of mathematics such as Coq~\cite{coq22} or Lean~\cite{lean15}. Type theory is a flexible formalism supporting different models. One of this model interprets types as topological spaces, where equality is interpreted as path and substitutivity of equality as transport. This model supports the univalence principle stating that equality of types mimics equivalence of types, leading to the development of Homotopy Type Theory~\cite{hottbook}. In type theory, types are organized in a hierarchy of universes written $\Type_m$ for $m$ a natural number. Typical types in type theory are the types of dependent pairs, called $\Sigma$-types, with projections $\hd$ and $\tl$, the types of dependent functions, called $\Pi$-types, a distinguished singleton type called $\textsf{unit}$ type, the type of Boolean values, called $\textsf{bool}$, the type of natural numbers.
+Martin-Löf's Type theory~\cite{martinlof75,martinlof84} is a logical formalism based on the notion of a \emph{type} rather than that of a \emph{set}. It can be seen as a foundation of mathematics alternative to set theory and is the core of several tools for the formalization of mathematics such as Coq~\cite{coq22} or Lean~\cite{lean15}. Type theory is a flexible formalism supporting different models. One of this model interprets types as topological spaces, where equality is interpreted as path and substitutivity of equality as transport. This model supports the univalence principle stating that equality of types mimics equivalence of types, leading to the development of Homotopy Type Theory~\cite{hottbook}. In type theory, types are organized in a hierarchy of universes written $\Type_m$ for $m$ a natural number. Typical types in type theory are the types of dependent pairs, called $\Sigma$-types, with projections $\hd$ and $\tl$, the types of dependent functions, called $\Pi$-types, a distinguished singleton type called $\textsf{unit}$ type, the type of boolean values, called $\textsf{bool}$, and the type of natural numbers.
 
 A notion of sets can be recovered in each universe as $\U[m]$, denoting the subtype of $\Type_m$ for which paths are degenerated, what can be expressed by the property of Uniqueness of Identity Proofs (UIP). Technically, this is expressed as a structure equipping a domain $\Dom$ with the property $\UIP$:
 
 \begin{align*}
-  \Dom & : \Type_m                                          \\
+  \Dom & : \Type_m                                        \\
   \UIP & : \forall x y : \Dom, \forall p q : x = y, p = q
 \end{align*}
 
@@ -402,13 +402,11 @@ In $\U[m]$, the following properties hold:
 
 \begin{enumerate}
   \item[(i)] UIP holds on the unit and bool type:
-
     \begin{align*}
       \textsf{eq\_refl}        & : \forall x, x = x                                                    \\
       \textsf{UIP\_refl\_unit} & : \forall u : \textsf{unit}, \forall x : u = u, x = \textsf{eq\_refl} \\
-      \textsf{UIP\_refl\_bool} & : \forall b : \textsf{bool}, \forall x : b = b, x = \textsf{eq\_refl} \\
+      \textsf{UIP\_refl\_bool} & : \forall b : \textsf{bool}, \forall x : b = b, x = \textsf{eq\_refl}
     \end{align*}
-
   \item[(ii)] UIP propagates to $\Sigma$-types.
   \item[(iii)] UIP propagates to $\Pi$-types, with some additional functional extensionality axioms.
 \end{enumerate}
@@ -457,10 +455,6 @@ The focus of our work has been to formally define such an indexed presentation o
 In this section, we gradually build up an intuition for our construction, followed by the full details.
 
 \subsection{Intuition for our formal construction}
-\begin{notation}[$\Sigma$]
-  In the prose that follows, we assume the existence of $\Sigma$-types with projections $\hd$ and $\tl$.
-\end{notation}
-
 To assign $X_0, X_1, X_2, \ldots$ in the above indexed representation types, we need to exhibit a recursive definition over our building blocks, which we will call $\framep$, $\layer$, and $\filler$. A $\framep$ is a boundary of a standard form (simplex, cube, etc.), which we decompose into $\layer$, and a $\filler$ is a filled $\framep$.
 
 We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applying the isomorphism between $A \rightarrow B \rightarrow C$ and $A \times B \rightarrow C$, or between $\Pi a : A, (B a \rightarrow C)$ and $(\Sigma a : A, B a) \rightarrow C$. Let us now illustrate how we build $\fullframe[n]$ by refining types of $X_0, X_1, \ldots, X_{n - 1}$ so that they have the form $\fullframe[n] \rightarrow \U$. To begin, let us set $\fullframe[0] = \unittype$, so that the type $\U$ of $X_0$ can be equivalently formulated as $\unittype \rightarrow \U$. Each $\fullframe[n]$ is made of $n$-layers, written $\layer[n][p]$ with $p < n$, initialized with the $\unittype$ type. Then, $X_1$ is made of one layer, so that it can be written as a $\Sigma$-type of an inhabitant of the $\unittype$ and $\layer[1][0]$. The rest of the construction is shown in Fig. \ref{fig:intuition}
