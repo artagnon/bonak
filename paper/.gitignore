@@ -4,4 +4,6 @@
 *.blg
 *.out
 *.toc
+*.dvi
+*.ps
 paper.pdf
