@@ -185,17 +185,17 @@
   labelfont=mdit,
 }
 
-\title{A formalization of semi-simplicial and semi-cubical sets in dependent type theory}
+\title{A parametricity-based formalization of semi-simplicial and semi-cubical sets}
 \author{\IEEEauthorblockN{Hugo Herbelin \\ and Ramkumar Ramachandra} \IEEEauthorblockA{Université Paris Cité, Inria, CNRS, IRIF, Paris}}
 
 \begin{document}
 \maketitle
 \begin{abstract}
-  Constructions such as semi-simplicial and semi-cubical sets can be defined in the ``usual way'' as presheaves over respectively the semi-simplex or semi-cube category, which we shall call \emph{fibered} definitions, but also, as done e.g. in Voevodsky~\cite{voevodsky12} and in previous work~\cite{herbelin15} as a dependently-typed, or, say, \emph{indexed} construction.
+  Constructions such as semi-simplicial and semi-cubical sets can be defined in the ``usual way'' as presheaves over respectively, the semi-simplex or semi-cube category, which we call \emph{fibered} definitions, but also defined like in e.g. Voevodsky~\cite{voevodsky12} or in previous work~\cite{herbelin15}, as a dependently-typed construction, which we call \emph{indexed}.
 
-  This paper describes an alternative indexed construction of both augmented semi-simplicial and semi-cubical sets based on the property that they naturally arise as respectively unary and binary iterated parametricity-based constructions.
+  This paper describes an alternative indexed characterization of both augmented semi-simplicial and semi-cubical sets arising respectively as unary and binary iterated parametricity-based constructions.
 
-  Additionally, the axiom-free construction has been fully formalized in Coq's dependent type theory, which turned out not to be so straightforward.
+  Additionally, our construction is fully formalized in Coq's dependent type theory.
 \end{abstract}
 
 \section{Introduction}
@@ -450,6 +450,18 @@ If we think of $X_1$ fibered over two copies of $X_0$ in an indexed way, we get 
  & &  \rightarrow \U                    \\
   \ldots
 \end{align*}
+
+Now, let's observe that the process of construction of the type of
+$X_1$ from that of $X_0$ and from that of $X_2$ to that of $X_1$ is
+similar to applying a binary parametricity translation on contexts that
+is: to triplicate each declaration $x_L:X_0$ and $x_R:X_0$ into two
+copies of $x$ and a line connecting these copies, that is into two
+triples of declarations $x_{LL}:X_0, x_{LR}:X_0,
+x_{L\kstar}:X_1(x_{LL},x_{LR})$ and $x_{RL}:X_0, x_{RL}:X_0,
+x_{R\kstar}:X_1(x_{RL},x_{RR})$, and to expand $\U$ into the type of a
+relation over these two copies, that is, into $x_{\kstar
+  L}:X_1(x_{LL},x_{RL}) \times x_{\kstar R}:X_1(x_{LR},x_{RR})
+\rightarrow \U$.
 
 The focus of our work has been to formally define such an indexed presentation of not just semi-cubical, but more generally, $\nu$-sets.
 
@@ -836,6 +848,26 @@ Finally, we have the ``inductive variant'', phrased as:
 \end{minted}
 
 Compared to \texttt{leY}, \texttt{leI} has no proof-irrelevance properties. This definition is specially crafted for $\filler$, where we have to reason inductively from $p \leq n$ to $n$. In our usage, we have lemmas \texttt{leY\_of\_leI} and \texttt{leI\_of\_leY} in order to equip \texttt{leY} with the induction scheme of \texttt{leI}. Then, together with computational rules stated propositionally, we reason about $\beta$-reduction of induction.
+
+\section{Perspectives}
+
+In the cubical case, we expect the construction to eventually provide
+a model of (some version of) parametric type theory~\cite{} by adding
+degeneracies, a hierarchy of universes (as sketched e.g. in a talk by
+Herbelin at the HoTT-UF workshop for the bridge
+case~\cite{herbelin-hott-uf}) as well as reasoning modulo
+permutations~\cite{grandis03}.
+
+By equipping the universe construction with a structure of
+equivalences (as suggested along the lines of Altenkirch and
+Kaposi~\cite{}), as well as connections~\cite{}, we expect the
+parametric model to extend into a model of cubical type
+theory~\cite{}. A key point in this approach, is that, thanks to the
+indexed construction, we expect univalence to hold by definition in
+the model, without requiring any kind of Reedy fibrancy as it would a
+priori be needed in the fibered case. If these intuitions are correct,
+this would definitively root cubical type theory on top of iterated
+parametricity translation.
 
 \bibliographystyle{IEEEtran}
 \bibliography{paper}
