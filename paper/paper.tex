@@ -199,7 +199,7 @@
 \end{abstract}
 
 \section{Introduction}
-In the context of functional programming, Reynolds' parametricity~\cite{reynolds72} interprets types as relations characterizing the observational equality of programs of this type. Parametricity can be iterated, and it has been noted that iterated Reynolds' parametricity has a cubical flavor~\cite{johann17,altenkirch15,moulin16,moeneclaey21,moeneclaey22phd}. We obtain a \emph{unary} variant of Reynolds' \emph{binary} parametricity by using predicates instead of relations, in which case we obtain a form of realizability~\cite{bernardy12,moulin16}. It has then been noted that iterated unary parametricity has an augmented simplicial flavor~\footnote{Private communication with Thorsten Altenkirch and Hugo Moeneclaey}.
+In the context of functional programming, Reynolds' parametricity~\cite{reynolds72} interprets types as relations characterizing the observational equality of programs of this type. Parametricity can be iterated, and it has been noted that iterated Reynolds' parametricity has a cubical flavor~\cite{johann17,altenkirch15,moulin16,moeneclaey21,moeneclaey22phd}. We obtain a \emph{unary} variant of Reynolds' \emph{binary} parametricity by using predicates instead of relations, in which case, we obtain a form of realizability~\cite{bernardy12,moulin16}. It has then been noted that iterated unary parametricity has an augmented simplicial flavor~\footnote{Private communication with Thorsten Altenkirch and Hugo Moeneclaey}.
 
 We exploit the connection between iterated unary parametricity and augmented simplicial sets, and between iterated binary parametricity and cubical sets to present a uniform construction of both semi-simplicial and semi-cubical sets obtained by applying simple rules iterating parametricity. In contrast to the standard presheaf presentation of semi-simplicial and semi-cubical sets~\cite{fri08,grandis03,buchholtz17}, our uniform construction, which we call \emph{$\nu$-sets}, is \emph{indexed}. That is, instead of having the set of semi-simplices or semi-cubes in dimension $n+1$ \emph{fibered} over the set of semi-simplices or semi-cubes in dimension $n$, we consider families of semi-simplices and semi-cubes indexed over their faces.
 
@@ -441,29 +441,35 @@ Let us now come back to semi-cubical sets. A semi-cubical set can be represented
   \end{tikzcd}
 \end{equation*}
 
-If we think of $X_1$ fibered over two copies of $X_0$ in an indexed way, we get $X_1$ of type $X_0 \times X_0 \rightarrow \U$. Continuing the process, we can think of $X_2$ fibered over four copies of $X_1$ themselves fibered over two copies of $X_0$ as a dependent type. We have a priori a dependency over eight copies of $X_0$ but these are actually four due to the coherence conditions. Based on these coherence conditions, the type of $X_2$ happens to have the form $\Pi a b c d, X_1 (a, b) \times X_1 (a, c) \times X_1 (b, d) \times X_1 (c, d) \rightarrow \U$, recovering the square structure of $X_2$. In summary,
+If we think of $X_1$ fibered over two copies of $X_0$ in an indexed way, we get $X_1$ of type $X_0 \rightarrow X_0 \rightarrow \U$. Continuing the process, we can think of $X_2$ fibered over four copies of $X_1$ themselves fibered over two copies of $X_0$ as a dependent type. We have a priori a dependency over eight copies of $X_0$ but these are actually four due to the coherence conditions. Based on these coherence conditions, the type of $X_2$ happens to have the form $\Pi a b c d, X_1 (a)(b) \rightarrow X_1 (a)(c) \rightarrow X_1 (b)(d) \rightarrow X_1 (c)(d) \rightarrow \U$, recovering the square structure of $X_2$. In summary,
 
 \begin{align*}
   X_0 & :                  & \U                                                       \\
-  X_1 & :                  & X_0 \times X_0 \rightarrow \U                            \\
-  X_2 & : \Pi a b c d, & X_1 (a, b) \times X_1 (a, c)  \times X_1 (b, d) \times X_1 (c, d) \\
- & &  \rightarrow \U                    \\
+  X_1 & :                  & X_0 \rightarrow X_0 \rightarrow \U                            \\
+  X_2 & : \Pi a b c d, & X_1(a)(b) \rightarrow X_1(a)(c) \rightarrow X_1 (b)(d) \\
+  & & \rightarrow X_1 (c)(d) \rightarrow \U                    \\
   \ldots
 \end{align*}
 
-Now, let's observe that the process of construction of the type of
-$X_1$ from that of $X_0$ and from that of $X_2$ to that of $X_1$ is
-similar to applying a binary parametricity translation on contexts that
-is: to triplicate each declaration $x_L:X_0$ and $x_R:X_0$ into two
-copies of $x$ and a line connecting these copies, that is into two
-triples of declarations $x_{LL}:X_0, x_{LR}:X_0,
-x_{L\kstar}:X_1(x_{LL},x_{LR})$ and $x_{RL}:X_0, x_{RL}:X_0,
-x_{R\kstar}:X_1(x_{RL},x_{RR})$, and to expand $\U$ into the type of a
-relation over these two copies, that is, into $x_{\kstar
-  L}:X_1(x_{LL},x_{RL}) \times x_{\kstar R}:X_1(x_{LR},x_{RR})
-\rightarrow \U$.
+We observe that the process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$, is similar to applying a binary parametricity translation and expecting the resulting translation to be inhabited. Indeed, parametricity interprets a type $A$ by a relation $A_\kstar$ over this type, and a term $t: A$ as an evidence that $A_\kstar(t)(t)$ is inhabited. Technically, $\U$ is interpreted as the relation ${\U}_\kstar$, which takes two types $A_L$ and $A_R$ and returns the type $A_L \rightarrow A_R \rightarrow \U$, while a dependent function type $\Pi a: A.\, B$ is interpreted as the relation $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and returns the $\Pi$ type taking as arguments two copies of $a: A$ together with a line between the two copies. That is,
 
-The focus of our work has been to formally define such an indexed presentation of not just semi-cubical, but more generally, $\nu$-sets.
+\begin{align*}
+  & (\Pi a: A.\, B)_\kstar(f_L)(f_R) \defeq \\
+  & \Pi a_L: A.\, \Pi a_R: A.\, A_\kstar(a_L)(a_R) \rightarrow B_\kstar(f_L(a_L))(f_R(a_R))
+\end{align*}
+
+In particular, for $X: \U$, applying the parametricity translation is about exhibiting a relation $X_\kstar$ which inhabits ${\U}_\kstar(X)(X)$ i.e. $X \rightarrow X \rightarrow \U$. In turn, the parametricity translation of $X_\kstar: X \rightarrow X \rightarrow \U$ is about finding an inhabitant $X_{\kstar\kstar}$ of $(X \rightarrow X \rightarrow \U)\_\kstar(X_\kstar)(X_\kstar)$ i.e. of:
+%. Let us equivalently write the type of $X_1$ as $\Pi x_L: X_0.\, \Pi x_R: X_0.\, \U$. To define its translation, we need to triplicate each of $x_L: X_0$ and $x_R: X_0$ into two copies and a line connecting these copies, leading to the sequences of premises $x_{LL}: X_0$, $x_{LR}: X_0$, $x_{L\kstar}: X_1(x_{LL}$, $x_{LR})$ and $x_{RL}: X_0$, $x_{RL}: X_0$, $x_{R\kstar}: X_1(x_{RL})(x_{RR})$. Then, in the context of $x_L$ and $x_R$, interpreting $X_1(x_L)(x_R): \U$ itself leads to exhibiting an inhabitant of $X_1(x_{LL})(x_{LR}) \rightarrow X_1(x_{RL})(x_{RR}) \rightarrow \U$, therefore leading to exhibiting an inhabitant of:
+
+\begin{align*}
+  \Pi x_{LL}: X.\, \Pi x_{LR}: X\, X_\kstar(x_{LL})(x_{LR}) \\
+  \rightarrow \Pi x_{RL}: X.\, \Pi x_{RR}: X.\, X_\kstar(x_{RL})(x_{RR}) \\ \rightarrow X_\kstar(x_{LL}, x_{RL}) \rightarrow X_\kstar(x_{LR})(x_{RR}) \\
+  \rightarrow \U
+\end{align*}
+
+which hints us at how the sequence $X_0$, $X_1$, $X_2$ can be seen as a sequence of inhabitants of the iteration $X_0 \defeq X$, $X_1 \defeq X_\kstar$, $X_2 \defeq X_{\kstar\kstar}$ of parametricity applied to an initial $X: \U$. This tells us how the previous (informal) type given to $X_2$ could be rephrased so that it comes as the instance of a general recipe characterizing the type of all $X_i$.
+
+The focus of our work has then been to formally define such an indexed presentation of not just semi-cubical, but more generally, $\nu$-sets.
 
 \section{Our construction}
 In this section, we gradually build up an intuition for our construction, followed by the full details.
@@ -471,7 +477,7 @@ In this section, we gradually build up an intuition for our construction, follow
 \subsection{Intuition for our formal construction}
 To assign $X_0, X_1, X_2, \ldots$ in the above indexed representation types, we need to exhibit a recursive definition over our building blocks, which we will call $\framep$, $\layer$, and $\filler$. A $\framep$ is a boundary of a standard form (simplex, cube, etc.), which we decompose into $\layer$, and a $\filler$ is a filled $\framep$.
 
-We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applying the isomorphism between $A \rightarrow B \rightarrow C$ and $A \times B \rightarrow C$, or between $\Pi a : A, (B a \rightarrow C)$ and $(\Sigma a : A, B a) \rightarrow C$. Let us now illustrate how we build $\fullframe[n]$ by refining types of $X_0, X_1, \ldots, X_{n - 1}$ so that they have the form $\fullframe[n] \rightarrow \U$. To begin, let us set $\fullframe[0] = \unittype$, so that the type $\U$ of $X_0$ can be equivalently formulated as $\unittype \rightarrow \U$. Each $\fullframe[n]$ is made of $n$-layers, written $\layer[n][p]$ with $p < n$, initialized with the $\unittype$ type. Then, $X_1$ is made of one layer, so that it can be written as a $\Sigma$-type of an inhabitant of the $\unittype$ and $\layer[1][0]$. The rest of the construction is shown in Fig. \ref{fig:intuition}
+We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applying the isomorphism between $A \rightarrow B \rightarrow C$ and $A \times B \rightarrow C$, or between $\Pi a : A, (B a \rightarrow C)$ and $(\Sigma a : A, B a) \rightarrow C$. Let us now illustrate how we build $\fullframe[n]$ by refining types of $X_0, X_1, \ldots, X_{n - 1}$ so that they have the form $\fullframe[n] \rightarrow \U$. To begin, let us set $\fullframe[0] = \unittype$, so that the type $\U$ of $X_0$ can be equivalently formulated as $\unittype \rightarrow \U$. Each $\fullframe[n]$ is made of $n$-layers, written $\layer[n][p]$ with $p < n$, initialized with the $\unittype$ type. Then, $X_1$ is made of one layer, so that it can be written as a $\Sigma$-type of an inhabitant of the $\unittype$ and $\layer[1][0]$. The rest of the construction is shown in Fig. \ref{fig:intuition}.
 
 \begin{figure*}[!t]
   \begin{equation*}
@@ -851,23 +857,9 @@ Compared to \texttt{leY}, \texttt{leI} has no proof-irrelevance properties. This
 
 \section{Perspectives}
 
-In the cubical case, we expect the construction to eventually provide
-a model of (some version of) parametric type theory~\cite{} by adding
-degeneracies, a hierarchy of universes (as sketched e.g. in a talk by
-Herbelin at the HoTT-UF workshop for the bridge
-case~\cite{herbelin-hott-uf}) as well as reasoning modulo
-permutations~\cite{grandis03}.
+In the cubical case, we expect the construction to eventually provide a model of (some version of) parametric type theory~\cite{} by adding degeneracies, a hierarchy of universes (as sketched e.g. in a talk by Herbelin at the HoTT-UF workshop for the bridge case~\cite{herbelin-hott-uf}) as well as reasoning modulo permutations~\cite{grandis03}.
 
-By equipping the universe construction with a structure of
-equivalences (as suggested along the lines of Altenkirch and
-Kaposi~\cite{}), as well as connections~\cite{}, we expect the
-parametric model to extend into a model of cubical type
-theory~\cite{}. A key point in this approach, is that, thanks to the
-indexed construction, we expect univalence to hold by definition in
-the model, without requiring any kind of Reedy fibrancy as it would a
-priori be needed in the fibered case. If these intuitions are correct,
-this would definitively root cubical type theory on top of iterated
-parametricity translation.
+By equipping the universe construction with a structure of equivalences (as suggested along the lines of Altenkirch and Kaposi~\cite{}), as well as connections~\cite{}, we expect the parametric model to extend into a model of cubical type theory~\cite{}. A key point in this approach, is that, thanks to the indexed construction, we expect univalence to hold by definition in the model, without requiring any kind of Reedy fibrancy as it would a priori be needed in the fibered case. If these intuitions are correct, this would definitively root cubical type theory on top of iterated parametricity translation.
 
 \bibliographystyle{IEEEtran}
 \bibliography{paper}
