@@ -396,8 +396,8 @@ Martin-Löf's Type theory~\cite{martinlof75,martinlof84} is a logical formalism 
 A notion of sets can be recovered in each universe as $\U[m]$, denoting the subtype of $\Type_m$ for which paths are degenerated, what can be expressed by the property of Uniqueness of Identity Proofs (UIP). Technically, this is expressed as a structure equipping a domain $\Dom$ with the property $\UIP$:
 
 \begin{align*}
-  \Dom & : \Type_m                                        \\
-  \UIP & : \Pi x y : \Dom, \Pi p q : x = y, p = q
+  \Dom & : \Type_m                                  \\
+  \UIP & : \Pi x y: \Dom.\, \Pi p q: x = y.\, p = q
 \end{align*}
 
 In $\U[m]$, the following properties hold:
@@ -405,9 +405,9 @@ In $\U[m]$, the following properties hold:
 \begin{enumerate}
   \item[(i)] UIP holds on the unit and bool type:
     \begin{align*}
-      \textsf{eq\_refl}        & : \Pi x, x = x                                                    \\
-      \textsf{UIP\_refl\_unit} & : \Pi u : \textsf{unit}, \Pi x : u = u, x = \textsf{eq\_refl} \\
-      \textsf{UIP\_refl\_bool} & : \Pi b : \textsf{bool}, \Pi x : b = b, x = \textsf{eq\_refl}
+      \textsf{eq\_refl}        & : \Pi x.\, x = x                                             \\
+      \textsf{UIP\_refl\_unit} & : \Pi u: \unittype.\, \Pi x : u = u.\, x = \textsf{eq\_refl} \\
+      \textsf{UIP\_refl\_bool} & : \Pi b: \booltype.\, \Pi x : b = b.\, x = \textsf{eq\_refl}
     \end{align*}
   \item[(ii)] UIP propagates to $\Sigma$-types.
   \item[(iii)] UIP propagates to $\Pi$-types, with some additional functional extensionality axioms.
@@ -416,7 +416,7 @@ In $\U[m]$, the following properties hold:
 Note that an equivalent definition of UIP is given by \textsf{UIP\_refl}:
 
 \begin{align*}
-  \textsf{UIP\_refl} & : \Pi x:\Dom, \Pi p : x = x, p = \textsf{eq\_refl } x
+  \textsf{UIP\_refl} & : \Pi x: \Dom.\, \Pi p: x = x.\, p = \textsf{eq\_refl } x
 \end{align*}
 
 Unless otherwise specified, we fix a universe level $m$ and abbreviate
@@ -444,32 +444,32 @@ Let us now come back to semi-cubical sets. A semi-cubical set can be represented
 If we think of $X_1$ fibered over two copies of $X_0$ in an indexed way, we get $X_1$ of type $X_0 \rightarrow X_0 \rightarrow \U$. Continuing the process, we can think of $X_2$ fibered over four copies of $X_1$ themselves fibered over two copies of $X_0$ as a dependent type. We have a priori a dependency over eight copies of $X_0$ but these are actually four due to the coherence conditions. Based on these coherence conditions, the type of $X_2$ happens to have the form $\Pi a b c d, X_1 (a)(b) \rightarrow X_1 (a)(c) \rightarrow X_1 (b)(d) \rightarrow X_1 (c)(d) \rightarrow \U$, recovering the square structure of $X_2$. In summary,
 
 \begin{align*}
-  X_0 & :                  & \U                                                       \\
-  X_1 & :                  & X_0 \rightarrow X_0 \rightarrow \U                            \\
+  X_0 & :              & \U                                                     \\
+  X_1 & :              & X_0 \rightarrow X_0 \rightarrow \U                     \\
   X_2 & : \Pi a b c d, & X_1(a)(b) \rightarrow X_1(a)(c) \rightarrow X_1 (b)(d) \\
-  & & \rightarrow X_1 (c)(d) \rightarrow \U                    \\
+      &                & \rightarrow X_1 (c)(d) \rightarrow \U                  \\
   \ldots
 \end{align*}
 
 We observe that the process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$, is similar to applying a binary parametricity translation and expecting the resulting translation to be inhabited. Indeed, parametricity interprets a type $A$ by a relation $A_\kstar$ over this type, and a term $t: A$ as an evidence that $A_\kstar(t)(t)$ is inhabited. Technically, $\U$ is interpreted as the relation ${\U}_\kstar$, which takes two types $A_L$ and $A_R$ and returns the type $A_L \rightarrow A_R \rightarrow \U$, while a dependent function type $\Pi a: A.\, B$ is interpreted as the relation $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
 
 \begin{align*}
-  & (\Pi a: A.\, B)_\kstar(f_L)(f_R) \defeq \\
-  & \Pi a_L: A.\, \Pi a_R: A.\, A_\kstar(a_L)(a_R) \rightarrow B_\kstar(f_L(a_L))(f_R(a_R))
+   & (\Pi a: A.\, B)_\kstar(f_L)(f_R) \defeq                                                 \\
+   & \Pi a_L: A.\, \Pi a_R: A.\, A_\kstar(a_L)(a_R) \rightarrow B_\kstar(f_L(a_L))(f_R(a_R))
 \end{align*}
 
 In particular, for $X: \U$, applying the parametricity translation is about exhibiting a relation $X_\kstar$ which inhabits ${\U}_\kstar(X)(X)$ i.e. $X \rightarrow X \rightarrow \U$. In turn, the parametricity translation of $X_\kstar: X \rightarrow X \rightarrow \U$ is about finding an inhabitant $X_{\kstar\kstar}$ of $(X \rightarrow X \rightarrow \U)_\kstar(X_\kstar)(X_\kstar)$ i.e. of:
 
 \begin{align*}
-  \Pi x_{LL}: X.\, \Pi x_{LR}: X\, X_\kstar(x_{LL})(x_{LR}) \\
+  \Pi x_{LL}: X.\, \Pi x_{LR}: X\, X_\kstar(x_{LL})(x_{LR})              \\
   \rightarrow \Pi x_{RL}: X.\, \Pi x_{RR}: X.\, X_\kstar(x_{RL})(x_{RR}) \\ \rightarrow X_\kstar(x_{LL}, x_{RL}) \rightarrow X_\kstar(x_{LR})(x_{RR})  \rightarrow \U
 \end{align*}
 which hints us at how the sequence $X_0$, $X_1$, $X_2$ can be seen as a sequence of inhabitants of the iteration
 
 \begin{align*}
-  X_0 &\defeq X:& \U \\
-  X_1 &\defeq X_\kstar:& {\U}_\kstar(X)(X) \\
-  X_2 &\defeq X_{\kstar\kstar}:& ({\U}_\kstar(X)(X))_{\kstar}(X_\kstar)(X_\kstar)
+  X_0 & \defeq X                & :\, & \U                                               \\
+  X_1 & \defeq X_\kstar         & :\, & {\U}_\kstar(X)(X)                                \\
+  X_2 & \defeq X_{\kstar\kstar} & :\, & ({\U}_\kstar(X)(X))_{\kstar}(X_\kstar)(X_\kstar)
 \end{align*}
 of parametricity applied to an initial $X: \U$. This tells us how the previous (informal) type given to $X_2$ could be rephrased so that it comes as the instance of a general recipe characterizing the type of all $X_i$.
 
@@ -859,11 +859,11 @@ Finally, we have the ``inductive variant'', phrased as:
 
 Compared to \texttt{leY}, \texttt{leI} has no proof-irrelevance properties. This definition is specially crafted for $\filler$, where we have to reason inductively from $p \leq n$ to $n$. In our usage, we have lemmas \texttt{leY\_of\_leI} and \texttt{leI\_of\_leY} in order to equip \texttt{leY} with the induction scheme of \texttt{leI}. Then, together with computational rules stated propositionally, we reason about $\beta$-reduction of induction.
 
-\section{Perspectives}
+\section{Future work}
 
 In the cubical case, we expect the construction to eventually provide a model of (some version of) parametric type theory~\cite{} by adding degeneracies, a hierarchy of universes (as sketched e.g. in a talk by Herbelin at the HoTT-UF workshop for the bridge case~\cite{herbelin-hott-uf}) as well as reasoning modulo permutations~\cite{grandis03}.
 
-By equipping the universe construction with a structure of equivalences (as suggested along the lines of Altenkirch and Kaposi~\cite{}), as well as connections~\cite{}, we expect the parametric model to extend into a model of cubical type theory~\cite{}. A key point in this approach, is that, thanks to the indexed construction, we expect univalence to hold by definition in the model, without requiring any kind of Reedy fibrancy as it would a priori be needed in the fibered case. If these intuitions are correct, this would definitively root cubical type theory on top of iterated parametricity translation.
+By equipping the universe construction with a structure of equivalences , as suggested along the lines of Altenkirch and Kaposi~\cite{}, as well as connections~\cite{}, we expect the parametric model to extend into a model of cubical type theory~\cite{}. A key point in this approach, is that, thanks to the indexed construction, we expect univalence to hold by definition in the model, without requiring any kind of Reedy fibrancy as it would a priori be needed in the fibered case. If these intuitions are correct, this would definitively root cubical type theory on top of iterated parametricity translation.
 
 \bibliographystyle{IEEEtran}
 \bibliography{paper}
