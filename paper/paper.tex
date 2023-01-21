@@ -446,34 +446,37 @@ If we think of $X_1$ fibered over two copies of $X_0$ in an indexed way, we get 
 \begin{align*}
   X_0 & :              & \U                                                     \\
   X_1 & :              & X_0 \rightarrow X_0 \rightarrow \U                     \\
-  X_2 & : \Pi a b c d, & X_1(a)(b) \rightarrow X_1(a)(c) \rightarrow X_1 (b)(d) \\
+  X_2 & : \Pi a b c d. & X_1(a)(b) \rightarrow X_1(a)(c) \rightarrow X_1 (b)(d) \\
       &                & \rightarrow X_1 (c)(d) \rightarrow \U                  \\
   \ldots
 \end{align*}
 
-We observe that the process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$, is similar to applying a binary parametricity translation and expecting the resulting translation to be inhabited. Indeed, parametricity interprets a type $A$ by a relation $A_\kstar$ over this type, and a term $t: A$ as an evidence that $A_\kstar(t)(t)$ is inhabited. Technically, $\U$ is interpreted as the relation ${\U}_\kstar$, which takes two types $A_L$ and $A_R$ and returns the type $A_L \rightarrow A_R \rightarrow \U$, while a dependent function type $\Pi a: A.\, B$ is interpreted as the relation $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
+We observe that the process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$, is similar to applying a binary parametricity translation and expecting the resulting translation to be inhabited. Indeed, parametricity interprets a type $A$ by a relation $A_\kstar$ over this type, and a term $t: A$ as an evidence that $A_\kstar(t)(t)$ is inhabited. In particular, $\U$ is interpreted as the relation ${\U}_\kstar$, which takes two types $A_L$ and $A_R$ and returns the type $A_L \rightarrow A_R \rightarrow \U$, while, for $A$ interpreted by $A_\kstar$ and $B$ interpreted by $B_\kstar$, a dependent function type $\Pi a: A.\, B$ is interpreted as the relation $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
 
 \begin{align*}
    & (\Pi a: A.\, B)_\kstar(f_L)(f_R) \defeq                                                 \\
    & \Pi a_L: A.\, \Pi a_R: A.\, A_\kstar(a_L)(a_R) \rightarrow B_\kstar(f_L(a_L))(f_R(a_R))
 \end{align*}
 
-In particular, for $X: \U$, applying the parametricity translation is about exhibiting a relation $X_\kstar$ which inhabits ${\U}_\kstar(X)(X)$ i.e. $X \rightarrow X \rightarrow \U$. In turn, the parametricity translation of $X_\kstar: X \rightarrow X \rightarrow \U$ is about finding an inhabitant $X_{\kstar\kstar}$ of $(X \rightarrow X \rightarrow \U)_\kstar(X_\kstar)(X_\kstar)$ i.e. of:
+In particular, for $X: \U$, applying the parametricity translation is about canonically associating to $X$ an inhabitant $X_\kstar$ of ${\U}_\kstar(X)(X)$ i.e. of $X \rightarrow X \rightarrow \U$. In turn, applying the parametricity translation to $X_\kstar: X \rightarrow X \rightarrow \U$ is about canonically associating to $X_\kstar$ an inhabitant $X_{\kstar\kstar}$ of $(X \rightarrow X \rightarrow \U)_\kstar(X_\kstar)(X_\kstar)$ i.e. of:
 
 \begin{align*}
   \Pi x_{LL}: X.\, \Pi x_{LR}: X\, X_\kstar(x_{LL})(x_{LR})              \\
   \rightarrow \Pi x_{RL}: X.\, \Pi x_{RR}: X.\, X_\kstar(x_{RL})(x_{RR}) \\ \rightarrow X_\kstar(x_{LL}, x_{RL}) \rightarrow X_\kstar(x_{LR})(x_{RR})  \rightarrow \U
 \end{align*}
-which hints us at how the sequence $X_0$, $X_1$, $X_2$ can be seen as a sequence of inhabitants of the iteration
+which hints us at how the sequence $X_0$, $X_1$, $X_2$ can be seen as a sequence of inhabitants of the iteration of parametricity
 
-\begin{align*}
-  X_0 & \defeq X                & :\, & \U                                               \\
-  X_1 & \defeq X_\kstar         & :\, & {\U}_\kstar(X)(X)                                \\
-  X_2 & \defeq X_{\kstar\kstar} & :\, & ({\U}_\kstar(X)(X))_{\kstar}(X_\kstar)(X_\kstar)
-\end{align*}
-of parametricity applied to an initial $X: \U$. This tells us how the previous (informal) type given to $X_2$ could be rephrased so that it comes as the instance of a general recipe characterizing the type of all $X_i$.
+\begin{equation*}
+\begin{array}{llllr}
+  X_0 & \defeq & X                & : & \U                                               \\
+  X_1 & \defeq & X_\kstar         & : & {\U}_\kstar(X)(X)                                \\
+  X_2 & \defeq & X_{\kstar\kstar} & : & ({\U}_\kstar(X)(X))_{\kstar}(X_\kstar)(X_\kstar) \\
+  \ldots
+\end{array}
+\end{equation*}
+applied to an initial $X: \U$. This tells us how the previous (informal) type given to $X_2$ could be rephrased so that it comes as the instance of a general recipe characterizing the type of all $X_i$.
 
-The focus of our work has then been to formally define such an indexed presentation of not just semi-cubical, but more generally, $\nu$-sets.
+Notice, however, that the recipe obtained so far, $X_{n + 1}: ({S_n})_\kstar(X_n)(X_n)$ for $X_n: S_n$, applies parametricity on the \emph{syntax} of the type of $X_n$. It does not directly yield a characterization of $S_n$ as a function from $n$, as one would need for that to work on the syntax of types, with an ultimate step of interpretation of the syntax of types as a type, rather than on types directly. Reformulating the recipe as an explicit type construction, without requiring an interpretation of the syntax of types, is the main outcome of this work, together with the mechanization and the generalization to $\nu$-sets.
 
 \section{Our construction}
 In this section, we gradually build up an intuition for our construction, followed by the full details.
@@ -819,9 +822,9 @@ Remark: If we weren't working in \U, but in \HGpd, we would need to prove one mo
 \renewcommandx{\cohl}[1][1]{\coh{layer}[][][][][][#1][][]}
 \renewcommandx{\cohc}[1][1]{\coh{filler}[][][][][][#1][][]}
 
-Since the construction shown in the previous sections are by induction on $n$, and dependencies are on lower $n$ and $p < n$, one would imagine formalizing this using well-founded induction in the calculus of inductive constructions. We initially tried this approach: we had terms dependent on the proofs of the case distinction of $n' \leq n$ implies $n' < n$ or $n' = n$, and these proofs didn't have definitional computational rule; it started to be necessary to reason propositionally on the computational property of the case distinction, and it eventually turned out to be unmanageable. Hence, we chose a different route: in practice, since $\restrf[n]$ depends on $\framep[n]$ and $\framep[n-1]$, while $\cohf[n]$ depends on $\framep[n]$, $\framep[n-1]$, and $\framep[n-2]$, we only need to keep track of three ``levels'', and we built separate data structures for the levels, with dependencies. More concretely, we build the ten definitions shown in the tables by induction, and this is part of the definition of a larger record. Other fields in the record are necessary because we need copies of $\framep$, $\layer$, $\filler$ at levels $n - 1$ and $n - 2$, $\restrf$, $\restrl$, and $\restrc$ at level $n - 1$, and equations to recall the definitions of these objects at lower levels.
+Since the construction shown in the previous sections are by induction on $n$, and dependencies are on lower $n$ and $p < n$, one would imagine formalizing this using well-founded induction in the calculus of inductive constructions. We initially tried this approach: we had terms dependent on the proofs of the case distinction of $n' \leq n$ implies $n' < n$ or $n' = n$, and these proofs didn't have definitional computational rule; it started to be necessary to reason propositionally on the computational property of the case distinction, and it eventually turned out to be unmanageable. Hence, we chose a different route: in practice, since $\restrf[n]$ depends on $\framep[n]$ and $\framep[n-1]$, while $\cohf[n]$ depends on $\framep[n]$, $\framep[n-1]$, and $\framep[n-2]$, we only need to keep track of three ``levels'', and we built separate data structures for the levels, with dependencies. More concretely, we build the ten definitions shown in the tables by induction, and this is part of the definition of a larger record. The other fields of the record aref $\framep$, $\layer$, $\filler$ at levels $n - 1$ and $n - 2$, $\restrf$, $\restrl$, and $\restrc$ at level $n - 1$, and equations to recall the definitions of these objects at lower levels.
 
-The entire construction relies on inequalities over natural numbers, and we have three different definitions of $\leq$ addressing two different concerns, and conversions between them. First, we have what we call the ``recursive variant'', phrased as:
+The entire construction relies on inequalities over natural numbers, and we use two different definitions of $\leq$ addressing different concerns in our formalization. In order to build our first variant, we present an intermediate ``recursive definition'', phrased as:
 
 \begin{minted}{coq}
   Fixpoint leR (n m : nat) : SProp :=
@@ -832,14 +835,13 @@ The entire construction relies on inequalities over natural numbers, and we have
   end.
 \end{minted}
 
-The upside of this definition is that all inequalities of the form $m \leq n$ are equivalent, definitionally. By placing the definition in \SProp, we have definitional equality of inequality proofs. For the purpose of unification, however, this definition doesn't go far enough. Consider the unification problems:
+By placing the definition in \SProp, we have definitional equality of all inequality proofs. For the purpose of unification, however, this definition does not go far enough. Consider the unification problems:
 
 \begin{minted}{coq}
   le_trans ?p le_refl = ?p
   le_trans le_refl ?p = ?p
 \end{minted}
-
-where \texttt{le\_trans} is transitivity, \texttt{le\_refl} is reflexivity, and \texttt{?p} is an existential variable. These two problems definitionally hold in \SProp, but equalizing them does not solve the existential. For unification to be useful in inferring existentials, we present our next definition, which we dub as the ``Yoneda variant'':
+where \texttt{le\_trans} is transitivity, \texttt{le\_refl} is reflexivity, and \texttt{?p} is an existential variable. These two problems definitionally hold in \SProp, but equalizing them does not solve the existential. For unification to be useful in inferring existentials, we present our first variant of $\leq$, which we dub as the ``Yoneda variant'':
 
 \begin{minted}{coq}
   Definition leY n m :=
@@ -848,7 +850,7 @@ where \texttt{le\_trans} is transitivity, \texttt{le\_refl} is reflexivity, and 
 
 \texttt{leY} is an improvement over \texttt{leR} since reflexivity is now definitionally the neutral element of transitivity, and associativity of transitivity also holds definitionally. Although it significantly eases our proof, there are some instances where unification is unable to solve for the existentials, and we have to provide them explicitly.
 
-Finally, we have the ``inductive variant'', phrased as:
+The second variant of $\leq$, the ``inductive variant'', is phrased as:
 
 \begin{minted}{coq}
   Inductive leI : nat -> nat -> Type :=
@@ -858,6 +860,9 @@ Finally, we have the ``inductive variant'', phrased as:
 \end{minted}
 
 Compared to \texttt{leY}, \texttt{leI} has no proof-irrelevance properties. This definition is specially crafted for $\filler$, where we have to reason inductively from $p \leq n$ to $n$. In our usage, we have lemmas \texttt{leY\_of\_leI} and \texttt{leI\_of\_leY} in order to equip \texttt{leY} with the induction scheme of \texttt{leI}. Then, together with computational rules stated propositionally, we reason about $\beta$-reduction of induction.
+
+- Equality lemmas (rew_app, assoc, ...)
+
 
 \section{Future work}
 
