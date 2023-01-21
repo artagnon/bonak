@@ -207,7 +207,7 @@ The outline of the paper is as follows. First, we recall the definition of the a
 
 Our precise mechanization in Coq is available on Github, at \href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak}. The construction was conceived in Summer 2019 and the mechanization began in late 2019. A sketch of the construction was presented at the 2020 HoTT-UF workshop and the completion of the mechanization was reported at the TYPES 2022 conference.
 
-\section{Semi-simplicial and semi-cubical sets}
+\section{Semi-simplicial sets, semi-cubical sets and a generalization}
 It is well-known that simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices. What we have formalized is \emph{augmented semi-simplicial} sets~\cite{fri08}, and \emph{semi-cubical} sets~\cite{grandis03,buchholtz17}. We will proceed to explain the mathematical objects we have formalized.
 
 \subsection{Augmented semi-simplicial sets}
@@ -215,14 +215,10 @@ Augmented semi-simplicial sets are defined similarly to semi-simplicial sets, ex
 
 Let us associate dimension $0$ to colors; then, points are dimension $1$, lines are dimension $2$, and so on. There is hence a shift by one when compared to semi-simplicial sets. We can then draw augmented semi-simplicial sets like semi-simplicial sets, except for this shift by one.
 
-While ordinary semi-simplicial sets are presheaves over the semi-simplex category \DeltaHat, augmented semi-simplicial sets are presheaves over, what we will define as, \DeltaPlus. There are different ways to define \DeltaPlus, upto equivalence, and we use a combinatorial definition. The reason for our choice is that this definition has a straightforward extension to semi-cubical sets.
+While ordinary semi-simplicial sets are presheaves over the semi-simplex category \DeltaHat, augmented semi-simplicial sets are presheaves over, what we will define as, \DeltaPlus. There are different ways to define \DeltaPlus, upto equivalence, and we use a definition that will later straightforwardly extend to semi-cubical sets.
 
 \begin{notation}[Finite sequences]
-  We denote finite sequences by $\{i_1, \ldots i_n\}$ for $i_j$ ranging over some domain. In particular, the empty sequence is written $\{\}$.
-\end{notation}
-
-\begin{notation}[::]
-  We define $i :: \{j_1, \ldots, j_n\}$ to be $\{i, j_1, \ldots, j_n\}$.
+  We denote finite sequences by $\{i_1, \ldots i_n\}$ for $i_j$ ranging over some domain. In particular, the empty sequence is written $\{\}$ and we define $i :: \{j_1, \ldots, j_n\}$ to be $\{i, j_1, \ldots, j_n\}$.
 \end{notation}
 
 \begin{definition}[$\DeltaPlus$]
@@ -236,7 +232,7 @@ While ordinary semi-simplicial sets are presheaves over the semi-simplex categor
         0 :: (g' \circ f)  & \text{if $g = (0 :: g')$}                                                 \\
         a :: (g' \circ f') & \text{if $g = (\star :: g')$, $f = (a :: f')$, where $a = 0$ or $\kstar$} \\
       \end{cases} \\
-      \id              & := \{\kstar, \ldots, \kstar\} \text{ $n$ times}
+      \id              & := \{\kstar, \ldots, \kstar\} \text{ $n$ times} % TODO: n not bound on the left
     \end{align*}
     \caption{Definition of \DeltaPlus}\label{fig:deltaplus}
   \end{figure*}
@@ -464,7 +460,7 @@ In particular, for $X: \U$, applying the parametricity translation is about cano
   \Pi x_{LL}: X.\, \Pi x_{LR}: X\, X_\kstar(x_{LL})(x_{LR})              \\
   \rightarrow \Pi x_{RL}: X.\, \Pi x_{RR}: X.\, X_\kstar(x_{RL})(x_{RR}) \\ \rightarrow X_\kstar(x_{LL}, x_{RL}) \rightarrow X_\kstar(x_{LR})(x_{RR})  \rightarrow \U
 \end{align*}
-which hints us at how the sequence $X_0$, $X_1$, $X_2$ can be seen as a sequence of inhabitants of the iteration of parametricity
+which hints us at how the sequence $X_0$, $X_1$, $X_2$ can be seen as a sequence of inhabitants of the iteration of parametricity applied to an initial $X: \U$:
 
 \begin{equation*}
   \begin{array}{llllr}
@@ -474,9 +470,9 @@ which hints us at how the sequence $X_0$, $X_1$, $X_2$ can be seen as a sequence
     \ldots
   \end{array}
 \end{equation*}
-applied to an initial $X: \U$. This tells us how the previous (informal) type given to $X_2$ could be rephrased so that it comes as the instance of a general recipe characterizing the type of all $X_i$.
+This tells us how the previous (informal) type given to $X_2$ could be rephrased so that it comes as the instance of a general recipe characterizing the type of all $X_i$.
 
-Notice, however, that the recipe obtained so far, $X_{n + 1}: ({S_n})_\kstar(X_n)(X_n)$ for $X_n: S_n$, applies parametricity on the \emph{syntax} of the type of $X_n$. It does not directly yield a characterization of $S_n$ as a function from $n$, as one would need for that to work on the syntax of types, with an ultimate step of interpretation of the syntax of types as a type, rather than on types directly. Reformulating the recipe as an explicit type construction, without requiring an interpretation of the syntax of types, is the main outcome of this work, together with the mechanization and the generalization to $\nu$-sets.
+Notice, however, that the recipe obtained so far, $X_{n + 1}: ({S_n})_\kstar(X_n)(X_n)$ for $X_n: S_n$, applies parametricity on the \emph{syntax} of the type of $X_n$. It does not directly yield a characterization of $S_n$ as a function from $n$. Reformulating the recipe as an explicit recursive construction, without requiring an interpretation of the syntax of types, is the main outcome of this work, together with the mechanization and its uniform treatment of augmented semi-simplial and semi-cubical sets by means of the generalization to $\nu$-sets.
 
 \section{Our construction}
 In this section, we gradually build up an intuition for our construction, followed by the full details.
