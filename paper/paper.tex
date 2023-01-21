@@ -468,7 +468,7 @@ We observe that the process of construction of the type of $X_1$ from that of $X
 In particular, for $X: \U$, applying the parametricity translation is about canonically associating to $X$ an inhabitant $X_\kstar$ of ${\U}_\kstar(X)(X)$ i.e. of $X \rightarrow X \rightarrow \U$. In turn, applying the parametricity translation to $X_\kstar: X \rightarrow X \rightarrow \U$ is about canonically associating to $X_\kstar$ an inhabitant $X_{\kstar\kstar}$ of $(X \rightarrow X \rightarrow \U)_\kstar(X_\kstar)(X_\kstar)$ i.e. of:
 
 \begin{align*}
-  \Pi x_{LL}: X.\, \Pi x_{LR}: X\, X_\kstar(x_{LL})(x_{LR})              \\
+  \Pi x_{LL}: X.\, \Pi x_{LR}: X.\, X_\kstar(x_{LL})(x_{LR})              \\
   \rightarrow \Pi x_{RL}: X.\, \Pi x_{RR}: X.\, X_\kstar(x_{RL})(x_{RR}) \\ \rightarrow X_\kstar(x_{LL}, x_{RL}) \rightarrow X_\kstar(x_{LR})(x_{RR})  \rightarrow \U
 \end{align*}
 which hints us at how the sequence $X_0$, $X_1$, $X_2$ can be seen as a sequence of inhabitants of the iteration of parametricity applied to an initial $X: \U$:
