@@ -1,14 +1,17 @@
-(** Recursive definition of "less than or equalf" + "less than or equal" with "Yoneda trick", all in SProp *)
+(** Two definitions of "less than or equal" in SProp:
+    - Recursive definition
+    - "Yoneda trick" *)
 
-Require Import Aux.
+Require Import Notation.
+Require Import LeInductive.
 
 Set Warnings "-notation-overridden".
 
-(* False in SProp has no inhabitant *)
+(** False and True in SProp *)
 Inductive SFalse : SProp :=.
 Inductive STrue : SProp := sI.
 
-(* A recursive definition of le *)
+(** A recursive definition of le *)
 Fixpoint leR (n m : nat) : SProp :=
   match n, m with
   | O, _ => STrue
@@ -24,7 +27,7 @@ Qed.
 Ltac reflexivity' := apply leR_refl || reflexivity.
 Ltac reflexivity := reflexivity'.
 
-(* A Yoneda-style encoding of the recursive definition of le *)
+(** A Yoneda-style encoding of the recursive definition of le *)
 Definition leY n m := forall p, leR p n -> leR p m.
 Infix "<=" := leY : nat_scope.
 
@@ -36,12 +39,12 @@ Theorem leY_irrelevance : forall {n m} (H H' : n <= m), H =S H'.
   now reflexivity.
 Qed.
 
-(* A simple contraction used in the next lemma *)
+(** A simple contraction used in the next lemma *)
 Lemma leR_contra {p}: leR p.+1 O -> SFalse.
   now auto.
 Qed.
 
-(* Contradiction of type n.+1 <= 0 *)
+(** Contradiction of type n.+1 <= 0 *)
 Theorem leY_contra {n}: n.+1 <= O -> False.
   intros; elimtype SFalse; unfold leY in H.
   specialize H with (p := 1); eapply leR_contra.
@@ -58,19 +61,19 @@ Lemma leY_0 {n}: O <= n.
   - intros H. now apply leR_contra in H.
 Qed.
 
-(* Reflexivity in leY *)
+(** Reflexivity in leY *)
 Definition leY_refl n : n <= n :=
   fun _ x => x. (* Coq bug! *)
 
 Notation "♢" := leY_refl (at level 0).
 
-(* Transitivity in leY *)
+(** Transitivity in leY *)
 Definition leY_trans {n m p} (Hnm : n <= m) (Hmp : m <= p) : n <= p :=
   fun q (Hqn : leR q n) => Hmp _ (Hnm _ Hqn).
 
 Infix "↕" := leY_trans (at level 45).
 
-(* Some trivial inequality proofs in leYoneda *)
+(** Some trivial inequality proofs in leYoneda *)
 
 Lemma leR_up {n m} (Hnm : leR n m): leR n m.+1.
   revert m Hnm. induction n. now auto. destruct m. intros H.
@@ -115,8 +118,8 @@ Qed.
 
 Notation "⇑ p" := (leY_raise_both p) (at level 40).
 
-(* A tactic to turn inequalities of the form p.+2 <= q.+1 into p.+2 <= q.+2;
- * find_raise is a helper for the tactic *)
+(** A tactic to turn inequalities of the form p.+2 <= q.+1 into p.+2 <= q.+2;
+    find_raise is a helper for the tactic *)
 
 Ltac find_raise q :=
   match q with
@@ -131,7 +134,7 @@ Ltac invert_le Hpq :=
                    now apply leY_contra in Hpq |]
   end.
 
-(* Connecting leI with leY *)
+(** Connecting leI with leY *)
 
 Lemma leY_of_leI {n p}: p <~ n -> p <= n.
 Proof.
@@ -147,8 +150,8 @@ Proof.
   intros H. simpl in H. apply IHp in H. now apply leI_raise_both.
 Defined.
 
-(* A couple of properties of the two connections, asserting the equality
- * of morphisms *)
+(** A couple of properties of the two connections, asserting the equality
+    of morphisms *)
 
 Lemma leI_refl_morphism n: leI_of_leY (♢ n) = leI_refl _.
 Proof.
@@ -170,12 +173,12 @@ Proof.
     now rewrite IHp.
 Defined.
 
-(* An inductive on leY *)
+(** An inductive on leY *)
 Inductive leYind n : forall p, p <= n -> Type :=
 | leYind_refl : leYind n n (♢ n)
 | leYind_down p Hp : leYind n p.+1 Hp -> leYind n p (↓ Hp).
 
-(* A constructor of leYind *)
+(** A constructor of leYind *)
 Lemma leYind_construct {n p} Hp: leYind n p Hp.
 Proof.
   intros; induction (leI_of_leY Hp).
@@ -185,7 +188,7 @@ Proof.
     apply leYind_down, IHl.
 Defined.
 
-(* le_induction along with a couple of computational properties *)
+(** le_induction along with a couple of computational properties *)
 
 Theorem le_induction {n p} (Hp : p <= n) (P: forall p (Hp: p <= n), Type)
   (H_base: P n (♢ n))
@@ -209,7 +212,7 @@ Proof.
   rewrite leI_down_morphism; simpl. now destruct leY_irrelevance.
 Qed.
 
-(* Some helper-abbreviations *)
+(** Some helper-abbreviations *)
 
 Definition le_induction' {n p} (Hp: p.+1 <= n.+1)
   (P: forall p (Hp: p.+1 <= n.+1), Type)

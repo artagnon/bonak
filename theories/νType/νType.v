@@ -4,14 +4,14 @@
 
 Import Logic.EqNotations.
 Require Import Logic.FunctionalExtensionality.
-Require Import Aux.
+Require Import Notation.
 Require Import RewLemmas.
 
 (* Note: this import overrides { & } notation and introduces hforall *)
 Set Warnings "-notation-overridden".
 Require Import HSet.
 
-Require Import Yoneda.
+Require Import LeYoneda.
 
 Set Printing Projections.
 Set Keyed Unification.

@@ -2,7 +2,7 @@
 
 Require Import Logic.FunctionalExtensionality.
 Require Import Logic.Eqdep_dec. (* UIP_refl_unit *)
-Require Import Aux.
+Require Import Notation.
 
 Set Universe Polymorphism.
 
