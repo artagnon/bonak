@@ -453,7 +453,12 @@ If we think of $X_1$ fibered over two copies of $X_0$ in an indexed way, we get 
   \ldots
 \end{align*}
 
-We observe that the process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$, is similar to applying a binary parametricity translation and expecting the resulting translation to be inhabited. Indeed, parametricity interprets a type $A$ by a relation $A_\kstar$ over this type, and a term $t: A$ as an evidence that $A_\kstar(t)(t)$ is inhabited. In particular, $\U$ is interpreted as the relation ${\U}_\kstar$, which takes two types $A_L$ and $A_R$ and returns the type $A_L \rightarrow A_R \rightarrow \U$, while, for $A$ interpreted by $A_\kstar$ and $B$ interpreted by $B_\kstar$, a dependent function type $\Pi a: A.\, B$ is interpreted as the relation $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
+\section{Our construction}
+In this section, we gradually build up an intuition for our construction, followed by the full details.
+
+\subsection{Relating the indexed representation to parametricity}
+
+We observe that the process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$ in the last section, is similar to applying a binary parametricity translation and expecting the resulting translation to be inhabited. Indeed, parametricity interprets a type $A$ by a relation $A_\kstar$ over this type, and a term $t: A$ as an evidence that $A_\kstar(t)(t)$ is inhabited. In particular, $\U$ is interpreted as the relation ${\U}_\kstar$, which takes two types $A_L$ and $A_R$ and returns the type $A_L \rightarrow A_R \rightarrow \U$, while, for $A$ interpreted by $A_\kstar$ and $B$ interpreted by $B_\kstar$, a dependent function type $\Pi a: A.\, B$ is interpreted as the relation $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
 
 \begin{align*}
    & (\Pi a: A.\, B)_\kstar(f_L)(f_R) \defeq                                                 \\
@@ -476,12 +481,9 @@ which hints us at how the sequence $X_0$, $X_1$, $X_2$ can be seen as a sequence
     \ldots
   \end{array}
 \end{equation*}
-This tells us how the previous (informal) type given to $X_2$ could be rephrased so that it comes as the instance of a general recipe characterizing the type of all $X_i$.
+This tells us how the informal type given to $X_2$ in the previous section could be rephrased so that it comes as the instance of a general recipe characterizing the type of all $X_i$.
 
 Notice, however, that the recipe obtained so far, $X_{n + 1}: ({S_n})_\kstar(X_n)(X_n)$ for $X_n: S_n$, applies parametricity on the \emph{syntax} of the type of $X_n$. It does not directly yield a characterization of $S_n$ as a function from $n$. Reformulating the recipe as an explicit recursive construction, without requiring an interpretation of the syntax of types, is the main outcome of this work, together with the mechanization and its uniform treatment of augmented semi-simplial and semi-cubical sets by means of the generalization to $\nu$-sets.
-
-\section{Our construction}
-In this section, we gradually build up an intuition for our construction, followed by the full details.
 
 \subsection{Intuition for our formal construction}
 To assign $X_0, X_1, X_2, \ldots$ in the above indexed representation types, we need to exhibit a recursive definition over our building blocks, which we will call $\framep$, $\layer$, and $\filler$. A $\framep$ is a boundary of a standard form (simplex, cube, etc.), which we decompose into $\layer$, and a $\filler$ is a filled $\framep$.
