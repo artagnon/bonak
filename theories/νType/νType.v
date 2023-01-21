@@ -32,7 +32,7 @@ Variable arity: HSet.
 (** A ν-parametric set is a family of sets obtained by iterating
     Reynolds' parametricity translation.
 
-    For N=1: this is a collection of colors, of points depending on a
+    For ν=1: this is a collection of colors, of points depending on a
     color, of lines connecting two points of the same color, of
     triangles filling a frame made of three connected lines, of
     tetrahedra filling a frame made of four glued triangles, etc.
@@ -61,7 +61,7 @@ Variable arity: HSet.
       previous arguments using "restrictions". These restrictions
       themselves obey coherence rules.
 
-    For N=2: this is a collection of points, of lines connecting two
+    For ν=2: this is a collection of points, of lines connecting two
     points, of squares filling a frame made of four lines, of cubes
     filling a frame made of six squares, etc.
     Intuitively, this is:
@@ -185,7 +185,7 @@ Class νType (n : nat) := {
   Filler: FillerBlock n prefix FillerPrev (@Frame);
 
   (** Abbreviations for [ν]-family of previous fillers, one for
-      each [ϵ]-restriction of the previous frame (ϵ∈N) *)
+      each [ϵ]-restriction of the previous frame (ϵ∈ν) *)
   Layer {p} {Hp: p.+1 <= n} {D: prefix} (d: Frame.(frame) (↓ Hp) D) :=
     hforall ε, FillerPrev.(filler') (Frame.(restrFrame) Hp ε d);
   Layer' {p} {Hp: p.+2 <= n} {D: prefix} (d: FramePrev.(frame') (↓ Hp) D) :=
