@@ -73,7 +73,7 @@ Notation "{ x : A & P }" := (hsigT (A := A) (fun x => P)): type_scope.
 
 (** [forall] defined over an [HSet] codomain *)
 
-(* Bug! equal_f_dep is unnecessarily opaque in Coq *)
+(* Cannot use Coq's equal_f_dep which is opaque *)
 Lemma equal_f_dep: forall {A B} {f g: forall (x: A), B x},
   f = g -> forall x, f x = g x.
 Proof.
@@ -105,5 +105,8 @@ Proof.
   exists (forall a: A, B a). intros x y h g. now apply hpiT_UIP.
 Defined.
 
-Notation "'hforall' x , A" := (hpiT (fun x => A))
-(x binder, at level 200): type_scope.
+Notation "'hforall' x , B" := (hpiT (fun x => B))
+  (x binder, at level 200): type_scope.
+
+Notation "'hforall' x : A , B" := (hpiT (fun x : A => B))
+  (x binder, at level 200): type_scope.
