@@ -184,7 +184,7 @@ Class νType (n : nat) := {
   FillerPrev: FillerBlockPrev n prefix FramePrev;
   Filler: FillerBlock n prefix FillerPrev (@Frame);
 
-  (** Abbreviations for [N]-family of previous fillers, one for
+  (** Abbreviations for [ν]-family of previous fillers, one for
       each [ϵ]-restriction of the previous frame (ϵ∈N) *)
   Layer {p} {Hp: p.+1 <= n} {D: prefix} (d: Frame.(frame) (↓ Hp) D) :=
     hforall ε, FillerPrev.(filler') (Frame.(restrFrame) Hp ε d);
@@ -195,7 +195,8 @@ Class νType (n : nat) := {
       Layer' (Frame.(restrFrame) Hq ε d) :=
   fun ω => rew [FillerPrev.(filler'')] Frame.(cohFrame) (Hrq := Hpq) d in FillerPrev.(restrFiller') Hq ε (l ω);
 
-  (* We can't create htt: hunit, so we have to resort to this *)
+  (** Equations carrying the definition of frame and filler from level
+      [n]-1 and [n]-2 *)
   eqFrame0 {len0: 0 <= n} {D: prefix}: (Frame.(frame) len0 D).(Dom) = unit;
   eqFrame0' {len1: 1 <= n} {D: prefix}: (FramePrev.(frame') len1 D).(Dom) = unit;
   eqFrameSp {p} {Hp: p.+1 <= n} {D: prefix}:
@@ -323,7 +324,7 @@ Instance mkFrame0 {n} {C: νType n}: FrameBlock n.+1 O mkprefix mkFramePrev.
                 eqRestrFrame0 with (Hpq := ⇓ (Hpr ↕ Hrq)).
 Defined.
 
-(** The Frame at level n.+1 for S p knowing the Frame at level n.+1 for p *)
+(** The Frame at level n.+1 for p.+1 knowing the Frame at level n.+1 for p *)
 #[local]
 Instance mkFrameSp {n p} {C: νType n} {Frame: FrameBlock n.+1 p mkprefix mkFramePrev}:
   FrameBlock n.+1 p.+1 mkprefix mkFramePrev.
@@ -343,7 +344,6 @@ Instance mkFrameSp {n p} {C: νType n} {Frame: FrameBlock n.+1 p mkprefix mkFram
     apply f_equal with (B := C.(FramePrev).(frame') _ D.1)
       (f := fun x => rew <- (C.(eqFrameSp') (Hp := ⇓ (Hpr ↕ Hrq) ↕ ⇓ Hq)) in x).
     now exact (= Frame.(cohFrame) (Hrq := Hrq) d; mkCohLayer l).
-    (* Bug? Coq being too smart for its own good. *)
 Defined.
 
 (** Finally, we can define mkFrame at level n.+1 for all p *)
@@ -431,7 +431,7 @@ Proof.
 Qed.
 
 (** Now, for the last part of the proof: proving coherence conditions
-  on [cohFiller] *)
+    on [cohFiller] *)
 
 (** The base case is easily discharged *)
 Definition mkCohFiller_base {q r n} {ε ω: arity} {C: νType n} {D: mkprefix}
@@ -444,6 +444,7 @@ Definition mkCohFiller_base {q r n} {ε ω: arity} {C: νType n} {D: mkprefix}
       (mkRestrFiller (ε := ω) (Hpq := ♢ _) (Hq := ↓ (Hrq ↕ Hq)) E d c) =
   mkFillerPrev.(restrFiller') (Hpq := ♢ _) (Hrq ↕ Hq) ω
     (mkRestrFiller (ε := ε) (Hpq := ↓ Hrq) (Hq := Hq) E d c).
+Proof.
   change (♢ _ ↕ ?H) with H; change (⇓ (♢ _) ↕ ?H) with H.
   rewrite mkRestrFiller_base_computes, mkRestrFiller_step_computes.
   destruct (rew [id] mkfiller_computes in c) as (l, c'); clear c.
@@ -472,6 +473,7 @@ Definition mkCohFiller_step {p q r n} {ε ω: arity} {C: νType n} {D: mkprefix}
   {IHP: forall (d: (mkFrame p.+1).(frame) (↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D)
         (c: mkfiller E d), mkCohFillerHyp p.+1 Hpr (ε := ε) (ω := ω) d c}:
         mkCohFillerHyp p (↓ Hpr) (ε := ε) (ω := ω) d c.
+Proof.
   unfold mkCohFillerHyp in *; simpl projT1 in *; simpl projT2 in *.
   change (⇓ (↓ ?Hpr)) with (↓ (⇓ Hpr)).
   do 2 rewrite mkRestrFiller_step_computes.
@@ -560,7 +562,7 @@ Defined.
 
 (** We are now ready to build an [νType n.+1] from an [νType n] *)
 #[local]
-Instance mkνTypeSn {n} {C: νType n}: νType n.+1 :=
+Instance mkνTypeSn {n} (C: νType n): νType n.+1 :=
 {|
     prefix := mkprefix;
     FramePrev := mkFramePrev;
@@ -583,13 +585,13 @@ Instance mkνTypeSn {n} {C: νType n}: νType n.+1 :=
 |}.
 
 (** An [νType] truncated up to dimension [n] *)
-Definition νTypeAt: forall n, νType n.
-  induction n.
-  - now exact mkνType0.
-  - now exact mkνTypeSn.
-Defined.
+Fixpoint νTypeAt n : νType n :=
+  match n with
+  | O => mkνType0
+  | n.+1 => mkνTypeSn (νTypeAt n)
+  end.
 
-(** The coinductive suffix of an [νType] beyhond level [n] *)
+(** The coinductive suffix of an [νType] beyond level [n] *)
 CoInductive νTypeFrom n (X: (νTypeAt n).(prefix)): Type@{m'} := cons {
   this: (νTypeAt n).(Frame).(frame) (♢ n) X -> HSet@{m};
   next: νTypeFrom n.+1 (X; this);
