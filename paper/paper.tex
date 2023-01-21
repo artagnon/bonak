@@ -374,7 +374,7 @@ Standard $n$-semi-cubes have a geometric interpretation, which we illustrate for
 In particular, the standard $(n+1)$-semi-cube can be obtained by taking two copies of the standard $n$-semi-cube serving as bottom and top face and connecting them by a tube obtained as an other copy of the standard $n$-semi-cube stretched in the new dimension.
 
 \subsection{Generalization to \texorpdfstring{$\nu$}{ν}-sets}
-Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and semi-cubical sets. To obtain this, we extend $\DeltaPlus$ and $\Cube$ in a straightforward manner by taking sequences of elements of a set $\nu$ of arbitrary cardinal, extended with $\kstar$. That is:
+Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and semi-cubical sets. To obtain this, we extend $\DeltaPlus$ and $\Cube$ in a straightforward manner into a category which we call $\nu$-semi-shape category. The morphisms of the $\nu$-semi-shape category are sequences of elements of a set $\nu$ of arbitrary cardinal, extended with $\kstar$, so that the following holds:
 
 \begin{table}[H]
   \centering
@@ -386,6 +386,8 @@ Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and
     \bottomrule
   \end{tabularx}
 \end{table}
+
+A $\nu$-set is thus a functor $\phi$ from the $\nu$-semi-shape category to $\Set$ and we call $n$-$\nu$-semi-shape an element of $\phi(n)$. As in the augmented semi-simplicial and semi-cubical cases, the standard $(n+1)$-$\nu$-semi-shape is obtained by connecting together $\nu$ copies of the standard $n$-$\nu$-semi-shape with an extra copy stretched in a new dimension. We clarify in the next sections how this process of construction is similar to the parametricity translation considered in the context of typed programming languages~\cite{reynolds72, bernardy10, bernardy11, atkey14, bernardy15}.
 
 \section{Our setting}
 In this section, we explain how we recover the notion of sets in type theory, and briefly explain the difference between the fibered and indexed representations.
