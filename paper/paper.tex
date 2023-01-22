@@ -207,7 +207,7 @@ The outline of the paper is as follows. First, we recall the definition of the a
 
 Our precise mechanization in Coq is available on Github, at \href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak}. The construction was conceived in Summer 2019 and the mechanization began in late 2019. A sketch of the construction was presented at the 2020 HoTT-UF workshop and the completion of the mechanization was reported at the TYPES 2022 conference.
 
-\section{Semi-simplicial sets, semi-cubical sets and a generalization}
+\section{Semi-simplicial and semi-cubical sets}
 It is well-known that simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices. What we have formalized is \emph{augmented semi-simplicial} sets~\cite{fri08}, and \emph{semi-cubical} sets~\cite{grandis03,buchholtz17}. We will proceed to explain the mathematical objects we have formalized. % TODO: well-known: can we find a reference?
 
 \subsection{Augmented semi-simplicial sets}
@@ -233,7 +233,7 @@ While ordinary semi-simplicial sets are presheaves over the semi-simplex categor
         0 :: (g' \circ f)  & \text{if $g = (0 :: g')$}                                                 \\
         a :: (g' \circ f') & \text{if $g = (\star :: g')$, $f = (a :: f')$, where $a = 0$ or $\kstar$} \\
       \end{cases} \\
-      \id              & := \{\kstar, \ldots, \kstar\} \text{ $n$ times} % TODO: n not bound on the left
+      \id              & := \{\kstar, \ldots, \kstar\} \text{ $n$ times}                             % TODO: n not bound on the left
     \end{align*}
     \caption{Definition of \DeltaPlus}\label{fig:deltaplus}
   \end{figure*}
@@ -295,7 +295,7 @@ The standard augmented $0$-semi-simplex is a singleton of one color. Standard au
   \end{equation*}
 \end{example}
 
-More generally, the standard augmented $(n+1)$-semi-simplex can be obtained by taking a copy of the standard augmented $n$-semi-simplex serving as the base and glueing on top of it another copy of it lifted by one dimension. In the latter, the color becomes an extra point, the points become lines connecting the points of the base to the extra point and so on. In particular, the components of the base are those of the standard augmented $n$-semi-simplex postfixed by 0 while the components of the lifted copy are postfixed by $\kstar$.
+More generally, the standard augmented $(n+1)$-semi-simplex can be obtained by taking a copy of the standard augmented $n$-semi-simplex serving as the base and glueing on top of it another copy of it lifted by one dimension. In the latter, the color becomes an extra point, the points become lines connecting the points of the base to the extra point and so on. In particular, the components of the base are those of the standard augmented $n$-semi-simplex postfixed by $0$ while the components of the lifted copy are postfixed by $\kstar$.
 
 \subsection{Semi-cubical sets}
 Semi-cubical sets are defined like augmented semi-simplicial sets except that $\DeltaPlus$ is replaced by $\Cube$ in which we take sequences of $L$, $R$ and $\star$, instead of sequences of $0$ and $\kstar$.
@@ -468,14 +468,14 @@ In this section, we gradually build up an intuition for our construction, follow
 The process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$ in the last section, is similar to applying a binary parametricity translation and expecting the resulting translation to be inhabited. The parametricity which we consider interprets a type $A$ by a graph $A_\kstar$ over this type, and a term $t: A$ as an edge in $A_\kstar(t)(t)$. In particular, $\U$ is interpreted as the graph ${\U}_\kstar$, which takes two types $A_L$ and $A_R$ and returns the type $A_L \rightarrow A_R \rightarrow \U$ of graphs over $A_L$ and $A_R$. Also, for $A$ interpreted by $A_\kstar$ and $B$ interpreted by $B_\kstar$, a dependent function type $\Pi a: A.\, B$ is interpreted as the graph $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$: %TODO be explicit that HSet and HSet* are in the next universe??
 
 \begin{align*}
-   & (\Pi a: A.\, B)_\kstar(f_L)(f_R) \defeq                                                 \\
+   & (\Pi a: A.\, B)_\kstar(f_L)(f_R) \defeq                                                      \\
    & \Pi a_L: A.\, \Pi a_R: A.\, \Pi a_\kstar: A_\kstar(a_L)(a_R).\, B_\kstar(f_L(a_L))(f_R(a_R))
 \end{align*}
 
 In particular, for $X: \U$, applying the parametricity translation is about canonically associating to $X$ an inhabitant $X_\kstar$ of ${\U}_\kstar(X)(X)$ i.e. of $X \rightarrow X \rightarrow \U$. In turn, applying the parametricity translation to $X_\kstar: X \rightarrow X \rightarrow \U$ is about canonically associating to $X_\kstar$ an inhabitant $X_{\kstar\kstar}$ of $(X \rightarrow X \rightarrow \U)_\kstar(X_\kstar)(X_\kstar)$ i.e. of:
 
 \begin{align*}
-  \Pi x_{LL}: X.\, \Pi x_{LR}: X.\, X_\kstar(x_{LL})(x_{LR})              \\
+  \Pi x_{LL}: X.\, \Pi x_{LR}: X.\, X_\kstar(x_{LL})(x_{LR})             \\
   \rightarrow \Pi x_{RL}: X.\, \Pi x_{RR}: X.\, X_\kstar(x_{RL})(x_{RR}) \\ \rightarrow X_\kstar(x_{LL}, x_{RL}) \rightarrow X_\kstar(x_{LR})(x_{RR})  \rightarrow \U
 \end{align*}
 which hints us at how the sequence $X_0$, $X_1$, $X_2$ can be seen as a sequence of inhabitants of the iteration of binary parametricity applied to an initial $X: \U$:
