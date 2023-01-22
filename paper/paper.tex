@@ -233,7 +233,7 @@ While ordinary semi-simplicial sets are presheaves over the semi-simplex categor
         0 :: (g' \circ f)  & \text{if $g = (0 :: g')$}                                                 \\
         a :: (g' \circ f') & \text{if $g = (\star :: g')$, $f = (a :: f')$, where $a = 0$ or $\kstar$} \\
       \end{cases} \\
-      \id              & := \{\kstar, \ldots, \kstar\} \text{ $n$ times}                             % TODO: n not bound on the left
+      \id              & := \{\kstar, \ldots, \kstar\} \text{ $n$ times for $\id \in \Hom(n, n)$}
     \end{align*}
     \caption{Definition of \DeltaPlus}\label{fig:deltaplus}
   \end{figure*}
@@ -252,7 +252,7 @@ While ordinary semi-simplicial sets are presheaves over the semi-simplex categor
 To provide examples, we define the standard augmented $n$-semi-simplex.
 
 \begin{definition}[$\DeltaPlus^n$]
-  The standard augmented $n$-semi-simplex $\DeltaPlus^n$ is defined as what is called the Yoneda embedding of $n\in\Obj(\DeltaPlus)$:
+  The standard augmented $n$-semi-simplex $\DeltaPlus^n$ is defined as what is called the Yoneda embedding of $n \in \Obj(\DeltaPlus)$:
 
   \begin{align*}
     \DeltaPlus^n    & : \Set_{\DeltaPlus}        \\
@@ -295,7 +295,7 @@ The standard augmented $0$-semi-simplex is a singleton of one color. Standard au
   \end{equation*}
 \end{example}
 
-More generally, the standard augmented $(n+1)$-semi-simplex can be obtained by taking a copy of the standard augmented $n$-semi-simplex serving as the base and glueing on top of it another copy of it lifted by one dimension. In the latter, the color becomes an extra point, the points become lines connecting the points of the base to the extra point and so on. In particular, the components of the base are those of the standard augmented $n$-semi-simplex postfixed by $0$ while the components of the lifted copy are postfixed by $\kstar$.
+More generally, the standard augmented $(n+1)$-semi-simplex can be obtained by taking a copy of the standard augmented $n$-semi-simplex serving as the base and glueing on top of it another copy of it lifted by one dimension. In the second copy, the color becomes an extra point, the points become lines connecting the points of the base to the extra point and so on. In particular, the components of the base are those of the standard augmented $n$-semi-simplex postfixed by $0$ while the components of the lifted copy are postfixed by $\kstar$.
 
 \subsection{Semi-cubical sets}
 Semi-cubical sets are defined like augmented semi-simplicial sets except that $\DeltaPlus$ is replaced by $\Cube$ in which we take sequences of $L$, $R$ and $\star$, instead of sequences of $0$ and $\kstar$.
@@ -329,7 +329,7 @@ Semi-cubical sets are defined like augmented semi-simplicial sets except that $\
 \end{definition}
 
 \begin{definition}[$\Cube^n$]
-  The standard semi-cube $\Cube^n$ is defined as the Yoneda embedding of $n\in\Obj(\Cube)$:
+  The standard semi-cube $\Cube^n$ is defined as the Yoneda embedding of $n \in \Obj(\Cube)$:
 
   \begin{align*}
     \Cube^n    & : \CSet                    \\
@@ -372,7 +372,7 @@ Standard $n$-semi-cubes have a geometric interpretation, which we illustrate for
   \end{equation*}
 \end{example}
 
-More generally, the standard $(n+1)$-semi-cube can be obtained by taking two copies of the standard $n$-semi-cube serving as bottom and top face and connecting them by a tube obtained as a third copy stretched in the new dimension. The bottom and top faces are obtained from the standard $n$-semi-cube by postfixing with respectively $L$ and $R$ while the tube is obtained by postfixing with~$\kstar$.
+More generally, the standard $(n+1)$-semi-cube can be obtained by taking two copies of the standard $n$-semi-cube serving as bottom and top face and connecting them by a cylinder obtained as a third copy stretched in the new dimension. The bottom and top faces are obtained from the standard $n$-semi-cube by postfixing with respectively $L$ and $R$ while the cylinder is obtained by postfixing with \kstar.
 
 \subsection{Generalization to \texorpdfstring{$\nu$}{ν}-sets}
 Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and semi-cubical sets. To obtain this, we extend $\DeltaPlus$ and $\Cube$ in a straightforward manner into a category which we call $\nu$-semi-shape category. The morphisms of the $\nu$-semi-shape category are sequences of elements of a set $\nu$ of arbitrary cardinal, extended with $\kstar$, so that the following holds:
@@ -456,16 +456,13 @@ If we think of $X_1$ fibered over two copies of $X_0$ in an indexed way, we get 
   \ldots
 \end{align*}
 
-Now, one may wonder how to express the type of $X_i$ uniformly as a function of $n$? Connecting semi-cubical sets to binary parametricity
-%, later, thanks to the generalization to $\nu$-sets, augmented semi-simplicial sets to unary parametricity
-will give us a solution which we describe in the next section.
+Now, one may wonder how to express the type of $X_i$ uniformly as a function of $n$. Connecting semi-cubical sets to binary parametricity will give us a solution which we describe in the next section.
 
 \section{Our construction}
 In this section, we gradually build up an intuition for our construction, followed by the full details.
 
 \subsection{Relating the indexed representation to parametricity}
-
-The process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$ in the last section, is similar to applying a binary parametricity translation and expecting the resulting translation to be inhabited. The parametricity which we consider interprets a type $A$ by a graph $A_\kstar$ over this type, and a term $t: A$ as an edge in $A_\kstar(t)(t)$. In particular, $\U$ is interpreted as the graph ${\U}_\kstar$, which takes two types $A_L$ and $A_R$ and returns the type $A_L \rightarrow A_R \rightarrow \U$ of graphs over $A_L$ and $A_R$. Also, for $A$ interpreted by $A_\kstar$ and $B$ interpreted by $B_\kstar$, a dependent function type $\Pi a: A.\, B$ is interpreted as the graph $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$: %TODO be explicit that HSet and HSet* are in the next universe??
+The process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$ in the last section, is similar to applying a binary parametricity translation and expecting the resulting translation to be inhabited. The parametricity which we consider interprets a type $A$ by a graph $A_\kstar$ over this type, and a term $t: A$ as an edge in $A_\kstar(t)(t)$. In particular, $\U$ is interpreted as the graph ${\U}_\kstar$, which takes $A_L$ and $A_R$ in $\U$ and returns the type $A_L \rightarrow A_R \rightarrow \U$ of graphs over $A_L$ and $A_R$. Also, for $A$ interpreted by $A_\kstar$ and $B$ interpreted by $B_\kstar$, a dependent function type $\Pi a: A.\, B$ is interpreted as the graph $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
 
 \begin{align*}
    & (\Pi a: A.\, B)_\kstar(f_L)(f_R) \defeq                                                      \\
@@ -488,6 +485,7 @@ which hints us at how the sequence $X_0$, $X_1$, $X_2$ can be seen as a sequence
     \ldots
   \end{array}
 \end{equation*}
+
 This tells us how the informal type given to $X_2$ in the previous section could be rephrased so that it comes as the instance of a general recipe characterizing the type of all $X_i$.
 
 Notice, however, that the recipe obtained so far, $X_{n + 1}: ({S_n})_\kstar(X_n)(X_n)$ for $X_n: S_n$, applies parametricity on the \emph{syntax} of the type of $X_n$. It does not directly yield a characterization of $S_n$ as a function from $n$. Reformulating the recipe as an explicit recursive construction, without requiring an interpretation of the syntax of types, is the main outcome of this work, together with the mechanization and the uniform treatment of augmented semi-simplial and semi-cubical sets by means of the generalization to $\nu$-sets.
@@ -580,7 +578,8 @@ A $\fullframe[n]$ is a sequence of $\layer[n][p]$, and we write $\framep[n][p]$ 
 
 The figure on the left is $\framep[3][1]$, on the right is $\framep[3][2]$, and on the bottom is $\framep[3][3]$, which is full. Further, $\framep[3][1]$ is made of one layer, $\layer[3][0]$, shown in blue, $\framep[3][2]$ is made of one additional layer, $\layer[3][1]$, shown in red, $\framep[3][3]$ is made of one more layer, $\layer[3][2]$, shown in green.
 
-We illustrated here the cubical case, that is $\nu=2$, but, in general, a $\layer[n][p]$ is a product of $\nu$ $\filler[n - 1][p]$. A $\filler[n][p]$ is an $n$-dimensional object obtained by stretching a $(n - p)$-dimensional frame in $p$ directions. For instance, in the picture, each of the two $\filler[2][0]$ of $\layer[3][0]$ is a filled blue square, each of the two $\filler[2][1]$ of $\layer[3][1]$ is the line shown in red, stretched into a square, and each of the two $\filler[2][2]$ of $\layer[3][2]$ is a point shown in green, stretched into a square. Note that a filler, which extends a frame with an element depending on it, shown as an element of $X_n$ below. As a filler extends a frame, it also has layer components, but note that the layers of a filler are associated on the right that is opposite to the way they are associated in frames:
+We illustrated here the cubical case, that is $\nu = 2$, but, in general, a $\layer[n][p]$ is a product of $\nu$ $\filler[n - 1][p]$. A $\filler[n][p]$ is an $n$-dimensional object obtained by stretching a $(n - p)$-dimensional frame in $p$ directions. For instance, in the picture, each of the two $\filler[2][0]$ of $\layer[3][0]$ is a filled blue square, each of the two $\filler[2][1]$ of $\layer[3][1]$ is the line shown in red, stretched into a square, and each of the two $\filler[2][2]$ of $\layer[3][2]$ is a point shown in green, stretched into a square. Note that a filler, which extends a frame with an element depending on it, shown as an element of $X_n$ below. As a filler extends a frame, it also has layer components, but note that the layers of a filler are associated on the right that is opposite to the way they are associated in frames:
+
 \begin{align*}
   \framep[n][p] & \defeq \Sigma a_n : (\ldots (\Sigma \unitpoint : \unittype .\; \layer[n][0]) \ldots) .\; \layer[n][p] \\
   \filler[n][p] & \defeq \Sigma l_p : \layer[n][p] . (\ldots (\Sigma l_n : \layer[n][n - 1] .\; X_n) \ldots)
