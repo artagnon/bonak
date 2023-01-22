@@ -815,11 +815,13 @@ Remark: If we weren't working in \U, but in \HGpd, we would need to prove one mo
 \renewcommand*{\lab}{fulltab:frames}
 \input{tab-frames.tex}
 
-\renewcommand*{\lab}{fulltab:faces}
-\input{tab-faces.tex}
-
-\renewcommand*{\lab}{fulltab:coh}
-\input{tab-coh.tex}
+\begin{sidewaystable*}
+  \renewcommand*{\lab}{fulltab:faces}
+  \input{tab-faces.tex}
+  \vspace{5em}
+  \renewcommand*{\lab}{fulltab:coh}
+  \input{tab-coh.tex}
+\end{sidewaystable*}
 
 \subsection{Details on the mechanization\label{sec:mech}}
 \renewcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
