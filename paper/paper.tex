@@ -11,9 +11,9 @@
 \define@cmdkey[bonak]{frame}{D}{(#1)}
 \define@cmdkey[bonak]{layer}{D}{(#1)}
 \define@cmdkey[bonak]{layer}{d}{(#1)}
-\define@cmdkey[bonak]{filler}{D}{(#1)}
-\define@cmdkey[bonak]{filler}{E}{(#1)}
-\define@cmdkey[bonak]{filler}{d}{(#1)}
+\define@cmdkey[bonak]{painting}{D}{(#1)}
+\define@cmdkey[bonak]{painting}{E}{(#1)}
+\define@cmdkey[bonak]{painting}{d}{(#1)}
 \define@cmdkey[bonak]{fullframe}{D}{(#1)}
 
 \define@cmdkey[bonak]{restrframe}{D}{(#1)}
@@ -21,20 +21,20 @@
 \define@cmdkey[bonak]{restrlayer}{D}{(#1)}
 \define@cmdkey[bonak]{restrlayer}{d}{(#1)}
 \define@cmdkey[bonak]{restrlayer}{l}{(#1)}
-\define@cmdkey[bonak]{restrfiller}{D}{(#1)}
-\define@cmdkey[bonak]{restrfiller}{E}{(#1)}
-\define@cmdkey[bonak]{restrfiller}{d}{(#1)}
-\define@cmdkey[bonak]{restrfiller}{c}{(#1)}
+\define@cmdkey[bonak]{restrpainting}{D}{(#1)}
+\define@cmdkey[bonak]{restrpainting}{E}{(#1)}
+\define@cmdkey[bonak]{restrpainting}{d}{(#1)}
+\define@cmdkey[bonak]{restrpainting}{c}{(#1)}
 
 \define@cmdkey[bonak]{cohframe}{D}{(#1)}
 \define@cmdkey[bonak]{cohframe}{d}{(#1)}
 \define@cmdkey[bonak]{cohlayer}{D}{(#1)}
 \define@cmdkey[bonak]{cohlayer}{d}{(#1)}
 \define@cmdkey[bonak]{cohlayer}{l}{(#1)}
-\define@cmdkey[bonak]{cohfiller}{D}{(#1)}
-\define@cmdkey[bonak]{cohfiller}{E}{(#1)}
-\define@cmdkey[bonak]{cohfiller}{d}{(#1)}
-\define@cmdkey[bonak]{cohfiller}{c}{(#1)}
+\define@cmdkey[bonak]{cohpainting}{D}{(#1)}
+\define@cmdkey[bonak]{cohpainting}{E}{(#1)}
+\define@cmdkey[bonak]{cohpainting}{d}{(#1)}
+\define@cmdkey[bonak]{cohpainting}{c}{(#1)}
 \makeatother
 
 % Truncated sets, otherwise referred to as X: the general macro
@@ -43,21 +43,21 @@
   \setkeys*[bonak]{X}{#3}
 }
 
-% Frame, layer, and filler: the general macro
+% Frame, layer, and painting: the general macro
 \newcommandx{\prim}[6][2,3,4,5,6]{
   \ensuremath{\mathsf{\color{indian-yellow}{#1}}_{#2}^{
     \joinargs[#3][#4][#5]}}
   \setkeys*[bonak]{#1}{#6}
 }
 
-% Restriction for frame, layer, and filler: the general macro
+% Restriction for frame, layer, and painting: the general macro
 \newcommandx{\restr}[8][2,3,4,5,6,7,8]{
   \ensuremath{\mathsf{\color{russian-green}{restr}}_{
     \joinargs[\mathsf{\color{indian-yellow}{#1}}][#2][#3][#4]}^{\joinargs[#5][#6][#7]}}
   \setkeys*[bonak]{restr#1}{#8}
 }
 
-% Coherence conditions for frame, layer, and filler: the general macro
+% Coherence conditions for frame, layer, and painting: the general macro
 
 % Hack: we'd like \coh to take 10 arguments, with the 10th being passed to
 % xkeyval, but this is not possible. The only possible compromise is to join
@@ -118,13 +118,13 @@
 % typesetting
 \newcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
 \newcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
-\newcommandx{\filler}[2][1,2]{\prim{filler}[][#1][#2][][]}
+\newcommandx{\filler}[2][1,2]{\prim{painting}[][#1][#2][][]}
 \newcommandx{\restrf}[4][1,2,3,4]{\restr{frame}[][#3][#4][#1][#2][][]}
 \newcommandx{\restrl}[4][1,2,3,4]{\restr{layer}[][#3][#4][#1][#2][][]}
-\newcommandx{\restrc}[4][1,2,3,4]{\restr{filler}[][#3][#4][#1][#2][][]}
+\newcommandx{\restrc}[4][1,2,3,4]{\restr{painting}[][#3][#4][#1][#2][][]}
 \newcommandx{\cohf}{\coh{frame}[][][][][][][][]}
 \newcommandx{\cohl}{\coh{layer}[][][][][][][][]}
-\newcommandx{\cohc}{\coh{filler}[][][][][][][][]}
+\newcommandx{\cohc}{\coh{painting}[][][][][][][][]}
 \newcommandx{\coht}{\cohtwo{frame}[][][][][][][][]}
 \newcommandx{\fullframe}[1][1]{\prim{fullframe}[][#1][][][]}
 
@@ -642,13 +642,13 @@ Hence, we need a coherence condition to commute the terms. Coherence conditions 
 % show 1 explicit in first two parts
 % show E + 1 explicit in the third part
 \appendmask[bonak]{layer}[D]
-\appendmask[bonak]{filler}[D]
+\appendmask[bonak]{painting}[D]
 \appendmask[bonak]{restrframe}[D]
 \appendmask[bonak]{restrlayer}[D, d]
-\appendmask[bonak]{restrfiller}[D, d]
+\appendmask[bonak]{restrpainting}[D, d]
 \appendmask[bonak]{cohframe}[D]
 \appendmask[bonak]{cohlayer}[D, d]
-\appendmask[bonak]{cohfiller}[D, d]
+\appendmask[bonak]{cohpainting}[D, d]
 
 % Now, we write the type theory bit, and input the abbreviated tables
 
@@ -659,23 +659,23 @@ Hence, we need a coherence condition to commute the terms. Coherence conditions 
 \newcommandx{\Xcomp}[3][3=]{\X[#1][=#2][#3]}
 \newcommandx{\Xfrom}[3][3=]{\X[#1][\geq#2][#3]}
 
-% Frame, layer, and filler
+% Frame, layer, and painting
 % Drop the universe letter
 \renewcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[][#2][#3][#4][#5]}
 \renewcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[][#2][#3][#4][#5]}
-\renewcommandx{\filler}[5][1,2,3,4,5]{\prim{filler}[][#2][#3][#4][#5]}
+\renewcommandx{\filler}[5][1,2,3,4,5]{\prim{painting}[][#2][#3][#4][#5]}
 
-% Restriction for frame, layer, and filler
+% Restriction for frame, layer, and painting
 % Drop the universe letter
 \renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
 \renewcommandx{\restrl}[7][1,2,3,4,5,6,7]{\restr{layer}[][#2][#3][#4][#5][#6][#7]}
-\renewcommandx{\restrc}[7][1,2,3,4,5,6,7]{\restr{filler}[][#2][#3][#4][#5][#6][#7]}
+\renewcommandx{\restrc}[7][1,2,3,4,5,6,7]{\restr{painting}[][#2][#3][#4][#5][#6][#7]}
 
-% Coherence conditions for frame, layer, and filler
+% Coherence conditions for frame, layer, and painting
 % Keep only ε, ω; n, p; proposition on n and p
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][][][#9]}
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][][][][][#9]}
-\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][#2][#3][][][][][#9]}
+\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][][][][][#9]}
 
 We now present the construction in \emph{extensional} type theory; i.e. in a type theory with the following reflection rule, where $=$ is propositional equality in some type and $\equiv$ is definitional equality~\cite{martinlof84}:
 
@@ -722,25 +722,25 @@ Remark: For a given $n$, the coherence conditions evaluate to a reflexivity proo
 \renewcommand*{\lab}{tab:faces}
 \input{tab-faces-ett.tex}
 
-% Restriction for frame, layer, and filler
+% Restriction for frame, layer, and painting
 % Drop just the universe letter for the coh table
 \renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
 \renewcommandx{\restrl}[7][1,2,3,4,5,6,7]{\restr{layer}[][#2][#3][#4][#5][#6][#7]}
-\renewcommandx{\restrc}[7][1,2,3,4,5,6,7]{\restr{filler}[][#2][#3][#4][#5][#6][#7]}
+\renewcommandx{\restrc}[7][1,2,3,4,5,6,7]{\restr{painting}[][#2][#3][#4][#5][#6][#7]}
 
-% Frame, layer, and filler
+% Frame, layer, and painting
 % Drop all arguments for coh table; they're not present in coind table.
 \renewcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[][][][][#5]}
 \renewcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[][][][][#5]}
-\renewcommandx{\filler}[5][1,2,3,4,5]{\prim{filler}[][][][][#5]}
+\renewcommandx{\filler}[5][1,2,3,4,5]{\prim{painting}[][][][][#5]}
 
 % Hack to remove , in \cohf
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][][][#9]}
 
-% Coherence conditions for frame, layer, and filler
+% Coherence conditions for frame, layer, and painting
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
 
 \renewcommand*{\lab}{tab:coh}
@@ -757,7 +757,7 @@ Tables \ref{fulltab:coind}, \ref{fulltab:core}, and \ref{fulltab:frames} are unc
 \renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 
 \begin{align*}
   \cohf[m][\omega][\theta][r][p][n][p][][d = {\restrf[m][\epsilon][q+2][n][p][][d = \d]}]\;\bullet       \\
@@ -772,7 +772,7 @@ Tables \ref{fulltab:coind}, \ref{fulltab:core}, and \ref{fulltab:frames} are unc
 \renewcommandx{\restrf}{\restr{frame}[][][][][][][]}
 \renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
 \renewcommandx{\cohl}{\coh{layer}[][][][][][][][]}
-\renewcommandx{\cohc}{\coh{filler}[][][][][][][][]}
+\renewcommandx{\cohc}{\coh{painting}[][][][][][][][]}
 
 where $\mathsf{ap}$ applies a function on two sides of an equality, and $\bullet$ is transitivity of equality. This property of equality proofs holds in \U, and since our formalization is done in \U, the term is trivially discharged.
 
@@ -792,21 +792,21 @@ Remark: If we weren't working in \U, but in \HGpd, we would need to prove one mo
 \clearmask
 
 % Keep all arguments for all macros
-% Frame, layer, and filler
+% Frame, layer, and painting
 \renewcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[#1][#2][#3][#4][#5]}
 \renewcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[#1][#2][#3][#4][#5]}
-\renewcommandx{\filler}[5][1,2,3,4,5]{\prim{filler}[#1][#2][#3][#4][#5]}
+\renewcommandx{\filler}[5][1,2,3,4,5]{\prim{painting}[#1][#2][#3][#4][#5]}
 \renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[#1][#2][][][#3]}
 
-% Restriction for frame, layer, and filler
+% Restriction for frame, layer, and painting
 \renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[#1][#2][#3][#4][#5][#6][#7]}
 \renewcommandx{\restrl}[7][1,2,3,4,5,6,7]{\restr{layer}[#1][#2][#3][#4][#5][#6][#7]}
-\renewcommandx{\restrc}[7][1,2,3,4,5,6,7]{\restr{filler}[#1][#2][#3][#4][#5][#6][#7]}
+\renewcommandx{\restrc}[7][1,2,3,4,5,6,7]{\restr{painting}[#1][#2][#3][#4][#5][#6][#7]}
 
-% Coherence conditions for frame, layer, and filler
+% Coherence conditions for frame, layer, and painting
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{filler}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[#1][#2][#3][#4][#5][#6][#7,#8][#9]}
 
 \renewcommand*{\lab}{fulltab:coind}
@@ -825,13 +825,13 @@ Remark: If we weren't working in \U, but in \HGpd, we would need to prove one mo
 \subsection{Details on the mechanization\label{sec:mech}}
 \renewcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
 \renewcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
-\renewcommandx{\filler}[2][1,2]{\prim{filler}[][#1][#2][][]}
+\renewcommandx{\filler}[2][1,2]{\prim{painting}[][#1][#2][][]}
 \renewcommandx{\restrf}[4][1,2,3,4]{\restr{frame}[][#3][#4][#1][#2][][]}
 \renewcommandx{\restrl}[4][1,2,3,4]{\restr{layer}[][#3][#4][#1][#2][][]}
-\renewcommandx{\restrc}[4][1,2,3,4]{\restr{filler}[][#3][#4][#1][#2][][]}
+\renewcommandx{\restrc}[4][1,2,3,4]{\restr{painting}[][#3][#4][#1][#2][][]}
 \renewcommandx{\cohf}[1][1]{\coh{frame}[][][][][][#1][][]}
 \renewcommandx{\cohl}[1][1]{\coh{layer}[][][][][][#1][][]}
-\renewcommandx{\cohc}[1][1]{\coh{filler}[][][][][][#1][][]}
+\renewcommandx{\cohc}[1][1]{\coh{painting}[][][][][][#1][][]}
 
 Since the construction shown in the previous sections are by induction on $n$, and dependencies are on lower $n$ and $p < n$, one would imagine formalizing this using well-founded induction in the calculus of inductive constructions. We initially tried this approach: we had terms dependent on the proofs of the case distinction of $n' \leq n$ implies $n' < n$ or $n' = n$, and these proofs didn't have definitional computational rule; it started to be necessary to reason propositionally on the computational property of the case distinction, and it eventually turned out to be unmanageable. Hence, we chose a different route: in practice, since $\restrf[n]$ depends on $\framep[n]$ and $\framep[n-1]$, while $\cohf[n]$ depends on $\framep[n]$, $\framep[n-1]$, and $\framep[n-2]$, we only need to keep track of three ``levels'', and we built separate data structures for the levels, with dependencies. More concretely, we build the ten definitions shown in the tables by induction, and this is part of the definition of a larger record. The other fields of the record aref $\framep$, $\layer$, $\filler$ at levels $n - 1$ and $n - 2$, $\restrf$, $\restrl$, and $\restrc$ at level $n - 1$, and equations to recall the definitions of these objects at lower levels.
 
