@@ -738,11 +738,11 @@ Notice that each $\restrl$ in the type of $\cohl$ is hiding a $\cohf$ rewrite: t
 
 Finally, let us explain $\cohc$. The base case $p = r$ is the key case of the commutation of $\restrf$, when one of the $\restrc$ collapses, and the remaining equation holds trivially. The case of $p < r$ follows the structure of $\restrc$ by induction.
 
-There are a few more subtleties. In $\cohf$ and $\cohc$, we use the reflection rule to identify equalities of pairs with a conjunction of two equalities. In $\cohl$, we use the reflection rule to identify equality of functions with point-wise equality. We additionally rely heavily on basic properties of the groupoid transport, which we don't detail.
+Like in \ref{tab:coh}, we leave implicit in \ref{fulltab:coh}, the use of the isomorphism between the type of equalities of dependent pairs in a $\Sigma$-type with the $\Sigma$-type of equalities of the components of the pair, as well as the isomorphism between equality of functions with point-wise equality. Contrary to the ETT case, functional extensionality does not hold, so we assume it. However, the requirement of functional extensionality disappears if $\nu$ is finite. As for basic groupoid properties of equalities, which no longer hold definitionally, we do not mention them for simplicity.
 
 For a fixed $n$, $\framep$, $\restrf$, and $\cohf$ have to be mutually defined by induction on $p$. Each of them rely on $\painting$, $\restrc$, and $\cohc$ at lower $n$, so they are well-founded. Finally, each of $\painting$, $\restrc$, and $\cohc$ are by induction from $p$ to $n$.
 
-Remark: If we weren't working in \U, but in \HGpd, we would need to prove one more higher-dimensional coherence, and if we were working in \Type, we would need to prove arbitrarily many higher-dimensional coherences. For the unfamiliar reader, $\HGpd$ is the subset of types $A$ such that for all $x$ and $y$ in $A$, $x = y$ is in \U. See \cite{herbelin15,altenkirch16,kraus21} for a discussion on the need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory.
+Remark: If we were not working in \U, but in \HGpd, we would need to prove one more higher-dimensional coherence, and if we were working in \Type, we would need to prove arbitrarily many higher-dimensional coherences. For the unfamiliar reader, $\HGpd$ is the subset of types $A$ such that for all $x$ and $y$ in $A$, $x = y$ is in \U. See \cite{herbelin15,altenkirch16,kraus21} for a discussion on the need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory.
 
 % Full tables in this section
 %
@@ -806,20 +806,20 @@ The entire construction relies on inequalities over natural numbers, and we use 
   end.
 \end{minted}
 
-By placing the definition in \SProp, we have definitional equality of all inequality proofs. For the purpose of unification, however, this definition does not go far enough. Consider the unification problems:
+Here \SProp is a definitionally proof-irrelevant impredicative universe at the bottom of the universe hierarchy~\cite{gilbert19}. By placing the definition in \SProp, we have definitional equality of all inequality proofs. For the purpose of unification, however, this definition does not go far enough. Consider the unification problems:
 
 \begin{minted}{coq}
-  le_trans ?p le_refl = ?p
-  le_trans le_refl ?p = ?p
+  leR_trans ?p leR_refl = ?p
+  leR_trans leR_refl ?p = ?p
 \end{minted}
-where \texttt{le\_trans} is transitivity, \texttt{le\_refl} is reflexivity, and \texttt{?p} is an existential variable. These two problems definitionally hold in \SProp, but equalizing them does not solve the existential. For unification to be useful in inferring existentials, we present our first variant of $\leq$, which we dub as the ``Yoneda variant'':
+where \texttt{leR\_trans} is transitivity, \texttt{leR\_refl} is reflexivity, and \texttt{?p} is an existential variable. These two problems definitionally hold in \SProp, but equalizing them does not solve the existential. For unification to be useful in inferring existentials, we present our first variant of $\leq$, which we dub as the ``Yoneda variant'':
 
 \begin{minted}{coq}
   Definition leY n m :=
     forall p, leR p n -> leR p m.
 \end{minted}
 
-\texttt{leY} is an improvement over \texttt{leR} since reflexivity is now definitionally the neutral element of transitivity, and associativity of transitivity also holds definitionally. Although it significantly eases our proof, there are some instances where unification is unable to solve for the existentials, and we have to provide them explicitly.
+This definition is an improvement over \texttt{leR} since reflexivity is now definitionally the neutral element of transitivity, and associativity of transitivity also holds definitionally. Although it significantly eases our proof, there are some instances where unification is unable to solve the existentials, and we have to provide them explicitly.
 
 The second variant of $\leq$, the ``inductive variant'', is phrased as:
 
