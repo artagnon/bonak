@@ -253,7 +253,6 @@ To provide examples, we define the standard augmented $n$-semi-simplex.
 
 \begin{definition}[$\DeltaPlus^n$]
   The standard augmented $n$-semi-simplex $\DeltaPlus^n$ is defined as what is called the Yoneda embedding of $n \in \Obj(\DeltaPlus)$:
-
   \begin{align*}
     \DeltaPlus^n    & : \Set_{\DeltaPlus}        \\
     \DeltaPlus^n(p) & := \Hom(p, n)              \\
@@ -330,7 +329,6 @@ Semi-cubical sets are defined like augmented semi-simplicial sets except that $\
 
 \begin{definition}[$\Cube^n$]
   The standard semi-cube $\Cube^n$ is defined as the Yoneda embedding of $n \in \Obj(\Cube)$:
-
   \begin{align*}
     \Cube^n    & : \CSet                    \\
     \Cube^n(p) & := \Hom(p, n)              \\
@@ -399,7 +397,6 @@ Martin-Löf's Type theory~\cite{martinlof75,martinlof84} is a logical formalism 
 Type theory is a flexible formalism supporting different models. One of this model interprets types as topological spaces, where equality is interpreted as path and substitutivity of equality as transport. This model supports the univalence principle stating that equality of types mimics equivalence of types, leading to the development of Homotopy Type Theory~\cite{hottbook}. In type theory, types are organized in a hierarchy of universes written $\Type_m$ for $m$ a natural number. Main types in type theory are the types of dependent pairs, written $\Sigma a : A.\,B(a)$, the types of dependent functions, written $\Pi a:A.\,B(a)$, for $A$ a type and $B(a)$ a type dependent on the inhabitant $a$ of $A$, and the type of propositional equality, written $t = u$. We assume our type theory to also include a distinguished singleton type, written $\unittype$, and with inhabitant $\unitpoint$, the type of boolean values, called $\textsf{bool}$, and the type of natural numbers. We also write $\hd$ and $\tl$ the projections of dependent pairs. In type theory, logical propositions are types themselves and we use $\Pi$ to represent universal quantification and $\Sigma$ to represent existential quantification.
 
 A notion of sets can be recovered in each universe as $\U[m]$, denoting the subtype of $\Type_m$ for which paths are degenerated, what can be expressed by the property of Uniqueness of Identity Proofs (UIP). Technically, this is expressed as a structure equipping a domain $\Dom$ with the property $\UIP$:
-
 \begin{align*}
   \Dom & : \Type_m                                  \\
   \UIP & : \Pi x y: \Dom.\, \Pi p q: x = y.\, p = q
@@ -419,7 +416,6 @@ In $\U[m]$, the following properties hold:
 \end{enumerate}
 
 Note that an equivalent definition of UIP is given by \textsf{UIP\_refl}:
-
 \begin{align*}
   \textsf{UIP\_refl} & : \Pi x: \Dom.\, \Pi p: x = x.\, p = \textsf{eq\_refl } x
 \end{align*}
@@ -449,7 +445,6 @@ Let us now come back to semi-cubical sets. A semi-cubical set can be represented
 \end{equation*}
 
 If we think of $X_1$ fibered over two copies of $X_0$ in an indexed way, we get $X_1$ of type $X_0 \rightarrow X_0 \rightarrow \U$. Continuing the process, we can think of $X_2$ fibered over four copies of $X_1$ themselves fibered over two copies of $X_0$ as a dependent type. We have a priori a dependency over eight copies of $X_0$ but these are actually four due to the coherence conditions. Based on these coherence conditions, the type of $X_2$ happens to have the form $\Pi a b c d, X_1 (a)(b) \rightarrow X_1 (a)(c) \rightarrow X_1 (b)(d) \rightarrow X_1 (c)(d) \rightarrow \U$, recovering the square structure of $X_2$. In summary,
-
 \begin{align*}
   X_0 & :              & \U                                                     \\
   X_1 & :              & X_0 \rightarrow X_0 \rightarrow \U                     \\
@@ -465,14 +460,12 @@ In this section, we gradually build up an intuition for our construction, follow
 
 \subsection{Relating the indexed representation to parametricity}
 The process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$ in the last section, is similar to applying a binary parametricity translation and expecting the resulting translation to be inhabited. The parametricity which we consider interprets a type $A$ by a graph $A_\kstar$ over this type, and a term $t: A$ as an edge in $A_\kstar(t)(t)$. In particular, $\U$ is interpreted as the graph ${\U}_\kstar$, which takes $A_L$ and $A_R$ in $\U$ and returns the type $A_L \rightarrow A_R \rightarrow \U$ of graphs over $A_L$ and $A_R$. Also, for $A$ interpreted by $A_\kstar$ and $B$ interpreted by $B_\kstar$, a dependent function type $\Pi a: A.\, B$ is interpreted as the graph $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
-
 \begin{align*}
    & (\Pi a: A.\, B)_\kstar(f_L)(f_R) \defeq                                                      \\
    & \Pi a_L: A.\, \Pi a_R: A.\, \Pi a_\kstar: A_\kstar(a_L)(a_R).\, B_\kstar(f_L(a_L))(f_R(a_R))
 \end{align*}
 
 In particular, for $X: \U$, applying the parametricity translation is about canonically associating to $X$ an inhabitant $X_\kstar$ of ${\U}_\kstar(X)(X)$ i.e. of $X \rightarrow X \rightarrow \U$. In turn, applying the parametricity translation to $X_\kstar: X \rightarrow X \rightarrow \U$ is about canonically associating to $X_\kstar$ an inhabitant $X_{\kstar\kstar}$ of $(X \rightarrow X \rightarrow \U)_\kstar(X_\kstar)(X_\kstar)$ i.e. of:
-
 \begin{align*}
   \Pi x_{LL}: X.\, \Pi x_{LR}: X.\, X_\kstar(x_{LL})(x_{LR})             \\
   \rightarrow \Pi x_{RL}: X.\, \Pi x_{RR}: X.\, X_\kstar(x_{RL})(x_{RR}) \\ \rightarrow X_\kstar(x_{LL}, x_{RL}) \rightarrow X_\kstar(x_{LR})(x_{RR})  \rightarrow \U
@@ -581,14 +574,12 @@ Let us now illustrate the construction of $\fullframe[3]$, necessary to build th
 The figure on the left is $\framep[3][1]$, on the right is $\framep[3][2]$, and on the bottom is $\framep[3][3]$, which is full. Further, $\framep[3][1]$ is made of one layer, $\layer[3][0]$, shown in blue, $\framep[3][2]$ is made of one additional layer, $\layer[3][1]$, shown in red, $\framep[3][3]$ is made of one more layer, $\layer[3][2]$, shown in green.
 
 We illustrated here the cubical case, that is $\nu = 2$, but, in general, a $\layer[n][p]$ is a product of $\nu$ $\painting[n - 1][p]$. A $\painting[n][0]$ is a $n$-dimensional object corresponding to a filled $\fullframe[n]$. More generally, a $\painting[n][p]$ is an $n$-dimensional object which has the form of a $\painting[n-p][0]$, thus of $(n-p)$-dimensional form, but shifted and living in dimensions $p$ to $n$. Such $\painting[n][p]$ fills a space framed by a partial $\framep[n][p]$ so that, together, they form a filled $\fullframe[n]$. For instance, in the picture, each of the two $\painting[2][0]$ of $\layer[3][0]$ is a filled blue square, each of the two $\painting[2][1]$ of $\layer[3][1]$ is the line shown in red, stretched into a partial square filling the partial frames made of respectively the left and right border of the blue square, and each of the two $\painting[2][2]$ of $\layer[3][2]$ is a point shown in green, stretched into a partial square filling the full frames made respectively of the upper and lower borders of the blue and red squares. A $\painting[n][p]$ adds to a $\framep[n][p]$ the layers needed to form a $\fullframe[n]$. They are added from dimension $n$ to dimension $p$ that is opposite to the order from $0$ to $p$ the $\framep[n][p]$ are built. A $\painting[n][p]$ complementing a given $\framep[n][p]$ fills the resulting $\fullframe[n]$. Thus, on the contrary of frames, it includes a filler, which lives in $X_n$ as shown below:
-
 \begin{align*}
   \framep[n][p]   & \defeq \Sigma a_n : (\ldots (\Sigma \unitpoint : \unittype .\; \layer[n][0]) \ldots) .\; \layer[n][p] \\
   \painting[n][p] & \defeq \Sigma l_p : \layer[n][p] . (\ldots (\Sigma l_n : \layer[n][n - 1] .\; X_n) \ldots)
 \end{align*}
 
 So far, we have not paid attention to the fact that we have a dependent type, shown as a $\Sigma$. Let us be more precise about this requirement. First, $\fullframe[n]$ depends on all $X_i$ up to $n - 1$. So, we need to package up $X_i$, for $i < n$, into a type, which we call $\X[][<n][]$. This allows us to give the type $\X[][<n][] \rightarrow \U$ to $\fullframe[n]$. Then, for $D: \X[][<n][]$, representing an initial prefix of $X_0, X_1, \ldots X_{n - 1}$, the indexed set $X_n$ has type $\fullframe[n](D) \rightarrow \U$. Thus, $\framep[n][p]$, $\layer[n][p]$ and $\painting[n][p]$ also depend on $D$. We can then refine the previous equation by showing the dependencies on $D$. In particular, $X_n$ is just $D.\tl$.
-
 \begin{align*}
    & \framep[n][p](D) \defeq                                                                                     \\
    & \;\;\;\;\Sigma a_n : (\ldots (\Sigma \unitpoint : \unittype .\; \layer[n][0](D)) \ldots) .\,\layer[n][p](D) \\
@@ -608,7 +599,6 @@ An extra refinement arises from the fact that each addition of a layer to a fram
 \end{figure*}
 
 Let us recall that a layer is made of $\nu$ paintings. When $\nu = 2$, this amounts to:
-
 \begin{align*}
   \layer[n][p](D)(d) & \defeq & \painting[n-1][p](D.\hd)(\restrf[n][p][L][p](d)) & \times \\
                      &        & \painting[n-1][p](D.\hd)(\restrf[n][p][R][p](d)) &
@@ -617,17 +607,14 @@ Let us recall that a layer is made of $\nu$ paintings. When $\nu = 2$, this amou
 $\restrf[n][p][\epsilon][q]$ indicates restriction on $q$ layers of a frame, and the induction is on $p$, going from $0$ to $q$. In particular, $\restrf[n][p][\epsilon][p]$ is a ``full restriction''. We define $\restrf[n][p][\epsilon][p](d)$ by recursion on the structure of a frame $d$, which necessitates definitions of $\restrl[n][p][\epsilon][q](d)(l)$ and $\restrc[n][p][\epsilon][q](d)(c)$, for $l$ a $\layer$ and $c$ a $\painting$. The key case is $\restrc[n][p][\epsilon][p](d)(c)$, where $c$, a $\painting[n][p]$, has necessarily the form of $((c_L, c_R), \_)$: $\restrc[n][p][L][p]$ picks out $c_L$, a $\painting[n-1][p]$, $\restrc[n][p][R][p]$ picks out the $c_R$, also a $\painting[n-1][p]$, and $\_$, a $\painting[n][p+1]$, is discarded. There is one more difficulty, which we illustrate by writing down expected and actual types.
 
 Given $c_\omega$ of type
-
 \begin{align*}
   c_\omega & : \painting[n-1][p](D.\hd)(\restrf[n-1][p][\omega][q](d))
 \end{align*}
 $\restrl[n][p][\epsilon](d)(c_L, c_R)$ produces a layer, in which the $\omega$-component has the type
-
 \begin{equation*}
   \painting[n-2][p](D.\hd.\hd)(\restrf[n-1][p][\epsilon][q](\restrf[n][p][\omega][p](d)))
 \end{equation*}
 while we expect a term of type
-
 \begin{equation*}
   \painting[n-2][p](D.\hd.\hd)(\restrf[n-1][p][\omega][p](\restrf[n][p][\epsilon][q+1](d)))
 \end{equation*}
@@ -756,12 +743,10 @@ As a side remark, note that for a fixed constant $n$, the coherence conditions e
 Since we have formalized the proof in the Coq proof assistant, which implements an intensional type theory, we now present the tables in \emph{intensional} type theory~\cite{martinlof75,martinlof84,coq22}, leaving implicit some details, which we will explain here, and other details, which we will explain in \ref{sec:mech}.
 
 Tables \ref{fulltab:coind}, \ref{fulltab:core}, and \ref{fulltab:frames} are unchanged, except that we make explicit all arguments, including those that can be inferred from the context. The need for transport along a proof of commutation of $\restrf$ in the definition of $\restrl$ is made explicit as shown in table \ref{fulltab:faces}, where the arrow over $\cohf$ indicates the direction of rewrite. The proof of $\cohf$ is described on \ref{fulltab:coh}, and it requires explicitation of several equalities which were definitional in extensional type theory. The commutation of $\restrl$ lives in a type referring to $\cohf$, so we need a transport along the commutation of $\restrf$ in the statement of $\cohl$. The proof of $\cohl$ is the most involved proof in the construction. This is where the higher-dimensional coherence condition is needed. The exact formulation of this coherence condition is as follows.
-
 \renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
-
 \begin{align*}
   \cohf[m][\omega][\theta][r][p][n][p][][d = {\restrf[m][\epsilon][q+2][n][p][][d = \d]}]\;\bullet       \\
   \ap \restrf[m][\omega][r][n][p][][]\;(\cohf[m][\epsilon][\theta][q+1][p][n][p][][d = \d])\;\bullet     \\
