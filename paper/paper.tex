@@ -399,9 +399,9 @@ In $\U[m]$, the following properties hold:
 \begin{enumerate}
   \item[(i)] UIP holds on the unit and bool type:
     \begin{align*}
-      \textsf{eq\_refl}        & : \Pi x.\, x = x                                             \\
-      \textsf{UIP\_refl\_unit} & : \Pi u: \unittype.\, \Pi x : u = u.\, x = \textsf{eq\_refl} \\
-      \textsf{UIP\_refl\_bool} & : \Pi b: \booltype.\, \Pi x : b = b.\, x = \textsf{eq\_refl}
+      \textsf{eq\_refl}        & : \Pi x.\, x = x                                            \\
+      \textsf{UIP\_refl\_unit} & : \Pi u: \unittype.\, \Pi x: u = u.\, x = \textsf{eq\_refl} \\
+      \textsf{UIP\_refl\_bool} & : \Pi b: \booltype.\, \Pi x: b = b.\, x = \textsf{eq\_refl}
     \end{align*}
   \item[(ii)] UIP propagates to $\Sigma$-types.
   \item[(iii)] UIP propagates to $\Pi$-types, with some additional functional extensionality axioms.
@@ -420,16 +420,16 @@ It is well-known in set theory that families of small sets can be represented in
 
 In category theory, the correspondence between the fibered and indexed way manifests as the correspondence between Grothendieck fibrations and pseudofunctors, of which a particular instance is the correspondence between discrete fibrations and presheaves, or even between discrete fibrations over sets and families of sets.
 
-The latter correspondence can be expressed in Homotopy Type Theory, for $T: \Type$, as an equivalence between $\Sigma S: \Type\;.\;S \rightarrow T$ and $T \rightarrow \Type$, which can be proved using univalence. This correspondence also holds on \U, for $T: \U$:
+The latter correspondence can be expressed in Homotopy Type Theory, for $T: \Type$, as an equivalence between $\Sigma S: \Type.\, S \rightarrow T$ and $T \rightarrow \Type$, which can be proved using univalence. This correspondence also holds on \U, for $T: \U$:
 \begin{equation*}
-  \Sigma S: \U\;.\;S\rightarrow T ~\simeq~ T \rightarrow \U
+  \Sigma S: \U.\, S\rightarrow T ~\simeq~ T \rightarrow \U
 \end{equation*}
 
 \subsection{Example: indexed semi-cubical sets}
 Let us now come back to semi-cubical sets. A semi-cubical set can be represented as a sequence of fibrations, together with appropriate coherence conditions.
 \begin{equation*}
   \begin{tikzcd}
-    X_0 : \U & X_1 : \U \arrow[l, "\delta^L" description, shift left=2] \arrow[l, "\delta^R" description, shift right=2] & X_2 : \U \arrow[l, "\delta^{L\kstar}" description, shift left=6] \arrow[l, "\delta^{R\kstar}" description, shift left=2] \arrow[l, "\delta^{\kstar R}" description, shift right=2] \arrow[l, "\delta^{\kstar L}" description, shift right=6] & \ldots
+    X_0: \U & X_1: \U \arrow[l, "\delta^L" description, shift left=2] \arrow[l, "\delta^R" description, shift right=2] & X_2: \U \arrow[l, "\delta^{L\kstar}" description, shift left=6] \arrow[l, "\delta^{R\kstar}" description, shift left=2] \arrow[l, "\delta^{\kstar R}" description, shift right=2] \arrow[l, "\delta^{\kstar L}" description, shift right=6] & \ldots
   \end{tikzcd}
 \end{equation*}
 
@@ -476,7 +476,7 @@ Notice, however, that the recipe obtained so far, $X_{n + 1}: ({S_n})_\kstar(X_n
 \subsection{Intuition for our formal construction}
 To assign types to $X_0, X_1, X_2, \ldots$ in the above indexed representation, we give a recursive definition relying on building blocks, which we call $\framep$, $\layer$, and $\painting$. A $\framep$ is a boundary of a standard form (simplex, cube, etc.), which we decompose into $\layer$, and a $\painting$ corresponds to a filled $\framep$. Some $\framep$ are full and we call them $\fullframe$.
 
-We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applying to the description above the isomorphism between $A \rightarrow B \rightarrow C$ and $A \times B \rightarrow C$, or between $\Pi a : A, (B a \rightarrow C)$ and $(\Sigma a : A, B a) \rightarrow C$. Let us now illustrate how we build $\fullframe[n]$. To begin, let us set $\fullframe[0] = \unittype$, so that the type $\U$ of $X_0$ can be equivalently formulated as $\unittype \rightarrow \U$. Then, more generally, we let each $\fullframe[n]$ consist of $n$ layers, written $\layer[n][p]$ with $p < n$, that we stack in order, starting from the $\unittype$ type and writing $\framep[n][p]$ for the $p$ first layers of a $\fullframe[n]$, so that $\fullframe[n]$ is $\framep[n][n]$. For instance, $X_1$ is made of one layer, so that it can be written as a $\Sigma$-type of an inhabitant of the $\unittype$ and $\layer[1][0]$, as shown in Fig.~\ref{fig:intuition} for $\nu = 2$ which also mentions how the type of $X_2$ is structured.
+We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applying to the description above the isomorphism between $A \rightarrow B \rightarrow C$ and $A \times B \rightarrow C$, or between $\Pi a: A, (B a \rightarrow C)$ and $(\Sigma a: A, B a) \rightarrow C$. Let us now illustrate how we build $\fullframe[n]$. To begin, let us set $\fullframe[0] = \unittype$, so that the type $\U$ of $X_0$ can be equivalently formulated as $\unittype \rightarrow \U$. Then, more generally, we let each $\fullframe[n]$ consist of $n$ layers, written $\layer[n][p]$ with $p < n$, that we stack in order, starting from the $\unittype$ type and writing $\framep[n][p]$ for the $p$ first layers of a $\fullframe[n]$, so that $\fullframe[n]$ is $\framep[n][n]$. For instance, $X_1$ is made of one layer, so that it can be written as a $\Sigma$-type of an inhabitant of the $\unittype$ and $\layer[1][0]$, as shown in Fig.~\ref{fig:intuition} for $\nu = 2$ which also mentions how the type of $X_2$ is structured.
 
 \begin{figure*}[!t]
   \begin{equation*}
@@ -496,7 +496,7 @@ We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applyin
                              \\ \times \\
                              X_0(\unitpoint)
                            \end{array}\hspace{-0.4em}
-            \right).\; \underbrace{X_1 \underbrace{(\unitpoint, b)}_{\restrf[2][0][L]}}_{\painting[1][1]}}_{\painting[1][0]}
+            \right).\, \underbrace{X_1 \underbrace{(\unitpoint, b)}_{\restrf[2][0][L]}}_{\painting[1][1]}}_{\painting[1][0]}
             \\ \times \\
             \underbrace{\Sigma b: \left(
             \hspace{-0.4em}\begin{array}{c}
@@ -504,7 +504,7 @@ We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applyin
                              \\ \times \\
                              X_0(\unitpoint)
                            \end{array}\hspace{-0.4em}
-            \right).\; \underbrace{X_1 \underbrace{(\unitpoint, b)}_{\restrf[2][0][R]}}_{\painting[1][1]}}_{\painting[1][0]}
+            \right).\, \underbrace{X_1 \underbrace{(\unitpoint, b)}_{\restrf[2][0][R]}}_{\painting[1][1]}}_{\painting[1][0]}
           \end{array}
           \right)}_{\layer[2][0]}\right)}_{\framep[2][1]}.\underbrace{\left(
         \begin{array}{c}
@@ -563,22 +563,22 @@ The figure on the left is $\framep[3][1]$, on the right is $\framep[3][2]$, and 
 
 We illustrated here the cubical case, that is $\nu = 2$, but, in general, a $\layer[n][p]$ is a product of $\nu$ $\painting[n - 1][p]$. A $\painting[n][0]$ is a $n$-dimensional object corresponding to a filled $\fullframe[n]$. More generally, a $\painting[n][p]$ is an $n$-dimensional object which has the form of a $\painting[n-p][0]$, thus of $(n-p)$-dimensional form, but shifted and living in dimensions $p$ to $n$. Such $\painting[n][p]$ fills a space framed by a partial $\framep[n][p]$ so that, together, they form a filled $\fullframe[n]$. For instance, in the picture, each of the two $\painting[2][0]$ of $\layer[3][0]$ is a filled blue square, each of the two $\painting[2][1]$ of $\layer[3][1]$ is the line shown in red, stretched into a partial square filling the partial frames made of respectively the left and right border of the blue square, and each of the two $\painting[2][2]$ of $\layer[3][2]$ is a point shown in green, stretched into a partial square filling the full frames made respectively of the upper and lower borders of the blue and red squares. A $\painting[n][p]$ adds to a $\framep[n][p]$ the layers needed to form a $\fullframe[n]$. They are added from dimension $n$ to dimension $p$ that is opposite to the order from $0$ to $p$ the $\framep[n][p]$ are built. A $\painting[n][p]$ complementing a given $\framep[n][p]$ fills the resulting $\fullframe[n]$. Thus, on the contrary of frames, it includes a filler, which lives in $X_n$ as shown below.
 \begin{align*}
-  \framep[n][p]   & \defeq \Sigma a_n : (\ldots (\Sigma \unitpoint : \unittype .\; \layer[n][0]) \ldots) .\; \layer[n][p] \\
-  \painting[n][p] & \defeq \Sigma l_p : \layer[n][p] . (\ldots (\Sigma l_n : \layer[n][n - 1] .\; X_n) \ldots)
+  \framep[n][p]   & \defeq \Sigma a_n: (\ldots (\Sigma \unitpoint: \unittype .\, \layer[n][0]) \ldots) .\, \layer[n][p] \\
+  \painting[n][p] & \defeq \Sigma l_p: \layer[n][p] . (\ldots (\Sigma l_n: \layer[n][n - 1] .\, X_n) \ldots)
 \end{align*}
 
 So far, we have not paid attention to the fact that we have a dependent type, shown as a $\Sigma$. Let us be more precise about this requirement. First, $\fullframe[n]$ depends on all $X_i$ up to $n - 1$. So, we need to package up $X_i$, for $i < n$, into a type, which we call $\X[][<n][]$. This allows us to give the type $\X[][<n][] \rightarrow \U$ to $\fullframe[n]$. Then, for $D: \X[][<n][]$, representing an initial prefix of $X_0, X_1, \ldots X_{n - 1}$, the indexed set $X_n$ has type $\fullframe[n](D) \rightarrow \U$. Thus, $\framep[n][p]$, $\layer[n][p]$ and $\painting[n][p]$ also depend on $D$. We can then refine the previous equation by showing the dependencies on $D$. In particular, $X_n$ is just $D.\tl$.
 \begin{align*}
-   & \framep[n][p](D) \defeq                                                                                     \\
-   & \;\;\;\;\Sigma a_n : (\ldots (\Sigma \unitpoint : \unittype .\; \layer[n][0](D)) \ldots) .\,\layer[n][p](D) \\
-   & \painting[n][p](D) \defeq                                                                                   \\
-   & \;\;\;\;\Sigma l_p : \layer[n][p](D).\, (\ldots (\Sigma l_n : \layer[n][n - 1](D) .\, D.\tl) \ldots)
+   & \framep[n][p](D) \defeq                                                                                  \\
+   & \;\;\;\;\Sigma a_n: (\ldots (\Sigma \unitpoint: \unittype.\, \layer[n][0](D)) \ldots) .\,\layer[n][p](D) \\
+   & \painting[n][p](D) \defeq                                                                                \\
+   & \;\;\;\;\Sigma l_p: \layer[n][p](D).\, (\ldots (\Sigma l_n: \layer[n][n - 1](D) .\, D.\tl) \ldots)
 \end{align*}
 
 \begin{figure*}[!t]
   \begin{align*}
-    \framep[n][p](D)      & \defeq & \Sigma d : (\ldots (\Sigma \unitpoint: \unittype.\, \layer[n][0](D)(\unitpoint)) \ldots).\, \layer[n][p](D)(d)                                \\
-    \painting[n][p](D)(d) & \defeq & \Sigma l_p: \layer[n][p](D)(d).\, (\ldots (\Sigma l_n : \layer[n][n - 1](D)(d, l_p, \ldots, l_{n - 1}).\, D.\tl(d, l_p, \ldots, l_n)) \ldots) \\
+    \framep[n][p](D)      & \defeq & \Sigma d: (\ldots (\Sigma \unitpoint: \unittype.\, \layer[n][0](D)(\unitpoint)) \ldots).\, \layer[n][p](D)(d)                                \\
+    \painting[n][p](D)(d) & \defeq & \Sigma l_p: \layer[n][p](D)(d).\, (\ldots (\Sigma l_n: \layer[n][n - 1](D)(d, l_p, \ldots, l_{n - 1}).\, D.\tl(d, l_p, \ldots, l_n)) \ldots) \\
                           &        & \text{where } (d, l_p, \ldots, l_q) \text{ abbreviates } ((\ldots(d, l_p), \ldots), l_q)
   \end{align*}
   \caption{Refinement of definition of $\framep$ and $\painting$\label{fig:refinement}}
@@ -653,7 +653,7 @@ Hence, we need a coherence condition to commute the restrictions. Coherence cond
 
 We now present the construction in \emph{extensional} type theory; i.e. in a type theory with the following reflection rule, where $=$ is propositional equality in some type and $\equiv$ is definitional equality~\cite{martinlof84}:
 \begin{equation*}
-  \seqr{}{\Gamma \vdash p : t = u}{\Gamma \vdash t \equiv u}
+  \seqr{}{\Gamma \vdash p: t = u}{\Gamma \vdash t \equiv u}
 \end{equation*}
 
 For the presentation corresponding to the formalization in \emph{intensional} type theory, see \ref{sec:itt}.
@@ -664,7 +664,7 @@ Notably, the definition of $\restrl$ relies on a definitional equality expressin
 
 Most components of the construction takes inequality constraints as parameters, and we have left implicit that they are satisfied in the tables. Comparison of inequality proofs depends on the definition of inequality, which we leave implicit, only assuming that we can pick a definition for which proofs of $m \leq n$ are provably unique and thus definitionally equal by the reflection rule.
 
-The construction takes benefit of various provable equalities over proofs of equality being definitional by the reflection rule. This includes in particular the groupoid properties of equality. Notably, unicity of identity proofs holds in extensional type theory, so that any type is automatically an $\U$. Also, we left implicit in table~\ref{tab:coh} the use of the isomorphism between $u = v$ and $\Sigma (p:u.\hd = v.\hd). (u.\tl = v.\tl)$ for $u$ and $v$ in a $\Sigma$-type. In the same table, we also left implicit the use of the isomorphism between $f = g$ and $\Pi a:A.f(a) = g(a)$ for $f$ and $g$ in $\Pi a:A.\, B$, where it should be recalled that the right-to-left map, that is function extensionality, holds by default in extensional type theory.
+The construction takes benefit of various provable equalities over proofs of equality being definitional by the reflection rule. This includes in particular the groupoid properties of equality. Notably, unicity of identity proofs holds in extensional type theory, so that any type is automatically an $\U$. Also, we left implicit in table~\ref{tab:coh} the use of the isomorphism between $u = v$ and $\Sigma (p:u.\hd = v.\hd). (u.\tl = v.\tl)$ for $u$ and $v$ in a $\Sigma$-type. In the same table, we also left implicit the use of the isomorphism between $f = g$ and $\Pi a: A.\, f(a) = g(a)$ for $f$ and $g$ in $\Pi a: A.\, B$, where it should be recalled that the right-to-left map, that is function extensionality, holds by default in extensional type theory.
 
 % TODO explain the role of the subscript HSet on =
 
