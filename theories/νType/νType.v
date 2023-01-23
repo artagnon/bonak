@@ -362,7 +362,7 @@ Defined.
 Instance mkPaintingPrev {n} {C: νType n} : PaintingBlockPrev n.+1 mkprefix mkFramePrev :=
 {|
   painting' (p: nat) (Hp: p.+1 <= n.+1) (D: mkprefix) := C.(Painting).(painting) D.2:
-    mkFramePrev.(frame') Hp D -> HSet; (* Bug? *)
+    mkFramePrev.(frame') Hp D -> HSet; (* Coq bug? *)
   painting'' (p: nat) (Hp: p.+2 <= n.+1) (D: mkprefix)
     (d : mkFramePrev.(frame'') Hp D) :=
     C.(PaintingPrev).(painting') d;
@@ -376,6 +376,7 @@ Instance mkPaintingPrev {n} {C: νType n} : PaintingBlockPrev n.+1 mkprefix mkFr
 Definition mkpainting {n p} {C: νType n} {Hp: p <= n.+1} {D: mkprefix}
   (E: (mkFrame n.+1).(frame) (♢ _) D -> HSet)
   (d: (mkFrame p).(frame) Hp D): HSet.
+Proof.
   revert d; apply le_induction with (Hp := Hp); clear p Hp.
   + now exact E. (* p = n *)
   + intros p Hp mkpaintingSp d; exact {l : mkLayer & mkpaintingSp (d; l)}. (* p = S n *)
