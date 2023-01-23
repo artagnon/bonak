@@ -118,7 +118,7 @@
 % typesetting
 \newcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
 \newcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
-\newcommandx{\filler}[2][1,2]{\prim{painting}[][#1][#2][][]}
+\newcommandx{\painting}[2][1,2]{\prim{painting}[][#1][#2][][]}
 \newcommandx{\restrf}[4][1,2,3,4]{\restr{frame}[][#3][#4][#1][#2][][]}
 \newcommandx{\restrl}[4][1,2,3,4]{\restr{layer}[][#3][#4][#1][#2][][]}
 \newcommandx{\restrc}[4][1,2,3,4]{\restr{painting}[][#3][#4][#1][#2][][]}
@@ -205,7 +205,7 @@ We exploit the connection between iterated unary parametricity and augmented sim
 
 The outline of the paper is as follows. First, we recall the definition of the augmented semi-simplicial and semi-cubical categories using a combinatorial presentation, that directly leads to our generalization to $\nu$-sets. We then proceed to explain our indexed construction, with the help of diagrams. Before spelling out the details of our formalization in type-theoretic language, we have a section on reasoning with sets inside type theory. We end with some of the finer details of our mechanization. % TODO polish
 
-Our precise mechanization in Coq is available on Github, at \href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak}. The construction was conceived in Summer 2019 and the mechanization began in late 2019. A sketch of the construction was presented at the 2020 HoTT-UF workshop and the completion of the mechanization was reported at the TYPES 2022 conference.
+Our precise mechanization in Coq is available at \href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak}. The construction was conceived in Summer 2019 and the mechanization began in late 2019. A sketch of the construction was presented at the 2020 HoTT-UF workshop and the completion of the mechanization was reported at the TYPES 2022 conference.
 
 \section{Semi-simplicial and semi-cubical sets}
 It is well-known that simplicial sets exist purely in the imagination of the mathematician, as every simplicial set has an infinite number of degenerate simplices. What we have formalized is \emph{augmented semi-simplicial} sets~\cite{fri08}, and \emph{semi-cubical} sets~\cite{grandis03,buchholtz17}. We will proceed to explain the mathematical objects we have formalized. % TODO: well-known: can we find a reference?
@@ -238,7 +238,7 @@ While ordinary semi-simplicial sets are presheaves over the semi-simplex categor
     \caption{Definition of \DeltaPlus}\label{fig:deltaplus}
   \end{figure*}
 
-  The definition of $\DeltaPlus$ is shown in Fig. \ref{fig:deltaplus}. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
+  The definition of $\DeltaPlus$ is shown in Fig.~\ref{fig:deltaplus}. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
 \end{definition}
 
 \begin{definition}[$\Set_{\DeltaPlus}$]
@@ -491,9 +491,9 @@ This tells us how the informal type given to $X_2$ in the previous section could
 Notice, however, that the recipe obtained so far, $X_{n + 1}: ({S_n})_\kstar(X_n)(X_n)$ for $X_n: S_n$, applies parametricity on the \emph{syntax} of the type of $X_n$. It does not directly yield a characterization of $S_n$ as a function from $n$. Reformulating the recipe as an explicit recursive construction, without requiring an interpretation of the syntax of types, is the main outcome of this work, together with the mechanization and the uniform treatment of augmented semi-simplial and semi-cubical sets by means of the generalization to $\nu$-sets.
 
 \subsection{Intuition for our formal construction}
-To assign types to $X_0, X_1, X_2, \ldots$ in the above indexed representation, we give a recursive definition relying on building blocks, which we call $\framep$, $\layer$, and $\filler$. A $\framep$ is a boundary of a standard form (simplex, cube, etc.), which we decompose into $\layer$s, and a $\filler$ corresponds to a filled $\framep$. Some $\framep$ are full and we call them $\fullframe$.
+To assign types to $X_0, X_1, X_2, \ldots$ in the above indexed representation, we give a recursive definition relying on building blocks, which we call $\framep$, $\layer$, and $\painting$. A $\framep$ is a boundary of a standard form (simplex, cube, etc.), which we decompose into $\layer$s, and a $\painting$ corresponds to a filled $\framep$. Some $\framep$ are full and we call them $\fullframe$.
 
-We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applying to the description above the isomorphism between $A \rightarrow B \rightarrow C$ and $A \times B \rightarrow C$, or between $\Pi a : A, (B a \rightarrow C)$ and $(\Sigma a : A, B a) \rightarrow C$. Let us now illustrate how we build $\fullframe[n]$. To begin, let us set $\fullframe[0] = \unittype$, so that the type $\U$ of $X_0$ can be equivalently formulated as $\unittype \rightarrow \U$. Then, more generally, we let each $\fullframe[n]$ consist of $n$ layers, written $\layer[n][p]$ with $p < n$, that we stack in order, starting from the $\unittype$ type and writing $\framep[n][p]$ for the $p$ first layers of a $\fullframe[n]$, so that $\fullframe[n]$ is $\framep[n][n]$. For instance, $X_1$ is made of one layer, so that it can be written as a $\Sigma$-type of an inhabitant of the $\unittype$ and $\layer[1][0]$, as shown in Fig. \ref{fig:intuition} for $\nu = 2$ which also mentions how the type of $X_2$ is structured.
+We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applying to the description above the isomorphism between $A \rightarrow B \rightarrow C$ and $A \times B \rightarrow C$, or between $\Pi a : A, (B a \rightarrow C)$ and $(\Sigma a : A, B a) \rightarrow C$. Let us now illustrate how we build $\fullframe[n]$. To begin, let us set $\fullframe[0] = \unittype$, so that the type $\U$ of $X_0$ can be equivalently formulated as $\unittype \rightarrow \U$. Then, more generally, we let each $\fullframe[n]$ consist of $n$ layers, written $\layer[n][p]$ with $p < n$, that we stack in order, starting from the $\unittype$ type and writing $\framep[n][p]$ for the $p$ first layers of a $\fullframe[n]$, so that $\fullframe[n]$ is $\framep[n][n]$. For instance, $X_1$ is made of one layer, so that it can be written as a $\Sigma$-type of an inhabitant of the $\unittype$ and $\layer[1][0]$, as shown in Fig.~\ref{fig:intuition} for $\nu = 2$ which also mentions how the type of $X_2$ is structured.
 
 \begin{figure*}[!t]
   \begin{equation*}
@@ -501,9 +501,9 @@ We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applyin
       X_0                                : \underbrace{\unittype}_{\framep[0][0]}                                                    \rightarrow \U \\
       X_1                                : \underbrace{\Sigma \unitpoint: \unittype. \underbrace{\left(
       \begin{array}{c}
-          \underbrace{X_0(\unitpoint)}_{\filler[0][0]}
+          \underbrace{X_0(\unitpoint)}_{\painting[0][0]}
           \\ \times \\
-          \underbrace{X_0(\unitpoint)}_{\filler[0][0]}
+          \underbrace{X_0(\unitpoint)}_{\painting[0][0]}
         \end{array}\right)}_{\layer[1][0]}}_{\framep[1][1]} \rightarrow \U                                                                            \\
       X_2                                : \underbrace{\Sigma a: \underbrace{\left(\Sigma \unitpoint: \unittype. \underbrace{\left(
           \begin{array}{c}
@@ -513,7 +513,7 @@ We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applyin
                              \\ \times \\
                              X_0(\unitpoint)
                            \end{array}\hspace{-0.4em}
-            \right).\; \underbrace{X_1 \underbrace{(\unitpoint, b)}_{\restrf[2][0][L]}}_{\filler[1][1]}}_{\filler[1][0]}
+            \right).\; \underbrace{X_1 \underbrace{(\unitpoint, b)}_{\restrf[2][0][L]}}_{\painting[1][1]}}_{\painting[1][0]}
             \\ \times \\
             \underbrace{\Sigma b: \left(
             \hspace{-0.4em}\begin{array}{c}
@@ -521,7 +521,7 @@ We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applyin
                              \\ \times \\
                              X_0(\unitpoint)
                            \end{array}\hspace{-0.4em}
-            \right).\; \underbrace{X_1 \underbrace{(\unitpoint, b)}_{\restrf[2][0][R]}}_{\filler[1][1]}}_{\filler[1][0]}
+            \right).\; \underbrace{X_1 \underbrace{(\unitpoint, b)}_{\restrf[2][0][R]}}_{\painting[1][1]}}_{\painting[1][0]}
           \end{array}
           \right)}_{\layer[2][0]}\right)}_{\framep[2][1]}.\underbrace{\left(
         \begin{array}{c}
@@ -530,14 +530,14 @@ We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applyin
                                a.\tl.L.\hd.L, \\
                                a.\tl.R.\hd.L
                              \end{array}\hspace{-0.4em}
-              \right)\right)}_{\restrf[2][1][L]}}_{\filler[1][1]}
+              \right)\right)}_{\restrf[2][1][L]}}_{\painting[1][1]}
           \\ \times \\
           \underbrace{X_1 \underbrace{\left(a.\hd, \left(
               \hspace{-0.4em}\begin{array}{c}
                                a.\tl.L.\hd.R, \\
                                a.\tl.R.\hd.R
                              \end{array}\hspace{-0.4em}
-              \right)\right)}_{\restrf[2][1][R]}}_{\filler[1][1]}
+              \right)\right)}_{\restrf[2][1][R]}}_{\painting[1][1]}
         \end{array}
         \right)}_{\layer[2][1]}}_{\framep[2][2]}
       \rightarrow \U                                                                                                                                \\
@@ -578,59 +578,59 @@ Let us now illustrate the construction of $\fullframe[3]$, necessary to build th
 
 The figure on the left is $\framep[3][1]$, on the right is $\framep[3][2]$, and on the bottom is $\framep[3][3]$, which is full. Further, $\framep[3][1]$ is made of one layer, $\layer[3][0]$, shown in blue, $\framep[3][2]$ is made of one additional layer, $\layer[3][1]$, shown in red, $\framep[3][3]$ is made of one more layer, $\layer[3][2]$, shown in green.
 
-We illustrated here the cubical case, that is $\nu = 2$, but, in general, a $\layer[n][p]$ is a product of $\nu$ $\filler[n - 1][p]$. A $\filler[n][0]$ is a $n$-dimensional object corresponding to a filled $\fullframe[n]$. More generally, a $\filler[n][p]$ is an $n$-dimensional object which has the form of a $\filler[n-p][0]$, thus of $(n-p)$-dimensional form, but shifted and living in dimensions $p$ to $n$. Such $\filler[n][p]$ fills a space framed by a partial $\framep[n][p]$ so that, together, they form a filled $\fullframe[n]$. For instance, in the picture, each of the two $\filler[2][0]$ of $\layer[3][0]$ is a filled blue square, each of the two $\filler[2][1]$ of $\layer[3][1]$ is the line shown in red, stretched into a partial square filling the partial frames made of respectively the left and right border of the blue square, and each of the two $\filler[2][2]$ of $\layer[3][2]$ is a point shown in green, stretched into a partial square filling the full frames made respectively of the upper and lower borders of the blue and red squares. A $\filler[n][p]$ adds to a $\framep[n][p]$ the layers needed to form a $\fullframe[n]$. They are added from dimension $n$ to dimension $p$ that is opposite to the order from $0$ to $p$ the $\framep[n][p]$ are built. A $\filler[n][p]$ complementing a given $\framep[n][p]$ fills the resulting $\fullframe[n]$. Thus, on the contrary of frames, it includes a filler, which lives in $X_n$ as shown below:
+We illustrated here the cubical case, that is $\nu = 2$, but, in general, a $\layer[n][p]$ is a product of $\nu$ $\painting[n - 1][p]$. A $\painting[n][0]$ is a $n$-dimensional object corresponding to a filled $\fullframe[n]$. More generally, a $\painting[n][p]$ is an $n$-dimensional object which has the form of a $\painting[n-p][0]$, thus of $(n-p)$-dimensional form, but shifted and living in dimensions $p$ to $n$. Such $\painting[n][p]$ fills a space framed by a partial $\framep[n][p]$ so that, together, they form a filled $\fullframe[n]$. For instance, in the picture, each of the two $\painting[2][0]$ of $\layer[3][0]$ is a filled blue square, each of the two $\painting[2][1]$ of $\layer[3][1]$ is the line shown in red, stretched into a partial square filling the partial frames made of respectively the left and right border of the blue square, and each of the two $\painting[2][2]$ of $\layer[3][2]$ is a point shown in green, stretched into a partial square filling the full frames made respectively of the upper and lower borders of the blue and red squares. A $\painting[n][p]$ adds to a $\framep[n][p]$ the layers needed to form a $\fullframe[n]$. They are added from dimension $n$ to dimension $p$ that is opposite to the order from $0$ to $p$ the $\framep[n][p]$ are built. A $\painting[n][p]$ complementing a given $\framep[n][p]$ fills the resulting $\fullframe[n]$. Thus, on the contrary of frames, it includes a filler, which lives in $X_n$ as shown below:
 
 \begin{align*}
-  \framep[n][p] & \defeq \Sigma a_n : (\ldots (\Sigma \unitpoint : \unittype .\; \layer[n][0]) \ldots) .\; \layer[n][p] \\
-  \filler[n][p] & \defeq \Sigma l_p : \layer[n][p] . (\ldots (\Sigma l_n : \layer[n][n - 1] .\; X_n) \ldots)
+  \framep[n][p]   & \defeq \Sigma a_n : (\ldots (\Sigma \unitpoint : \unittype .\; \layer[n][0]) \ldots) .\; \layer[n][p] \\
+  \painting[n][p] & \defeq \Sigma l_p : \layer[n][p] . (\ldots (\Sigma l_n : \layer[n][n - 1] .\; X_n) \ldots)
 \end{align*}
 
-So far, we have not paid attention to the fact that we have a dependent type, shown as a $\Sigma$. Let us be more precise about this requirement. First, $\fullframe[n]$ depends on all $X_i$ up to $n - 1$. So, we need to package up $X_i$, for $i < n$, into a type, which we call $\X[][<n][]$. This allows us to give the type $\X[][<n][] \rightarrow \U$ to $\fullframe[n]$. Then, for $D: \X[][<n][]$, representing an initial prefix of $X_0, X_1, \ldots X_{n - 1}$, the indexed set $X_n$ has type $\fullframe[n](D) \rightarrow \U$. Thus, $\framep[n][p]$, $\layer[n][p]$ and $\filler[n][p]$ also depend on $D$. We can then refine the previous equation by showing the dependencies on $D$. In particular, $X_n$ is just $D.\tl$.
+So far, we have not paid attention to the fact that we have a dependent type, shown as a $\Sigma$. Let us be more precise about this requirement. First, $\fullframe[n]$ depends on all $X_i$ up to $n - 1$. So, we need to package up $X_i$, for $i < n$, into a type, which we call $\X[][<n][]$. This allows us to give the type $\X[][<n][] \rightarrow \U$ to $\fullframe[n]$. Then, for $D: \X[][<n][]$, representing an initial prefix of $X_0, X_1, \ldots X_{n - 1}$, the indexed set $X_n$ has type $\fullframe[n](D) \rightarrow \U$. Thus, $\framep[n][p]$, $\layer[n][p]$ and $\painting[n][p]$ also depend on $D$. We can then refine the previous equation by showing the dependencies on $D$. In particular, $X_n$ is just $D.\tl$.
 
 \begin{align*}
    & \framep[n][p](D) \defeq                                                                                     \\
    & \;\;\;\;\Sigma a_n : (\ldots (\Sigma \unitpoint : \unittype .\; \layer[n][0](D)) \ldots) .\,\layer[n][p](D) \\
-   & \filler[n][p](D) \defeq                                                                                     \\
+   & \painting[n][p](D) \defeq                                                                                   \\
    & \;\;\;\;\Sigma l_p : \layer[n][p](D).\, (\ldots (\Sigma l_n : \layer[n][n - 1](D) .\, D.\tl) \ldots)
 \end{align*}
 
-An extra refinement arises from the fact that each addition of a layer to a frame has to be glued onto the border of the partial frame built so far. So, each $\layer[n][p]$ has to depend on $\framep[n][p]$. We also need a way to characterize the border of the $\nu$ $\filler[n-1][p]$ that compose a $\layer[n][p]$, and this is $\restrf[n][p][\epsilon]$, for all $\epsilon < \nu$. For instance, on the picture, each of the $\filler[2][1]$, shown as the red boxes, is laid on the borders of the blue boxes, and hence needs to depend on $\framep[3][1]$. The left and right borders of the two blue boxes are extracted as $\restrf[2][1][L](D)(d)$ and $\restrf[2][1][R](D)(d)$. We can then refine the previous equation by showing the dependencies on $d$, as shown in Figure~\ref{fig:refinement}.
+An extra refinement arises from the fact that each addition of a layer to a frame has to be glued onto the border of the partial frame built so far. So, each $\layer[n][p]$ has to depend on $\framep[n][p]$. We also need a way to characterize the border of the $\nu$ $\painting[n-1][p]$ that compose a $\layer[n][p]$, and this is $\restrf[n][p][\epsilon]$, for all $\epsilon < \nu$. For instance, on the picture, each of the $\painting[2][1]$, shown as the red boxes, is laid on the borders of the blue boxes, and hence needs to depend on $\framep[3][1]$. The left and right borders of the two blue boxes are extracted as $\restrf[2][1][L](D)(d)$ and $\restrf[2][1][R](D)(d)$. We can then refine the previous equation by showing the dependencies on $d$, as shown in Fig.~\ref{fig:refinement}.
 
 \begin{figure*}[!t]
   \begin{align*}
-    \framep[n][p](D)    & \defeq & \Sigma d : (\ldots (\Sigma \unitpoint: \unittype.\, \layer[n][0](D)(\unitpoint)) \ldots).\, \layer[n][p](D)(d)                                \\
-    \filler[n][p](D)(d) & \defeq & \Sigma l_p: \layer[n][p](D)(d).\, (\ldots (\Sigma l_n : \layer[n][n - 1](D)(d, l_p, \ldots, l_{n - 1}).\, D.\tl(d, l_p, \ldots, l_n)) \ldots) \\
-                        &        & \text{where } (d, l_p, \ldots, l_q) \text{ abbreviates } ((\ldots(d, l_p), \ldots), l_q)
+    \framep[n][p](D)      & \defeq & \Sigma d : (\ldots (\Sigma \unitpoint: \unittype.\, \layer[n][0](D)(\unitpoint)) \ldots).\, \layer[n][p](D)(d)                                \\
+    \painting[n][p](D)(d) & \defeq & \Sigma l_p: \layer[n][p](D)(d).\, (\ldots (\Sigma l_n : \layer[n][n - 1](D)(d, l_p, \ldots, l_{n - 1}).\, D.\tl(d, l_p, \ldots, l_n)) \ldots) \\
+                          &        & \text{where } (d, l_p, \ldots, l_q) \text{ abbreviates } ((\ldots(d, l_p), \ldots), l_q)
   \end{align*}
-  \caption{Refinement of definition of $\framep$ and $\filler$\label{fig:refinement}}
+  \caption{Refinement of definition of $\framep$ and $\painting$\label{fig:refinement}}
 \end{figure*}
 
-Let us recall that a layer is made of $\nu$ paintings. When $\nu=2$, this amounts to:
+Let us recall that a layer is made of $\nu$ paintings. When $\nu = 2$, this amounts to:
 
 \begin{align*}
-  \layer[n][p](D)(d) & \defeq & \filler[n-1][p](D.\hd)(\restrf[n][p][L][p](d)) & \times \\
-                     &        & \filler[n-1][p](D.\hd)(\restrf[n][p][R][p](d)) &
+  \layer[n][p](D)(d) & \defeq & \painting[n-1][p](D.\hd)(\restrf[n][p][L][p](d)) & \times \\
+                     &        & \painting[n-1][p](D.\hd)(\restrf[n][p][R][p](d)) &
 \end{align*}
 
-$\restrf[n][p][\epsilon][q]$ indicates restriction on $q$ layers of a frame, and the induction is on $p$, going from $0$ to $q$. In particular, $\restrf[n][p][\epsilon][p]$ is a ``full restriction''. We define $\restrf[n][p][\epsilon][p](d)$ by recursion on the structure of a frame $d$, which necessitates definitions of $\restrl[n][p][\epsilon][q](d)(l)$ and $\restrc[n][p][\epsilon][q](d)(c)$, for $l$ a $\layer$ and $c$ a $\filler$. The key case is $\restrc[n][p][\epsilon][p](d)(c)$, where $c$, a $\filler[n][p]$, has necessarily the form of $((c_L, c_R), \_)$: $\restrc[n][p][L][p]$ picks out $c_L$, a $\filler[n-1][p]$, $\restrc[n][p][R][p]$ picks out the $c_R$, also a $\filler[n-1][p]$, and $\_$, a $\filler[n][p+1]$, is discarded. There is one more difficulty, which we illustrate by writing down expected and actual types.
+$\restrf[n][p][\epsilon][q]$ indicates restriction on $q$ layers of a frame, and the induction is on $p$, going from $0$ to $q$. In particular, $\restrf[n][p][\epsilon][p]$ is a ``full restriction''. We define $\restrf[n][p][\epsilon][p](d)$ by recursion on the structure of a frame $d$, which necessitates definitions of $\restrl[n][p][\epsilon][q](d)(l)$ and $\restrc[n][p][\epsilon][q](d)(c)$, for $l$ a $\layer$ and $c$ a $\painting$. The key case is $\restrc[n][p][\epsilon][p](d)(c)$, where $c$, a $\painting[n][p]$, has necessarily the form of $((c_L, c_R), \_)$: $\restrc[n][p][L][p]$ picks out $c_L$, a $\painting[n-1][p]$, $\restrc[n][p][R][p]$ picks out the $c_R$, also a $\painting[n-1][p]$, and $\_$, a $\painting[n][p+1]$, is discarded. There is one more difficulty, which we illustrate by writing down expected and actual types.
 
 Given $c_\omega$ of type
 
 \begin{align*}
-  c_\omega & : \filler[n-1][p](D.\hd)(\restrf[n-1][p][\omega][q](d))
+  c_\omega & : \painting[n-1][p](D.\hd)(\restrf[n-1][p][\omega][q](d))
 \end{align*}
 $\restrl[n][p][\epsilon](d)(c_L, c_R)$ produces a layer, in which the $\omega$-component has the type
 
 \begin{equation*}
-  \filler[n-2][p](D.\hd.\hd)(\restrf[n-1][p][\epsilon][q](\restrf[n][p][\omega][p](d)))
+  \painting[n-2][p](D.\hd.\hd)(\restrf[n-1][p][\epsilon][q](\restrf[n][p][\omega][p](d)))
 \end{equation*}
 while we expect a term of type
 
 \begin{equation*}
-  \filler[n-2][p](D.\hd.\hd)(\restrf[n-1][p][\omega][p](\restrf[n][p][\epsilon][q+1](d)))
+  \painting[n-2][p](D.\hd.\hd)(\restrf[n-1][p][\omega][p](\restrf[n][p][\epsilon][q+1](d)))
 \end{equation*}
 
-Hence, we need a coherence condition to commute the restrictions. Coherence conditions similar to this necessitate, what are shown as, $\cohf$, $\cohl$ and $\cohc$ in tables in the next section. These are by induction on the structure of $\framep$, $\layer$ and $\filler$. Note that, for the construction in \ref{sec:itt}, we further need a $2$-dimensional coherence condition, $\coht$, for $\cohl$.
+Hence, we need a coherence condition to commute the restrictions. Coherence conditions similar to this necessitate, what are shown as, $\cohf$, $\cohl$ and $\cohc$ in tables in the next section. These are by induction on the structure of $\framep$, $\layer$ and $\painting$. Note that, for the construction in \ref{sec:itt}, we further need a $2$-dimensional coherence condition, $\coht$, for $\cohl$.
 
 \subsection{Formal construction in ETT}
 % Abbreviated tables in this section
@@ -660,7 +660,7 @@ Hence, we need a coherence condition to commute the restrictions. Coherence cond
 % Drop the universe letter
 \renewcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[][#2][#3][#4][#5]}
 \renewcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[][#2][#3][#4][#5]}
-\renewcommandx{\filler}[5][1,2,3,4,5]{\prim{painting}[][#2][#3][#4][#5]}
+\renewcommandx{\painting}[5][1,2,3,4,5]{\prim{painting}[][#2][#3][#4][#5]}
 
 % Restriction for frame, layer, and painting
 % Drop the universe letter
@@ -682,9 +682,9 @@ We now present the construction in \emph{extensional} type theory; i.e. in a typ
 
 For the presentation corresponding to the formalization in \emph{intensional} type theory, see \ref{sec:itt}.
 
-The definition is dispatched over tables \ref{tab:coind}, \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces} and \ref{tab:coh}. Table \ref{tab:coind} describes a $\nu$-set in indexed form, as a coinductive limit of $n$-truncated $\nu$-sets. The $n$-truncated $\nu$-sets are themselves described in \ref{tab:core}. The $n$th component is a family over a $\fullframe$. The type $\fullframe$ is recursively defined in \ref{tab:frames}, using the auxiliary definitions of $\layer$ and $\filler$. The type $\layer$ and $\filler$ are dependent over $\restrf$, and these restrictions are defined on \ref{tab:faces}. These restrictions are defined using auxiliary definitions of $\restrl$ and $\restrc$.
+The definition is dispatched over tables \ref{tab:coind}, \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces} and \ref{tab:coh}. Table \ref{tab:coind} describes a $\nu$-set in indexed form, as a coinductive limit of $n$-truncated $\nu$-sets. The $n$-truncated $\nu$-sets are themselves described in \ref{tab:core}. The $n$th component is a family over a $\fullframe$. The type $\fullframe$ is recursively defined in \ref{tab:frames}, using the auxiliary definitions of $\layer$ and $\painting$. The type $\layer$ and $\painting$ are dependent over $\restrf$, and these restrictions are defined on \ref{tab:faces}. These restrictions are defined using auxiliary definitions of $\restrl$ and $\restrc$.
 
-Notably, the definition of $\restrl$ relies on a definitional equality expressing the commutation of the composition of $\restrf$. This commutation is not provable by computation so we have to prove it propositionally before using the reflection rule. Proving this itself requires an induction on the dimension, and on the structure of $\framep$, $\layer$, and $\filler$. This is what $\cohf$ proves, as shown in the table \ref{tab:coh}, using auxiliary definitions $\cohl$ and $\cohc$. Even though it looks independent of the other tables, it has to proved mutually with the definitions of $\framep$, $\layer$, $\filler$, and their corresponding restrictions.
+Notably, the definition of $\restrl$ relies on a definitional equality expressing the commutation of the composition of $\restrf$. This commutation is not provable by computation so we have to prove it propositionally before using the reflection rule. Proving this itself requires an induction on the dimension, and on the structure of $\framep$, $\layer$, and $\painting$. This is what $\cohf$ proves, as shown in the table \ref{tab:coh}, using auxiliary definitions $\cohl$ and $\cohc$. Even though it looks independent of the other tables, it has to proved mutually with the definitions of $\framep$, $\layer$, $\painting$, and their corresponding restrictions.
 
 Most components of the construction takes inequality constraints as parameters, and we have left implicit that they are satisfied in the tables. Comparison of inequality proofs depends on the definition of inequality, which we leave implicit, and assume that we can pick a definition for which proofs of $m \leq n$ are provably unique and thus definitionally equal by the reflection rule.
 
@@ -731,7 +731,7 @@ Remark: For a fixed constant $n$, the coherence conditions evaluate to a reflexi
 % Drop all arguments for coh table; they're not present in coind table.
 \renewcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[][][][][#5]}
 \renewcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[][][][][#5]}
-\renewcommandx{\filler}[5][1,2,3,4,5]{\prim{painting}[][][][][#5]}
+\renewcommandx{\painting}[5][1,2,3,4,5]{\prim{painting}[][][][][#5]}
 
 % Hack to remove , in \cohf
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][][][#9]}
@@ -781,7 +781,7 @@ Finally, let us explain $\cohc$. The base case $p = r$ is the key case of the co
 
 There are a few more subtleties. In $\cohf$ and $\cohc$, we use the reflection rule to identify equalities of pairs with a conjunction of two equalities. In $\cohl$, we use the reflection rule to identify equality of functions with point-wise equality. We additionally rely heavily on basic properties of the groupoid transport, which we don't detail.
 
-For a fixed $n$, $\framep$, $\restrf$, and $\cohf$ have to be mutually defined by induction on $p$. Each of them rely on $\filler$, $\restrf$, and $\cohc$ at lower $n$, so they are well-founded. Finally, each of $\filler$, $\restrf$, and $\cohf$ are by induction from $p$ to $n$.
+For a fixed $n$, $\framep$, $\restrf$, and $\cohf$ have to be mutually defined by induction on $p$. Each of them rely on $\painting$, $\restrf$, and $\cohc$ at lower $n$, so they are well-founded. Finally, each of $\painting$, $\restrf$, and $\cohf$ are by induction from $p$ to $n$.
 
 Remark: If we weren't working in \U, but in \HGpd, we would need to prove one more higher-dimensional coherence, and if we were working in \Type, we would need to prove arbitrarily many higher-dimensional coherences. For the unfamiliar reader, $\HGpd$ is the subset of types $A$ such that for all $x$ and $y$ in $A$, $x =_{\mathit{HGpd}} y$ is in \U. See \cite{herbelin15} for a discussion on the need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory.
 
@@ -794,7 +794,7 @@ Remark: If we weren't working in \U, but in \HGpd, we would need to prove one mo
 % Frame, layer, and painting
 \renewcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[#1][#2][#3][#4][#5]}
 \renewcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[#1][#2][#3][#4][#5]}
-\renewcommandx{\filler}[5][1,2,3,4,5]{\prim{painting}[#1][#2][#3][#4][#5]}
+\renewcommandx{\painting}[5][1,2,3,4,5]{\prim{painting}[#1][#2][#3][#4][#5]}
 \renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[#1][#2][][][#3]}
 
 % Restriction for frame, layer, and painting
@@ -826,7 +826,7 @@ Remark: If we weren't working in \U, but in \HGpd, we would need to prove one mo
 \subsection{Details on the mechanization\label{sec:mech}}
 \renewcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
 \renewcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
-\renewcommandx{\filler}[2][1,2]{\prim{painting}[][#1][#2][][]}
+\renewcommandx{\painting}[2][1,2]{\prim{painting}[][#1][#2][][]}
 \renewcommandx{\restrf}[4][1,2,3,4]{\restr{frame}[][#3][#4][#1][#2][][]}
 \renewcommandx{\restrl}[4][1,2,3,4]{\restr{layer}[][#3][#4][#1][#2][][]}
 \renewcommandx{\restrc}[4][1,2,3,4]{\restr{painting}[][#3][#4][#1][#2][][]}
@@ -834,7 +834,7 @@ Remark: If we weren't working in \U, but in \HGpd, we would need to prove one mo
 \renewcommandx{\cohl}[1][1]{\coh{layer}[][][][][][#1][][]}
 \renewcommandx{\cohc}[1][1]{\coh{painting}[][][][][][#1][][]}
 
-Since the construction shown in the previous sections are by induction on $n$, and dependencies are on lower $n$ and $p < n$, one would imagine formalizing this using well-founded induction in the calculus of inductive constructions. We initially tried this approach: we had terms dependent on the proofs of the case distinction of $n' \leq n$ implies $n' < n$ or $n' = n$, and these proofs didn't have definitional computational rule; it started to be necessary to reason propositionally on the computational property of the case distinction, and it eventually turned out to be unmanageable. Hence, we chose a different route: in practice, since $\restrf[n]$ depends on $\framep[n]$ and $\framep[n-1]$, while $\cohf[n]$ depends on $\framep[n]$, $\framep[n-1]$, and $\framep[n-2]$, we only need to keep track of three ``levels'', and we built separate data structures for the levels, with dependencies. More concretely, we build the ten definitions shown in the tables by induction, and this is part of the definition of a larger record. The other fields of the record aref $\framep$, $\layer$, $\filler$ at levels $n - 1$ and $n - 2$, $\restrf$, $\restrl$, and $\restrc$ at level $n - 1$, and equations to recall the definitions of these objects at lower levels.
+Since the construction shown in the previous sections are by induction on $n$, and dependencies are on lower $n$ and $p < n$, one would imagine formalizing this using well-founded induction in the calculus of inductive constructions. We initially tried this approach: we had terms dependent on the proofs of the case distinction of $n' \leq n$ implies $n' < n$ or $n' = n$, and these proofs didn't have definitional computational rule; it started to be necessary to reason propositionally on the computational property of the case distinction, and it eventually turned out to be unmanageable. Hence, we chose a different route: in practice, since $\restrf[n]$ depends on $\framep[n]$ and $\framep[n-1]$, while $\cohf[n]$ depends on $\framep[n]$, $\framep[n-1]$, and $\framep[n-2]$, we only need to keep track of three ``levels'', and we built separate data structures for the levels, with dependencies. More concretely, we build the ten definitions shown in the tables by induction, and this is part of the definition of a larger record. The other fields of the record aref $\framep$, $\layer$, $\painting$ at levels $n - 1$ and $n - 2$, $\restrf$, $\restrl$, and $\restrc$ at level $n - 1$, and equations to recall the definitions of these objects at lower levels.
 
 The entire construction relies on inequalities over natural numbers, and we use two different definitions of $\leq$ addressing different concerns in our formalization. In order to build our first variant, we present an intermediate ``recursive definition'', phrased as:
 
@@ -871,7 +871,7 @@ The second variant of $\leq$, the ``inductive variant'', is phrased as:
   where "n <~ m" := (leI n m) : nat_scope.
 \end{minted}
 
-Compared to \texttt{leY}, \texttt{leI} has no proof-irrelevance properties. This definition is specially crafted for $\filler$, where we have to reason inductively from $p \leq n$ to $n$. In our usage, we have lemmas \texttt{leY\_of\_leI} and \texttt{leI\_of\_leY} in order to equip \texttt{leY} with the induction scheme of \texttt{leI}. The resulting induction scheme has computational rules holding propositionally.
+Compared to \texttt{leY}, \texttt{leI} has no proof-irrelevance properties. This definition is specially crafted for $\painting$, where we have to reason inductively from $p \leq n$ to $n$. In our usage, we have lemmas \texttt{leY\_of\_leI} and \texttt{leI\_of\_leY} in order to equip \texttt{leY} with the induction scheme of \texttt{leI}. The resulting induction scheme has computational rules holding propositionally.
 
 \section{Future work}
 In the cubical case, we expect the construction to eventually provide a model of (some version of) parametric type theory~\cite{nuyts17,cavallo19} by adding degeneracies, a hierarchy of universes (as sketched e.g. in a talk by Herbelin at the HoTT-UF workshop for the bridge case~\cite{herbelin-hott-uf}) as well as reasoning modulo permutations~\cite{grandis03}.

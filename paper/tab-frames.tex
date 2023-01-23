@@ -10,10 +10,10 @@
   \graymidrule
 
   \eqnline{\layer[m][n][p][p < n]}{\makecell{\eqnarg{layer}{D}{\Xto{m}{n}} \\ \eqnarg{layer}{d}{\framep[m][n][p][][D=\D]}}}{:}{\U[m]}
-  \eqnline{\layer[m][n][p]}{D~d}{\defeq}{\Pi \omega.\filler[m][n-1][p][][D=\hdD, E=\tlD, d={\restrf[m][\omega][p][n][p][][D=\D, d=\d]}]}
+  \eqnline{\layer[m][n][p]}{D~d}{\defeq}{\Pi \omega.\painting[m][n-1][p][][D=\hdD, E=\tlD, d={\restrf[m][\omega][p][n][p][][D=\D, d=\d]}]}
   \graymidrule
 
-  \eqnline{\filler[m][n][p][p \leq n]}{\makecell{\eqnarg{filler}{D}{\Xto{m}{n}} \\ \eqnarg{filler}{E}{\Xcomp{m}{n}[D=\D]} \\ \eqnarg{filler}{d}{\framep[m][n][p][][D=\D]}}}{:}{\U[m]}
-  \eqnline{\filler[m][n][p][p = n]}{\D~\E~\d}{\defeq}{\E(\d)}
-  \eqnline{\filler[m][n][p][p < n]}{\D~\E~\d}{\defeq}{\Sigma l:\layer[m][n][p][][D=\D, d=\d].\,\filler[m][n][p+1][][D=\D, E=\E, d=\pair{\d}{\l}]}
+  \eqnline{\painting[m][n][p][p \leq n]}{\makecell{\eqnarg{filler}{D}{\Xto{m}{n}} \\ \eqnarg{filler}{E}{\Xcomp{m}{n}[D=\D]} \\ \eqnarg{filler}{d}{\framep[m][n][p][][D=\D]}}}{:}{\U[m]}
+  \eqnline{\painting[m][n][p][p = n]}{\D~\E~\d}{\defeq}{\E(\d)}
+  \eqnline{\painting[m][n][p][p < n]}{\D~\E~\d}{\defeq}{\Sigma l:\layer[m][n][p][][D=\D, d=\d].\,\painting[m][n][p+1][][D=\D, E=\E, d=\pair{\d}{\l}]}
 \end{eqntable}
