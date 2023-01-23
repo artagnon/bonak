@@ -719,11 +719,11 @@ Tables \ref{fulltab:coind}, \ref{fulltab:core}, and \ref{fulltab:frames} are unc
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \begin{align*}
-  \cohf[m][\omega][\theta][r][p][n][p][][d = {\restrf[m][\epsilon][q+2][n][p][][d = \d]}]\;\bullet       \\
-  \ap \restrf[m][\omega][r][n][p][][]\;(\cohf[m][\epsilon][\theta][q+1][p][n][p][][d = \d])\;\bullet     \\
-  \cohf[m][\epsilon][\omega][q][r][n][p][][d = {\restrf[m][\theta][p][n][p][][d = \d]}] =_\mathit{HProp} \\
-  \ap \restrf[m][\theta][p][n][p][][]\;(\cohf[m][\epsilon][\omega][q+1][r+1][n][p][][d = \d])\;\bullet   \\
-  \cohf[m][\epsilon][\theta][q][p][n][p][][d = {\restrf[m][\omega][r+1][n][p][][d = \d]}]\;\bullet       \\
+  \cohf[m][\omega][\theta][r][p][n][p][][d = {\restrf[m][\epsilon][q+2][n][p][][d = \d]}]\;\bullet     \\
+  \ap \restrf[m][\omega][r][n][p][][]\;(\cohf[m][\epsilon][\theta][q+1][p][n][p][][d = \d])\;\bullet   \\
+  \cohf[m][\epsilon][\omega][q][r][n][p][][d = {\restrf[m][\theta][p][n][p][][d = \d]}] =              \\
+  \ap \restrf[m][\theta][p][n][p][][]\;(\cohf[m][\epsilon][\omega][q+1][r+1][n][p][][d = \d])\;\bullet \\
+  \cohf[m][\epsilon][\theta][q][p][n][p][][d = {\restrf[m][\omega][r+1][n][p][][d = \d]}]\;\bullet     \\
   \ap \restrf[m][\epsilon][q][n][p][]\;(\cohf[m][\omega][\theta][r][p][n][p][][d = \d])
 \end{align*}
 where $\mathsf{ap}$ applies a function on two sides of an equality, and $\bullet$ is transitivity of equality. This property of equality proofs holds in \U, and since our formalization is done in \U, the term is trivially discharged.
