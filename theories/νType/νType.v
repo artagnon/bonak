@@ -125,8 +125,10 @@ Arguments cohFrame {n p prefix FramePrev} _ {q r Hpr Hrq Hq ε ω D} d.
      frame'', we have painting' and painting''. *)
 Class PaintingBlockPrev (n: nat) (prefix: Type@{m'})
   (FramePrev : FrameBlockPrev n prefix) := {
-  painting' {p} {Hp: p.+1 <= n} {D: prefix}: FramePrev.(frame') Hp D -> HSet@{m};
-  painting'' {p} {Hp: p.+2 <= n} {D: prefix}: FramePrev.(frame'') Hp D -> HSet@{m};
+  painting' {p} {Hp: p.+1 <= n} {D: prefix}:
+    FramePrev.(frame') Hp D -> HSet@{m};
+  painting'' {p} {Hp: p.+2 <= n} {D: prefix}:
+    FramePrev.(frame'') Hp D -> HSet@{m};
   restrPainting' {p q} {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) (ε: arity) {D: prefix}
     {d : FramePrev.(frame') (↓ (Hpq ↕ Hq)) D}:
     painting' d -> painting'' (FramePrev.(restrFrame') Hq ε d);
@@ -160,8 +162,10 @@ Class PaintingBlock (n: nat) (prefix: Type@{m'})
 }.
 
 Arguments painting {n prefix FramePrev PaintingPrev Frame} _ {p Hp D} E.
-Arguments restrPainting {n prefix FramePrev PaintingPrev Frame} _ {p q Hpq Hq ε D E} [d] c.
-Arguments cohPainting {n prefix FramePrev PaintingPrev Frame} _ {p q r Hpr Hrq Hq ε ω D E d} c.
+Arguments restrPainting {n prefix FramePrev PaintingPrev Frame} _
+  {p q Hpq Hq ε D E} [d] c.
+Arguments cohPainting {n prefix FramePrev PaintingPrev Frame} _
+  {p q r Hpr Hrq Hq ε ω D E d} c.
 
 (** An ν-parametric type truncated at level [n] consists of:
 
@@ -227,8 +231,8 @@ Class νType (n : nat) := {
     {Q: Painting.(painting) (D := D) E (rew <- eqFrameSp in (d; l))}:
     l ε = Painting.(restrPainting) (Hq := Hp)
       (rew <- [id] eqPaintingSp in (l; Q));
-  eqRestrPaintingSp {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D: prefix} {E} {d}
-    {ε: arity} {l: Layer (Hp := ↓ (Hpq ↕ Hq)) d}
+  eqRestrPaintingSp {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D: prefix}
+    {E} {d} {ε: arity} {l: Layer (Hp := ↓ (Hpq ↕ Hq)) d}
     {Q: Painting.(painting) (D := D) E (rew <- eqFrameSp in (d; l))}:
     Painting.(restrPainting) (Hpq := ↓ Hpq) (ε := ε)
     (rew <- [id] eqPaintingSp in (l; Q)) =
@@ -278,7 +282,8 @@ Definition mkFramePrev {n} {C: νType n}: FrameBlockPrev n.+1 mkprefix := {|
    of Frame. These will be used in the proof script of mkFrame. *)
 
 Definition mkLayer {n p} {Hp: p.+1 <= n.+1} {C: νType n} {D: mkprefix}
-  {Frame: FrameBlock n.+1 p mkprefix mkFramePrev} {d: Frame.(frame) (↓ Hp) D}: HSet :=
+  {Frame: FrameBlock n.+1 p mkprefix mkFramePrev}
+  {d: Frame.(frame) (↓ Hp) D}: HSet :=
   hforall ε, C.(Painting).(painting) D.2
     (Frame.(restrFrame) (Hpq := ♢ _) Hp ε d).
 
@@ -329,9 +334,9 @@ Qed.
 #[local]
 Instance mkFrame0 {n} {C: νType n}: FrameBlock n.+1 O mkprefix mkFramePrev.
   unshelve esplit.
-  * intros; now exact hunit. (* FrameSn *)
-  * simpl; intros; rewrite C.(eqFrame0). now exact tt. (* restrFrameSn *)
-  * simpl; intros. (* cohFramep *)
+  * intros; now exact hunit.
+  * simpl; intros; rewrite C.(eqFrame0). now exact tt.
+  * simpl; intros.
     now rewrite eqRestrFrame0 with (Hpq := ⇓ Hpr),
                 eqRestrFrame0 with (Hpq := ⇓ (Hpr ↕ Hrq)).
 Defined.
@@ -343,10 +348,10 @@ Instance mkFrameSp {n p} {C: νType n}
   FrameBlock n.+1 p.+1 mkprefix mkFramePrev.
   unshelve esplit.
   * intros Hp D; exact {d : Frame.(frame) (↓ Hp) D & mkLayer (d := d)}.
-  * simpl; intros * ε * (d, l); invert_le Hpq. (* restrFramep *)
+  * simpl; intros * ε * (d, l); invert_le Hpq.
     now exact (rew <- [id] C.(eqFrameSp) in
       (Frame.(restrFrame) Hq ε d; mkRestrLayer d l)).
-  * simpl; intros q r Hpr Hrq Hq ε ω D (d, l). (* cohframep *)
+  * simpl; intros q r Hpr Hrq Hq ε ω D (d, l).
     invert_le Hpr; invert_le Hrq.
 
     (* A roundabout way to simplify the proof of mkCohPainting_step *)
@@ -393,8 +398,8 @@ Definition mkpainting {n p} {C: νType n} {Hp: p <= n.+1} {D: mkprefix}
   (d: (mkFrame p).(frame) Hp D): HSet.
 Proof.
   revert d; apply le_induction with (Hp := Hp); clear p Hp.
-  + now exact E. (* p = n *)
-  + intros p Hp mkpaintingSp d; exact {l : mkLayer & mkpaintingSp (d; l)}. (* p = S n *)
+  + now exact E.
+  + intros p Hp mkpaintingSp d; exact {l : mkLayer & mkpaintingSp (d; l)}.
 Defined.
 
 Lemma mkpainting_computes {n p} {C: νType n} {Hp: p.+1 <= n.+1} {D: mkprefix}
