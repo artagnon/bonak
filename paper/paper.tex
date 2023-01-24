@@ -799,38 +799,46 @@ Since the construction shown in the previous sections is by induction on $n$, an
 
 The entire construction relies on inequalities over natural numbers, and we use two different definitions of $\leq$ addressing different concerns in our formalization. In order to build our first variant, we present an intermediate ``recursive definition'', phrased as:
 
-\begin{minted}{coq}
+\begin{figure}[H]
+  \begin{minted}{coq}
   Fixpoint leR (n m : nat) : SProp :=
   match n, m with
   | O, _ => STrue
   | S n, O => SFalse
   | S n, S m => leR n m
   end.
-\end{minted}
+  \end{minted}
+\end{figure}
 
-Here \SProp is a definitionally proof-irrelevant impredicative universe at the bottom of the universe hierarchy~\cite{gilbert19}. By placing the definition in \SProp, we have definitional equality of all inequality proofs. For the purpose of unification, however, this definition does not go far enough. Consider the unification problems:
+Here $\SProp$ is a definitionally proof-irrelevant impredicative universe at the bottom of the universe hierarchy~\cite{gilbert19}. By placing the definition in \SProp, we have definitional equality of all inequality proofs. For the purpose of unification, however, this definition does not go far enough. Consider the unification problems:
 
-\begin{minted}{coq}
+\begin{figure}[H]
+  \begin{minted}{coq}
   leR_trans ?p leR_refl = ?p
   leR_trans leR_refl ?p = ?p
-\end{minted}
+  \end{minted}
+\end{figure}
 where \texttt{leR\_trans} is transitivity, \texttt{leR\_refl} is reflexivity, and \texttt{?p} is an existential variable. These two problems definitionally hold in \SProp, but equalizing them does not solve the existential. For unification to be useful in inferring existentials, we present our first variant of $\leq$, which we dub as the ``Yoneda variant'':
 
-\begin{minted}{coq}
+\begin{figure}[H]
+  \begin{minted}{coq}
   Definition leY n m :=
     forall p, leR p n -> leR p m.
-\end{minted}
+  \end{minted}
+\end{figure}
 
 This definition is an improvement over \texttt{leR} since reflexivity is now definitionally the neutral element of transitivity, and associativity of transitivity also holds definitionally. Although it significantly eases our proof, there are some instances where unification is unable to solve the existentials, and we have to provide them explicitly.
 
 The second variant of $\leq$, the ``inductive variant'', is phrased as:
 
-\begin{minted}{coq}
+\begin{figure}[H]
+  \begin{minted}{coq}
   Inductive leI : nat -> nat -> Type :=
   | leI_refl n : n <~ n
   | leI_down {n p} : p.+1 <~ n -> p <~ n
   where "n <~ m" := (leI n m) : nat_scope.
-\end{minted}
+  \end{minted}
+\end{figure}
 
 Compared to \texttt{leY}, \texttt{leI} has no proof-irrelevance properties. This definition is specially crafted for $\painting$, where we have to reason inductively from $p \leq n$ to $n$. In our usage, we have lemmas \texttt{leY\_of\_leI} and \texttt{leI\_of\_leY} in order to equip \texttt{leY} with the induction scheme of \texttt{leI}. The resulting induction scheme has computational rules holding propositionally.
 
