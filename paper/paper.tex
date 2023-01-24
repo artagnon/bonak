@@ -652,7 +652,7 @@ Most components of the construction takes inequality constraints as parameters, 
 
 The construction takes benefit of various provable equalities over proofs of equality being definitional by the reflection rule. This includes in particular the groupoid properties of equality. Notably, uniqueness of identity proofs holds in extensional type theory, so that any type is automatically an $\U$. Also, we left implicit in table~\ref{tab:coh} the use of the isomorphism between $u = v$ and $\Sigma (p:u.\hd = v.\hd). (u.\tl = v.\tl)$ for $u$ and $v$ in a $\Sigma$-type. In the same table, we also left implicit the use of the isomorphism between $f = g$ and $\Pi a: A.\, f(a) = g(a)$ for $f$ and $g$ in $\Pi a: A.\, B$, where it should be recalled that the right-to-left map, that is function extensionality, holds by default in extensional type theory.
 
-As a side remark, note that for a fixed constant $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning $\restrf$ nor $\cohf$ anymore.
+Note that for a fixed constant $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning them anymore. For instance, it produces figure \ref{fig:intuition} for $n=2$ and $\nu=2$.
 
 \renewcommand*{\lab}{tab:coind}
 \input{tab-coind.tex}
