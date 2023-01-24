@@ -602,6 +602,6 @@ CoInductive νTypeFrom n (X: (νTypeAt n).(prefix)): Type@{m'} := cons {
 Definition νTypes := νTypeFrom 0 tt.
 End νType.
 
-Definition AugmentedSemiSimplicial := νType hunit.
+Definition AugmentedSemiSimplicial := νTypes hunit.
 Definition SemiSimplicial := νTypeFrom hunit 1 (tt; fun _ => hunit).
-Definition SemiCubical := νType hbool.
+Definition SemiCubical := νTypes hbool.
