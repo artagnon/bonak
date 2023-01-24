@@ -144,7 +144,8 @@ Class PaintingBlock (n: nat) (prefix: Type@{m'})
   painting {p} {Hp: p <= n} {D: prefix}:
     (Frame.(frame) (♢ _) D -> HSet@{m}) -> Frame.(frame) Hp D -> HSet@{m};
   restrPainting {p q} {Hpq: p.+1 <= q.+1}
-    (Hq: q.+1 <= n) (ε: arity) {D : prefix} {E: Frame.(frame) (♢ _) D -> HSet@{m}}
+    (Hq: q.+1 <= n) (ε: arity) {D : prefix}
+    {E: Frame.(frame) (♢ _) D -> HSet@{m}}
     {d: Frame.(frame) (↓ (Hpq ↕ Hq)) D} (c: painting E d):
     PaintingPrev.(painting') (Frame.(restrFrame) Hq ε d);
   cohPainting {p q r} {Hpr: p.+2 <= r.+2}
@@ -192,13 +193,15 @@ Class νType (n : nat) := {
     hforall ε, PaintingPrev.(painting'') (FramePrev.(restrFrame') Hp ε d);
   RestrLayer {p q ε} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D: prefix}
     (d: Frame.(frame) (↓ ↓ (Hpq ↕ Hq)) D) (l: Layer d):
-      Layer' (Frame.(restrFrame) Hq ε d) :=
-  fun ω => rew [PaintingPrev.(painting'')] Frame.(cohFrame) (Hrq := Hpq) d in PaintingPrev.(restrPainting') Hq ε (l ω);
+    Layer' (Frame.(restrFrame) Hq ε d) :=
+  fun ω => rew [PaintingPrev.(painting'')] Frame.(cohFrame) (Hrq := Hpq) d in
+    PaintingPrev.(restrPainting') Hq ε (l ω);
 
   (** Equations carrying the definition of frame and painting from level
       [n]-1 and [n]-2 *)
   eqFrame0 {len0: 0 <= n} {D: prefix}: (Frame.(frame) len0 D).(Dom) = unit;
-  eqFrame0' {len1: 1 <= n} {D: prefix}: (FramePrev.(frame') len1 D).(Dom) = unit;
+  eqFrame0' {len1: 1 <= n} {D: prefix}:
+    (FramePrev.(frame') len1 D).(Dom) = unit;
   eqFrameSp {p} {Hp: p.+1 <= n} {D: prefix}:
     Frame.(frame) Hp D = {d: Frame.(frame) (↓ Hp) D & Layer d} :> Type;
   eqFrameSp' {p} {Hp: p.+2 <= n} {D: prefix}:
@@ -217,16 +220,21 @@ Class νType (n : nat) := {
       Painting.(painting) (D := D) E (rew <- [id] eqFrameSp in (d; l))} :> Type;
   eqPaintingSp' {p} {Hp: p.+2 <= n} {D: prefix} {d}:
     PaintingPrev.(painting') (Hp := ↓ Hp) d = {b : Layer' d &
-      PaintingPrev.(painting') (rew <- [id] eqFrameSp' (D := D) in (d; b))} :> Type;
+      PaintingPrev.(painting')
+        (rew <- [id] eqFrameSp' (D := D) in (d; b))} :> Type;
   eqRestrPainting0 {p} {Hp: p.+1 <= n} {D: prefix} {E} {d} {ε: arity}
-    {l: Layer d} {Q: Painting.(painting) (D := D) E (rew <- eqFrameSp in (d; l))}:
-      l ε = Painting.(restrPainting) (Hq := Hp) (rew <- [id] eqPaintingSp in (l; Q));
+    {l: Layer d}
+    {Q: Painting.(painting) (D := D) E (rew <- eqFrameSp in (d; l))}:
+    l ε = Painting.(restrPainting) (Hq := Hp)
+      (rew <- [id] eqPaintingSp in (l; Q));
   eqRestrPaintingSp {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D: prefix} {E} {d}
     {ε: arity} {l: Layer (Hp := ↓ (Hpq ↕ Hq)) d}
     {Q: Painting.(painting) (D := D) E (rew <- eqFrameSp in (d; l))}:
-    Painting.(restrPainting) (Hpq := ↓ Hpq) (ε := ε) (rew <- [id] eqPaintingSp in (l; Q)) = rew <- [id] eqPaintingSp' (Hp := Hpq ↕ Hq) in
-      (RestrLayer d l; rew [PaintingPrev.(painting')] eqRestrFrameSp in
-        Painting.(restrPainting) Q);
+    Painting.(restrPainting) (Hpq := ↓ Hpq) (ε := ε)
+    (rew <- [id] eqPaintingSp in (l; Q)) =
+      rew <- [id] eqPaintingSp' (Hp := Hpq ↕ Hq) in
+        (RestrLayer d l; rew [PaintingPrev.(painting')] eqRestrFrameSp in
+          Painting.(restrPainting) Q);
 }.
 
 Arguments prefix {n} _.
@@ -257,7 +265,8 @@ Definition mkprefix {n} {C: νType n}: Type@{m'} :=
 
 (** Memoizing the previous levels of [Frame] *)
 Definition mkFramePrev {n} {C: νType n}: FrameBlockPrev n.+1 mkprefix := {|
-  frame' (p: nat) (Hp: p.+1 <= n.+1) (D: mkprefix) := C.(Frame).(frame) (⇓ Hp) D.1;
+  frame' (p: nat) (Hp: p.+1 <= n.+1) (D: mkprefix) :=
+    C.(Frame).(frame) (⇓ Hp) D.1;
   frame'' (p: nat) (Hp: p.+2 <= n.+1) (D: mkprefix) :=
     C.(FramePrev).(frame') (⇓ Hp) D.1;
   restrFrame' (p q: nat) (Hpq: p.+2 <= q.+2) (Hq: q.+2 <= n.+1) (ε: arity)
@@ -270,12 +279,14 @@ Definition mkFramePrev {n} {C: νType n}: FrameBlockPrev n.+1 mkprefix := {|
 
 Definition mkLayer {n p} {Hp: p.+1 <= n.+1} {C: νType n} {D: mkprefix}
   {Frame: FrameBlock n.+1 p mkprefix mkFramePrev} {d: Frame.(frame) (↓ Hp) D}: HSet :=
-  hforall ε, C.(Painting).(painting) D.2 (Frame.(restrFrame) (Hpq := ♢ _) Hp ε d).
+  hforall ε, C.(Painting).(painting) D.2
+    (Frame.(restrFrame) (Hpq := ♢ _) Hp ε d).
 
-Definition mkRestrLayer {n p q} {ε: arity} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
-  {C: νType n} {D: mkprefix} {Frame: FrameBlock n.+1 p mkprefix mkFramePrev}
-  (d: Frame.(frame) (↓ ↓ (Hpq ↕ Hq)) D)
-  (l: mkLayer): C.(Layer) (Frame.(restrFrame) Hq ε d) :=
+Definition mkRestrLayer {n p q} {ε: arity} {Hpq: p.+2 <= q.+2}
+  {Hq: q.+2 <= n.+1} {C: νType n} {D: mkprefix}
+  {Frame: FrameBlock n.+1 p mkprefix mkFramePrev}
+  (d: Frame.(frame) (↓ ↓ (Hpq ↕ Hq)) D) (l: mkLayer):
+  C.(Layer) (Frame.(restrFrame) Hq ε d) :=
   fun ω => rew [C.(PaintingPrev).(painting')] Frame.(cohFrame) d in
     C.(Painting).(restrPainting) (Hpq := ⇓ Hpq) (l ω).
 
@@ -296,7 +307,8 @@ Proof.
     (f := C.(RestrLayer) _ (mkRestrLayer d l)).
   unfold RestrLayer, mkRestrLayer.
   rewrite <- map_subst with (f := C.(PaintingPrev).(restrPainting') (⇓ Hq) ε).
-  rewrite <- map_subst with (f := C.(PaintingPrev).(restrPainting') (⇓ (Hrq ↕ Hq)) ω).
+  rewrite <- map_subst with
+    (f := C.(PaintingPrev).(restrPainting') (⇓ (Hrq ↕ Hq)) ω).
   rewrite rew_map with
     (P := fun x => (C.(PaintingPrev).(painting'') x).(Dom))
     (f := fun x => C.(FramePrev).(restrFrame') (⇓ (Hpr ↕ Hrq) ↕ ⇓ Hq) 𝛉 x).
@@ -326,7 +338,8 @@ Defined.
 
 (** The Frame at level n.+1 for p.+1 knowing the Frame at level n.+1 for p *)
 #[local]
-Instance mkFrameSp {n p} {C: νType n} {Frame: FrameBlock n.+1 p mkprefix mkFramePrev}:
+Instance mkFrameSp {n p} {C: νType n}
+  {Frame: FrameBlock n.+1 p mkprefix mkFramePrev}:
   FrameBlock n.+1 p.+1 mkprefix mkFramePrev.
   unshelve esplit.
   * intros Hp D; exact {d : Frame.(frame) (↓ Hp) D & mkLayer (d := d)}.
@@ -337,7 +350,8 @@ Instance mkFrameSp {n p} {C: νType n} {Frame: FrameBlock n.+1 p mkprefix mkFram
     invert_le Hpr; invert_le Hrq.
 
     (* A roundabout way to simplify the proof of mkCohPainting_step *)
-    etransitivity. apply (C.(eqRestrFrameSp) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq)).
+    etransitivity.
+    apply (C.(eqRestrFrameSp) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq)).
     etransitivity.
     2: symmetry; apply (C.(eqRestrFrameSp) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq))).
 
@@ -359,7 +373,8 @@ Defined.
 
 (** First, memoizing the previous levels of [Painting] *)
 #[local]
-Instance mkPaintingPrev {n} {C: νType n} : PaintingBlockPrev n.+1 mkprefix mkFramePrev :=
+Instance mkPaintingPrev {n} {C: νType n}:
+  PaintingBlockPrev n.+1 mkprefix mkFramePrev :=
 {|
   painting' (p: nat) (Hp: p.+1 <= n.+1) (D: mkprefix) := C.(Painting).(painting) D.2:
     mkFramePrev.(frame') Hp D -> HSet; (* Coq bug? *)
@@ -384,7 +399,8 @@ Defined.
 
 Lemma mkpainting_computes {n p} {C: νType n} {Hp: p.+1 <= n.+1} {D: mkprefix}
   {E: (mkFrame n.+1).(frame) (♢ _) D -> HSet} {d}:
-  mkpainting (Hp := ↓ Hp) E d = {l : mkLayer & mkpainting (Hp := Hp) E (d; l)} :> Type.
+  mkpainting (Hp := ↓ Hp) E d =
+  {l : mkLayer & mkpainting (Hp := Hp) E (d; l)} :> Type.
 Proof.
   unfold mkpainting; now rewrite le_induction_step_computes.
 Qed.
@@ -546,7 +562,7 @@ Instance mkνType0: νType 0.
     * exfalso; now apply leY_contra in Hp.
     * exfalso; clear -Hq; now apply leY_contra in Hq.
   - unshelve esplit.
-    * intros p Hp _ _ _; now exact hunit.
+    * intros p Hp D E d. now exact (E d).
     * simpl; intros *; exfalso; now apply leY_contra in Hq.
     * simpl; intros *; exfalso; now apply leY_contra in Hq.
   - now intros *.
