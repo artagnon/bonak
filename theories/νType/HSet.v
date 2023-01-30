@@ -73,21 +73,11 @@ Notation "{ x : A & P }" := (hsigT (A := A) (fun x => P)): type_scope.
 
 (** [forall] defined over an [HSet] codomain *)
 
-(* Cannot use Coq's equal_f_dep which is opaque *)
-Lemma equal_f_dep: forall {A B} {f g: forall (x: A), B x},
-  f = g -> forall x, f x = g x.
-Proof.
-  intros A B f g <- H; now reflexivity.
-Defined.
-
-Axiom fext_computes: forall {A: Type} {B: A -> HSet} {f: forall a: A, B a},
-  functional_extensionality_dep f f (fun a: A => eq_refl) = eq_refl.
-
 Lemma hpiT_decompose {A: Type} (B: A -> HSet)
   (f g: forall a: A, B a) (p: f = g):
-  functional_extensionality_dep _ _ (equal_f_dep p) = p.
+  functional_extensionality_dep_good _ _ (fun x => f_equal (fun H => H x) p) = p.
 Proof.
-  destruct p; simpl; now apply fext_computes.
+  destruct p; simpl; now apply functional_extensionality_dep_good_refl.
 Qed.
 
 Definition hpiT_UIP {A: Type} (B: A -> HSet)
@@ -96,7 +86,7 @@ Proof.
   rewrite <- hpiT_decompose with (p := p).
   rewrite <- hpiT_decompose with (p := q).
   f_equal.
-  apply functional_extensionality_dep; intros a.
+  apply functional_extensionality_dep_good; intros a.
   apply (B a).
 Qed.
 
