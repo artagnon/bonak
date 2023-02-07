@@ -8,36 +8,36 @@ rew <- [P] H in rew [P] H in a = a.
   now destruct H.
 Qed.
 
-Lemma rew_rew' {A} {x y: A} (H : x = y) P {a: P y} :
+Lemma rew_rew' {A} {x y: A} (H: x = y) P {a: P y} :
 rew [P] H in rew <- [P] H in a = a.
   now destruct H.
 Qed.
 
-Lemma rew_context {A} {x y : A} (eq: x = y) {P} {a: P x}
-{Q : forall a, P a -> Type} : Q y (rew eq in a) = Q x a.
+Lemma rew_context {A} {x y: A} (eq: x = y) {P} {a: P x}
+{Q: forall a, P a -> Type}: Q y (rew eq in a) = Q x a.
   now destruct eq.
 Qed.
 
-Lemma rew_pair : forall A {a} (P Q: A -> Type) (x: P a) (y: Q a)
+Lemma rew_pair: forall A {a} (P Q: A -> Type) (x: P a) (y: Q a)
   {b} (H: a = b), (rew H in x, rew H in y) =
                    rew [fun a => (P a * Q a)%type] H in (x, y).
 Proof.
   now destruct H.
 Qed.
 
-Lemma rew_sigT {A x} {P : A -> Type} (Q : forall a, P a -> Type)
-  (u : { p : P x & Q x p }) {y} (H: x = y)
+Lemma rew_sigT {A x} {P: A -> Type} (Q: forall a, P a -> Type)
+  (u: { p: P x & Q x p }) {y} (H: x = y)
     : rew [fun x => { p : P x & Q x p }] H in u
       = (rew H in u.1; rew dependent [fun x H => Q x (rew H in u.1)] H in u.2).
 Proof.
   now destruct H, u.
 Qed.
 
-Lemma rew_existT_curried {A x} {P : A -> Type} {Q: {a & P a} -> Type}
-   {y} {H : x = y}
-   {u : P x} {v : Q (x; u)}
+Lemma rew_existT_curried {A x} {P: A -> Type} {Q: {a & P a} -> Type}
+   {y} {H: x = y}
+   {u: P x} {v: Q (x; u)}
    {u': P y} {v': Q (y; u')}
-   {Hu : rew H in u = u'} {Hv : rew (=H; Hu) in v = v'}:
+   {Hu: rew H in u = u'} {Hv: rew (=H; Hu) in v = v'}:
    rew [fun x => {a: P x & Q (x; a)}] H in (u; v) = (u'; v').
 Proof.
    now destruct Hu, Hv, H.

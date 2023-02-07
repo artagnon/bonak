@@ -98,5 +98,5 @@ Defined.
 Notation "'hforall' x , B" := (hpiT (fun x => B))
   (x binder, at level 200): type_scope.
 
-Notation "'hforall' x : A , B" := (hpiT (fun x : A => B))
+Notation "'hforall' x : A , B" := (hpiT (fun x: A => B))
   (x binder, at level 200): type_scope.

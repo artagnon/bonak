@@ -24,18 +24,15 @@ Proof.
   now induction n.
 Qed.
 
-Ltac reflexivity' := apply leR_refl || reflexivity.
-Ltac reflexivity := reflexivity'.
-
 (** A Yoneda-style encoding of the recursive definition of le *)
 Definition leY n m := forall p, leR p n -> leR p m.
-Infix "<=" := leY : nat_scope.
+Infix "<=" := leY: nat_scope.
 
 (* Equality in SProp is =S *)
-Inductive eqsprop {A : SProp} (x : A) : A -> Prop := eqsprop_refl : eqsprop x x.
-Infix "=S" := eqsprop (at level 70) : type_scope.
+Inductive eqsprop {A: SProp} (x: A): A -> Prop := eqsprop_refl: eqsprop x x.
+Infix "=S" := eqsprop (at level 70): type_scope.
 
-Theorem leY_irrelevance : forall {n m} (H H' : n <= m), H =S H'.
+Theorem leY_irrelevance: forall {n m} (H H': n <= m), H =S H'.
   now reflexivity.
 Qed.
 
@@ -46,13 +43,13 @@ Qed.
 
 (** Contradiction of type n.+1 <= 0 *)
 Theorem leY_contra {n}: n.+1 <= O -> False.
-  intros; elimtype SFalse; unfold leY in H.
+  intros. cut SFalse. intro Hn; elim Hn. unfold leY in H.
   specialize H with (p := 1); eapply leR_contra.
   apply H; clear H. now auto.
 Qed.
 
 Lemma leR_0 {n}: leR O n.
-  destruct n. now simpl. now simpl.
+  destruct n. all: now auto.
 Qed.
 
 Lemma leY_0 {n}: O <= n.
@@ -62,25 +59,25 @@ Lemma leY_0 {n}: O <= n.
 Qed.
 
 (** Reflexivity in leY *)
-Definition leY_refl n : n <= n :=
+Definition leY_refl n: n <= n :=
   fun _ x => x. (* Coq bug! *)
 
 Notation "♢" := leY_refl (at level 0).
 
 (** Transitivity in leY *)
-Definition leY_trans {n m p} (Hnm : n <= m) (Hmp : m <= p) : n <= p :=
-  fun q (Hqn : leR q n) => Hmp _ (Hnm _ Hqn).
+Definition leY_trans {n m p} (Hnm: n <= m) (Hmp: m <= p): n <= p :=
+  fun q (Hqn: leR q n) => Hmp _ (Hnm _ Hqn).
 
 Infix "↕" := leY_trans (at level 45).
 
 (** Some trivial inequality proofs in leYoneda *)
 
-Lemma leR_up {n m} (Hnm : leR n m): leR n m.+1.
+Lemma leR_up {n m} (Hnm: leR n m): leR n m.+1.
   revert m Hnm. induction n. now auto. destruct m. intros H.
   now apply leR_contra in H. now apply IHn.
 Qed.
 
-Lemma leY_up {n m} (Hnm : n <= m): n <= m.+1.
+Lemma leY_up {n m} (Hnm: n <= m): n <= m.+1.
   unfold "<=" in *. intros p Hpn. now apply leR_up, Hnm, Hpn.
 Qed.
 
@@ -101,7 +98,7 @@ Lemma leR_lower_both {n m} (Hnm: leR n.+1 m.+1): leR n m.
   now auto.
 Qed.
 
-Lemma leY_lower_both {n m} (Hnm: n.+1 <= m.+1) : n <= m.
+Lemma leY_lower_both {n m} (Hnm: n.+1 <= m.+1): n <= m.
   unfold "<=" in *. intros p Hpn. now apply leR_lower_both, Hnm, Hpn.
 Qed.
 
@@ -190,7 +187,7 @@ Defined.
 
 (** le_induction along with a couple of computational properties *)
 
-Theorem le_induction {n p} (Hp : p <= n) (P: forall p (Hp: p <= n), Type)
+Theorem le_induction {n p} (Hp: p <= n) (P: forall p (Hp: p <= n), Type)
   (H_base: P n (♢ n))
   (H_step: forall p (Hp: p.+1 <= n) (H: P p.+1 Hp), P p (↓ Hp)): P p Hp.
 Proof.
@@ -221,7 +218,7 @@ Definition le_induction' {n p} (Hp: p.+1 <= n.+1)
   le_induction (⇓ Hp) (fun p Hp => P p (⇑ Hp)) H_base
     (fun q Hq => H_step q (⇑ Hq)).
 
-Definition le_induction'' {n p} (Hp : p.+2 <= n.+2)
+Definition le_induction'' {n p} (Hp: p.+2 <= n.+2)
   (P : forall p (Hp: p.+2 <= n.+2), Type)
   (H_base: P n (♢ n.+2))
   (H_step: forall p (H : p.+3 <= n.+2), P p.+1 H -> P p (↓ H)): P p Hp :=
