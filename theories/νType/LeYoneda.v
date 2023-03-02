@@ -89,7 +89,7 @@ Lemma leR_down {n m} (Hnm: leR n.+1 m): leR n m.
 Qed.
 
 Lemma leY_down {n m} (Hnm: n.+1 <= m): n <= m.
-  unfold "<=" in *. intros p Hpn. now apply leR_down, Hnm, Hpn.
+  unfold "<=" in *. intros p Hpn. now apply leR_down, Hnm.
 Qed.
 
 Notation "↓ p" := (leY_down p) (at level 40).
@@ -99,7 +99,7 @@ Lemma leR_lower_both {n m} (Hnm: leR n.+1 m.+1): leR n m.
 Qed.
 
 Lemma leY_lower_both {n m} (Hnm: n.+1 <= m.+1): n <= m.
-  unfold "<=" in *. intros p Hpn. now apply leR_lower_both, Hnm, Hpn.
+  unfold "<=" in *. intros p Hpn. now apply leR_lower_both, Hnm.
 Qed.
 
 Notation "⇓ p" := (leY_lower_both p) (at level 40).
@@ -110,7 +110,7 @@ Qed.
 
 Lemma leY_raise_both {n m} (Hnm: n <= m): n.+1 <= m.+1.
   unfold "<=" in *. intros p Hpn. destruct p. now auto.
-  now apply leR_raise_both, Hnm, Hpn.
+  now apply leR_raise_both, Hnm.
 Qed.
 
 Notation "⇑ p" := (leY_raise_both p) (at level 40).
