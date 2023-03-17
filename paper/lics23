@@ -300,7 +300,7 @@ We're unsure about this.
 >   The Simplicial Model of Univalent Foundations (after Voevodsky).
 >   doi: 10.4171/JEMS/1050
 
-(right, to add)
+Done.
 
 > * p3, §III.A: I would suggest mentioning already here that you use SProp in your mechanisation (though in what seems to be a theoretically inessential way).
 
@@ -309,8 +309,10 @@ We're unsure about this.
 > * p5, Fig. 3: Thank you for this figure, it helps a lot!
 >
 > * p10, §V, "thanks to the indexed approach, we expect univalence to hold by definition": I can see why you might expect to be able to model definitional univalence in a model based on [30], but I'm skeptical about [31] and [32]; as far as I'm aware, the only successes in this area so far are for cubes without diagonals. I think it would be more reasonable to "conjecture" than to "expect" this.
->
+
 > * Reference [3]: I think you meant to cite a different Reynolds paper.
+
+Done.
 
 > * Reference [28]: There is a published article matching this preprint, https://doi.org/10.4230/LIPIcs.CSL.2020.13
 
