@@ -103,7 +103,9 @@ Done.
 
 > **** 2 semi simplicial and semi cubical sets
 > - I suggest you begin the section with the "While ordinary semi-simplicial" paragraph. The 2 first paragraphs should be moved to the mid of the section. More precisely they should be distilled in the examples of standard simplices. The story w.r.t colors is particularly obscure to me. I think that X0 for X an augmented semi simplicial set, is a set of colors. Why not say that directly? Also I suspect it is tied to your "type theory in color" (G. Moulin) references, so you could add a brief sentence mentioning this.
->
+
+Colors in our definition are unrelated to colors in Moulin (in Moulin, colors are dimensions, for us, it is a tagging of points).
+
 > - "over the semi-simplex category [delta cap]"
 >   I think you meant [delta], not [delta cap] as the latter is ofc itself a presheaf category.
 
@@ -129,7 +131,9 @@ Done.
 > - "Standard augmented n-semi-simplices have a geometric interpretation, and we illustrate them for dimensions 1, 2, and 3."
 >   include 0 in this sentence. Then explain that for X an augmented semi simplicial set, (IIUC) X0 is pictured as a set of colors,
 >   X1 a set of points, etc. Then explain it for standard semi simplicial sets.
->
+
+Colors alone are not pictured. Only points are pictured, then pictured with "literally" the color they have.
+
 > - "In dimension 2, the standard augmented semi-simplex"
 >   Rather: the standard augmented 2-semi-simplex
 >
@@ -287,15 +291,21 @@ We're unsure about this.
 > == COMMENTS
 >
 > * §I: I think some more detail on the relationship between this work and [2] would be useful for unfamilar readers.
->
+
+(todo)
+
 > * p3, §III.A: You say first "Some models", then "This model"–are you thinking of several or just one? It would be nice to cite (2) here.
 >
 >   (2) Krzysztof Kapulkin and Peter LeFanu Lumsdaine.
 >   The Simplicial Model of Univalent Foundations (after Voevodsky).
 >   doi: 10.4171/JEMS/1050
->
+
+(right, to add)
+
 > * p3, §III.A: I would suggest mentioning already here that you use SProp in your mechanisation (though in what seems to be a theoretically inessential way).
->
+
+(ok)
+
 > * p5, Fig. 3: Thank you for this figure, it helps a lot!
 >
 > * p10, §V, "thanks to the indexed approach, we expect univalence to hold by definition": I can see why you might expect to be able to model definitional univalence in a model based on [30], but I'm skeptical about [31] and [32]; as far as I'm aware, the only successes in this area so far are for cubes without diagonals. I think it would be more reasonable to "conjecture" than to "expect" this.
