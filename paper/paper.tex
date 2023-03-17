@@ -549,15 +549,15 @@ The figure on the left is $\framep[3][1]$, on the right is $\framep[3][2]$, and 
 
 We illustrated here the cubical case, that is $\nu = 2$, but, in general, a $\layer[n][p]$ is a product of $\nu$ $\painting[n - 1][p]$. A $\painting[n][0]$ is a $n$-dimensional object corresponding to a filled $\fullframe[n]$. More generally, a $\painting[n][p]$ is an $n$-dimensional object which has the form of a $\painting[n-p][0]$, thus of $(n-p)$-dimensional form, but shifted and living in dimensions $p$ to $n$. Such $\painting[n][p]$ fills a space framed by a partial $\framep[n][p]$ so that, together, they form a filled $\fullframe[n]$. For instance, in the picture, each of the two $\painting[2][0]$ of $\layer[3][0]$ is a filled blue square, each of the two $\painting[2][1]$ of $\layer[3][1]$ is the line shown in red, stretched into a partial square filling the partial frames made of respectively the left and right border of the blue square, and each of the two $\painting[2][2]$ of $\layer[3][2]$ is a point shown in green, stretched into a partial square filling the full frames made respectively of the upper and lower borders of the blue and red squares. A $\painting[n][p]$ complements a $\framep[n][p]$ by adding layers needed to form a $\fullframe[n]$ and by filling the resulting $\fullframe[n]$ with an inhabitant of $X_n$. Layers are added from dimension $n$ to dimension $p$ that is opposite to the order from $0$ to $p$ the $\framep[n][p]$ are built, as shown below.
 \begin{align*}
-  \framep[n][p]   & \defeq \Sigma a_n: (\ldots (\Sigma \unitpoint: \unittype .\, \layer[n][0]) \ldots) .\, \layer[n][p] \\
+  \framep[n][p]   & \defeq \Sigma a_n: (\ldots (\Sigma \unitpoint: \unittype .\, \layer[n][0]) \ldots) .\, \layer[n][p - 1] \\
   \painting[n][p] & \defeq \Sigma l_p: \layer[n][p]. (\ldots (\Sigma l_n: \layer[n][n - 1] .\, X_n) \ldots)
 \end{align*}
 
 So far, we have not paid attention to the fact that we have a dependent type, shown as a $\Sigma$. Let us be more precise about this requirement. First, $\fullframe[n]$ depends on all $X_i$ up to $n - 1$. So, we need to package up $X_i$, for $i < n$, into a type, which we call $\X[][<n][]$. This allows us to give the type $\X[][<n][] \rightarrow \U$ to $\fullframe[n]$. Then, for $D: \X[][<n][]$, representing an initial prefix of $X_0, X_1, \ldots X_{n - 1}$, the indexed set $X_n$ has type $\fullframe[n](D) \rightarrow \U$. Thus, $\framep[n][p]$, $\layer[n][p]$ and $\painting[n][p]$ also depend on $D$. We can then refine the previous equation by showing the dependencies on $D$. In particular, $X_n$ is just $D.\tl$.
 \begin{align*}
-   & \framep[n][p](D) \defeq                                                                                  \\
-   & \;\;\;\;\Sigma a_n: (\ldots (\Sigma \unitpoint: \unittype.\, \layer[n][0](D)) \ldots) .\,\layer[n][p](D) \\
-   & \painting[n][p](D) \defeq                                                                                \\
+   & \framep[n][p](D) \defeq                                                                                      \\
+   & \;\;\;\;\Sigma a_n: (\ldots (\Sigma \unitpoint: \unittype.\, \layer[n][0](D)) \ldots) .\,\layer[n][p - 1](D) \\
+   & \painting[n][p](D) \defeq                                                                                    \\
    & \;\;\;\;\Sigma l_p: \layer[n][p](D).\, (\ldots (\Sigma l_n: \layer[n][n - 1](D) .\, D.\tl) \ldots)
 \end{align*}
 
