@@ -1,0 +1,312 @@
+> Dear Authors,
+>
+> Thank you for your submission to LICS 2023. The rebuttal phase has started. It
+> will end at 23:59, March 19 (Anywhere on Earth).
+>
+> The goal of this phase is to give you an opportunity to answer questions of reviewers.
+>
+> Please keep in mind the following when writing your response:
+>
+> - The reviews were double-blind. Your names will be revealed to PC members
+>   during the discussion phase. Therefore, you can reveal your identity in your
+>   response.  
+>
+> - You are not required to write a response.
+>
+> - Many reviews have explicit questions for the authors. Please try to respond to
+>   them. In general, your response should address the reviewer's concerns.
+>
+> - Most of the papers have three reviews. I apologize if your paper has a review
+>   missing. This means that we have not received it on time.
+>
+> - Be concise. Although there is no length limit, if your response is too long
+>   (say, above 6000 characters) then it may not be read in full. Also, there is
+>   no need to respond to every minor question or suggestion for improvement.
+>
+> The reviews of your paper are attached to this letter. To submit your response,
+> you should log on EasyChair Web page for LICS'23 and select your submission on
+> the menu.
+>
+> Best regards,
+>
+> Igor Walukiewicz
+>
+> ----------------------- REVIEW 1 ---------------------
+> SUBMISSION: 160
+> TITLE: A parametricity-based formalization of semi-simplicial and semi-cubical sets
+> AUTHORS: Hugo Herbelin and Ramkumar Ramachandra
+>
+> ----------- Overall evaluation -----------
+> *** Summary
+> As far as I understand, this paper makes 3 contributions.
+> 1) Novel alternate definitions for the category of augmented semi-simplices and the category of semi-cubes. A generalisation of this definition (the category of v-semi-shapes, for v finite set) is also suggested but not written down. The authors claim that these alternate category-of-shapes definitions are equivalent to the standard definitions (e.g. in terms of finite total orders in the case of simplices, I suppose).
+> 2) An "indexed" definition for v-sets. v-sets can either be defined as presheaves over the category of v-semi-shapes ("fibered" definition), or using the proposed novel "indexed" definition. This indexed definition of a v-set X regards the n-dimensional cells of X (denoted X(n)) as a family of sets, basically indexed by faces of lower dimension. The authors remark that, in order to obtain the type of the family X(n + 1) knowing X(n):S(n), it suffices to apply a v-ary parametricity translation to the latter term. However parametricity is merely used as an initial guiding intuition to compute S(n+1) based on Xn:Sn, and the main contribution of the paper is to define S(n) more directly. No equivalence between the 2 definitions is proved or sketched.
+> 3) Indexed v-sets are formalised in the Coq proof assistant.
+>
+> *** Compliance with the Instructions to Authors (https://lics.siglog.org/lics23/cfp.php)
+> - "[The paper] should begin with a succinct statement of the issues [...]"
+>   The main contribution of the paper is to give an indexed definition of v-sets, rather than a fibered definition.
+>   But the authors don't explain why it is important or interesting to have such a definition available.
+> - "[then] a summary of the main results [...]"
+>   The contributions (2) and (3) above are listed (although not explicitly enough IMO), but the status of the contribution (1) is somewhat unclear. It is not explicitly listed as a contribution, and at the same time no references are provided.
+>
+> *** Overall opinion
+> The core idea of the paper is to give a mechanized, indexed, parametricity-flavoured definition of v-sets (in contrast with a fibered definition, i.e. v-sets as presheaves). I personally believe that it is an acceptable contribution: in general, mathematicians (and progammers) could gain a lot by directly recognizing type dependency in the structures they study. Unfortunately no motivation is provided for this indexed definition in the paper, and, more importantly, the overall exposition is quite unsatisfactory in several respects:
+> - As stated above the set of contributions is not clearly defined.
+> - Virtually every section, sub-section, and the paper itself use the same flawed explanation strategy:
+>   First a vague definition of the key concepts (of e.g. the subsection) is given. Then preliminary precise statements/intuition about those (for now imprecise) key concepts are discussed. Then an actual definition is  given (in some cases no precise definitions appear, see ν-semi-shape category for instance). This means that the reader has to read the paper  "in reverse": the preliminary precise statements about imprecise concepts induce confusion. Then the reader skims through the rest of the section and comes back to the beginning of the section to make sense of it. This explanation strategy is particularly problematic when one wants to read the technical sections of the paper.
+> - Part of the provided geometric intuition is not clearly connected to the actual definitions (for instance the colored cubes of subsection "B. Intuition for our formal construction"). In my opinion, having an unambiguous mathematical definition is more important than having an accompanying geometric intuition. Moreover, geometric intuition can be provided, as long as it is clearly, explicitly tied to such a definition.
+> - The added value of several fragments of the paper to the exposition is unclear. For instance the authors give a definition of indexed v-sets both in ETT and in ITT. Why not just explaining this definition in ITT? It think it makes more sense, since the mechanization also uses ITT. Another example: the sub-section "B. Fibered versus indexed representation" seems disconnected from the rest of the paper as even the simplest instance of Grothendieck correspondence (the last formula of this sub-section) is not used explicitly in the paper. Yet another example: there is a whole paragraph about homotopy type theory and univalence in sub-section "A. Working with sets in type theory". Yet univalence does not seem to be used anywhere in the paper.
+> - Too many statements are badly phrased, or inaccurate (details follow).
+>
+> *** detailed review
+> Here I list simple suggestions to make the paper better in my opinion. I'm sure there are more than one way (and better ways) to rewrite things of course.
+> **** 1 Introduction
+> - "Parametricity can be iterated, and it has been noted that iterated Reynolds’ parametricity, when using more generally graphs than relations, has a cubical flavor [4], [5], [6], [7], [8]."
+>   Please use a phrasing more precise that "has a flavor". For instance: It has been noted that Iterated Reynolds' parametricity can be interpreted in various cubical sets categories.
+>
+> - "We obtain a unary variant of Reynolds’ binary parametricity by using predicates or families instead of relations or graphs, in which case, we obtain a form of realizability [9], [10], [6]."
+>   Using "we" makes it sound like a contribution. I suggest to use, e.g., a passive form instead.
+>
+> - "It has then been noted that iterated unary parametricity has an augmented simplicial flavor."
+>   same remark than above.
+>
+> - "[...] obtained by applying imple rules characterizing iterated parametricity."
+>   I would rather say "rules inspired from iterated parametricity".
+>
+> - "The outline of the paper is as follows."
+>   Please incorporate section numbers in here
+>
+> - "First, we recall the definition of the augmented semi-simplicial and [...]"
+>   If your definition appears in the literature, please add a reference. If it is novel, state it as an explicit contribution.
+>
+> - "Our precise mechanization in Coq"
+>   Our mechanization
+> **** 2 semi simplicial and semi cubical sets
+> - I suggest you begin the section with the "While ordinary semi-simplicial" paragraph. The 2 first paragraphs should be moved to the mid of the section. More precisely they should be distilled in the examples of standard simplices. The story w.r.t colors is particularly obscure to me. I think that X0 for X an augmented semi simplicial set, is a set of colors. Why not say that directly? Also I suspect it is tied to your "type theory in color" (G. Moulin) references, so you could add a brief sentence mentioning this.
+>
+> - "over the semi-simplex category [delta cap]"
+>   I think you meant [delta], not [delta cap] as the latter is ofc itself a presheaf category.
+>
+> - "and we use a definition that will later straightforwardly extend [..]"
+>   Again, is it a contribution or does it appear in the literature?
+>
+> - "We denote finite sequences by"
+>   The curly brace notation is not standard for sequences. please use tuples instead (a1, a2, ..., an) (or square brackets []) and () (or []) for the empty sequence. The :: notation is fine.
+>   When context is clear you can omit the parentheses and you recover your notation for labelling cells on the geometric representation of a semi-simplicial/semi cubical set.
+>
+> - "The standard augmented 0-semi-simplex is a singleton of one color."
+>   drop this or incorporate it to the moved 2 first paragraphs.
+>   The phrasing "is a singleton of one color" is inaccurate.
+>
+> - "Standard augmented n-semi-simplices have a geometric interpretation, and we illustrate them for dimensions 1, 2, and 3."
+>   include 0 in this sentence. Then explain that for X an augmented semi simplicial set, (IIUC) X0 is pictured as a set of colors,
+>   X1 a set of points, etc. Then explain it for standard semi simplicial sets.
+>
+> - "In dimension 2, the standard augmented semi-simplex"
+>   Rather: the standard augmented 2-semi-simplex
+>
+> - "More generally, the standard augmented"
+>   refer explicitly to the above triangle.
+>
+> - Regarding "B. Semi-cubical sets"
+>   Say explicitly that there are no dimension shifts anymore
+>   The same remarks than for the simplices apply, when relevant.
+>
+> - "C. Generalization to ν-sets"
+>   Provide a definition of the category of v semi shapes (objects, morphisms, ...). If you think there are too many definitions,
+>   just provide this one, and obtain the two above instances by setting v = {0}, or {L,R} as you explain.
+>   Again, is it a contribution of the present paper, or does the definition exist in the literature?
+>
+> - "A ν-set is thus a functor [phi] from the ν-semi-shape category to Set"
+>   a contravariant functor I suppose
+>
+> **** 3 our setting
+> - The scope of section 3 and 4 is rather unclear. You should think of a more logical distribution of topics.
+>   I think 3A can be replaced with a section explaining what precise flavour of ITT you will use (as stated above I think you can delete the ETT section) to describe your construction on paper.
+>   3B can be deleted. The simple equivalence between the fibered and the indexed point of view (last formula) can be inlined in the paper. It's also OK to have sentence stating that it is a particular case of the Grothendieck correspondance, but it is not necessary to have a whole sub-section about this.
+>
+> - About "3C. Example: indexed semi-cubical sets"...
+>   "together with appropriate coherence conditions." explain that the coherence conditions come from the equations in the shape category.
+>
+> - "If we think of X1 fibered over two copies of X0 in [...]"
+>   I can see what you want to do but the phrasing in the rest of this sub section is too vague.
+>
+> **** 4 our construction
+> - In this section, there is a mismatch between the amount of details given and the amount of explanations accompanying the details (by explanation I mean rigorous unambigous mathematical explanations). In fact I think that some details could be condensed into short sentences, and that some rigorous explanations should be expanded. Also you tend to give definitions after intuitions/statements and this greatly affects the intelligibility of the exposition.
+>
+> - I think that 4A should be merged with 3C
+>
+> - "The process of construction of the type of X1 from that of X0 , and from the type of X2 to that of X1 in the last section, is similar to applying a binary parametricity translation and expecting the resulting translation to be inhabited."
+>   the last part of the sentence is too vague
+>
+> - "Notice, however that the recipe obtained[...]"
+>   This paragraph speaks about the main contribution of the paper. But this contribution is not clearly stated in the introduction.
+>
+> - "B. Intuition for our formal construction"
+>   I think it is a bad idea to give intuition about the technical part, before giving the definition (even if it is a on-paper definition).
+>
+> - "A frame is a boundary of a standard form (simplex,cube, etc.), which we decompose into layer, and a painting corresponds to a filled frame. Some frame are full and we call them fullframe."
+>   I was quite confused by this sentence. Again, you try to give intuition before definitions which is a bad idea in my opinion.
+>
+> - "We assign every Xn the type fullframen → HSet uniformly, applying to the description above the isomorphism between A → B → C and [...]"
+>   Say explicitly that fullframe is going to be a telescope of sigma types. I could not deduce that after a first reading of this paraggraph and was confused.
+>
+> - "Let us now illustrate how we build fullframe n"
+>   Again, it would be preferrable to have definitions before intuition (even geometric intuition)
+>
+> - Let us now illustrate the construction of fullframe3
+>   I think that having those drawings with no clear explanations as to how they connect to the fullframe3 type does not improve the understanding of the reader. You can either keep the drawings and precisely explain how they connect to fullframe, or you can remove the drawings.
+>
+> - "So, we need to package up Xi , for i < n, into a type, which we call vset<n."
+>   No definition for the latter type is provided.
+>
+> - "C. Formal construction in ETT"
+>   This sub section can be dropped.
+>
+> - "over tables I, II, [...]"
+>   The first two table should be swapped as the first one uses definitions in the second one.
+>
+> - "Table I describes a ν-set in indexed form, as a coinductive limit of n-truncated ν-sets."
+>   I think "coinductive limit" is a non standard term. I believe what you mean is a filtered colimit. I would drop this limit description as it brings no further immediate insights to the definition.
+>
+> - Table 1 is labelled "coinductive structure". I think it is an inappropriate name.
+>
+> - "The nth component is a family over a fullframe"
+>   Too vague
+>
+> - "We leave however implicit the exact way this mutual recursion can be formalized as this stage"
+>   do you mean on paper, or in your devlopement?
+>
+> - "D. Formal construction in ITT"
+>
+> - "leaving implicit some details, which we will explain here [...]"
+>   this is expected, as you introduce these tables in the current subsection.
+>
+> - "Tables VI, VII, and VIII are unchanged, except that we make explicit all arguments, including those that can be inferred from the context"
+>   I see no difference. Do you mean in the coq devlopment? the sentence is too vague.
+>
+> - Generally speaking I think you give to many details with imprecise explanations in the sub-sections "C. Formal construction in ETT" and "D. Formal construction in ITT""
+>
+> - "E. Details on the mechanization"
+>
+> - "The entire construction relies on inequalities over natural numbers, and we [...]"
+>   I think that the rest of this section can be condensed in a few sentences, rather than several paragraphs.
+>
+> **** 5 future work
+> - "By equipping the universe construction with a structure of equivalences, as suggested along the lines of Altenkirch and Kaposi"
+>   the last few words constitute questionable phrasing
+>
+> - "A key point is that, thanks to the indexed approach, we expect univalence to hold by definition."
+>   This seems to be part of the missing motivation for having an indexed definition of v-sets (or more complex sets)
+>
+> - "If these intuitions are correct, this would definitively root cubical type theory on top of iterated parametricity translation."
+>   I believe that "root on top" is not an english idiom.
+>
+>
+>
+> In conclusion I think that this paper makes a reasonable contribution, but that unfortunately the exposition lacks motivation, clarity, conciseness and accuracy (see overall opinion above).
+> ----------- Questions for authors during the rebuttal phase -----------
+> - Do the provided alternate definitions for the category or augmented semi-simplices and semi-cubes consitute a contribution of the paper?
+> - Why present the main result both in extensional and intensional type theory?
+>
+> <This review contains an attachment, which can be
+> downloaded from EasyChair.>
+>
+> ----------------------- REVIEW 2 ---------------------
+> SUBMISSION: 160
+> TITLE: A parametricity-based formalization of semi-simplicial and semi-cubical sets
+> AUTHORS: Hugo Herbelin and Ramkumar Ramachandra
+>
+> ----------- Overall evaluation -----------
+> This is a formalized definition in dependent type theory of ∞-dimensional structures that appear in homotopy theory and in iterated parametricity translations. The authors in particular formulate these structures as towers of type families dependent on each other (the "indexed" style), in contrast to the traditional ("fibred") style of definition by a sequence of (non-dependent) sets with functions between them.
+>
+> The central innovation of the paper is the concept of "ν-set", which has as special cases semi-cubical (ν = 2) and augmented simplicial (ν = 1) sets. Both of these are notions of structure with applications in homotopy theory. It's not clear to me that any other values of ν are of interest, but given the complexity of the construction, giving a uniform definition for just these two cases is worthwhile.
+>
+> The paper becomes quite technical, but I think this is inevitable given the nature of the problem; the authors have made a good effort to explain their construction.
+>
+> Thankfully the definition has been formalized, so its type-correctness is not in question. On the other hand there is a question of conceptual correctness: have we actually given a correct definition of the structure we set out to define? I think the authors make a good case that their definition is sensible with their explanations of its structure. Some exercise of the definition through applications would make me more confident, but I think it is fair to leave this for future work.
+>
+> I recommend the article for publication.
+>
+> == REQUESTS
+>
+> * p10, §V: You mention that you expect to be able to model definitional univalence using your indexed approach. In (1), the equivalent of definitional univalence (the PAIR-PRED rule) is modeled by using "refined presheaves". What is the relationship between their approach and your indexed approach? In general, I would appreciate more explanation of the benefits you see in using an indexed rather than a fibred approach.
+>
+>   (1) Jean-Philippe Bernardy, Thierry Coquand, and Guilhem Moulin.
+>   A Presheaf Model of Parametric Type Theory.
+>   doi: 10.1016/j.entcs.2015.12.006
+>
+> == QUESTIONS
+>
+> * p2, Fig. 1: Does your way of defining Δ₊ appear elsewhere in the literature, or is this a novel presentation?
+>
+> * p6, §III.B: In your descriptions here it looks like frame^{n,p} contains a layer^{n,p}, but elsewhere it seems that frame^{n,p} contains only up to layer^{n,p-1}. Is this a typo?
+>
+> == COMMENTS
+>
+> * §I: I think some more detail on the relationship between this work and [2] would be useful for unfamilar readers.
+>
+> * p3, §III.A: You say first "Some models", then "This model"–are you thinking of several or just one? It would be nice to cite (2) here.
+>
+>   (2) Krzysztof Kapulkin and Peter LeFanu Lumsdaine.
+>   The Simplicial Model of Univalent Foundations (after Voevodsky).
+>   doi: 10.4171/JEMS/1050
+>
+> * p3, §III.A: I would suggest mentioning already here that you use SProp in your mechanisation (though in what seems to be a theoretically inessential way).
+>
+> * p5, Fig. 3: Thank you for this figure, it helps a lot!
+>
+> * p10, §V, "thanks to the indexed approach, we expect univalence to hold by definition": I can see why you might expect to be able to model definitional univalence in a model based on [30], but I'm skeptical about [31] and [32]; as far as I'm aware, the only successes in this area so far are for cubes without diagonals. I think it would be more reasonable to "conjecture" than to "expect" this.
+>
+> * Reference [3]: I think you meant to cite a different Reynolds paper.
+>
+> * Reference [28]: There is a published article matching this preprint, https://doi.org/10.4230/LIPIcs.CSL.2020.13
+>
+> == FORMATTING COMMENTS
+>
+> * p2-3, §II.A-B: In your pictures of the semi-simplices and semi-cubes, it would have been helpful for me if you indicated the orientations of the edges.
+>
+> * p3, §III.B: At the end of this section, some parentheses would make the equivalence easier to read.
+>
+> == TYPOS
+>
+> * p3, §III.A: "henceforth" -> "hence"
+> * Reference [25]: "2ltt" -> "2LTT", "hott" -> "HoTT"
+>
+>
+> ----------------------- REVIEW 3 ---------------------
+> SUBMISSION: 160
+> TITLE: A parametricity-based formalization of semi-simplicial and semi-cubical sets
+> AUTHORS: Hugo Herbelin and Ramkumar Ramachandra
+>
+> ----------- Overall evaluation -----------
+> This paper describes in detail a construction relating parametricity to (augmented) simplicial and cubical sets which has been formalized in Coq. This is an important line of research because it helps us to understand how to deal with higher dimensional constructions like constructing models of HoTT. While the basic idea is folklore it is important to work out the technical details.
+>
+> I wonder what input the paper can provide on the question of defining semi-simplicial (or semi-cubical) types in general. It seems that the construction on types could be developed in a 2-level type theory as in [1].
+>
+> Another remark is that instead of adding degeneracies to the category as it is done classically, it may be better to add weak degeneracies as suggested in [2] (by taking the direct replacement).
+>
+> [1]
+> @article{altenkirch2016extending,
+>   title={Extending homotopy type theory with strict equality},
+>   author={Altenkirch, Thorsten and Capriotti, Paolo and Kraus, Nicolai},
+>   journal={arXiv preprint arXiv:1604.03799},
+>   year={2016}
+> }
+> [2]
+> @article{kraus2017space,
+>   title={Space-valued diagrams, type-theoretically},
+>   author={Kraus, Nicolai and Sattler, Christian},
+>   journal={arXiv preprint arXiv:1704.04543},
+>   year={2017}
+> }
+>
+> P.S. My favourite representation of \Delta+ is using a non-unique definition of <= generated
+> from 0 <= 0, m <= n -> m <= succ n, m <= n -> m <= succ n. The general case follows by using n copies of
+> the last constructor.
+> ----------- Questions for authors during the rebuttal phase -----------
+> I wonder what input the paper can provide on the question of defining semi-simplicial (or semi-cubical) types in general. It seems that the construction on types could be developed in a 2-level type theory as in [1].
+>
+>
+> ------------------------------------------------------
