@@ -42,14 +42,24 @@
 > 1) Novel alternate definitions for the category of augmented semi-simplices and the category of semi-cubes. A generalisation of this definition (the category of v-semi-shapes, for v finite set) is also suggested but not written down. The authors claim that these alternate category-of-shapes definitions are equivalent to the standard definitions (e.g. in terms of finite total orders in the case of simplices, I suppose).
 > 2) An "indexed" definition for v-sets. v-sets can either be defined as presheaves over the category of v-semi-shapes ("fibered" definition), or using the proposed novel "indexed" definition. This indexed definition of a v-set X regards the n-dimensional cells of X (denoted X(n)) as a family of sets, basically indexed by faces of lower dimension. The authors remark that, in order to obtain the type of the family X(n + 1) knowing X(n):S(n), it suffices to apply a v-ary parametricity translation to the latter term. However parametricity is merely used as an initial guiding intuition to compute S(n+1) based on Xn:Sn, and the main contribution of the paper is to define S(n) more directly. No equivalence between the 2 definitions is proved or sketched.
 > 3) Indexed v-sets are formalised in the Coq proof assistant.
->
+> 
 > *** Compliance with the Instructions to Authors (https://lics.siglog.org/lics23/cfp.php)
 > - "[The paper] should begin with a succinct statement of the issues [...]"
 >   The main contribution of the paper is to give an indexed definition of v-sets, rather than a fibered definition.
 >   But the authors don't explain why it is important or interesting to have such a definition available.
 > - "[then] a summary of the main results [...]"
 >   The contributions (2) and (3) above are listed (although not explicitly enough IMO), but the status of the contribution (1) is somewhat unclear. It is not explicitly listed as a contribution, and at the same time no references are provided.
->
+
+Yes, we consider points 2 (parametricity-based recipe to define v-sets in the indexed way) and 3 (their full formalisation) to be our main contributions. Regarding point 1, the definitions of semi-simplicial and semi-cubical sets we present is not standard in the literature but the literature on the subject is so large that it is difficult to assert with certainty that this has not already been defined somewhere. In particular, we use this definition to highlight the similarity between semi-simpliial sets and semi-cubical sets, not to advocate a new definition. We will reformulate the introduction showing more explicitly that 2 is a contribution.
+
+We agree that the motivation for such an indexed construction is not clearly stated, even though it is multiple:
+- it is a key case study within the Homotopy Type Theory community, related to the question of semi-simplicial types [nlab] (which we do not address)
+- it is related to the central difference between the fibered and indexed presentations of dependent types (a particular case of Grothendieck construction): the importance of the difference is generally underestimated but it matters, as it modifies the balance between strict and weak properties of semi-simplicial and semi-cubical sets
+- in particular, it is related to the problem of providing models of type theory that satisfy different definitional equalities than models based on the presheaf ("fibered") definition of simplicial or cubical sets (as sketched in the conclusion)
+- it connects the computer science concept of parametricity and the geometrical concept of semi-simplicial and semi-cubical sets
+
+[nlab] https://ncatlab.org/nlab/show/semi-simplicial+types+in+homotopy+type+theory
+
 > *** Overall opinion
 > The core idea of the paper is to give a mechanized, indexed, parametricity-flavoured definition of v-sets (in contrast with a fibered definition, i.e. v-sets as presheaves). I personally believe that it is an acceptable contribution: in general, mathematicians (and progammers) could gain a lot by directly recognizing type dependency in the structures they study. Unfortunately no motivation is provided for this indexed definition in the paper, and, more importantly, the overall exposition is quite unsatisfactory in several respects:
 > - As stated above the set of contributions is not clearly defined.
@@ -87,14 +97,18 @@
 >
 > - "over the semi-simplex category [delta cap]"
 >   I think you meant [delta], not [delta cap] as the latter is ofc itself a presheaf category.
->
+
+Give a reference...
+
 > - "and we use a definition that will later straightforwardly extend [..]"
 >   Again, is it a contribution or does it appear in the literature?
 >
 > - "We denote finite sequences by"
 >   The curly brace notation is not standard for sequences. please use tuples instead (a1, a2, ..., an) (or square brackets []) and () (or []) for the empty sequence. The :: notation is fine.
 >   When context is clear you can omit the parentheses and you recover your notation for labelling cells on the geometric representation of a semi-simplicial/semi cubical set.
->
+
+Done
+
 > - "The standard augmented 0-semi-simplex is a singleton of one color."
 >   drop this or incorporate it to the moved 2 first paragraphs.
 >   The phrasing "is a singleton of one color" is inaccurate.
@@ -305,8 +319,10 @@
 > P.S. My favourite representation of \Delta+ is using a non-unique definition of <= generated
 > from 0 <= 0, m <= n -> m <= succ n, m <= n -> m <= succ n. The general case follows by using n copies of
 > the last constructor.
+
+??
+
 > ----------- Questions for authors during the rebuttal phase -----------
 > I wonder what input the paper can provide on the question of defining semi-simplicial (or semi-cubical) types in general. It seems that the construction on types could be developed in a 2-level type theory as in [1].
->
->
-> ------------------------------------------------------
+
+This could be done also. We used Coq which is not a 2-level type theory, so we used hsets instead.
