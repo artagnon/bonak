@@ -206,7 +206,9 @@ Done.
 >
 > - "Table I describes a ν-set in indexed form, as a coinductive limit of n-truncated ν-sets."
 >   I think "coinductive limit" is a non standard term. I believe what you mean is a filtered colimit. I would drop this limit description as it brings no further immediate insights to the definition.
->
+
+(todo)
+
 > - Table 1 is labelled "coinductive structure". I think it is an inappropriate name.
 >
 > - "The nth component is a family over a fullframe"
@@ -287,7 +289,9 @@ One advantage of the ETT presentation is that it has direct correspondence with 
 We're unsure about this.
 
 > * p6, §III.B: In your descriptions here it looks like frame^{n,p} contains a layer^{n,p}, but elsewhere it seems that frame^{n,p} contains only up to layer^{n,p-1}. Is this a typo?
->
+
+Yes, this is a typo, thanks!
+
 > == COMMENTS
 >
 > * §I: I think some more detail on the relationship between this work and [2] would be useful for unfamilar readers.
