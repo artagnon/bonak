@@ -156,6 +156,8 @@ Colors alone are not pictured. Only points are pictured, then pictured with "lit
 > - The scope of section 3 and 4 is rather unclear. You should think of a more logical distribution of topics.
 >   I think 3A can be replaced with a section explaining what precise flavour of ITT you will use (as stated above I think you can delete the ETT section) to describe your construction on paper.
 
+Done.
+
 >   3B can be deleted. The simple equivalence between the fibered and the indexed point of view (last formula) can be inlined in the paper. It's also OK to have sentence stating that it is a particular case of the Grothendieck correspondance, but it is not necessary to have a whole sub-section about this.
 
 Done.
@@ -314,23 +316,25 @@ Done.
 >
 > * p10, §V, "thanks to the indexed approach, we expect univalence to hold by definition": I can see why you might expect to be able to model definitional univalence in a model based on [30], but I'm skeptical about [31] and [32]; as far as I'm aware, the only successes in this area so far are for cubes without diagonals. I think it would be more reasonable to "conjecture" than to "expect" this.
 
+We reformulated the conclusion.
+
 > * Reference [3]: I think you meant to cite a different Reynolds paper.
 
-Done.
+Fixed.
 
 > * Reference [28]: There is a published article matching this preprint, https://doi.org/10.4230/LIPIcs.CSL.2020.13
 
-Done.
+Updated.
 
 > == FORMATTING COMMENTS
 >
 > * p2-3, §II.A-B: In your pictures of the semi-simplices and semi-cubes, it would have been helpful for me if you indicated the orientations of the edges.
 
+We added a comment explaining how the n-components of standard semi-simplices and semi-cubes can be oriented.
 
 > * p3, §III.B: At the end of this section, some parentheses would make the equivalence easier to read.
 
-Section deleted.
-
+Done.
 
 > == TYPOS
 >
@@ -339,7 +343,7 @@ Section deleted.
 
 Done.
 
->
+
 > ----------------------- REVIEW 3 ---------------------
 > SUBMISSION: 160
 > TITLE: A parametricity-based formalization of semi-simplicial and semi-cubical sets
@@ -371,9 +375,9 @@ Done.
 > from 0 <= 0, m <= n -> m <= succ n, m <= n -> m <= succ n. The general case follows by using n copies of
 > the last constructor.
 
-??
+I guess you mean "m <= n -> succ m <= succ n" for the second constructor, in which case this is basically the representation we use. Giving a reference would answer the question of reviewer 1 about the originality of our presentation.
 
 > ----------- Questions for authors during the rebuttal phase -----------
 > I wonder what input the paper can provide on the question of defining semi-simplicial (or semi-cubical) types in general. It seems that the construction on types could be developed in a 2-level type theory as in [1].
 
-This could be done also. We used Coq which is not a 2-level type theory, so we used HSet instead.
+The paper does not contribute anything special to the question of semi-simplicial or semi-cubical types in general. However, it seems indeed that the relaxing from HSets to types in our construction could be developed in a 2-level type theory, as it was for other constructions.
