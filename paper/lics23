@@ -148,10 +148,12 @@ Colors alone are not pictured. Only points are pictured, then pictured with "lit
 >   Provide a definition of the category of v semi shapes (objects, morphisms, ...). If you think there are too many definitions,
 >   just provide this one, and obtain the two above instances by setting v = {0}, or {L,R} as you explain.
 >   Again, is it a contribution of the present paper, or does the definition exist in the literature?
->
+
 > - "A ν-set is thus a functor [phi] from the ν-semi-shape category to Set"
 >   a contravariant functor I suppose
->
+
+Fixed.
+
 > **** 3 our setting
 > - The scope of section 3 and 4 is rather unclear. You should think of a more logical distribution of topics.
 >   I think 3A can be replaced with a section explaining what precise flavour of ITT you will use (as stated above I think you can delete the ETT section) to describe your construction on paper.
@@ -243,9 +245,9 @@ Done.
 >
 > - "If these intuitions are correct, this would definitively root cubical type theory on top of iterated parametricity translation."
 >   I believe that "root on top" is not an english idiom.
->
->
->
+
+The conclusion has been re-written.
+
 > In conclusion I think that this paper makes a reasonable contribution, but that unfortunately the exposition lacks motivation, clarity, conciseness and accuracy (see overall opinion above).
 > ----------- Questions for authors during the rebuttal phase -----------
 > - Do the provided alternate definitions for the category or augmented semi-simplices and semi-cubes consitute a contribution of the paper?
