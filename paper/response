@@ -4,9 +4,11 @@ Some comments are about local parts of the paper and we have taken them into acc
 
 Other comments are about stating contributions more explicitly and we also took them into account in the new version of paper.
 
-An important part of the comments is about the structure of the paper and about the explanation strategy. We have been able to take several suggestions into account but it would be unreasonable for us to deeply reorganize the paper at this stage, all the more that we are unsure that such a reorganization would be appreciated by all kinds of readers. Instead, considering each comment one by one, we did our best to prevent the reader to be lost in explanations by adding text that we hope clarifies the structure of the paper and addresses the comment.
+An important part of the comments is about the structure of the paper and about the explanation strategy. We have been able to take several suggestions into account but it would be unreasonable for us to deeply reorganize the paper at this stage, all the more that we are unsure that such a reorganization would be appreciated by all kinds of readers. Instead, considering each comment one by one, we did our best to prevent the reader to be lost in explanations by adding text that we hope clarifies the structure of the paper.
 
-# Local remarks
+We otherwise conclude the response with answers to specific points.
+
+# Local comments easy to take into account
 
 This includes in particular:
 - replacing "flavor" with a more precise word ("has the structure of a cubical / augmented simplicial set")
@@ -32,12 +34,12 @@ This includes in particular:
 
 # Contributions
 
-We added in the introduction a paragraph stating what we consider are our contributions:
+We added in the introduction a paragraph stating what we consider to be our main contributions:
 - a recipe for parametricity iterated in all dimensions defined in full details
 - another case study in defining indexed augmented semi-simplicial and semi-cubical sets, especially regarding the question of how to deal with coherence conditions (indirectly helping to understand semi-simplicial types)
-- an alternative to presheaf models of parametric and cubical type theories
+- an indexed alternative to presheaf models of parametric and cubical type theories
 
-We are not aware of a reference for our uniform definition of augmented semi-simplicial and cubical sets but, as an answer to reviewers 1 and 2, we suspect that this is folklore. For instance, this seems known from reviewer 3 whose review says that a definition (morally) identical to ours is their favorite definition (assuming that the type of their second constructor has a typo and should be read ""m <= n -> succ m <= succ n").
+We are not aware of a reference for our uniform definition of augmented semi-simplicial and cubical sets, but, as an answer to reviewers 1 and 2, we suspect that this is folklore. For instance, this seems known from reviewer 3 whose review says that a definition (morally) identical to ours is their favorite definition (assuming that the type of their second constructor has a typo and should be read ""m <= n -> succ m <= succ n").
 
 We also follow reviewer 2 in considering that the purpose of the definition of nu-sets is before all to generalize the two cases of augmented semi-simplicial and cubical sets. We are thus a bit hesitant at repeating it a third time even though we are not aware of the concept being spelled out in the literature.
 
@@ -45,7 +47,7 @@ We also follow reviewer 2 in considering that the purpose of the definition of n
 
 ## Scope of sections III and IV
 
-As suggested, we removed the discussion about fibered/indexed in set theory, we also removed the useless reference to Grothendieck's construction and inline section III.B in former III.C
+As suggested, we removed the discussion about fibered/indexed in set theory, we also removed the useless reference to Grothendieck's construction and inlined section III.B in former III.C.
 
 As suggested, we merged IV.A with III.C (or rather, III.B and III.C being merged, IV.A becomes III.C)
 
@@ -53,9 +55,9 @@ As suggested, we merged IV.A with III.C (or rather, III.B and III.C being merged
 
 One reason for having chosen to give intuitions first is that in our experience, the formal definitions are perceived as very technical and very difficult to grasp without help.
 
-On the other side, we agree that it is not helpful to give intuitions without explaining also where which formal definition we are heading.
+On the other side, we agree that it is not so helpful either to give intuitions without explaining also to which formal definition we are heading.
 
-As a compromise, we have added text explaining the structure of Section III and IV, explaining where the formal explanations are, and clarifying that the intuitions can be read in parallel with the tables formally defining the construction.
+As a compromise, we have added text explaining the structure of Sections III and IV, explaining where the formal explanations are, and clarifying that the intuitions can be read in parallel with the tables formally defining the construction.
 
 # Other issues or questions
 
@@ -65,7 +67,11 @@ As a compromise, we have added text explaining the structure of Section III and 
 
 Colors alone have no geometric representation. Only points, lines, etc. are pictured, and, when pictured, with "literally" using a color (such as red, green, ... though in our case, it is black).
 
-We kept the drawing in Section 4 which seems to be useful.
+> those drawings with no clear explanations as to how they connect to the fullframe3 type does not improve the understanding of the reader
+
+It is unclear to us how to make the explanations following the drawings clearer.
+
+> The first two table should be swapped as the first one uses definitions in the second one.
 
 We prefer to keep Table I first because this is the main "entry point" to the construction.
 
@@ -79,11 +85,11 @@ Colors in our definition are unrelated to colors in Moulin (in Moulin, colors ar
 
 > "coinductive limit" is a non standard term. I believe what you mean is a filtered colimit
 
-We don't think that a ν-set is a colimit. It is a stream, nesting ∑-types countably many times, thus a limit. Formulated in a fibered way, it would be a (co)filtered limit but it is in indexed form, so it seems to us that talking about coinductive limit makes sense, even if not a standard terminology. What about the following alternative: "it is a stream representing the (coinductive) limit of $n$-truncated $\nu$-sets"?
+We don't think that a ν-set is a colimit. It is a stream, nesting ∑-types countably many times, thus a limit. Formulated in a fibered way, it would be a (co)filtered limit but it is in indexed form, so it seems to us that talking about coinductive limit makes sense, even if not a standard terminology. What about the following alternative: "it is a stream, coinductively representing the limit of $n$-truncated $\nu$-sets"?
 
 > Condensing the paragraphs starting with "The entire construction relies on inequalities over natural numbers, ..."
 
-How to deal at the same time with the inductive, computational, proof-irrelevant aspects of inequalities over natural numbers is a crucial issue in the formalization which may actually deserve a paper in itself. Even if not developed in all details, it seems to us important to hint at the importance of such issues.
+How to deal at the same time with the inductive, computational and proof-irrelevant aspects of inequalities over natural numbers is a crucial issue in the formalization which may somehow deserve a paper in itself. Even if not developed in all details, it seems to us important to hint at the importance of such issues.
 
 ## Semi-simplicial (or semi-cubical) types in general
 
@@ -95,16 +101,16 @@ About degeneracies, we did not think deeply about it but Kraus-Sattler is a good
 
 ## Comments that we expect to address at some time
 
-> Position of the "While ordinary semi-simplicial" paragraph.
+> I suggest you begin the section [II.A] with the "While ordinary semi-simplicial" paragraph
 
-We need more time to think about it.
+That is a possibility but we need more time to think about it.
 
 > I think some more detail on the relationship between this work and Herbelin 2015 would be useful for unfamilar readers.
 
-We agree. Shortly, Herbelin 2015 organizes the boundary of a n-simplex as a length-n nested ∑-type whose p-th component is the collection of the faces of dimension p of the n-simplex while the paper organizes the boundary of a n-simplex as a length-n nested ∑-type whose p-th component is a (n-p)-dimensional cube living from dimension p. In particular, in the paper, the faces are not ordered by their dimension but structurally, by the dimension of the subcube they live in, according to the decomposition shown page 6 in the picture with blue, red and green faces of a 3-cube.
+We agree. Shortly, Herbelin 2015 organizes the boundary of a n-simplex as a nested ∑-type of length n whose p-th component is the collection of the faces of dimension p of the n-simplex while the paper organizes the boundary of a n-simplex as a nested ∑-type of length n whose p-th component is a (n-p)-dimensional cube living between dimension p and dimension n. In particular, in the paper, the faces are not ordered by their dimension but structurally, by the dimension of the subcube they live in, according to the decomposition shown page 6 in the picture with blue, red and green faces of a 3-cube.
 
 # Miscellaneous
 
-There are also comments which we did not understand:
-- The phrasing "is a singleton of one color" is inaccurate
-- "More generally, the standard augmented": refer explicitly to the above triangle
+There are also comments which we are unsure to be able to understand what they ask:
+- ``The phrasing "is a singleton of one color" is inaccurate''
+- ``"More generally, the standard augmented": refer explicitly to the above triangle''
