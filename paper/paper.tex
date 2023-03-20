@@ -531,18 +531,22 @@ Notice, however, that the recipe obtained so far, $X_{n + 1}: ({S_n})_\kstar(X_n
 
 \section{Our construction}
 
-Our construction involves several details, some of them being visible only in the Coq formalization. A description at an informal level which we estimate to be however mathematically precise enough can be found in Sections~\ref{sec:ett} and~\ref{sec:itt}, while technical issues with the mechanization are explained in~\ref{sec:mech}.
+Our construction is highly dependent, with dependencies in inequality
+and equality proofs. It involves several involved details, some of
+them being visible only in the Coq formalization.
 
-The whole definition is highly dependent, with dependencies in
-inequality proofs and in coherence conditions. In Section~\ref{sec:ett} and Tables~\ref{tab:coind}, \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces}, \ref{tab:coh}, we
-give a definition in Extensional Type Theory, which roughly
-corresponds to a level of reasoning ``à la set theory'' where coherence
-conditions are thought as ``holding on the nose'' without having to
-mention them explicitly once they are justified. In Section~\ref{sec:itt} and Tables~\ref{fulltab:coind}, \ref{fulltab:core}, \ref{fulltab:frames}, \ref{fulltab:faces}, \ref{fulltab:coh}, we
-give a definition in Intentional Type Theory, where transporting along
-the coherence conditions is made explicit. This makes the definition
-more involved, but at the same time helps to understand the
-specificities of coherence conditions.
+In Section~\ref{sec:ett} and Tables~\ref{tab:coind}, \ref{tab:core},
+\ref{tab:frames}, \ref{tab:faces}, \ref{tab:coh}, we give an informal,
+mathematical definition in Extensional Type Theory, which roughly
+corresponds to a level of reasoning ``à la set theory'' where
+equalities are thought as ``holding on the nose'' without having to
+mention them explicitly once they are justified. In
+Section~\ref{sec:itt} and Tables~\ref{fulltab:coind},
+\ref{fulltab:core}, \ref{fulltab:frames}, \ref{fulltab:faces},
+\ref{fulltab:coh}, we give the same mathematical definition in
+Intensional Type Theory, where transporting along coherence conditions
+is now made explicit. Adding this level of details helps to understand
+the specificities of coherence conditions.
 
 But first, we start with a section gradually and informally explaining
 the intuition of the construction. It can be read in parallel with the
