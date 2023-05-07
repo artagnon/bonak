@@ -211,44 +211,56 @@
 % - perspective: models of cubical type theory using indexed cubical sets, hence preserving more definitial rules
 % - mention also the semi-simplicial types problem
 
-\subsection{Fibered vs indexed presentation of semi-simplicial and semi-cubical sets}
+\subsection*{Fibered vs indexed presentation of semi-simplicial and semi-cubical sets}
 
-A dependent set can be represented in two ways: as a family indexed over a set or as a set together with a map telling for each element on which index it depends on. In the latter case, the set associated to a given index is the fiber (i.e. the inverse image) of this index under the map. The two presentations are equivalent, what can be formally stated as what we call the fibered/indexed correspondence\footnote{At a discussion on the Zulip discussion channel for the HoTT community, alternative names fibration/family and unbundled/bundled were proposed, among others. In our experience, the opposition fibered/indexed is intuitively understood by many speakers. In particular, it echoes to the Grothendieck construction of fibered categories from indexed categories, so that some people also calls this correspondence the Grothendieck construction for dummies}:
+A family of sets can commonly be represented in two ways: as a family indexed over a set properly speaking or as a set together with a map telling for each element of the set on which index it depends on. In the latter case, the set associated to a given index is the fiber, i.e. inverse image, of the index under the map. The two presentations are equivalent, what can be formally stated in a type-theoretic language as a fibered/indexed correspondence\footnote{At a discussion on the Zulip channel for the HoTT community, alternative names fibration/family correspondence and unbundled/bundled correspondence were proposed, among others. In our experience, the opposition fibered/indexed is spontaneously understood by many listeners. In particular, it echoes to the Grothendieck construction of fibered categories from indexed categories. Some people actually calls this correspondence ``the Grothendieck construction for dummies''. Its proof requires univalence (see~\cite{hottbook}).}:
 $$(\Sigma S: \U. (S \rightarrow T)) \simeq (T \rightarrow \U)$$
+where $\U$ represents the type of sets.
 
-While a presheaf, i.e. a family of sets with maps between them according to an index category, can be seen as living on the indexed side of the correspondence, with discrete fibration on the other side of the correspondence, there are situations where the presheaf can be seen as living on the fibered side of the correspondence.
-Indeed, when the index category of the presheaf is direct, i.e. with a well-founded collection of morphisms, as is the case of semi-simplicial and semi-cubical sets, each set serving as domain of a map can be turned into a family dependent, i.e. indexed, on the codomain of the map, and, since the collection of maps is well-founded, this can be iterated, eventually producing a collection of families which we call the indexed presentation of the presheaf over a direct category\dots
+While a presheaf over an index category, i.e. a family of sets with maps between them according to the morphisms of the category, can be seen as living on the indexed side of the correspondence, with discrete Grothendieck fibrations on the other side of the correspondence, there are situations where the presheaf can also be seen as living on the fibered side of the correspondence.
+Indeed, when the index category is direct, i.e. with a downwards-well-founded collection of morphisms, as is the case of semi-simplicial and semi-cubical sets, each set serving as domain of a map can be turned into a family indexed on the codomain of the map, and, since the collection of maps is well-founded, this can be iterated, eventually producing a collection of families which we call an indexed presentation of the presheaf over the direct category.
 
-For instance, in the case of a semi-cubical set, presented with $2n$ face maps from the set of $n$-cubes to the set of $(n-1)$-cubes, the presheaf approach corresponds to a family of sets fibered the ones over the others as follows (up to some coherence conditions):
+For instance, in the case of a semi-cubical set, presented with $2n$ face maps from the set of $n$-cubes to the set of $(n-1)$-cubes, the presheaf approach corresponds to a family of sets fibered the ones over the others (up to coherence conditions such). Formulated in type theory, it corresponds to:
 
 \begin{equation*}
   \begin{tikzcd}
-    X_0: \U & X_1: \U \arrow[l, "\delta^L" description, shift left=2] \arrow[l, "\delta^R" description, shift right=2] & X_2: \U \arrow[l, "\delta^{L\kstar}" description, shift left=6] \arrow[l, "\delta^{R\kstar}" description, shift left=2] \arrow[l, "\delta^{\kstar L}" description, shift right=2] \arrow[l, "\delta^{\kstar R}" description, shift right=6] & \ldots
+    X_0: \U & X_1: \U \arrow[l, "\partial^L" description, shift left=2] \arrow[l, "\partial^R" description, shift right=2] & X_2: \U \arrow[l, "\partial^{L\kstar}" description, shift left=6] \arrow[l, "\partial^{R\kstar}" description, shift left=2] \arrow[l, "\partial^{\kstar L}" description, shift right=2] \arrow[l, "\partial^{\kstar R}" description, shift right=6] & \ldots
   \end{tikzcd}
 \end{equation*}
 
-On the other side, the indexed presentation of the same presheaf is a stratified sequence of families recursively indexed on elements of families of lower rank, taking into account the coherence conditions to prevent duplications:
+On the other side, the indexed presentation of the same presheaf is a stratified sequence of families indexed on elements of families of lower rank, taking into account the coherence conditions to prevent duplications. Formulated in type theory, it corresponds to:
 \begin{align*}
-  X_0                                                                                      & \mbox{ a set of points}                                       \\
-  (X_1)_{a,b\in X_0}                                                                       & \mbox{ a set of lines between any two points}                 \\
-  (X_2)_{a,b,c,d\in X_0,p\in (X_1)_{ab},q\in (X_1)_{bc},r \in (X_1)_{ac}, s\in (X_1)_{cd}} & \mbox{ a set of squares over any 4 lines lying over 4 points} \\
+  X_0 & :              & \U                                                     \\
+  X_1 & :              & X_0 \rightarrow X_0 \rightarrow \U                     \\
+  X_2 & : \Pi a b c d. & X_1(a)(b) \rightarrow X_1(a)(c) \rightarrow X_1 (b)(d) \\
+      &                & \rightarrow X_1 (c)(d) \rightarrow \U                  \\
   \ldots
 \end{align*}
+%% \begin{align*}
+%%   X_0                                                                                      & \mbox{ a set of points}                                       \\
+%%   (X_1)_{a,b\in X_0}                                                                       & \mbox{ a set of lines between any two points}                 \\
+%%   (X_2)_{a,b,c,d\in X_0,p\in (X_1)_{ab},q\in (X_1)_{bc},r \in (X_1)_{ac}, s\in (X_1)_{cd}} & \mbox{ a set of squares over any 4 lines lying over 4 points} \\
+%%   \ldots
+%% \end{align*}
 
-The idea for such indexed presentation of presheaves over a direct category was introduced at the Univalent Foundations year in the context of defining semi-simplicial types~\cite{...}. A couple of constructions were proposed since then. One, by Voevodsky, relies on the presentation of semi-simplicial sets as a presheaf over injective monotone finite maps (see \cite[Section]{Herbelin14} for a presentation). Another, by the first author, and fully formalized in Coq, relies on the presentation of semi-simplicial sets as a presheaf over face maps~\cite{Herbelin14}. Another one by Park and Luo, and formalized in Plastic, works generically for any Reedy category with only upwards maps~\cite{ParkLuo}.
+The idea for such indexed presentation of presheaves over a direct category was introduced at the Univalent Foundations year in the context of defining semi-simplicial types~\cite{}. A couple of constructions were proposed since then. One, by Voevodsky~\cite{Voevodsky12}, relies on the presentation of semi-simplicial sets as a presheaf over injective monotone maps between finite ordinals. Another, by the first author, and fully formalized in Coq, relies on the presentation of semi-simplicial sets as a presheaf over face maps~\cite{herbelin15}. Another one by Part and Luo, and formalized in the Plastic proof assistant, works generically for any Reedy category with only upwards maps~\cite{part15}.
 
-The indexed definition of a presheaf over a direct category is technically more involvedthanthepresheafdefinition as it requires hard-wiringinthestructurethe dependencies betweenelements of the sets of the presheaf, including the coherence condition between these dependencies, such as taking the $i$-th face of the $j$-th face of a $n$-simplex is the same as taking the $(j-1)$-th face of the $i$-th face (when $j>i$). On the other side, defining a concrete presheaf in indexedform only requires to provide the family since the burden of defining maps and showing the coherence conditions over them is has already been integrate what is not the case in the presheaf presentation.
+The indexed definition of a presheaf over a direct category is technically more involved than the presheaf definition as it requires hard-wiring in the structure the dependencies between elements of the sets of the presheaf, including the coherence condition between these dependencies, such as taking the $i$-th face of the $j$-th face of a $n$-simplex is the same as taking the $(j-1)$-th face of the $i$-th face (when $j>i$). On the other side, defining a concrete presheaf in indexed form only requires to provide the family since the burden of defining maps and showing the coherence conditions has already been integrated in the definition what is not the case in the presheaf presentation.
 
-\subsection{Reynolds' parametricity and its unary and binary variants}
+\subsection*{Reynolds' parametricity and its unary and binary variants}
 
 In the context of functional programming, Reynolds' parametricity~\cite{reynolds83} interprets types as relations characterizing the observational behavior of programs of this type. Parametricity can be iterated, and it has been noted that iterated Reynolds' parametricity has the structure of a cubical set~\cite{johann17,altenkirch15,moulin16,moeneclaey21,moeneclaey22phd}. We obtain a \emph{unary} variant of Reynolds' \emph{binary} parametricity by using predicates or families instead of relations or graphs, in which case, we obtain a form of realizability~\cite{bernardy12,lasson12,moulin16}. It has then been noted that iterated unary parametricity has the structure of an augmented simplicial set~\footnote{Private communication with Hugo Moeneclaey and Thorsten Altenkirch}.
 
-\subsection{Iterated-parametricity-based constructio}
+\subsection*{Iterated-parametricity-based construction}
 
 We exploit the connection between iterated unary parametricity and augmented simplicial sets, and between iterated binary parametricity and cubical sets to present a uniform construction of both augmented semi-simplicial and semi-cubical sets, generated by iterating the parametricity translation for type judgements. In contrast to the standard presheaf presentation of augmented semi-simplicial and semi-cubical sets~\cite{fri08,grandis03,buchholtz17}, our uniform construction, which we call \emph{$\nu$-sets}, is \emph{indexed}. That is, instead of having the set of augmented semi-simplices or semi-cubes in dimension $n+1$ \emph{fibered} over the set of augmented semi-simplices or semi-cubes in dimension $n$, we consider families of augmented semi-simplices and semi-cubes indexed over their faces.
 
+\subsection*{Contribution}
+
 As a result, our work can be seen as contributing the following: it characterizes, will full details, how to technically define parametricity iterated in arbitrary dimensions; %Second, it makes fully formal the relation between semi-simplicial and semi-cubical sets and parametricity.
 it provides a new example of indexed constructions of semi-simplicial and semi-cubical sets~\cite{voevodsky12,herbelin15,part15}, useful in the direction of better understanding the technicality of coherence issues in defining ``semi-simplicial types''~\cite{part15,shulman14,altenkirch16,kraus2017space}, as well as the dialectic between reasoning in Extensional Type Theory and Intensional Type Theory (as will be discussed in Section~\ref{sec:ett}); it makes a step in the direction of the program initiated in~\cite{altenkirch15} to develop parametricity-based models of parametric type theory~\cite{bernardy15,nuyts17,cavallo19} and cubical type theory~\cite{bezem13,cohen16,angiuli21} which are closer to the syntax of type theory and thus more liable to reflect definitional properties of type theory than presheaf-based cubical sets would do (compare e.g. to the loss of definitional properties when interpreting ``indexed'' dependent types of type theory as ``fibrations'' in models such as locally cartesian closed categories~\cite{curien14}).
+
+\subsection*{Outline}
 
 The outline of the paper is as follows. We recall the definition of the augmented semi-simplicial and semi-cubical categories using a combinatorial presentation, that directly leads to our generalization to $\nu$-sets, in \ref{sec:nu}. We then proceed to explain the connection between the indexed representation and parametricity in \ref{sec:indexed-param}. Before spelling out the details of our formalization in type-theoretic language in \ref{sec:ett} and \ref{sec:itt}, we give intuitions in \ref{sec:intuition}. We end with some of the finer details of our mechanization in \ref{sec:mech}.
 
@@ -516,11 +528,11 @@ There are different ways to represent a family of sets, commonly known as the fi
 Let us apply this correspondence to the case of semi-cubical sets. A semi-cubical set can be represented as a sequence of fibrations, together with appropriate coherence conditions.
 \begin{equation*}
   \begin{tikzcd}
-    X_0: \U & X_1: \U \arrow[l, "\delta^L" description, shift left=2] \arrow[l, "\delta^R" description, shift right=2] & X_2: \U \arrow[l, "\delta^{L\kstar}" description, shift left=6] \arrow[l, "\delta^{R\kstar}" description, shift left=2] \arrow[l, "\delta^{\kstar L}" description, shift right=2] \arrow[l, "\delta^{\kstar R}" description, shift right=6] & \ldots
+    X_0: \U & X_1: \U \arrow[l, "\partial^L" description, shift left=2] \arrow[l, "\partial^R" description, shift right=2] & X_2: \U \arrow[l, "\partial^{L\kstar}" description, shift left=6] \arrow[l, "\partial^{R\kstar}" description, shift left=2] \arrow[l, "\partial^{\kstar L}" description, shift right=2] \arrow[l, "\partial^{\kstar R}" description, shift right=6] & \ldots
   \end{tikzcd}
 \end{equation*}
 
-If we think of $X_1$ fibered over two copies of $X_0$ in an indexed way, we get $X_1$ of type $X_0 \rightarrow X_0 \rightarrow \U$. Continuing the process, we can think of $X_2$ fibered over four copies of $X_1$ themselves fibered over two copies of $X_0$ as a dependent type. We have a priori a dependency over eight copies of $X_0$ but these are actually four due to the coherence conditions on the functor (e.g. that $\delta^R \circ \delta^{R\kstar} = \delta^{(R\kstar)\circ(R)} = \delta^{RR} = \delta^{(\kstar R)\circ(R)} = \delta^R \circ \delta^{\kstar R}$, etc.). Based on these coherence conditions, the types of $X_0, X_1, X_2$ happen to have the form:
+If we think of $X_1$ fibered over two copies of $X_0$ in an indexed way, we get $X_1$ of type $X_0 \rightarrow X_0 \rightarrow \U$. Continuing the process, we can think of $X_2$ fibered over four copies of $X_1$ themselves fibered over two copies of $X_0$ as a dependent type. We have a priori a dependency over eight copies of $X_0$ but these are actually four due to the coherence conditions on the functor (e.g. that $\partial^R \circ \partial^{R\kstar} = \partial^{(R\kstar)\circ(R)} = \partial^{RR} = \partial^{(\kstar R)\circ(R)} = \partial^R \circ \partial^{\kstar R}$, etc.). Based on these coherence conditions, the types of $X_0, X_1, X_2$ happen to have the form:
 \begin{align*}
   X_0 & :              & \U                                                     \\
   X_1 & :              & X_0 \rightarrow X_0 \rightarrow \U                     \\
