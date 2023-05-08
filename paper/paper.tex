@@ -1,6 +1,6 @@
 \documentclass{msc}
 
-\usepackage{amsmath, amssymb, mathrsfs, url, bookmark, tikz, tikz-cd, mathpazo, enumitem, xargs, multirow, float, tabularx, environ, booktabs, setspace, makecell, caption, colortbl, pdflscape, flushend, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
+\usepackage{amsmath, amssymb, mathrsfs, url, bookmark, tikz, tikz-cd, mathpazo, enumitem, xargs, multirow, float, tabularx, environ, booktabs, setspace, makecell, colortbl, pdflscape, flushend, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
 
 \usepackage[prefix=bonak]{art.cls/xkeymask}
 \usetikzlibrary{patterns}
@@ -172,15 +172,6 @@
 % and { ... } if in mask
 \newcommandx*{\eqnarg}[3]{\ifinmask[bonak]{#1}[#2]{\{#2:#3\}}{(#2:#3)}}
 
-% Table caption set up
-\DeclareCaptionFormat{hfillunittypet}{\hfill#1#2#3\par}
-\DeclareCaptionFont{mdit}{\mdseries\itshape}
-\captionsetup[table]{
-  justification=centering,
-  font=bf,
-  labelfont=mdit,
-}
-
 % Use lettered footnotes
 \renewcommand{\thefootnote}{\alph{footnote}}
 
@@ -190,6 +181,8 @@
   \author{Hugo Herbelin}
   \affiliation{Université Paris Cité, Inria, CNRS, IRIF, Paris
     \email{Hugo.Herbelin@inria.fr}}
+  \author{Ramkumar Ramachandra}
+  \affiliation{Unaffiliated \email{r@artagnon.com}}
 \end{authgrp}
 \begin{abstract}
   Constructions such as semi-simplicial and semi-cubical sets can be defined in the ``usual way'' as presheaves over respectively, the semi-simplex or semi-cube category, which we call \emph{fibered} definitions, but also defined like in e.g. Voevodsky~\cite{voevodsky12} or in previous work~\cite{herbelin15}, as a dependently-typed construction, which we call \emph{indexed}.
@@ -217,8 +210,7 @@ A family of sets can commonly be represented in two ways: as a family indexed ov
 $$(\Sigma S: \U. (S \rightarrow T)) \simeq (T \rightarrow \U)$$
 where $\U$ represents the type of sets.
 
-While a presheaf over an index category, i.e. a family of sets with maps between them according to the morphisms of the category, can be seen as living on the indexed side of the correspondence, with discrete Grothendieck fibrations on the other side of the correspondence, there are situations where the presheaf can also be seen as living on the fibered side of the correspondence.
-Indeed, when the index category is direct, i.e. with a downwards-well-founded collection of morphisms, as is the case of semi-simplicial and semi-cubical sets, each set serving as domain of a map can be turned into a family indexed on the codomain of the map, and, since the collection of maps is well-founded, this can be iterated, eventually producing a collection of families which we call an indexed presentation of the presheaf over the direct category.
+While a presheaf over an index category, i.e. a family of sets with maps between them according to the morphisms of the category, can be seen as living on the indexed side of the correspondence, with discrete Grothendieck fibrations on the other side of the correspondence, there are situations where the presheaf can also be seen as living on the fibered side of the correspondence. Indeed, when the index category is direct, i.e. with a downwards-well-founded collection of morphisms, as is the case of semi-simplicial and semi-cubical sets, each set serving as domain of a map can be turned into a family indexed on the codomain of the map, and, since the collection of maps is well-founded, this can be iterated, eventually producing a collection of families which we call an indexed presentation of the presheaf over the direct category.
 
 For instance, in the case of a semi-cubical set, presented with $2n$ face maps from the set of $n$-cubes to the set of $(n-1)$-cubes, the presheaf approach corresponds to a family of sets fibered the ones over the others (up to coherence conditions such). Formulated in type theory, it corresponds to:
 
@@ -229,6 +221,7 @@ For instance, in the case of a semi-cubical set, presented with $2n$ face maps f
 \end{equation*}
 
 On the other side, the indexed presentation of the same presheaf is a stratified sequence of families indexed on elements of families of lower rank, taking into account the coherence conditions to prevent duplications. Formulated in type theory, it corresponds to:
+
 \begin{align*}
   X_0 & :              & \U                                                     \\
   X_1 & :              & X_0 \rightarrow X_0 \rightarrow \U                     \\
@@ -248,17 +241,13 @@ The idea for such indexed presentation of presheaves over a direct category was 
 The indexed definition of a presheaf over a direct category is technically more involved than the presheaf definition as it requires hard-wiring in the structure the dependencies between elements of the sets of the presheaf, including the coherence condition between these dependencies, such as taking the $i$-th face of the $j$-th face of a $n$-simplex is the same as taking the $(j-1)$-th face of the $i$-th face (when $j>i$). On the other side, defining a concrete presheaf in indexed form only requires to provide the family since the burden of defining maps and showing the coherence conditions has already been integrated in the definition what is not the case in the presheaf presentation.
 
 \subsection*{Reynolds' parametricity and its unary and binary variants}
-
 In the context of functional programming, Reynolds' parametricity~\cite{reynolds83} interprets types as relations characterizing the observational behavior of programs of this type. Parametricity can be iterated, and it has been noted that iterated Reynolds' parametricity has the structure of a cubical set~\cite{johann17,altenkirch15,moulin16,moeneclaey21,moeneclaey22phd}. We obtain a \emph{unary} variant of Reynolds' \emph{binary} parametricity by using predicates or families instead of relations or graphs, in which case, we obtain a form of realizability~\cite{bernardy12,lasson12,moulin16}. It has then been noted that iterated unary parametricity has the structure of an augmented simplicial set~\footnote{Private communication with Hugo Moeneclaey and Thorsten Altenkirch}.
 
 \subsection*{Iterated-parametricity-based construction}
-
 We exploit the connection between iterated unary parametricity and augmented simplicial sets, and between iterated binary parametricity and cubical sets to present a uniform construction of both augmented semi-simplicial and semi-cubical sets, generated by iterating the parametricity translation for type judgements. In contrast to the standard presheaf presentation of augmented semi-simplicial and semi-cubical sets~\cite{fri08,grandis03,buchholtz17}, our uniform construction, which we call \emph{$\nu$-sets}, is \emph{indexed}. That is, instead of having the set of augmented semi-simplices or semi-cubes in dimension $n+1$ \emph{fibered} over the set of augmented semi-simplices or semi-cubes in dimension $n$, we consider families of augmented semi-simplices and semi-cubes indexed over their faces.
 
 \subsection*{Contribution}
-
-As a result, our work can be seen as contributing the following: it characterizes, will full details, how to technically define parametricity iterated in arbitrary dimensions; %Second, it makes fully formal the relation between semi-simplicial and semi-cubical sets and parametricity.
-it provides a new example of indexed constructions of semi-simplicial and semi-cubical sets~\cite{voevodsky12,herbelin15,part15}, useful in the direction of better understanding the technicality of coherence issues in defining ``semi-simplicial types''~\cite{part15,shulman14,altenkirch16,kraus2017space}, as well as the dialectic between reasoning in Extensional Type Theory and Intensional Type Theory (as will be discussed in Section~\ref{sec:ett}); it makes a step in the direction of the program initiated in~\cite{altenkirch15} to develop parametricity-based models of parametric type theory~\cite{bernardy15,nuyts17,cavallo19} and cubical type theory~\cite{bezem13,cohen16,angiuli21} which are closer to the syntax of type theory and thus more liable to reflect definitional properties of type theory than presheaf-based cubical sets would do (compare e.g. to the loss of definitional properties when interpreting ``indexed'' dependent types of type theory as ``fibrations'' in models such as locally cartesian closed categories~\cite{curien14}).
+As a result, our work can be seen as contributing the following: it characterizes, will full details, how to technically define parametricity iterated in arbitrary dimensions; it provides a new example of indexed constructions of semi-simplicial and semi-cubical sets~\cite{voevodsky12,herbelin15,part15}, useful in the direction of better understanding the technicality of coherence issues in defining ``semi-simplicial types''~\cite{part15,shulman14,altenkirch16,kraus2017space}, as well as the dialectic between reasoning in Extensional Type Theory and Intensional Type Theory (as will be discussed in Section~\ref{sec:ett}); it makes a step in the direction of the program initiated in~\cite{altenkirch15} to develop parametricity-based models of parametric type theory~\cite{bernardy15,nuyts17,cavallo19} and cubical type theory~\cite{bezem13,cohen16,angiuli21} which are closer to the syntax of type theory and thus more liable to reflect definitional properties of type theory than presheaf-based cubical sets would do (compare e.g. to the loss of definitional properties when interpreting ``indexed'' dependent types of type theory as ``fibrations'' in models such as locally cartesian closed categories~\cite{curien14}).
 
 \subsection*{Outline}
 
@@ -311,7 +300,10 @@ While ordinary semi-simplicial sets are presheaves over the semi-simplex categor
 \end{notation}
 
 \begin{definition}[$\DeltaPlus$]
+  The definition of $\DeltaPlus$ is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
+
   \begin{figure}[H]
+    \centering
     \begin{align*}
       \Obj(\DeltaPlus) & := \Nat                                                                     \\
       \Hom(p, n)       & := \{l \in [0, \kstar]^n \mid \text{number of $\kstar$ in $l = p$}\}        \\
@@ -323,10 +315,7 @@ While ordinary semi-simplicial sets are presheaves over the semi-simplex categor
       \end{cases} \\
       \id              & := [\kstar, \ldots, \kstar] \text{ $n$ times for $\id \in \Hom(n, n)$}
     \end{align*}
-    \caption{Definition of \DeltaPlus}\label{fig:deltaplus}
   \end{figure}
-
-  The definition of $\DeltaPlus$ is shown in Fig.~\ref{fig:deltaplus}. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
 \end{definition}
 
 \begin{definition}[$\Set_{\DeltaPlus}$]
@@ -384,8 +373,10 @@ More generally, the standard augmented $(n + 1)$-semi-simplex can be obtained by
 Semi-cubical sets are defined like augmented semi-simplicial sets except that $\DeltaPlus$ is replaced by $\Cube$ in which we take sequences of $L$, $R$ and $\star$, instead of sequences of $0$ and $\kstar$. They represent ordinary semi-cubical sets, with faces (and no augmentation).
 
 \begin{definition}[\Cube]
-  The definition of $\Cube$ is shown in Fig.~\ref{fig:cube}. The symbols $L$ and $R$ indicate opposite faces of a cube.
+  The definition of $\Cube$ is shown below. The symbols $L$ and $R$ indicate opposite faces of a cube.
+
   \begin{figure}[H]
+    \centering
     \begin{align*}
       \Obj(\Cube) & := \Nat                                                                                \\
       \Hom(p, n)  & := \{l \in [L, R, \kstar]^n \mid \text{number of $\kstar$ in $l = p$}\}                \\
@@ -397,7 +388,6 @@ Semi-cubical sets are defined like augmented semi-simplicial sets except that $\
       \end{cases} \\
       \id         & := [\kstar, \ldots, \kstar] \text{ $n$ times}
     \end{align*}
-    \caption{Definition of \Cube}\label{fig:cube}
   \end{figure}
 
   Again, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
@@ -540,6 +530,7 @@ If we think of $X_1$ fibered over two copies of $X_0$ in an indexed way, we get 
       &                & \rightarrow X_1 (c)(d) \rightarrow \U                  \\
   \ldots
 \end{align*}
+
 \section{Relating to parametricity\label{sec:rel-param}}
 The process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$ in the last section, is similar to applying a binary parametricity translation and expecting the resulting translation to be inhabited. The parametricity which we consider interprets a type $A$ by a graph $A_\kstar$ over this type, and a term $t: A$ as an edge in $A_\kstar(t)(t)$. In particular, $\U$ is interpreted as the graph ${\U}_\kstar$, which takes $A_L$ and $A_R$ in $\U$ and returns the type $A_L \rightarrow A_R \rightarrow \U$ of graphs over $A_L$ and $A_R$. Also, for $A$ interpreted by $A_\kstar$ and $B$ interpreted by $B_\kstar$, a dependent function type $\Pi a: A.\, B$ is interpreted as the graph $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
 \begin{align*}
@@ -686,11 +677,23 @@ Note that for a fixed constant $n$, the coherence conditions evaluate to a refle
 \input{tab-coh-ett.tex}
 
 \subsection*{Intuition for our formal construction\label{sec:intuition}}
+\renewcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
+\renewcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
+\renewcommandx{\painting}[2][1,2]{\prim{painting}[][#1][#2][][]}
+\renewcommandx{\restrf}[4][1,2,3,4]{\restr{frame}[][#3][#4][#1][#2][][]}
+\renewcommandx{\restrl}[4][1,2,3,4]{\restr{layer}[][#3][#4][#1][#2][][]}
+\renewcommandx{\restrc}[4][1,2,3,4]{\restr{painting}[][#3][#4][#1][#2][][]}
+\renewcommandx{\cohf}[1][1]{\coh{frame}[][][][][][#1][][]}
+\renewcommandx{\cohl}[1][1]{\coh{layer}[][][][][][#1][][]}
+\renewcommandx{\cohc}[1][1]{\coh{painting}[][][][][][#1][][]}
+\renewcommandx{\coht}{\cohtwo{frame}[][][][][][][][]}
+
 To assign types to $X_0, X_1, X_2, \ldots$ in the above indexed representation, we give a recursive definition relying on building blocks, which we call $\framep$, $\layer$, and $\painting$. A $\framep$ is a boundary of a standard form (simplex, cube, etc.), which we decompose into $\layer$, and a $\painting$ corresponds to a filled $\framep$. Some $\framep$ are full and we call them $\fullframe$.
 
-We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applying to the description above the isomorphism between $A \rightarrow B \rightarrow C$ and $A \times B \rightarrow C$, or between $\Pi a: A.\, (B a \rightarrow C)$ and $(\Sigma a: A.\, B a) \rightarrow C$. In particular, $\fullframe[n]$ is a ``telescope'', i.e. a nesting of $\Sigma$-type. Let us now illustrate how we build $\fullframe[n]$. To begin, let us set $\fullframe[0] = \unittype$, so that the type $\U$ of $X_0$ can be equivalently formulated as $\unittype \rightarrow \U$. Then, more generally, we let each $\fullframe[n]$ consist of $n$ layers, written $\layer[n][p]$ with $p < n$, that we stack in order, starting from the $\unittype$ type and writing $\framep[n][p]$ for the $p$ first layers of a $\fullframe[n]$, so that $\fullframe[n]$ is $\framep[n][n]$. For instance, $X_1$ is made of one layer, so that it can be written as a $\Sigma$-type of an inhabitant of the $\unittype$ and $\layer[1][0]$, as shown in Fig.~\ref{fig:intuition}. Fig.~\ref{fig:intuition} also mentions how the type of $X_2$ is structured.
+We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applying to the description above the isomorphism between $A \rightarrow B \rightarrow C$ and $A \times B \rightarrow C$, or between $\Pi a: A.\, (B a \rightarrow C)$ and $(\Sigma a: A.\, B a) \rightarrow C$. In particular, $\fullframe[n]$ is a ``telescope'', i.e. a nesting of $\Sigma$-type. Let us now illustrate how we build $\fullframe[n]$. To begin, let us set $\fullframe[0] = \unittype$, so that the type $\U$ of $X_0$ can be equivalently formulated as $\unittype \rightarrow \U$. Then, more generally, we let each $\fullframe[n]$ consist of $n$ layers, written $\layer[n][p]$ with $p < n$, that we stack in order, starting from the $\unittype$ type and writing $\framep[n][p]$ for the $p$ first layers of a $\fullframe[n]$, so that $\fullframe[n]$ is $\framep[n][n]$. For instance, $X_1$ is made of one layer, so that it can be written as a $\Sigma$-type of an inhabitant of the $\unittype$ and $\layer[1][0]$, as shown below. The figure also mentions how the type of $X_2$ is structured.
 
 \begin{figure}[H]
+  \centering
   \begin{equation*}
     \begin{array}{ll}
       X_0                                : \underbrace{\unittype}_{\framep[0][0]}                                                    \rightarrow \U \\
@@ -739,7 +742,6 @@ We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applyin
       \ldots
     \end{array}
   \end{equation*}
-  \caption{Intuition for formal construction ($\nu = 2$)}\label{fig:intuition}
 \end{figure}
 
 Let us now illustrate the construction of $\fullframe[3]$, necessary to build the type of $X_3$.
@@ -759,7 +761,7 @@ Let us now illustrate the construction of $\fullframe[3]$, necessary to build th
     \draw[raspeberry, pattern=dots] (0.1, 1.1) -- (0.5, 1.5) -- (0.5, 1.1);
     \draw[raspeberry] (0.3, 1.3) -- (0.3, 1.1);
   \end{tikzpicture}
-  \newline\newline
+  \;\;
   \begin{tikzpicture}[scale=2]
     \draw[spanish-blue, fill=spanish-blue] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
     \draw[spanish-blue, fill=spanish-blue, nearly transparent] (0.6, 1) -- (0.6, 1.6) -- (1.6, 1.6) -- (1.6, 0.6) -- (1.0, 0.6);
@@ -774,35 +776,40 @@ Let us now illustrate the construction of $\fullframe[3]$, necessary to build th
 The figure on the left is $\framep[3][1]$, on the right is $\framep[3][2]$, and on the bottom is $\framep[3][3]$, which is full. Further, $\framep[3][1]$ is made of one layer, $\layer[3][0]$, shown in blue, $\framep[3][2]$ is made of one additional layer, $\layer[3][1]$, shown in red, $\framep[3][3]$ is made of one more layer, $\layer[3][2]$, shown in green.
 
 We illustrated here the cubical case, that is $\nu = 2$, but, in general, a $\layer[n][p]$ is a product of $\nu$ $\painting[n - 1][p]$. A $\painting[n][0]$ is a $n$-dimensional object corresponding to a filled $\fullframe[n]$. More generally, a $\painting[n][p]$ is an $n$-dimensional object which has the form of a $\painting[n-p][0]$, thus of $(n-p)$-dimensional form, but shifted and living in dimensions $p$ to $n$. Such $\painting[n][p]$ fills a space framed by a partial $\framep[n][p]$ so that, together, they form a filled $\fullframe[n]$. For instance, in the picture, each of the two $\painting[2][0]$ of $\layer[3][0]$ is a filled blue square, each of the two $\painting[2][1]$ of $\layer[3][1]$ is the line shown in red, stretched into a partial square filling the partial frames made of respectively the left and right border of the blue square, and each of the two $\painting[2][2]$ of $\layer[3][2]$ is a point shown in green, stretched into a partial square filling the full frames made respectively of the upper and lower borders of the blue and red squares. A $\painting[n][p]$ complements a $\framep[n][p]$ by adding layers needed to form a $\fullframe[n]$ and by filling the resulting $\fullframe[n]$ with an inhabitant of $X_n$. Layers are added from dimension $n$ to dimension $p$ that is opposite to the order from $0$ to $p$ the $\framep[n][p]$ are built, as shown below.
-\begin{align*}
-  \framep[n][p]   & \defeq \Sigma a_n: (\ldots (\Sigma \unitpoint: \unittype .\, \layer[n][0]) \ldots) .\, \layer[n][p - 1] \\
-  \painting[n][p] & \defeq \Sigma l_p: \layer[n][p]. (\ldots (\Sigma l_n: \layer[n][n - 1] .\, X_n) \ldots)
-\end{align*}
+\begin{equation*}
+  \begin{array}{lll}
+    \framep[n][p]   & \defeq & \Sigma a_n: (\ldots (\Sigma \unitpoint: \unittype .\, \layer[n][0]) \ldots) .\, \layer[n][p - 1] \\
+    \painting[n][p] & \defeq & \Sigma l_p: \layer[n][p]. (\ldots (\Sigma l_n: \layer[n][n - 1] .\, X_n) \ldots)
+  \end{array}
+\end{equation*}
 
 So far, we have not paid attention to the fact that we have a dependent type, shown as a $\Sigma$. Let us be more precise about this requirement. First, $\fullframe[n]$ depends on all $X_i$ up to $n - 1$. So, we need to package up $X_i$, for $i < n$, into a nesting of $\Sigma$-types, which we abbreviate as $\X[][<n][]$. This allows us to give the type $\X[][<n][] \rightarrow \U$ to $\fullframe[n]$. Then, for $D: \X[][<n][]$, representing an initial prefix of $X_0, X_1, \ldots X_{n - 1}$, the indexed set $X_n$ has type $\fullframe[n](D) \rightarrow \U$. Thus, $\framep[n][p]$, $\layer[n][p]$ and $\painting[n][p]$ also depend on $D$. We can then refine the previous equation by showing the dependencies on $D$. In particular, $X_n$ is just $D.\tl$.
-\begin{align*}
-   & \framep[n][p](D) \defeq                                                                                      \\
-   & \;\;\;\;\Sigma a_n: (\ldots (\Sigma \unitpoint: \unittype.\, \layer[n][0](D)) \ldots) .\,\layer[n][p - 1](D) \\
-   & \painting[n][p](D) \defeq                                                                                    \\
-   & \;\;\;\;\Sigma l_p: \layer[n][p](D).\, (\ldots (\Sigma l_n: \layer[n][n - 1](D) .\, D.\tl) \ldots)
-\end{align*}
+\begin{equation*}
+  \begin{array}{lll}
+    \framep[n][p](D)   & \defeq & \Sigma a_n: (\ldots (\Sigma \unitpoint: \unittype.\, \layer[n][0](D)) \ldots) .\,\layer[n][p - 1](D) \\
+    \painting[n][p](D) & \defeq & \Sigma l_p: \layer[n][p](D).\, (\ldots (\Sigma l_n: \layer[n][n - 1](D) .\, D.\tl) \ldots)
+  \end{array}
+\end{equation*}
 
-\begin{figure}[H]
-  \begin{align*}
-    \framep[n][p](D)      & \defeq & \Sigma d: (\ldots (\Sigma \unitpoint: \unittype.\, \layer[n][0](D)(\unitpoint)) \ldots).\, \layer[n][p](D)(d)                                \\
-    \painting[n][p](D)(d) & \defeq & \Sigma l_p: \layer[n][p](D)(d).\, (\ldots (\Sigma l_n: \layer[n][n - 1](D)(d, l_p, \ldots, l_{n - 1}).\, D.\tl(d, l_p, \ldots, l_n)) \ldots) \\
+An extra refinement arises from the fact that each addition of a layer to a frame has to be glued onto the border of the partial frame built so far. So, each $\layer[n][p]$ has to depend on $\framep[n][p]$. We also need a way to characterize the border of the $\nu$ $\painting[n-1][p]$ that compose a $\layer[n][p]$, and this is $\restrf[n][p][\epsilon][p]$, for all $\epsilon < \nu$. For instance, on the picture, the left and right $\painting[2][1]$, shown in red, are laid on respectively the left and right borders of the blue boxes, and hence needs to depend on $\framep[3][1]$. The left and right borders of the two blue boxes are extracted as $\restrf[2][1][L](D)(d)$ and $\restrf[2][1][R](D)(d)$. We can then refine the previous equation by showing the dependencies on $d$, as shown below.
+
+\begin{equation*}
+  \begin{array}{llr}
+    \framep[n][p](D)      & \defeq & \Sigma d: (\ldots (\Sigma \unitpoint: \unittype.\, \layer[n][0](D)(\unitpoint)) \ldots).\, \layer[n][p](D)(d) \\
+    \painting[n][p](D)(d) & \defeq & \Sigma l_p: \layer[n][p](D)(d).\, (\ldots (\Sigma l_n: \layer[n][n - 1](D)(d, l_p, \ldots, l_{n - 1}).        \\
+                          &        & D.\tl(d, l_p, \ldots, l_n)) \ldots)                                                                           \\
                           &        & \text{where } (d, l_p, \ldots, l_q) \text{ abbreviates } ((\ldots(d, l_p), \ldots), l_q)
-  \end{align*}
-  \caption{Refinement of definition of $\framep$ and $\painting$\label{fig:refinement}}
-\end{figure}
-
-An extra refinement arises from the fact that each addition of a layer to a frame has to be glued onto the border of the partial frame built so far. So, each $\layer[n][p]$ has to depend on $\framep[n][p]$. We also need a way to characterize the border of the $\nu$ $\painting[n-1][p]$ that compose a $\layer[n][p]$, and this is $\restrf[n][p][\epsilon][p]$, for all $\epsilon < \nu$. For instance, on the picture, the left and right $\painting[2][1]$, shown in red, are laid on respectively the left and right borders of the blue boxes, and hence needs to depend on $\framep[3][1]$. The left and right borders of the two blue boxes are extracted as $\restrf[2][1][L](D)(d)$ and $\restrf[2][1][R](D)(d)$. We can then refine the previous equation by showing the dependencies on $d$, as shown in Fig.~\ref{fig:refinement}.
+  \end{array}
+\end{equation*}
 
 When $\nu = 2$, the formation of layers from paintings amounts to:
-\begin{align*}
-  \layer[n][p](D)(d) & \defeq & \painting[n-1][p](D.\hd)(\restrf[n][p][L][p](d)) & \times \\
-                     &        & \painting[n-1][p](D.\hd)(\restrf[n][p][R][p](d)) &
-\end{align*}
+\begin{equation*}
+  \begin{array}{llc}
+    \layer[n][p](D)(d) & \defeq & \painting[n-1][p](D.\hd)(\restrf[n][p][L][p](d)) \\
+                       &        & \times                                           \\
+                       &        & \painting[n-1][p](D.\hd)(\restrf[n][p][R][p](d))
+  \end{array}
+\end{equation*}
 
 The operation $\restrf[n][p][\epsilon][q]$ indicates restriction on $q$ layers of a frame, and the induction is on $p$, from $0$ to $q$. In particular, $\restrf[n][p][\epsilon][p]$ is a ``full restriction''. We define $\restrf[n][p][\epsilon][p](d)$ by recursion on the structure of a frame $d$, which necessitates definitions of $\restrl[n][p][\epsilon][q](d)(l)$ and $\restrc[n][p][\epsilon][q](d)(c)$, for $l$ a $\layer$ and $c$ a $\painting$. The key case is $\restrc[n][p][\epsilon][p](d)(c)$, where $c$, a $\painting[n][p]$, has necessarily the form of $((c_L, c_R), \_)$: $\restrc[n][p][L][p]$ picks out $c_L$, a $\painting[n-1][p]$, $\restrc[n][p][R][p]$ picks out the $c_R$, also a $\painting[n-1][p]$, and $\_$, a $\painting[n][p+1]$, is discarded. There is one more difficulty, which we illustrate by writing down expected and actual types.
 
