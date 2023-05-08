@@ -78,8 +78,8 @@
 % Simplicial and Cubical sets
 \newcommand{\DeltaHat}{\ensuremath{\hat{\boldsymbol{\Delta}}}}
 \newcommand{\DeltaPlus}{\ensuremath{\boldsymbol{\Delta}_+}}
-\newcommand{\Cube}{\ensuremath{\boldsymbol{{\Box}}}}
-\newcommand{\CSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\Box}}}}
+\newcommand{\Cube}{\ensuremath{\boldsymbol{{\square}}}}
+\newcommand{\CSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\square}}}}
 
 % Universe, referred to as U
 \newcommandx{\U}[1][1=]{\ensuremath{\mathsf{\color{spanish-blue}{HSet}}_{#1}}}
@@ -243,7 +243,7 @@ On the other side, the indexed presentation of the same presheaf is a stratified
 %%   \ldots
 %% \end{align*}
 
-The idea for such indexed presentation of presheaves over a direct category was introduced at the Univalent Foundations year in the context of defining semi-simplicial types~\cite{}. A couple of constructions were proposed since then. One, by Voevodsky~\cite{Voevodsky12}, relies on the presentation of semi-simplicial sets as a presheaf over increasing injective maps between finite ordinals. Another, by the first author, and fully formalized in Coq, relies on the presentation of semi-simplicial sets as a presheaf over face maps~\cite{herbelin15}. Another one by Part and Luo, and formalized in the Plastic proof assistant, works generically for any Reedy category with only upwards maps~\cite{part15}.
+The idea for such indexed presentation of presheaves over a direct category was introduced at the Univalent Foundations year in the context of defining semi-simplicial types~\cite{}. A couple of constructions were proposed since then. One, by Voevodsky~\cite{voevodsky12}, relies on the presentation of semi-simplicial sets as a presheaf over increasing injective maps between finite ordinals. Another, by the first author, and fully formalized in Coq, relies on the presentation of semi-simplicial sets as a presheaf over face maps~\cite{herbelin15}. Another one by Part and Luo, and formalized in the Plastic proof assistant, works generically for any Reedy category with only upwards maps~\cite{part15}.
 
 The indexed definition of a presheaf over a direct category is technically more involved than the presheaf definition as it requires hard-wiring in the structure the dependencies between elements of the sets of the presheaf, including the coherence condition between these dependencies, such as taking the $i$-th face of the $j$-th face of a $n$-simplex is the same as taking the $(j-1)$-th face of the $i$-th face (when $j>i$). On the other side, defining a concrete presheaf in indexed form only requires to provide the family since the burden of defining maps and showing the coherence conditions has already been integrated in the definition what is not the case in the presheaf presentation.
 
@@ -269,12 +269,12 @@ See \href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak} for our 
 \section{Semi-simplicial and semi-cubical sets\label{sec:nu}}
 In this section, we generalize semi-simplicial and semi-cubical sets to, what we call, $\nu$-sets, subsuming the earlier defintions. However, we also explicitly work out the cases of semi-simplical and semi-cubical sets, in a way that is similar to a previous art~\cite{aitchison86}.
 
-\subsection{\texorpdfstring{$\nu$}{ν}-sets}
+\subsection*{\texorpdfstring{$\nu$}{ν}-sets}
 Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and semi-cubical sets. To obtain this, we extend $\DeltaPlus$ and $\Cube$ in a straightforward manner into a category which we call $\nu$-semi-shape category. The morphisms of the $\nu$-semi-shape category are sequences of elements of a set $\nu$ of arbitrary cardinal, extended with $\kstar$, so that the following holds.
 
 \begin{table}[H]
   \centering
-  \begin{tabularx}{0.95\linewidth}{X|X|X}
+  \begin{tabularx}{0.7\linewidth}{X|X|X}
     \toprule
     Value of $\nu$ & 1                               & 2                  \\
     \graymidrule
@@ -285,7 +285,7 @@ Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and
 
 A $\nu$-set is thus a contravariant functor $\phi$ from the $\nu$-semi-shape category to $\Set$ and we call $n$-$\nu$-semi-shape an element of $\phi(n)$. As in the augmented semi-simplicial and semi-cubical cases, the standard $(n + 1)$-$\nu$-semi-shape is obtained by connecting together $\nu$ copies of the standard $n$-$\nu$-semi-shape with an extra copy stretched in the new dimension. We clarify in the next sections how this process of construction is similar to the parametricity translation developed for functional programming~\cite{reynolds83} and more generally for type theory~\cite{bernardy10, bernardy11, atkey14, bernardy15}.
 
-\subsection{Augmented semi-simplicial sets}
+\subsection*{Augmented semi-simplicial sets}
 Augmented semi-simplicial sets are defined similarly to semi-simplicial sets, except that the connected components are additionally dependent on a ``color''. Conversely, semi-simplicial sets can be seen as augmented semi-simplicial sets over a singleton set of colors.
 
 Let us associate dimension $0$ to colors; then, points are dimension $1$, lines are dimension $2$, and so on. There is hence a shift by one when compared to semi-simplicial sets. We can then draw augmented semi-simplicial sets like semi-simplicial sets, except for this shift by one.
@@ -380,7 +380,7 @@ The standard augmented $0$-semi-simplex is a singleton made of one color (in our
 
 More generally, the standard augmented $(n + 1)$-semi-simplex can be obtained by taking a copy of the standard augmented $n$-semi-simplex serving as a base and gluing on top of it another copy lifted by one dimension. In the second copy, the color becomes an extra point, the points become lines connecting the points of the base to the extra point and so on. In particular, the components of the base are those of the standard augmented $n$-semi-simplex postfixed by $0$ while the components of the lifted copy are postfixed by~$\kstar$. Note that the components may be oriented by letting each $n$-dimensional component point to the $(n-1)$-dimensional component obtained by replacing the leftmost $\kstar$ of the $n$-dimensional component with $0$.
 
-\subsection{Semi-cubical sets}
+\subsection*{Semi-cubical sets}
 Semi-cubical sets are defined like augmented semi-simplicial sets except that $\DeltaPlus$ is replaced by $\Cube$ in which we take sequences of $L$, $R$ and $\star$, instead of sequences of $0$ and $\kstar$. They represent ordinary semi-cubical sets, with faces (and no augmentation).
 
 \begin{definition}[\Cube]
@@ -474,7 +474,7 @@ In $\U[m]$, the following properties hold:
 Unless otherwise specified, we fix a universe level $m$ and abbreviate
 $\Type_m$ as $\Type$ and $\U[m]$ as $\U$.
 
-\section{Comparison of fibered and indexed presentations}
+\section*{Comparison of fibered and indexed presentations}
 %     - standard augmented triangle:
 %       Inductive points := A | B | C.
 %       Inductive lines := AB | BC | AC.
@@ -547,58 +547,6 @@ The process of construction of the type of $X_1$ from that of $X_0$, and from th
    & \Pi a_L: A.\, \Pi a_R: A.\, \Pi a_\kstar: A_\kstar(a_L)(a_R).\, B_\kstar(f_L(a_L))(f_R(a_R))
 \end{align*}
 
-\begin{figure}[H]
-  \begin{equation*}
-    \begin{array}{ll}
-      X_0                                : \underbrace{\unittype}_{\framep[0][0]}                                                    \rightarrow \U \\
-      X_1                                : \underbrace{\Sigma \unitpoint: \unittype. \underbrace{\left(
-      \begin{array}{c}
-          \underbrace{X_0(\unitpoint)}_{\painting[0][0]}
-          \\ \times \\
-          \underbrace{X_0(\unitpoint)}_{\painting[0][0]}
-        \end{array}\right)}_{\layer[1][0]}}_{\framep[1][1]} \rightarrow \U                                                                            \\
-      X_2                                : \underbrace{\Sigma a: \underbrace{\left(\Sigma \unitpoint: \unittype. \underbrace{\left(
-          \begin{array}{c}
-            \underbrace{\Sigma b: \left(
-            \hspace{-0.4em}\begin{array}{c}
-                             X_0(\unitpoint)
-                             \\ \times \\
-                             X_0(\unitpoint)
-                           \end{array}\hspace{-0.4em}
-            \right).\, \underbrace{X_1 \underbrace{(\unitpoint, b)}_{\restrf[2][0][L]}}_{\painting[1][1]}}_{\painting[1][0]}
-            \\ \times \\
-            \underbrace{\Sigma b: \left(
-            \hspace{-0.4em}\begin{array}{c}
-                             X_0(\unitpoint)
-                             \\ \times \\
-                             X_0(\unitpoint)
-                           \end{array}\hspace{-0.4em}
-            \right).\, \underbrace{X_1 \underbrace{(\unitpoint, b)}_{\restrf[2][0][R]}}_{\painting[1][1]}}_{\painting[1][0]}
-          \end{array}
-          \right)}_{\layer[2][0]}\right)}_{\framep[2][1]}.\underbrace{\left(
-        \begin{array}{c}
-          \underbrace{X_1 \underbrace{\left(a.\hd, \left(
-              \hspace{-0.4em}\begin{array}{c}
-                               a.\tl.L.\hd.L, \\
-                               a.\tl.R.\hd.L
-                             \end{array}\hspace{-0.4em}
-              \right)\right)}_{\restrf[2][1][L]}}_{\painting[1][1]}
-          \\ \times \\
-          \underbrace{X_1 \underbrace{\left(a.\hd, \left(
-              \hspace{-0.4em}\begin{array}{c}
-                               a.\tl.L.\hd.R, \\
-                               a.\tl.R.\hd.R
-                             \end{array}\hspace{-0.4em}
-              \right)\right)}_{\restrf[2][1][R]}}_{\painting[1][1]}
-        \end{array}
-        \right)}_{\layer[2][1]}}_{\framep[2][2]}
-      \rightarrow \U                                                                                                                                \\
-      \ldots
-    \end{array}
-  \end{equation*}
-  \caption{Intuition for formal construction ($\nu = 2$)}\label{fig:intuition}
-\end{figure}
-
 In particular, for $X: \U$, applying the parametricity translation is about canonically associating to $X$ an inhabitant $X_\kstar$ of ${\U}_\kstar(X)(X)$ i.e. of $X \rightarrow X \rightarrow \U$. In turn, applying the parametricity translation to $X_\kstar: X \rightarrow X \rightarrow \U$ is about canonically associating to $X_\kstar$ an inhabitant $X_{\kstar\kstar}$ of $(X \rightarrow X \rightarrow \U)_\kstar(X_\kstar)(X_\kstar)$ i.e. of:
 \begin{align*}
   \Pi x_{LL}: X.\, \Pi x_{LR}: X.\, X_\kstar(x_{LL})(x_{LR})             \\
@@ -619,30 +567,13 @@ This tells us how the informal type given to $X_2$ in the previous section could
 Notice, however, that the recipe obtained so far, $X_{n + 1}: ({S_n})_\kstar(X_n)(X_n)$ for $X_n: S_n$, applies parametricity on the \emph{syntax} of the type of $X_n$. It does not directly yield a characterization of $S_n$ as a function from $n$. Reformulating the recipe as an explicit recursive construction, without requiring an interpretation of the syntax of types, is the main outcome of this work, together with the mechanization and the uniform treatment of augmented semi-simplicial and semi-cubical sets by means of the generalization to $\nu$-sets.
 
 \section{Our construction}
+Our construction is highly dependent, with dependencies in inequality and equality proofs. It involves several involved details, some of them being visible only in the Coq formalization.
 
-Our construction is highly dependent, with dependencies in inequality
-and equality proofs. It involves several involved details, some of
-them being visible only in the Coq formalization.
+In Section~\ref{sec:ett} and Tables~\ref{tab:coind}, \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces}, \ref{tab:coh}, we give an informal, mathematical definition in Extensional Type Theory, which roughly corresponds to a level of reasoning ``à la set theory'' where equalities are thought as ``holding on the nose'' without having to mention them explicitly once they are justified. In Section~\ref{sec:itt} and Tables~\ref{fulltab:coind}, \ref{fulltab:core}, \ref{fulltab:frames}, \ref{fulltab:faces}, \ref{fulltab:coh}, we give the same mathematical definition in Intensional Type Theory, where transporting along coherence conditions is now made explicit. Adding this level of details helps to understand the specificities of coherence conditions.
 
-In Section~\ref{sec:ett} and Tables~\ref{tab:coind}, \ref{tab:core},
-\ref{tab:frames}, \ref{tab:faces}, \ref{tab:coh}, we give an informal,
-mathematical definition in Extensional Type Theory, which roughly
-corresponds to a level of reasoning ``à la set theory'' where
-equalities are thought as ``holding on the nose'' without having to
-mention them explicitly once they are justified. In
-Section~\ref{sec:itt} and Tables~\ref{fulltab:coind},
-\ref{fulltab:core}, \ref{fulltab:frames}, \ref{fulltab:faces},
-\ref{fulltab:coh}, we give the same mathematical definition in
-Intensional Type Theory, where transporting along coherence conditions
-is now made explicit. Adding this level of details helps to understand
-the specificities of coherence conditions.
+But first, we start with a section gradually and informally explaining the intuition of the construction. It can be read in parallel with the tables if wished.
 
-But first, we start with a section gradually and informally explaining
-the intuition of the construction. It can be read in parallel with the
-tables if wished.
-
-
-\subsection{Formal construction in ETT\label{sec:ett}}
+\subsection*{Formal construction in ETT\label{sec:ett}}
 % Abbreviated tables in this section
 %
 % The rule for implicit arguments for each table:
@@ -754,10 +685,62 @@ Note that for a fixed constant $n$, the coherence conditions evaluate to a refle
 \renewcommand*{\lab}{tab:coh}
 \input{tab-coh-ett.tex}
 
-\subsection{Intuition for our formal construction\label{sec:intuition}}
+\subsection*{Intuition for our formal construction\label{sec:intuition}}
 To assign types to $X_0, X_1, X_2, \ldots$ in the above indexed representation, we give a recursive definition relying on building blocks, which we call $\framep$, $\layer$, and $\painting$. A $\framep$ is a boundary of a standard form (simplex, cube, etc.), which we decompose into $\layer$, and a $\painting$ corresponds to a filled $\framep$. Some $\framep$ are full and we call them $\fullframe$.
 
 We assign every $X_n$ the type $\fullframe[n] \rightarrow \U$ uniformly, applying to the description above the isomorphism between $A \rightarrow B \rightarrow C$ and $A \times B \rightarrow C$, or between $\Pi a: A.\, (B a \rightarrow C)$ and $(\Sigma a: A.\, B a) \rightarrow C$. In particular, $\fullframe[n]$ is a ``telescope'', i.e. a nesting of $\Sigma$-type. Let us now illustrate how we build $\fullframe[n]$. To begin, let us set $\fullframe[0] = \unittype$, so that the type $\U$ of $X_0$ can be equivalently formulated as $\unittype \rightarrow \U$. Then, more generally, we let each $\fullframe[n]$ consist of $n$ layers, written $\layer[n][p]$ with $p < n$, that we stack in order, starting from the $\unittype$ type and writing $\framep[n][p]$ for the $p$ first layers of a $\fullframe[n]$, so that $\fullframe[n]$ is $\framep[n][n]$. For instance, $X_1$ is made of one layer, so that it can be written as a $\Sigma$-type of an inhabitant of the $\unittype$ and $\layer[1][0]$, as shown in Fig.~\ref{fig:intuition}. Fig.~\ref{fig:intuition} also mentions how the type of $X_2$ is structured.
+
+\begin{figure}[H]
+  \begin{equation*}
+    \begin{array}{ll}
+      X_0                                : \underbrace{\unittype}_{\framep[0][0]}                                                    \rightarrow \U \\
+      X_1                                : \underbrace{\Sigma \unitpoint: \unittype. \underbrace{\left(
+      \begin{array}{c}
+          \underbrace{X_0(\unitpoint)}_{\painting[0][0]}
+          \\ \times \\
+          \underbrace{X_0(\unitpoint)}_{\painting[0][0]}
+        \end{array}\right)}_{\layer[1][0]}}_{\framep[1][1]} \rightarrow \U                                                                            \\
+      X_2                                : \underbrace{\Sigma a: \underbrace{\left(\Sigma \unitpoint: \unittype. \underbrace{\left(
+          \begin{array}{c}
+            \underbrace{\Sigma b: \left(
+            \hspace{-0.4em}\begin{array}{c}
+                             X_0(\unitpoint)
+                             \\ \times \\
+                             X_0(\unitpoint)
+                           \end{array}\hspace{-0.4em}
+            \right).\, \underbrace{X_1 \underbrace{(\unitpoint, b)}_{\restrf[2][0][L]}}_{\painting[1][1]}}_{\painting[1][0]}
+            \\ \times \\
+            \underbrace{\Sigma b: \left(
+            \hspace{-0.4em}\begin{array}{c}
+                             X_0(\unitpoint)
+                             \\ \times \\
+                             X_0(\unitpoint)
+                           \end{array}\hspace{-0.4em}
+            \right).\, \underbrace{X_1 \underbrace{(\unitpoint, b)}_{\restrf[2][0][R]}}_{\painting[1][1]}}_{\painting[1][0]}
+          \end{array}
+          \right)}_{\layer[2][0]}\right)}_{\framep[2][1]}.\underbrace{\left(
+        \begin{array}{c}
+          \underbrace{X_1 \underbrace{\left(a.\hd, \left(
+              \hspace{-0.4em}\begin{array}{c}
+                               a.\tl.L.\hd.L, \\
+                               a.\tl.R.\hd.L
+                             \end{array}\hspace{-0.4em}
+              \right)\right)}_{\restrf[2][1][L]}}_{\painting[1][1]}
+          \\ \times \\
+          \underbrace{X_1 \underbrace{\left(a.\hd, \left(
+              \hspace{-0.4em}\begin{array}{c}
+                               a.\tl.L.\hd.R, \\
+                               a.\tl.R.\hd.R
+                             \end{array}\hspace{-0.4em}
+              \right)\right)}_{\restrf[2][1][R]}}_{\painting[1][1]}
+        \end{array}
+        \right)}_{\layer[2][1]}}_{\framep[2][2]}
+      \rightarrow \U                                                                                                                                \\
+      \ldots
+    \end{array}
+  \end{equation*}
+  \caption{Intuition for formal construction ($\nu = 2$)}\label{fig:intuition}
+\end{figure}
 
 Let us now illustrate the construction of $\fullframe[3]$, necessary to build the type of $X_3$.
 
@@ -839,7 +822,7 @@ while we expect a term of type
 Hence, we need a coherence condition to commute the restrictions. Coherence conditions similar to this necessitate, what are shown as, $\cohf$, $\cohl$ and $\cohc$ in tables in the next section. These are by induction on the structure of $\framep$, $\layer$ and $\painting$. Note that, for the construction in \ref{sec:itt}, we further need a $2$-dimensional coherence condition, $\coht$, for $\cohl$.
 
 \section{Details on the mechanization\label{sec:mech}}
-\subsection{Formal construction in ITT\label{sec:itt}}
+\subsection*{Formal construction in ITT\label{sec:itt}}
 \renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
 \renewcommandx{\cohl}{\coh{layer}[][][][][][][][]}
 
@@ -917,7 +900,7 @@ Remark: If we were not working in \U, but in \HGpd, we would need to prove one m
   \input{tab-coh.tex}
 \end{landscape}
 
-\subsection{Finer details}
+\subsection*{Finer details}
 \renewcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
 \renewcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
 \renewcommandx{\painting}[2][1,2]{\prim{painting}[][#1][#2][][]}
@@ -981,6 +964,7 @@ In the cubical case, we expect the construction to eventually provide a model of
 By equipping the universe construction with a structure of equivalences, as suggested along the lines of Altenkirch and Kaposi~\cite{altenkirch15}, we expect the construction to be able to serve as a basis for syntactic models of various versions of cubical type theory~\cite{bezem13,cohen16,angiuli21}, saving the detour via the fibered approach inherent to usual presheaf models. This would a priori preserve definitional properties which may be lost when detouring via presheaves. In particular, we conjecture being able to justify univalence holding definitionally. Our approach would also definitively ground cubical type theory in iterated parametricity.
 
 Another direction for future work would also be to generically construct the indexed form of any presentation of presheaves over a direct category and to show the equivalence between the two presentations.
+
 \bibliographystyle{msclike}
 \bibliography{paper}
 
