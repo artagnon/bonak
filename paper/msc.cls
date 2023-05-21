@@ -1357,7 +1357,7 @@ original work is properly cited.}
       \ignorespaces\csname author0\endcsname%
    \else%
       \ifnum\authorcount=2%
-         \ignorespaces\csname author0\endcsname\if@twoauthors\else\comma\ \fi \auandname \csname author1\endcsname%
+         \ignorespaces\csname author0\endcsname \auandname \csname author1\endcsname%
       \else%
                \@whilenum\tempcount<\tempauthorcount%
                                \do{%\vskip8pt

@@ -172,9 +172,6 @@
 % and { ... } if in mask
 \newcommandx*{\eqnarg}[3]{\ifinmask[bonak]{#1}[#2]{\{#2:#3\}}{(#2:#3)}}
 
-% Use lettered footnotes
-\renewcommand{\thefootnote}{\alph{footnote}}
-
 \begin{document}
 \title{A parametricity-based formalization of semi-simplicial and semi-cubical sets}
 \begin{authgrp}
@@ -185,12 +182,16 @@
   \affiliation{Unaffiliated \email{r@artagnon.com}}
 \end{authgrp}
 \begin{abstract}
-  Constructions such as semi-simplicial and semi-cubical sets can be defined in the ``usual way'' as presheaves over respectively, the semi-simplex or semi-cube category, which we call \emph{fibered} definitions, but also defined like in e.g. Voevodsky~\cite{voevodsky12} or in previous work~\cite{herbelin15}, as a dependently-typed construction, which we call \emph{indexed}.
+  Constructions such as semi-simplicial and semi-cubical sets can be defined in the ``usual way'' as presheaves over respectively, the semi-simplex or semi-cube category, which we call \emph{fibered} definitions, but also defined like in e.g. \cite{voevodsky12} or in \cite{herbelin15}, as a dependently-typed construction, which we call \emph{indexed}.
 
   On another side, it is known that semi-simplicial and semi-cubical sets are related to iterated Reynolds's parametricity, respectively in its unary and binary variants\dots
 
   We exploit this correspondence to develop a uniform indexed definition of both augmented semi-simplicial and semi-cubical sets, which is additionally fully formalized in Coq's dependent type theory. Beside the interest in the construction itself, we expect it to eventually serve as models of type theory preserving more definitional equalities than presheaf models do.
 \end{abstract}
+\begin{keywords}
+  simplicial set, cubical set, coq, formalization, HoTT
+\end{keywords}
+% \maketitle
 
 \section{Introduction}
 % - semisimplicial/semicubical sets in indexed form
@@ -206,13 +207,15 @@
 
 \subsection*{Fibered vs indexed presentation of semi-simplicial and semi-cubical sets}
 
-A family of sets can commonly be represented in two ways: as a family indexed over a set properly speaking or as a set together with a map telling for each element of the set on which index it depends. In the latter case, the set associated to a given index is the fiber, i.e. inverse image, of the index under the map. The two presentations are equivalent, what can be formally stated in a type-theoretic language as a fibered/indexed correspondence\footnote{At a discussion on the Zulip channel for the HoTT community, alternative names fibration/family correspondence and unbundled/bundled correspondence were proposed, among others. In our experience, the opposition fibered/indexed is spontaneously understood by many listeners. In particular, it echoes to the Grothendieck construction of fibered categories from indexed categories. Some people actually calls this correspondence ``the Grothendieck construction for dummies''. Its proof requires univalence (see~\cite{hottbook}).}:
-$$(\Sigma S: \U. (S \rightarrow T)) \simeq (T \rightarrow \U)$$
-where $\U$ represents the subset of types with proof-irrelevant equality.
+A family of sets can commonly be represented in two ways: as a family properly speaking, indexed over a set or as a set together with a map specifying for each element of the set on which index it depends. In the latter case, the set associated to a given index is the fiber, i.e. inverse image, of the index under the map. The two presentations are equivalent, what can be formally stated in a type-theoretic language as a fibered/indexed correspondence~\footnote{At a discussion on the Zulip channel for the HoTT community, alternative names fibration/family correspondence and unbundled/bundled correspondence were proposed, among others. In our experience, the opposition fibered/indexed is spontaneously understood by many listeners. In particular, it echoes to the Grothendieck construction of fibered categories from indexed categories. The most elementary instance of the correspondence, with $\Type$ instead of $\U$, that is $(\Sigma S: \Type. (S \rightarrow T)) \simeq (T \rightarrow \Type)$, is sometimes called ``Grothendieck construction for dummies'' (its proof requires univalence, see~\cite{hottbook}).}:
+\begin{equation*}
+  \mbox{(fibered)}\qquad(\Sigma S: \U. (S \rightarrow T)) \simeq (T \rightarrow \U)\qquad \mbox{(indexed)}
+\end{equation*}
+where $\U$ represents the subset of types with a unique proof of equality, that is the type-theoretic counterpart of the category of sets (within some universe).
 
-While a presheaf over an index category, i.e. a family of sets with maps between them according to the morphisms of the category, can be seen as living on the indexed side of the correspondence, with discrete Grothendieck fibrations on the other side of the correspondence, there are situations where the presheaf can also be seen as living on the fibered side of the correspondence. Indeed, when the index category is direct, i.e. with a downwards-well-founded collection of morphisms, as is the case of semi-simplicial and semi-cubical sets, each $F(X)$ serving as source of a map $F(X) \stackrel{F(f)}{\rightarrow} F(Y)$ can be turned into a family $F(X)$ indexed on $F(Y)$, and, since the collection of maps is well-founded, this can be iterated, eventually producing a collection of families which we call an indexed presentation of the presheaf over the direct category.
+While a presheaf over an index category, i.e. a family of sets connected with maps according to the morphisms of the index category, can be seen as living on the indexed side of the correspondence, opposing to discrete Grothendieck fibrations on the fibered side, there are situations where a presheaf $F$ can also be seen as living on the fibered side of the correspondence. Indeed, when the index category is direct, i.e. with a downwards-well-founded collection of non-identity morphisms, as is the case of semi-simplicial and semi-cubical sets, each $F(X)$ serving as source of a map $F(X) \stackrel{F(f)}{\rightarrow} F(Y)$ can be turned into a family $F(X)$ indexed on $F(Y)$, and, since the maps are well-founded downward, this can be iterated from below, eventually producing a collection of families which we call an \emph{indexed presentation} of the presheaf over the direct category.
 
-For instance, in the case of a semi-cubical set, presented with $2n$ face maps from the set of $n$-cubes to the set of $(n-1)$-cubes, the presheaf approach corresponds to a family of sets fibered the ones over the others (up to coherence conditions such). Formulated in type theory, it corresponds to:
+For instance, in the case of a semi-cubical set, presented with $2n$ face maps from the set of $n$-cubes to the set of $(n-1)$-cubes, the standard presheaf approach prescribes a family of sets fibered the ones over the others (up to coherence conditions such). Formulated in type theory, it corresponds to:
 
 \begin{equation*}
   \begin{tikzcd}
@@ -236,9 +239,9 @@ On the other side, the indexed presentation of the same presheaf is a stratified
 %%   \ldots
 %% \end{align*}
 
-The idea for such indexed presentation of presheaves over a direct category was introduced at the Univalent Foundations year in the context of defining semi-simplicial types~\cite{}. A couple of constructions were proposed since then. One, by Voevodsky~\cite{voevodsky12}, relies on the presentation of semi-simplicial sets as a presheaf over increasing injective maps between finite ordinals. Another, by the first author, and fully formalized in Coq, relies on the presentation of semi-simplicial sets as a presheaf over face maps~\cite{herbelin15}\footnote{The title of the paper ``A dependently-typed construction of semi-simplicial types'' is confusing: it was part of a project at defining semi-simplicial types, but, in practice, the definition is done in a type theory with Unicity of Identity Proofs (UIP), meaning in a type theory where types (intended to represent arbitrary $\infty$-groupoids) are actually sets ($0$-truncated $\infty$-groupoids, that is, morally, $0$-groupoids).}. Another one by Part and Luo, and formalized in the Plastic proof assistant, works generically for any Reedy category with only upwards maps~\cite{part15}.
+The idea for such indexed presentation of presheaves over a direct category was introduced at the Univalent Foundations year in the context of defining semi-simplicial types~\cite{}. A couple of constructions were proposed since then. One, by \cite{voevodsky12}, relies on the presentation of semi-simplicial sets as a presheaf over increasing injective maps between finite ordinals. Another, by \cite{herbelin15}\footnote{The title of the paper ``A dependently-typed construction of semi-simplicial types'' is confusing: it was part of a project at defining semi-simplicial types, but, in practice, the definition is done in a type theory with Unicity of Identity Proofs (UIP), meaning in a type theory where types (intended to represent arbitrary $\infty$-groupoids) are actually sets ($0$-truncated $\infty$-groupoids, that is, morally, $0$-groupoids).}, and fully formalized in Coq, relies on the presentation of semi-simplicial sets as a presheaf over face maps. Two other ones by~\cite{part15}, formalized in (an emulation of logic-enriched homotopoty type theory in) the Plastic proof assistant, and by \cite{annenkovCK17}, formalized in (an emulation of a two-level type theory in) the Agda proof assistant~\footnote{\url{https://github.com/nicolaikraus/HoTT-Agda/blob/master/nicolai/SemiSimp/SStypes.agda}}, also rely on the presentation of the semi-simplicial category from increasing injective func†ions over finite ordinals.
 
-The indexed definition of a presheaf over a direct category is technically more involved than the presheaf definition as it requires hard-wiring in the structure the dependencies between elements of the sets of the presheaf, including the coherence condition between these dependencies, such as taking the $i$-th face of the $j$-th face of a $n$-simplex is the same as taking the $(j-1)$-th face of the $i$-th face (when $j>i$). On the other side, defining a concrete presheaf in indexed form only requires to provide the family since the burden of defining maps and showing the coherence conditions has already been integrated in the definition what is not the case in the presheaf presentation.
+The indexed definition of a presheaf over a direct category is technically more involved than the presheaf definition as it requires hard-wiring in the structure the dependencies between elements of the sets of the presheaf, including the coherence conditions between these dependencies, such as taking the $i$-th face of the $j$-th face of a $n$-simplex is the same as taking the $(j-1)$-th face of the $i$-th face (when $j>i$). On the other side, defining a concrete presheaf in indexed form only requires to provide the family since the burden of defining maps and showing the coherence conditions has already been integrated in the definition what is not the case in the presheaf presentation.
 
 \subsection*{Reynolds' parametricity and its unary and binary variants}
 In the context of functional programming, Reynolds' parametricity~\cite{reynolds83} interprets types as relations characterizing the observational behavior of programs of this type. Parametricity can be iterated, and it has been noted that iterated Reynolds' parametricity has the structure of a cubical set~\cite{johann17,altenkirch15,moulin16,moeneclaey21,moeneclaey22phd}. We obtain a \emph{unary} variant of Reynolds' \emph{binary} parametricity by using predicates or families instead of relations or graphs, in which case, we obtain a form of realizability~\cite{bernardy12,lasson12,moulin16}. It has then been noted that iterated unary parametricity has the structure of an augmented simplicial set~\footnote{Private communication with Hugo Moeneclaey and Thorsten Altenkirch}.
@@ -256,7 +259,7 @@ The outline of the paper is as follows. We recall the definition of the augmente
 See \href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak} for our mechanization. The construction was conceived in Summer 2019, and the mechanization began in late 2019. A sketch of the construction was presented at the 2020 HoTT-UF workshop and the completion of the mechanization was reported at the TYPES 2022 conference.
 
 \section{Semi-simplicial and semi-cubical sets\label{sec:nu}}
-In this section, we generalize semi-simplicial and semi-cubical sets to, what we call, $\nu$-sets, subsuming the earlier defintions. However, we also explicitly work out the cases of semi-simplical and semi-cubical sets, in a way that is similar to a previous art~\cite{aitchison86}.
+In this section, we generalize semi-simplicial and semi-cubical sets to, what we call, $\nu$-sets, subsuming the earlier definitions. However, we also explicitly work out the cases of semi-simplicial and semi-cubical sets, in a way that is similar to a previous art~\cite{aitchison86}.
 
 \subsection*{\texorpdfstring{$\nu$}{ν}-sets}
 Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and semi-cubical sets. To obtain this, we extend $\DeltaPlus$ and $\Cube$ in a straightforward manner into a category which we call $\nu$-semi-shape category. The morphisms of the $\nu$-semi-shape category are sequences of elements of a set $\nu$ of arbitrary cardinal, extended with $\kstar$, so that the following holds.
@@ -869,43 +872,6 @@ The way recursion is implemented is still left implicit at this stage. See \ref{
 Depending on how inequality on natural numbers is defined, different equalities may hold or not definitionally, such as transitivity of inequality or the computational properties of induction over inequality proofs. Details are given in~\ref{sec:mech}.
 
 Remark: If we were not working in \U, but in \HGpd, we would need to prove one more higher-dimensional coherence, and if we were working in \Type, we would need to prove arbitrarily many higher-dimensional coherences. Here, $\HGpd$ is the subset of types $A$ such that for all $x$ and $y$ in $A$, $x = y$ is in \U. See \cite{herbelin15,altenkirch16,kraus21} for a discussion on the need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory.
-
-% Full tables in this section
-%
-% Clear the mask and label
-\clearmask
-
-% Keep all arguments for all macros
-% Frame, layer, and painting
-\renewcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[#1][#2][#3][#4][#5]}
-\renewcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[#1][#2][#3][#4][#5]}
-\renewcommandx{\painting}[5][1,2,3,4,5]{\prim{painting}[#1][#2][#3][#4][#5]}
-\renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[#1][#2][][][#3]}
-
-% Restriction for frame, layer, and painting
-\renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[#1][#2][#3][#4][#5][#6][#7]}
-\renewcommandx{\restrl}[7][1,2,3,4,5,6,7]{\restr{layer}[#1][#2][#3][#4][#5][#6][#7]}
-\renewcommandx{\restrc}[7][1,2,3,4,5,6,7]{\restr{painting}[#1][#2][#3][#4][#5][#6][#7]}
-
-% Coherence conditions for frame, layer, and painting
-\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[#1][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[#1][#2][#3][#4][#5][#6][#7,#8][#9]}
-
-\renewcommand*{\lab}{fulltab:coind}
-\input{tab-coind.tex}
-\renewcommand*{\lab}{fulltab:core}
-\input{tab-core.tex}
-\renewcommand*{\lab}{fulltab:frames}
-\input{tab-frames.tex}
-\renewcommand*{\lab}{fulltab:faces}
-\input{tab-faces.tex}
-
-\begin{landscape}
-  \renewcommand*{\lab}{fulltab:coh}
-  \input{tab-coh.tex}
-\end{landscape}
 
 \subsection*{Finer details}
 \renewcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
