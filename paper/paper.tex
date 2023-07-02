@@ -206,15 +206,15 @@
 % - mention also the semi-simplicial types problem
 
 \subsection*{Fibered vs indexed presentation of semi-simplicial and semi-cubical sets}
-A family of sets can commonly be represented in two ways: as a family properly speaking, indexed over a set or as a set together with a map specifying for each element of the set on which index it depends. In the latter case, the set associated to a given index is the fiber, i.e. inverse image, of the index under the map. The two presentations are equivalent, what can be formally stated in a type-theoretic language as a fibered/indexed correspondence~\footnote{At a discussion on the Zulip channel for the HoTT community, alternative names fibration/family correspondence and unbundled/bundled correspondence were proposed, among others. In our experience, the opposition fibered/indexed is spontaneously understood by many listeners. In particular, it echoes to the Grothendieck construction of fibered categories from indexed categories. The most elementary instance of the correspondence, with $\Type$ instead of $\U$, that is $(\Sigma S: \Type. (S \rightarrow T)) \simeq (T \rightarrow \Type)$, is sometimes called ``Grothendieck construction for dummies'' (its proof requires univalence, see~\cite{hottbook}).}:
+A family of sets can commonly be represented in two ways: as a family properly speaking, indexed over a set $S$, or as a set $T$ together with a map specifying for each element of the set $T$ on which index it depends in $S$. In the first case, we call it an \emph{indexed} presentation. In the latter case, the set associated to a given index is the fiber, i.e. inverse image, of the index under the map, so we call it a \emph{fibered} presentation. The two presentations are equivalent and the equivalence can be phrased concisely in the language of homotopy type theory~\cite{hottbook} as a fibered/indexed correspondence\footnote{At a discussion on the Zulip channel for the HoTT community, alternative names fibration/family correspondence and unbundled/bundled correspondence were proposed, among others. In our experience, the opposition fibered/indexed is spontaneously understood by many listeners. In particular, it echoes to the Grothendieck construction of fibered categories from indexed categories. The most elementary instance of the correspondence, with $\Type$ instead of $\U$, that is $(\Sigma S: \Type. (S \rightarrow T)) \simeq (T \rightarrow \Type)$, is sometimes called ``Grothendieck construction for dummies'' (its proof requires univalence, see~\cite{hottbook}).}
 \begin{equation*}
-  \mbox{(fibered)}\qquad(\Sigma S: \U. (S \rightarrow T)) \simeq (T \rightarrow \U)\qquad \mbox{(indexed)}
+  \mbox{(fibered)}\qquad(\Sigma S: \U. (S \rightarrow T)) ~\simeq~ (T \rightarrow \U)\qquad \mbox{(indexed)}
 \end{equation*}
-where $\U$ represents the subset of types with a unique proof of equality, that is the type-theoretic counterpart of the category of sets (within some universe).
+where $\U$ represents sets in homotopy type theory as the subset of types with a unique proof of equality (within some universe).
 
-While a presheaf over an index category, i.e. a family of sets connected with maps according to the morphisms of the index category, can be seen as living on the indexed side of the correspondence, opposing to discrete Grothendieck fibrations on the fibered side, there are situations where a presheaf $F$ can also be seen as living on the fibered side of the correspondence. Indeed, when the index category is direct, i.e. with a downwards-well-founded collection of non-identity morphisms, as is the case of semi-simplicial and semi-cubical sets, each $F(X)$ serving as source of a map $F(X) \stackrel{F(f)}{\rightarrow} F(Y)$ can be turned into a family $F(X)$ indexed on $F(Y)$, and, since the maps are well-founded downward, this can be iterated from below, eventually producing a collection of families which we call an \emph{indexed presentation} of the presheaf over the direct category.
+A \emph{presheaf} on an category is a family of sets connected with maps according to the morphisms of the category. As such, it lives on the indexed side of the correspondence, opposing on the fibered side to what is called \emph{discrete Grothendieck fibrations}. However, there are situations where a presheaf $F$ can also be seen as living on the fibered side of the correspondence. Indeed, when the indexing category is direct, i.e. with a downwards-well-founded collection of non-identity morphisms, as is the case of semi-simplicial and semi-cubical sets, each $F(X)$ serving as source of a map $F(X) \stackrel{F(f)}{\rightarrow} F(Y)$ can be turned into a family $F(X)$ indexed on $F(Y)$, and, since the maps are well-founded downward, this can be iterated from below, eventually producing a collection of families which we call an \emph{indexed presentation} of the presheaf over the direct category.
 
-For instance, in the case of a semi-cubical set~\citep{grandis03,buchholtz17}, presented with $2n$ face maps from the set of $n$-cubes to the set of $(n-1)$-cubes, the standard presheaf approach prescribes a family of sets fibered the ones over the others (up to coherence conditions such). Formulated in type theory, it corresponds to:
+For instance, in the case of a semi-cubical set~\citep{grandis03,buchholtz17}, presented with $2n$ face maps from the set of $n$-cubes to the set of $(n-1)$-cubes, the standard presheaf approach prescribes a family of sets fibered the ones over the others (up to cubical faces identities). Formulated in type theory, it corresponds to:
 
 \begin{equation*}
   \begin{tikzcd}
@@ -222,7 +222,7 @@ For instance, in the case of a semi-cubical set~\citep{grandis03,buchholtz17}, p
   \end{tikzcd}
 \end{equation*}
 
-On the other side, the indexed presentation of the same presheaf is a stratified sequence of families indexed on elements of families of lower rank, taking into account the coherence conditions to prevent duplications. Formulated in type theory, it corresponds to:
+On the other side, the indexed presentation of the same presheaf is a stratified sequence of families indexed on elements of families of lower rank, taking into account the coherence conditions to prevent duplications. Formulated in type theory, it takes the form:
 
 \begin{align*}
   X_0 & :              & \U                                                     \\
@@ -234,7 +234,9 @@ On the other side, the indexed presentation of the same presheaf is a stratified
 
 The idea for such indexed presentation of presheaves over a direct category was mentioned at the Univalent Foundations year in the context of defining semi-simplicial types~\footnote{See e.g. \url{https://ncatlab.org/nlab/show/semi-simplicial+types+in+homotopy+type+theory}.}. A couple of constructions were proposed since then. One, by \cite{voevodsky12}, relies on the presentation of semi-simplicial sets as a presheaf over increasing injective maps between finite ordinals. Another, by \cite{herbelin15}\footnote{With hindsight, the title of the paper ``A dependently-typed construction of semi-simplicial types'' is somehow confusing: it was part of a project at defining semi-simplicial types, but, in practice, the definition is done in a type theory with Unicity of Identity Proofs (UIP), meaning in a type theory where types (intended to represent arbitrary $\infty$-groupoids) are actually sets ($0$-truncated $\infty$-groupoids, that is, morally, $0$-groupoids). The confusion was however common at that time.}, and fully formalized in Coq, relies on the presentation of semi-simplicial sets as a presheaf over face maps. Another by~\cite{part15}, formalized in (an emulation of logic-enriched homotopy type theory in) the Plastic proof assistant, and yet another by \cite{annenkovCK17}, formalized in (an emulation of a two-level type theory in) the Agda proof assistant~\footnote{\url{https://github.com/nicolaikraus/HoTT-Agda/blob/master/nicolai/SemiSimp/SStypes.agda}}, also rely on the presentation of the semi-simplicial category from increasing injective functions over finite ordinals.
 
-The indexed definition of a presheaf over a direct category is technically more involved than the presheaf definition as it requires hard-wiring in the structure the dependencies between elements of the sets of the presheaf, including the coherence conditions between these dependencies, such as taking the $i$-th face of the $j$-th face of a $n$-simplex is the same as taking the $(j-1)$-th face of the $i$-th face (when $j>i$). On the other side, defining a concrete presheaf in indexed form only requires to provide the family since the responsibility of defining maps and showing the coherence conditions is already accounted for in the definition, what is not the case by default in the presheaf presentation. In category-theoretic terms, the indexation set of the family $X_n$ in the indexed presentation is called a \emph{matching object}. The indexed presentation of presheaves over a direct category can then be identified with a subclass of ordinary presheaves known as Reedy fibrant where Reedy fibrancy precisely expresses that the set $X_n$ in the fibered presentation is a $\Sigma$-type over an instance up to isomorphism of the matching object at level $n$~\citep{shulman14,kraus17}.
+The indexed definition of a presheaf over a direct category is technically more involved than the presheaf definition as it requires hard-wiring in the structure the dependencies between elements of the sets of the presheaf, including the coherence conditions between these dependencies, such as taking the $i$-th face of the $j$-th face of a $n$-simplex is the same as taking the $(j-1)$-th face of the $i$-th face (when $j>i$). On the other side, defining a concrete presheaf in indexed form only requires to provide the family since the responsibility of defining maps and showing the coherence conditions is already accounted for in the definition, what is not the case by default in the (ordinary) presheaf presentation.
+
+In category-theoretic terms, the indexi set of the family $X_n$ in the indexed presentation is called a \emph{matching object}. The indexed presentation of presheaves over a direct category can then be identified with a subclass of ordinary presheaves known as Reedy fibrant where Reedy fibrancy precisely expresses that the set $X_n$ in the fibered presentation is a $\Sigma$-type over an instance up to isomorphism of the matching object at level $n$~\citep{shulman14,kraus17}.
 
 \subsection*{Reynolds' parametricity and its unary and binary variants}
 In the context of functional programming, Reynolds' parametricity~(\citeyear{reynolds83}) interprets types as relations characterizing the observational behavior of programs of this type. More generally, correspondences, in the sense of ``relevant'' relation, that is of a family over a product of sets, can be used in place of relations. Parametricity can then be iterated, and, relying on the fibered representation of correspondences as spans, it has been noted that iterated Reynolds' parametricity has the structure of a cubical set~\citep{johann17,altenkirch15,moulin16,moeneclaey21,moeneclaey22phd}. We obtain a \emph{unary} variant of Reynolds' \emph{binary} parametricity by using predicates or families instead of relations or correspondences, in which case, we obtain a form of realizability~\citep{bernardy12,lasson12,moulin16}. It has then been noted that iterated unary parametricity has the structure of an augmented simplicial set~\footnote{Private communication with Hugo Moeneclaey and Thorsten Altenkirch.}. This similarity suggests to join the definition of augmented semi-simplicial sets and cubical sets and to see both of them as instances of a more general construction which we call $\nu$-sets of presheaves over a $\nu$-semi-shape category made of words of some cardinal $\nu$+1, where $\nu=1$ gives augmented semi-simplicial sets and $\nu=2$ gives semi-cubical sets.
@@ -254,22 +256,6 @@ See \href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak} for our 
 
 \section{Semi-simplicial and semi-cubical sets\label{sec:nu}}
 In this section, we generalize semi-simplicial and semi-cubical sets to, what we call, $\nu$-sets, subsuming the earlier definitions. However, we also explicitly work out the cases of semi-simplicial and semi-cubical sets, in a way that is similar to a previous art~(\citeyear{aitchison86}).
-
-\subsection*{\texorpdfstring{$\nu$}{ν}-sets}
-Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and semi-cubical sets. To obtain this, we extend $\DeltaPlus$ and $\Cube$ in a straightforward manner into a category which we call $\nu$-semi-shape category. The morphisms of the $\nu$-semi-shape category are sequences of elements of a set $\nu$ of arbitrary cardinal, extended with $\kstar$, so that the following holds.
-
-\begin{table}[H]
-  \centering
-  \begin{tabularx}{0.7\linewidth}{X|X|X}
-    \toprule
-    Value of $\nu$ & 1                               & 2                  \\
-    \graymidrule
-    Interpretation & Augmented semi-simplicial types & Semi-cubical types \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
-A $\nu$-set is thus a contravariant functor $\phi$ from the $\nu$-semi-shape category to $\Set$ and we call $n$-$\nu$-semi-shape an element of $\phi(n)$. As in the augmented semi-simplicial and semi-cubical cases, the standard $(n + 1)$-$\nu$-semi-shape is obtained by connecting together $\nu$ copies of the standard $n$-$\nu$-semi-shape with an extra copy stretched in the new dimension. We clarify in the next sections how this process of construction is similar to the parametricity translation developed for functional programming~\cite{reynolds83} and more generally for type theory~\cite{bernardy10, bernardy11, atkey14, bernardy15}.
 
 \subsection*{Augmented semi-simplicial sets}
 Augmented semi-simplicial sets are defined similarly to semi-simplicial sets, except that the connected components are additionally dependent on a ``color''. Conversely, semi-simplicial sets can be seen as augmented semi-simplicial sets over a singleton set of colors.
@@ -375,13 +361,13 @@ Semi-cubical sets are defined like augmented semi-simplicial sets except that $\
   \begin{figure}[H]
     \centering
     \begin{align*}
-      \Obj(\Cube) & := \Nat                                                                                \\
-      \Hom(p, n)  & := \{l \in [L, R, \kstar]^n \mid \text{number of $\kstar$ in $l = p$}\}                \\
+      \Obj(\Cube) & := \Nat                                                                                 \\
+      \Hom(p, n)  & := \{l \in [L, R, \kstar]^n \mid \text{number of $\kstar$ in $l = p$}\}                 \\
       g \circ f   & :=
       \begin{cases}
-        f                  & \text{if $g = []$}                                                              \\
-        a :: (g' \circ f)  & \text{if $g = (a :: g')$}, \text{where $a = L$ or $R$}                          \\
-        a :: (g' \circ f') & \text{if $g = (\star :: g')$, $f = (a :: f')$, where $a = L$, $R$, or $\kstar$} \\
+        f                  & \text{if $g = []$}                                                               \\
+        a :: (g' \circ f)  & \text{if $g = (a :: g')$}, \text{where $a = L$ or $R$}                           \\
+        a :: (g' \circ f') & \text{if $g = (\kstar :: g')$, $f = (a :: f')$, where $a = L$, $R$, or $\kstar$} \\
       \end{cases} \\
       \id         & := [\kstar, \ldots, \kstar] \text{ $n$ times}
     \end{align*}
@@ -438,6 +424,47 @@ Standard $n$-semi-cubes have a geometric interpretation, which we illustrate for
 \end{example}
 
 More generally, the standard $(n + 1)$-semi-cube can be obtained by taking two copies of the standard $n$-semi-cube serving as bottom and top face and connecting them on their border by a cylinder obtained as a third copy stretched in the new dimension. The bottom and top faces are obtained from the standard $n$-semi-cube by postfixing with respectively $L$ and $R$ while the cylinder is obtained by postfixing with $\kstar$. Note that the components can this time be oriented by letting each $n$-dimensional component go from the $(n-1)$-dimensional component obtained by replacing the leftmost $\kstar$ with $L$ to the one obtained by replacing the leftmost $\kstar$ with $R$.
+
+\subsection*{\texorpdfstring{$\nu$}{ν}-sets}
+Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and semi-cubical sets. To obtain this, we extend $\DeltaPlus$ and $\Cube$ in a straightforward manner into a category which we call $\nu$-semi-shape category.
+
+\begin{definition}[$\nu$-semi-shape categroy]
+  The definition of $\nu$-semi-shape category is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
+
+  \begin{figure}[H]
+    \centering
+    \begin{align*}
+      \Obj       & := \Nat                                                                            \\
+      \Hom(p, n) & := \{l \in (\nu \cup \kstar) \mid \text{number of $\kstar$ in $l = p$}\}           \\
+      g \circ f  & :=
+      \begin{cases}
+        f                  & \text{if $g = []$}                                                         \\
+        a :: (g' \circ f)  & \text{if $g = (a :: g')$}, \text{where $R \in \nu$}                        \\
+        a :: (g' \circ f') & \text{if $g = (\kstar :: g')$, $f = (a :: f')$, where $a = 0$ or $\kstar$} \\
+      \end{cases} \\
+      \id        & := [\kstar, \ldots, \kstar] \text{ $n$ times for $\id \in \Hom(n, n)$}
+    \end{align*}
+  \end{figure}
+\end{definition}
+
+The morphisms of the $\nu$-semi-shape category are sequences of elements of a set $\nu$ of arbitrary cardinal, extended with $\kstar$:
+
+so that the following holds.
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{0.7\linewidth}{X|X|X}
+    \toprule
+    Value of $\nu$ & 1                               & 2                  \\
+    \graymidrule
+    Interpretation & Augmented semi-simplicial types & Semi-cubical types \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+
+
+A $\nu$-set is thus a contravariant functor $\phi$ from the $\nu$-semi-shape category to $\Set$ and we call $n$-$\nu$-semi-shape an element of $\phi(n)$. As in the augmented semi-simplicial and semi-cubical cases, the standard $(n + 1)$-$\nu$-semi-shape is obtained by connecting together $\nu$ copies of the standard $n$-$\nu$-semi-shape with an extra copy stretched in the new dimension. We clarify in the next sections how this process of construction is similar to the parametricity translation developed for functional programming~\cite{reynolds83} and more generally for type theory~\cite{bernardy10, bernardy11, atkey14, bernardy15}.
 
 \section{Preliminaries}
 Martin-Löf's Type theory~\citep{martinlof75,martinlof84} is a logical formalism based on the notion of a \emph{type} rather than that of a \emph{set}. It can be seen as a foundation of mathematics alternative to set theory and is the core of several tools for the formalization of mathematics such as Agda~(\citeyear{agda23}), Coq~(\citeyear{coq22}) or Lean~(\citeyear{lean15}). In type theory, propositions are types and proofs are programs. A particularity of type theory is also that types and programs, hence propositions and proofs also, are considered modulo an equational theory called definitional equality.
