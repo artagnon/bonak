@@ -264,20 +264,6 @@ Let us associate dimension $0$ to colors; then, points are dimension $1$, lines 
 
 While ordinary semi-simplicial sets are presheaves over the semi-simplex category, augmented semi-simplicial sets are presheaves over, what we will define as, \DeltaPlus. There are different ways to define \DeltaPlus, up to equivalence, and we use a definition that will later straightforwardly extend to semi-cubical sets.
 
-%% Notations
-% simplicial, augmented, where
-% Γ           Γ+         Augmented Simplicial Combinatorics through Category Theory
-%                        José Manuel García-Calcines, María Teresa Rivas-Rodríguez, Luis Javier Hernández-Paricio, 2022
-
-% semi-augmented, where
-% ∆_s        HOMOLOGY IN RELATIVE SEMI-ABELIAN CATEGORIES, JULIA GOEDECKE, 2011
-
-% simplicial, semi-simplicial, where
-% Δ           Δ_inj            SEMI-SIMPLICIAL SPACES, JOHANNES EBERT AND OSCAR RANDAL-WILLIAMS, 2018
-% Δ           Δ_inj            PhD, Josep Esquirol Esteve, 2019
-% Δ           Δ'               Strict n-categories and augmented directed complexes model homotopy types, Andrea Gagna, 2018
-% Δ           Δ_inj, Δ_{inj,aug} Ms Th. Jonas Dallend ̈orfer, 2019
-
 \begin{notation}[Finite sequences]
   We denote finite sequences by $[i_1, \ldots i_n]$ for $i_j$ ranging over some domain. In particular, the empty sequence is written $[]$ and we define $i :: [j_1, \ldots, j_n]$ to be $[i, j_1, \ldots, j_n]$.
 \end{notation}
@@ -289,7 +275,7 @@ While ordinary semi-simplicial sets are presheaves over the semi-simplex categor
     \centering
     \begin{align*}
       \Obj_{\DeltaPlus}       & := \Nat                                                                             \\
-      \Hom_{\DeltaPlus}(p, n) & := \{l \in [0, \kstar]^n \mid \text{number of $\kstar$ in $l = p$}\}                \\
+      \Hom_{\DeltaPlus}(p, n) & := \{l \in \{0, \kstar\}^n \mid \text{number of $\kstar$ in $l = p$}\}              \\
       g \circ f               & :=
       \begin{cases}
         f                  & \text{if $g = []$}                                                        \\
@@ -362,7 +348,7 @@ Semi-cubical sets are defined like augmented semi-simplicial sets except that $\
     \centering
     \begin{align*}
       \Obj_{\Cube}       & := \Nat                                                                          \\
-      \Hom_{\Cube}(p, n) & := \{l \in [L, R, \kstar]^n \mid \text{number of $\kstar$ in $l = p$}\}          \\
+      \Hom_{\Cube}(p, n) & := \{l \in \{L, R, \kstar\}^n \mid \text{number of $\kstar$ in $l = p$}\}        \\
       g \circ f          & :=
       \begin{cases}
         f                  & \text{if $g = []$}                                                               \\
@@ -434,19 +420,18 @@ Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and
   \begin{figure}[H]
     \centering
     \begin{align*}
-      \Obj_{\hexagon}        & := \Nat                                                                           \\
-      \Hom_{\hexagon}(p, n) & := \{l \in (\nu \cup \kstar) \mid \text{number of $\kstar$ in $l = p$}\}          \\
-      g \circ f              & :=
+      \Obj_{\hexagon}       & := \Nat                                                                           \\
+      \Hom_{\hexagon}(p, n) & := \{l \in (\nu \cup \{\kstar\})^n \mid \text{number of $\kstar$ in $l = p$}\}    \\
+      g \circ f             & :=
       \begin{cases}
-        f                  & \text{if $g = []$}                                                      \\
-        a :: (g' \circ f)  & \text{if $g = (a :: g')$}, \text{where $R \in \nu$}                     \\
-        a :: (g' \circ f') & \text{if $g = (\kstar :: g')$, $f = (a :: f')$, where $a $ or $\kstar$} \\
-      \end{cases}               \\
-      \id                    & := [\kstar, \ldots, \kstar] \text{ $n$ times for $\id \in \Hom_{\hexagon}(n, n)$}
+        f                  & \text{if $g = []$}                                                                 \\
+        a :: (g' \circ f)  & \text{if $g = (a :: g')$}, \text{where $a \in \nu$}                                \\
+        a :: (g' \circ f') & \text{if $g = (\kstar :: g')$, $f = (a :: f')$, where $a \in \nu$ or $a = \kstar$} \\
+      \end{cases}   \\
+      \id                   & := [\kstar, \ldots, \kstar] \text{ $n$ times for $\id \in \Hom_{\hexagon}(n, n)$}
     \end{align*}
   \end{figure}
 \end{definition}
-
 
 so that the following holds.
 
@@ -461,14 +446,14 @@ so that the following holds.
   \end{tabularx}
 \end{table}
 
-A $\nu$-set is thus a contravariant functor $\phi$ from the $\nu$-semi-shape category to $\Set$ and we call $n$-$\nu$-semi-shape an element of $\phi(n)$. As in the augmented semi-simplicial and semi-cubical cases, the standard $(n + 1)$-$\nu$-semi-shape is obtained by connecting together $\nu$ copies of the standard $n$-$\nu$-semi-shape with an extra copy stretched in the new dimension. We clarify in the next sections how this process of construction is similar to the parametricity translation developed for functional programming~\cite{reynolds83} and more generally for type theory~\cite{bernardy10, bernardy11, atkey14, bernardy15}.
+A $\nu$-set is thus a contravariant functor $\phi$ from the $\nu$-semi-shape category to $\Set$ and we call $n$-$\nu$-semi-shape an element of $\phi(n)$. As in the augmented semi-simplicial and semi-cubical cases, the standard $(n + 1)$-$\nu$-semi-shape is obtained by connecting together $\nu$ copies of the standard $n$-$\nu$-semi-shape with an extra copy stretched in the new dimension. We clarify in the next sections how this process of construction is similar to the parametricity translation developed for functional programming~\citep{reynolds83} and more generally for type theory~\citep{bernardy10, bernardy11, atkey14, bernardy15}.
 
-\section{Preliminaries}
+\section{Type theory}
 Martin-Löf's Type theory~\citep{martinlof75,martinlof84} is a logical formalism based on the notion of a \emph{type} rather than that of a \emph{set}. It can be seen as a foundation of mathematics alternative to set theory and is the core of several tools for the formalization of mathematics such as Agda~(\citeyear{agda23}), Coq~(\citeyear{coq22}) or Lean~(\citeyear{lean15}). In type theory, propositions are types and proofs are programs. A particularity of type theory is also that types and programs, hence propositions and proofs also, are considered modulo an equational theory called definitional equality.
 
-Type theory is a flexible formalism supporting different models. Some models are based on topological spaces, where equality is interpreted as path, and substitutivity of equality as transport~\cite{kapulkin21}. These models support the univalence principle stating that equality of types mimics equivalence of types, leading to the development of Homotopy Type Theory~\cite{hottbook}. In type theory, types are organized in a hierarchy of universes written $\Type_m$ for $m$ a natural number. Main types in type theory are the types of dependent pairs, written $\Sigma a : A.\,B(a)$, the types of dependent functions, written $\Pi a:A.\,B(a)$, for $A$ a type and $B(a)$ a type dependent on the inhabitant $a$ of $A$, and the type of propositional equality, written $t = u$. We assume our type theory to also include a distinguished singleton type, written $\unittype$, and with inhabitant $\unitpoint$, the type of boolean values, called $\textsf{bool}$, and the type of natural numbers. We also write $\hd$ and $\tl$ the projections of dependent pairs, and $\refl$ for reflexivity. Logical propositions being types themselves, we use $\Pi$ to represent universal quantification and $\Sigma$ to represent existential quantification.
+Type theory is a flexible formalism supporting different models. Some models are based on topological spaces, where equality is interpreted as path, and substitutivity of equality as transport~\citep{kapulkin21}. These models support the univalence principle stating that equality of types mimics equivalence of types, leading to the development of Homotopy Type Theory~\citep{hottbook}. In type theory, types are organized in a hierarchy of universes written $\Type_m$ for $m$ a natural number. Main types in type theory are the types of dependent pairs, written $\Sigma a : A.\,B(a)$, the types of dependent functions, written $\Pi a:A.\,B(a)$, for $A$ a type and $B(a)$ a type dependent on the inhabitant $a$ of $A$, and the type of propositional equality, written $t = u$. We assume our type theory to also include a distinguished singleton type, written $\unittype$, and with inhabitant $\unitpoint$, the type of boolean values, called $\textsf{bool}$, and the type of natural numbers. We also write $\hd$ and $\tl$ the projections of dependent pairs, and $\refl$ for reflexivity. Logical propositions being types themselves, we use $\Pi$ to represent universal quantification and $\Sigma$ to represent existential quantification.
 
-A notion of sets can be recovered in each universe as $\U[m]$, denoting the subtype of $\Type_m$ for which paths are degenerated, what can be expressed by the property of Uniqueness of Identity Proofs (UIP). Technically, this is expressed as a structure equipping a domain $\Dom$ with the property $\UIP$:
+A type-theoretic notion of sets can be recovered in each universe as $\U[m]$, denoting the subtype of $\Type_m$ for which paths are degenerated, what can be expressed by the property of Uniqueness of Identity Proofs (UIP). Technically, this is expressed as a structure equipping a domain $\Dom$ with the property $\UIP$:
 \begin{align*}
   \Dom & : \Type_m                                  \\
   \UIP & : \Pi x y: \Dom.\, \Pi p q: x = y.\, p = q
@@ -484,73 +469,6 @@ In $\U[m]$, the following properties hold:
 
 Unless otherwise specified, we fix a universe level $m$ and abbreviate
 $\Type_m$ as $\Type$ and $\U[m]$ as $\U$.
-
-\section*{Comparison of fibered and indexed presentations}
-%     - standard augmented triangle:
-%       Inductive points := A | B | C.
-%       Inductive lines := AB | BC | AC.
-%       Inductive surface := ABC.
-
-%       {X n := match n with 0 => unit | 1 => points | 2 => lines | 4 => surface | n => empty_set;
-%        d {n} i (Hi:i<n) (x:X n) := match n, i, x with
-%        | 0, _, _ => assert false
-%        | 1, _, _ => tt
-%        | 2, 0, AB => B
-%        | 2, 1, AB => A
-%        | 2, 0, BC => C
-%        | 2, 1, BC => B
-%        | 2, 0, AC => C
-%        | 2, 1, AC => A
-%        | 3, 0, ABC => BC
-%        | 3, 1, ABC => AC
-%        | 3, 2, ABC => AB
-%        | n.+4, i, _ => assert false
-%        end;
-%        alpha n i j (Hi:i<n) (Hj:j<i) (x : X n) : d i Hi (d j _ x) = d (j-1) _ (d i _ x)
-%        := match n, i, j, x with
-%        | 0, _, _, _ => assert false
-%        | 1, _, _, _ => assert false
-%        | 2, _, _, _ => proof_irrelevance_of_unit : tt = tt
-%        | 3, 1, 0, ABC => proof_irrelevance_in_points : C = C
-%        | 3, 2, 0, ABC => proof_irrelevance_in_points : B = B
-%        | 3, 2, 1, ABC => proof_irrelevance_in_points : A = A
-%        | n.+4, i, _ => assert false
-%        end
-%        }
-%        {hd tt := unit;
-%         tl := {hd _ (* (tt;tt) *) := points; (* 3 points *)
-%                tl := {hd _ (* ((tt;(tt;a));b) *) := unit; (* unique line over any a and any b *)
-%                       tl := {hd _ (* ((tt;(tt;(a;(b;tt))));((c;tt);tt)) *) := unit; (* unique triangle over ab, bc, and ac *)
-%                              tl := cofix s := {hd _ := empty_set; tl := s}}}}}
-%        {hd _ := unit; tl :=
-%        {hd _ := points; tl :=
-%        {hd _ := unit; tl :=
-%        {hd _ := unit; tl := cofix s := {hd _ := empty_set; tl := s}}}}} : AugmentedSemiSimplicial
-
-%        standard n : AugmentedSemiSimplicial
-%        := {hd _ := unit; tl :=
-%           {hd _ := [0;n]; tl :=
-%            unit unit unit ... n times ... unit; empty_set; ... }}
-There are different ways to represent a family of sets, commonly known as the fibered and indexed representations. In type theory, they are equivalent, and this equivalence can be formulated as:
-\begin{equation*}
-  (\Sigma S: \U. (S \rightarrow T)) \simeq (T \rightarrow \U)
-\end{equation*}
-
-Let us apply this correspondence to the case of semi-cubical sets. A semi-cubical set can be represented as a sequence of fibrations, together with appropriate coherence conditions.
-\begin{equation*}
-  \begin{tikzcd}
-    X_0: \U & X_1: \U \arrow[l, "\partial^L" description, shift left=2] \arrow[l, "\partial^R" description, shift right=2] & X_2: \U \arrow[l, "\partial^{L\kstar}" description, shift left=6] \arrow[l, "\partial^{R\kstar}" description, shift left=2] \arrow[l, "\partial^{\kstar L}" description, shift right=2] \arrow[l, "\partial^{\kstar R}" description, shift right=6] & \ldots
-  \end{tikzcd}
-\end{equation*}
-
-If we think of $X_1$ fibered over two copies of $X_0$ in an indexed way, we get $X_1$ of type $X_0 \rightarrow X_0 \rightarrow \U$. Continuing the process, we can think of $X_2$ fibered over four copies of $X_1$ themselves fibered over two copies of $X_0$ as a dependent type. We have a priori a dependency over eight copies of $X_0$ but these are actually four due to the coherence conditions on the functor (e.g. that $\partial^R \circ \partial^{R\kstar} = \partial^{(R\kstar)\circ(R)} = \partial^{RR} = \partial^{(\kstar R)\circ(R)} = \partial^R \circ \partial^{\kstar R}$, etc.). Based on these coherence conditions, the types of $X_0, X_1, X_2$ happen to have the form:
-\begin{align*}
-  X_0 & :              & \U                                                     \\
-  X_1 & :              & X_0 \rightarrow X_0 \rightarrow \U                     \\
-  X_2 & : \Pi a b c d. & X_1(a)(b) \rightarrow X_1(a)(c) \rightarrow X_1 (b)(d) \\
-      &                & \rightarrow X_1 (c)(d) \rightarrow \U                  \\
-  \ldots
-\end{align*}
 
 \section{Relating to parametricity\label{sec:rel-param}}
 The process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$ in the last section, is similar to applying a binary parametricity translation and expecting the resulting translation to be inhabited. The parametricity which we consider interprets a type $A$ by a graph $A_\kstar$ over this type, and a term $t: A$ as an edge in $A_\kstar(t)(t)$. In particular, $\U$ is interpreted as the graph ${\U}_\kstar$, which takes $A_L$ and $A_R$ in $\U$ and returns the type $A_L \rightarrow A_R \rightarrow \U$ of graphs over $A_L$ and $A_R$. Also, for $A$ interpreted by $A_\kstar$ and $B$ interpreted by $B_\kstar$, a dependent function type $\Pi a: A.\, B$ is interpreted as the graph $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
