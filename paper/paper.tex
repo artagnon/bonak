@@ -1,6 +1,6 @@
 \documentclass{msc}
 
-\usepackage{amsmath, amssymb, mathrsfs, url, bookmark, tikz, tikz-cd, mathpazo, enumitem, xargs, multirow, float, tabularx, environ, booktabs, setspace, makecell, colortbl, pdflscape, flushend, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
+\usepackage{amsmath, amssymb, mathrsfs, wasysym, url, bookmark, tikz, tikz-cd, mathpazo, enumitem, xargs, multirow, float, tabularx, environ, booktabs, setspace, makecell, colortbl, pdflscape, flushend, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
 
 \usepackage[prefix=bonak]{art.cls/xkeymask}
 \usetikzlibrary{patterns}
@@ -236,7 +236,7 @@ The idea for such indexed presentation of presheaves over a direct category was 
 
 The indexed definition of a presheaf over a direct category is technically more involved than the presheaf definition as it requires hard-wiring in the structure the dependencies between elements of the sets of the presheaf, including the coherence conditions between these dependencies, such as taking the $i$-th face of the $j$-th face of a $n$-simplex is the same as taking the $(j-1)$-th face of the $i$-th face (when $j>i$). On the other side, defining a concrete presheaf in indexed form only requires to provide the family since the responsibility of defining maps and showing the coherence conditions is already accounted for in the definition, what is not the case by default in the (ordinary) presheaf presentation.
 
-In category-theoretic terms, the indexi set of the family $X_n$ in the indexed presentation is called a \emph{matching object}. The indexed presentation of presheaves over a direct category can then be identified with a subclass of ordinary presheaves known as Reedy fibrant where Reedy fibrancy precisely expresses that the set $X_n$ in the fibered presentation is a $\Sigma$-type over an instance up to isomorphism of the matching object at level $n$~\citep{shulman14,kraus17}.
+In category-theoretic terms, the indexing set of the family $X_n$ in the indexed presentation is called a \emph{matching object}. The indexed presentation of presheaves over a direct category can then be identified with a subclass of ordinary presheaves known as Reedy fibrant where Reedy fibrancy precisely expresses that the set $X_n$ in the fibered presentation is a $\Sigma$-type over an instance up to isomorphism of the matching object at level $n$~\citep{shulman14,kraus17}.
 
 \subsection*{Reynolds' parametricity and its unary and binary variants}
 In the context of functional programming, Reynolds' parametricity~(\citeyear{reynolds83}) interprets types as relations characterizing the observational behavior of programs of this type. More generally, correspondences, in the sense of ``relevant'' relation, that is of a family over a product of sets, can be used in place of relations. Parametricity can then be iterated, and, relying on the fibered representation of correspondences as spans, it has been noted that iterated Reynolds' parametricity has the structure of a cubical set~\citep{johann17,altenkirch15,moulin16,moeneclaey21,moeneclaey22phd}. We obtain a \emph{unary} variant of Reynolds' \emph{binary} parametricity by using predicates or families instead of relations or correspondences, in which case, we obtain a form of realizability~\citep{bernardy12,lasson12,moulin16}. It has then been noted that iterated unary parametricity has the structure of an augmented simplicial set~\footnote{Private communication with Hugo Moeneclaey and Thorsten Altenkirch.}. This similarity suggests to join the definition of augmented semi-simplicial sets and cubical sets and to see both of them as instances of a more general construction which we call $\nu$-sets of presheaves over a $\nu$-semi-shape category made of words of some cardinal $\nu$+1, where $\nu=1$ gives augmented semi-simplicial sets and $\nu=2$ gives semi-cubical sets.
@@ -288,15 +288,15 @@ While ordinary semi-simplicial sets are presheaves over the semi-simplex categor
   \begin{figure}[H]
     \centering
     \begin{align*}
-      \Obj(\DeltaPlus) & := \Nat                                                                     \\
-      \Hom(p, n)       & := \{l \in [0, \kstar]^n \mid \text{number of $\kstar$ in $l = p$}\}        \\
-      g \circ f        & :=
+      \Obj_{\DeltaPlus}       & := \Nat                                                                             \\
+      \Hom_{\DeltaPlus}(p, n) & := \{l \in [0, \kstar]^n \mid \text{number of $\kstar$ in $l = p$}\}                \\
+      g \circ f               & :=
       \begin{cases}
         f                  & \text{if $g = []$}                                                        \\
         0 :: (g' \circ f)  & \text{if $g = (0 :: g')$}                                                 \\
         a :: (g' \circ f') & \text{if $g = (\star :: g')$, $f = (a :: f')$, where $a = 0$ or $\kstar$} \\
-      \end{cases} \\
-      \id              & := [\kstar, \ldots, \kstar] \text{ $n$ times for $\id \in \Hom(n, n)$}
+      \end{cases}                \\
+      \id                     & := [\kstar, \ldots, \kstar] \text{ $n$ times for $\id \in \Hom_{\DeltaPlus}(n, n)$}
     \end{align*}
   \end{figure}
 \end{definition}
@@ -311,7 +311,7 @@ While ordinary semi-simplicial sets are presheaves over the semi-simplex categor
 To provide examples, we define the standard augmented $n$-semi-simplex.
 
 \begin{definition}[$\DeltaPlus^n$]
-  The standard augmented $n$-semi-simplex $\DeltaPlus^n$ is defined as what is called the Yoneda embedding of $n \in \Obj(\DeltaPlus)$:
+  The standard augmented $n$-semi-simplex $\DeltaPlus^n$ is defined as the Yoneda embedding of $n \in \Obj(\DeltaPlus)$:
   \begin{align*}
     \DeltaPlus^n    & : \Set_{\DeltaPlus}        \\
     \DeltaPlus^n(p) & := \Hom(p, n)              \\
@@ -361,15 +361,15 @@ Semi-cubical sets are defined like augmented semi-simplicial sets except that $\
   \begin{figure}[H]
     \centering
     \begin{align*}
-      \Obj(\Cube) & := \Nat                                                                                 \\
-      \Hom(p, n)  & := \{l \in [L, R, \kstar]^n \mid \text{number of $\kstar$ in $l = p$}\}                 \\
-      g \circ f   & :=
+      \Obj_{\Cube}       & := \Nat                                                                          \\
+      \Hom_{\Cube}(p, n) & := \{l \in [L, R, \kstar]^n \mid \text{number of $\kstar$ in $l = p$}\}          \\
+      g \circ f          & :=
       \begin{cases}
         f                  & \text{if $g = []$}                                                               \\
         a :: (g' \circ f)  & \text{if $g = (a :: g')$}, \text{where $a = L$ or $R$}                           \\
         a :: (g' \circ f') & \text{if $g = (\kstar :: g')$, $f = (a :: f')$, where $a = L$, $R$, or $\kstar$} \\
       \end{cases} \\
-      \id         & := [\kstar, \ldots, \kstar] \text{ $n$ times}
+      \id                & := [\kstar, \ldots, \kstar] \text{ $n$ times}
     \end{align*}
   \end{figure}
 
@@ -404,7 +404,7 @@ Standard $n$-semi-cubes have a geometric interpretation, which we illustrate for
 \end{example}
 
 \begin{example}[$\Cube^1$]
-  $\Cube^1$ consists of two points, given by $\Hom(0, 1)$ and a line, given by $\Hom(1, 1)$.
+  $\Cube^1$ consists of two points, given by $\Hom(0, 1)$, and a line, given by $\Hom(1, 1)$.
   \begin{equation*}
     \begin{tikzcd}
       L \arrow[r, "\kstar", dash] & R
@@ -426,28 +426,27 @@ Standard $n$-semi-cubes have a geometric interpretation, which we illustrate for
 More generally, the standard $(n + 1)$-semi-cube can be obtained by taking two copies of the standard $n$-semi-cube serving as bottom and top face and connecting them on their border by a cylinder obtained as a third copy stretched in the new dimension. The bottom and top faces are obtained from the standard $n$-semi-cube by postfixing with respectively $L$ and $R$ while the cylinder is obtained by postfixing with $\kstar$. Note that the components can this time be oriented by letting each $n$-dimensional component go from the $(n-1)$-dimensional component obtained by replacing the leftmost $\kstar$ with $L$ to the one obtained by replacing the leftmost $\kstar$ with $R$.
 
 \subsection*{\texorpdfstring{$\nu$}{ν}-sets}
-Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and semi-cubical sets. To obtain this, we extend $\DeltaPlus$ and $\Cube$ in a straightforward manner into a category which we call $\nu$-semi-shape category.
+Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and semi-cubical sets. To obtain this, we extend $\DeltaPlus$ and $\Cube$ in a straightforward manner into a category which we call $\hexagon$.
 
-\begin{definition}[$\nu$-semi-shape categroy]
+\begin{definition}[$\hexagon$]
   The definition of $\nu$-semi-shape category is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
 
   \begin{figure}[H]
     \centering
     \begin{align*}
-      \Obj       & := \Nat                                                                            \\
-      \Hom(p, n) & := \{l \in (\nu \cup \kstar) \mid \text{number of $\kstar$ in $l = p$}\}           \\
-      g \circ f  & :=
+      \Obj_{\hexagon}        & := \Nat                                                                           \\
+      \Hom_{\hexagon}(p, n) & := \{l \in (\nu \cup \kstar) \mid \text{number of $\kstar$ in $l = p$}\}          \\
+      g \circ f              & :=
       \begin{cases}
-        f                  & \text{if $g = []$}                                                         \\
-        a :: (g' \circ f)  & \text{if $g = (a :: g')$}, \text{where $R \in \nu$}                        \\
-        a :: (g' \circ f') & \text{if $g = (\kstar :: g')$, $f = (a :: f')$, where $a = 0$ or $\kstar$} \\
-      \end{cases} \\
-      \id        & := [\kstar, \ldots, \kstar] \text{ $n$ times for $\id \in \Hom(n, n)$}
+        f                  & \text{if $g = []$}                                                      \\
+        a :: (g' \circ f)  & \text{if $g = (a :: g')$}, \text{where $R \in \nu$}                     \\
+        a :: (g' \circ f') & \text{if $g = (\kstar :: g')$, $f = (a :: f')$, where $a $ or $\kstar$} \\
+      \end{cases}               \\
+      \id                    & := [\kstar, \ldots, \kstar] \text{ $n$ times for $\id \in \Hom_{\hexagon}(n, n)$}
     \end{align*}
   \end{figure}
 \end{definition}
 
-The morphisms of the $\nu$-semi-shape category are sequences of elements of a set $\nu$ of arbitrary cardinal, extended with $\kstar$:
 
 so that the following holds.
 
@@ -461,8 +460,6 @@ so that the following holds.
     \bottomrule
   \end{tabularx}
 \end{table}
-
-
 
 A $\nu$-set is thus a contravariant functor $\phi$ from the $\nu$-semi-shape category to $\Set$ and we call $n$-$\nu$-semi-shape an element of $\phi(n)$. As in the augmented semi-simplicial and semi-cubical cases, the standard $(n + 1)$-$\nu$-semi-shape is obtained by connecting together $\nu$ copies of the standard $n$-$\nu$-semi-shape with an extra copy stretched in the new dimension. We clarify in the next sections how this process of construction is similar to the parametricity translation developed for functional programming~\cite{reynolds83} and more generally for type theory~\cite{bernardy10, bernardy11, atkey14, bernardy15}.
 
