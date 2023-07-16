@@ -194,23 +194,12 @@
 % \maketitle
 
 \section{Introduction}
-% - semisimplicial/semicubical sets in indexed form
-%   - clarify indexed/fibered, justify advantages of the respective choice
-%     - the presentation matters when expressed in indexed way!
-%   - compare to indexed VV, previous indexed HH, indexed Pang-Luo
-% - iterated unary/binary parametricity has a semi-simplicial/semi-cubical structure
-% - nu-types as a uniform definition of semi-simplicial/semi-cubical
-%   iterated parametricity gives an alternative presentation of indexed semi-simplicial/semi-cubical
-%   this is what we described in the paper
-% - perspective: models of cubical type theory using indexed cubical sets, hence preserving more definitial rules
-% - mention also the semi-simplicial types problem
-
 \subsection*{Fibered vs indexed presentation of semi-simplicial and semi-cubical sets}
 A family of sets can commonly be represented in two ways: as a family properly speaking, indexed over a given set $S$ or as a set $T$ together with a map specifying for each element of the set $T$ on which index in $S$ it depends. In the first case, we call it an \emph{indexed} presentation. In the latter case, the set associated to a given index is the fiber, i.e. inverse image, of the index under the map, so we call it a \emph{fibered} presentation. The two presentations are equivalent and the equivalence can be phrased concisely in the language of homotopy type theory~\cite{hottbook} as a fibered/indexed correspondence\footnote{At a discussion on the Zulip channel for the HoTT community, alternative names fibration/family correspondence and unbundled/bundled correspondence were proposed, among others. In our experience, the opposition fibered/indexed is spontaneously understood by many listeners. In particular, it echoes to the Grothendieck construction of fibered categories from indexed categories. The most elementary instance of the correspondence, with $\Type$ instead of $\U$, that is $(\Sigma S: \Type. (S \rightarrow T)) \simeq (T \rightarrow \Type)$, is sometimes called ``Grothendieck construction for dummies'' (its proof requires univalence, see~\cite{hottbook}).}
 \begin{equation*}
   \mbox{(fibered)}\qquad(\Sigma S: \U. (S \rightarrow T)) ~\simeq~ (T \rightarrow \U)\qquad \mbox{(indexed)}
 \end{equation*}
-where $\U$ represents sets in homotopy type theory as the subset of types with a unique proof of equality (within some universe).
+where $\U$ represents in homotopy type theory the subset of types with a unique proof of equality (within some universe).
 
 A \emph{presheaf} on an category is a family of sets connected with maps according to the morphisms of the category. As such, it lives on the indexed side of the correspondence, opposing on the fibered side to what is called \emph{discrete Grothendieck fibrations}. However, there are situations where a presheaf $F$ can also be seen as living on the fibered side of the correspondence. Indeed, when the indexing category is direct, i.e. with a downwards-well-founded collection of non-identity morphisms, as is the case of semi-simplicial and semi-cubical sets, each $F(X)$ serving as source of a map $F(X) \stackrel{F(f)}{\rightarrow} F(Y)$ can be turned into a family $F(X)$ indexed on $F(Y)$, and, since the maps are well-founded downward, this can be iterated from below, eventually producing a collection of families which we call an \emph{indexed presentation} of the presheaf over the direct category.
 
@@ -225,18 +214,17 @@ For instance, in the case of a semi-cubical set~\citep{grandis03,buchholtz17}, p
 On the other side, the indexed presentation of the same presheaf is a stratified sequence of families indexed on elements of families of lower rank, taking into account the coherence conditions to prevent duplications. Formulated in type theory, it takes the form:
 
 \begin{align*}
-  X_0 & :              & \U                                                     \\
-  X_1 & :              & X_0 \rightarrow X_0 \rightarrow \U                     \\
-  X_2 & : \Pi a b c d. & X_1(a)(b) \rightarrow X_1(a)(c) \rightarrow X_1 (b)(d) \\
-      &                & \rightarrow X_1 (c)(d) \rightarrow \U                  \\
+  X_0 & :              & \U                                                                                           \\
+  X_1 & :              & X_0 \rightarrow X_0 \rightarrow \U                                                           \\
+  X_2 & : \Pi a b c d. & X_1(a)(b) \rightarrow X_1(a)(c) \rightarrow X_1 (b)(d) \rightarrow X_1 (c)(d) \rightarrow \U \\
   \ldots
 \end{align*}
 
-The idea for such indexed presentation of presheaves over a direct category was mentioned at the Univalent Foundations year in the context of defining semi-simplicial types~\footnote{See e.g. \url{https://ncatlab.org/nlab/show/semi-simplicial+types+in+homotopy+type+theory}.}. A couple of constructions were proposed since then. One, by \cite{voevodsky12}, relies on the presentation of semi-simplicial sets as a presheaf over increasing injective maps between finite ordinals. Another, by \cite{herbelin15}\footnote{With hindsight, the title of the paper ``A dependently-typed construction of semi-simplicial types'' is somehow confusing: it was part of a project at defining semi-simplicial types, but, in practice, the definition is done in a type theory with Unicity of Identity Proofs (UIP), meaning in a type theory where types (intended to represent arbitrary $\infty$-groupoids) are actually sets ($0$-truncated $\infty$-groupoids, that is, morally, $0$-groupoids). The confusion was however common at that time.}, and fully formalized in Coq, relies on the presentation of semi-simplicial sets as a presheaf over face maps. Another by~\cite{part15}, formalized in (an emulation of logic-enriched homotopy type theory in) the Plastic proof assistant, and yet another by \cite{annenkovCK17}, formalized in (an emulation of a two-level type theory in) the Agda proof assistant~\footnote{\url{https://github.com/nicolaikraus/HoTT-Agda/blob/master/nicolai/SemiSimp/SStypes.agda}}, also rely on the presentation of the semi-simplicial category from increasing injective functions over finite ordinals.
+The idea for such indexed presentation of presheaves over a direct category was mentioned at the Univalent Foundations year in the context of defining semi-simplicial types~\footnote{See e.g. \url{https://ncatlab.org/nlab/show/semi-simplicial+types+in+homotopy+type+theory}.}. A couple of constructions were proposed since then. One, by \cite{voevodsky12}, relies on the presentation of semi-simplicial sets as a presheaf over increasing injective maps between finite ordinals. Another, by \cite{herbelin15}\footnote{In hindsight, the title of the paper ``A dependently-typed construction of semi-simplicial types'' is somewhat confusing: it was part of a project for defining semi-simplicial types, but, in practice, the definition is done in a type theory with Unicity of Identity Proofs (UIP), meaning in a type theory where types (intended to represent arbitrary $\infty$-groupoids) are actually sets ($0$-truncated $\infty$-groupoids, that is, morally, $0$-groupoids). The confusion was however common at the time.}, and fully formalized in Coq, relies on the presentation of semi-simplicial sets as a presheaf over face maps. Another by~\cite{part15}, formalized in (an emulation of logic-enriched homotopy type theory in) the Plastic proof assistant, and yet another by \cite{annenkovCK17}, formalized in (an emulation of a two-level type theory in) the Agda proof assistant~\footnote{\url{https://github.com/nicolaikraus/HoTT-Agda/blob/master/nicolai/SemiSimp/SStypes.agda}}, also rely on the presentation of the semi-simplicial category from increasing injective functions over finite ordinals.
 
 The indexed definition of a presheaf over a direct category is technically more involved than the presheaf definition as it requires hard-wiring in the structure the dependencies between elements of the sets of the presheaf, including the coherence conditions between these dependencies, such as taking the $i$-th face of the $j$-th face of a $n$-simplex is the same as taking the $(j-1)$-th face of the $i$-th face (when $j>i$). On the other side, defining a concrete presheaf in indexed form only requires to provide the family since the responsibility of defining maps and showing the coherence conditions is already accounted for in the definition, what is not the case by default in the (ordinary) presheaf presentation.
 
-In category-theoretic terms, the indexing set of the family $X_n$ in the indexed presentation is called a \emph{matching object}. The indexed presentation of presheaves over a direct category can then be identified with a subclass of ordinary presheaves known as Reedy fibrant where Reedy fibrancy precisely expresses that the set $X_n$ in the fibered presentation is a $\Sigma$-type over an instance up to isomorphism of the matching object at level $n$~\citep{shulman14,kraus17}.
+In category-theoretic terms, the indexing set of the family $X_n$ in the indexed presentation is the \emph{matching object} of the presheaf at $n$. The indexed presentation of presheaves over a direct category can then be identified with a subclass of ordinary presheaves known as Reedy fibrant where Reedy fibrancy precisely expresses that the set $X_n$ in the fibered presentation is a $\Sigma$-type over an instance up to isomorphism of the matching object at level $n$~\citep{shulman14,kraus17}.
 
 \subsection*{Reynolds' parametricity and its unary and binary variants}
 In the context of functional programming, Reynolds' parametricity~(\citeyear{reynolds83}) interprets types as relations characterizing the observational behavior of programs of this type. More generally, correspondences, in the sense of ``relevant'' relation, that is of a family over a product of sets, can be used in place of relations. Parametricity can then be iterated, and, relying on the fibered representation of correspondences as spans, it has been noted that iterated Reynolds' parametricity has the structure of a cubical set~\citep{johann17,altenkirch15,moulin16,moeneclaey21,moeneclaey22phd}. We obtain a \emph{unary} variant of Reynolds' \emph{binary} parametricity by using predicates or families instead of relations or correspondences, in which case, we obtain a form of realizability~\citep{bernardy12,lasson12,moulin16}. It has then been noted that iterated unary parametricity has the structure of an augmented simplicial set~\footnote{Private communication with Hugo Moeneclaey and Thorsten Altenkirch.}. This similarity suggests to join the definition of augmented semi-simplicial sets and cubical sets and to see both of them as instances of a more general construction which we call $\nu$-sets of presheaves over a $\nu$-semi-shape category made of words of some cardinal $\nu$+1, where $\nu=1$ gives augmented semi-simplicial sets and $\nu=2$ gives semi-cubical sets.
@@ -255,7 +243,7 @@ The outline of the paper is as follows. We recall the definition of the augmente
 See \href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak} for our mechanization. The construction was conceived in Summer 2019, and the mechanization began in late 2019. A sketch of the construction was presented at the 2020 HoTT-UF workshop and the completion of the mechanization was reported at the TYPES 2022 conference.
 
 \section{Semi-simplicial and semi-cubical sets\label{sec:nu}}
-In this section, we generalize semi-simplicial and semi-cubical sets to, what we call, $\nu$-sets, subsuming the earlier definitions. We start by first explicitly working out the cases of semi-simplicial and semi-cubical sets. %, in a way that is similar to a previous art~(\citeyear{aitchison86}).
+In this section, we generalize semi-simplicial and semi-cubical sets to, what we call, $\nu$-sets, subsuming the earlier definitions. We start by first explicitly working out the cases of semi-simplicial and semi-cubical sets.
 
 \subsection*{Augmented semi-simplicial sets}
 Augmented semi-simplicial sets are defined similarly to semi-simplicial sets, except that the connected components are additionally dependent on a ``color''. Conversely, semi-simplicial sets can be seen as augmented semi-simplicial sets over the singleton set of one fixed color.
@@ -420,7 +408,7 @@ Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and
     \toprule
     Cardinal of $\nu$ & 1                               & 2                  \\
     \graymidrule
-    Interpretation & Augmented semi-simplicial types & Semi-cubical types \\
+    Interpretation    & Augmented semi-simplicial types & Semi-cubical types \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -471,7 +459,15 @@ Unless otherwise specified, we fix a universe level $m$ and abbreviate
 $\Type_m$ as $\Type$ and $\U[m]$ as $\U$.
 
 \section{Relating to parametricity\label{sec:rel-param}}
-The process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$ in the last section, is similar to applying a binary parametricity translation and expecting the resulting translation to be inhabited. The parametricity which we consider interprets a type $A$ by a graph $A_\kstar$ over this type, and a term $t: A$ as an edge in $A_\kstar(t)(t)$. In particular, $\U$ is interpreted as the graph ${\U}_\kstar$, which takes $A_L$ and $A_R$ in $\U$ and returns the type $A_L \rightarrow A_R \rightarrow \U$ of graphs over $A_L$ and $A_R$. Also, for $A$ interpreted by $A_\kstar$ and $B$ interpreted by $B_\kstar$, a dependent function type $\Pi a: A.\, B$ is interpreted as the graph $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
+Let us recall from the introduction, the form taken by the indexed presentation of a semi-cubical set:
+\begin{align*}
+  X_0 & :              & \U                                                                                           \\
+  X_1 & :              & X_0 \rightarrow X_0 \rightarrow \U                                                           \\
+  X_2 & : \Pi a b c d. & X_1(a)(b) \rightarrow X_1(a)(c) \rightarrow X_1 (b)(d) \rightarrow X_1 (c)(d) \rightarrow \U \\
+  \ldots
+\end{align*}
+
+In there, the process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$, and so on, is similar to iteratively applying a binary parametricity translation. The parametricity which we consider interprets a type $A$ by a graph $A_\kstar$ over this type, and a term $t: A$ as an edge in $A_\kstar(t)(t)$. In particular, $\U$ is interpreted as the graph ${\U}_\kstar$, which takes $A_L$ and $A_R$ in $\U$ and returns the type $A_L \rightarrow A_R \rightarrow \U$ of graphs over $A_L$ and $A_R$. Also, for $A$ interpreted by $A_\kstar$ and $B$ interpreted by $B_\kstar$, a dependent function type $\Pi a: A.\, B$ is interpreted as the graph $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
 \begin{align*}
    & (\Pi a: A.\, B)_\kstar(f_L)(f_R) \defeq                                                      \\
    & \Pi a_L: A.\, \Pi a_R: A.\, \Pi a_\kstar: A_\kstar(a_L)(a_R).\, B_\kstar(f_L(a_L))(f_R(a_R))
@@ -499,9 +495,7 @@ Notice, however, that the recipe obtained so far, $X_{n + 1}: ({S_n})_\kstar(X_n
 \section{Our construction}
 Our construction is highly dependent, with dependencies in inequality and equality proofs. It involves several involved details, some of them being visible only in the Coq formalization.
 
-In Section~\ref{sec:ett} and Tables~\ref{tab:coind}, \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces}, \ref{tab:coh}, we give an informal, mathematical definition in Extensional Type Theory, which roughly corresponds to a level of reasoning ``à la set theory'' where equalities are thought as ``holding on the nose'' without having to mention them explicitly once they are justified. In Section~\ref{sec:itt}, we give the same mathematical definition in Intensional Type Theory, where transporting along coherence conditions is now made explicit. Adding this level of details helps to understand the specificities of coherence conditions.
-
-But first, we start with a section gradually and informally explaining the intuition of the construction. It can be read in parallel with the tables if wished.
+In tables \ref{tab:coind}, \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces}, \ref{tab:coh}, we give an informal, mathematical definition in Extensional Type Theory, which roughly corresponds to a level of reasoning ``à la set theory'' where equalities are thought as ``holding on the nose'' without having to mention them explicitly once they are justified. In section \ref{sec:itt}, we give the same mathematical definition in Intensional Type Theory, where transporting along coherence conditions is now made explicit. Adding this level of details helps to understand the specificities of coherence conditions.
 
 \subsection*{Formal construction in ETT\label{sec:ett}}
 % Abbreviated tables in this section
@@ -550,8 +544,6 @@ We now present the construction in \emph{extensional} type theory; i.e. in a typ
   \seqr{}{\Gamma \vdash p: t = u}{\Gamma \vdash t \equiv u}
 \end{equation*}
 
-For the presentation corresponding to the formalization in \emph{intensional} type theory, see \ref{sec:itt}.
-
 The definition is dispatched over tables \ref{tab:coind}, \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces} and~\ref{tab:coh}. Table \ref{tab:coind} describes a $\nu$-set in indexed form, as a stream, coinductively representing the limit of $n$-truncated $\nu$-sets. The $n$-truncated $\nu$-sets are themselves described in \ref{tab:core}. In such stream, the $n$th component is a type dependent over a $\fullframe$. The type $\fullframe$ is recursively defined in \ref{tab:frames}, using the auxiliary definitions of $\layer$ and $\painting$. The type $\layer$ and $\painting$ are dependent over $\restrf$, and these restrictions are defined on \ref{tab:faces}. These restrictions are defined using auxiliary definitions of $\restrl$ and $\restrc$.
 
 Notably, the definition of $\restrl$ relies on a definitional equality expressing the commutation of the composition of $\restrf$. This commutation is not provable by computation so we have to prove it propositionally before using the reflection rule. Proving this itself requires an induction on the dimension, and on the structure of $\framep$, $\layer$, and $\painting$. This is what $\cohf$ proves, as shown in the table \ref{tab:coh}, using auxiliary definitions $\cohl$ and $\cohc$. Even though it looks independent of the other tables, $\cohf$ has to be proved mutually with the definitions of $\framep$, $\layer$, $\painting$, and their corresponding restrictions. More precisely, for a fixed $n$, the block of $\framep$, $\restrf$, and $\cohf$ has to be mutually defined by induction on $p$. Also, each of $\painting$, $\restrc$, and $\cohc$ is built by induction from $p$ to $n$. The $\painting$ block at $n$ relies on the $\framep$ block at $n$, but, the converse dependency is only on lower $n$, so this is well-founded. Note that $\layer$, $\restrl$ and $\cohl$ are just abbreviations. We leave however implicit the exact way this mutual recursion can be formalized at this stage of the paper.
@@ -560,7 +552,7 @@ Most components of the construction takes inequality constraints as parameters, 
 
 The construction takes benefit of various provable equalities over proofs of equality being definitional by the reflection rule. This includes in particular the groupoid properties of equality. Notably, uniqueness of identity proofs holds in extensional type theory, so that any type is automatically an $\U$. Also, we left implicit in table~\ref{tab:coh} the use of the isomorphism between $u = v$ and $\Sigma (p:u.\hd = v.\hd). (u.\tl = v.\tl)$ for $u$ and $v$ in a $\Sigma$-type. In the same table, we also left implicit the use of the isomorphism between $f = g$ and $\Pi a: A.\, f(a) = g(a)$ for $f$ and $g$ in $\Pi a: A.\, B$, where it should be recalled that the right-to-left map, that is function extensionality, holds by default in extensional type theory.
 
-Note that for a fixed constant $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning them anymore. For instance, it produces Fig.~\ref{fig:intuition} for $n=2$ and $\nu=2$.
+Note that for a fixed constant $n$, the coherence conditions evaluate to a reflexivity proof, so that the construction evaluates to an effective sequence of types of iterated relations not mentioning them anymore.
 
 \renewcommand*{\lab}{tab:coind}
 \input{tab-coind.tex}
@@ -772,7 +764,7 @@ Hence, we need a coherence condition to commute the restrictions. Coherence cond
 \renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
 \renewcommandx{\cohl}{\coh{layer}[][][][][][][][]}
 
-We now present the definition in \emph{intensional} type theory~\cite{martinlof84,coq22}, making explicit the need for transport along coherence proofs.
+We now present the definition in \emph{intensional} type theory~\citep{martinlof84,coq22}, making explicit the need for transport along coherence proofs.
 
 The need for transport along a proof of commutation of $\restrf$ in the definition of $\restrl$ is made explicit, where the arrow over $\cohf$ indicates the direction of rewrite. The proof of $\cohf$ requires making explicit several rewritings which were invisible in extensional type theory. The commutation of $\restrl$ lives in a type referring to $\cohf$, so we need a transport along the commutation of $\restrf$ in the statement of $\cohl$. The proof of $\cohl$ is the most involved proof in the construction. This is where the higher-dimensional coherence condition is needed. The exact formulation of this coherence condition is as follows.
 \renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
@@ -801,9 +793,7 @@ Finally, let us explain $\cohc$. The base case $p = r$ is the key case of the co
 
 Like in \ref{tab:coh}, we leave implicit in \ref{fulltab:coh}, the use of the isomorphism between the type of equalities of dependent pairs in a $\Sigma$-type with the $\Sigma$-type of equalities of the components of the pair, as well as the isomorphism between equality of functions with point-wise equality. Contrary to the ETT case, functional extensionality does not hold, so we assume it. However, the requirement of functional extensionality disappears if $\nu$ is finite. As for basic groupoid properties of equalities, which no longer hold definitionally, we do not mention them for simplicity.
 
-The way recursion is implemented is still left implicit at this stage. See \ref{sec:mech} for the details.
-
-Depending on how inequality on natural numbers is defined, different equalities may hold or not definitionally, such as transitivity of inequality or the computational properties of induction over inequality proofs. Details are given in~\ref{sec:mech}.
+The way recursion is implemented is still left implicit at this stage. Also, depending on how inequality on natural numbers is defined, different equalities may hold or not definitionally, such as transitivity of inequality or the computational properties of induction over inequality proofs. Details are given in \ref{sec:mech}.
 
 Remark: If we were not working in \U, but in \HGpd, we would need to prove one more higher-dimensional coherence, and if we were working in \Type, we would need to prove arbitrarily many higher-dimensional coherences. Here, $\HGpd$ is the subset of types $A$ such that for all $x$ and $y$ in $A$, $x = y$ is in \U. See \cite{herbelin15,altenkirch16,kraus21} for a discussion on the need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory.
 
@@ -833,7 +823,7 @@ The entire construction relies on inequalities over natural numbers, and we use 
   \end{minted}
 \end{figure}
 
-Here $\SProp$ is a definitionally proof-irrelevant impredicative universe at the bottom of the universe hierarchy~\cite{gilbert19}. By placing the definition in \SProp, we have definitional equality of all inequality proofs. For the purpose of unification, however, this definition does not go far enough. Consider the unification problems:
+Here $\SProp$ is a definitionally proof-irrelevant impredicative universe at the bottom of the universe hierarchy~\citep{gilbert19}. By placing the definition in \SProp, we have definitional equality of all inequality proofs. For the purpose of unification, however, this definition does not go far enough. Consider the unification problems:
 
 \begin{figure}[H]
   \begin{minted}{coq}
@@ -866,9 +856,9 @@ The second variant of $\leq$, the ``inductive variant'', is phrased as:
 Compared to \texttt{leY}, \texttt{leI} has no proof-irrelevance properties. This definition is specially crafted for $\painting$, where we have to reason inductively from $p \leq n$ to $n$. In our usage, we have lemmas \texttt{leY\_of\_leI} and \texttt{leI\_of\_leY} in order to equip \texttt{leY} with the induction scheme of \texttt{leI}. The resulting induction scheme has computational rules holding propositionally.
 
 \section{Future work}
-In the cubical case, we expect the construction to eventually provide a model of (some version of) parametric type theory~\cite{nuyts17,cavallo19} by adding degeneracies, a hierarchy of universes (as sketched e.g. in a talk by Herbelin at the HoTT-UF workshop for the bridge case~\cite{herbelin-hott-uf}), as well as reasoning modulo permutations~\cite{grandis03}.
+In the cubical case, we expect the construction to eventually provide a model of (some version of) parametric type theory~\citep{nuyts17,cavallo19} by adding degeneracies, a hierarchy of universes (as sketched e.g. in a talk by Herbelin at the HoTT-UF workshop for the bridge case~(\citeyear{herbelin-hott-uf})), as well as reasoning modulo permutations~\citep{grandis03}.
 
-By equipping the universe construction with a structure of equivalences, as suggested along the lines of Altenkirch and Kaposi~\cite{altenkirch15}, we expect the construction to be able to serve as a basis for syntactic models of various versions of cubical type theory~\cite{bezem13,cohen16,angiuli21}, saving the detour via the fibered approach inherent to usual presheaf models. This would a priori preserve definitional properties which may be lost when detouring via presheaves. In particular, we conjecture being able to justify univalence holding definitionally. Our approach would also definitively ground cubical type theory in iterated parametricity.
+By equipping the universe construction with a structure of equivalences, as suggested along the lines of Altenkirch and Kaposi~(\citeyear{altenkirch15}), we expect the construction to be able to serve as a basis for syntactic models of various versions of cubical type theory~\citep{bezem13,cohen16,angiuli21}, saving the detour via the fibered approach inherent to usual presheaf models. This would a priori preserve definitional properties which may be lost when detouring via presheaves. In particular, we conjecture being able to justify univalence holding definitionally. Our approach would also definitively ground cubical type theory in iterated parametricity.
 
 Another direction for future work would also be to generically construct the indexed form of any presentation of presheaves over a direct category and to show the equivalence between the two presentations.
 

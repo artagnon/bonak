@@ -1,15 +1,9 @@
 {
   "editor.wordWrapColumn": 80,
-  "ocaml.sandbox": {
-    "kind": "opam",
-    "switch": "default"
-  },
   "spellright.language": [
     "en"
   ],
   "spellright.documentTypes": [
-    "markdown",
     "latex",
-    "plaintext"
   ]
 }
