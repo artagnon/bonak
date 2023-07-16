@@ -412,7 +412,20 @@ Standard $n$-semi-cubes have a geometric interpretation, which we illustrate for
 More generally, the standard $(n + 1)$-semi-cube can be obtained by taking two copies of the standard $n$-semi-cube serving as bottom and top face and connecting them on their border by a cylinder obtained as a third copy stretched in the new dimension. The bottom and top faces are obtained from the standard $n$-semi-cube by postfixing with respectively $L$ and $R$ while the cylinder is obtained by postfixing with $\kstar$. Note that the components can this time be oriented by letting each $n$-dimensional component go from the $(n-1)$-dimensional component obtained by replacing the leftmost $\kstar$ with $L$ to the one obtained by replacing the leftmost $\kstar$ with $R$.
 
 \subsection*{\texorpdfstring{$\nu$}{ν}-sets}
-Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and semi-cubical sets. To obtain this, we extend $\DeltaPlus$ and $\Cube$ in a straightforward manner into a category which we call $\hexagon$.
+Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and semi-cubical sets obtained by building on an arbitrary alphabet $\nu$, so that the following holds:
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{0.7\linewidth}{X|X|X}
+    \toprule
+    Cardinal of $\nu$ & 1                               & 2                  \\
+    \graymidrule
+    Interpretation & Augmented semi-simplicial types & Semi-cubical types \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+To obtain this, we extend $\DeltaPlus$ and $\Cube$ in a straightforward manner into a category which we call $\hexagon$.
 
 \begin{definition}[$\hexagon$]
   The definition of $\nu$-semi-shape category is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
@@ -432,19 +445,6 @@ Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and
     \end{align*}
   \end{figure}
 \end{definition}
-
-so that the following holds.
-
-\begin{table}[H]
-  \centering
-  \begin{tabularx}{0.7\linewidth}{X|X|X}
-    \toprule
-    Value of $\nu$ & 1                               & 2                  \\
-    \graymidrule
-    Interpretation & Augmented semi-simplicial types & Semi-cubical types \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
 
 A $\nu$-set is thus a contravariant functor $\phi$ from the $\nu$-semi-shape category to $\Set$ and we call $n$-$\nu$-semi-shape an element of $\phi(n)$. As in the augmented semi-simplicial and semi-cubical cases, the standard $(n + 1)$-$\nu$-semi-shape is obtained by connecting together $\nu$ copies of the standard $n$-$\nu$-semi-shape with an extra copy stretched in the new dimension. We clarify in the next sections how this process of construction is similar to the parametricity translation developed for functional programming~\citep{reynolds83} and more generally for type theory~\citep{bernardy10, bernardy11, atkey14, bernardy15}.
 
