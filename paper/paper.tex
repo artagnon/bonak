@@ -458,6 +458,11 @@ In $\U[m]$, the following properties hold:
 Unless otherwise specified, we fix a universe level $m$ and abbreviate
 $\Type_m$ as $\Type$ and $\U[m]$ as $\U$.
 
+We are also interested in \emph{extensional} type theory; i.e. in a type theory with the following reflection rule, where $=$ is propositional equality in some type and $\equiv$ is definitional equality~\cite{martinlof84}:
+\begin{equation*}
+  \seqr{}{\Gamma \vdash p: t = u}{\Gamma \vdash t \equiv u}
+\end{equation*}
+
 \section{Relating to parametricity\label{sec:rel-param}}
 Let us recall from the introduction, the form taken by the indexed presentation of a semi-cubical set:
 \begin{align*}
@@ -508,11 +513,21 @@ Notice, however, that the recipe obtained so far, $X_{n + 1}: ({S_n})_\kstar(X_n
 %   - refine-style vs tactic-style
 
 \section{Our construction}
-Our construction is highly dependent, with dependencies in inequality and equality proofs. It involves several involved details, some of them being visible only in the Coq formalization.
 
-In tables \ref{tab:coind}, \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces}, \ref{tab:coh}, we give an informal, mathematical definition in Extensional Type Theory, which roughly corresponds to a level of reasoning ``à la set theory'' where equalities are thought as ``holding on the nose'' without having to mention them explicitly once they are justified. In section \ref{sec:itt}, we give the same mathematical definition in Intensional Type Theory, where transporting along coherence conditions is now made explicit. Adding this level of details helps to understand the specificities of coherence conditions.
+From now on, we assume reasoning in type theory, first informally, then, stepwise, in fully formal type theory.
 
-\subsection*{Formal construction in ETT\label{sec:ett}}
+In informal type theory, which would roughly correspond to an extensional type theory leaving implicit trivial steps, our inductive construction is described by tables \ref{tab:coind}, \ref{tab:core}, \ref{tab:frames} and \ref{tab:faces}. However, we went to the point of fully formalizing it in the intentional type theory of the Coq proof assistant. Going to such level of details requires to address the following points:
+\begin{itemize}
+  \item Verification that the construction is well-typed: for instance, the typing of $\restrl$, given in Table \ref{tab:faces}, requires a non-trivial coherence condition, given on \ref{tab:coh}, which has to be proved simultaneously with the rest of the construction. This proof also relies on type isomorphisms which have to be made explicit. All this is discussed in Section ...
+  \item The well-foundedness of the induction requires a special termination evidence which will be discussed in Section ...
+  \item Technically, even if trivial from the mathematical, the components of the construction have side conditions on the range of parameters of the constructions. In type theory, this typically corresponds to be dependent on proofs of inequalities on natural numbers. We discuss how we deal with such dependencies in Section ...
+  \item The simulation of extensional type theory in intensional type theory requires to make explicit equality reasoning, leading to types of the construction becoming dependent on proofs of equalities. This will be discussed in Section ...
+  \item Technically, a number of groupoid properties of equality are also used which will be discussed in Section ...
+\end{itemize}
+
+But first, let us give details and intuition on the informal construction.
+
+\subsection*{The informal construction\label{sec:ett}}
 % Abbreviated tables in this section
 %
 % The rule for implicit arguments for each table:
@@ -554,12 +569,7 @@ In tables \ref{tab:coind}, \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces}, \r
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][][][][][#9]}
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][][][][][#9]}
 
-We now present the construction in \emph{extensional} type theory; i.e. in a type theory with the following reflection rule, where $=$ is propositional equality in some type and $\equiv$ is definitional equality~\cite{martinlof84}:
-\begin{equation*}
-  \seqr{}{\Gamma \vdash p: t = u}{\Gamma \vdash t \equiv u}
-\end{equation*}
-
-The definition is dispatched over tables \ref{tab:coind}, \ref{tab:core}, \ref{tab:frames}, \ref{tab:faces} and~\ref{tab:coh}. Table \ref{tab:coind} describes a $\nu$-set in indexed form, as a stream, coinductively representing the limit of $n$-truncated $\nu$-sets. The $n$-truncated $\nu$-sets are themselves described in \ref{tab:core}. In such stream, the $n$th component is a type dependent over a $\fullframe$. The type $\fullframe$ is recursively defined in \ref{tab:frames}, using the auxiliary definitions of $\layer$ and $\painting$. The type $\layer$ and $\painting$ are dependent over $\restrf$, and these restrictions are defined on \ref{tab:faces}. These restrictions are defined using auxiliary definitions of $\restrl$ and $\restrc$.
+The definition is thus dispatched over tables \ref{tab:coind}, \ref{tab:core}, \ref{tab:frames} and \ref{tab:faces} with~\ref{tab:coh} showing the proof of a needed coherence condition. Table \ref{tab:coind} describes a $\nu$-set in indexed form, as a stream, coinductively representing the limit of $n$-truncated $\nu$-sets. The $n$-truncated $\nu$-sets are themselves described in \ref{tab:core}. In such stream, the $n$-th component is a type dependent over a $\fullframe$. The type $\fullframe$ is recursively defined in \ref{tab:frames}, using the auxiliary definitions of $\layer$ and $\painting$. The type $\layer$ and $\painting$ are dependent over $\restrf$, and these restrictions are defined on \ref{tab:faces}. These restrictions are defined using auxiliary definitions of $\restrl$ and $\restrc$.
 
 Notably, the definition of $\restrl$ relies on a definitional equality expressing the commutation of the composition of $\restrf$. This commutation is not provable by computation so we have to prove it propositionally before using the reflection rule. Proving this itself requires an induction on the dimension, and on the structure of $\framep$, $\layer$, and $\painting$. This is what $\cohf$ proves, as shown in the table \ref{tab:coh}, using auxiliary definitions $\cohl$ and $\cohc$. Even though it looks independent of the other tables, $\cohf$ has to be proved mutually with the definitions of $\framep$, $\layer$, $\painting$, and their corresponding restrictions. More precisely, for a fixed $n$, the block of $\framep$, $\restrf$, and $\cohf$ has to be mutually defined by induction on $p$. Also, each of $\painting$, $\restrc$, and $\cohc$ is built by induction from $p$ to $n$. The $\painting$ block at $n$ relies on the $\framep$ block at $n$, but, the converse dependency is only on lower $n$, so this is well-founded. Note that $\layer$, $\restrl$ and $\cohl$ are just abbreviations. We leave however implicit the exact way this mutual recursion can be formalized at this stage of the paper.
 
@@ -771,12 +781,9 @@ while we expect a term of type
 
 Hence, we need a coherence condition to commute the restrictions. Coherence conditions similar to this necessitate, what are shown as, $\cohf$, $\cohl$ and $\cohc$ in tables in the next section. These are by induction on the structure of $\framep$, $\layer$ and $\painting$. Note that, for the construction in \ref{sec:itt}, we further need a $2$-dimensional coherence condition, $\coht$, for $\cohl$.
 
-\section{Details on the mechanization\label{sec:mech}}
-\subsection*{Formal construction in ITT\label{sec:itt}}
+\subsection*{From extensional to intentional type theory: explicitation of the equality proofs\label{sec:itt}}
 \renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
 \renewcommandx{\cohl}{\coh{layer}[][][][][][][][]}
-
-We now present the definition in \emph{intensional} type theory~\citep{martinlof84,coq22}, making explicit the need for transport along coherence proofs.
 
 The need for transport along a proof of commutation of $\restrf$ in the definition of $\restrl$ is made explicit, where the arrow over $\cohf$ indicates the direction of rewrite. The proof of $\cohf$ requires making explicit several rewritings which were invisible in extensional type theory. The commutation of $\restrl$ lives in a type referring to $\cohf$, so we need a transport along the commutation of $\restrf$ in the statement of $\cohl$. The proof of $\cohl$ is the most involved proof in the construction. This is where the higher-dimensional coherence condition is needed. The exact formulation of this coherence condition is as follows.
 \renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
