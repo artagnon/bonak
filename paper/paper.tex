@@ -784,6 +784,8 @@ Hence, we need a coherence condition to commute the restrictions. Coherence cond
 
 The need for transport along a proof of commutation of $\restrf$ in the definition of $\restrl$ is made explicit as follows, where the arrow over $\cohf$ indicates the direction of rewrite:
 
+% Insert fulltab:faces and fulltab:coh, after overriding macros to make
+% everything but the universe letter explicit.
 \renewcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[][#2][#3][#4][#5]}
 \renewcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[][#2][#3][#4][#5]}
 \renewcommandx{\painting}[5][1,2,3,4,5]{\prim{painting}[][#2][#3][#4][#5]}
@@ -793,8 +795,11 @@ The need for transport along a proof of commutation of $\restrf$ in the definiti
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
 \renewcommand*{\lab}{fulltab:faces}
 \input{tab-faces.tex}
+\renewcommand*{\lab}{fulltab:coh}
+\input{tab-coh.tex}
 
 \renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
 \renewcommandx{\cohl}{\coh{layer}[][][][][][][][]}
