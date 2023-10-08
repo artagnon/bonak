@@ -459,6 +459,8 @@ We are also interested in \emph{extensional} type theory; i.e. in a type theory 
   \seqr{}{\Gamma \vdash p: t = u}{\Gamma \vdash t \equiv u}
 \end{equation*}
 
+Note that the reflection rule implies UIP so that $\U$ and $\Type$ ae equivalent in extensional type theory. The reflection rules also implies functional extensionality, and, actually, extensional type theory is logically equivalent to intentional type theory extended with UIP and functional extensionality~\citep{HofmannPhd}.
+
 \section{Relating to parametricity\label{sec:rel-param}}
 Let us recall from the introduction, the form taken by the indexed presentation of a semi-cubical set:
 \begin{align*}
@@ -626,7 +628,7 @@ Note that for a fixed constant $n$, relying on the evaluation rules of type theo
 \renewcommand*{\lab}{tab:coh}
 \input{tab-coh-ett.tex}
 
-\subsection*{Intuition for our formal construction\label{sec:intuition}}
+\subsection{Intuition for our formal construction\label{sec:intuition}}
 \renewcommandx{\fullframe}[1][1]{\prim{fullframe}[][#1][][][]}
 \renewcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
 \renewcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
@@ -744,7 +746,7 @@ So far, we have not paid attention to the fact that we have a dependent type, sh
   \end{array}
 \end{equation*}
 
-An extra refinement arises from the fact that each new layer of a frame has to be glued onto the border of the partial frame built so far. So, each $\layer[n][p]$ has to depend on $\framep[n][p]$. We also need a way to characterize the border of the $\nu$ $\painting[n-1][p]$ that compose a $\layer[n][p]$, and this is where the restriction $\restrf[n][p][\epsilon][p]$ is involved, for each $\epsilon < \nu$. For instance, on the picture, the left and right $\painting[2][1]$, shown in red, are laid on respectively the left and right borders of the blue boxes, and hence needs to depend on $\framep[3][1]$. The left and right borders of the two blue boxes are extracted as $\restrf[2][1][L](D)(d)$ and $\restrf[2][1][R](D)(d)$. We can then refine again the previous equation by showing the dependencies on $d$, as shown below.
+An extra refinement arises from the fact that each new layer of a frame has to be glued onto the border of the partial frame built so far. So, each $\layer[n][p]$ has to depend on $\framep[n][p]$. We also need a way to characterize the $\nu$ borders of each $\painting[n-1][p]$ that composes a $\layer[n][p]$, and this is where the restriction $\restrf[n][p][\epsilon][p]$ arrives, for each $\epsilon < \nu$. For instance, on the picture, the left and right $\painting[2][1]$, shown in red, are laid on respectively the left and right borders of the blue boxes, and hence needs to depend on $\framep[3][1]$. The left and right borders of the two blue boxes are extracted as $\restrf[2][1][L](D)(d)$ and $\restrf[2][1][R](D)(d)$. We can then refine again the previous equation by showing the dependencies on $d$, as shown below.
 
 \begin{equation*}
   \begin{array}{llr}
@@ -764,27 +766,30 @@ When $\nu = 2$, the formation of layers from paintings amounts to:
   \end{array}
 \end{equation*}
 
-The operation $\restrf[n][p][\epsilon][q]$ restricts the $p$ first layers of a frame, and the induction is on $p$, from $0$ to $q$. In particular, $\restrf[n][p][\epsilon][p]$ is a ``full restriction''. We define $\restrf[n][p][\epsilon][q](d)$ by recursion on the structure of a frame $d$, which necessitates definitions of $\restrl[n][p][\epsilon][q](d)(l)$ and $\restrc[n][p][\epsilon][q](d)(c)$, for $l$ a $\layer$ and $c$ a $\painting$. The key case is $\restrc[n][p][\epsilon][p](d)(c)$, where $c$, a $\painting[n][p]$, has necessarily the form of $((c_L, c_R), \_)$: $\restrc[n][p][L][p]$ picks out $c_L$, a $\painting[n-1][p]$, $\restrc[n][p][R][p]$ picks out the $c_R$, also a $\painting[n-1][p]$, and $\_$, a $\painting[n][p+1]$, is discarded. There is one more difficulty, which we illustrate by writing down expected and actual types.
+The operation $\restrf[n][p][\epsilon][q]$ restricts the $p$ first layers of a frame, and the construction is by recursion on the structure of a frame $d$. This necessitates the definitions $\restrl[n][p][\epsilon][q](d)(l)$ and $\restrc[n][p][\epsilon][q](d)(c)$, for $l$ a $\layer$ and $c$ a $\painting$. The key case is $\restrc[n][p][\epsilon][p](d)(c)$, where $c$, a $\painting[n][p]$, has necessarily the form of $((c_L, c_R), \_)$: $\restrc[n][p][L][p]$ picks out $c_L$, a $\painting[n-1][p]$, $\restrc[n][p][R][p]$ picks out the $c_R$, also a $\painting[n-1][p]$, and $\_$, a $\painting[n][p+1]$, is discarded. There is one last difficulty, which we illustrate by writing down expected and actual types.
 
 Given $c_\omega$ of type
 \begin{align*}
   c_\omega & : \painting[n-1][p](D.\hd)(\restrf[n-1][p][\omega][q](d))
 \end{align*}
-$\restrl[n][p][\epsilon](d)(c_L, c_R)$ produces a layer, in which the $\omega$-component has the type
+$\restrl[n][p][\epsilon](d)(c_L, c_R)$ produces a layer in which the $\omega$-component has the type
 \begin{equation*}
   \painting[n-2][p](D.\hd.\hd)(\restrf[n-1][p][\epsilon][q](\restrf[n][p][\omega][p](d)))
 \end{equation*}
-while we expect a term of type
+while we expect a component of type
 \begin{equation*}
   \painting[n-2][p](D.\hd.\hd)(\restrf[n-1][p][\omega][p](\restrf[n][p][\epsilon][q+1](d)))
 \end{equation*}
 
-Hence, we need a coherence condition to commute the restrictions. Coherence conditions similar to this necessitate, what are shown as, $\cohf$, $\cohl$ and $\cohc$ in tables in the next section. These are by induction on the structure of $\framep$, $\layer$ and $\painting$. Note that, for the construction in \ref{sec:itt}, we further need a $2$-dimensional coherence condition, $\coht$, for $\cohl$.
+Hence, we need a coherence condition to commute the restrictions. Coherence conditions similar to this necessitate what are shown as, $\cohf$, $\cohl$ and $\cohc$ in table~\ref{tab:coh}. These are by induction on the structure of $\framep$, $\layer$ and $\painting$. Note that, for the construction in intentional type theory, we further need a $2$-dimensional coherence condition, $\coht$, for $\cohl$. This is explained in the next section.
 
 \subsection{From extensional to intentional type theory: explication of the equality proofs\label{sec:itt}}
 \renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
 
-The need for transport along a proof of commutation of $\restrf$ in the definition of $\restrl$ is made explicit as follows, where the arrow over $\cohf$ indicates the direction of rewrite:
+In this section, we intend to get rid of the reflection rule and make explicit what is needed to rephrase the construction from extensional type theory to intentional type theory. For readability purpose, we however make explicit only the key coherence conditions of the construction.
+Other form of equality reasoning would have to be made explicit to obtain a construction fully in intentional type theory but these other steps are standard enough to be omitted at this stage. See section~\ref{sec:eqproperties} for the details.
+
+The need for transport along a proof of commutation of $\restrf$ in the definition of $\restrl$ is made explicit in table~\ref{fulltab:faces}, where the arrow over $\cohf$ indicates the direction of rewrite.
 
 % Insert fulltab:faces and fulltab:coh, after overriding macros to make
 % everything but the universe letter explicit.
@@ -805,10 +810,12 @@ The need for transport along a proof of commutation of $\restrf$ in the definiti
 
 \renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
 \renewcommandx{\cohl}{\coh{layer}[][][][][][][][]}
-The proof of $\cohf$ requires making explicit several rewritings which were invisible in extensional type theory. The commutation of $\restrl$ lives in a type referring to $\cohf$, so we need a transport along the commutation of $\restrf$ in the statement of $\cohl$. The proof of $\cohl$ is the most involved proof in the construction. This is where the higher-dimensional coherence condition is needed. The exact formulation of this coherence condition is as follows.
+\renewcommandx{\coht}{\cohtwo{frame}[][][][][][][][]}
+The proof of $\cohf$ itself requires making explicit several rewritings which were invisible in extensional type theory. The commutation of $\restrl$ lives in a type referring to $\cohf$, so we need a transport along the commutation of $\restrf$ in the statement of $\cohl$. The proof of $\cohl$ is the most involved proof of the construction. It requires a higher-dimensional coherence condition, $\coht$, whose exact formulation is as follows.
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
 \begin{align*}
   \cohf[m][\omega][\theta][r][p][n][p][][d = {\restrf[m][\epsilon][q+2][n][p][][d = \d]}]\;\bullet     \\
   \ap \restrf[m][\omega][r][n][p][][]\;(\cohf[m][\epsilon][\theta][q+1][p][n][p][][d = \d])\;\bullet   \\
@@ -817,7 +824,7 @@ The proof of $\cohf$ requires making explicit several rewritings which were invi
   \cohf[m][\epsilon][\theta][q][p][n][p][][d = {\restrf[m][\omega][r+1][n][p][][d = \d]}]\;\bullet     \\
   \ap \restrf[m][\epsilon][q][n][p][]\;(\cohf[m][\omega][\theta][r][p][n][p][][d = \d])
 \end{align*}
-where $\mathsf{ap}$ applies a function on two sides of an equality, and $\bullet$ is transitivity of equality. This property of equality proofs holds in \U, and since our formalization is done in \U, the term is trivially discharged.
+where $\ap$ applies a function on two sides of an equality, and $\bullet$ is transitivity of equality. This property of equality proofs holds in \U, and since our formalization is done in \U, the term is trivially discharged.
 
 \renewcommandx{\coht}{\cohtwo{frame}[][][][][][][][]}
 \renewcommandx{\restrf}{\restr{frame}[][][][][][][]}
@@ -825,15 +832,11 @@ where $\mathsf{ap}$ applies a function on two sides of an equality, and $\bullet
 \renewcommandx{\cohl}{\coh{layer}[][][][][][][][]}
 \renewcommandx{\cohc}{\coh{painting}[][][][][][][][]}
 
-Notice that each $\restrl$ in the type of $\cohl$ is hiding a $\cohf$ rewrite: this makes a sum total of three $\cohf$ rewrites on the left-hand side, and two $\cohf$ rewrites on the right-hand side. In the proof term of $\cohl$, $\cohc$ has one $\cohf$ rewrite on its left-hand side and zero on the right-hand side. This combined with the two terms of the form $\ap \cohf$ matches our expectation of three $\cohf$ on the left-hand side and two $\cohf$ on the right-hand side. Then, $\coht$ can roughly be seen as a commutation of these $\cohf$ terms.
+Notice that each $\restrl$ in the type of $\cohl$ is hiding a $\cohf$ rewrite: this makes a sum total of three $\cohf$ rewrites on the left-hand side, and two $\cohf$ rewrites on the right-hand side. In the proof term of $\cohl$, $\cohc$ has one $\cohf$ rewrite on its left-hand side and zero on the right-hand side. This, combined with the two terms of the form $\ap \cohf$, matches our expectation of three $\cohf$ on the left-hand side and two $\cohf$ on the right-hand side. Then, $\coht$ can roughly be seen as a commutation of these $\cohf$ terms.
 
 Finally, let us explain $\cohc$. The base case $p = r$ is the key case of the commutation of $\restrf$, when one of the $\restrc$ collapses, and the remaining equation holds trivially. The case of $p < r$ follows the structure of $\restrc$ by induction.
 
-Contrary to the ETT case, functional extensionality does not hold, so we assume it. However, the requirement of functional extensionality disappears if $\nu$ is finite. As for basic groupoid properties of equalities, which no longer hold definitionally, we do not mention them for simplicity.
-
-The way recursion is implemented is still left implicit at this stage. Also, depending on how inequality on natural numbers is defined, different equalities may hold or not definitionally, such as transitivity of inequality or the computational properties of induction over inequality proofs.
-
-Remark: If we were not working in \U, but in \HGpd, we would need to prove one more higher-dimensional coherence, and if we were working in \Type, we would need to prove arbitrarily many higher-dimensional coherences. Here, $\HGpd$ is the subset of types $A$ such that for all $x$ and $y$ in $A$, $x = y$ is in \U. See \cite{herbelin15,altenkirch16,kraus21} for a discussion on the need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory.
+If we were not working in \U, but in $\HGpd$ we would need to prove one more higher-dimensional coherence, and if we were working in \Type, we would need to prove arbitrarily many higher-dimensional coherences. Here, $\HGpd$ is the subset of types $A$ such that for all $x$ and $y$ in $A$, $x = y$ is in \U. See \cite{herbelin15,altenkirch16,kraus21} for a discussion on the need for recursive higher-dimensional coherence conditions in formulating higher-dimensional structures in type theory.
 
 \subsection{Well-foundedness of the construction\label{sec:wf}}
 \renewcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
@@ -895,7 +898,7 @@ The second variant of $\leq$, the ``inductive variant'', is phrased as:
 Compared to \texttt{leY}, \texttt{leI} has no proof-irrelevance properties. This definition is specially crafted for $\painting$, where we have to reason inductively from $p \leq n$ to $n$. In our usage, we have lemmas \texttt{leY\_of\_leI} and \texttt{leI\_of\_leY} in order to equip \texttt{leY} with the induction scheme of \texttt{leI}. The resulting induction scheme has computational rules holding propositionally.
 
 \subsection{Groupoid properties of equality and basic type isomorphisms\label{sec:eqproperties}}
-The construction takes benefit of various provable equalities over proofs of equality being definitional by the reflection rule. This includes in particular the groupoid properties of equality. Notably, uniqueness of identity proofs holds in extensional type theory, so that any type is automatically an $\U$. Also, we left implicit in table~\ref{tab:coh} the use of the isomorphism between $u = v$ and $\Sigma (p:u.\hd = v.\hd). (u.\tl = v.\tl)$ for $u$ and $v$ in a $\Sigma$-type. In the same table, we also left implicit the use of the isomorphism between $f = g$ and $\Pi a: A.\, f(a) = g(a)$ for $f$ and $g$ in $\Pi a: A.\, B$, where it should be recalled that the right-to-left map, that is function extensionality, holds by default in extensional type theory.
+The construction takes benefit of various provable equalities over proofs of equality being definitional by the reflection rule. This includes in particular the groupoid properties of equality. Notably, uniqueness of identity proofs holds in extensional type theory, so that any type is automatically an $\U$. Also, we left implicit in table~\ref{tab:coh} the use of the isomorphism between $u = v$ and $\Sigma (p:u.\hd = v.\hd). (u.\tl = v.\tl)$ for $u$ and $v$ in a $\Sigma$-type. In the same table, we also left implicit the use of the isomorphism between $f = g$ and $\Pi a: A.\, f(a) = g(a)$ for $f$ and $g$ in $\Pi a: A.\, B$, where it should be recalled that the right-to-left map, that is functional extensionality, holds by default in extensional type theory.
 
 \section{Future work}
 In the cubical case, we expect the construction to eventually provide a model of (some version of) parametric type theory~\citep{nuyts17,cavallo19} by adding degeneracies, a hierarchy of universes (as sketched e.g. in a talk by Herbelin at the HoTT-UF workshop for the bridge case~(\citeyear{herbelin-hott-uf})), as well as reasoning modulo permutations~\citep{grandis03}.
