@@ -1167,18 +1167,6 @@
 
 \def\aopfoot#1{\gdef\@aopfoot{#1}}\aopfoot{}
 
-\def\ps@myplain{\let\@mkboth\@gobbletwo%
-   \def\@evenfoot{\vbox to 2.7pt{\vspace*{-27.5pt}%
-            \hbox to \textwidth{\psplainfootfont\@cpr\hfill}}}%
-   \def\@oddfoot{\vbox to 2.7pt{\vspace*{-27.5pt}%
-            \hbox to \textwidth{\psplainfootfont\@cpr\hfill}}}%
-   \def\@evenhead{\hbox to 322.5pt{\vbox{\vspace*{6.5pt}%
-               {\psplainfont\global\copoddheadtrue{\itshape\@journaltitle} (\@jnlDoiYr),\if@issue\ \textbf{\@volno},\ pp.\else\fi\ \first@page--\last@page}\vskip2pt%\ \textbf{\@volumeno}
-               {\psplainfont\doitext\@doi}}}\vbox to 13.5pt{\includegraphics{cup_logo.eps}}}
-   \def\@oddhead{\hbox to 322.5pt{\vbox{\vspace*{6.5pt}%
-               {\psplainfont\global\copoddheadtrue{\itshape\@journaltitle} (\@jnlDoiYr),\if@issue\ \textbf{\@volno},\ pp.\else\fi\ \first@page--\last@page}\vskip2pt%\ \textbf{\@volumeno}
-               {\psplainfont\doitext\@doi}}}\vbox to 13.5pt{\includegraphics{cup_logo.eps}}}}%
-
 \let\save@clearpage\clearpage
 \let\save@outputpage\@outputpage
 
@@ -1338,8 +1326,8 @@
 %
 \def\auand{\unskip\unskip\unskip\comma\nobreakspace{}\unskip\unskip\unskip}%
 \def\aurunand{\unskip\unskip\unskip\comma}%
-\def\aulastand{\ and\nobreakspace{}\unskip\unskip\unskip}%
-\def\auandname{and\nobreakspace{}\unskip\unskip\unskip}%
+\def\aulastand{\ and}%
+\def\auandname{\ and\ }%
 
 \renewcommand{\author}[2][]{%
    \gdef\au@data{yes}%
@@ -1357,11 +1345,11 @@
       \ignorespaces\csname author0\endcsname%
    \else%
       \ifnum\authorcount=2%
-         \ignorespaces\csname author0\endcsname\if@twoauthors\else\comma\ \fi \auandname \csname author1\endcsname%
+         \ignorespaces\csname author0\endcsname \auandname \csname author1\endcsname%
       \else%
          \@whilenum\tempcount<\tempauthorcount%
          \do{%\vskip8pt
-            \csname author\the\tempcount\endcsname\comma\ %
+            \csname author\the\tempcount\endcsname\ %
             \global\advance\tempcount1}%
          \aulastand \csname author\the\tempcount\endcsname\unskip%
       \fi%
@@ -1467,7 +1455,6 @@
    %  \def\@makefnmark{\rlap{\@textsuperscript{\scriptsize\@thefnmark}}}%
    %   \long\def\@makefntext##1{##1}%
    \@maketitle%
-   \thispagestyle{myplain}%
    \endgroup
    %  \renewcommand\thefootnote{}%
    \ifx\@aopfoot\@empty%
@@ -2145,6 +2132,7 @@
                \fi
             \fi
          \fi}
+
    \fi}
 %
 \def\endenumerate{\@topsepadd\csname belowlistskip\romannumeral\the\@enumdepth\endcsname\endlist}%
@@ -2421,6 +2409,7 @@
             \fi\fi
          \leftmargin\csname leftmargin\romannumeral\the\@itemdepth\endcsname
          \def\makelabel##1{\hss\llap{##1}}}
+
    \fi}%
 %
 \def\enditemize{%
@@ -2452,6 +2441,7 @@
             \fi\fi
          \leftmargin\csname leftmargin\romannumeral\the\@itemdepth\endcsname
          \def\makelabel##1{\hss\llap{##1}}}
+
    \fi}%
 %
 \def\enddescription{\endlist}
@@ -3414,6 +3404,7 @@
    \else
       \def\draftnote{\vbox to 0pt{\vskip-12pt}}%
       \def\Qauthor#1{\marginpar{{\raggedright\footnotesize\bf #1\endgraf}}}
+
    \fi
    \let\qtoa\Qauthor
    %%%%%%%%%%%%%%%%%%%% Character count  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -3757,6 +3748,7 @@
    \else
       \vadjust{\vbox to 0pt{%
                \vskip-7.5pt\@@question{#1}\vskip7.5pt}}
+
    \fi}
 %
 \def\QtoAuthor#1{\@question{{\bf Author:\ #1}}}
@@ -3898,6 +3890,7 @@
 \ifpuretex
 \else
    \newcommand\emptyfloatpage{\thisfloatpagestyle{rotatepage}}
+
 \fi
 
 
@@ -3913,6 +3906,7 @@
                \else%%
                   %\hbox to\hsize{\hss\box\@tempboxa\hss}%%
                   \Set@LT@caption{#1}{#2}{\centering#3}
+
                \fi%%
                \endgraf%
                \vskip\belowcaptionskip%

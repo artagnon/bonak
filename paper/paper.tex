@@ -184,14 +184,14 @@
 \begin{abstract}
   Constructions such as semi-simplicial and semi-cubical sets can be defined in the ``usual way'' as presheaves over respectively, the semi-simplex or semi-cube category, which we call \emph{fibered} definitions, but also defined like in e.g. \cite{voevodsky12} or in \cite{herbelin15}, as a dependently-typed construction, which we call \emph{indexed}.
 
-  On another side, it is known that semi-simplicial and semi-cubical sets are related to iterated Reynolds's parametricity, respectively in its unary and binary variants\dots
+  It is known that semi-simplicial and semi-cubical sets are related to iterated Reynolds's parametricity, respectively in its unary and binary variants\dots
 
   We exploit this correspondence to develop a uniform indexed definition of both augmented semi-simplicial and semi-cubical sets, which is additionally fully formalized in Coq's dependent type theory. Beside the interest in the construction itself, we expect it to eventually serve as models of type theory preserving more definitional equalities than presheaf models do.
 \end{abstract}
 \begin{keywords}
   simplicial set, cubical set, coq, formalization, HoTT
 \end{keywords}
-% \maketitle
+\maketitle
 
 \section{Introduction}
 \subsection*{Fibered vs indexed presentation of semi-simplicial and semi-cubical sets}
@@ -214,8 +214,8 @@ maps between them as follows:
 up to cubical faces identities. In it, $X_1$ can be seen as a family over $X_0 \times X_0$ presented in a fibered form, $X_2$ can be seen as a family of $X_1 \times X_1 \times X_1 \times X_1$, and so on. This suggests an alternative indexed presentation of the same presheaf as a stratified sequence of families indexed on elements of families of lower rank, taking into account the coherence conditions to prevent duplications. Formulated in type theory, it takes the form:
 
 \begin{align*}
-  X_0 & :              & \U                                                                                           \\
-  X_1 & :              & X_0 \times X_0 \rightarrow \U                                                           \\
+  X_0 & :              & \U                                                                            \\
+  X_1 & :              & X_0 \times X_0 \rightarrow \U                                                 \\
   X_2 & : \Pi a b c d. & X_1(a)(b) \times X_1(a)(c) \times X_1 (b)(d) \times X_1 (c)(d) \rightarrow \U \\
   \ldots
 \end{align*}
@@ -465,8 +465,8 @@ Note that the reflection rule implies UIP so that $\U$ and $\Type$ ae equivalent
 \section{Relating to parametricity\label{sec:rel-param}}
 Let us recall from the introduction, the form taken by the indexed presentation of a semi-cubical set:
 \begin{align*}
-  X_0 & :              & \U                                                                                           \\
-  X_1 & :              & X_0 \times X_0 \rightarrow \U                                                           \\
+  X_0 & :              & \U                                                                            \\
+  X_1 & :              & X_0 \times X_0 \rightarrow \U                                                 \\
   X_2 & : \Pi a b c d. & X_1(a)(b) \times X_1(a)(c) \times X_1 (b)(d) \times X_1 (c)(d) \rightarrow \U \\
   \ldots
 \end{align*}
