@@ -435,7 +435,7 @@ A $\nu$-set is thus a contravariant functor $\phi$ from the $\nu$-semi-shape cat
 \section{Type theory}
 Martin-Löf's Type theory~\citep{martinlof75,martinlof84} is a logical formalism based on the notion of a \emph{type} rather than that of a \emph{set}. It can be seen as a foundation of mathematics alternative to set theory and is the core of several tools for the formalization of mathematics such as Agda~(\citeyear{agda23}), Coq~(\citeyear{coq22}) or Lean~(\citeyear{lean15}). In type theory, propositions are types and proofs are programs. A particularity of type theory is also that types and programs, hence propositions and proofs also, are considered modulo an equational theory called definitional equality.
 
-Type theory is a flexible formalism supporting different models. Some models are based on topological spaces, where equality is interpreted as path, and substitutivity of equality as transport~\citep{kapulkin21}. These models support the univalence principle stating that equality of types mimics equivalence of types, leading to the development of Homotopy Type Theory~\citep{hottbook}. In type theory, types are organized in a hierarchy of universes written $\Type_m$ for $m$ a natural number. Main types in type theory are the types of dependent pairs, written $\Sigma a : A.\,B(a)$, the types of dependent functions, written $\Pi a:A.\,B(a)$, for $A$ a type and $B(a)$ a type dependent on the inhabitant $a$ of $A$, and the type of propositional equality, written $t = u$. We assume our type theory to also include a distinguished singleton type, written $\unittype$, and with inhabitant $\unitpoint$, the type of boolean values, called $\textsf{bool}$, and the type of natural numbers. We also assume that our type theory includes the coinductive type of infinite tuples. We also write $\hd$ and $\tl$ the projections of dependent pairs, and $\refl$ for reflexivity. Logical propositions being types themselves, we use $\Pi$ to represent universal quantification and $\Sigma$ to represent existential quantification.
+Type theory is a flexible formalism supporting different models. Some models are based on topological spaces, where equality is interpreted as path, and substitutivity of equality as transport~\citep{kapulkin21}. These models support the univalence principle stating that equality of types mimics equivalence of types, leading to the development of Homotopy Type Theory~\citep{hottbook}. In type theory, types are organized in a hierarchy of universes written $\Type_m$ for $m$ a natural number. Main types in type theory are the types of dependent pairs, written $\Sigma a : A.\,B(a)$, the types of dependent functions, written $\Pi a:A.\,B(a)$, for $A$ a type and $B(a)$ a type dependent on the inhabitant $a$ of $A$, and the type of propositional equality, written $t = u$. As a notation, the type of dependent pairs when $B$ is actually not dependent on $A$ is shortened into $A \times B$ and the type of dependent functions when $B$ is not dependent on $A$ is written $A \rightarrow B$. We assume our type theory to also include a distinguished singleton type, written $\unittype$, and with inhabitant $\unitpoint$, the type of boolean values, called $\textsf{bool}$, and the type of natural numbers. We also assume that our type theory includes the coinductive type of infinite tuples. We also write $\hd$ and $\tl$ the projections of dependent pairs, and $\refl$ for reflexivity. Logical propositions being types themselves, we use $\Pi$ to represent universal quantification and $\Sigma$ to represent existential quantification.
 
 A type-theoretic notion of sets can be recovered in each universe as $\U[m]$, denoting the subtype of $\Type_m$ for which paths are degenerated, what can be expressed by the property of Uniqueness of Identity Proofs (UIP). Technically, this is expressed as a structure equipping a domain $\Dom$ with the property $\UIP$:
 \begin{align*}
@@ -469,29 +469,35 @@ Let us recall from the introduction, the form taken by the indexed presentation 
   \ldots
 \end{align*}
 
-In there, the process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$, and so on, is similar to iteratively applying a binary parametricity translation. The parametricity which we consider interprets a type $A$ by a family $A_\kstar$ over $A \times A$, what can be seen as a graph whose vertices are in $A$. To each type constructor is thus associated the construction of a graph. In particular, the type of types $\U$ is interpreted as the family of families ${\U}_\kstar$, which takes $A_L$ and $A_R$ in $\U$ and returns the type $A_L \rightarrow A_R \rightarrow \U$ of families over $A_L$ and $A_R$. Also, for $A$ interpreted by $A_\kstar$ and $B$ interpreted by $B_\kstar$, a dependent function type $\Pi a: A.\, B$ is interpreted as the graph $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
+In there, the process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$, and so on, is similar to iteratively applying a binary parametricity translation. The parametricity which we consider interprets a type $A$ by a family $A_\kstar$ over $A \times A$, what can be seen as a graph whose vertices are in $A$. To each type constructor is thus associated the construction of a graph. In particular, the type of types $\U$ is interpreted as the family of families ${\U}_\kstar$, which takes $A_L$ and $A_R$ in $\U$ and returns the type $A_L \times A_R \rightarrow \U$ of families over $A_L$ and $A_R$. Also, for $A$ interpreted by $A_\kstar$ and $B$ interpreted by $B_\kstar$, a dependent function type $\Pi a: A.\, B$ is interpreted as the graph $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
 \begin{align*}
-  (\Pi a: A.\, B)_\kstar(f_L)(f_R) \; \defeq \; \Pi a_L: A.\, \Pi a_R: A.\, \Pi a_\kstar: A_\kstar(a_L,a_R).\, B_\kstar(f_L(a_L),f_R(a_R))
+  (\Pi a: A.\, B)_\kstar(f_L)(f_R) \; \defeq \; \Pi (a_L,a_R): (A \times A).\, (A_\kstar(a_L,a_R)\,\rightarrow B_\kstar(f_L(a_L),f_R(a_R)))
+\end{align*}
+
+Similarly, a product type $A \times B$ is interpreted as the graph $(A \times B)_\kstar$ that relates two tuples $(a_L,b_L)$ and $(a_R,b_R)$ in $A \times B$ as follows:
+\begin{align*}
+  (A \times B)_\kstar((a_L,b_L),(a_R,b_R)) \; \defeq \; A_\kstar(a_L,a_R) \times B_\kstar(b_L,b_R)
 \end{align*}
 
 In particular, for $X: \U$, applying the parametricity translation is about canonically associating to $X$ an inhabitant $X_\kstar$ of ${\U}_\kstar(X,X)$ i.e. of $X \times X \rightarrow \U$. In turn, applying the parametricity translation to $X_\kstar: X \times X \rightarrow \U$ is about canonically associating to $X_\kstar$ an inhabitant $X_{\kstar\kstar}$ of $(X \times X \rightarrow \U)_\kstar(X_\kstar,X_\kstar)$ i.e. of:
 \begin{align*}
-  \Pi x_{LL}: X.\, \Pi x_{LR}: X.\, X_\kstar(x_{LL},x_{LR})              \\
-  \rightarrow \Pi x_{RL}: X.\, \Pi x_{RR}: X.\, X_\kstar(x_{RL})(x_{RR}) \\ \rightarrow X_\kstar(x_{LL}, x_{RL}) \times X_\kstar(x_{LR},x_{RR})  \rightarrow \U
+  \Pi ((x_{LL},x_{lR}),(x_{RL},x_{RR})): ((X \times X) \times (X \times X)).\,\\
+  (X_\kstar(x_{LL},x_{LR}) \times X_\kstar(x_{RL},x_{RR})
+  \rightarrow X_\kstar(x_{LL}, x_{RL}) \times X_\kstar(x_{LR},x_{RR})  \rightarrow \U)
 \end{align*}
 which hints us at how the sequence $X_0$, $X_1$, $X_2$ can be seen as a sequence of inhabitants of the iteration of binary parametricity applied to an initial $X: \U$:
 \begin{equation*}
   \begin{array}{llllr}
     X_0 & \defeq & X                & : & \U                                               \\
-    X_1 & \defeq & X_\kstar         & : & {\U}_\kstar(X)(X)                                \\
-    X_2 & \defeq & X_{\kstar\kstar} & : & ({\U}_\kstar(X)(X))_{\kstar}(X_\kstar)(X_\kstar) \\
+    X_1 & \defeq & X_\kstar         & : & {\U}_\kstar(X,X)                                \\
+    X_2 & \defeq & X_{\kstar\kstar} & : & ({\U}_\kstar(X,X))_{\kstar}(X_\kstar,X_\kstar) \\
     \ldots
   \end{array}
 \end{equation*}
 
 This tells us how the informal type given to $X_2$ in the previous section could be rephrased so that it comes as the instance of a general recipe characterizing the type of all $X_i$.
 
-Notice, however, that the recipe obtained so far, $X_{n + 1}: ({S_n})_\kstar(X_n)(X_n)$ for $X_n: S_n$, applies parametricity on the \emph{syntax} of the type of $X_n$. It does not directly yield a characterization of $S_n$ as a function from $n$. Reformulating the recipe as an explicit recursive construction, without requiring an interpretation of the syntax of types, is the main outcome of this work, together with the mechanization and the uniform treatment of augmented semi-simplicial and semi-cubical sets by means of the generalization to $\nu$-sets.
+Notice, however, that the recipe obtained so far, $X_{n + 1}: ({S_n})_\kstar(X_n,X_n)$ for $X_n: S_n$, applies parametricity on the \emph{syntax} of the type of $X_n$. It does not directly yield a characterization of $S_n$ as a function from $n$. Reformulating the recipe as an explicit recursive construction, without requiring an interpretation of the syntax of types, is the main outcome of this work, together with the mechanization and the uniform treatment of augmented semi-simplicial and semi-cubical sets by means of the generalization to $\nu$-sets.
 
 % 5. The "mathematical" construction (and its intuition)
 %   leaving equality and inequality side conditions implicit
