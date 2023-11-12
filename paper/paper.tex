@@ -179,14 +179,14 @@
   \affiliation{Université Paris Cité, Inria, CNRS, IRIF, Paris
     \email{Hugo.Herbelin@inria.fr}}
   \author{Ramkumar Ramachandra}
-  \affiliation{Unaffiliated \email{r@artagnon.com}}
+  \affiliation{Université Paris Cité (2020-2022) \email{r@artagnon.com}}
 \end{authgrp}
 \begin{abstract}
-  Constructions such as semi-simplicial and semi-cubical sets can be defined in the ``usual way'' as presheaves over respectively, the semi-simplex or semi-cube category, which we call \emph{fibered} definitions, but also defined like in e.g. \cite{voevodsky12} or in \cite{herbelin15}, as a dependently-typed construction, which we call \emph{indexed}.
+  Semi-simplicial and semi-cubical sets are commonly defined as presheaves over respectively, the semi-simplex or semi-cube category. Homotopy Type Theory then popularized an alternative definition, where the set of $n$-simplices or $n$-cubes are instead regrouped into the families of the fibers over their faces, leading to a characterization we call \emph{indexed}.
 
-  It is known that semi-simplicial and semi-cubical sets are related to iterated Reynolds's parametricity, respectively in its unary and binary variants\dots
+  Moreover, it is known that semi-simplicial and semi-cubical sets are related to iterated Reynolds's parametricity, respectively in its unary and binary variants.
 
-  We exploit this correspondence to develop a uniform indexed definition of both augmented semi-simplicial and semi-cubical sets, which is additionally fully formalized in Coq's dependent type theory. Beside the interest in the construction itself, we expect it to eventually serve as models of type theory preserving more definitional equalities than presheaf models do.
+  We exploit this correspondence to develop an original uniform indexed definition of both augmented semi-simplicial and semi-cubical sets, and fully formalize it in Coq.
 \end{abstract}
 \begin{keywords}
   simplicial set, cubical set, coq, formalization, HoTT
@@ -540,8 +540,6 @@ Sections~\ref{sec:wf}, \ref{sec:le}, and \ref{sec:eqproperties} describe additio
 \appendmask[bonak]{cohframe}[D]
 \appendmask[bonak]{cohlayer}[D, d]
 \appendmask[bonak]{cohpainting}[D, d]
-
-% Now, we write the type theory bit, and input the abbreviated tables
 
 % Truncated sets, otherwise referred to as X
 % Keep all arguments
