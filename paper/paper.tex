@@ -146,7 +146,7 @@
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 \NewEnviron{eqntable}[1]{
   \scriptsize
-  \begin{tabularx}{0.9\linewidth}{
+  \begin{tabularx}{0.93\linewidth}{
     @{}
     >{$}l<{$}
     >{$}c<{$}
@@ -807,8 +807,10 @@ The need for transport along a proof of commutation of $\restrf$ in the definiti
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
 \renewcommand*{\lab}{fulltab:faces}
+\renewcommand{\thetable}{4'}
 \input{tab-faces.tex}
 \renewcommand*{\lab}{fulltab:coh}
+\renewcommand{\thetable}{5'}
 \input{tab-coh.tex}
 
 \renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
