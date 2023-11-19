@@ -469,7 +469,7 @@ Let us recall from the introduction, the form taken by the indexed presentation 
   \ldots
 \end{align*}
 
-In there, the process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$, and so on, is similar to iteratively applying a binary parametricity translation. The parametricity which we consider interprets a type $A$ by a family $A_\kstar$ over $A \times A$, what can be seen as a graph whose vertices are in $A$. To each type constructor is thus associated the construction of a graph. To start with, the type of types $\U$ is interpreted as the family of type of families ${\U}_\kstar$, which takes $A_L$ and $A_R$ in $\U$ and returns the type $A_L \times A_R \rightarrow \U$ of families over $A_L$ and $A_R$. Also, for $A$ interpreted by $A_\kstar$ and $B$ interpreted by $B_\kstar$, a dependent function type $\Pi a: A.\, B$ is interpreted as the graph $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
+In there, the process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$, and so on, is similar to iteratively applying a binary parametricity translation. The binary parametricity which we consider is composed with the diagonal on types and interprets a type $A$ by a family $A_\kstar$ over $A \times A$, what can be seen as a graph whose vertices are in $A$. To each type constructor is thus associated the construction of a graph. To start with, the type of types $\U$ is interpreted as the family of type of families ${\U}_\kstar$, which takes $A_L$ and $A_R$ in $\U$ and returns the type $A_L \times A_R \rightarrow \U$ of families over $A_L$ and $A_R$. Also, for $A$ interpreted by $A_\kstar$ and $B$ interpreted by $B_\kstar$, a dependent function type $\Pi a: A.\, B$ is interpreted as the graph $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
 \begin{align*}
   (\Pi a: A.\, B)_\kstar(f_L,f_R) \; \defeq \; \Pi (a_L,a_R): (A \times A).\, (A_\kstar(a_L,a_R)\,\rightarrow B_\kstar(f_L(a_L),f_R(a_R)))
 \end{align*}
@@ -479,13 +479,13 @@ Similarly, a product type $A \times B$ is interpreted as the graph $(A \times B)
   (A \times B)_\kstar((a_L,b_L),(a_R,b_R)) \; \defeq \; A_\kstar(a_L,a_R) \times B_\kstar(b_L,b_R)
 \end{align*}
 
-In particular, for $X: \U$, applying the parametricity construction is about canonically associating to $X$ an inhabitant $X_\kstar$ of ${\U}_\kstar(X,X)$ i.e. of $X \times X \rightarrow \U$. In turn, applying the parametricity translation to $X_\kstar: X \times X \rightarrow \U$ is about canonically associating to $X_\kstar$ an inhabitant $X_{\kstar\kstar}$ of $(X \times X \rightarrow \U)_\kstar(X_\kstar,X_\kstar)$ i.e. of:
+In particular, for $X: \U$, applying our parametricity translation is about associating to $X$ an inhabitant $X_\kstar$ of ${\U}_\kstar(X,X)$ i.e. of $X \times X \rightarrow \U$. In turn, applying the translation again to $X_\kstar: X \times X \rightarrow \U$ is about associating to $X_\kstar$ an inhabitant $X_{\kstar\kstar}$ of $(X \times X \rightarrow \U)_\kstar(X_\kstar,X_\kstar)$ i.e. of:
 \begin{align*}
   \Pi ((x_{LL},x_{lR}),(x_{RL},x_{RR})): ((X \times X) \times (X \times X)). \\
   (X_\kstar(x_{LL},x_{LR}) \times X_\kstar(x_{RL},x_{RR})
   \rightarrow X_\kstar(x_{LL}, x_{RL}) \times X_\kstar(x_{LR},x_{RR})  \rightarrow \U)
 \end{align*}
-which hints us at how the sequence $X_0$, $X_1$, $X_2$ can be seen as a sequence of inhabitants of the iteration of binary parametricity applied to an initial $X: \U$:
+which hints us at how the sequence $X_0$, $X_1$, $X_2$ can be seen as a sequence of inhabitants of the iteration of the composition of binary parametricity with the diagonal on types and type families, applied to an initial $X: \U$:
 \begin{equation*}
   \begin{array}{llllr}
     X_0 & \defeq & X                & : & \U                                             \\
