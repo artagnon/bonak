@@ -1,6 +1,6 @@
 \documentclass{msc}
 
-\usepackage{amsmath, amssymb, mathrsfs, wasysym, tikz, tikz-cd, mathpazo, xargs, environ, multirow, float, tabularx, booktabs, makecell, colortbl, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
+\usepackage{amsmath, amssymb, mathrsfs, wasysym, tikz, tikz-cd, mathpazo, xargs, environ, multirow, float, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
 
 \usepackage[prefix=bonak]{art.cls/xkeymask}
 \usetikzlibrary{patterns}
@@ -138,24 +138,26 @@
 % Kerning for star
 \newcommand{\kstar}{{\star}}
 
+% Caption setup
+\DeclareCaptionFormat{plain}{#1#3}
+\captionsetup{font=scriptsize,labelfont=bf}
+
 % The eqntable environment
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 \NewEnviron{eqntable}[1]{
-  \begin{table}[H]
-    \small
-    \begin{tabularx}{\linewidth}{
-      @{}
-      >{$}l<{$}
-      >{$}c<{$}
-      >{$}c<{$}
-      >{$}Y<{$}
-      @{}}
-      \toprule
-      \BODY
-      \bottomrule
-    \end{tabularx}
-    \caption{#1}
-  \end{table}
+  \scriptsize
+  \begin{tabularx}{0.9\linewidth}{
+    @{}
+    >{$}l<{$}
+    >{$}c<{$}
+    >{$}c<{$}
+    >{$}Y<{$}
+    @{}}
+    \toprule
+    \BODY
+    \bottomrule
+  \end{tabularx}
+  \captionof{table}{#1}
 }
 
 % The label, since we're including twice
@@ -189,9 +191,6 @@
 
   We exploit this correspondence to develop an original uniform indexed definition of both augmented semi-simplicial and semi-cubical sets, and fully formalize it in Coq.
 \end{abstract}
-\begin{keywords}
-  simplicial set, cubical set, coq, formalization, HoTT
-\end{keywords}
 \maketitle
 
 \section{Introduction}
@@ -447,9 +446,9 @@ A type-theoretic notion of sets can be recovered in each universe as $\U[m]$, de
 In $\U[m]$, the following properties hold:
 
 \begin{enumerate}
-  \item[(i)] UIP holds on the unit type, bool type, as well as all types of finite cardinal $\nu$.
-  \item[(ii)] UIP propagates to $\Sigma$-types.
-  \item[(iii)] UIP propagates to $\Pi$-types, with some additional functional extensionality axioms.
+  \item UIP holds on the unit type, bool type, as well as all types of finite cardinal $\nu$.
+  \item UIP propagates to $\Sigma$-types.
+  \item UIP propagates to $\Pi$-types, with some additional functional extensionality axioms.
 \end{enumerate}
 
 By the notations $\Type$ and $\U$ will be meant $\Type_m$ or $\U[m]$ at some unspecified universe level $m$.
@@ -579,7 +578,7 @@ The definition of the type of a $n$-truncated $\nu$-set is in turn described in 
 
 Notably, the definition of $\restrl$ relies on an equality expressing the commutation of the composition of $\restrf$. The proof of this commutation is worth being made explicit, which we do in table \ref{tab:coh} using proof-term notations. The proof requires an induction on the dimension, and on the structure of $\framep$, $\layer$, and $\painting$. This is what $\cohf$ does using auxiliary proofs $\cohl$ and $\cohc$. Even though it looks independent of the definitions from the the other tables, $\cohf$ has to be proved mutually with the definitions of $\framep$, $\layer$, $\painting$, and their corresponding restrictions. More precisely, for a fixed $n$, the block of $\framep$, $\restrf$, and $\cohf$ has to be mutually defined by induction on $p$. Also, each of $\painting$, $\restrc$, and $\cohc$ is built by induction from $p$ to $n$. The $\painting$ block at $n$ relies on the $\framep$ block at $n$, but the converse dependency is only on lower $n$, so this is well-founded. Note that $\layer$, $\restrl$ and $\cohl$ are just abbreviations. The exact way this mutual recursion is eventually formalized is explained in section~\ref{sec:wf}.
 
-Note that for a fixed constant $n$, relying on the evaluation rules of type theory, the coherence conditions degenerate to a reflexivity proof, so that the construction builds an effective sequence of types not mentioning coherences anymore.
+Note that for a fixed constant $n$, relying on the evaluation rules of type theory, the coherence conditions degenerate to a reflexivity proof, so that the construction builds an effective sequence of types not mentioning coherences anymore. \\
 
 \renewcommand*{\lab}{tab:coind}
 \input{tab-coind.tex}
@@ -652,6 +651,7 @@ Let us now illustrate how we recursively build $\fullframe[n]$. To begin, let us
 
 \begin{figure}[H]
   \centering
+  \small
   \begin{equation*}
     \begin{array}{ll}
       X_0                                : \underbrace{\unittype}_{\framep[0][0]}                                                    \rightarrow \U \\
@@ -792,7 +792,7 @@ Hence, we need a coherence condition to commute the restrictions. Coherence cond
 In this section, we intend to get rid of the reflection rule and make explicit what is needed to rephrase the construction from extensional type theory to intentional type theory. For readability purpose, we however make explicit only the key coherence conditions of the construction.
 Other form of equality reasoning would have to be made explicit to obtain a construction fully in intentional type theory but these other steps are standard enough to be omitted at this stage. See section~\ref{sec:eqproperties} for the details.
 
-The need for transport along a proof of commutation of $\restrf$ in the definition of $\restrl$ is made explicit in table~\ref{fulltab:faces}, where the arrow over $\cohf$ indicates the direction of rewrite.
+The need for transport along a proof of commutation of $\restrf$ in the definition of $\restrl$ is made explicit in table~\ref{fulltab:faces}, where the arrow over $\cohf$ indicates the direction of rewrite. \\
 
 % Insert fulltab:faces and fulltab:coh, after overriding macros to make
 % everything but the universe letter explicit.
@@ -814,6 +814,7 @@ The need for transport along a proof of commutation of $\restrf$ in the definiti
 \renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
 \renewcommandx{\cohl}{\coh{layer}[][][][][][][][]}
 \renewcommandx{\coht}{\cohtwo{frame}[][][][][][][][]}
+\vspace{1em}
 The proof of $\cohf$ itself requires making explicit several rewritings which were invisible in extensional type theory. The commutation of $\restrl$ lives in a type referring to $\cohf$, so we need a transport along the commutation of $\restrf$ in the statement of $\cohl$. The proof of $\cohl$ is the most involved proof of the construction. It requires a higher-dimensional coherence condition, $\coht$, whose exact formulation is as follows.
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
@@ -857,46 +858,39 @@ Since the construction shown in the previous sections is by induction on $n$, an
 \subsection{Dependencies in inequality proofs\label{sec:le}}
 The entire construction relies on inequalities over natural numbers, and we use two different definitions of $\leq$ addressing different concerns in our formalization. In order to build our first variant, we present an intermediate ``recursive definition'', phrased as:
 
-\begin{figure}[H]
-  \begin{minted}{coq}
-  Fixpoint leR (n m : nat) : SProp :=
-  match n, m with
-  | O, _ => STrue
-  | S n, O => SFalse
-  | S n, S m => leR n m
-  end.
-  \end{minted}
-\end{figure}
+\begin{minted}{coq}
+Fixpoint leR (n m : nat) : SProp :=
+match n, m with
+| O, _ => STrue
+| S n, O => SFalse
+| S n, S m => leR n m
+end.
+\end{minted}
 
 Here $\SProp$ is a definitionally proof-irrelevant impredicative universe at the bottom of the universe hierarchy~\citep{gilbert19}. By placing the definition in \SProp, we have definitional equality of all inequality proofs. For the purpose of unification, however, this definition does not go far enough. Consider the unification problems:
 
-\begin{figure}[H]
-  \begin{minted}{coq}
-  leR_trans ?p leR_refl = ?p
-  leR_trans leR_refl ?p = ?p
-  \end{minted}
-\end{figure}
+\begin{minted}{coq}
+leR_trans ?p leR_refl = ?p
+leR_trans leR_refl ?p = ?p
+\end{minted}
+
 where \texttt{leR\_trans} is transitivity, \texttt{leR\_refl} is reflexivity, and \texttt{?p} is an existential variable. These two problems definitionally hold in \SProp, but equalizing them does not solve the existential. For unification to be useful in inferring existentials, we present our first variant of $\leq$, which we dub as the ``Yoneda variant'':
 
-\begin{figure}[H]
-  \begin{minted}{coq}
-  Definition leY n m :=
-    forall p, leR p n -> leR p m.
-  \end{minted}
-\end{figure}
+\begin{minted}{coq}
+Definition leY n m :=
+  forall p, leR p n -> leR p m.
+\end{minted}
 
 This definition is an improvement over \texttt{leR} since reflexivity is now definitionally the neutral element of transitivity, and associativity of transitivity also holds definitionally. Although it significantly eases our proof, there are some instances where unification is unable to solve the existentials, and we have to provide them explicitly.
 
 The second variant of $\leq$, the ``inductive variant'', is phrased as:
 
-\begin{figure}[H]
-  \begin{minted}{coq}
-  Inductive leI : nat -> nat -> Type :=
-  | leI_refl n : n <~ n
-  | leI_down {n p} : p.+1 <~ n -> p <~ n
-  where "n <~ m" := (leI n m) : nat_scope.
-  \end{minted}
-\end{figure}
+\begin{minted}{coq}
+Inductive leI : nat -> nat -> Type :=
+| leI_refl n : n <~ n
+| leI_down {n p} : p.+1 <~ n -> p <~ n
+where "n <~ m" := (leI n m) : nat_scope.
+\end{minted}
 
 Compared to \texttt{leY}, \texttt{leI} has no proof-irrelevance properties. This definition is specially crafted for $\painting$, where we have to reason inductively from $p \leq n$ to $n$. In our usage, we have lemmas \texttt{leY\_of\_leI} and \texttt{leI\_of\_leY} in order to equip \texttt{leY} with the induction scheme of \texttt{leI}. The resulting induction scheme has computational rules holding propositionally.
 
