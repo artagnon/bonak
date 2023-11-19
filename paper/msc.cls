@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{CUP-MSC-LaTeX-V1}[2018/08/09 v1.0 CUP MSC LaTeX document class]
+\ProvidesClass{msc}[2018/08/09 v1.0 CUP MSC LaTeX document class]
 %
 \newif\ifOA\global\OAfalse%
 \newif\iflsans\global\lsansfalse
@@ -702,7 +702,6 @@
 
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%Standard Packages
 
-   \usepackage{etex}
    \usepackage{amsthm}
    \usepackage{soul}
    \usepackage{calc}
@@ -3784,7 +3783,6 @@
 %
 \def\endash{--}
 %
-%\RequirePackage{CUP-XML-Inputs}%
 
 \ifonline
    \usepackage{hyperref}%

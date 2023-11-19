@@ -1,8 +1,9 @@
 \documentclass{msc}
 
-\usepackage{amsmath, amssymb, mathrsfs, wasysym, tikz, tikz-cd, mathpazo, xargs, environ, multirow, float, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
-
+\usepackage{amsmath, amssymb, mathrsfs, wasysym, tikz, tikz-cd, lmodern, mathpazo, t1enc, anyfontsize, xargs, environ, multirow, float, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
 \usepackage[prefix=bonak]{art.cls/xkeymask}
+
+% Use the patterns library to draw the cubes figure
 \usetikzlibrary{patterns}
 
 % Magic with xkeyval to go over the 9-argument limit of LaTeX
@@ -145,8 +146,8 @@
 % The eqntable environment
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 \NewEnviron{eqntable}[1]{
-  \scriptsize
-  \begin{tabularx}{0.93\linewidth}{
+  \fontsize{7.2}{9}\selectfont
+  \begin{tabularx}{0.94\linewidth}{
     @{}
     >{$}l<{$}
     >{$}c<{$}
@@ -469,7 +470,7 @@ Let us recall from the introduction, the form taken by the indexed presentation 
   \ldots
 \end{align*}
 
-In there, the process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$, and so on, is similar to iteratively applying a binary parametricity translation. The binary parametricity which we consider is composed with the diagonal on types and interprets a type $A$ by a family $A_\kstar$ over $A \times A$, what can be seen as a graph whose vertices are in $A$. To each type constructor is thus associated the construction of a graph. To start with, the type of types $\U$ is interpreted as the family of type of families ${\U}_\kstar$, which takes $A_L$ and $A_R$ in $\U$ and returns the type $A_L \times A_R \rightarrow \U$ of families over $A_L$ and $A_R$. Also, for $A$ interpreted by $A_\kstar$ and $B$ interpreted by $B_\kstar$, a dependent function type $\Pi a: A.\, B$ is interpreted as the graph $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
+In there, the process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$, and so on, is similar to iteratively applying a binary parametricity translation. The binary parametricity which we consider interprets a type $A$ by a family $A_\kstar$ over $A \times A$, what can be seen as a graph whose vertices are in $A$. To each type constructor is thus associated the construction of a graph. To start with, the type of types $\U$ is interpreted as the family of type of families ${\U}_\kstar$, which takes $A_L$ and $A_R$ in $\U$ and returns the type $A_L \times A_R \rightarrow \U$ of families over $A_L$ and $A_R$. Also, for $A$ interpreted by $A_\kstar$ and $B$ interpreted by $B_\kstar$, a dependent function type $\Pi a: A.\, B$ is interpreted as the graph $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
 \begin{align*}
   (\Pi a: A.\, B)_\kstar(f_L,f_R) \; \defeq \; \Pi (a_L,a_R): (A \times A).\, (A_\kstar(a_L,a_R)\,\rightarrow B_\kstar(f_L(a_L),f_R(a_R)))
 \end{align*}
