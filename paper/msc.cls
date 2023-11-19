@@ -705,7 +705,7 @@
    \usepackage{amsthm}
    \usepackage{soul}
    \usepackage{calc}
-   \usepackage{color}
+   \usepackage{xcolor}
 
    \renewcommand{\rmdefault}{ptm}%
    \renewcommand{\sfdefault}{phv}%
@@ -3789,7 +3789,6 @@
    \usepackage[all]{hypcap}
    \hypersetup{
       draft=false,
-      dvips,
       colorlinks=true,
       linkcolor=blue,
       anchorcolor=blue,
@@ -3801,7 +3800,7 @@
       pdfborderstyle={/S/U/W 0},
       pdfstartview={FitH 800},
       breaklinks=true}
-   \usepackage{breakurl}
+   \usepackage{url}
    \urlstyle{tt}
    \usepackage{bookmark}[2011/12/02]
    \usepackage{etoolbox}
