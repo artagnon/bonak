@@ -1,6 +1,6 @@
 \documentclass{msc}
 
-\usepackage{amsmath, amssymb, mathrsfs, wasysym, url, bookmark, tikz, tikz-cd, mathpazo, enumitem, xargs, multirow, float, tabularx, environ, booktabs, setspace, makecell, colortbl, pdflscape, flushend, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
+\usepackage{amsmath, amssymb, mathrsfs, wasysym, tikz, tikz-cd, mathpazo, xargs, environ, multirow, float, tabularx, booktabs, makecell, colortbl, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
 
 \usepackage[prefix=bonak]{art.cls/xkeymask}
 \usetikzlibrary{patterns}
@@ -179,7 +179,8 @@
   \affiliation{Université Paris Cité, Inria, CNRS, IRIF, Paris
     \email{Hugo.Herbelin@inria.fr}}
   \author{Ramkumar Ramachandra}
-  \affiliation{Université Paris Cité (2020-2022) \email{r@artagnon.com}}
+  \affiliation{Université Paris Cité (2020-2022), Unaffiliated
+    \email{r@artagnon.com}}
 \end{authgrp}
 \begin{abstract}
   Semi-simplicial and semi-cubical sets are commonly defined as presheaves over respectively, the semi-simplex or semi-cube category. Homotopy Type Theory then popularized an alternative definition, where the set of $n$-simplices or $n$-cubes are instead regrouped into the families of the fibers over their faces, leading to a characterization we call \emph{indexed}.
@@ -201,7 +202,7 @@ A family of sets can commonly be represented in two ways: as a family properly s
 \end{equation*}
 where $\U$ represents in homotopy type theory the subset of types within a given universe where equality of any two elements has at most one proof.
 
-A \emph{presheaf} on an category is a family of sets connected with maps indexed over the morphisms of the category. As such, it lives on the indexed side of the equivalence, contrasting with the fibered side, where we have \emph{discrete Grothendieck fibrations}~\citep{LoregianRiehl20}. However, there are situations where a presheaf $F$ can also be seen as living on the fibered side of the equivalance. This happens when the indexing category is \emph{direct}, or has a downwards-well-founded collection of non-identity morphisms. This is the case in semi-simplicial and semi-cubical sets, where each $F(X)$ serving as source of a map $F(X) \stackrel{F(f)}{\rightarrow} F(Y)$ can be turned into a family $F(X)$ indexed on $F(Y)$. Since the maps are well-founded downward, this can be iterated from below, eventually producing a collection of families which we call an indexed presentation of the presheaf over the direct category.
+A \emph{presheaf} on an category is a family of sets connected with maps indexed over the morphisms of the category. As such, it lives on the indexed side of the equivalence, contrasting with the fibered side, where we have \emph{discrete Grothendieck fibrations}~\citep{LoregianRiehl20}. However, there are situations where a presheaf $F$ can also be seen as living on the fibered side of the equivalence. This happens when the indexing category is \emph{direct}, or has a downwards-well-founded collection of non-identity morphisms. This is the case in semi-simplicial and semi-cubical sets, where each $F(X)$ serving as source of a map $F(X) \stackrel{F(f)}{\rightarrow} F(Y)$ can be turned into a family $F(X)$ indexed on $F(Y)$. Since the maps are well-founded downward, this can be iterated from below, eventually producing a collection of families which we call an indexed presentation of the presheaf over the direct category.
 
 Let us consider, for instance, the case of a semi-cubical set~\citep{grandis03,buchholtz17} presented with $2n$ face maps from the set of $n$-cubes to the set of $(n-1)$-cubes. Formulated in type theory, the corresponding presheaf definition of a semi-cubical set prescribes a family of sets and face
 maps between them as follows:
@@ -216,11 +217,11 @@ up to cubical faces identities. In it, $X_1$ can be seen as a family over $X_0 \
 \begin{align*}
   X_0 & :              & \U                                                                            \\
   X_1 & :              & X_0 \times X_0 \rightarrow \U                                                 \\
-  X_2 & : \Pi a b c d. & X_1(a)(b) \times X_1(a)(c) \times X_1 (b)(d) \times X_1 (c)(d) \rightarrow \U \\
+  X_2 & : \Pi a b c d. & X_1(a)(b) \times X_1 (c)(d) \times X_1(a)(c) \times X_1 (b)(d) \rightarrow \U \\
   \ldots
 \end{align*}
 
-The idea for such an indexed presentation of presheaves over a direct category was mentioned at the Univalent Foundations year in the context of defining semi-simplicial types~\footnote{See e.g. \url{https://ncatlab.org/nlab/show/semi-simplicial+types+in+homotopy+type+theory}.}. A couple of constructions were proposed since then. One, by \cite{voevodsky12}, relies on the presentation of semi-simplicial sets as a presheaf over increasing injective maps between finite ordinals. Another, by \cite{herbelin15}\footnote{In hindsight, the title of the paper ``A dependently-typed construction of semi-simplicial types'' is somewhat confusing: it was part of a project for defining semi-simplicial types, but, in practice, the definition is done in a type theory with Unicity of Identity Proofs, meaning, in a type theory where types (intended to represent arbitrary $\infty$-groupoids) are actually sets ($0$-truncated $\infty$-groupoids or $0$-groupoids). The confusion between the question of moving from semi-simplicial sets to semi-simplicial types, and moving from a presheaf to an indexed presentation was, however, common at the time.}, and fully formalized in the Coq proof assistant, relies on the presentation of semi-simplicial sets as a presheaf over face maps. Another by \cite{part15}, formalized in (an emulation of logic-enriched homotopy type theory in) the Plastic proof assistant, and yet another by \cite{annenkovCK17}, formalized in (an emulation of a two-level type theory in) the Agda proof assistant~\footnote{\url{https://github.com/nicolaikraus/HoTT-Agda/blob/master/nicolai/SemiSimp/SStypes.agda}}, also rely on the presentation of the semi-simplicial category from increasing injective functions over finite ordinals.
+The idea for such an indexed presentation of presheaves over a direct category was mentioned at the Univalent Foundations year in the context of defining semi-simplicial types~\footnote{See e.g. \href{https://ncatlab.org/nlab/show/semi-simplicial+types+in+homotopy+type+theory}{ncatlab.org/nlab/show/semi-simplicial+types+in+homotopy+type+theory}.}. A couple of constructions were proposed since then. One, by \cite{voevodsky12}, relies on the presentation of semi-simplicial sets as a presheaf over increasing injective maps between finite ordinals. Another, by \cite{herbelin15}\footnote{In hindsight, the title of the paper ``A dependently-typed construction of semi-simplicial types'' is somewhat confusing: it was part of a project for defining semi-simplicial types, but, in practice, the definition is done in a type theory with Unicity of Identity Proofs, meaning, in a type theory where types (intended to represent arbitrary $\infty$-groupoids) are actually sets ($0$-truncated $\infty$-groupoids or $0$-groupoids). The confusion between the question of moving from semi-simplicial sets to semi-simplicial types, and moving from a presheaf to an indexed presentation was, however, common at the time.}, and fully formalized in the Coq proof assistant, relies on the presentation of semi-simplicial sets as a presheaf over face maps. Another by \cite{part15}, formalized in (an emulation of logic-enriched homotopy type theory in) the Plastic proof assistant, and yet another by \cite{annenkovCK17}, formalized in (an emulation of a two-level type theory in) the Agda proof assistant~\footnote{\href{https://github.com/nicolaikraus/HoTT-Agda/blob/master/nicolai/SemiSimp/SStypes.agda}{github.com/nicolaikraus/HoTT-Agda/blob/master/nicolai/SemiSimp/SStypes.agda}}, also rely on the presentation of the semi-simplicial category from increasing injective functions over finite ordinals.
 
 The indexed definition of a presheaf over a direct category is technically more involved than the presheaf definition, as it requires hard-wiring in the structure the dependencies between elements of the sets of the presheaf, including the coherence conditions between these dependencies, such as taking the $i$-th face of the $j$-th face of a $n$-simplex being the same as taking the $(j-1)$-th face of the $i$-th face (when $j>i$). However, defining a concrete presheaf in indexed form only requires providing the family, since the responsibility of defining maps and showing the coherence conditions is already accounted for in the definition.
 
@@ -465,13 +466,13 @@ Let us recall from the introduction, the form taken by the indexed presentation 
 \begin{align*}
   X_0 & :              & \U                                                                            \\
   X_1 & :              & X_0 \times X_0 \rightarrow \U                                                 \\
-  X_2 & : \Pi a b c d. & X_1(a)(b) \times X_1(a)(c) \times X_1 (b)(d) \times X_1 (c)(d) \rightarrow \U \\
+  X_2 & : \Pi a b c d. & X_1(a)(b) \times X_1 (c)(d) \times X_1(a)(c) \times X_1 (b)(d) \rightarrow \U \\
   \ldots
 \end{align*}
 
-In there, the process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$, and so on, is similar to iteratively applying a binary parametricity translation. The parametricity which we consider interprets a type $A$ by a family $A_\kstar$ over $A \times A$, what can be seen as a graph whose vertices are in $A$. To each type constructor is thus associated the construction of a graph. In particular, the type of types $\U$ is interpreted as the family of families ${\U}_\kstar$, which takes $A_L$ and $A_R$ in $\U$ and returns the type $A_L \times A_R \rightarrow \U$ of families over $A_L$ and $A_R$. Also, for $A$ interpreted by $A_\kstar$ and $B$ interpreted by $B_\kstar$, a dependent function type $\Pi a: A.\, B$ is interpreted as the graph $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
+In there, the process of construction of the type of $X_1$ from that of $X_0$, and from the type of $X_2$ to that of $X_1$, and so on, is similar to iteratively applying a binary parametricity translation. The parametricity which we consider interprets a type $A$ by a family $A_\kstar$ over $A \times A$, what can be seen as a graph whose vertices are in $A$. To each type constructor is thus associated the construction of a graph. To start with, the type of types $\U$ is interpreted as the family of type of families ${\U}_\kstar$, which takes $A_L$ and $A_R$ in $\U$ and returns the type $A_L \times A_R \rightarrow \U$ of families over $A_L$ and $A_R$. Also, for $A$ interpreted by $A_\kstar$ and $B$ interpreted by $B_\kstar$, a dependent function type $\Pi a: A.\, B$ is interpreted as the graph $(\Pi a: A.\, B)_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
 \begin{align*}
-  (\Pi a: A.\, B)_\kstar(f_L)(f_R) \; \defeq \; \Pi (a_L,a_R): (A \times A).\, (A_\kstar(a_L,a_R)\,\rightarrow B_\kstar(f_L(a_L),f_R(a_R)))
+  (\Pi a: A.\, B)_\kstar(f_L,f_R) \; \defeq \; \Pi (a_L,a_R): (A \times A).\, (A_\kstar(a_L,a_R)\,\rightarrow B_\kstar(f_L(a_L),f_R(a_R)))
 \end{align*}
 
 Similarly, a product type $A \times B$ is interpreted as the graph $(A \times B)_\kstar$ that relates two tuples $(a_L,b_L)$ and $(a_R,b_R)$ in $A \times B$ as follows:
@@ -479,17 +480,17 @@ Similarly, a product type $A \times B$ is interpreted as the graph $(A \times B)
   (A \times B)_\kstar((a_L,b_L),(a_R,b_R)) \; \defeq \; A_\kstar(a_L,a_R) \times B_\kstar(b_L,b_R)
 \end{align*}
 
-In particular, for $X: \U$, applying the parametricity translation is about canonically associating to $X$ an inhabitant $X_\kstar$ of ${\U}_\kstar(X,X)$ i.e. of $X \times X \rightarrow \U$. In turn, applying the parametricity translation to $X_\kstar: X \times X \rightarrow \U$ is about canonically associating to $X_\kstar$ an inhabitant $X_{\kstar\kstar}$ of $(X \times X \rightarrow \U)_\kstar(X_\kstar,X_\kstar)$ i.e. of:
+In particular, for $X: \U$, applying the parametricity construction is about canonically associating to $X$ an inhabitant $X_\kstar$ of ${\U}_\kstar(X,X)$ i.e. of $X \times X \rightarrow \U$. In turn, applying the parametricity translation to $X_\kstar: X \times X \rightarrow \U$ is about canonically associating to $X_\kstar$ an inhabitant $X_{\kstar\kstar}$ of $(X \times X \rightarrow \U)_\kstar(X_\kstar,X_\kstar)$ i.e. of:
 \begin{align*}
-  \Pi ((x_{LL},x_{lR}),(x_{RL},x_{RR})): ((X \times X) \times (X \times X)).\,\\
+  \Pi ((x_{LL},x_{lR}),(x_{RL},x_{RR})): ((X \times X) \times (X \times X)). \\
   (X_\kstar(x_{LL},x_{LR}) \times X_\kstar(x_{RL},x_{RR})
   \rightarrow X_\kstar(x_{LL}, x_{RL}) \times X_\kstar(x_{LR},x_{RR})  \rightarrow \U)
 \end{align*}
 which hints us at how the sequence $X_0$, $X_1$, $X_2$ can be seen as a sequence of inhabitants of the iteration of binary parametricity applied to an initial $X: \U$:
 \begin{equation*}
   \begin{array}{llllr}
-    X_0 & \defeq & X                & : & \U                                               \\
-    X_1 & \defeq & X_\kstar         & : & {\U}_\kstar(X,X)                                \\
+    X_0 & \defeq & X                & : & \U                                             \\
+    X_1 & \defeq & X_\kstar         & : & {\U}_\kstar(X,X)                               \\
     X_2 & \defeq & X_{\kstar\kstar} & : & ({\U}_\kstar(X,X))_{\kstar}(X_\kstar,X_\kstar) \\
     \ldots
   \end{array}
@@ -515,7 +516,7 @@ Notice, however, that the recipe obtained so far, $X_{n + 1}: ({S_n})_\kstar(X_n
 %   - refine-style vs tactic-style
 
 \section{Our construction}
-In this section, we describe our parametricity-based construction of $\nu$-sets in indexed form at two levels of formality:
+In this section, we describe our parametricity-based construction of $\nu$-sets in indexed form at two levels of formality.
 
 Sections~\ref{sec:ett} and~\ref{sec:itt} describe the construction at an informal level of discourse:
 \begin{enumerate}
