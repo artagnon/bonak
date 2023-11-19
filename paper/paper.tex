@@ -163,9 +163,6 @@
   \captionof{table}{#1}
 }
 
-% The label, since we're including twice
-\newcommand*{\lab}{}
-
 % \midrule color
 \def\graymidrule{\arrayrulecolor{gray30}\midrule\arrayrulecolor{gray65}}
 
@@ -564,24 +561,24 @@ A $\nu$-set is a sequence of families of $\U$, that is $\U[m]$ for some universe
 
 Table \ref{tab:coind} describes the type of a $\nu$-set at level $m$ in indexed form, as the type of a coinductively-defined infinite sequence of type families representing the limit of $n$-truncated $\nu$-sets: $\Xfrom{m}{n}$ denotes an infinite sequence $X_{n+1}, X_{n+2}, \ldots$ dependent on a $n$-truncated $\nu$-set, $\Xto{m}{n}$, so that, when $m$ is $0$, it denotes a full $\nu$-set, written $\Xp{m}$. This is made possible because the $0$-truncated $\nu$-set, $\Xto{m}{0}$, is degenerated: it is an empty family, defined to be the unit type, and there is thus only one $0$-truncated $\nu$-set, namely the canonical inhabitant $\kstar$ of $\unittype$.
 
-The definition of the type of a $n$-truncated $\nu$-set is in turn described in \ref{tab:core}. In the infinite sequence of type families representing a $\nu$-set, the $n$-th component is a type dependent over a $\fullframe$. The type $\fullframe$ represents a matching object. It is recursively defined in \ref{tab:frames}, using the auxiliary definitions of $\framep$, $\layer$ and $\painting$. The rationale behind $\framep$, $\layer$ and $\painting$ will be explained later but it should already be noticed that the type $\layer$ relies on an operator of frame restriction $\restrf$ which is defined in \ref{tab:faces}, and this restriction operator is in turn defined using the auxiliary definitions of $\restrl$ and $\restrc$.
+The definition of the type of a $n$-truncated $\nu$-set is in turn described in table \ref{tab:core}. In the infinite sequence of type families representing a $\nu$-set, the $n$-th component is a type dependent over a $\fullframe$. The type $\fullframe$ represents a matching object. It is recursively defined in table \ref{tab:frames}, using the auxiliary definitions of $\framep$, $\layer$ and $\painting$. The rationale behind $\framep$, $\layer$ and $\painting$ will be explained later but it should already be noticed that the type $\layer$ relies on an operator of frame restriction $\restrf$ which is defined in table \ref{tab:faces}, and this restriction operator is in turn defined using the auxiliary definitions of $\restrl$ and $\restrc$.
 
 Notably, the definition of $\restrl$ relies on an equality expressing the commutation of the composition of $\restrf$. The proof of this commutation is worth being made explicit, which we do in table \ref{tab:coh} using proof-term notations. The proof requires an induction on the dimension, and on the structure of $\framep$, $\layer$, and $\painting$. This is what $\cohf$ does using auxiliary proofs $\cohl$ and $\cohc$. Even though it looks independent of the definitions from the the other tables, $\cohf$ has to be proved mutually with the definitions of $\framep$, $\layer$, $\painting$, and their corresponding restrictions. More precisely, for a fixed $n$, the block of $\framep$, $\restrf$, and $\cohf$ has to be mutually defined by induction on $p$. Also, each of $\painting$, $\restrc$, and $\cohc$ is built by induction from $p$ to $n$. The $\painting$ block at $n$ relies on the $\framep$ block at $n$, but the converse dependency is only on lower $n$, so this is well-founded. Note that $\layer$, $\restrl$ and $\cohl$ are just abbreviations. The exact way this mutual recursion is eventually formalized is explained in section~\ref{sec:wf}.
 
 Note that for a fixed constant $n$, relying on the evaluation rules of type theory, the coherence conditions degenerate to a reflexivity proof, so that the construction builds an effective sequence of types not mentioning coherences anymore. \\
 
-\renewcommand*{\lab}{tab:coind}
+\def\lab{tab:coind}
 \input{tab-coind.tex}
 
 % For just the second table, keep the universe letter in fullframe
 \renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[#1][#2][][][#3]}
 
-\renewcommand*{\lab}{tab:core}
+\def\lab{tab:core}
 \input{tab-core.tex}
 
 % Drop the universe letter in fullframe for all remaining tables
 \renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[][#2][][][#3]}
-\renewcommand*{\lab}{tab:frames}
+\def\lab{tab:frames}
 \input{tab-frames.tex}
 
 % Truncated sets, otherwise referred to as X
@@ -593,7 +590,7 @@ Note that for a fixed constant $n$, relying on the evaluation rules of type theo
 % The third table mentions cohframe; keep ε, ω in this instance
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][#6,#7][#8][#9]}
 
-\renewcommand*{\lab}{tab:faces}
+\def\lab{tab:faces}
 \input{tab-faces-ett.tex}
 
 % Restriction for frame, layer, and painting
@@ -617,7 +614,7 @@ Note that for a fixed constant $n$, relying on the evaluation rules of type theo
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
 
-\renewcommand*{\lab}{tab:coh}
+\def\lab{tab:coh}
 \input{tab-coh-ett.tex}
 
 \subsection{Intuition for our formal construction\label{sec:intuition}}
@@ -793,10 +790,10 @@ The need for transport along a proof of commutation of $\restrf$ in the definiti
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
-\renewcommand*{\lab}{fulltab:faces}
+\def\lab{fulltab:faces}
 \renewcommand{\thetable}{4'}
 \input{tab-faces.tex}
-\renewcommand*{\lab}{fulltab:coh}
+\def\lab{fulltab:coh}
 \renewcommand{\thetable}{5'}
 \input{tab-coh.tex}
 
