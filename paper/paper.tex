@@ -193,6 +193,7 @@
   We exploit this correspondence to develop an original uniform indexed definition of both augmented semi-simplicial and semi-cubical sets, and fully formalize it in Coq.
 \end{abstract}
 \maketitle
+\vspace{-2em} % Remove space after abstract
 
 \section{Introduction}
 \subsection*{Fibered vs indexed presentation of semi-simplicial and semi-cubical sets}
@@ -213,7 +214,6 @@ maps between them as follows:
   \end{tikzcd}
 \end{equation*}
 up to cubical faces identities. In it, $X_1$ can be seen as a family over $X_0 \times X_0$ presented in a fibered form, $X_2$ can be seen as a family of $X_1 \times X_1 \times X_1 \times X_1$, and so on. This suggests an alternative indexed presentation of the same presheaf as a stratified sequence of families indexed on elements of families of lower rank, taking into account the coherence conditions to prevent duplications. Formulated in type theory, it takes the form:
-
 \begin{align*}
   X_0 & :              & \U                                                                            \\
   X_1 & :              & X_0 \times X_0 \rightarrow \U                                                 \\
@@ -255,21 +255,17 @@ While ordinary semi-simplicial sets are presheaves over the semi-simplex categor
 
 \begin{definition}[$\DeltaPlus$]
   The definition of $\DeltaPlus$ is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
-
-  \begin{figure}[H]
-    \centering
-    \begin{align*}
-      \Obj_{\DeltaPlus}       & := \Nat                                                                             \\
-      \Hom_{\DeltaPlus}(p, n) & := \{l \in \{0, \kstar\}^n \mid \text{number of $\kstar$ in $l = p$}\}              \\
-      g \circ f               & :=
-      \begin{cases}
-        f                  & \text{if $g = []$}                                                        \\
-        0 :: (g' \circ f)  & \text{if $g = (0 :: g')$}                                                 \\
-        a :: (g' \circ f') & \text{if $g = (\star :: g')$, $f = (a :: f')$, where $a = 0$ or $\kstar$} \\
-      \end{cases}                \\
-      \id                     & := [\kstar, \ldots, \kstar] \text{ $n$ times for $\id \in \Hom_{\DeltaPlus}(n, n)$}
-    \end{align*}
-  \end{figure}
+  \begin{align*}
+    \Obj_{\DeltaPlus}       & := \Nat                                                                             \\
+    \Hom_{\DeltaPlus}(p, n) & := \{l \in \{0, \kstar\}^n \mid \text{number of $\kstar$ in $l = p$}\}              \\
+    g \circ f               & :=
+    \begin{cases}
+      f                  & \text{if $g = []$}                                                        \\
+      0 :: (g' \circ f)  & \text{if $g = (0 :: g')$}                                                 \\
+      a :: (g' \circ f') & \text{if $g = (\star :: g')$, $f = (a :: f')$, where $a = 0$ or $\kstar$} \\
+    \end{cases}                \\
+    \id                     & := [\kstar, \ldots, \kstar] \text{ $n$ times for $\id \in \Hom_{\DeltaPlus}(n, n)$}
+  \end{align*}
 \end{definition}
 
 \begin{definition}[$\Set_{\DeltaPlus}$]
@@ -329,20 +325,17 @@ Semi-cubical sets are defined like augmented semi-simplicial sets except that $\
 \begin{definition}[\Cube]
   The definition of $\Cube$ is shown below. The symbols $L$ and $R$ indicate opposite faces of a cube.
 
-  \begin{figure}[H]
-    \centering
-    \begin{align*}
-      \Obj_{\Cube}       & := \Nat                                                                          \\
-      \Hom_{\Cube}(p, n) & := \{l \in \{L, R, \kstar\}^n \mid \text{number of $\kstar$ in $l = p$}\}        \\
-      g \circ f          & :=
-      \begin{cases}
-        f                  & \text{if $g = []$}                                                               \\
-        a :: (g' \circ f)  & \text{if $g = (a :: g')$}, \text{where $a = L$ or $R$}                           \\
-        a :: (g' \circ f') & \text{if $g = (\kstar :: g')$, $f = (a :: f')$, where $a = L$, $R$, or $\kstar$} \\
-      \end{cases} \\
-      \id                & := [\kstar, \ldots, \kstar] \text{ $n$ times}
-    \end{align*}
-  \end{figure}
+  \begin{align*}
+    \Obj_{\Cube}       & := \Nat                                                                          \\
+    \Hom_{\Cube}(p, n) & := \{l \in \{L, R, \kstar\}^n \mid \text{number of $\kstar$ in $l = p$}\}        \\
+    g \circ f          & :=
+    \begin{cases}
+      f                  & \text{if $g = []$}                                                               \\
+      a :: (g' \circ f)  & \text{if $g = (a :: g')$}, \text{where $a = L$ or $R$}                           \\
+      a :: (g' \circ f') & \text{if $g = (\kstar :: g')$, $f = (a :: f')$, where $a = L$, $R$, or $\kstar$} \\
+    \end{cases} \\
+    \id                & := [\kstar, \ldots, \kstar] \text{ $n$ times}
+  \end{align*}
 
   Again, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
 \end{definition}
@@ -399,8 +392,7 @@ More generally, the standard $(n + 1)$-semi-cube can be obtained by taking two c
 \subsection*{\texorpdfstring{$\nu$}{ν}-sets}
 Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and semi-cubical sets obtained by building on an arbitrary alphabet $\nu$, so that the following holds:
 
-\begin{table}[H]
-  \centering
+\begin{center}
   \begin{tabularx}{0.7\linewidth}{X|X|X}
     \toprule
     Cardinal of $\nu$ & 1                               & 2                  \\
@@ -408,27 +400,23 @@ Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and
     Interpretation    & Augmented semi-simplicial types & Semi-cubical types \\
     \bottomrule
   \end{tabularx}
-\end{table}
+\end{center}
 
 To obtain this, we extend $\DeltaPlus$ and $\Cube$ in a straightforward manner into a category which we call $\hexagon$.
 
 \begin{definition}[$\hexagon$]
   The definition of $\nu$-semi-shape category is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
-
-  \begin{figure}[H]
-    \centering
-    \begin{align*}
-      \Obj_{\hexagon}       & := \Nat                                                                           \\
-      \Hom_{\hexagon}(p, n) & := \{l \in (\nu \cup \{\kstar\})^n \mid \text{number of $\kstar$ in $l = p$}\}    \\
-      g \circ f             & :=
-      \begin{cases}
-        f                  & \text{if $g = []$}                                                                 \\
-        a :: (g' \circ f)  & \text{if $g = (a :: g')$}, \text{where $a \in \nu$}                                \\
-        a :: (g' \circ f') & \text{if $g = (\kstar :: g')$, $f = (a :: f')$, where $a \in \nu$ or $a = \kstar$} \\
-      \end{cases}   \\
-      \id                   & := [\kstar, \ldots, \kstar] \text{ $n$ times for $\id \in \Hom_{\hexagon}(n, n)$}
-    \end{align*}
-  \end{figure}
+  \begin{align*}
+    \Obj_{\hexagon}       & := \Nat                                                                           \\
+    \Hom_{\hexagon}(p, n) & := \{l \in (\nu \cup \{\kstar\})^n \mid \text{number of $\kstar$ in $l = p$}\}    \\
+    g \circ f             & :=
+    \begin{cases}
+      f                  & \text{if $g = []$}                                                                 \\
+      a :: (g' \circ f)  & \text{if $g = (a :: g')$}, \text{where $a \in \nu$}                                \\
+      a :: (g' \circ f') & \text{if $g = (\kstar :: g')$, $f = (a :: f')$, where $a \in \nu$ or $a = \kstar$} \\
+    \end{cases}   \\
+    \id                   & := [\kstar, \ldots, \kstar] \text{ $n$ times for $\id \in \Hom_{\hexagon}(n, n)$}
+  \end{align*}
 \end{definition}
 
 A $\nu$-set is thus a contravariant functor $\phi$ from the $\nu$-semi-shape category to $\Set$ and we call $n$-$\nu$-semi-shape an element of $\phi(n)$. As in the augmented semi-simplicial and semi-cubical cases, the standard $(n + 1)$-$\nu$-semi-shape is obtained by connecting together $\nu$ copies of the standard $n$-$\nu$-semi-shape with an extra copy stretched in the new dimension. We clarify in the next sections how this process of construction is similar to the parametricity translation developed for functional programming~\citep{reynolds83} and more generally for type theory~\citep{bernardy10, bernardy11, atkey14, bernardy15}.
@@ -445,7 +433,6 @@ A type-theoretic notion of sets can be recovered in each universe as $\U[m]$, de
 \end{align*}
 
 In $\U[m]$, the following properties hold:
-
 \begin{enumerate}
   \item UIP holds on the unit type, bool type, as well as all types of finite cardinal $\nu$.
   \item UIP propagates to $\Sigma$-types.
@@ -644,15 +631,12 @@ Note that for a fixed constant $n$, relying on the evaluation rules of type theo
 \renewcommandx{\cohc}[1][1]{\coh{painting}[][][][][][#1][][]}
 \renewcommandx{\coht}{\cohtwo{frame}[][][][][][][][]}
 
-To assign types to $X_0, X_1, X_2, \ldots$ in the above indexed representation, we give a recursive definition relying on the building blocks which we call $\framep$, $\layer$, and $\painting$. A $\framep$ is a boundary of a standard form (simplex, cube, etc.), which we decompose into $\layer$, and a $\painting$ corresponds to a filled $\framep$. Some $\framep$ are full and we call them $\fullframe$: they represent matching objects.
+To assign types to $X_0, X_1, X_2, \ldots$ in the above indexed representation, we give a recursive definition relying on the building blocks called $\framep$, $\layer$, and $\painting$. A $\framep$ is a boundary of a standard form (simplex, cube), which we decompose into $\layer$, and a $\painting$ corresponds to a filled $\framep$. Some $\framep$ are full and we call them $\fullframe$: they represent matching objects.
 
-To every $X_n$ is uniformly assigned a type of the form $\fullframe[n] \rightarrow \U$. Compared to the informal description given in section~\ref{sec:rel-param}, this amounts to applying the isomorphisms between $A \rightarrow B \rightarrow C$ and $A \times B \rightarrow C$, or between $\Pi a: A.\, (B a \rightarrow C)$ and $(\Sigma a: A.\, B a) \rightarrow C$ so as to get the expected form $\fullframe[n] \rightarrow \U$. In particular, $\fullframe[n]$ is a ``telescope'', i.e. a nesting of $\Sigma$-types.
+Every $X_n$ is uniformly assigned a type of the form $\fullframe[n] \rightarrow \U$. Compared to the informal description given in section~\ref{sec:rel-param}, this amounts to applying the isomorphisms between $A \rightarrow B \rightarrow C$ and $A \times B \rightarrow C$, or between $\Pi a: A.\, (B a \rightarrow C)$ and $(\Sigma a: A.\, B a) \rightarrow C$ to get the expected form $\fullframe[n] \rightarrow \U$. In particular, $\fullframe[n]$ is a ``telescope'', or a nesting of $\Sigma$-types.
 
-Let us now illustrate how we recursively build $\fullframe[n]$. To begin, let us set $\fullframe[0] = \unittype$, so that the type $\U$ given to $X_0$ in section~\ref{sec:rel-param} can be equivalently formulated as $\unittype \rightarrow \U$. Then, more generally, we let each $\fullframe[n]$ consist of $n$ layers, written $\layer[n][p]$ with $p < n$, that we stack in order, starting from the $\unittype$ type and writing $\framep[n][p]$ for the $p$ first layers of a $\fullframe[n]$, so that $\fullframe[n]$ is $\framep[n][n]$. For instance, $X_1$ is made of one layer, so that it can be written as a $\Sigma$-type of an inhabitant of the $\unittype$ and $\layer[1][0]$, as shown below. The figure also mentions how the type of $X_2$ is structured.
-
-\begin{figure}[H]
-  \centering
-  \small
+Let us now illustrate how we recursively build $\fullframe[n]$. To begin, let us set $\fullframe[0] = \unittype$, so that the type $\U$ given to $X_0$ in section~\ref{sec:rel-param} can be equivalently formulated as $\unittype \rightarrow \U$. Then, more generally, we let each $\fullframe[n]$ consist of $n$ layers, written $\layer[n][p]$ with $p < n$, that we stack in order, starting from $\unittype$, and writing $\framep[n][p]$ for the $p$ first layers of a $\fullframe[n]$, so that $\fullframe[n]$ is $\framep[n][n]$. For instance, $X_1$ is made of one layer, so that it can be written as a $\Sigma$-type of an inhabitant of $\unittype$ and $\layer[1][0]$, as shown below. The figure also mentions how the type of $X_2$ is structured.
+\begin{small}
   \begin{equation*}
     \begin{array}{ll}
       X_0                                : \underbrace{\unittype}_{\framep[0][0]}                                                    \rightarrow \U \\
@@ -701,7 +685,7 @@ Let us now illustrate how we recursively build $\fullframe[n]$. To begin, let us
       \ldots
     \end{array}
   \end{equation*}
-\end{figure}
+\end{small}
 
 Let us now illustrate the construction of $\fullframe[3]$, necessary to build the type of $X_3$.
 
