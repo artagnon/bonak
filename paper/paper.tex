@@ -228,7 +228,7 @@ In the context of functional programming, Reynolds' parametricity~(\citeyear{rey
 \subsection*{Contribution}
 The main contribution of the paper is to describe in full, the details of a recipe that uniformly characterizes unary and binary iterated parametricity in indexed form, and to derive from it a new indexed presentation, called indexed \emph{$\nu$-sets}, of augmented semi-simplicial and semi-cubical sets. Alternatively, from a category-theory perspective, we are characterizing, among the class of matching objects up to isomorphism for augmented semi-simplicial and cubical sets, a particular instance that reflects the structure of iterated parametricity.
 
-This new construction is useful in the direction of better understanding the technicality of coherence issues in defining ``semi-simplicial types''~\citep{part15,shulman14,altenkirch16,kraus17}, as well as the dialectic between reasoning in Extensional Type Theory and Intensional Type Theory (as will be discussed in Section~\ref{sec:ett}).
+This new construction is useful in the direction of better understanding the technicality of coherence issues in defining ``semi-simplicial types''~\citep{part15,shulman14,altenkirch16,kraus17}, as well as the dialectic between reasoning in Extensional Type Theory and Intensional Type Theory.
 
 Our work is a step in the direction of the program initiated in \cite{altenkirch15} to develop parametricity-based models of parametric type theory~\citep{bernardy15,nuyts17,cavallo19} and cubical type theory~\citep{bezem13,cohen16,angiuli21} which are closer to the syntax of type theory, and is likely to better reflect the definitional properties of type theory than presheaf-based cubical sets would do. Compare, for example, the loss of definitional properties when interpreting ``indexed'' dependent types of type theory as ``fibrations'' in models such as locally cartesian closed categories~\citep{curien14}.
 
@@ -482,21 +482,6 @@ This tells us how the informal type given to $X_2$ in the previous section could
 
 Notice, however, that the recipe obtained so far, $X_{n + 1}: ({S_n})_\kstar(X_n,X_n)$ for $X_n: S_n$, applies parametricity on the \emph{syntax} of the type of $X_n$. It does not directly yield a characterization of $S_n$ as a function from $n$. Reformulating the recipe as an explicit recursive construction, without requiring an interpretation of the syntax of types, is the main outcome of this work, together with the mechanization and the uniform treatment of augmented semi-simplicial and semi-cubical sets by means of the generalization to $\nu$-sets.
 
-% 5. The "mathematical" construction (and its intuition)
-%   leaving equality and inequality side conditions implicit
-%   in particular, this means:
-%   - assuming equality reflection
-%   - equality as in observational type theory
-%   - assuming termination of recursive constructions
-% 6. Formal details
-% - making substitution of equals by equals explicit
-% - observational properties of equality
-% - the theory of inequality proofs
-% - the well-foundedness
-% - the formalization tricks
-%   - implicit arguments
-%   - refine-style vs tactic-style
-
 \section{Our construction}
 In this section, we describe our parametricity-based construction of $\nu$-sets in indexed form at two levels of formality.
 
@@ -509,7 +494,7 @@ Sections~\ref{sec:ett} and~\ref{sec:itt} describe the construction at an informa
 Sections~\ref{sec:wf}, \ref{sec:le}, and \ref{sec:eqproperties} describe additional issues to be addressed in order to get a fully formal construction:
 \begin{enumerate}
   \item The well-foundedness of the induction requires a special termination evidence which will be discussed in section~\ref{sec:wf}.
-  \item The construction is indexed over integers and holds under some constraints on the range of these integers. There is a standard formalization dilemma in this kind of situation: either the constraints on the range are embedded in the construction so that the construction makes sense only on the corresponding range, or the construction is made first on a more general domain than needed but restricted to a smaller domain at the time of use. We adopted the first approach, requiring however the construction to be dependent on proofs of inequalities on natural numbers. We discuss how we deal with such dependencies in section~\ref{sec:le}.
+  \item The construction is indexed over integers and holds under some constraints on the range of these integers. There is a standard formalization dilemma in this kind of situation: either the constraints on the range are embedded in the construction so that the construction makes sense only on the corresponding range, or the construction is made first on a more general domain than needed but restricted to a smaller domain at the time of use. We adopted the former approach, requiring the construction to be dependent on proofs of inequalities on natural numbers. We discuss how we deal with such dependencies in section~\ref{sec:le}.
   \item A number of standard groupoid properties of equality as well as type isomorphisms have been left implicit in the informal definition. This is discussed in section~\ref{sec:eqproperties}.
 \end{enumerate}
 
