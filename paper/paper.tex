@@ -1,6 +1,6 @@
 \documentclass{msc}
 
-\usepackage{amsmath, amssymb, mathrsfs, wasysym, tikz, tikz-cd, lmodern, mathpazo, anyfontsize, xargs, environ, multirow, float, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
+\usepackage{amsmath, amssymb, mathrsfs, wasysym, tikz, tikz-cd, lmodern, mathpazo, anyfontsize, xargs, environ, multirow, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[prefix=bonak]{art.cls/xkeymask}
@@ -441,7 +441,7 @@ We are also interested in \emph{extensional} type theory; i.e. in a type theory 
   \seqr{}{\Gamma \vdash p: t = u}{\Gamma \vdash t \equiv u}
 \end{equation*}
 
-Note that the reflection rule implies UIP so that $\U$ and $\Type$ ae equivalent in extensional type theory. The reflection rules also implies functional extensionality, and, actually, extensional type theory is logically equivalent to intentional type theory extended with UIP and functional extensionality~\citep{HofmannPhd}.
+Note that the reflection rule implies UIP so that $\U$ and $\Type$ ae equivalent in extensional type theory. The reflection rules also implies functional extensionality, and, actually, extensional type theory is logically equivalent to intensional type theory extended with UIP and functional extensionality~\citep{HofmannPhd}.
 
 \section{Relating to parametricity\label{sec:rel-param}}
 Let us recall from the introduction, the form taken by the indexed presentation of a semi-cubical set:
@@ -628,7 +628,7 @@ Note that for a fixed constant $n$, relying on the evaluation rules of type theo
 
 To assign types to $X_0, X_1, X_2, \ldots$ in the indexed representation, we give a recursive definition relying on the building blocks called $\framep$, $\layer$, and $\painting$. A $\framep$ is a boundary of a standard form (simplex, cube), which we decompose into $\layer$, and a $\painting$ corresponds to a filled $\framep$. Some $\framep$ are full and we call them $\fullframe$: they represent matching objects.
 
-Every $X_n$ is uniformly assigned a type of the form $\fullframe[n] \rightarrow \U$. Compared to the informal description given in section~\ref{sec:rel-param}, this amounts to applying isomorphisms such as $(A \rightarrow B \rightarrow C) \simeq (A \times B \rightarrow C)$, or $()\Pi a: A.\, (B a \rightarrow C)) \simeq ((\Sigma a: A.\, B a) \rightarrow C)$, or associativity of $\times$, etc. In particular, $\fullframe[n]$ is a ``telescope'', or a nesting of $\Sigma$-types.
+Every $X_n$ is uniformly assigned a type of the form $\fullframe[n] \rightarrow \U$. Compared to the informal description given in section~\ref{sec:rel-param}, this amounts to applying isomorphisms such as $(A \rightarrow B \rightarrow C) \simeq (A \times B \rightarrow C)$ or $(\Pi a: A.\, (B a \rightarrow C)) \simeq ((\Sigma a: A.\, B a) \rightarrow C)$. In particular, $\fullframe[n]$ is a ``telescope'', or a nesting of $\Sigma$-types.
 
 We now illustrate how to recursively build $\fullframe[n]$. To begin, let us set $\fullframe[0] = \unittype$, so that the type $\U$ given to $X_0$ in section~\ref{sec:rel-param} can be equivalently formulated as $\unittype \rightarrow \U$. Then, more generally, let each $\fullframe[n]$ consist of $n$ layers, written $\layer[n][p]$ with $p < n$, that we stack in order, starting from $\unittype$, and writing $\framep[n][p]$ for the $p$ first layers of a $\fullframe[n]$, so that $\fullframe[n]$ is $\framep[n][n]$. For instance, $X_1$ is made of one layer, so that it can be written as a $\Sigma$-type of an inhabitant of $\unittype$ and $\layer[1][0]$, as shown below. The figure also mentions how the type of $X_2$ is structured.
 \begin{small}
@@ -684,8 +684,7 @@ We now illustrate how to recursively build $\fullframe[n]$. To begin, let us set
 
 Let us now illustrate the construction of $\fullframe[3]$, necessary to build the type of $X_3$.
 
-\begin{figure}[H]
-  \centering
+\begin{center}
   \begin{tikzpicture}[scale=2]
     \draw[spanish-blue, fill=spanish-blue] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
     \draw[spanish-blue, fill=spanish-blue, nearly transparent] (0.6, 1) -- (0.6, 1.6) -- (1.6, 1.6) -- (1.6, 0.6) -- (1, 0.6);
@@ -709,7 +708,7 @@ Let us now illustrate the construction of $\fullframe[3]$, necessary to build th
     \draw[russian-green, pattern=dots] (0.2, 1.1) -- (1.0, 1.1) -- (1.4, 1.5) -- (0.6, 1.5) -- (0.2, 1.1);
     \filldraw[russian-green] (0.8, 1.3) circle (0.6pt);
   \end{tikzpicture}
-\end{figure}
+\end{center}
 
 The figure on the left is $\framep[3][1]$, in the middle is $\framep[3][2]$, and on the right is $\framep[3][3]$, which is full. Further, $\framep[3][1]$ is made of one layer, $\layer[3][0]$, shown in blue, $\framep[3][2]$ is made of one additional layer, $\layer[3][1]$, shown in red, $\framep[3][3]$ is made of one more layer, $\layer[3][2]$, shown in green.
 
@@ -740,7 +739,7 @@ An extra refinement arises from the fact that each new layer of a frame has to b
   \end{array}
 \end{equation*}
 
-When $\nu = 2$, the formation of layers from paintings amounts to:
+When $\nu = 2$, using $L$ and $R$ to represent the sides, the formation of layers from paintings amounts to:
 \begin{equation*}
   \begin{array}{llc}
     \layer[n][p](D)(d) & \defeq & \painting[n-1][p](D.\hd)(\restrf[n][p][L][p](d)) \\
@@ -764,13 +763,11 @@ while we expect a component of type
   \painting[n-2][p](D.\hd.\hd)(\restrf[n-1][p][\omega][p](\restrf[n][p][\epsilon][q+1](d)))
 \end{equation*}
 
-Hence, we need a coherence condition to commute the restrictions. Coherence conditions similar to this necessitate what are shown as, $\cohf$, $\cohl$ and $\cohc$ in table~\ref{tab:coh}. These are by induction on the structure of $\framep$, $\layer$ and $\painting$. Note that, for the construction in intentional type theory, we further need a $2$-dimensional coherence condition, $\coht$, for $\cohl$. This is explained in the next section.
+Hence, we need a coherence condition to commute the restrictions. Coherence conditions similar to this necessitate what are shown as, $\cohf$, $\cohl$ and $\cohc$ in table~\ref{tab:coh}. These are by induction on the structure of $\framep$, $\layer$ and $\painting$. Note that, for the construction in intensional type theory, we further need a $2$-dimensional coherence condition, $\coht$, for $\cohl$. This is explained in the next section.
 
-\subsection{From extensional to intentional type theory: explication of the equality proofs\label{sec:itt}}
+\subsection{From extensional to intensional type theory: making explicit the equality proofs\label{sec:itt}}
 \renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
-
-In this section, we intend to get rid of the reflection rule and make explicit what is needed to rephrase the construction from extensional type theory to intentional type theory. For readability purpose, we however make explicit only the key coherence conditions of the construction.
-Other form of equality reasoning would have to be made explicit to obtain a construction fully in intentional type theory but these other steps are standard enough to be omitted at this stage. See section~\ref{sec:eqproperties} for the details.
+In this section, we intend to get rid of the reflection rule and make explicit what is needed to rephrase the construction in intensional type theory. For readability purpose, we however make explicit only the key coherence conditions of the construction. Other cases of equality reasoning would have to be made explicit to fully obtain a construction in intensional type theory but these other steps are standard enough to be omitted at this stage. See section~\ref{sec:eqproperties} for the details.
 
 The need for transport along a proof of commutation of $\restrf$ in the definition of $\restrl$ is made explicit in table~\ref{fulltab:faces}, where the arrow over $\cohf$ indicates the direction of rewrite. \\
 
@@ -818,7 +815,7 @@ where $\ap$ applies a function on two sides of an equality, and $\bullet$ is tra
 \renewcommandx{\cohl}{\coh{layer}[][][][][][][][]}
 \renewcommandx{\cohc}{\coh{painting}[][][][][][][][]}
 
-Notice that each $\restrl$ in the type of $\cohl$ is hiding a $\cohf$ rewrite: this makes a sum total of three $\cohf$ rewrites on the left-hand side, and two $\cohf$ rewrites on the right-hand side. In the proof term of $\cohl$, $\cohc$ has one $\cohf$ rewrite on its left-hand side and zero on the right-hand side. This, combined with the two terms of the form $\ap \cohf$, matches our expectation of three $\cohf$ on the left-hand side and two $\cohf$ on the right-hand side. Then, $\coht$ can roughly be seen as a commutation of these $\cohf$ terms.
+Notice that each $\restrl$ in the type of $\cohl$ is hiding a $\cohf$ rewrite: this makes a sum total of three $\cohf$ rewrites on the left-hand side, and two $\cohf$ rewrites on the right-hand side. In the proof term of $\cohl$, $\cohc$ has one $\cohf$ rewrite on its left-hand side and zero on the right-hand side. This, combined with the two terms of the form $\ap \cohf$, matches our expectation of three $\cohf$ on the left-hand side and two $\cohf$ on the right-hand side. Then, $\coht$ can be seen as expressing the commutation of these $\cohf$ terms.
 
 Finally, let us explain $\cohc$. The base case $p = r$ is the key case of the commutation of $\restrf$, when one of the $\restrc$ collapses, and the remaining equation holds trivially. The case of $p < r$ follows the structure of $\restrc$ by induction.
 
@@ -835,7 +832,7 @@ If we were not working in \U, but in $\HGpd$ we would need to prove one more hig
 \renewcommandx{\cohl}[1][1]{\coh{layer}[][][][][][#1][][]}
 \renewcommandx{\cohc}[1][1]{\coh{painting}[][][][][][#1][][]}
 
-Since the construction shown in the previous sections is by induction on $n$, and dependencies are on lower $n$ and $p < n$, one would imagine formalizing this using well-founded induction in dependent type theory. We initially tried this approach: we had terms dependent on the proofs of the case distinction of $n' \leq n$ implies $n' < n$ or $n' = n$, and these proofs did not have definitional computational rule; it started to be necessary to reason propositionally on the computational property of the case distinction, and it eventually turned out to be unmanageable. Hence, we chose a different route: in practice, since $\restrf[n]$ depends on $\framep[n]$ and $\framep[n-1]$, while $\cohf[n]$ depends on $\framep[n]$, $\framep[n-1]$, and $\framep[n-2]$, we only need to keep track of three ``levels'', and we built separate data structures for the levels, with dependencies. More concretely, we build the ten definitions shown in the tables by induction, and this is part of the definition of a larger record. The other fields of the record are $\framep$, $\layer$, $\painting$ at levels $n - 1$ and $n - 2$, $\restrf$, $\restrl$, and $\restrc$ at level $n - 1$, and equations to recall the definitions of these objects at lower levels.
+Since the construction shown in the previous sections is by induction on $n$, and dependencies are on lower $n$ and $p < n$, one would imagine formalizing this using well-founded induction in dependent type theory. We initially tried this approach: we had terms dependent on the proofs of the case distinction that $n' \leq n$ implies $n' < n$ or $n' = n$, but these proofs did not come with enough definitional properties to be usable in practice. Hence, we chose a different route: in practice, since $\restrf[n]$ depends on $\framep[n]$ and $\framep[n-1]$, while $\cohf[n]$ depends on $\framep[n]$, $\framep[n-1]$, and $\framep[n-2]$, we only need to keep track of three ``levels'', and we built separate data structures for the levels, with dependencies. More concretely, we build the ten definitions shown in the tables by induction, and this is part of the definition of a larger record. The other fields of the record are $\framep$, $\layer$, $\painting$ at levels $n - 1$ and $n - 2$, $\restrf$, $\restrl$, and $\restrc$ at level $n - 1$, and equations to recall the definitions of these objects at lower levels.
 
 \subsection{Dependencies in inequality proofs\label{sec:le}}
 The entire construction relies on inequalities over natural numbers, and we use two different definitions of $\leq$ addressing different concerns in our formalization. In order to build our first variant, we present an intermediate ``recursive definition'', phrased as:
@@ -849,14 +846,14 @@ match n, m with
 end.
 \end{minted}
 
-Here $\SProp$ is a definitionally proof-irrelevant impredicative universe at the bottom of the universe hierarchy~\citep{gilbert19}. By placing the definition in \SProp, we have definitional equality of all inequality proofs. For the purpose of unification, however, this definition does not go far enough. Consider the unification problems:
+Here $\SProp$ is a definitionally proof-irrelevant impredicative universe morally\footnote{In Coq~(\citeyear{coq23}), it is however a stand-alone universe unrelated to the universe hierarchy.} living at the bottom of the universe hierarchy~\citep{gilbert19}. By placing the definition in \SProp, we have definitional equality of all inequality proofs. For the purpose of unification, however, this definition does not go far enough. Consider the unification problems:
 
 \begin{minted}{coq}
 leR_trans ?p leR_refl = ?p
 leR_trans leR_refl ?p = ?p
 \end{minted}
-
-where \texttt{leR\_trans} is transitivity, \texttt{leR\_refl} is reflexivity, and \texttt{?p} is an existential variable. These two problems definitionally hold in \SProp, but equalizing them does not solve the existential. For unification to be useful in inferring existentials, we present our first variant of $\leq$, which we dub as the ``Yoneda variant'':
+%
+where \texttt{leR\_trans} is transitivity, \texttt{leR\_refl} is reflexivity, and \texttt{?p} is an existential variable. These two problems definitionally hold in \SProp, but equating them does not solve the existential. For unification to be useful in inferring existentials, we present our first variant of $\leq$, which we dub as the ``Yoneda variant'':
 
 \begin{minted}{coq}
 Definition leY n m :=
@@ -886,6 +883,7 @@ By equipping the universe construction with a structure of equivalences, as sugg
 
 Another direction for future work would also be to generically construct the indexed form of any presentation of presheaves over a direct category and to show the equivalence between the two presentations.
 
+\newpage
 \bibliographystyle{msclike}
 \bibliography{paper}
 
