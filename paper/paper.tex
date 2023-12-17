@@ -249,8 +249,8 @@ While ordinary semi-simplicial sets are presheaves over the semi-simplex categor
     g \circ f               & :=
     \begin{cases}
       f                  & \text{if $g = \epsilon$}                                                        \\
-      0\,(g' \circ f)  & \text{if $g = (0\,g')$}                                                 \\
-      a\,(g' \circ f') & \text{if $g = (\kstar\,g')$, $f = (a\,f')$, where $a = 0$ or $\kstar$} \\
+      0\,(g' \circ f)  & \text{if $g = 0\,g'$}                                                 \\
+      a\,(g' \circ f') & \text{if $g = \kstar\,g'$, $f = a\,f'$, where $a = 0$ or $\kstar$} \\
     \end{cases}                \\
     \id                     & := \kstar \ldots \kstar \text{ $n$ times for $\id \in \Hom_{\DeltaPlus}(n, n)$}
   \end{align*}
@@ -319,8 +319,8 @@ Semi-cubical sets are defined like augmented semi-simplicial sets except that $\
     g \circ f          & :=
     \begin{cases}
       f                  & \text{if $g = \epsilon$}                                                               \\
-      a\,(g' \circ f)  & \text{if $g = (a\,g')$}, \text{where $a = L$ or $R$}                           \\
-      a\,(g' \circ f') & \text{if $g = (\kstar\,g')$, $f = (a\,f')$, where $a = L$, $R$, or $\kstar$} \\
+      a\,(g' \circ f)  & \text{if $g = a\,g'$}, \text{where $a = L$ or $R$}                           \\
+      a\,(g' \circ f') & \text{if $g = \kstar\,g'$, $f = a\,f'$, where $a = L$, $R$, or $\kstar$} \\
     \end{cases} \\
     \id                & := \kstar \ldots \kstar \text{ $n$ times}
   \end{align*}
@@ -400,8 +400,8 @@ To obtain this, we extend $\DeltaPlus$ and $\Cube$ in a straightforward manner i
     g \circ f             & :=
     \begin{cases}
       f                  & \text{if $g = \epsilon$}                                                                 \\
-      a\,(g' \circ f)  & \text{if $g = (a\,g')$}, \text{where $a \in \nu$}                                \\
-      a\,(g' \circ f') & \text{if $g = (\kstar\,g')$, $f = (a\,f')$, where $a \in \nu$ or $a = \kstar$} \\
+      a\,(g' \circ f)  & \text{if $g = a\,g'$}, \text{where $a \in \nu$}                                \\
+      a\,(g' \circ f') & \text{if $g = \kstar\,g'$, $f = a\,f'$, where $a \in \nu$ or $a = \kstar$} \\
     \end{cases}   \\
     \id                   & := \kstar \ldots \kstar \text{ $n$ times for $\id \in \Hom_{\hexagon}(n, n)$}
   \end{align*}
