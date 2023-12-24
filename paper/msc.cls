@@ -1052,26 +1052,6 @@
    \@endparpenalty   -\@lowpenalty
    \@itempenalty     -\@lowpenalty
    %
-   \trimwidthval\the\trimwidth
-   \trimheightval\the\trimheight
-
-   \trimwidthbleedval\trimwidthval
-   \advance\trimwidthbleedval.25in
-   \trimheightbleedval\trimheightval
-   \advance\trimheightbleedval.25in
-
-   \def\thepaperwidth{\the\trimwidthval}
-   \def\thepaperheight{\the\trimheightval}
-
-   \def\thebleedpaperwidth{\the\trimwidthbleedval}
-   \def\thebleedpaperheight{\the\trimheightbleedval}
-
-   \def\papwidth{\ifdbleed\thebleedpaperwidth\else\thepaperwidth\fi}
-
-   \def\papheight{\ifdbleed\thebleedpaperheight\else\thepaperheight\fi}
-
-   \AtBeginDvi{\special{papersize=\papwidth,\papheight}}
-   %
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% End Parameters %%%%%%%%%%%%%%%%%%%%%%%%%
    %
    \def\mycolor#1{#1\special{color pop}}
