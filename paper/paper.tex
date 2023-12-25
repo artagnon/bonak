@@ -1,8 +1,6 @@
-\documentclass{msc}
+\documentclass{art.cls/art}
 
 \usepackage{amsmath, amssymb, mathrsfs, wasysym, tikz, tikz-cd, lmodern, mathpazo, anyfontsize, xargs, environ, multirow, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
 \usepackage[prefix=bonak]{art.cls/xkeymask}
 
 % Use the patterns library to draw the cubes figure
@@ -90,9 +88,6 @@
 \newcommand{\Type}{\ensuremath{\mathsf{\color{spanish-blue}{Type}}}}
 \newcommand{\SProp}{\ensuremath{\mathsf{\color{spanish-blue}{SProp}}}}
 
-% Examples
-\newtheorem{example}[therm]{Example}
-
 % The unit and bool types
 \newcommand{\unittype}{\ensuremath{\mathsf{unit}}}
 \newcommand{\booltype}{\ensuremath{\mathsf{bool}}}
@@ -174,35 +169,35 @@
 % and { ... } if in mask
 \newcommandx*{\eqnarg}[3]{\ifinmask[bonak]{#1}[#2]{\{#2:#3\}}{(#2:#3)}}
 
-% Double-spacing
-% \linespread{2}
+% Set the entire document to gray65, and pick certain colors
+\color{gray65}
 
 \begin{document}
 \title{A parametricity-based formalization of semi-simplicial and semi-cubical sets}
-\begin{authgrp}
-  \author{Hugo Herbelin}
-  \affiliation{Université Paris Cité, Inria, CNRS, IRIF, Paris
-    \email{Hugo.Herbelin@inria.fr}}
-  \author{Ramkumar Ramachandra}
-  \affiliation{Université Paris Cité (2020-2022), Unaffiliated
-    \email{r@artagnon.com}}
-\end{authgrp}
+\date{}
+\author{
+  \textcolor{gray80}{Hugo Herbelin} \\
+  \itshape \textcolor{gray80}{Université Paris-Cité, Inria, CNRS, IRIF, Paris} \\
+  \ttfamily \textcolor{gray80}{Hugo.Herbelin@inria.fr}
+  \and
+  \textcolor{gray80}{Ramkumar Ramachandra} \\
+  \itshape \textcolor{gray80}{Université Paris-Cité (2020-2022), Unaffiliated} \\
+  \ttfamily \textcolor{gray80}{r@artagnon.com}
+}
+\maketitle
 \begin{abstract}
   Semi-simplicial and semi-cubical sets are commonly defined as presheaves over respectively, the semi-simplex or semi-cube category. Homotopy Type Theory then popularized an alternative definition, where the set of $n$-simplices or $n$-cubes are instead regrouped into the families of the fibres over their faces, leading to a characterization we call \emph{indexed}. Moreover, it is known that semi-simplicial and semi-cubical sets are related to iterated Reynolds parametricity, respectively in its unary and binary variants. We exploit this correspondence to develop an original uniform indexed definition of both augmented semi-simplicial and semi-cubical sets, and fully formalize it in Coq.
 \end{abstract}
-\footnotetext{Competing interests: The authors declare none}
-\maketitle
-\vspace{-2em} % Remove space after abstract
 
 \section{Introduction}
 \subsection*{Fibred vs indexed presentation of semi-simplicial and semi-cubical sets}
-A family of sets can commonly be represented in two ways: as a family properly speaking, indexed by the elements of a given set $S$, or as a set $T$ together with a map from $T$ to $S$, which specifies for each element of $T$ its dependency on $S$. In the former case, we call it an \emph{indexed} presentation. In the latter case, the set associated to a given element of $S$ is the fibre of this element, so we call it a \emph{fibred} presentation. The two presentations are equivalent and the equivalence can be phrased concisely in the language of homotopy type theory~\citep{hottbook} as the fibred/indexed equivalence\footnote{In an informal discussion, alternative nomenclatures were proposed: fibration/family equivalence and unbundled/bundled equivalence. The fibred/indexed nomenclature echoes the Grothendieck construction of fibred categories from indexed categories. The most elementary instance of the equivalence, with $\Type$ instead of $\U$, is sometimes called ``Grothendieck construction for dummies'', and its proof requires univalence~\citep{hottbook}.}.
+A family of sets can commonly be represented in two ways: as a family properly speaking, indexed by the elements of a given set $S$, or as a set $T$ together with a map from $T$ to $S$, which specifies for each element of $T$ its dependency on $S$. In the former case, we call it an \emph{indexed} presentation. In the latter case, the set associated to a given element of $S$ is the fibre of this element, so we call it a \emph{fibred} presentation. The two presentations are equivalent and the equivalence can be phrased concisely in the language of homotopy type theory~\cite{hottbook} as the fibred/indexed equivalence\footnote{In an informal discussion, alternative nomenclatures were proposed: fibration/family equivalence and unbundled/bundled equivalence. The fibred/indexed nomenclature echoes the Grothendieck construction of fibred categories from indexed categories. The most elementary instance of the equivalence, with $\Type$ instead of $\U$, is sometimes called ``Grothendieck construction for dummies'', and its proof requires univalence~\cite{hottbook}.}.
 \begin{equation*}
   \mbox{(fibred)}\qquad(\Sigma T: \U. (T \rightarrow S)) ~\simeq~ (S \rightarrow \U)\qquad \mbox{(indexed)}
 \end{equation*}
 Here, $\U$ represents in homotopy type theory the subset of types within a given universe where equality of any two elements has at most one proof.
 
-A \emph{presheaf} on an category is a family of sets indexed by the object of the category with maps indexed by the morphisms. As such, it lives on the indexed side of the equivalence, contrasting with the fibred side, where we have \emph{discrete Grothendieck fibrations}~\citep{LoregianRiehl20}. However, there are situations where a presheaf can also be seen as living on the fibred side of the equivalence. This happens when the indexing category is \emph{direct}, or has a downwards-well-founded collection of non-identity morphisms. Let us consider, for instance, the case of a semi-cubical set~\citep{grandis03,buchholtz17} presented with $2n$ face maps from the set of $n$-cubes to the set of $(n-1)$-cubes. Formulated in type theory, the corresponding presheaf definition of a semi-cubical set prescribes a family of sets and face maps between them as follows.
+A \emph{presheaf} on an category is a family of sets indexed by the object of the category with maps indexed by the morphisms. As such, it lives on the indexed side of the equivalence, contrasting with the fibred side, where we have \emph{discrete Grothendieck fibrations}~\cite{LoregianRiehl20}. However, there are situations where a presheaf can also be seen as living on the fibred side of the equivalence. This happens when the indexing category is \emph{direct}, or has a downwards-well-founded collection of non-identity morphisms. Let us consider, for instance, the case of a semi-cubical set~\cite{grandis03,buchholtz17} presented with $2n$ face maps from the set of $n$-cubes to the set of $(n-1)$-cubes. Formulated in type theory, the corresponding presheaf definition of a semi-cubical set prescribes a family of sets and face maps between them as follows.
 
 \begin{equation*}
   \begin{tikzcd}
@@ -226,12 +221,12 @@ By taking the sum of each component of an indexed presentation over the indexing
 The indexed definition of a presheaf over a direct category is technically more involved than the presheaf definition, as it requires hard-wiring in the structure the dependencies between elements of the sets of the presheaf, including the coherence conditions between these dependencies, such as taking the $i$-th face of the $j$-th face of a $n$-simplex being the same as taking the $(j-1)$-th face of the $i$-th face (when $j>i$). However, exhibiting a concrete instance of a presheaf in indexed form only requires providing the families, since the responsibility of defining maps and showing the coherence conditions is already accounted for in the definition of the structure.
 
 \subsection*{Reynolds parametricity and its unary and binary variants}
-In the context of functional programming, Reynolds parametricity~(\citeyear{reynolds83}) interprets types as relations characterizing the observational behaviour of programs of this type. More generally, families over a product of sets, or \emph{correspondences}, can be used in place of relations. Parametricity can then be iterated, and relying on the fibred presentation of correspondences as spans, it has been noted that iterated Reynolds parametricity has the structure of a cubical set~\citep{altenkirch15,moulin16,johann17,moeneclaey21,moeneclaey22phd}. We obtain a \emph{unary} variant of Reynolds \emph{binary} parametricity by using predicates or families instead of relations or correspondences, and this is a form of realizability~\citep{bernardy12,lasson12,moulin16}. Cubical set models which differ only by the arity one~\citep{bernardy15} or two~\citep{bezem13} were introduced, and this led to a general notion of affine $\nu$-ary cubes in \cite{nuytsdevriese24}. In parallel, it has been noted that iterated unary parametricity has the structure of an augmented simplicial set\footnote{Private communication with Hugo Moeneclaey and Thorsten Altenkirch.}. This suggests that the definition of augmented semi-simplicial sets and semi-cubical sets can in turn be seen as particular instances of the restriction of Nuyts-Devriese's $\nu$-ary cubes to only faces, which we call $\nu$-sets, of presheaves over a $\nu$-semi-shape category made of words of some cardinal $\nu+1$, where $\nu=1$ gives augmented semi-simplicial sets and $\nu=2$ gives semi-cubical sets.
+In the context of functional programming, Reynolds parametricity~\cite{reynolds83} interprets types as relations characterizing the observational behaviour of programs of this type. More generally, families over a product of sets, or \emph{correspondences}, can be used in place of relations. Parametricity can then be iterated, and relying on the fibred presentation of correspondences as spans, it has been noted that iterated Reynolds parametricity has the structure of a cubical set~\cite{altenkirch15,moulin16,johann17,moeneclaey21,moeneclaey22phd}. We obtain a \emph{unary} variant of Reynolds \emph{binary} parametricity by using predicates or families instead of relations or correspondences, and this is a form of realizability~\cite{bernardy12,lasson12,moulin16}. Cubical set models which differ only by the arity one~\cite{bernardy15} or two~\cite{bezem13} were introduced, and this led to a general notion of affine $\nu$-ary cubes in \cite{nuytsdevriese24}. In parallel, it has been noted that iterated unary parametricity has the structure of an augmented simplicial set\footnote{Private communication with Hugo Moeneclaey and Thorsten Altenkirch.}. This suggests that the definition of augmented semi-simplicial sets and semi-cubical sets can in turn be seen as particular instances of the restriction of Nuyts-Devriese's $\nu$-ary cubes to only faces, which we call $\nu$-sets, of presheaves over a $\nu$-semi-shape category made of words of some cardinal $\nu+1$, where $\nu=1$ gives augmented semi-simplicial sets and $\nu=2$ gives semi-cubical sets.
 
 \subsection*{Contribution}
 The main contribution of the paper is to describe the details of a recipe that uniformly characterizes unary and binary iterated parametricity in indexed form, and to derive from it a new indexed presentation, called indexed \emph{$\nu$-sets}, of augmented semi-simplicial and semi-cubical sets.
 
-Our work is a step in the direction of the program initiated in \cite{altenkirch15} to develop parametricity-based models of parametric type theory~\citep{bernardy15,nuyts17,cavallo19} and cubical type theory~\citep{bezem13,cohen16,angiuli21}, which are closer to the syntax of type theory, and are likely to better reflect the definitional properties of type theory than presheaf-based cubical sets would. For example, consider the loss of definitional properties when interpreting ``indexed'' dependent types of type theory as ``fibrations'' in models such as locally cartesian closed categories~\citep{curien14}.
+Our work is a step in the direction of the program initiated in \cite{altenkirch15} to develop parametricity-based models of parametric type theory~\cite{bernardy15,nuyts17,cavallo19} and cubical type theory~\cite{bezem13,cohen16,angiuli21}, which are closer to the syntax of type theory, and are likely to better reflect the definitional properties of type theory than presheaf-based cubical sets would. For example, consider the loss of definitional properties when interpreting ``indexed'' dependent types of type theory as ``fibrations'' in models such as locally cartesian closed categories~\cite{curien14}.
 
 Our construction has the unique property of reflecting the structure of parametricity and of yielding both augmented semi-simplicial and semi-cubical sets from the same construction. The approach taken in \cite{part15} and \cite{altenkirch16} takes benefit of the definitional compositionality of increasing injective maps, but we do not see how they could be generalized to yield semi-cubical sets.
 
@@ -415,12 +410,12 @@ To obtain this, we extend $\DeltaPlus$ and $\Cube$ in a straightforward manner i
   \end{align*}
 \end{definition}
 
-A $\nu$-set is thus a contravariant functor $\phi$ from the $\nu$-semi-shape category to $\Set$ and we call $n$-$\nu$-semi-shape an element of $\phi(n)$. As in the augmented semi-simplicial and semi-cubical cases, the standard $(n + 1)$-$\nu$-semi-shape is obtained by connecting together $\nu$ copies of the standard $n$-$\nu$-semi-shape with an extra copy stretched in the new dimension. We clarify in the next sections, how this process of construction is similar to the parametricity translation developed for functional programming~\citep{reynolds83} and more generally for type theory~\citep{bernardy10,bernardy11,atkey14,bernardy15}.
+A $\nu$-set is thus a contravariant functor $\phi$ from the $\nu$-semi-shape category to $\Set$ and we call $n$-$\nu$-semi-shape an element of $\phi(n)$. As in the augmented semi-simplicial and semi-cubical cases, the standard $(n + 1)$-$\nu$-semi-shape is obtained by connecting together $\nu$ copies of the standard $n$-$\nu$-semi-shape with an extra copy stretched in the new dimension. We clarify in the next sections, how this process of construction is similar to the parametricity translation developed for functional programming~\cite{reynolds83} and more generally for type theory~\cite{bernardy10,bernardy11,atkey14,bernardy15}.
 
 \section{Type theory\label{sec:tt}}
-Martin-Löf's Type theory~(\citeyear{martinlof75,martinlof84}) is a logical formalism based on the notion of a \emph{type} rather than that of a \emph{set}. It can be seen as a foundation of mathematics alternative to set theory and is the core of several tools for the formalization of mathematics such as Agda, Coq and Lean. In type theory, propositions are types and proofs are programs. Type theory includes \emph{definitional equality}, by which all propositions and proofs are quotiented.
+Martin-Löf's Type theory~(\cite{martinlof75,martinlof84}) is a logical formalism based on the notion of a \emph{type} rather than that of a \emph{set}. It can be seen as a foundation of mathematics alternative to set theory and is the core of several tools for the formalization of mathematics such as Agda, Coq and Lean. In type theory, propositions are types and proofs are programs. Type theory includes \emph{definitional equality}, by which all propositions and proofs are quotiented.
 
-Type theory is a flexible formalism supporting different models. Some models come from homotopy theory, and are based on simplicial sets or related structures~\citep{HofmannStreicher94,kapulkin21,BezemCoquandHuber13,cchm}: in these models, equality is interpreted as paths, and they support the univalence principle stating that equality of types mimics equivalence of types, leading to the development of Homotopy Type Theory~\citep{hottbook}.
+Type theory is a flexible formalism supporting different models. Some models come from homotopy theory, and are based on simplicial sets or related structures~\cite{HofmannStreicher94,kapulkin21,BezemCoquandHuber13,cchm}: in these models, equality is interpreted as paths, and they support the univalence principle stating that equality of types mimics equivalence of types, leading to the development of Homotopy Type Theory~\cite{hottbook}.
 
 Types are organized in a hierarchy of universes written $\Type_m$ for $m$ a natural number. The main types in type theory are the type of dependent pairs, written $\Sigma a : A.\,B(a)$, the type of dependent functions, written $\Pi a : A.\,B(a)$, for $A$ a type and $B(a)$ a type dependent on the inhabitant $a$ of $A$, and the type of propositional equalities, written $t = u$. As a notation, the type of dependent pairs when $B$ is not dependent on $A$ is shortened into $A \times B$ and the type of dependent functions when $B$ is not dependent on $A$ is written $A \rightarrow B$. We assume our type theory to also include a distinguished singleton type, written $\unittype$, and with inhabitant $\unitpoint$, the type of boolean values, and the type of natural numbers. We write $\hd$ and $\tl$ the projections of dependent pairs, and $\refl$ for reflexivity. Logical propositions being types themselves, we use $\Pi$ to represent universal quantification and $\Sigma$ to represent existential quantification. We also assume that our type theory includes a coinductively-defined notion of dependent streams described in Appendix \ref{app:depstream}.
 
@@ -439,12 +434,12 @@ In $\U[m]$, the following properties hold:
 
 By notation, $\Type$ and $\U$ mean $\Type_m$ and $\U[m]$ at some unspecified universe level $m$.
 
-We are also interested in \emph{extensional} type theory, a type theory with the following reflection rule, where $=$ is propositional equality in some type and $\equiv$ is definitional equality~\citep{martinlof84}:
+We are also interested in \emph{extensional} type theory, a type theory with the following reflection rule, where $=$ is propositional equality in some type and $\equiv$ is definitional equality~\cite{martinlof84}:
 \begin{equation*}
   \seqr{}{\Gamma \vdash p: t = u}{\Gamma \vdash t \equiv u}
 \end{equation*}
 
-Note that the reflection rule implies UIP so that $\U$ and $\Type$ are equivalent in extensional type theory. The rule also implies functional extensionality. Extensional type theory is logically equivalent to intensional type theory extended with UIP and functional extensionality~\citep{HofmannPhd}.
+Note that the reflection rule implies UIP so that $\U$ and $\Type$ are equivalent in extensional type theory. The rule also implies functional extensionality. Extensional type theory is logically equivalent to intensional type theory extended with UIP and functional extensionality~\cite{HofmannPhd}.
 
 \section{Relating to parametricity\label{sec:rel-param}}
 Recall from the introduction, the form taken by the indexed presentation of a semi-cubical set:
@@ -837,7 +832,7 @@ match n, m with
 end.
 \end{minted}
 
-Here, $\SProp$ is a definitionally proof-irrelevant impredicative universe morally\footnote{In Coq, it is however a stand-alone universe unrelated to the universe hierarchy.} living at the bottom of the universe hierarchy~\citep{gilbert19}. By placing the definition in \SProp, we have definitional equality of inequality proofs. However, for the purpose of unification, this definition does not go far enough. Consider the unification problems:
+Here, $\SProp$ is a definitionally proof-irrelevant impredicative universe morally\footnote{In Coq, it is however a stand-alone universe unrelated to the universe hierarchy.} living at the bottom of the universe hierarchy~\cite{gilbert19}. By placing the definition in \SProp, we have definitional equality of inequality proofs. However, for the purpose of unification, this definition does not go far enough. Consider the unification problems:
 
 \begin{minted}{coq}
 leR_trans ?p leR_refl = ?p
@@ -869,18 +864,18 @@ The construction relies on groupoid properties of equality which are left implic
 As a final remark, note that as a consequence of $\eta$-conversion for finite enumerated types, the requirement of functional extensionality disappears when $\nu$ is finite. However, this is a conversion which Coq does not implement, and the alternative would be to replace $\Pi a: \nu.\, B$ by a ``flat'' iterated product $B(1) \times B(2) \times \ldots \times B(\nu)$.
 
 \section{Future work}
-The construction could be extended with degeneracies as well as with permutations~\citep{grandis03}. Dependent $\nu$-sets could also be defined, opening the way to construct $\Pi$-types and $\Sigma$-types of $\nu$-sets. A $\nu$-set of $\nu$-sets representing a universe could also be defined as sketched in a talk at the HoTT-UF workshop for the bridge case~(\citeyear{herbelin-hott-uf}). More generally, we believe these lines of work would eventually provide alternative models to parametric type theories~\citep{nuyts17,cavallo19} where equality of types, now a family rather than the total space of a fibration, is not only definitionally isomorphic to bridges~\citep{bernardy15}, but definitionally the same as bridges.
+The construction could be extended with degeneracies as well as with permutations~\cite{grandis03}. Dependent $\nu$-sets could also be defined, opening the way to construct $\Pi$-types and $\Sigma$-types of $\nu$-sets. A $\nu$-set of $\nu$-sets representing a universe could also be defined as sketched in a talk at the HoTT-UF workshop for the bridge case~(\cite{herbelin-hott-uf}). More generally, we believe these lines of work would eventually provide alternative models to parametric type theories~\cite{nuyts17,cavallo19} where equality of types, now a family rather than the total space of a fibration, is not only definitionally isomorphic to bridges~\cite{bernardy15}, but definitionally the same as bridges.
 
-By equipping the universe construction with a structure of equivalences, as suggested along the lines of \cite{altenkirch15}, we also suspect the construction to be able to serve as a basis for syntactic models of various versions of cubical type theory~\citep{bezem13,cohen16,angiuli21}, saving the detour via the fibred approach inherent to usual presheaf models. In particular, we conjecture being able to justify univalence holding definitionally. Our approach would also firmly ground cubical type theory in iterated parametricity.
+By equipping the universe construction with a structure of equivalences, as suggested along the lines of \cite{altenkirch15}, we also suspect the construction to be able to serve as a basis for syntactic models of various versions of cubical type theory~\cite{bezem13,cohen16,angiuli21}, saving the detour via the fibred approach inherent to usual presheaf models. In particular, we conjecture being able to justify univalence holding definitionally. Our approach would also firmly ground cubical type theory in iterated parametricity.
 
 Although prior approaches to constructing the indexed presentation of a presheaf over a direct category rely on it being evident by inspection that the fibred and indexed presentations are equivalent, no formal proof has been given, and this is a direction for future work. In our construction, we can check by computation of the first levels that it indeed computes the expected sets.
 
-\newpage
-\bibliographystyle{msclike}
+\bibliographystyle{alpha}
 \bibliography{paper}
 
 \appendix
-\section{Definition of dependent stream\label{app:depstream}}
+\fancyhead[L]{\footnotesize\textcolor{gray80}{{\MakeUppercase{Appendix}}}}
+\section*{Appendix: Definition of dependent stream\label{app:depstream}}
 
 \begin{align*}
   \mbox{\emph{type formation}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    \\
