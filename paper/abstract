@@ -1,5 +1,0 @@
-Constructions such as semi-simplicial and semi-cubical sets can be defined in the "usual way" as presheaves over respectively, the semi-simplex or semi-cube category, which we call fibered definitions, but also defined like in e.g. Voevodsky or in Herbelin, as a dependently-typed construction, which we call indexed.
-
-This paper describes an alternative indexed characterization of both augmented semi-simplicial and semi-cubical sets arising respectively as unary and binary iterated parametricity-based constructions.
-
-Additionally, our construction is fully formalized in Coq's dependent type theory.
