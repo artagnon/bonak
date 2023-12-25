@@ -384,7 +384,7 @@ More generally, the standard $(n + 1)$-semi-cube can be obtained by taking two c
 Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and semi-cubical sets obtained by building on an arbitrary alphabet $\nu$, so that the following holds:
 
 \begin{center}
-  \begin{tabularx}{0.7\linewidth}{X|X|X}
+  \begin{tabularx}{\linewidth}{X|X|X}
     \toprule
     Cardinal of $\nu$ & 1                              & 2                 \\
     \graymidrule
@@ -549,7 +549,7 @@ The definition of the type of a $n$-truncated $\nu$-set is in turn described in 
 
 Notably, the definition of $\restrl$ relies on an equality expressing the commutation of the composition of two $\restrf$. The proof of this commutation is worth being made explicit, which we do in table~\ref{tab:coh} using proof-term notations. The proof requires an induction on the dimension and on the structure of $\framep$, $\layer$, and $\painting$. This is what $\cohf$ does using auxiliary proofs $\cohl$ and $\cohc$. Even though it looks independent of the definitions from the other tables, $\cohf$ has to be proved mutually with the definitions of $\framep$, $\layer$, $\painting$, and their corresponding restrictions. More precisely, for a fixed $n$, the block of $\framep$, $\restrf$, and $\cohf$ has to be defined in one go by induction on $p$. Also, each of $\painting$, $\restrc$, and $\cohc$ is built by induction from $p$ to $n$. The $\painting$ block at $n$ relies on the $\framep$ block at $n$, but the converse dependency is only on lower $n$, so this is well-founded. Note that $\layer$, $\restrl$ and $\cohl$ are just abbreviations. The exact way this mutual recursion is eventually formalized is explained in section~\ref{sec:wf}.
 
-Note that for a fixed constant $n$, relying on the evaluation rules of type theory, the coherence conditions degenerate to a reflexivity proof, so that the construction builds an effective sequence of types not mentioning coherences anymore. \\
+Note that for a fixed constant $n$, relying on the evaluation rules of type theory, the coherence conditions degenerate to a reflexivity proof, so that the construction builds an effective sequence of types not mentioning coherences anymore.
 
 \def\lab{tab:coind}
 \input{tab-coind.tex}
@@ -728,9 +728,7 @@ An extra refinement arises from the fact that each new layer of a frame has to b
 When $\nu = 2$, using $L$ and $R$ to represent the sides, the formation of layers from paintings amounts to:
 \begin{equation*}
   \begin{array}{llc}
-    \layer[n][p](D)(d) & \defeq & \painting[n-1][p](D.\hd)(\restrf[n][p][L][p](d)) \\
-                       &        & \times                                           \\
-                       &        & \painting[n-1][p](D.\hd)(\restrf[n][p][R][p](d))
+    \layer[n][p](D)(d) & \defeq & \painting[n-1][p](D.\hd)(\restrf[n][p][L][p](d)) \times \painting[n-1][p](D.\hd)(\restrf[n][p][R][p](d))
   \end{array}
 \end{equation*}
 
@@ -755,7 +753,8 @@ Hence, we need a coherence condition to commute the restrictions. Coherence cond
 \renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
 In this section, we intend to get rid of the reflection rule and make explicit the equational reasoning step needed to rephrase the construction in intensional type theory. For readability purposes, we make only explicit in this section the key coherence conditions of the construction. Other cases of equality reasoning would have to be made explicit to fully obtain a construction in intensional type theory, but these steps are standard enough to be omitted at this stage. See section~\ref{sec:eqproperties} for the details.
 
-The need for transport along a proof of commutation of $\restrf$ in the definition of $\restrl$ is made explicit in table~\ref{fulltab:faces}, where the arrow over $\cohf$ indicates the direction of rewrite. \\
+The need for transport along a proof of commutation of $\restrf$ in the definition of $\restrl$ is made explicit in table~\ref{fulltab:faces}, where the arrow over $\cohf$ indicates the direction of rewrite.
+\vspace{1em}
 
 % Insert fulltab:faces and fulltab:coh, after overriding macros to make
 % everything but the universe letter explicit.
