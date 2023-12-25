@@ -1,5 +1,5 @@
-(lang dune 3.6)
+(lang dune 3.9)
 
-(using coq 0.6)
+(using coq 0.8)
 
 (name bonak)
