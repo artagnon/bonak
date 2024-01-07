@@ -174,6 +174,9 @@
 % and { ... } if in mask
 \newcommandx*{\eqnarg}[3]{\ifinmask[bonak]{#1}[#2]{\{#2:#3\}}{(#2:#3)}}
 
+% Double-spacing
+\linespread{2}
+
 \begin{document}
 \title{A parametricity-based formalization of semi-simplicial and semi-cubical sets}
 \begin{authgrp}
@@ -187,6 +190,7 @@
 \begin{abstract}
   Semi-simplicial and semi-cubical sets are commonly defined as presheaves over respectively, the semi-simplex or semi-cube category. Homotopy Type Theory then popularized an alternative definition, where the set of $n$-simplices or $n$-cubes are instead regrouped into the families of the fibers over their faces, leading to a characterization we call \emph{indexed}. Moreover, it is known that semi-simplicial and semi-cubical sets are related to iterated Reynolds parametricity, respectively in its unary and binary variants. We exploit this correspondence to develop an original uniform indexed definition of both augmented semi-simplicial and semi-cubical sets, and fully formalize it in Coq.
 \end{abstract}
+\footnotetext{Competing interests: The authors declare none}
 \maketitle
 \vspace{-2em} % Remove space after abstract
 
