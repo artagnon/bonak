@@ -18,3 +18,4 @@ TAGS
 _build
 .lia.cache
 _minted*/
+.vscode
