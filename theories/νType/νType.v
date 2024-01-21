@@ -334,9 +334,9 @@ Qed.
 #[local]
 Instance mkFrame0 {n} {C: νType n}: FrameBlock n.+1 O mkprefix mkFramePrev.
   unshelve esplit.
-  * intros; now exact hunit.
-  * simpl; intros; rewrite C.(eqFrame0). now exact tt.
-  * simpl; intros.
+  * intros; now exact hunit. (* FrameSn *)
+  * simpl; intros; rewrite C.(eqFrame0). now exact tt. (* restrFrameSn *)
+  * simpl; intros. (* cohFramep *)
     now rewrite eqRestrFrame0 with (Hpq := ⇓ Hpr),
                 eqRestrFrame0 with (Hpq := ⇓ (Hpr ↕ Hrq)).
 Defined.
@@ -348,10 +348,10 @@ Instance mkFrameSp {n p} {C: νType n}
   FrameBlock n.+1 p.+1 mkprefix mkFramePrev.
   unshelve esplit.
   * intros Hp D; exact {d : Frame.(frame) (↓ Hp) D & mkLayer (d := d)}.
-  * simpl; intros * ε * (d, l); invert_le Hpq.
+  * simpl; intros * ε * (d, l); invert_le Hpq. (* restrFramep *)
     now exact (rew <- [id] C.(eqFrameSp) in
       (Frame.(restrFrame) Hq ε d; mkRestrLayer d l)).
-  * simpl; intros q r Hpr Hrq Hq ε ω D (d, l).
+  * simpl; intros q r Hpr Hrq Hq ε ω D (d, l). (* cohframep *)
     invert_le Hpr; invert_le Hrq.
 
     (* A roundabout way to simplify the proof of mkCohPainting_step *)
@@ -398,8 +398,8 @@ Definition mkpainting {n p} {C: νType n} {Hp: p <= n.+1} {D: mkprefix}
   (d: (mkFrame p).(frame) Hp D): HSet.
 Proof.
   revert d; apply le_induction with (Hp := Hp); clear p Hp.
-  + now exact E.
-  + intros p Hp mkpaintingSp d; exact {l : mkLayer & mkpaintingSp (d; l)}.
+  + now exact E. (* p = n *)
+  + intros p Hp mkpaintingSp d; exact {l : mkLayer & mkpaintingSp (d; l)}. (* p = S n *)
 Defined.
 
 Lemma mkpainting_computes {n p} {C: νType n} {Hp: p.+1 <= n.+1} {D: mkprefix}
