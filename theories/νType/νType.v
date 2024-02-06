@@ -616,6 +616,49 @@ CoInductive νTypeFrom n (X: (νTypeAt n).(prefix)): Type@{m'} := cons {
 
 (** The final construction *)
 Definition νTypes := νTypeFrom 0 tt.
+
+(* Degeneracies *)
+
+Class DgnBlockPrev n (C : νType n) := {
+  dgnFrame' {p q} {Hpq: p.+2 <= q.+2} (Hq : q.+2 <= n) {D}
+    (d : C.(FramePrev).(frame'') (Hpq ↕ Hq) D) :
+    C.(FramePrev).(frame') (↓ (Hpq ↕ Hq)) D;
+}.
+
+Arguments dgnFrame' {n C} _ {p q Hpq} Hq {D} d.
+
+Class DgnFrameBlock n p (C : νType n) (Prev: DgnBlockPrev n C):= {
+  dgnFrame {q} {Hpq : p.+1 <= q.+1} (Hq : q.+1 <= n) {D}
+    (d : C.(FramePrev).(frame') (Hpq ↕ Hq) D) :
+    C.(Frame).(frame) (↓ (Hpq ↕ Hq)) D;
+  cohDgnFrame {q r} {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n} {D}
+    (d: C.(FramePrev).(frame'') (Hpr ↕ (Hrq ↕ Hq)) D):
+    dgnFrame (Hpq := ⇓ Hpr) (↓ (Hrq ↕ Hq)) (Prev.(dgnFrame') _ d) =
+    (dgnFrame (Hpq := ↓ Hpr) (Hrq ↕ Hq) (Prev.(dgnFrame') _ d));
+}.
+
+Arguments dgnFrame {n p C Prev} _ {q Hpq} Hq {D} d.
+Arguments cohDgnFrame {n p C Prev} _ {q r Hpr Hrq Hq D} d.
+
+Class DgnPaintingPrev n (C : νType n) (Prev: DgnBlockPrev n C) := {
+  dgnPainting' {p q} {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) {D}
+    (d : C.(FramePrev).(frame'') (Hpq ↕ Hq) D):
+    C.(PaintingPrev).(painting'') d -> C.(PaintingPrev).(painting') (Prev.(dgnFrame') Hq d);
+}.
+
+Arguments dgnPainting' {n C Prev} _ {p q Hpq} Hq {D} d.
+
+Class DgnPaintingBlock n p (C : νType n) Q (Prev: DgnPaintingPrev n C Q) := {
+  dgnPainting {p q} {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) {D}
+    (d : C.(FramePrev).(frame'') (Hpq ↕ Hq) D):
+    painting' d -> painting (Prev.(dgnFrame') Hq d);
+  cohDgnPainting {q r} {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
+    {D} (d: C.(FramePrev).(frame'') (Hpr ↕ (Hrq ↕ Hq)) D):
+    dgnPainting (Hpq := ⇓ Hpr) (↓ (Hrq ↕ Hq)) (Prev.(dgnPainting') _ d) =
+    (dgnPainting (Hpq := ↓ Hpr) (Hrq ↕ Hq) (Prev.(dgnPainting') _ d));
+}.
+
+Arguments dgnPainting {n C Q Prev} _ {p q Hpq} Hq {D} d.
 End νType.
 
 Definition AugmentedSemiSimplicial := νTypes hunit.
