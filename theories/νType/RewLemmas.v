@@ -1,7 +1,7 @@
 (** A few rewriting lemmas not in the standard library *)
 
 Import Logic.EqNotations.
-Require Import Notation.
+From Bonak Require Import Notation.
 
 Lemma rew_rew {A} {x y: A} (H : x = y) P {a: P x} :
 rew <- [P] H in rew [P] H in a = a.

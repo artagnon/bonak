@@ -5,5 +5,19 @@
   ],
   "spellright.documentTypes": [
     "latex",
-  ]
+  ],
+  "files.exclude": {
+    "**/*.vo": true,
+    "**/*.vok": true,
+    "**/*.vos": true,
+    "**/*.aux": true,
+    "**/*.glob": true,
+    "**/.git": true,
+    "**/.svn": false,
+    "**/.hg": false,
+    "**/CVS": false,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/.ruby-lsp": true
+  }
 }

@@ -1,4 +1,4 @@
-Require Import Notation.
+From Bonak Require Import Notation.
 
 (** An inductive definition of le *)
 Reserved Infix "<~" (at level 70).

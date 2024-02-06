@@ -2,8 +2,8 @@
     - Recursive definition
     - "Yoneda trick" *)
 
-Require Import Notation.
-Require Import LeInductive.
+From Bonak Require Import Notation.
+From Bonak Require Import LeInductive.
 
 Set Warnings "-notation-overridden".
 

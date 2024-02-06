@@ -2,8 +2,9 @@
 
 Require Import Logic.FunctionalExtensionality.
 Require Import Logic.Eqdep_dec. (* UIP_refl_unit *)
-Require Import Notation.
+From Bonak Require Import Notation.
 
+Set Primitive Projections.
 Set Universe Polymorphism.
 
 Record HSet := {

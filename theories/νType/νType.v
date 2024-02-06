@@ -4,15 +4,16 @@
 
 Import Logic.EqNotations.
 Require Import Logic.FunctionalExtensionality.
-Require Import Notation.
-Require Import RewLemmas.
+From Bonak Require Import Notation.
+From Bonak Require Import RewLemmas.
 
 (* Note: this import overrides { & } notation and introduces hforall *)
 Set Warnings "-notation-overridden".
-Require Import HSet.
+From Bonak Require Import HSet.
 
-Require Import LeYoneda.
+From Bonak Require Import LeYoneda.
 
+Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.
 Remove Printing Let sigT.
@@ -525,7 +526,7 @@ Proof.
   simpl (mkFrame p.+1). unfold mkPaintingPrev, painting''.
   change (fun x => C.(PaintingPrev).(painting') (Hp := ?Hp) (D := ?D) x) with
     (C.(PaintingPrev).(painting') (Hp := Hp) (D := D)).
-  unfold mkFrameSp; unfold cohFrame at -1.
+  unfold mkFrameSp, cohFrame.
   rewrite rew_map with (P := fun x => (C.(PaintingPrev).(painting') x).(Dom))
                        (f := fun x => rew <- [id] C.(eqFrameSp') in x).
   repeat rewrite rew_compose.
