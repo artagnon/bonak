@@ -7,6 +7,8 @@ From Bonak Require Import Notation.
 Set Primitive Projections.
 Set Universe Polymorphism.
 
+Set Primitive Projections.
+
 Record HSet := {
   Dom:> Type;
   UIP {x y: Dom} {h g: x = y}: h = g;
