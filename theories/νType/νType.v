@@ -88,7 +88,7 @@ Variable arity: HSet.
 (** [FrameBlockPrev] consists of the levels we remember before the
     current one and for each such previous data, [FrameBlock]
     consists of the data to maintain at the current level. *)
-Class FrameBlockPrev (n: nat) (prefix: Type@{m'}) := {
+Class FrameBlockPrev n (prefix: Type@{m'}) := {
   frame' {p} (Hp: p.+1 <= n): prefix -> HSet@{m};
   frame'' {p} (Hp: p.+2 <= n): prefix -> HSet@{m};
   restrFrame' {p q} {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) (ε: arity) {D}:
@@ -99,7 +99,7 @@ Arguments frame' {n prefix} _ {p} Hp D.
 Arguments frame'' {n prefix} _ {p} Hp D.
 Arguments restrFrame' {n prefix} _ {p q Hpq} Hq ε {D} d.
 
-Class FrameBlock (n p: nat) (prefix: Type@{m'})
+Class FrameBlock n p (prefix: Type@{m'})
   (FramePrev: FrameBlockPrev n prefix) := {
   frame (Hp: p <= n): prefix -> HSet@{m};
   restrFrame {q} {Hpq: p.+1 <= q.+1} (Hq: q.+1 <= n) (ε: arity) {D}:
@@ -124,7 +124,7 @@ Arguments cohFrame {n p prefix FramePrev} _ {q r Hpr Hrq Hq ε ω D} d.
 (** We build paintings using an iterated construction: a painting at level n
     depends on paintings at level n-1 and n-2; just as we have frame' and
      frame'', we have painting' and painting''. *)
-Class PaintingBlockPrev (n: nat) (prefix: Type@{m'})
+Class PaintingBlockPrev n (prefix: Type@{m'})
   (FramePrev : FrameBlockPrev n prefix) := {
   painting' {p} {Hp: p.+1 <= n} {D}:
     FramePrev.(frame') Hp D -> HSet@{m};
@@ -140,7 +140,7 @@ Arguments painting'' {n prefix FramePrev} _ {p Hp D} d.
 Arguments restrPainting' {n prefix FramePrev} _ {p q Hpq} Hq ε {D} [d] b.
 
 (** Painting consists of painting, restrPainting, and coherence conditions between them *)
-Class PaintingBlock (n: nat) (prefix: Type@{m'})
+Class PaintingBlock n (prefix: Type@{m'})
   {FramePrev: FrameBlockPrev n prefix}
   (PaintingPrev: PaintingBlockPrev n prefix FramePrev)
   (Frame: forall {p}, FrameBlock n p prefix FramePrev) := {
@@ -183,7 +183,7 @@ Arguments cohPainting {n prefix FramePrev PaintingPrev Frame} _
     the previous dimensions, so that the induction can be carried
 *)
 
-Class νType (n: nat) := {
+Class νType n := {
   prefix: Type@{m'};
   FramePrev: FrameBlockPrev n prefix;
   Frame {p}: FrameBlock n p prefix FramePrev;
@@ -436,7 +436,7 @@ Proof.
   unfold mkRestrPainting; now rewrite le_induction'_base_computes.
 Qed.
 
-Lemma mkRestrPainting_step_computes {q r n} {C: νType n} {Hq: q.+2 <= n.+1}
+Lemma mkRestrPainting_step_computes {n} {C: νType n} {q r} {Hq: q.+2 <= n.+1}
   {Hrq: r.+2 <= q.+2} {ε: arity} {D E} {d: (mkFrame r).(frame) _ D} {c}:
   mkRestrPainting (Hpq := ↓ Hrq) (Hq := Hq) (ε := ε) E d c =
   match (rew [id] mkpainting_computes in c) with
