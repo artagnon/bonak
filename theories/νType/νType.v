@@ -147,7 +147,7 @@ Class PaintingBlock (n: nat) (prefix: Type@{m'})
   painting {p} {Hp: p <= n} {D}:
     (Frame.(frame) (♢ _) D -> HSet@{m}) -> Frame.(frame) Hp D -> HSet@{m};
   restrPainting {p q} {Hpq: p.+1 <= q.+1}
-    (Hq: q.+1 <= n) (ε: arity) {D : prefix}
+    (Hq: q.+1 <= n) (ε: arity) {D}
     {E: Frame.(frame) (♢ _) D -> HSet@{m}}
     {d: Frame.(frame) (↓ (Hpq ↕ Hq)) D} (c: painting E d):
     PaintingPrev.(painting') (Frame.(restrFrame) Hq ε d);
