@@ -91,7 +91,7 @@ Variable arity: HSet.
 Class FrameBlockPrev (n: nat) (prefix: Type@{m'}) := {
   frame' {p} (Hp: p.+1 <= n): prefix -> HSet@{m};
   frame'' {p} (Hp: p.+2 <= n): prefix -> HSet@{m};
-  restrFrame' {p q} {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) (ε: arity) {D: prefix}:
+  restrFrame' {p q} {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) (ε: arity) {D}:
     frame' (↓ (Hpq ↕ Hq)) D -> frame'' (Hpq ↕ Hq) D;
 }.
 
@@ -102,10 +102,10 @@ Arguments restrFrame' {n prefix} _ {p q Hpq} Hq ε {D} d.
 Class FrameBlock (n p: nat) (prefix: Type@{m'})
   (FramePrev: FrameBlockPrev n prefix) := {
   frame (Hp: p <= n): prefix -> HSet@{m};
-  restrFrame {q} {Hpq: p.+1 <= q.+1} (Hq: q.+1 <= n) (ε: arity) {D: prefix}:
+  restrFrame {q} {Hpq: p.+1 <= q.+1} (Hq: q.+1 <= n) (ε: arity) {D}:
     frame (↓ (Hpq ↕ Hq)) D -> FramePrev.(frame') (Hpq ↕ Hq) D;
   cohFrame {q r} {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
-    {ε: arity} {ω: arity} {D: prefix} (d: frame (↓ (⇓ Hpr ↕ (↓ (Hrq ↕ Hq)))) D):
+    {ε: arity} {ω: arity} {D} (d: frame (↓ (⇓ Hpr ↕ (↓ (Hrq ↕ Hq)))) D):
     FramePrev.(restrFrame') (Hpq := Hpr ↕ Hrq) Hq ε
       (restrFrame (Hpq := ⇓ Hpr) (↓ (Hrq ↕ Hq)) ω d) =
     (FramePrev.(restrFrame') (Hpq := Hpr) (Hrq ↕ Hq) ω
@@ -126,11 +126,11 @@ Arguments cohFrame {n p prefix FramePrev} _ {q r Hpr Hrq Hq ε ω D} d.
      frame'', we have painting' and painting''. *)
 Class PaintingBlockPrev (n: nat) (prefix: Type@{m'})
   (FramePrev : FrameBlockPrev n prefix) := {
-  painting' {p} {Hp: p.+1 <= n} {D: prefix}:
+  painting' {p} {Hp: p.+1 <= n} {D}:
     FramePrev.(frame') Hp D -> HSet@{m};
-  painting'' {p} {Hp: p.+2 <= n} {D: prefix}:
+  painting'' {p} {Hp: p.+2 <= n} {D}:
     FramePrev.(frame'') Hp D -> HSet@{m};
-  restrPainting' {p q} {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) (ε: arity) {D: prefix}
+  restrPainting' {p q} {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) (ε: arity) {D}
     {d : FramePrev.(frame') (↓ (Hpq ↕ Hq)) D}:
     painting' d -> painting'' (FramePrev.(restrFrame') Hq ε d);
 }.
@@ -144,7 +144,7 @@ Class PaintingBlock (n: nat) (prefix: Type@{m'})
   {FramePrev: FrameBlockPrev n prefix}
   (PaintingPrev: PaintingBlockPrev n prefix FramePrev)
   (Frame: forall {p}, FrameBlock n p prefix FramePrev) := {
-  painting {p} {Hp: p <= n} {D: prefix}:
+  painting {p} {Hp: p <= n} {D}:
     (Frame.(frame) (♢ _) D -> HSet@{m}) -> Frame.(frame) Hp D -> HSet@{m};
   restrPainting {p q} {Hpq: p.+1 <= q.+1}
     (Hq: q.+1 <= n) (ε: arity) {D : prefix}
@@ -153,7 +153,7 @@ Class PaintingBlock (n: nat) (prefix: Type@{m'})
     PaintingPrev.(painting') (Frame.(restrFrame) Hq ε d);
   cohPainting {p q r} {Hpr: p.+2 <= r.+2}
     {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
-    (ε: arity) (ω : arity) {D: prefix} (E: Frame.(frame) (♢ _) D -> HSet@{m})
+    (ε: arity) (ω : arity) {D} (E: Frame.(frame) (♢ _) D -> HSet@{m})
     (d: Frame.(frame) (↓ (⇓ Hpr ↕ (↓ (Hrq ↕ Hq)))) D) (c: painting E d):
     rew [PaintingPrev.(painting'')] (Frame.(cohFrame) d) in
     PaintingPrev.(restrPainting') (Hpq := Hpr ↕ Hrq) Hq
