@@ -692,37 +692,40 @@ Arguments DgnPaintingPrev {n C} _.
 Arguments DgnPainting {n C} _.
 Arguments DgnLayer {n C} _ {p q} Hpq {Hq D d} l.
 
-Definition mkDgnFrameBlockPrev {n} {C: νType n} {G: Dgn n C}:
-  DgnFrameBlockPrev n.+1 (mkνTypeSn C) := {|
-  dgnFrame' p q Hpq Hq D d := G.(DgnFrame).(dgnFrame) (Hpq := ⇓ Hpq) (⇓ Hq) d;
+#[local]
+Instance mkDgnFramePrev {n} {G: Dgn n (νTypeAt n)}:
+  DgnFrameBlockPrev n.+1 (νTypeAt n.+1) := {|
+  dgnFrame' p q Hpq Hq (D: (νTypeAt n.+1).(prefix)) d := G.(DgnFrame).(dgnFrame) (Hpq := ⇓ Hpq) (⇓ Hq) d;
 |}.
 
-Definition mkDgnFrameBlock0 {n} {C: νType n} {G: Dgn n C}:
-  DgnFrameBlock n.+1 O (mkνTypeSn C) mkDgnFrameBlockPrev := {|
-  dgnFrame := _;
-  cohDgnFrame := _;
-  cohDgnRestrFrame := _;
-|}.
+#[local]
+Instance mkDgnFrame0 {n} {G: Dgn n (νTypeAt n)}:
+  DgnFrameBlock n.+1 O (νTypeAt n.+1) mkDgnFramePrev.
+  unshelve esplit.
+  - intros. now exact tt.
+  - now intros.
+  - intros. simpl; simpl in d. rewrite (νTypeAt n).(eqFrame0) in d.
+Defined.
 
-Definition mkDgnFrameBlockSp {n} {C: νType n} {p} {G: Dgn n C}
-  {Prev: DgnFrameBlock n.+1 p (mkνTypeSn C) mkDgnFrameBlockPrev}:
-  DgnFrameBlock n.+1 p.+1 (mkνTypeSn C) mkDgnFrameBlockPrev := {|
-  dgnFrame := _;
-  cohDgnFrame := _;
-  cohDgnRestrFrame := _;
-|}.
+#[local]
+Instance mkDgnFrameSp {n} {p} {G: Dgn n (νTypeAt n)}
+  {Prev: DgnFrameBlock n.+1 p (νTypeAt n.+1) mkDgnFramePrev}:
+  DgnFrameBlock n.+1 p.+1 (νTypeAt n.+1) mkDgnFramePrev.
+  unshelve esplit.
+Defined.
 
-Fixpoint mkDgnFrameBlock {n} {C: νType n} {p} {G: Dgn n C}:
-  DgnFrameBlock n.+1 p (mkνTypeSn C) mkDgnFrameBlockPrev :=
+#[local]
+Instance mkDgnFrameBlock {n} {p} {G: Dgn n (νTypeAt n)}:
+  DgnFrameBlock n.+1 p (νTypeAt n.+1) mkDgnFramePrev :=
   match p with
-  | O => mkDgnFrameBlock0
-  | S _ => mkDgnFrameBlockSp
+  | O => mkDgnFrame0
+  | S _ => mkDgnFrameSp
   end.
 
-Definition mkDgnLayer {n} {C: νType n} {p} {Hp: p.+1 <= n.+1}
+Definition mkDgnLayer {n} {p} {Hp: p.+1 <= n.+1}
   {Frame: FrameBlock n.+1 p mkprefix mkFramePrev} {D}
-  {d: Frame.(frame) (↓ Hp) D} {G: Dgn n C}: HSet :=
-  hforall ω, C.(Painting).(painting) D.2
+  {d: Frame.(frame) (↓ Hp) D} {G: Dgn n (νTypeAt n)}: HSet :=
+  hforall ω, (νTypeAt n).(Painting).(painting) D.2
     (Frame.(restrFrame) (Hpq := ♢ _) Hp ω d).
 End νType.
 
