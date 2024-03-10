@@ -284,12 +284,11 @@ Definition mkLayer {n} {C: νType n} {p} {Hp: p.+1 <= n.+1}
     (Frame.(restrFrame) (Hpq := ♢ _) Hp ε d).
 
 Definition mkLayer' {n} {C: νType n} {p} {Hp: p.+2 <= n.+1}
-  {Frame: FrameBlock n.+1 p mkprefix mkFramePrev}
   {D} {d: mkFramePrev.(frame') (↓ Hp) D}: HSet :=
-    C.(Layer) (Hp := ⇓ Hp) d.
+  C.(Layer) (Hp := ⇓ Hp) d.
 
 Definition mkRestrLayer {n} {C: νType n} {p q} {Hpq: p.+2 <= q.+2}
-  {Hq: q.+2 <= n.+1} {ε: arity} {Frame: FrameBlock n.+1 p mkprefix mkFramePrev}
+  {Hq: q.+2 <= n.+1} {ε} {Frame: FrameBlock n.+1 p mkprefix mkFramePrev}
   {D} (d: Frame.(frame) (↓ ↓ (Hpq ↕ Hq)) D): mkLayer -> mkLayer' :=
   fun l ω => rew [C.(PaintingPrev).(painting')] Frame.(cohFrame) d in
     C.(Painting).(restrPainting) (ε := ε) (Hpq := ⇓ Hpq) (l ω).
@@ -689,9 +688,9 @@ Class Dgn {n} (C: νType n) := {
   DgnPainting: DgnPaintingBlock C DgnPaintingPrev (@DgnFrame);
 
   DgnLayer {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D}
-    (d: C.(FramePrev).(frame') (↓ Hq) D) {l: C.(Layer') d}:
-    C.(Layer) (DgnFrame.(dgnFrame) Hq d) :=
-    fun ω => rew [C.(PaintingPrev).(painting')]
+    (d: C.(FramePrev).(frame') (↓ Hq) D):
+    C.(Layer') d -> C.(Layer) (DgnFrame.(dgnFrame) Hq d) :=
+    fun l ω => rew [C.(PaintingPrev).(painting')]
     DgnFrame.(cohDgnRestrFrame) d in DgnPaintingPrev.(dgnPainting') _ (l ω);
 }.
 
@@ -710,13 +709,12 @@ Instance mkDgnFramePrev {n} {G: Dgn (νTypeAt n)}:
 
 Definition mkDgnLayer {n} {G: Dgn (νTypeAt n)}
   {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
-  {FrmPrev: forall p, DgnFrameBlock (νTypeAt n.+1) p mkDgnFramePrev}
-  {PntPrev: DgnPaintingBlockPrev (νTypeAt n.+1) mkDgnFramePrev}
+  {Prev: DgnFrameBlock (νTypeAt n.+1) p mkDgnFramePrev}
   {D} (d: mkFramePrev.(frame') (↓ (Hpq ↕ Hq)) D):
-  mkLayer' (d := d) -> mkLayer (d := ((FrmPrev p).(dgnFrame) (↓ Hq) d)):=
-  fun l ω => rew [mkPaintingPrev.(painting')]
-    G.(DgnFrame).(cohDgnRestrFrame) d (D := D.1) in
-    PntPrev.(dgnPainting') _ (l ω).
+  mkLayer' (d := d) -> mkLayer (d := (Prev.(dgnFrame) (↓ Hq) d)):=
+  fun l ω => rew [(νTypeAt n).(PaintingPrev).(painting')]
+    G.(DgnFrame).(cohDgnRestrFrame) d in
+    G.(DgnPaintingPrev).(dgnPainting') _ (l ω).
 
 #[local]
 Instance mkDgnFrame0 {n} {G: Dgn (νTypeAt n)}:
