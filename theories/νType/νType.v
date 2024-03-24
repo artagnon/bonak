@@ -635,8 +635,8 @@ Class DgnFrameBlock {n} (C: νType n) p (Prev: DgnFrameBlockPrev C):= {
     C.(FramePrev).(frame') (Hpq ↕ Hq) D -> C.(Frame).(frame) (↓ (Hpq ↕ Hq)) D;
   cohDgnFrame {q r} {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n} {D}
     (d: C.(FramePrev).(frame'') (Hpr ↕ (Hrq ↕ Hq)) D):
-    dgnFrame (⇓ (Hpr ↕ Hrq)) (Hq := ↓ Hq) (Prev.(dgnFrame') _ d) =
-    dgnFrame (↓ Hpr) (Hq := Hrq ↕ Hq) (Prev.(dgnFrame') _ d);
+    dgnFrame (q:=q.+1) (↓ (Hpr ↕ Hrq)) (Hq := Hq) (Prev.(dgnFrame') (q:=r) _ d) =
+    dgnFrame (q:=r) (⇓ Hpr) (Hq := ↓ Hrq ↕ Hq) (Prev.(dgnFrame') (q:=q) (Hpr ↕ Hrq) (Hq:=_) d);
   cohDgnRestrFrame {q r ω} {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2}
     {Hq: q.+2 <= n} {D} (d: C.(FramePrev).(frame') (↓ (Hpr ↕ Hrq ↕ Hq)) D):
     (Prev.(dgnFrame') (Hpr ↕ Hrq))
