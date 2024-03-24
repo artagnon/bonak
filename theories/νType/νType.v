@@ -724,7 +724,7 @@ Instance mkDgnFrame0 {n} {G: Dgn (νTypeAt n)}:
   * intros; now exact tt.
   * now trivial.
   * intros; apply rew_swap with (P := id); now destruct (rew _ in _).
-  * intros.
+  * intros. simpl. apply -> (rew_swap _ id). now destruct (rew <- _ in _).
 Defined.
 
 #[local]
@@ -732,10 +732,16 @@ Instance mkDgnFrameSp {n p} {G: Dgn (νTypeAt n)}
   {Prev: DgnFrameBlock (νTypeAt n.+1) p mkDgnFramePrev}:
   DgnFrameBlock (νTypeAt n.+1) p.+1 mkDgnFramePrev.
   unshelve esplit.
-  * intros q Hpq Hq D d.
+  * (* dgnFrame *)
+    intros q Hpq Hq D d.
     rewrite (νTypeAt n).(eqFrameSp) in d; destruct d as (d, l).
     now exact (Prev.(dgnFrame) _ d; mkDgnLayer d l).
-Defined.
+  * (* cohDgnFrame *)
+    intros. simpl. admit.
+  * (* cohDgnRestrFrame *)
+    intros. simpl. admit.
+  * admit.
+Admitted.
 
 #[local]
 Instance mkDgnFrameBlock {n p} {G: Dgn (νTypeAt n)}:
