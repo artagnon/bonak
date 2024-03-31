@@ -720,13 +720,14 @@ Definition mkDgnLayer {n} {G: Dgn (νTypeAt n)}
 
 Definition mkCohDgnLayer {n} {G: Dgn (νTypeAt n)} {p q r}
   {Hpr: p.+3 <= r.+3} {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
+  {Frame: DgnFrameBlock (νTypeAt n.+1) p mkDgnFramePrev}
   {D} {d: mkFramePrev.(frame'') (↓ (Hpr ↕ Hrq ↕ Hq)) D}
   (l: (νTypeAt n).(Layer') (Hp := ⇓ (Hpr ↕ Hrq ↕ Hq)) d):
-  let sl := mkDgnLayer (Hpq := ⇓ (Hpr ↕ Hrq))
-    (G.(DgnLayer) (Hpq := ⇓ (Hpr ↕ Hrq)) d) in
-  let sl' := mkDgnLayer (Hpq := ⇓ Hpr)
-    (G.(DgnLayer) (Hpq := ↓ (Hpr ↕ Hrq)) d) in
-  rew G.(DgnFrame).(cohDgnRestrFrame) d in
+  let sl := mkDgnLayer (Hpq := ↓ (Hpr ↕ Hrq)) (Hq := Hq)
+    (G.(DgnLayer) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq)) (l := l) d) in
+  let sl' := mkDgnLayer (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq))
+    (G.(DgnLayer) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq) (l := l) d) in
+  rew [fun d => mkLayer (d := d)] Frame.(cohDgnFrame) (Hrq := ⇓ Hrq) d in
     sl = sl'.
 
 #[local]
@@ -741,18 +742,16 @@ Defined.
 
 #[local]
 Instance mkDgnFrameSp {n p} {G: Dgn (νTypeAt n)}
-  {Prev: DgnFrameBlock (νTypeAt n.+1) p mkDgnFramePrev}:
+  {Frame: DgnFrameBlock (νTypeAt n.+1) p mkDgnFramePrev}:
   DgnFrameBlock (νTypeAt n.+1) p.+1 mkDgnFramePrev.
   unshelve esplit.
   * (* dgnFrame *)
     intros q Hpq Hq D d.
     rewrite (νTypeAt n).(eqFrameSp) in d; destruct d as (d, l).
-    now exact (Prev.(dgnFrame) _ d; mkDgnLayer d l).
+    now exact (Frame.(dgnFrame) _ d; mkDgnLayer d l).
   * (* cohDgnFrame *)
-    intros. simpl.
-     (= Frame.(cohDgnFrame) (Hrq := Hrq) d; mkCohDgnLayer l).
-
-    admit.
+    intros.
+    exact (Frame.(cohDgnFrame) d; mkCohDgnLayer l).
   * (* cohDgnRestrFrame *)
     intros. simpl. admit.
   * admit.
