@@ -729,6 +729,14 @@ Definition mkCohDgnLayer {n} {G: Dgn (νTypeAt n)} {p q r}
     (G.(DgnLayer) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq) (l := l) d) in
   rew [fun d => mkLayer (d := d)] Frame.(cohDgnFrame) (Hrq := ⇓ Hrq) d in
     sl = sl'.
+Proof.
+  intros *.
+  subst sl sl'; apply functional_extensionality_dep; intros 𝛉.
+  unfold mkDgnLayer, DgnLayer; rewrite <- map_subst_app.
+  repeat rewrite <- map_subst; rewrite rew_map.
+  rewrite (νTypeAt n).(Painting).(cohPainting) with (c := l 𝛉).
+  Show.
+Qed.
 
 #[local]
 Instance mkDgnFrame0 {n} {G: Dgn (νTypeAt n)}:
@@ -748,9 +756,10 @@ Instance mkDgnFrameSp {n p} {G: Dgn (νTypeAt n)}
   * (* dgnFrame *)
     intros q Hpq Hq D d.
     rewrite (νTypeAt n).(eqFrameSp) in d; destruct d as (d, l).
-    now exact (Frame.(dgnFrame) _ d; mkDgnLayer d l).
+    now exact (Frame.(dgnFrame) _ d; mkDgnLayer l).
   * (* cohDgnFrame *)
-    intros.
+    intros. simpl. revert d.
+    rewrite (νTypeAt n).(eqFrameSp'). destruct d as (d, l).
     exact (Frame.(cohDgnFrame) d; mkCohDgnLayer l).
   * (* cohDgnRestrFrame *)
     intros. simpl. admit.
