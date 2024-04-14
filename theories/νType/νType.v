@@ -676,8 +676,10 @@ Class DgnPaintingBlock {n} (C: νType n) {Q: DgnFrameBlockPrev C}
     {D} (E: C.(Frame).(frame) (♢ _) D -> HSet@{m})
     (d: C.(FramePrev).(frame'') (Hpr ↕ (Hrq ↕ Hq)) D)
     (c : C.(PaintingPrev).(painting'') d):
-    dgnPainting (↓ Hpr) (Hq := Hrq ↕ Hq) (E := E) (Prev.(dgnPainting') _ c) =
-    (dgnPainting (↓ Hpr) (Hq := Hrq ↕ Hq) (Prev.(dgnPainting') _ c));
+    rew [C.(Painting).(painting) E] (FrameBlock.(cohDgnFrame) d) in
+      dgnPainting (q := q.+1) (↓ (Hpr ↕ Hrq)) (E := E)
+        (Prev.(dgnPainting') (q := r) _ c) =
+    dgnPainting (⇓ Hpr) (q := r) (Prev.(dgnPainting') (q := q) _ c);
 }.
 
 Arguments dgnPainting {n C Q Prev FrameBlock} _ {p q} Hpq {Hq D E d} c.
@@ -694,6 +696,13 @@ Class Dgn {n} (C: νType n) := {
     C.(Layer') d -> C.(Layer) (DgnFrame.(dgnFrame) (⇓ Hpq) d) :=
     fun l ω => rew [C.(PaintingPrev).(painting')]
     DgnFrame.(cohDgnRestrFrame) d in DgnPaintingPrev.(dgnPainting') Hpq (l ω);
+
+  eqDgnFrameSp {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D}
+    (d: C.(FramePrev).(frame') (Hpq ↕ Hq) D):
+    rew [id] C.(eqFrameSp) in DgnFrame.(dgnFrame) Hpq d =
+    match rew [id] C.(eqFrameSp') in d with
+      (d; l) => (DgnFrame.(dgnFrame) (⇓ Hpq) d; DgnLayer d l)
+    end
 }.
 
 Arguments DgnFramePrev {n C} _.
@@ -701,6 +710,7 @@ Arguments DgnFrame {n C} _ {p}.
 Arguments DgnPaintingPrev {n C} _.
 Arguments DgnPainting {n C} _.
 Arguments DgnLayer {n C} _ {p q Hpq Hq D} d {l}.
+Arguments eqDgnFrameSp {n C} _ {p q Hpq Hq D} d.
 
 #[local]
 Instance mkDgnFramePrev {n} {G: Dgn (νTypeAt n)}:
@@ -720,22 +730,33 @@ Definition mkDgnLayer {n} {G: Dgn (νTypeAt n)}
 
 Definition mkCohDgnLayer {n} {G: Dgn (νTypeAt n)} {p q r}
   {Hpr: p.+3 <= r.+3} {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
-  {Frame: DgnFrameBlock (νTypeAt n.+1) p mkDgnFramePrev}
+  {FrameB: DgnFrameBlock (νTypeAt n.+1) p mkDgnFramePrev}
   {D} {d: mkFramePrev.(frame'') (↓ (Hpr ↕ Hrq ↕ Hq)) D}
   (l: (νTypeAt n).(Layer') (Hp := ⇓ (Hpr ↕ Hrq ↕ Hq)) d):
   let sl := mkDgnLayer (Hpq := ↓ (Hpr ↕ Hrq)) (Hq := Hq)
     (G.(DgnLayer) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq)) (l := l) d) in
   let sl' := mkDgnLayer (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq))
     (G.(DgnLayer) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq) (l := l) d) in
-  rew [fun d => mkLayer (d := d)] Frame.(cohDgnFrame) (Hrq := ⇓ Hrq) d in
+  rew [fun d => mkLayer (d := d)] FrameB.(cohDgnFrame) (Hrq := ⇓ Hrq) d in
     sl = sl'.
 Proof.
-  intros *.
+  intros *. simpl.
   subst sl sl'; apply functional_extensionality_dep; intros 𝛉.
-  unfold mkDgnLayer, DgnLayer; rewrite <- map_subst_app.
-  repeat rewrite <- map_subst; rewrite rew_map.
-  rewrite (νTypeAt n).(Painting).(cohPainting) with (c := l 𝛉).
-  Show.
+  unfold mkDgnLayer; rewrite <- map_subst_app; fold (νTypeAt n).
+  repeat rewrite <- map_subst.
+  rewrite <- (G.(DgnPainting).(cohDgnPainting) (Hpr := ⇓ Hpr) (Hrq := ⇓ Hrq))
+    with (c := l 𝛉).
+  rewrite rew_map with (P := fun x => (νTypeAt n).(Painting).(painting) D.2 x).
+  rewrite rew_map with
+  (P := fun x => (νTypeAt n).(Painting).(painting) D.2 x)
+  (f := fun d => (G.(DgnFrame).(dgnFrame) (⇓ (↓ (Hpr ↕ Hrq))) d)).
+  rewrite rew_map with
+  (P := fun x => (νTypeAt n).(Painting).(painting) D.2 x)
+  (f := fun d => (G.(DgnFrame).(dgnFrame) (⇓ (⇓ Hpr)) d)).
+  repeat rewrite rew_compose.
+  apply rew_swap with (P := fun x => (νTypeAt n).(Painting).(painting) D.2 x).
+  rewrite rew_app. now trivial.
+  now apply ((νTypeAt n).(Frame).(frame) _ _).(UIP).
 Qed.
 
 #[local]
@@ -758,9 +779,13 @@ Instance mkDgnFrameSp {n p} {G: Dgn (νTypeAt n)}
     rewrite (νTypeAt n).(eqFrameSp) in d; destruct d as (d, l).
     now exact (Frame.(dgnFrame) _ d; mkDgnLayer l).
   * (* cohDgnFrame *)
-    intros. simpl. revert d.
-    rewrite (νTypeAt n).(eqFrameSp'). destruct d as (d, l).
-    exact (Frame.(cohDgnFrame) d; mkCohDgnLayer l).
+    intros q r Hpr Hrq Hq D d. simpl.
+    invert_le Hpr; invert_le Hrq; invert_le Hq.
+    rewrite (G.(eqDgnFrameSp) (Hpq := ⇓ (Hpr ↕ Hrq))),
+            (G.(eqDgnFrameSp) (Hpq := ⇓ Hpr)).
+    repeat destruct (rew [id] _ in d) as (d', l).
+    Check (= Frame.(cohDgnFrame) d';
+             mkCohDgnLayer (Hpr := Hpr) (Hrq := Hrq) l).
   * (* cohDgnRestrFrame *)
     intros. simpl. admit.
   * admit.
