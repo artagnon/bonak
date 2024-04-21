@@ -27,7 +27,7 @@ Proof.
 Qed.
 
 (** A Yoneda-style encoding of the recursive definition of le *)
-Definition leY n m := forall p, leR p n -> leR p m.
+Class leY n m := le_intro : forall p, leR p n -> leR p m.
 Infix "<=" := leY: nat_scope.
 
 (* Equality in SProp is =S *)
@@ -246,3 +246,133 @@ Definition le_induction'_step_computes {n p P H_base H_step} {Hp: p.+2 <= n.+1}:
   le_induction' (↓ Hp) P H_base H_step =
     H_step p Hp (le_induction' Hp P H_base H_step) :=
       le_induction_step_computes.
+
+(** Automatization of proofs of leY based on ↓, ⇓, ↕ and ♢ *)
+
+Ltac is_less p q n :=
+  match p with
+  | q => constr:(Some n)
+  | _ =>
+    lazymatch q with
+    | S ?q => is_less p q (S n)
+    | _ => constr:(@None nat)
+    end
+  end.
+
+Ltac is_less_up_to_succ p q n :=
+  match p with
+  | q => constr:(Some n)
+  | S ?p =>
+       lazymatch q with
+       | S ?q => is_less_up_to_succ p q n
+       | _ => constr:(@None nat)
+       end
+   | _ => is_less p q n
+   end.
+
+Ltac debug c := idtac. (* Use "Ltac debug c := c." for debugging *)
+
+Ltac mk_down proof :=
+  match type of proof with
+  | leY ?m.+1 ?n => constr:(@leY_down m n proof)
+  | _ => debug ltac:(idtac "anomaly")
+  end.
+
+Ltac mk_lower_both proof :=
+  match type of proof with
+  | leY ?m.+1 ?n.+1 => constr:(@leY_lower_both m n proof)
+  | _ => debug ltac:(idtac "anomaly")
+  end.
+
+Ltac slide_down n n' H success :=
+  (* we try to prove p+n <= q+n' |- p <= q *)
+  debug ltac:(idtac "Sliding" n n');
+  lazymatch n with
+  | 0 =>
+     lazymatch n' with
+     | 0 => debug ltac:(idtac "Slide success" H); success H
+     | S ?n' => debug ltac:(idtac "anomaly")
+     end
+  | (S ?n) =>
+     lazymatch n' with
+     | 0 =>
+         debug ltac:(idtac "Down left");
+         slide_down n 0 H
+           ltac:(fun proof => let c:= mk_down proof in let t:= type of c in debug ltac:(idtac "Down left proof :=" c ":" t); success c)
+     | S ?n' =>
+         debug ltac:(idtac "Down both");
+         slide_down n n' H
+           ltac:(fun proof => let c:= mk_lower_both proof in let t:= type of c in debug ltac:(idtac "Down both proof :=" c ":" t); success c)
+     end
+  end.
+
+(* Using hypotheses of the form
+      H1 : p1.+k1 <= p2.+k2
+      ...
+      Hn : p_{n-1}.+k_{n-1} <= pn.+kn
+   to prove statements of the form pi.+l <= p_{i+l}.+l' *)
+
+Ltac find p q n0 success failure :=
+  debug ltac:(idtac "       search a proof of " p "<=" q);
+  debug ltac:(idtac "try reflexivity");
+  match is_less_up_to_succ q p 0 with
+  | Some ?n => debug ltac:(idtac"success2"); success p 0 n constr:(eq_refl q)
+  | None =>
+    match goal with
+    | [ H : leY ?p' ?q' |- _ ] =>
+       debug ltac:(idtac "try" H ":" p' "<=" q' "for" p "<=" q);
+       match is_less_up_to_succ q q' 0 with
+       | Some ?n =>
+         debug ltac:(idtac "Found right" p' "<=" q' "|-" p "<=" q "n:=" n);
+         match is_less_up_to_succ p p' 0 with
+         | Some ?n' => let n1 := eval compute in (n + n0) in debug ltac:(idtac "Found hyp" p' p n' n1 H); success p' n' n1 H
+         | None =>
+              debug ltac:(idtac "Found midpoint" p' "<=" q' "|-" p "<=" q "n:=" n);
+(*              let q := eval compute in (n + q) in*)
+              let n1 := eval compute in (n + n0) in
+              find p p' n1
+                ltac:(fun p0 n n' H' =>
+                        let c := constr:(@leY_trans p0 p' q' H' H) in
+                        let t := type of c in debug ltac:(idtac "transitivity" p0 p' q' H' H ":=" c ":" t);
+                        success p0 n n' c)
+                ltac:(fun _ => debug ltac:(idtac "Fail p:=" p "q:=" q); fail)
+         end
+      | None => debug ltac:(idtac "Try next hyp"); fail
+      end
+    | _ => failure ()
+    end
+  end.
+
+Ltac solve_leY :=
+  debug ltac:(idtac "Trying to solve leY");
+  lazymatch goal with
+  | [ |- leY ?p ?q ] =>
+      let success x n n' H :=
+        slide_down n n' H
+          ltac:(fun proof => debug ltac:(idtac "Found proof =" proof); refine proof) in
+      let failure _ := fail 100 "Could not find a proof" in
+      find p q 0 success failure
+  | [ |- ?c ] => debug ltac:(idtac "Not a leY:" c); fail
+  end.
+
+Example ex1 (n p q r : nat)
+  (Hpr : p.+2 <= r.+2)
+  (Hrq : r.+2 <= q.+2)
+  (Hq : q.+2 <= n) : forall C, (p.+1 <= q.+2 -> p.+1 <= q.+1 -> p.+2 <= r.+2 -> p.+2 <= n -> C) -> C.
+intros C H. apply H.
+solve_leY.
+solve_leY.
+solve_leY.
+solve_leY.
+Qed.
+
+Hint Extern 10 (leY _ _) => solve_leY : typeclass_instances.
+
+Example ex2
+  (n p q r : nat)
+  (Hpr : p.+2 <= r.+2)
+  (Hrq : r.+2 <= q.+2)
+  (Hq : q.+2 <= n):
+  forall C, (forall p q r, p.+1 <= q.+2 -> p.+1 <= q.+1 -> p.+2 <= r.+2 -> p.+2 <= n -> C) -> C.
+intros C H. eapply (H p q r _ _ _ _). Show.
+Qed.
