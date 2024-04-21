@@ -623,80 +623,50 @@ Definition νTypes := νTypeFrom 0 tt.
 (* Degeneracies *)
 
 Class DgnFrameBlockPrev {n} (C: νType n) := {
-  dgnFrame' {p q} (Hpq: p.+2 <= q.+2) {Hq : q.+2 <= n} {D}:
-    C.(FramePrev).(frame'') (Hpq ↕ Hq) D ->
-    C.(FramePrev).(frame') (↓ (Hpq ↕ Hq)) D;
+  dgnFrame' {p} (Hp: p.+2 <= n) {D}:
+    C.(FramePrev).(frame'') Hp D ->
+    C.(FramePrev).(frame') (↓ Hp) D;
 }.
 
-Arguments dgnFrame' {n C} _ {p q} Hpq {Hq D} d.
+Arguments dgnFrame' {n C} _ {p} Hp {D} d.
 
 Class DgnFrameBlock {n} (C: νType n) p (Prev: DgnFrameBlockPrev C):= {
-  dgnFrame {q} (Hpq: p.+1 <= q.+1) {Hq: q.+1 <= n} {D}:
-    C.(FramePrev).(frame') (Hpq ↕ Hq) D -> C.(Frame).(frame) (↓ (Hpq ↕ Hq)) D;
-  cohDgnFrame {q r} {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n} {D}
-    (d: C.(FramePrev).(frame'') (Hpr ↕ (Hrq ↕ Hq)) D):
-    dgnFrame (q := q.+1) (Hq := Hq) (↓ (Hpr ↕ Hrq))
-      (Prev.(dgnFrame') (q := r) Hpr d) =
-    dgnFrame (q := r) (⇓ Hpr) (Hq := ↓ Hrq ↕ Hq)
-      (Prev.(dgnFrame') (q := q) (Hpr ↕ Hrq) d);
-  cohDgnRestrFrame {q r ω} {Hpr: p.+3 <= r.+3} {Hrq: r.+3 <= q.+3}
-    {Hq: q.+3 <= n} {D} (d: C.(FramePrev).(frame') (↓ ↓ (Hpr ↕ Hrq ↕ Hq)) D):
-    Prev.(dgnFrame') (Hq := ↓ Hq) (⇓ (Hpr ↕ Hrq)) (q := q)
-    (C.(FramePrev).(restrFrame') (Hpq := ⇓ Hpr)(↓ (Hrq ↕ Hq)) (q := r) ω d) =
-      C.(Frame).(restrFrame) (Hpq := ⇓ ⇓ Hpr) (q := r) (↓ ↓ (Hrq ↕ Hq)) ω
-      (dgnFrame (⇓ ↓ (Hpr ↕ Hrq)) (Hq := ↓ Hq) (q := q.+1) d);
-  cohDgnRestrFrame' {q r ω} {Hpr: p.+3 <= r.+3} {Hrq: r.+3 <= q.+3}
-    {Hq: q.+3 <= n} {D} (d: C.(FramePrev).(frame') (↓ ↓ (Hpr ↕ (Hrq ↕ Hq))) D):
-    Prev.(dgnFrame') (↓ Hpr) (Hq := (Hrq ↕ Hq)) (q := r.+1)
-    (C.(FramePrev).(restrFrame') (Hpq := ⇓ (Hpr ↕ Hrq)) (↓ Hq) (q := q) ω d) =
-      C.(Frame).(restrFrame) (Hpq := ⇓ ↓ (Hpr ↕ Hrq)) (q := q.+1) (↓ Hq) ω
-      (dgnFrame (⇓ ↓ Hpr) (Hq := ↓ (Hrq ↕ Hq)) (q := r.+1) d);
-  idDgnRestrFrame {q ω} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D}
+  dgnFrame (Hp: p.+1 <= n) {D}:
+    C.(FramePrev).(frame') Hp D -> C.(Frame).(frame) (↓ Hp) D;
+  idDgnRestrFrame {ω} {Hp: p.+1 <= n} {D} (d: C.(FramePrev).(frame') Hp D):
+    C.(Frame).(restrFrame) Hp ω (dgnFrame Hp d) = d;
+  cohDgnRestrFrame {q ω} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D}
     (d: C.(FramePrev).(frame') (↓ (Hpq ↕ Hq)) D):
-    C.(Frame).(restrFrame) (Hpq := ⇓ Hpq) (q := q) (↓ Hq) ω
-      (dgnFrame (⇓ Hpq) (Hq := ↓ Hq) (q := q) d) = d;
-  idDgnRestrFrame' {q ω} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D}
-    (d: C.(FramePrev).(frame') (↓ (Hpq ↕ Hq)) D):
-    C.(Frame).(restrFrame) (Hpq := ⇓ Hpq) (q := q) (↓ Hq) ω
-      (dgnFrame (↓ Hpq) (Hq := Hq) (q := q.+1) d) = d;
+    Prev.(dgnFrame') (Hpq ↕ Hq)
+    (C.(FramePrev).(restrFrame') (Hpq := Hpq) Hq ω d) =
+      C.(Frame).(restrFrame) (Hpq := ⇓ Hpq) (↓ Hq) ω
+      (dgnFrame (↓ (Hpq ↕ Hq)) d);
 }.
 
-Arguments dgnFrame {n C p Prev} _ {q} Hpq {Hq D} d.
-Arguments cohDgnFrame {n C p Prev} _ {q r Hpr Hrq Hq D} d.
-Arguments cohDgnRestrFrame {n C p Prev} _ {q r ω Hpr Hrq Hq D} d.
-Arguments cohDgnRestrFrame' {n C p Prev} _ {q r ω Hpr Hrq Hq D} d.
-Arguments idDgnRestrFrame {n C p Prev} _ {q ω Hpq Hq D} d.
-Arguments idDgnRestrFrame' {n C p Prev} _ {q ω Hpq Hq D} d.
+Arguments dgnFrame {n C p Prev} _ Hp {D} d.
+Arguments idDgnRestrFrame {n C p Prev} _ {ω Hp D} d.
+Arguments cohDgnRestrFrame {n C p Prev} _ {q ω Hpq Hq D} d.
 
 Class DgnPaintingBlockPrev {n} (C: νType n) (Prev: DgnFrameBlockPrev C) := {
-  dgnPainting' {p q} (Hpq: p.+2 <= q.+2) {Hq: q.+2 <= n} {D}
-    {d : C.(FramePrev).(frame'') (Hpq ↕ Hq) D}:
+  dgnPainting' {p} (Hp: p.+2 <= n) {D}
+    {d : C.(FramePrev).(frame'') Hp D}:
     C.(PaintingPrev).(painting'') d ->
-    C.(PaintingPrev).(painting') (Prev.(dgnFrame') Hpq d);
+    C.(PaintingPrev).(painting') (Prev.(dgnFrame') Hp d);
 }.
 
-Arguments dgnPainting' {n C Prev} _ {p q} Hpq {Hq D d} c.
+Arguments dgnPainting' {n C Prev} _ {p} Hp {D d} c.
 
 Class DgnPaintingBlock {n} (C: νType n) {Q: DgnFrameBlockPrev C}
   (Prev: DgnPaintingBlockPrev C Q)
   (FrameBlock: forall {p}, DgnFrameBlock C p Q):= {
-  dgnPainting {p q} (Hpq: p.+1 <= q.+1) {Hq: q.+1 <= n} {D}
+  dgnPainting {p} (Hp: p.+1 <= n) {D}
     {E: C.(Frame).(frame) (♢ _) D -> HSet@{m}}
-    {d : C.(FramePrev).(frame') (Hpq ↕ Hq) D}:
+    {d : C.(FramePrev).(frame') Hp D}:
     C.(PaintingPrev).(painting') d ->
-    C.(Painting).(painting) E (FrameBlock.(dgnFrame) Hpq d);
-  cohDgnPainting {p q r} {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
-    {D} (E: C.(Frame).(frame) (♢ _) D -> HSet@{m})
-    (d: C.(FramePrev).(frame'') (Hpr ↕ (Hrq ↕ Hq)) D)
-    (c : C.(PaintingPrev).(painting'') d):
-    rew [C.(Painting).(painting) E] (FrameBlock.(cohDgnFrame) d) in
-      dgnPainting (q := q.+1) (↓ (Hpr ↕ Hrq)) (E := E)
-        (Prev.(dgnPainting') (q := r) _ c) =
-    dgnPainting (⇓ Hpr) (q := r) (Prev.(dgnPainting') (q := q) _ c);
+    C.(Painting).(painting) E (FrameBlock.(dgnFrame) Hp d);
 }.
 
-Arguments dgnPainting {n C Q Prev FrameBlock} _ {p q} Hpq {Hq D E d} c.
-Arguments cohDgnPainting {n C Q Prev FrameBlock} _ {p q r Hpr Hrq Hq D} E {d} c.
+Arguments dgnPainting {n C Q Prev FrameBlock} _ {p} Hp {D E d} c.
 
 Class Dgn {n} (C: νType n) := {
   DgnFramePrev: DgnFrameBlockPrev C;
@@ -704,82 +674,55 @@ Class Dgn {n} (C: νType n) := {
   DgnPaintingPrev: DgnPaintingBlockPrev C DgnFramePrev;
   DgnPainting: DgnPaintingBlock C DgnPaintingPrev (@DgnFrame);
 
-  DgnLayer {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D}
-    (d: C.(FramePrev).(frame') (↓ (Hpq ↕ Hq)) D):
-    C.(Layer') d -> C.(Layer) (DgnFrame.(dgnFrame) (⇓ Hpq) d) :=
+  DgnLayer {p} {Hp: p.+2 <= n} {D}
+    (d: C.(FramePrev).(frame') (↓ Hp) D):
+    C.(Layer') d -> C.(Layer) (DgnFrame.(dgnFrame) (↓ Hp) d) :=
     fun l ω => rew [C.(PaintingPrev).(painting')]
     DgnFrame.(cohDgnRestrFrame) d in
-      DgnPaintingPrev.(dgnPainting') _ (l ω);
-
-  eqDgnFrameSp {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D}
-    (d: C.(FramePrev).(frame') (Hpq ↕ Hq) D):
-    rew [id] C.(eqFrameSp) in DgnFrame.(dgnFrame) Hpq d =
-    let (d, l) := rew [id] C.(eqFrameSp') in d in
-      (DgnFrame.(dgnFrame) (⇓ Hpq) d; DgnLayer d l);
+      DgnPaintingPrev.(dgnPainting') Hp (l ω);
+  eqDgnFrameSp {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D} {ε}
+    {d: C.(Frame).(frame) (↓ ↓ (Hpq ↕ Hq)) D}
+    {l: C.(Layer) d}:
+    DgnFrame.(dgnFrame) (Hpq ↕ Hq) (rew <- [id] C.(eqFrameSp') in
+      (C.(Frame).(restrFrame) Hq ε d; C.(RestrLayer) ε l)) =
+    rew <- [id] C.(eqFrameSp) in (d; l);
 }.
 
 Arguments DgnFramePrev {n C} _.
 Arguments DgnFrame {n C} _ {p}.
 Arguments DgnPaintingPrev {n C} _.
 Arguments DgnPainting {n C} _.
-Arguments DgnLayer {n C} _ {p q Hpq Hq D} d {l}.
-Arguments eqDgnFrameSp {n C} _ {p q Hpq Hq D} d.
+Arguments DgnLayer {n C} _ {p Hp D} d {l}.
+Arguments eqDgnFrameSp {n C} _ {p q Hpq Hq D ε} d l.
 
 #[local]
 Instance mkDgnFramePrev {n} {G: Dgn (νTypeAt n)}:
   DgnFrameBlockPrev (νTypeAt n.+1) := {|
-  dgnFrame' p q Hpq Hq (D: (νTypeAt n.+1).(prefix)) d :=
-    G.(DgnFrame).(dgnFrame) (⇓ Hpq) (Hq := ⇓ Hq) d;
+  dgnFrame' p Hp (D: (νTypeAt n.+1).(prefix)) d :=
+    G.(DgnFrame).(dgnFrame) (⇓ Hp) d;
 |}.
 
 Definition mkDgnLayer {n} {G: Dgn (νTypeAt n)}
-  {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n.+1}
-  {Frame: DgnFrameBlock (νTypeAt n.+1) p mkDgnFramePrev}
-  {D} {d: mkFramePrev.(frame') (↓ (Hpq ↕ Hq)) D}:
-  mkLayer' (d := d) -> mkLayer (d := Frame.(dgnFrame) (⇓ Hpq) d) :=
+  {p } {Hp: p.+2 <= n.+1} {Frame: DgnFrameBlock (νTypeAt n.+1) p mkDgnFramePrev}
+  {D} {d: mkFramePrev.(frame') (↓ Hp) D}:
+  mkLayer' (d := d) -> mkLayer (d := Frame.(dgnFrame) (↓ Hp) d) :=
   fun l ω => rew [(νTypeAt n).(Painting).(painting) D.2]
     Frame.(cohDgnRestrFrame) d in
-    G.(DgnPainting).(dgnPainting) (⇓ Hpq) (l ω).
+    G.(DgnPainting).(dgnPainting) (⇓ Hp) (l ω).
 
-Definition mkCohDgnLayer {n} {G: Dgn (νTypeAt n)} {p q r}
-  {Hpr: p.+3 <= r.+3} {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
-  {FrameB: DgnFrameBlock (νTypeAt n.+1) p mkDgnFramePrev}
-  {D} {d: mkFramePrev.(frame'') (↓ (Hpr ↕ Hrq ↕ Hq)) D}
-  (l: (νTypeAt n).(Layer') (Hp := ⇓ (Hpr ↕ Hrq ↕ Hq)) d):
-  let sl := mkDgnLayer (Hpq := ↓ (Hpr ↕ Hrq)) (Hq := Hq)
-    (G.(DgnLayer) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq)) (l := l) d) in
-  let sl' := mkDgnLayer (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq))
-    (G.(DgnLayer) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq) (l := l) d) in
-  rew [fun d => mkLayer (d := d)] FrameB.(cohDgnFrame) (Hrq := ⇓ Hrq) d in
-    sl = sl'.
-Proof.
-  intros *. simpl.
-  subst sl sl'; apply functional_extensionality_dep; intros 𝛉.
-  unfold mkDgnLayer; rewrite <- map_subst_app; fold (νTypeAt n).
-  repeat rewrite <- map_subst.
-  rewrite <- (G.(DgnPainting).(cohDgnPainting) (Hpr := ⇓ Hpr) (Hrq := ⇓ Hrq))
-    with (c := l 𝛉).
-  rewrite rew_map with (P := fun x => (νTypeAt n).(Painting).(painting) D.2 x).
-  rewrite rew_map with
-  (P := fun x => (νTypeAt n).(Painting).(painting) D.2 x)
-  (f := fun d => (G.(DgnFrame).(dgnFrame) (⇓ (↓ (Hpr ↕ Hrq))) d)).
-  rewrite rew_map with
-  (P := fun x => (νTypeAt n).(Painting).(painting) D.2 x)
-  (f := fun d => (G.(DgnFrame).(dgnFrame) (⇓ (⇓ Hpr)) d)).
-  repeat rewrite rew_compose.
-  apply rew_swap with (P := fun x => (νTypeAt n).(Painting).(painting) D.2 x).
-  rewrite rew_app. now trivial.
-  now apply ((νTypeAt n).(Frame).(frame) _ _).(UIP).
-Defined.
+Definition mkidDgnRestrLayer {n} {p q} {Hp: p.+1 <= n.+1}
+  {Frame: DgnFrameBlock (νTypeAt n.+1) p mkDgnFramePrev}
+  {D} {d: mkFramePrev.(frame') Hp D} {l: mkLayer' (d := d)}:
+  rew [fun d => mkLayer' (d := d)] Frame.(idDgnRestrFrame) d in
+    mkRestrLayer (Frame.(dgnFrame) Hp d) (mkDgnLayer l) = l.
 
 #[local]
 Instance mkDgnFrame0 {n} {G: Dgn (νTypeAt n)}:
   DgnFrameBlock (νTypeAt n.+1) O mkDgnFramePrev.
   unshelve esplit.
   * intros; now exact tt.
-  * now trivial.
-  * intros; apply rew_swap with (P := id); now destruct (rew _ in _).
   * intros; apply rew_swap with (P := id); now destruct (rew <- _ in _).
+  * intros; apply rew_swap with (P := id); now destruct (rew _ in _).
 Defined.
 
 #[local]
@@ -788,19 +731,22 @@ Instance mkDgnFrameSp {n p} {G: Dgn (νTypeAt n)}
   DgnFrameBlock (νTypeAt n.+1) p.+1 mkDgnFramePrev.
   unshelve esplit.
   * (* dgnFrame *)
-    intros q Hpq Hq D d.
+    intros Hp D d.
     rewrite (νTypeAt n).(eqFrameSp) in d; destruct d as (d, l).
     now exact (Frame.(dgnFrame) _ d; mkDgnLayer l).
-  * (* cohDgnFrame *)
-    intros q r Hpr Hrq Hq D d. simpl.
-    invert_le Hpr; invert_le Hrq.
-    rewrite (G.(eqDgnFrameSp) (Hpq := ⇓ (Hpr ↕ Hrq))),
-            (G.(eqDgnFrameSp) (Hpq := ⇓ Hpr)).
-    repeat destruct (rew [id] _ in d) as (d', l).
-    Check (= Frame.(cohDgnFrame) d'; mkCohDgnLayer (Hq := Hq) l).
-    admit.
+  * (* idDgnRestrFrame *) admit.
   * (* cohDgnRestrFrame *)
-    intros. simpl. admit.
+    simpl. intros q ω Hpq Hq D c.
+    invert_le Hpq.
+    rewrite <- rew_rew with (P := id) (H := (νTypeAt n).(eqFrameSp)) (a := c).
+    destruct (rew [id] _ in c) as (d, l); clear c.
+    rewrite rew_rew'.
+    rewrite (νTypeAt n).(eqRestrFrameSp).
+    fold ((νTypeAt n).(RestrLayer) ω (Hpq := ⇓ Hpq) (Hq := ⇓ Hq) (d := d) l).
+    rewrite G.(eqDgnFrameSp).
+    f_equal.
+    exact (= Frame.(idDgnRestrFrame) d; mkidDgnRestrLayer).
+    admit.
   * admit.
 Admitted.
 
