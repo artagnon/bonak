@@ -713,6 +713,9 @@ Definition mkidDgnRestrLayer {n p q} {G: Dgn (νTypeAt n)}
   rew [fun d => mkLayer' (d := d)] Frame.(idDgnRestrFrame) d in
   mkRestrLayer (ε := ε) (mkDgnLayer l) = l.
 Proof.
+apply functional_extensionality_dep; intros 𝛉.
+unfold mkRestrLayer, mkDgnLayer.
+simpl. fold (νTypeAt n).
 Admitted.
 
 #[local]
@@ -733,17 +736,22 @@ Instance mkDgnFrameSp {n p} {G: Dgn (νTypeAt n)}
     intros Hp D d. rewrite (νTypeAt n).(eqFrameSp) in d; destruct d as (d, l).
     now exact (Frame.(dgnFrame) _ d; mkDgnLayer l).
   * (* idDgnRestrFrame *)
-    intros q ε Hpq Hq D d.
-    admit.
+    simpl. intros q ε Hpq Hq D d'.
+    invert_le Hpq.
+    rewrite <- rew_rew with (P:=id) (H:=(νTypeAt n).(eqFrameSp)) (a:=d'). (* TODO: avoid double rewriting *)
+    destruct (rew [id] _ in d') as (d,l). clear d'.
+    rewrite rew_rew'.
+    f_equal.
+    exact (= Frame.(idDgnRestrFrame) d; mkidDgnRestrLayer).
   * (* cohDgnRestrFrame *)
     simpl; intros q ε Hpq Hq D c; invert_le Hpq.
-    rewrite <- rew_rew with (P := id) (H := (νTypeAt n).(eqFrameSp)) (a := c).
+    rewrite <- rew_rew with (P := id) (H := (νTypeAt n).(eqFrameSp)) (a := c). (* TODO: avoid double rewriting *)
     destruct (rew [id] _ in c) as (d, l); clear c.
     rewrite rew_rew', (νTypeAt n).(eqRestrFrameSp).
     fold ((νTypeAt n).(RestrLayer) ε (Hpq := ⇓ Hpq) (Hq := ⇓ Hq) (d := d) l).
     rewrite G.(eqDgnFrameSp); f_equal; symmetry.
     now exact (= Frame.(idDgnRestrFrame) d; mkidDgnRestrLayer).
-Admitted.
+Defined.
 
 #[local]
 Instance mkDgnFrameBlock {n p} {G: Dgn (νTypeAt n)}:
@@ -752,6 +760,7 @@ Instance mkDgnFrameBlock {n p} {G: Dgn (νTypeAt n)}:
   * now exact mkDgnFrame0.
   * now exact mkDgnFrameSp.
 Defined.
+
 End νType.
 
 Definition AugmentedSemiSimplicial := νTypes hunit.
