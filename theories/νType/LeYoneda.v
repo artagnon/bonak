@@ -115,6 +115,40 @@ Qed.
 
 Notation "⇑ p" := (leY_raise_both p) (at level 40).
 
+(* Additional lemmas for .-1 *)
+
+Lemma leY_pred_succ {n p}: p.+1 <= n -> p.+1 <= n.-1.+1.
+  intros len1. destruct n.
+  - exfalso. now apply (leY_contra len1).
+  - now apply len1.
+Defined.
+
+Notation "⇄" := leY_pred_succ (at level 0).
+
+Lemma leY_pred_succ_refl {n p}: p.+1 <= n -> n.-1.+1 <= n.
+  intros len1. destruct n.
+  - exfalso. now apply (leY_contra len1).
+  - now trivial.
+Defined.
+
+Notation "⇋" := leY_pred_succ_refl (at level 0).
+
+Lemma leY_pred_succ_refl' {n p}: p.+1 <= n -> n.+1.-1 = n.-1.+1.
+  intros len1. destruct n.
+  - exfalso. now apply (leY_contra len1).
+  - now trivial.
+Defined.
+
+Notation "⇝" := leY_pred_succ_refl' (at level 0).
+
+Lemma leY_pred_succ_equiv {n}: n.+1.-1 = n.
+  destruct n.
+  - now trivial.
+  - now trivial.
+Defined.
+
+Notation "⇔" := leY_pred_succ_equiv (at level 0).
+
 (** A tactic to turn inequalities of the form p.+2 <= q.+1 into p.+2 <= q.+2;
     find_raise is a helper for the tactic *)
 
