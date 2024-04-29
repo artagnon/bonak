@@ -5,6 +5,8 @@
 From Bonak Require Import Notation.
 From Bonak Require Import LeInductive.
 
+From Coq Require Import StrictProp.
+
 Set Warnings "-notation-overridden".
 
 (** False and True in SProp *)
@@ -117,37 +119,93 @@ Notation "⇑ p" := (leY_raise_both p) (at level 40).
 
 (* Additional lemmas for .-1 *)
 
-Lemma leY_pred_succ {n p}: p.+1 <= n -> p.+1 <= n.-1.+1.
-  intros len1. destruct n.
-  - exfalso. now apply (leY_contra len1).
-  - now apply len1.
-Defined.
-
-Notation "⇄" := leY_pred_succ (at level 0).
-
-Lemma leY_pred_succ_refl {n p}: p.+1 <= n -> n.-1.+1 <= n.
+Lemma leY_pred_succ_cancel {n p}: p.+1 <= n -> n.-1.+1 = n.
   intros len1. destruct n.
   - exfalso. now apply (leY_contra len1).
   - now trivial.
 Defined.
 
-Notation "⇋" := leY_pred_succ_refl (at level 0).
+Notation "‹" := leY_pred_succ_cancel (at level 0).
 
-Lemma leY_pred_succ_refl' {n p}: p.+1 <= n -> n.+1.-1 = n.-1.+1.
+Lemma leY_swap_pred_succ {n p}: p.+1 <= n -> n.+1.-1 = n.-1.+1.
   intros len1. destruct n.
   - exfalso. now apply (leY_contra len1).
   - now trivial.
 Defined.
 
-Notation "⇝" := leY_pred_succ_refl' (at level 0).
+Definition rew_leY_H {x y z} (H: x = y) (le: leY z y): leY z x.
+Proof.
+  now rewrite H.
+Defined.
 
-Lemma leY_pred_succ_equiv {n}: n.+1.-1 = n.
+Definition rew_leY_H' {x y z} (H: x = y) (le: leY z x): leY z y.
+Proof.
+  now rewrite <- H.
+Defined.
+
+Definition rew_H {x y: nat} {f} (H: x = y) (_: f y): f x.
+Proof.
+  now rewrite H.
+Defined.
+
+Fixpoint pred_succ_gen n p: nat :=
+  match n, p with
+  | O, _ => p
+  | S n', O => p
+  | S n', S _ => pred_succ_gen n' p.-1.+1
+  end.
+
+Lemma leY_pred_succ_gen {p q}:
+  forall n n', q.+1 <= p -> pred_succ_gen n q.+1 <= pred_succ_gen n' p.
+Proof.
+  intros n n' Hp. induction n, n'.
+  - now simpl.
+  - simpl. rewrite (‹ Hp). induction n'.
+    + destruct p.
+      * exfalso. now apply leY_contra in Hp.
+      * now simpl.
+    + destruct p.
+      * now simpl.
+      * now simpl.
+  - simpl. induction n.
+    + destruct q.
+      * now simpl in IHn.
+      * now simpl in IHn.
+    + destruct q.
+      * now apply IHn.
+      * now apply (IHn0 IHn).
+  - simpl. destruct p, q.
+    + now trivial.
+    + now apply IHn.
+    + induction n'.
+      * now apply leY_down in Hp.
+      * now apply (IHn' IHn).
+    + now apply IHn.
+Qed.
+
+Notation "›" := leY_pred_succ_gen (at level 0).
+
+Definition invert_Hp {n p} (Hp: p.+1 <= n): p.+1 <= n.+1.
   destruct n.
-  - now trivial.
+  - exfalso; now apply leY_contra in Hp.
+  - apply (leY_trans Hp). now apply leY_up.
+Defined.
+
+Definition invert_Hp' {n p} (Hp: p.+1 <= n): p.+1 <= n.-1.+1.
+  destruct n.
+  - exfalso; now apply leY_contra in Hp.
+  - now apply (leY_trans Hp).
+Defined.
+
+Definition invert_Hq {n p} (Hp: p.+1 <= n): n.-1.+1 <= n.
+  destruct n.
+  - exfalso; now apply leY_contra in Hp.
   - now trivial.
 Defined.
 
-Notation "⇔" := leY_pred_succ_equiv (at level 0).
+Definition construct_Hq {n n'} (Hn': n' = n.+1): n.+1 <= n'.
+  now subst n'.
+Defined.
 
 (** A tactic to turn inequalities of the form p.+2 <= q.+1 into p.+2 <= q.+2;
     find_raise is a helper for the tactic *)
