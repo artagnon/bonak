@@ -718,21 +718,23 @@ Definition mkidDgnRestrLayer {n n' p ε} {H: n = n'.+1}
     FrameBlock.(idDgnRestrFrame) (H := eq_refl _) (ε := ε) in
       mkRestrLayer (q := n') (Hpq := Hp) (mkDgnLayer l) = l.
 Proof.
+  destruct n. exfalso. now inversion H.
   apply functional_extensionality_dep; intros 𝛉.
   rewrite <-
     (G.(DgnPainting).(idDgnRestrPainting) (H := eq_refl _)
       (ε := ε) (E := D.2) (c := l 𝛉)).
-  unfold mkRestrLayer, mkDgnLayer; rewrite <- map_subst_app; fold (νTypeAt n).
+  unfold mkRestrLayer, mkDgnLayer; rewrite <- map_subst_app; fold (νTypeAt n').
   repeat rewrite <- map_subst.
   rewrite rew_map with
-    (P := fun x => (νTypeAt n).(PaintingPrev).(painting') x).
+    (P := fun x => (mkνTypeSn (νTypeAt n')).(PaintingPrev).(painting') x).
   rewrite rew_map with
-    (P := fun x => (νTypeAt n).(PaintingPrev).(painting') x)
-    (f := fun d => (νTypeAt n).(Frame).(restrFrame) _ d).
+    (P := fun x => (mkνTypeSn (νTypeAt n')).(PaintingPrev).(painting') x)
+    (f := fun d => (mkνTypeSn (νTypeAt n')).(Frame).(restrFrame) _ d).
   repeat rewrite rew_compose.
-  apply rew_swap with (P := fun x => (νTypeAt n).(PaintingPrev).(painting') x).
+  apply rew_swap with
+    (P := fun x => (mkνTypeSn (νTypeAt n')).(PaintingPrev).(painting') x).
   rewrite rew_app. now trivial.
-  now apply ((νTypeAt n).(FramePrev).(frame') _ _).(UIP).
+  now apply ((mkνTypeSn (νTypeAt n')).(FramePrev).(frame') _ _).(UIP).
 Defined.
 
 #[local]
@@ -754,12 +756,13 @@ Instance mkDgnFrameSp {n p} {G: Dgn (νTypeAt n)}
     now exact (Frame.(dgnFrame) _ d; mkDgnLayer l).
   * (* idDgnRestrFrame *)
     simpl; intros n' ε H Hp D c; invert_le Hp.
+    destruct n. exfalso; now inversion H.
     rewrite <-
       rew_rew with (P := id) (H := (νTypeAt n.+1).(eqFrameSp)) (a := c).
     (* TODO: avoid double rewriting *)
     destruct (rew [id] _ in c) as (d, l); clear c.
     f_equal.
-    exact (= Frame.(idDgnRestrFrame); mkidDgnRestrLayer).
+    now exact (= Frame.(idDgnRestrFrame); mkidDgnRestrLayer).
     admit.
   * (* cohDgnRestrFrame *)
     simpl; intros q ε Hpq Hq D c; invert_le Hpq; invert_le Hq.
