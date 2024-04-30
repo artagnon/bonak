@@ -633,8 +633,8 @@ Class DgnFrameBlock {n} (C: νType n) p (Prev: DgnFrameBlockPrev C) := {
     C.(FramePrev).(frame') Hp D -> C.(Frame).(frame) (↓ Hp) D;
   idDgnRestrFrame {n' ε} {H: n = n'.+1} {Hp: p.+1 <= n'.+1} {D}
     {d: C.(FramePrev).(frame') _ D}:
-    C.(Frame).(restrFrame) (q := n') (Hpq := Hp) (Hq := construct_Hq H)
-      ε (dgnFrame (rew_leY_H H Hp) d) = d;
+    C.(Frame).(restrFrame) (q := n') (Hpq := Hp) (Hq := construct_Hq H) ε
+      (dgnFrame (rew_leY H Hp) d) = d;
   cohDgnRestrFrame {q ε} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {D}
     {d: C.(FramePrev).(frame') (↓ (Hpq ↕ Hq)) D}:
     Prev.(dgnFrame') (Hpq ↕ Hq)
@@ -662,11 +662,11 @@ Class DgnPaintingBlock {n} (C: νType n) {Q: DgnFrameBlockPrev C}
     C.(PaintingPrev).(painting') d ->
     C.(Painting).(painting) E (FrameBlock.(dgnFrame) Hp d);
   idDgnRestrPainting {n' p ε} {H: n = n'.+1} {Hp: p.+1 <= n'.+1} {D E}
-    {d: C.(FramePrev).(frame') (rew_leY_H H Hp) D}
+    {d: C.(FramePrev).(frame') _ D}
     {c: C.(PaintingPrev).(painting') d}:
     rew [C.(PaintingPrev).(painting')] FrameBlock.(idDgnRestrFrame) in
     C.(Painting).(restrPainting) (q := n') (ε := ε) (E := E)
-      (dgnPainting (rew_leY_H H Hp) c) = c;
+      (dgnPainting (rew_leY H Hp) c) = c;
 }.
 
 Arguments dgnPainting {n C Q Prev FrameBlock} _ {p} Hp {D E d} c.
@@ -721,8 +721,8 @@ Proof.
   destruct n. exfalso. now inversion H.
   apply functional_extensionality_dep; intros 𝛉.
   rewrite <-
-    (G.(DgnPainting).(idDgnRestrPainting) (H := eq_refl _)
-      (ε := ε) (E := D.2) (c := l 𝛉)).
+    (G.(DgnPainting).(idDgnRestrPainting) (H := eq_refl _) (ε := ε)
+      (E := D.2) (c := l 𝛉)).
   unfold mkRestrLayer, mkDgnLayer; rewrite <- map_subst_app; fold (νTypeAt n').
   repeat rewrite <- map_subst.
   rewrite rew_map with
