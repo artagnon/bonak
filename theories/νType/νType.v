@@ -762,10 +762,23 @@ Instance mkDgnFrameSp {n' p} {G: Dgn (νTypeAt n'.+1)}
     now exact (= Frame.(idDgnRestrFrame); mkidDgnRestrLayer).
   * (* cohDgnRestrFrame *)
     simpl; intros q ε Hpq Hq D c. invert_le Hpq; invert_le Hq.
+    destruct c.
+(*
     rewrite <-
       rew_rew with (P := id) (H := (νTypeAt n'.+2).(eqFrameSp)) (a := c).
     (* TODO: avoid double rewriting *)
     destruct (rew [id] _ in c) as (d, l); clear c.
+rewrite rew_rew.
+*)
+    rewrite G.(eqDgnFrameSp).
+unfold eq_rect_r at 2, eq_rect, eq_sym.
+symmetry.
+unshelve eapply eq_existT_curried.
+apply (Frame.(idDgnRestrFrame) (d:=x) (ε:=ε) (Hp:=(↓ (↓ (Hpq ↕ Hq))))).
+(*erewrite rew_swap with (P:=id).*)
+exact (= Frame.(idDgnRestrFrame); mkidDgnRestrLayer).
+simpl (rew <- [id] eq_refl in _).
+apply G.(cohDgnRestrFrame)
     rewrite (νTypeAt n'.+2).(eqRestrFrameSp).
     fold ((νTypeAt n'.+2).(RestrLayer) ε (Hpq := ⇓ Hpq) (Hq := ⇓ Hq) (d := d) l).
     rewrite G.(eqDgnFrameSp); f_equal; symmetry.
