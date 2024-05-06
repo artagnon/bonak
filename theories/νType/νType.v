@@ -89,10 +89,10 @@ Variable arity: HSet.
     current one and for each such previous data, [FrameBlock]
     consists of the data to maintain at the current level. *)
 Class FrameBlockPrev n (prefix: Type@{m'}) := {
-  frame' {p} (Hp: p.+1 <= n): prefix -> HSet@{m};
-  frame'' {p} (Hp: p.+2 <= n): prefix -> HSet@{m};
-  restrFrame' {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity) {D}:
-    frame' (↓ (Hpq ↕ Hq)) D -> frame'' (Hpq ↕ Hq) D;
+  frame' p {Hp: p.+1 <= n}: prefix -> HSet@{m};
+  frame'' p {Hp: p.+2 <= n}: prefix -> HSet@{m};
+  restrFrame' {p q} {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) (ε: arity) {D}:
+    frame' p D -> frame'' p D;
 }.
 
 Arguments frame' {n prefix} _ {p} Hp D.
