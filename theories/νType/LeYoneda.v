@@ -270,7 +270,7 @@ Ltac is_less_up_to_succ p q n :=
    | _ => is_less p q n
    end.
 
-Ltac debug c := idtac. (* Use "Ltac debug c := c." for debugging *)
+Ltac debug c := c. (* Use "Ltac debug c := c." for debugging *)
 
 Ltac mk_down proof :=
   match type of proof with
@@ -352,6 +352,7 @@ Ltac solve_leY :=
         slide_down n n' H
           ltac:(fun proof => debug ltac:(idtac "Found proof =" proof); refine proof) in
       let failure _ := fail 100 "Could not find a proof" in
+      debug ltac:(idtac "Finding proof with p := " p "q := " q);
       find p q 0 success failure
   | [ |- ?c ] => debug ltac:(idtac "Not a leY:" c); fail
   end.
