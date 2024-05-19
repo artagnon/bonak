@@ -347,6 +347,7 @@ Ltac solve_leY :=
   debug ltac:(idtac "Trying to solve leY");
   lazymatch goal with
   | [ |- leY ?p ?q ] =>
+      apply leY_refl ||
       let success x n n' H :=
         slide_down n n' H
           ltac:(fun proof => debug ltac:(idtac "Found proof =" proof); refine proof) in
