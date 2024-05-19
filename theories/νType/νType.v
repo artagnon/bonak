@@ -682,11 +682,6 @@ Class Dgn {n'} (C: νType n'.+1) := {
     C.(Layer') d -> C.(Layer) (DgnFrame.(dgnFrame) (↓ Hp) d) :=
     fun l ω => rew [C.(PaintingPrev).(painting')]
     DgnFrame.(cohDgnRestrFrame) in DgnPaintingPrev.(dgnPainting') Hp (l ω);
-  eqDgnFrameSp {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n'.+1} {ε D}
-    {d: C.(Frame).(frame) (↓ ↓ (Hpq ↕ Hq)) D} {l: C.(Layer) d}:
-    DgnFrame.(dgnFrame) (Hpq ↕ Hq) (rew <- [id] C.(eqFrameSp') in
-      (C.(Frame).(restrFrame) ε d; C.(RestrLayer) ε l)) =
-    rew <- [id] C.(eqFrameSp) in (d; l);
 }.
 
 Arguments DgnFramePrev {n' C} _.
@@ -694,7 +689,6 @@ Arguments DgnFrame {n' C} _ {p}.
 Arguments DgnPaintingPrev {n' C} _.
 Arguments DgnPainting {n' C} _.
 Arguments DgnLayer {n' C} _ {p Hp D d} l.
-Arguments eqDgnFrameSp {n' C} _ {p q Hpq Hq ε D} d l.
 
 #[local]
 Instance mkDgnFramePrev {n'} {G: Dgn (νTypeAt n'.+1)}:
@@ -756,8 +750,8 @@ Instance mkDgnFrameSp {n' p} {G: Dgn (νTypeAt n'.+1)}
     simpl; intros ε Hp D (d, l).
     now exact (= Frame.(idDgnRestrFrame); mkidDgnRestrLayer).
   * (* cohDgnRestrFrame *)
-    simpl; intros q ε Hpq Hq D (d, l). invert_le Hpq; invert_le Hq.
-    rewrite G.(eqDgnFrameSp); symmetry.
+    simpl; intros q ε Hpq Hq D (d, l). invert_le Hpq. invert_le Hq.
+    symmetry.
     exact (= Frame.(idDgnRestrFrame); mkidDgnRestrLayer).
     admit.
 Admitted.
