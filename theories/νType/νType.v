@@ -420,7 +420,7 @@ Proof.
     now exact (l ε).
   * clear p Hpq; intros p Hpq mkRestrPaintingSp d c; invert_le Hpq.
     rewrite mkpainting_computes in c; destruct c as (l, c).
-    change (⇓ (↓ ?Hpq ↕ ?Hq)) with (↓ ⇓ (Hpq ↕ Hq)); rewrite C.(eqPaintingSp).
+    rewrite C.(eqPaintingSp).
     apply mkRestrPaintingSp in c.
     now exact (mkRestrLayer l; c).
 Defined.
@@ -461,7 +461,6 @@ Definition mkCohPainting_base {n} {C: νType n} {q r}
   mkPaintingPrev.(restrPainting') (Hpq := ♢ _) (Hrq ↕ Hq) ω
     (mkRestrPainting (ε := ε) (Hpq := ↓ Hrq) (Hq := Hq) E d c).
 Proof.
-  change (♢ _ ↕ ?H) with H; change (⇓ (♢ _) ↕ ?H) with H.
   rewrite mkRestrPainting_base_computes, mkRestrPainting_step_computes.
   destruct (rew [id] mkpainting_computes in c) as (l, c'); clear c.
   now refine (C.(eqRestrPainting0)
@@ -491,16 +490,12 @@ Definition mkCohPainting_step {n} {C: νType n} {p q r} {Hpr: p.+3 <= r.+3}
         mkCohPaintingHyp p (↓ Hpr) (ε := ε) (ω := ω) d c.
 Proof.
   unfold mkCohPaintingHyp in *; simpl projT1 in *; simpl projT2 in *.
-  change (⇓ (↓ ?Hpr)) with (↓ (⇓ Hpr)).
   do 2 rewrite mkRestrPainting_step_computes.
   destruct (rew [id] mkpainting_computes in c) as (l, c'); clear c.
   rewrite (C.(eqRestrPaintingSp) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq)),
           (C.(eqRestrPaintingSp) (Hpq := ⇓ Hpr) (Hq := ⇓ (Hrq ↕ Hq))).
-  change ((fun _ (x : leR _ ?y) => x) ↕ ?z) with z.
-  change (⇓ ?x ↕ ⇓ ?y) with (⇓ (x ↕ y)).
   rewrite <- rew_permute with (H := @eqPaintingSp' _ _ _ (⇓ _) _)
                               (H' := (mkFrame p).(cohFrame) _).
-  change (↓ ?Hpr ↕ ?Hrq) with (↓ (Hpr ↕ Hrq)).
   f_equal.
   unshelve eapply (rew_existT_curried (P := C.(Layer'))
   (Q := fun x => C.(PaintingPrev).(painting') (rew <- [id] C.(eqFrameSp') in x))
@@ -517,8 +512,6 @@ Proof.
   now exact (mkCohLayer (Hpr := Hpr) (Hrq := Hrq) (Hq := Hq) l).
   rewrite <- IHP with (d := (d; l)) (c := c').
   simpl (mkFrame p.+1). unfold mkPaintingPrev, painting''.
-  change (fun x => C.(PaintingPrev).(painting') (Hp := ?Hp) (D := ?D) x) with
-    (C.(PaintingPrev).(painting') (Hp := Hp) (D := D)).
   unfold mkFrameSp, cohFrame.
   rewrite rew_map with (P := fun x => (C.(PaintingPrev).(painting') x).(Dom))
                        (f := fun x => rew <- [id] C.(eqFrameSp') in x).
@@ -591,10 +584,9 @@ Instance mkνTypeSn {n} (C: νType n): νType n.+1 :=
     eqFrameSp' := ltac:(intros *; now refine C.(eqFrameSp));
     eqRestrFrame0 := ltac:(now intros *);
     eqRestrFrameSp := ltac:(now intros *);
-    eqPaintingSp := ltac:(intros *; simpl; now refine mkpainting_computes);
+    eqPaintingSp := ltac:(intros *; now refine mkpainting_computes);
     eqPaintingSp' := ltac:(intros *; now refine C.(eqPaintingSp));
-    eqRestrPainting0 := ltac:(intros *;
-      change (fun _ (_: leR _ ?q) => _) with (♢ q); simpl;
+    eqRestrPainting0 := ltac:(intros *; simpl;
       now rewrite mkRestrPainting_base_computes, rew_rew');
     eqRestrPaintingSp := ltac:(intros *; simpl;
       now rewrite mkRestrPainting_step_computes, rew_rew');
