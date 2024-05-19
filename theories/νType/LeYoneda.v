@@ -270,7 +270,7 @@ Ltac is_less_up_to_succ p q n :=
    | _ => is_less p q n
    end.
 
-Ltac debug c := c. (* Use "Ltac debug c := c." for debugging *)
+Ltac debug c := idtac. (* Use "Ltac debug c := c." for debugging *)
 
 Ltac mk_down proof :=
   match type of proof with
@@ -313,7 +313,7 @@ Ltac slide_down n n' H success :=
    to prove statements of the form pi.+l <= p_{i+l}.+l' *)
 
 Ltac find p q n0 success failure :=
-  debug ltac:(idtac "       search a proof of " p "<=" q);
+  debug ltac:(idtac "Search a proof of " p "<=" q);
   debug ltac:(idtac "try reflexivity");
   match is_less_up_to_succ q p 0 with
   | Some ?n => debug ltac:(idtac"success2"); success p 0 n constr:(eq_refl q)
@@ -323,11 +323,11 @@ Ltac find p q n0 success failure :=
        debug ltac:(idtac "try" H ":" p' "<=" q' "for" p "<=" q);
        match is_less_up_to_succ q q' 0 with
        | Some ?n =>
-         debug ltac:(idtac "Found right" p' "<=" q' "|-" p "<=" q "n:=" n);
+         debug ltac:(idtac "Found right" p' "<=" q' "|-" p "<=" q "n :=" n);
          match is_less_up_to_succ p p' 0 with
          | Some ?n' => let n1 := eval compute in (n + n0) in debug ltac:(idtac "Found hyp" p' p n' n1 H); success p' n' n1 H
          | None =>
-              debug ltac:(idtac "Found midpoint" p' "<=" q' "|-" p "<=" q "n:=" n);
+              debug ltac:(idtac "Found midpoint" p' "<=" q' "|-" p "<=" q "n :=" n);
 (*              let q := eval compute in (n + q) in*)
               let n1 := eval compute in (n + n0) in
               find p p' n1
@@ -335,7 +335,7 @@ Ltac find p q n0 success failure :=
                         let c := constr:(@leY_trans p0 p' q' H' H) in
                         let t := type of c in debug ltac:(idtac "transitivity" p0 p' q' H' H ":=" c ":" t);
                         success p0 n n' c)
-                ltac:(fun _ => debug ltac:(idtac "Fail p:=" p "q:=" q); fail)
+                ltac:(fun _ => debug ltac:(idtac "Fail p :=" p "q :=" q); fail)
          end
       | None => debug ltac:(idtac "Try next hyp"); fail
       end
@@ -352,9 +352,8 @@ Ltac solve_leY :=
         slide_down n n' H
           ltac:(fun proof => debug ltac:(idtac "Found proof =" proof); refine proof) in
       let failure _ := fail 100 "Could not find a proof" in
-      debug ltac:(idtac "Finding proof with p := " p "q := " q);
       find p q 0 success failure
-  | [ |- ?c ] => debug ltac:(idtac "Not a leY:" c); fail
+  | [ |- ?c ] => debug ltac:(idtac "Not a leY: " c); fail
   end.
 
 Example ex1 (n p q r : nat)

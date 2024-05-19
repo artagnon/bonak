@@ -281,7 +281,7 @@ Definition mkLayer {n} {C: νType n} {p} {Hp: p.+1 <= n.+1}
     (Frame.(restrFrame p) p ε d).
 
 Definition mkLayer' {n} {C: νType n} {p} {Hp: p.+2 <= n.+1}
-  {D} {d: mkFramePrev.(frame') p D}: HSet :=
+  {D} {d: mkFramePrev.(frame' (n := n.+1)) p D}: HSet :=
   C.(Layer) (Hp := ⇓ Hp) d.
 
 Definition mkRestrLayer {n} {C: νType n} {p q} {Hpq: p.+2 <= q.+2}
@@ -295,9 +295,9 @@ Definition mkCohLayer {n} {C: νType n} {p q r} {Hpr: p.+3 <= r.+3}
   {Frame: FrameBlock n.+1 p mkprefix mkFramePrev}
   {D} {d: Frame.(frame p) D} (l: mkLayer):
   let sl := C.(RestrLayer) (Hpq := ⇓ (Hpr ↕ Hrq)) ε
-              (mkRestrLayer (Hpq := ⇓ Hpr) l) in
+              (mkRestrLayer (p := p) (q := r) l) in
   let sl' := C.(RestrLayer) (Hpq := ⇓ Hpr) ω
-               (mkRestrLayer (Hpq := ↓ (Hpr ↕ Hrq)) l) in
+               (mkRestrLayer (p := p) (q := q.+1) l) in
   rew [C.(Layer')] Frame.(cohFrame) (Hpr := ↓ Hpr) (Hrq := Hrq) (Hq := Hq) d in sl = sl'.
 Proof.
   intros *.
@@ -507,7 +507,7 @@ Proof.
   (H := (mkFrame p).(cohFrame) (Hpr := ↓ Hpr) (Hrq := Hrq) (Hq := Hq) (ε := ε)
         (ω := ω) (D := D) d)
   (u := C.(RestrLayer) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq) (D := D.1) ε
-          (mkRestrLayer (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq)) (C := C) (D := D)
+          (mkRestrLayer (p := p) (q := r) (C := C) (D := D)
           (Frame := mkFrame p) (ε := ω) l))
   (v := rew [C.(PaintingPrev).(painting')] C.(eqRestrFrameSp) in
     C.(Painting).(restrPainting) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq) (ε := ε)
@@ -707,7 +707,7 @@ Definition mkidDgnRestrLayer {n' p ε} {G: Dgn (νTypeAt n'.+1)}
   {d: mkFramePrev.(frame') p D} {l: mkLayer' (d := d)}:
   rew [fun d => mkLayer' (d := d)]
     FrameBlock.(idDgnRestrFrame) (ε := ε) in
-      mkRestrLayer (q := n') (Hpq := Hp) (Hq := ♢ _) (mkDgnLayer l) = l.
+      mkRestrLayer (p := p) (q := n') (mkDgnLayer l) = l.
 Proof.
   apply functional_extensionality_dep; intros 𝛉.
   rewrite <-
@@ -723,7 +723,7 @@ Proof.
   apply rew_swap with
     (P := fun x => (mkνTypeSn (νTypeAt n')).(PaintingPrev).(painting') x).
   rewrite rew_app. now trivial.
-  now apply ((mkνTypeSn (νTypeAt n')).(FramePrev).(frame') _ _).(UIP).
+  now apply ((mkνTypeSn (νTypeAt n')).(FramePrev).(frame') p D.1).(UIP).
 Defined.
 
 #[local]
