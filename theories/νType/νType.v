@@ -406,7 +406,7 @@ Qed.
 
 (** Now, [restrPainting], and the corresponding computational properties. *)
 
-Definition mkRestrPainting {n} {C: νType n} {p q} {Hpq: p.+1 <= q.+1}
+Definition mkRestrPainting {n} {C: νType n} p q {Hpq: p.+1 <= q.+1}
   {Hq: q.+1 <= n.+1} {ε} {D}
   (E: (mkFrame n.+1).(frame n.+1) D -> HSet)
   (d: (mkFrame p).(frame p) D)
@@ -427,7 +427,7 @@ Defined.
 
 Lemma mkRestrPainting_base_computes {n} {C: νType n} {p} {Hp: p.+1 <= n.+1}
   {ε} {D E} {d: (mkFrame p).(frame p) D} {c}:
-  mkRestrPainting (Hq := Hp) E d c =
+  mkRestrPainting p p E d c =
   match (rew [id] mkpainting_computes in c) with
   | (l; _) => l ε
   end.
@@ -437,10 +437,10 @@ Qed.
 
 Lemma mkRestrPainting_step_computes {n} {C: νType n} {q r} {Hrq: r.+2 <= q.+2}
   {Hq: q.+2 <= n.+1} {ε} {D E} {d: (mkFrame r).(frame r) D} {c}:
-  mkRestrPainting (Hpq := ↓ Hrq) (Hq := Hq) (ε := ε) E d c =
+  mkRestrPainting r q.+1 (Hpq := ↓ Hrq) (Hq := Hq) (ε := ε) E d c =
   match (rew [id] mkpainting_computes in c) with
   | (l; c) => rew <- [id] C.(eqPaintingSp) in
-    (mkRestrLayer l; mkRestrPainting (Hpq := Hrq) E (d; l) c)
+    (mkRestrLayer l; mkRestrPainting r.+1 q.+1 E (d; l) c)
   end.
 Proof.
   unfold mkRestrPainting; now rewrite le_induction'_step_computes.
@@ -457,14 +457,14 @@ Definition mkCohPainting_base {n} {C: νType n} {q r}
   (c: mkpainting E d):
   rew [mkPaintingPrev.(painting'')] (mkFrame r).(cohFrame) (Hpr := ♢ _) d in
     mkPaintingPrev.(restrPainting') (Hpq := Hrq) Hq ε
-      (mkRestrPainting (ε := ω) (Hpq := ♢ _) (Hq := ↓ (Hrq ↕ Hq)) E d c) =
+      (mkRestrPainting r r (ε := ω) E d c) =
   mkPaintingPrev.(restrPainting') (Hpq := ♢ _) (Hrq ↕ Hq) ω
-    (mkRestrPainting (ε := ε) (Hpq := ↓ Hrq) (Hq := Hq) E d c).
+    (mkRestrPainting r q.+1 (ε := ε) E d c).
 Proof.
   rewrite mkRestrPainting_base_computes, mkRestrPainting_step_computes.
   destruct (rew [id] mkpainting_computes in c) as (l, c'); clear c.
   now refine (C.(eqRestrPainting0)
-    (Q := mkRestrPainting (Hpq := Hrq) E (_; _) c')).
+    (Q := mkRestrPainting r.+1 q.+1 E (_; _) c')).
 Qed.
 
 (** A small abbreviation *)
@@ -475,9 +475,9 @@ Definition mkCohPaintingHyp {n} {C: νType n}
   (c: mkpainting E d) :=
   rew [mkPaintingPrev.(painting'')] (mkFrame p).(cohFrame) (Hrq := Hrq) d in
   C.(Painting).(restrPainting) (ε := ε) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq)
-    (mkRestrPainting (ε := ω) (Hpq := (⇓ Hpr)) (Hq := ↓ (Hrq ↕ Hq)) E d c) =
+    (mkRestrPainting p r.+1 E d c) =
   C.(Painting).(restrPainting) (ε := ω) (Hpq := (⇓ Hpr)) (Hq := ⇓ (Hrq ↕ Hq))
-    (mkRestrPainting (ε := ε) (Hpq := ↓ (Hpr ↕ Hrq)) (Hq := Hq) E d c).
+    (mkRestrPainting p q.+2 (ε := ε) (Hpq := ↓ (Hpr ↕ Hrq)) (Hq := Hq) E d c).
 
 (** The step case is discharged as (mkCohLayer; IHP) *)
 Definition mkCohPainting_step {n} {C: νType n} {p q r} {Hpr: p.+3 <= r.+3}
@@ -507,7 +507,7 @@ Proof.
   (v := rew [C.(PaintingPrev).(painting')] C.(eqRestrFrameSp) in
     C.(Painting).(restrPainting) (Hpq := ⇓ (Hpr ↕ Hrq)) (Hq := ⇓ Hq) (ε := ε)
                        (D := D.1) (E := D.2)
-                       (mkRestrPainting (Hpq := ⇓ Hpr) (Hq := ↓ (Hrq ↕ Hq))
+                       (mkRestrPainting p.+1 r.+1
                        (D := D) (ε := ω) E (d; l) c'))).
   now exact (mkCohLayer (Hpr := Hpr) (Hrq := Hrq) (Hq := Hq) l).
   rewrite <- IHP with (d := (d; l)) (c := c').
@@ -527,7 +527,7 @@ Instance mkPainting {n} {C: νType n}:
   PaintingBlock n.+1 mkprefix mkPaintingPrev mkFrame.
   unshelve esplit; intros p.
   * intros *; now exact mkpainting.
-  * intros q Hpq Hq ε d; now exact mkRestrPainting.
+  * intros q Hpq Hq ε d; now exact (mkRestrPainting p q).
   * intros *. revert d c. pattern p, Hpr. apply le_induction''.
     + now exact mkCohPainting_base.
     + clear p Hpr; unfold mkPaintingPrev, restrPainting'; cbv beta iota;
