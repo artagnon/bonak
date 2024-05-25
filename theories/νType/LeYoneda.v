@@ -249,28 +249,22 @@ Definition le_induction'_step_computes {n p P H_base H_step} {Hp: p.+2 <= n.+1}:
 
 (** Automatization of proofs of leY based on ↓, ⇓, ↕ and ♢ *)
 
+Ltac debug c := idtac. (* Use "Ltac debug c := c." for debugging *)
+
 Ltac is_less p q n :=
   match p with
   | q => constr:(Some n)
+  | S ?p =>
+    match q with
+    | S ?q => is_less p q n
+    | _ => constr:(@None nat)
+    end
   | _ =>
-    lazymatch q with
+    match q with
     | S ?q => is_less p q (S n)
     | _ => constr:(@None nat)
     end
   end.
-
-Ltac is_less_up_to_succ p q n :=
-  match p with
-  | q => constr:(Some n)
-  | S ?p =>
-    lazymatch q with
-    | S ?q => is_less_up_to_succ p q n
-    | _ => constr:(@None nat)
-    end
-   | _ => is_less p q n
-   end.
-
-Ltac debug c := idtac. (* Use "Ltac debug c := c." for debugging *)
 
 Ltac mk_down proof :=
   match type of proof with
@@ -285,7 +279,7 @@ Ltac mk_lower_both proof :=
   end.
 
 Ltac slide_down n n' H success :=
-  (* we try to prove p+n <= q+n' |- p <= q *)
+  (* we try to prove p.+n <= q.+n' |- p <= q *)
   debug ltac:(idtac "Sliding" n n');
   lazymatch n with
   | O =>
@@ -298,13 +292,13 @@ Ltac slide_down n n' H success :=
     | O =>
     debug ltac:(idtac "Down left");
     slide_down n O H
-      ltac:(fun proof => let c:= mk_down proof in
+      ltac:(fun proof => let c := mk_down proof in
             let t := type of c in
             debug ltac:(idtac "Down left proof :=" c ":" t); success c)
     | S ?n' =>
         debug ltac:(idtac "Down both");
         slide_down n n' H
-          ltac:(fun proof => let c:= mk_lower_both proof in
+          ltac:(fun proof => let c := mk_lower_both proof in
                 let t := type of c in
                 debug ltac:(idtac "Down both proof :=" c ":" t); success c)
     end
@@ -318,16 +312,16 @@ Ltac slide_down n n' H success :=
 
 Ltac find p q n0 success :=
   debug ltac:(idtac "Search a proof of " p "<=" q);
-  match is_less_up_to_succ q p O with
+  match is_less q p O with
   | Some ?n => success p O n constr:(eq_refl q)
   | None =>
     match goal with
     | [ H : leY ?p' ?q' |- _ ] =>
       debug ltac:(idtac "Try" H ":" p' "<=" q' "for" p "<=" q);
-      match is_less_up_to_succ q q' O with
+      match is_less q q' O with
       | Some ?n =>
         debug ltac:(idtac "Right" p' "<=" q' "|-" p "<=" q "n :=" n);
-        match is_less_up_to_succ p p' O with
+        match is_less p p' O with
         | Some ?n' => let n1 := eval compute in (n + n0) in
           debug ltac:(idtac "Found hyp" p' p n' n1 H); success p' n' n1 H
         | None =>
