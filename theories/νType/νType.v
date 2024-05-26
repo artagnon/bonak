@@ -410,13 +410,12 @@ Proof.
   intros *; revert d Painting; simpl.
   pattern p, Hpq. (* Bug? Why is this needed? *)
   apply le_induction'.
-  * intros d c; rewrite mkpainting_computes in c. destruct c as (l, _).
+  * intros d c. destruct (rew [id] mkpainting_computes in c) as (l, _).
     now exact (l ε).
   * clear p Hpq; intros p Hpq mkRestrPaintingSp d c; invert_le Hpq.
-    rewrite mkpainting_computes in c; destruct c as (l, c).
-    rewrite C.(eqPaintingSp).
-    apply mkRestrPaintingSp in c.
-    now exact (mkRestrLayer p q l; c).
+    destruct (rew [id] mkpainting_computes in c) as (l, c'). clear c.
+    rewrite C.(eqPaintingSp). apply mkRestrPaintingSp in c'.
+    now exact (mkRestrLayer p q l; c').
 Defined.
 
 Lemma mkRestrPainting_base_computes {n} {C: νType n} {p} {Hp: p.+1 <= n.+1}
@@ -434,7 +433,7 @@ Lemma mkRestrPainting_step_computes {n} {C: νType n} {r q} {Hrq: r.+2 <= q.+2}
   mkRestrPainting r q.+1 (Hpq := ↓ Hrq) (Hq := Hq) (ε := ε) E d c =
   match (rew [id] mkpainting_computes in c) with
   | (l; c) => rew <- [id] C.(eqPaintingSp) in
-    (mkRestrLayer r q l; mkRestrPainting r.+1 q.+1 E (d; l) c)
+      (mkRestrLayer r q l; mkRestrPainting r.+1 q.+1 E (d; l) c)
   end.
 Proof.
   unfold mkRestrPainting; now rewrite le_induction'_step_computes.
@@ -457,7 +456,7 @@ Definition mkCohPainting_base {n} {C: νType n} {r q}
 Proof.
   rewrite mkRestrPainting_base_computes, mkRestrPainting_step_computes.
   destruct (rew [id] mkpainting_computes in c) as (l, c'); clear c.
-  now refine (C.(eqRestrPainting0) (mkRestrPainting r.+1 q.+1 E (_; _) c')).
+  now exact (C.(eqRestrPainting0) (mkRestrPainting r.+1 q.+1 E (_; _) c')).
 Qed.
 
 (** A small abbreviation *)
@@ -573,11 +572,11 @@ Instance mkνTypeSn {n} (C: νType n): νType n.+1 :=
     eqFrame0 := ltac:(now intros *);
     eqFrame0' := ltac:(intros *; now apply C.(eqFrame0));
     eqFrameSp := ltac:(now intros *);
-    eqFrameSp' := ltac:(intros *; now refine C.(eqFrameSp));
+    eqFrameSp' := ltac:(intros *; now apply C.(eqFrameSp));
     eqRestrFrame0 := ltac:(now intros *);
     eqRestrFrameSp := ltac:(now intros *);
-    eqPaintingSp := ltac:(intros *; now refine mkpainting_computes);
-    eqPaintingSp' := ltac:(intros *; now refine C.(eqPaintingSp));
+    eqPaintingSp := ltac:(intros *; now apply mkpainting_computes);
+    eqPaintingSp' := ltac:(intros *; now apply C.(eqPaintingSp));
     eqRestrPainting0 := ltac:(intros *; simpl;
       now rewrite mkRestrPainting_base_computes, rew_rew');
     eqRestrPaintingSp := ltac:(intros *; simpl;
