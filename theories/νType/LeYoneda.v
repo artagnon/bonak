@@ -311,7 +311,7 @@ Ltac slide_down n n' H success :=
    to prove statements of the form pi.+l <= p_{i+l}.+l' *)
 
 Ltac find p q n0 success :=
-  debug ltac:(idtac "Search a proof of " p "<=" q);
+  debug ltac:(idtac "Search a proof of" p "<=" q);
   match is_less q p O with
   | Some ?n => success p O n constr:(eq_refl q)
   | None =>
@@ -364,9 +364,9 @@ solve_leY.
 solve_leY.
 Qed.
 
-Hint Extern 10 (leY _ _) => solve_leY : typeclass_instances.
+Hint Extern 0 (leY _ _) => solve_leY : typeclass_instances.
 
-(* Example ex2 {n} p q r {Hpr : p.+2 <= r.+2} {Hrq : r.+2 <= q.+2} {Hq : q.+2 <= n}
+Example ex2 {n} p q r {Hpr : p.+2 <= r.+2} {Hrq : r.+2 <= q.+2} {Hq : q.+2 <= n}
   {H: forall p q r, p.+1 <= r.+1 -> r <= q -> q <= n -> p <= n}: p <= n.
   now apply (H p q r _ _ _).
-Qed. *)
+Qed.
