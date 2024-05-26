@@ -198,8 +198,8 @@ Class νType n := {
 
   (** Equations carrying the definition of frame and painting from level
       [n]-1 and [n]-2 *)
-  eqFrame0 {len0: 0 <= n} {D}: (Frame.(frame 0) D).(Dom) = unit;
-  eqFrame0' {len1: 1 <= n} {D}: (FramePrev.(frame') 0 D).(Dom) = unit;
+  eqFrame0 {len0: 0 <= n} {D}: Frame.(frame 0) D = hunit :> Type;
+  eqFrame0' {len1: 1 <= n} {D}: FramePrev.(frame') 0 D = hunit :> Type;
   eqFrameSp {p} {Hp: p.+1 <= n} {D}:
     Frame.(frame p.+1) D = {d: Frame.(frame p) D & Layer d} :> Type;
   eqFrameSp' {p} {Hp: p.+2 <= n} {D}:
@@ -273,22 +273,23 @@ Definition mkFramePrev {n} {C: νType n}: FrameBlockPrev n.+1 mkprefix := {|
 
 Definition mkLayer {n} {C: νType n} {p} {Hp: p.+1 <= n.+1}
   {Frame: FrameBlock n.+1 p mkprefix mkFramePrev}
-  {D} {d: Frame.(frame p) D}: HSet :=
+  {D} (d: Frame.(frame p) D): HSet :=
   hforall ε, C.(Painting).(painting) D.2 (Frame.(restrFrame p) p ε d).
 
 Definition mkLayer' {n} {C: νType n} {p} {Hp: p.+2 <= n.+1}
-  {D} {d: mkFramePrev.(frame' (n := n.+1)) p D}: HSet := C.(Layer) d.
+  {D} (d: mkFramePrev.(frame' (n := n.+1)) p D): HSet := C.(Layer) d.
 
 Definition mkRestrLayer {n} {C: νType n} p q {Hpq: p.+2 <= q.+2}
   {Hq: q.+2 <= n.+1} {ε} {Frame: FrameBlock n.+1 p mkprefix mkFramePrev}
-  {D} {d: Frame.(frame p) D}: mkLayer -> mkLayer' :=
+  {D} {d: Frame.(frame p) D}:
+  mkLayer d -> mkLayer' (Frame.(restrFrame _) q.+1 ε d) :=
   fun l ω => rew [C.(PaintingPrev).(painting')] Frame.(cohFrame) p q d in
     C.(Painting).(restrPainting) p q (ε := ε) (l ω).
 
 Definition mkCohLayer {n} {C: νType n} {p r q} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {ε ω}
   {Frame: FrameBlock n.+1 p mkprefix mkFramePrev}
-  {D} {d: Frame.(frame p) D} (l: mkLayer):
+  {D} {d: Frame.(frame p) D} (l: mkLayer d):
   let sl := C.(RestrLayer) p q ε (mkRestrLayer p r l) in
   let sl' := C.(RestrLayer) p r ω (mkRestrLayer p q.+1 l) in
   rew [C.(Layer')] Frame.(cohFrame) r.+1 q.+1 d in sl = sl'.
@@ -297,24 +298,23 @@ Proof.
   subst sl sl'; apply functional_extensionality_dep; intros 𝛉; unfold Layer'.
   rewrite <- map_subst_app with
     (P := fun 𝛉 x => C.(PaintingPrev).(painting'')
-      (C.(FramePrev).(restrFrame') _ _ 𝛉 x))
-    (f := C.(RestrLayer) p q _ (mkRestrLayer _ _ l)).
+      (C.(FramePrev).(restrFrame') p p 𝛉 x)).
   unfold RestrLayer, mkRestrLayer.
   rewrite <- map_subst with (f := C.(PaintingPrev).(restrPainting') p q ε).
   rewrite <- map_subst with
     (f := C.(PaintingPrev).(restrPainting') p r ω).
   rewrite rew_map with
-    (P := fun x => (C.(PaintingPrev).(painting'') x).(Dom))
-    (f := fun x => C.(FramePrev).(restrFrame') _ _ 𝛉 x).
-  rewrite rew_map with
-    (P := fun x => (C.(PaintingPrev).(painting'') x).(Dom))
-    (f := fun x => C.(FramePrev).(restrFrame') _ _ ε x).
-  rewrite rew_map with
-    (P := fun x => (C.(PaintingPrev).(painting'') x).(Dom))
-    (f := fun x => (C.(FramePrev).(restrFrame') _ _ ω x)).
+    (P := fun x => C.(PaintingPrev).(painting'') x)
+    (f := fun x => C.(FramePrev).(restrFrame') p p 𝛉 x),
+  rew_map with
+    (P := fun x => C.(PaintingPrev).(painting'') x)
+    (f := fun x => C.(FramePrev).(restrFrame') p q ε x),
+  rew_map with
+    (P := fun x => C.(PaintingPrev).(painting'') x)
+    (f := fun x => C.(FramePrev).(restrFrame') p r ω x).
   rewrite <- (C.(Painting).(cohPainting) p r q).
   repeat rewrite rew_compose.
-  apply rew_swap with (P := fun x => (C.(PaintingPrev).(painting'') x).(Dom)).
+  apply rew_swap with (P := fun x => C.(PaintingPrev).(painting'') x).
   rewrite rew_app. now reflexivity.
   now apply (C.(FramePrev).(frame'') p _).(UIP).
 Qed.
@@ -336,7 +336,7 @@ Instance mkFrameSp {n} {C: νType n} {p}
   {Frame: FrameBlock n.+1 p mkprefix mkFramePrev}:
   FrameBlock n.+1 p.+1 mkprefix mkFramePrev.
   unshelve esplit.
-  * intros Hp D; exact {d : Frame.(frame p) D & mkLayer (d := d)}.
+  * intros Hp D; exact {d : Frame.(frame p) D & mkLayer d}.
   * simpl; intros * ε * (d, l); invert_le Hpq. (* restrFramep *)
     now exact (rew <- [id] C.(eqFrameSp) in
       (Frame.(restrFrame _) _ ε d; mkRestrLayer p q l)).
@@ -387,13 +387,13 @@ Proof.
   revert d; apply le_induction with (Hp := Hp); clear p Hp.
   * now exact E. (* p = n *)
   * intros p Hp mkpaintingSp d. (* p = S n *)
-    now exact {l : mkLayer & mkpaintingSp (d; l)}.
+    now exact {l : mkLayer d & mkpaintingSp (d; l)}.
 Defined.
 
 Lemma mkpainting_computes {n p} {C: νType n} {Hp: p.+1 <= n.+1} {D}
   {E: (mkFrame n.+1).(frame n.+1) D -> HSet} {d}:
   mkpainting (Hp := ↓ Hp) E d =
-  {l : mkLayer & mkpainting (Hp := Hp) E (d; l)} :> Type.
+  {l : mkLayer d & mkpainting (Hp := Hp) E (d; l)} :> Type.
 Proof.
   unfold mkpainting; now rewrite le_induction_step_computes.
 Qed.
@@ -505,7 +505,7 @@ Proof.
   rewrite <- IHP with (d := (d; l)) (c := c').
   simpl (mkFrame p.+1). unfold mkPaintingPrev, painting''.
   unfold mkFrameSp, cohFrame.
-  rewrite rew_map with (P := fun x => (C.(PaintingPrev).(painting') x).(Dom))
+  rewrite rew_map with (P := fun x => C.(PaintingPrev).(painting') x)
                        (f := fun x => rew <- [id] C.(eqFrameSp') in x).
   repeat rewrite rew_compose.
   set (FEQ := f_equal _ _); simpl in FEQ; clearbody FEQ.
@@ -680,16 +680,16 @@ Instance mkDgnFramePrev {n'} {G: Dgn (νTypeAt n'.+1)}:
 
 Definition mkDgnLayer {n' p} {G: Dgn (νTypeAt n'.+1)}
   {Hp: p.+2 <= n'.+2} {Frame: DgnFrameBlock (νTypeAt n'.+2) p mkDgnFramePrev}
-  {D} {d: mkFramePrev.(frame') p D} (l: mkLayer' (d := d)):
-  mkLayer (d := Frame.(dgnFrame) d) :=
+  {D} {d: mkFramePrev.(frame') p D} (l: mkLayer' d):
+  mkLayer (Frame.(dgnFrame) d) :=
   fun ω => rew [(νTypeAt n'.+1).(Painting).(painting) D.2]
     Frame.(cohDgnRestrFrame) in G.(DgnPainting).(dgnPainting) p (l ω).
 
 Definition mkidDgnRestrLayer {n' p ε} {G: Dgn (νTypeAt n'.+1)}
   {Hp: p.+2 <= n'.+2}
   {FrameBlock: DgnFrameBlock (νTypeAt n'.+2) p mkDgnFramePrev} {D}
-  {d: mkFramePrev.(frame') p D} {l: mkLayer' (d := d)}:
-  rew [fun d => mkLayer' (d := d)] FrameBlock.(idDgnRestrFrame) (ε := ε) in
+  {d: mkFramePrev.(frame') p D} {l: mkLayer' d}:
+  rew [mkLayer'] FrameBlock.(idDgnRestrFrame) (ε := ε) in
     mkRestrLayer p n' (mkDgnLayer l) = l.
 Proof.
   apply functional_extensionality_dep; intros 𝛉.
