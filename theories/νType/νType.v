@@ -461,9 +461,9 @@ Qed.
 
 (** A small abbreviation *)
 Definition mkCohPaintingHyp {n} {C: νType n}
-  p {r q} (Hpr: p.+2 <= r.+3) {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
-  {ε ω} {D} {E: (mkFrame n.+1).(frame n.+1) D -> HSet}
-  (d: (mkFrame p).(frame p) D)
+  p r q {Hpr: p.+2 <= r.+3} {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
+  ε ω {D} {E: (mkFrame n.+1).(frame n.+1) D -> HSet}
+  {d: (mkFrame p).(frame p) D}
   (c: mkpainting E d) :=
   rew [mkPaintingPrev.(painting'')] (mkFrame p).(cohFrame) r.+1 q.+1 d in
   C.(Painting).(restrPainting) p q.+1 (ε := ε)
@@ -478,15 +478,15 @@ Definition mkCohPainting_step {n} {C: νType n} {p r q} {Hpr: p.+3 <= r.+3}
   {d: (mkFrame p).(frame p) D}
   {c: mkpainting E d}
   {IHP: forall (d: (mkFrame p.+1).(frame p.+1) D)
-        (c: mkpainting E d), mkCohPaintingHyp p.+1 Hpr (ε := ε) (ω := ω) d c}:
-        mkCohPaintingHyp p (↓ Hpr) (ε := ε) (ω := ω) d c.
+        (c: mkpainting E d), mkCohPaintingHyp p.+1 r q ε ω c}:
+        mkCohPaintingHyp p r q ε ω c.
 Proof.
   unfold mkCohPaintingHyp in *; simpl projT1 in *; simpl projT2 in *.
   do 2 rewrite mkRestrPainting_step_computes.
   destruct (rew [id] mkpainting_computes in c) as (l, c'); clear c.
   rewrite (C.(eqRestrPaintingSp) p q),
           (C.(eqRestrPaintingSp) p r).
-  rewrite <- rew_permute with (H := @eqPaintingSp' _ _ _ (⇓ _) _)
+  rewrite <- rew_permute with (H := @eqPaintingSp' _ _ _ _ _)
                               (H' := (mkFrame p).(cohFrame) r.+1 q.+1 d).
   f_equal.
   unshelve eapply (rew_existT_curried (P := C.(Layer'))
