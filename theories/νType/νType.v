@@ -211,7 +211,7 @@ Class νType n := {
   eqRestrFrameSp {ε p q} {D} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n}
     {d: Frame.(frame p) D} {l: Layer d}:
     Frame.(restrFrame p.+1) q.+1 ε (rew <- [id] eqFrameSp in (d; l)) =
-      rew <- [id] eqFrameSp' in (Frame.(restrFrame _) _ ε d; RestrLayer ε l);
+      rew <- [id] eqFrameSp' in (Frame.(restrFrame p) q.+1 ε d; RestrLayer ε l);
   eqPaintingSp {p} {Hp: p.+1 <= n} {D E d}:
     Painting.(painting) (p := p) E d = {l: Layer d &
       Painting.(painting) (D := D) E (rew <- [id] eqFrameSp in (d; l))}
@@ -315,7 +315,7 @@ Proof.
   rewrite <- (C.(Painting).(cohPainting) p r q).
   repeat rewrite rew_compose.
   apply rew_swap with (P := fun x => C.(PaintingPrev).(painting'') x).
-  rewrite rew_app. now reflexivity.
+  rewrite rew_app. now trivial.
   now apply (C.(FramePrev).(frame'') p _).(UIP).
 Qed.
 
@@ -326,8 +326,7 @@ Instance mkFrame0 {n} {C: νType n}: FrameBlock n.+1 O mkprefix mkFramePrev.
   * intros; now exact hunit. (* FrameSn *)
   * simpl; intros; rewrite C.(eqFrame0); now exact tt. (* restrFrameSn *)
   * simpl; intros. (* cohFramep *)
-    now rewrite eqRestrFrame0 with (q := r),
-                eqRestrFrame0 with (q := q).
+    now repeat rewrite eqRestrFrame0.
 Defined.
 
 (** The Frame at level n.+1 for p.+1 knowing the Frame at level n.+1 for p *)
@@ -345,9 +344,9 @@ Instance mkFrameSp {n} {C: νType n} {p}
 
     (* A roundabout way to simplify the proof of mkCohPainting_step *)
     etransitivity.
-    apply (C.(eqRestrFrameSp) (p := p) (q := r)).
+    apply C.(eqRestrFrameSp).
     etransitivity.
-    2: symmetry; apply (C.(eqRestrFrameSp) (p := p) (q := q)).
+    2: symmetry; apply C.(eqRestrFrameSp).
 
     apply f_equal with (B := C.(FramePrev).(frame') _ D.1)
       (f := fun x => rew <- (C.(eqFrameSp') (p := p)) in x).
