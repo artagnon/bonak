@@ -481,33 +481,22 @@ Definition mkCohPainting_step {n} {C: νType n} {p r q} {Hpr: p.+3 <= r.+3}
         (c: mkpainting E d), mkCohPaintingHyp p.+1 r q ε ω c}:
         mkCohPaintingHyp p r q ε ω c.
 Proof.
-  unfold mkCohPaintingHyp in *; simpl projT1 in *; simpl projT2 in *.
+  unfold mkCohPaintingHyp in *.
   do 2 rewrite mkRestrPainting_step_computes.
   destruct (rew [id] mkpainting_computes in c) as (l, c'); clear c.
-  rewrite (C.(eqRestrPaintingSp) p q),
-          (C.(eqRestrPaintingSp) p r).
-  rewrite <- rew_permute with (H := @eqPaintingSp' _ _ _ _ _)
-                              (H' := (mkFrame p).(cohFrame) r.+1 q.+1 d).
+  rewrite (C.(eqRestrPaintingSp) p q), (C.(eqRestrPaintingSp) p r).
+  rewrite <- rew_permute with (H := @eqPaintingSp' _ _ _ _ _).
   f_equal.
   unshelve eapply (rew_existT_curried (P := C.(Layer'))
   (Q := fun x => C.(PaintingPrev).(painting') (rew <- [id] C.(eqFrameSp') in x))
-  (H := (mkFrame p).(cohFrame) r.+1 q.+1 (ε := ε) (ω := ω) (D := D) d)
-  (u := C.(RestrLayer) p q (D := D.1) ε
-          (mkRestrLayer p r (C := C) (D := D)
-          (Frame := mkFrame p) (ε := ω) l))
-  (v := rew [C.(PaintingPrev).(painting')] C.(eqRestrFrameSp) in
-    C.(Painting).(restrPainting) p.+1 q.+1 (ε := ε)
-                       (D := D.1) (E := D.2)
-                       (mkRestrPainting p.+1 r.+1
-                       (D := D) (ε := ω) E (d; l) c'))).
-  now exact (mkCohLayer (p := p) (r := r) (q := q) l).
+  (H := (mkFrame p).(cohFrame) r.+1 q.+1 (ε := ε) (ω := ω) (D := D) d)).
+  now exact (mkCohLayer l).
   rewrite <- IHP with (d := (d; l)) (c := c').
   simpl (mkFrame p.+1). unfold mkPaintingPrev, painting''.
   unfold mkFrameSp, cohFrame.
   rewrite rew_map with (P := fun x => C.(PaintingPrev).(painting') x)
                        (f := fun x => rew <- [id] C.(eqFrameSp') in x).
   repeat rewrite rew_compose.
-  set (FEQ := f_equal _ _); simpl in FEQ; clearbody FEQ.
   repeat rewrite <- eq_trans_assoc.
   now rewrite eq_trans_sym_inv_l, eq_trans_refl_r.
 Qed.
