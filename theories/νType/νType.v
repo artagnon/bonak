@@ -487,9 +487,9 @@ Proof.
   rewrite (C.(eqRestrPaintingSp) p q), (C.(eqRestrPaintingSp) p r).
   rewrite <- rew_permute with (H := @eqPaintingSp' _ _ _ _ _).
   f_equal.
-  unshelve eapply (rew_existT_curried (P := C.(Layer'))
-  (Q := fun x => C.(PaintingPrev).(painting') (rew <- [id] C.(eqFrameSp') in x))
-  (H := (mkFrame p).(cohFrame) r.+1 q.+1 (ε := ε) (ω := ω) (D := D) d)).
+  unshelve eapply (rew_existT_curried
+    (Q := fun x =>
+      C.(PaintingPrev).(painting') (rew <- [id] C.(eqFrameSp') in x))).
   now exact (mkCohLayer l).
   rewrite <- IHP with (d := (d; l)) (c := c').
   simpl (mkFrame p.+1). unfold mkPaintingPrev, painting''.
@@ -686,8 +686,8 @@ Proof.
   unfold mkRestrLayer, mkDgnLayer; rewrite <- map_subst_app; fold (νTypeAt n').
   repeat rewrite <- map_subst.
   rewrite rew_map with
-    (P := fun x => (mkνTypeSn (νTypeAt n')).(PaintingPrev).(painting') x).
-  rewrite rew_map with
+    (P := fun x => (mkνTypeSn (νTypeAt n')).(PaintingPrev).(painting') x),
+  rew_map with
     (P := fun x => (mkνTypeSn (νTypeAt n')).(PaintingPrev).(painting') x)
     (f := fun d => (mkνTypeSn (νTypeAt n')).(Frame).(restrFrame _) n' ε d).
   repeat rewrite rew_compose.
