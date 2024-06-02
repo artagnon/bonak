@@ -647,10 +647,10 @@ Class Dgn {n'} (C: νType n'.+1) := {
     (l: C.(Layer') d): C.(Layer) (DgnFrame.(dgnFrame) d) :=
     fun ε => rew [C.(PaintingPrev).(painting')]
     DgnFrame.(cohDgnRestrFrame) in DgnPaintingPrev.(dgnPainting') p (l ε);
-  (* eqDgnFrameSp {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n'.+1} {D}
+  eqDgnFrameSp {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n'.+1} {D}
     {d: C.(FramePrev).(frame') p D} (l: C.(Layer') d):
-    DgnFrame.(dgnFrame) (rew <- [id] C.(eqFrameSp) in (d; l)) =
-    rew <- [id] C.(eqFrameSp') in (DgnFrame.(dgnFrame) d; DgnLayer l); *)
+    DgnFrame.(dgnFrame) (rew <- [id] C.(eqFrameSp') in (d; l)) =
+    rew <- [id] C.(eqFrameSp) in (DgnFrame.(dgnFrame) d; DgnLayer l);
 }.
 
 Arguments DgnFramePrev {n' C} _.
@@ -696,6 +696,14 @@ Proof.
   now apply (C.(FramePrev).(frame') p D.1).(UIP).
 Defined.
 
+Definition mkCohDgnRestrLayer {n' p q ε} {C: νType n'.+1} {G: Dgn C}
+  {Hp: p.+3 <= q.+3} {Hq: q.+3 <= n'.+2}
+  {FrameBlock: DgnFrameBlock (mkνTypeSn C) p mkDgnFramePrev} {D}
+  {d: mkFramePrev.(frame') p D} {l: mkLayer' (C := C) d} :
+  rew [mkLayer'] FrameBlock.(cohDgnRestrFrame) in
+     G.(DgnLayer) (C.(RestrLayer) p q ε l) = mkRestrLayer p q (mkDgnLayer l).
+Admitted.
+
 #[local]
 Instance mkDgnFrame0 {n'} {C: νType n'.+1} {G: Dgn C}:
   DgnFrameBlock (mkνTypeSn C) O mkDgnFramePrev.
@@ -706,31 +714,37 @@ Instance mkDgnFrame0 {n'} {C: νType n'.+1} {G: Dgn C}:
 Defined.
 
 #[local]
-Instance mkDgnFrameSp {n' p} (C: νType n'.+1) {G: Dgn C}
+Instance mkDgnFrameSp {n' p} {C: νType n'.+1} {G: Dgn C}
   {Frame: DgnFrameBlock (mkνTypeSn C) p mkDgnFramePrev}:
   DgnFrameBlock (mkνTypeSn C) p.+1 mkDgnFramePrev.
   unshelve esplit.
   * (* dgnFrame *)
-    intros Hp D (d, l).
+    intros Hp D c.
+    destruct (rew [id] (mkνTypeSn C).(eqFrameSp') in c) as (d, l); clear c.
     now exact (Frame.(dgnFrame) d; mkDgnLayer l).
   * (* idDgnRestrFrame *)
-    simpl; intros ε Hp D (d, l).
+    simpl; intros ε Hp D c.
+    rewrite <- rew_opp_l with (P := id) (H := C.(eqFrameSp)).
+    destruct (rew [id] _ in c) as (d, l); clear c.
+    f_equal.
     now exact (= Frame.(idDgnRestrFrame); mkidDgnRestrLayer).
   * (* cohDgnRestrFrame *)
-    simpl; intros q ε Hpq Hq D (d, l). invert_le Hpq. invert_le Hq.
-    symmetry.
-    exact (= Frame.(idDgnRestrFrame); mkidDgnRestrLayer).
-    admit.
-Admitted.
+    intros q ε Hpq Hq D c; simpl. invert_le Hpq. invert_le Hq.
+    rewrite <- rew_opp_l with (P := id) (H := C.(eqFrameSp)) (a := c).
+    rewrite rew_opp_r.
+    destruct (rew [id] _ in c) as (d, l); clear c.
+    rewrite C.(eqRestrFrameSp), G.(eqDgnFrameSp).
+    f_equal.
+    exact (= Frame.(cohDgnRestrFrame) (q := q.+1); mkCohDgnRestrLayer).
+Qed.
 
 #[local]
-Instance mkDgnFrameBlock {n' p} {G: Dgn (νTypeAt n'.+1)}:
-  DgnFrameBlock (νTypeAt n'.+2) p mkDgnFramePrev.
+Instance mkDgnFrameBlock {n' p} {C: νType n'.+1} {G: Dgn C}:
+  DgnFrameBlock (mkνTypeSn C) p mkDgnFramePrev.
   induction p.
   * now exact mkDgnFrame0.
   * now exact mkDgnFrameSp.
 Defined.
-
 End νType.
 
 Definition AugmentedSemiSimplicial := νTypes hunit.
