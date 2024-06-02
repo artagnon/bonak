@@ -627,11 +627,9 @@ Class DgnPaintingBlock {n'} (C: νType n'.+1) {Q: DgnFrameBlockPrev C}
     C.(PaintingPrev).(painting') d ->
     C.(Painting).(painting) E (FrameBlock.(dgnFrame) d);
   idDgnRestrPainting {p ε} {Hp: p.+1 <= n'.+1} {D E}
-    {d: C.(FramePrev).(frame') p D}
-    {c: C.(PaintingPrev).(painting') d}:
+    {d: C.(FramePrev).(frame') p D} {c: C.(PaintingPrev).(painting') d}:
     rew [C.(PaintingPrev).(painting')] FrameBlock.(idDgnRestrFrame) in
-    C.(Painting).(restrPainting) p n' (ε := ε) (E := E)
-      (dgnPainting p c) = c;
+    C.(Painting).(restrPainting) p n' (ε := ε) (E := E) (dgnPainting p c) = c;
   cohDgnRestrPainting {p q ε} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n'.+1} {D E}
     {d: C.(FramePrev).(frame') p D} {c: C.(PaintingPrev).(painting') d}:
     rew <- [C.(PaintingPrev).(painting')] FrameBlock.(cohDgnRestrFrame) in
@@ -641,6 +639,7 @@ Class DgnPaintingBlock {n'} (C: νType n'.+1) {Q: DgnFrameBlockPrev C}
 
 Arguments dgnPainting {n' C Q Prev FrameBlock} _ p {Hp D E d} c.
 Arguments idDgnRestrPainting {n' C Q Prev FrameBlock} _ {p ε Hp D E d c}.
+Arguments cohDgnRestrPainting {n' C Q Prev FrameBlock} _ {p q ε Hpq Hq D E d c}.
 
 Class Dgn {n'} (C: νType n'.+1) := {
   DgnFramePrev: DgnFrameBlockPrev C;
@@ -724,24 +723,24 @@ Instance mkDgnFrameSp {n' p} {C: νType n'.+1} {G: Dgn C}
   DgnFrameBlock (mkνTypeSn C) p.+1 mkDgnFramePrev.
   unshelve esplit.
   * (* dgnFrame *)
-    intros Hp D c.
-    destruct (rew [id] (mkνTypeSn C).(eqFrameSp') in c) as (d, l); clear c.
+    intros Hp D d'.
+    destruct (rew [id] (mkνTypeSn C).(eqFrameSp') in d') as (d, l); clear d'.
     now exact (Frame.(dgnFrame) d; mkDgnLayer l).
   * (* idDgnRestrFrame *)
-    simpl; intros ε Hp D c.
+    simpl; intros ε Hp D d'.
     rewrite <- rew_opp_l with (P := id) (H := C.(eqFrameSp)).
-    destruct (rew [id] _ in c) as (d, l); clear c.
+    destruct (rew [id] _ in d') as (d, l); clear d'.
     f_equal.
     now exact (= Frame.(idDgnRestrFrame); mkidDgnRestrLayer).
   * (* cohDgnRestrFrame *)
-    intros q ε Hpq Hq D c; simpl. invert_le Hpq. invert_le Hq.
-    rewrite <- rew_opp_l with (P := id) (H := C.(eqFrameSp)) (a := c).
+    intros q ε Hpq Hq D d'; simpl. invert_le Hpq. invert_le Hq.
+    rewrite <- rew_opp_l with (P := id) (H := C.(eqFrameSp)) (a := d').
     rewrite rew_opp_r.
-    destruct (rew [id] _ in c) as (d, l); clear c.
+    destruct (rew [id] _ in d') as (d, l); clear d'.
     rewrite C.(eqRestrFrameSp), G.(eqDgnFrameSp).
     f_equal.
     exact (= Frame.(cohDgnRestrFrame) (q := q.+1); mkCohDgnRestrLayer).
-Qed.
+Defined.
 
 #[local]
 Instance mkDgnFrameBlock {n' p} {C: νType n'.+1} {G: Dgn C}:
