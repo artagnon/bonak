@@ -632,6 +632,11 @@ Class DgnPaintingBlock {n'} (C: νType n'.+1) {Q: DgnFrameBlockPrev C}
     rew [C.(PaintingPrev).(painting')] FrameBlock.(idDgnRestrFrame) in
     C.(Painting).(restrPainting) p n' (ε := ε) (E := E)
       (dgnPainting p c) = c;
+  cohDgnRestrPainting {p q ε} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n'.+1} {D E}
+    {d: C.(FramePrev).(frame') p D} {c: C.(PaintingPrev).(painting') d}:
+    rew <- [C.(PaintingPrev).(painting')] FrameBlock.(cohDgnRestrFrame) in
+    C.(Painting).(restrPainting) p q (ε := ε) (E := E) (dgnPainting p c) =
+    Prev.(dgnPainting') p (C.(PaintingPrev).(restrPainting') _ q ε c);
 }.
 
 Arguments dgnPainting {n' C Q Prev FrameBlock} _ p {Hp D E d} c.
