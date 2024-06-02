@@ -660,21 +660,21 @@ Arguments DgnPainting {n' C} _.
 Arguments DgnLayer {n' C} _ {p Hp D d} l.
 
 #[local]
-Instance mkDgnFramePrev {n'} {G: Dgn (νTypeAt n'.+1)}:
-  DgnFrameBlockPrev (νTypeAt n'.+2) := {|
-  dgnFrame' p Hp (D: (νTypeAt n'.+2).(prefix)) d := G.(DgnFrame).(dgnFrame) d;
+Instance mkDgnFramePrev {n'} {C: νType n'.+1} {G: Dgn C}:
+  DgnFrameBlockPrev (mkνTypeSn C) := {|
+  dgnFrame' p Hp (D: (mkνTypeSn C).(prefix)) d := G.(DgnFrame).(dgnFrame) d;
 |}.
 
-Definition mkDgnLayer {n' p} {G: Dgn (νTypeAt n'.+1)}
-  {Hp: p.+2 <= n'.+2} {Frame: DgnFrameBlock (νTypeAt n'.+2) p mkDgnFramePrev}
+Definition mkDgnLayer {n' p} {C: νType n'.+1} {G: Dgn C}
+  {Hp: p.+2 <= n'.+2} {Frame: DgnFrameBlock (mkνTypeSn C) p mkDgnFramePrev}
   {D} {d: mkFramePrev.(frame') p D} (l: mkLayer' d):
   mkLayer (Frame.(dgnFrame) d) :=
-  fun ω => rew [(νTypeAt n'.+1).(Painting).(painting) D.2]
+  fun ω => rew [C.(Painting).(painting) D.2]
     Frame.(cohDgnRestrFrame) in G.(DgnPainting).(dgnPainting) p (l ω).
 
-Definition mkidDgnRestrLayer {n' p ε} {G: Dgn (νTypeAt n'.+1)}
+Definition mkidDgnRestrLayer {n' p ε} {C: νType n'.+1} {G: Dgn C}
   {Hp: p.+2 <= n'.+2}
-  {FrameBlock: DgnFrameBlock (νTypeAt n'.+2) p mkDgnFramePrev} {D}
+  {FrameBlock: DgnFrameBlock (mkνTypeSn C) p mkDgnFramePrev} {D}
   {d: mkFramePrev.(frame') p D} {l: mkLayer' d}:
   rew [mkLayer'] FrameBlock.(idDgnRestrFrame) (ε := ε) in
     mkRestrLayer p n' (mkDgnLayer l) = l.
@@ -685,20 +685,20 @@ Proof.
   unfold mkRestrLayer, mkDgnLayer; rewrite <- map_subst_app; fold (νTypeAt n').
   repeat rewrite <- map_subst.
   rewrite rew_map with
-    (P := fun x => (mkνTypeSn (νTypeAt n')).(PaintingPrev).(painting') x),
+    (P := fun x => C.(PaintingPrev).(painting') x),
   rew_map with
-    (P := fun x => (mkνTypeSn (νTypeAt n')).(PaintingPrev).(painting') x)
-    (f := fun d => (mkνTypeSn (νTypeAt n')).(Frame).(restrFrame _) n' ε d).
+    (P := fun x => C.(PaintingPrev).(painting') x)
+    (f := fun d => C.(Frame).(restrFrame _) n' ε d).
   repeat rewrite rew_compose.
   apply rew_swap with
-    (P := fun x => (mkνTypeSn (νTypeAt n')).(PaintingPrev).(painting') x).
+    (P := fun x => C.(PaintingPrev).(painting') x).
   rewrite rew_app. now trivial.
-  now apply ((mkνTypeSn (νTypeAt n')).(FramePrev).(frame') p D.1).(UIP).
+  now apply (C.(FramePrev).(frame') p D.1).(UIP).
 Defined.
 
 #[local]
-Instance mkDgnFrame0 {n'} {G: Dgn (νTypeAt n'.+1)}:
-  DgnFrameBlock (νTypeAt n'.+2) O mkDgnFramePrev.
+Instance mkDgnFrame0 {n'} {C: νType n'.+1} {G: Dgn C}:
+  DgnFrameBlock (mkνTypeSn C) O mkDgnFramePrev.
   unshelve esplit.
   * intros; now exact tt.
   * intros; apply rew_swap with (P := id); now destruct (rew <- _ in _).
@@ -706,9 +706,9 @@ Instance mkDgnFrame0 {n'} {G: Dgn (νTypeAt n'.+1)}:
 Defined.
 
 #[local]
-Instance mkDgnFrameSp {n' p} {G: Dgn (νTypeAt n'.+1)}
-  {Frame: DgnFrameBlock (νTypeAt n'.+2) p mkDgnFramePrev}:
-  DgnFrameBlock (νTypeAt n'.+2) p.+1 mkDgnFramePrev.
+Instance mkDgnFrameSp {n' p} (C: νType n'.+1) {G: Dgn C}
+  {Frame: DgnFrameBlock (mkνTypeSn C) p mkDgnFramePrev}:
+  DgnFrameBlock (mkνTypeSn C) p.+1 mkDgnFramePrev.
   unshelve esplit.
   * (* dgnFrame *)
     intros Hp D (d, l).
