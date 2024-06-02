@@ -706,6 +706,9 @@ Definition mkCohDgnRestrLayer {n' p q ε} {C: νType n'.+1} {G: Dgn C}
   {d: mkFramePrev.(frame') p D} {l: mkLayer' (C := C) d} :
   rew [mkLayer'] FrameBlock.(cohDgnRestrFrame) in
      G.(DgnLayer) (C.(RestrLayer) p q ε l) = mkRestrLayer p q (mkDgnLayer l).
+Proof.
+  apply functional_extensionality_dep; intros 𝛉.
+  unfold mkRestrLayer, mkDgnLayer.
 Admitted.
 
 #[local]
