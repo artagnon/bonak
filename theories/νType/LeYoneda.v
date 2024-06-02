@@ -269,13 +269,13 @@ Ltac is_less p q n :=
 Ltac mk_down proof :=
   match type of proof with
   | leY ?m.+1 ?n => constr:(@leY_down m n proof)
-  | _ => debug ltac:(idtac "anomaly"); gfail
+  | ?c => debug ltac:(idtac "anomaly" c); gfail
   end.
 
 Ltac mk_lower_both proof :=
   match type of proof with
   | leY ?m.+1 ?n.+1 => constr:(@leY_lower_both m n proof)
-  | _ => debug ltac:(idtac "anomaly"); gfail
+  | ?c => debug ltac:(idtac "anomaly" c); gfail
   end.
 
 Ltac slide_down n n' H success :=
@@ -285,7 +285,7 @@ Ltac slide_down n n' H success :=
   | O =>
     lazymatch n' with
     | O => debug ltac:(idtac "Slide success" H); success H
-    | S ?n' => debug ltac:(idtac "anomaly"); gfail
+    | S ?n' => debug ltac:(idtac "anomaly" n'); gfail
     end
   | S ?n =>
     lazymatch n' with
@@ -313,7 +313,7 @@ Ltac slide_down n n' H success :=
 Ltac find p q n0 success :=
   debug ltac:(idtac "Search a proof of" p "<=" q);
   match is_less q p O with
-  | Some ?n => success p O n constr:(eq_refl q)
+  | Some ?n => debug ltac:(idtac "is_less " p q n); success p O n constr:(eq_refl q)
   | None =>
     match goal with
     | [ H : leY ?p' ?q' |- _ ] =>
