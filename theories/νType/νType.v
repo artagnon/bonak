@@ -632,7 +632,7 @@ Class DgnPaintingBlock {n'} (C: νType n'.+1) {Q: DgnFrameBlockPrev C}
     C.(Painting).(restrPainting) p n' (ε := ε) (E := E) (dgnPainting p c) = c;
   cohDgnRestrPainting {p q ε} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n'.+1} {D E}
     {d: C.(FramePrev).(frame') p D} {c: C.(PaintingPrev).(painting') d}:
-    rew <- [C.(PaintingPrev).(painting')] FrameBlock.(cohDgnRestrFrame) in
+    rew <- [C.(PaintingPrev).(painting')] FrameBlock.(cohDgnRestrFrame) q in
     C.(Painting).(restrPainting) p q (ε := ε) (E := E) (dgnPainting p c) =
     Prev.(dgnPainting') p (C.(PaintingPrev).(restrPainting') _ q ε c);
 }.
@@ -700,11 +700,11 @@ Proof.
   now apply (C.(FramePrev).(frame') p D.1).(UIP).
 Defined.
 
-Definition mkCohDgnRestrLayer {n' p q ε} {C: νType n'.+1} {G: Dgn C}
+Definition mkCohDgnRestrLayer {n' p} q {ε} {C: νType n'.+1} {G: Dgn C}
   {Hp: p.+3 <= q.+3} {Hq: q.+3 <= n'.+2}
   {FrameBlock: DgnFrameBlock (mkνTypeSn C) p mkDgnFramePrev} {D}
-  {d: mkFramePrev.(frame') p D} {l: mkLayer' (C := C) d} :
-  rew [mkLayer'] FrameBlock.(cohDgnRestrFrame) in
+  {d: mkFramePrev.(frame') p D} {l: mkLayer' (C:=C) d} :
+    rew [mkLayer'] FrameBlock.(cohDgnRestrFrame) q.+1 in
      G.(DgnLayer) (C.(RestrLayer) p q ε l) = mkRestrLayer p q (mkDgnLayer l).
 Proof.
   apply functional_extensionality_dep; intros 𝛉.
@@ -742,7 +742,7 @@ Instance mkDgnFrameSp {n' p} {C: νType n'.+1} {G: Dgn C}
     destruct (rew [id] _ in d') as (d, l); clear d'.
     rewrite C.(eqRestrFrameSp), G.(eqDgnFrameSp).
     f_equal.
-    exact (= Frame.(cohDgnRestrFrame) (q := q.+1); mkCohDgnRestrLayer).
+    exact (= Frame.(cohDgnRestrFrame) q.+1; mkCohDgnRestrLayer q).
 Defined.
 
 #[local]
