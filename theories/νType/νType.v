@@ -709,6 +709,8 @@ Definition mkCohDgnRestrLayer {n' p} q {ε} {C: νType n'.+1} {G: Dgn C}
 Proof.
   apply functional_extensionality_dep; intros 𝛉.
   unfold mkRestrLayer, mkDgnLayer.
+  rewrite <-
+    (G.(DgnPainting).(idDgnRestrPainting) (ε := ε) (E := D.2) (c := l 𝛉)).
 Admitted.
 
 #[local]
