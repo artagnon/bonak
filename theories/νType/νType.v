@@ -684,10 +684,10 @@ Definition mkidDgnRestrLayer {n' p ε} {C: νType n'.+1} {G: Dgn C}
     mkRestrLayer p n' (mkDgnLayer l) = l.
 Proof.
   apply functional_extensionality_dep; intros 𝛉.
+  unfold mkRestrLayer, mkDgnLayer.
   rewrite <-
     (G.(DgnPainting).(idDgnRestrPainting) (ε := ε) (E := D.2) (c := l 𝛉)).
-  unfold mkRestrLayer, mkDgnLayer; rewrite <- map_subst_app; fold (νTypeAt n').
-  repeat rewrite <- map_subst.
+  rewrite <- map_subst_app, <- map_subst.
   rewrite rew_map with
     (P := fun x => C.(PaintingPrev).(painting') x),
   rew_map with
@@ -708,10 +708,23 @@ Definition mkCohDgnRestrLayer {n' p} q {ε} {C: νType n'.+1} {G: Dgn C}
      G.(DgnLayer) (C.(RestrLayer) p q ε l) = mkRestrLayer p q (mkDgnLayer l).
 Proof.
   apply functional_extensionality_dep; intros 𝛉.
-  unfold mkRestrLayer, mkDgnLayer.
-  rewrite <-
-    (G.(DgnPainting).(idDgnRestrPainting) (ε := ε) (E := D.2) (c := l 𝛉)).
-Admitted.
+  unfold RestrLayer, mkRestrLayer, DgnLayer, mkDgnLayer.
+  rewrite <- map_subst_app, <- !map_subst.
+  rewrite rew_map with
+    (P := fun x => C.(PaintingPrev).(painting') x),
+  rew_map with
+    (P := fun x => C.(PaintingPrev).(painting') x)
+    (f := fun d => C.(Frame).(restrFrame _) q ε d),
+  rew_map with
+    (P := fun x => C.(PaintingPrev).(painting') x)
+    (f := fun x => G.(DgnFramePrev).(dgnFrame') p x).
+  rewrite <- (G.(DgnPainting).(cohDgnRestrPainting) (q := q) (E := D.2)).
+  repeat rewrite rew_compose.
+  apply rew_swap with
+    (P := fun x => C.(PaintingPrev).(painting') x).
+  rewrite rew_app. now trivial.
+  now apply (C.(FramePrev).(frame') p D.1).(UIP).
+Defined.
 
 #[local]
 Instance mkDgnFrame0 {n'} {C: νType n'.+1} {G: Dgn C}:
@@ -744,7 +757,7 @@ Instance mkDgnFrameSp {n' p} {C: νType n'.+1} {G: Dgn C}
     destruct (rew [id] _ in d') as (d, l); clear d'.
     rewrite C.(eqRestrFrameSp), G.(eqDgnFrameSp).
     f_equal.
-    exact (= Frame.(cohDgnRestrFrame) q.+1; mkCohDgnRestrLayer q).
+    now exact (= Frame.(cohDgnRestrFrame) q.+1; mkCohDgnRestrLayer q).
 Defined.
 
 #[local]
