@@ -25,4 +25,3 @@ Notation "(= u ; v )" := (eq_existT_curried u v)
 Infix "•" := eq_trans (at level 65, left associativity).
 Notation "[ x ⇒ f ] e" := (f_equal (fun x => f) e)
 (at level 60, left associativity).
-Notation "x ^" := (eq_sym x) (at level 55, left associativity, format "x ^").
