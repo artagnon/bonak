@@ -83,3 +83,15 @@ Lemma map_subst_app {A B} {x y} {𝛉: A} (H: x = y :> B) (P: A -> B -> Type)
 Proof.
   now destruct H.
 Defined.
+
+Lemma sigT_commute A (P : A -> Type) B (Q : B -> Type) C c
+  (d : forall a, P a -> { b & Q b}) (e : forall b, Q b -> C) :
+  match match c with (a; p) => d a p end with
+  | (b; q) => e b q
+  end =
+  match c with
+  | (a; p) => match d a p with (b; q) => e b q end
+  end.
+Proof.
+  now destruct c.
+Defined.
