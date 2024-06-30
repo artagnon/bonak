@@ -630,7 +630,7 @@ Class DgnPaintingBlock {n'} (C: νType n'.+1) {Q: DgnFrameBlockPrev C}
     {d: C.(FramePrev).(frame') p D} {c: C.(PaintingPrev).(painting') d}:
     rew [C.(PaintingPrev).(painting')] FrameBlock.(idDgnRestrFrame) in
     C.(Painting).(restrPainting) p n' (ε := ε) (E := E) (dgnPainting p c) = c;
-  cohDgnRestrPainting {p q ε} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n'.+1} {D E}
+  cohDgnRestrPainting {p} q {ε} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n'.+1} {D E}
     {d: C.(FramePrev).(frame') p D} {c: C.(PaintingPrev).(painting') d}:
     rew <- [C.(PaintingPrev).(painting')] FrameBlock.(cohDgnRestrFrame) q in
     C.(Painting).(restrPainting) p q (ε := ε) (E := E) (dgnPainting p c) =
@@ -639,7 +639,7 @@ Class DgnPaintingBlock {n'} (C: νType n'.+1) {Q: DgnFrameBlockPrev C}
 
 Arguments dgnPainting {n' C Q Prev FrameBlock} _ p {Hp D E d} c.
 Arguments idDgnRestrPainting {n' C Q Prev FrameBlock} _ {p ε Hp D E d c}.
-Arguments cohDgnRestrPainting {n' C Q Prev FrameBlock} _ {p q ε Hpq Hq D E d c}.
+Arguments cohDgnRestrPainting {n' C Q Prev FrameBlock} _ {p} q {ε Hpq Hq D E d c}.
 
 Class Dgn {n'} (C: νType n'.+1) := {
   DgnFramePrev: DgnFrameBlockPrev C;
@@ -718,7 +718,7 @@ Proof.
   rew_map with
     (P := fun x => C.(PaintingPrev).(painting') x)
     (f := fun x => G.(DgnFramePrev).(dgnFrame') p x).
-  rewrite <- (G.(DgnPainting).(cohDgnRestrPainting) (q := q) (E := D.2)).
+  rewrite <- (G.(DgnPainting).(cohDgnRestrPainting) q (E := D.2)).
   repeat rewrite rew_compose.
   apply rew_swap with
     (P := fun x => C.(PaintingPrev).(painting') x).
