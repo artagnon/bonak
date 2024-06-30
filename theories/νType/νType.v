@@ -629,17 +629,20 @@ Class DgnPaintingBlock {n'} (C: νType n'.+1) {Q: DgnFrameBlockPrev C}
     rew <- [C.(PaintingPrev).(painting')] FrameBlock.(cohDgnRestrFrame) q in
     C.(Painting).(restrPainting) p q (ε := ε) (E := E) (dgnPainting p c) =
     Prev.(dgnPainting') p (C.(PaintingPrev).(restrPainting') _ q ε c);
-  dgnLift {p} {Hp: p.+1 <= n'.+1} {D E} {d: C.(FramePrev).(frame') n' D}
-    (c: C.(PaintingPrev).(painting') d):
-    let l ε :=
-      rew <- [C.(PaintingPrev).(painting')] FrameBlock.(idDgnRestrFrame) in c in
-     E (rew <- [id] C.(eqFrameSp) in (FrameBlock.(dgnFrame) d; l));
 }.
 
 Arguments dgnPainting {n' C Q Prev FrameBlock} _ p {Hp D E d} c.
 Arguments idDgnRestrPainting {n' C Q Prev FrameBlock} _ {p ε Hp D E d c}.
 Arguments cohDgnRestrPainting {n' C Q Prev FrameBlock} _ {p} q {ε Hpq Hq D E d c}.
-Arguments dgnLift {n' C Q Prev FrameBlock} _ {p Hp D E d} c.
+
+Class DgnLift {n'} (C: νType n'.+1) (DgnFramePrev : DgnFrameBlockPrev C)
+  (DgnFrame : forall {p}, DgnFrameBlock C p DgnFramePrev) := {
+  dgnLift {p} {Hp: p.+1 <= n'.+1} {D E} {d: C.(FramePrev).(frame') n' D}
+    (c: C.(PaintingPrev).(painting') d):
+    let l ε :=
+      rew <- [C.(PaintingPrev).(painting')] DgnFrame.(idDgnRestrFrame) in c in
+     E (rew <- [id] C.(eqFrameSp) in (DgnFrame.(dgnFrame) d; l))
+}.
 
 Class Dgn {n'} (C: νType n'.+1) := {
   DgnFramePrev: DgnFrameBlockPrev C;
@@ -775,17 +778,32 @@ Instance mkDgnPaintingPrev {n'} {C: νType n'.+1} {G: Dgn C}:
 |}.
 
 Definition mkDgnPaintingType {n' p} {C: νType n'.+1} {G: Dgn C}
+  (L: DgnLift (mkνTypeSn C) mkDgnFramePrev (fun p => mkDgnFrame))
   {Hp: p.+1 <= n'.+2} {D E} {d: mkFramePrev.(frame') p D}
   (c: mkPaintingPrev.(painting') d): mkPaintingType E (mkDgnFrame.(dgnFrame) d).
 Proof.
-  revert d c; simpl. apply le_induction' with (Hp := Hp); clear p Hp.
-  * intros d c. rewrite mkpainting_computes. simpl. unshelve esplit.
-    - intros ε; rewrite sigT_commute. admit.
-    - admit.
-    (* now exact (G.(DgnPainting).(dgnLift) c). *) (* p = n *)
-  * intros p Hp mkPaintingTypeSp d. (* p = S n *)
-    (* now exact {l : mkLayer d & mkPaintingTypeSp (d; l)}. *)
+  revert d c; apply le_induction' with (Hp := Hp); clear p Hp.
+  * intros d c. rewrite mkpainting_computes. unshelve esplit.
+    - exact (fun ε : arity => rew <- [(mkPaintingPrev.(painting'))] (mkDgnFrame).(idDgnRestrFrame) (ε:=ε) in c).
+    - unfold mkPaintingType.
+      rewrite le_induction_base_computes. (* TODO: make a "painting"-level lemma *)
+      exact (L.(dgnLift) (E:=E) c).
+  * intros * mkDgnPaintingS * c.
+    destruct (rew [id] C.(eqPaintingSp) in c) as (l, c').
+    specialize (mkDgnPaintingS (rew <- [id] C.(eqFrameSp) in (d;l)) c').
+    simpl in mkDgnPaintingS; rewrite rew_rew' in mkDgnPaintingS.
+    rewrite mkpainting_computes.
+    unshelve esplit.
+    - exact (mkDgnLayer l).
+    - apply mkDgnPaintingS.
+Defined.
+
+Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}:
+  DgnPaintingBlock (mkνTypeSn C)  mkDgnPaintingPrev (fun p => mkDgnFrame).
+unshelve esplit.
+- intros. now apply mkDgnPaintingType.
 Admitted.
+
 End νType.
 
 Definition AugmentedSemiSimplicial := νTypes hunit.
