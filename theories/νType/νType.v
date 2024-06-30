@@ -379,36 +379,32 @@ Instance mkPaintingPrev {n} {C: νType n}:
 
 (** Then, the component [painting] of [Painting], built by upwards induction from [p] to [n] *)
 
-Definition mkpainting {n} {C: νType n} {p} {Hp: p <= n.+1} {D}
+Definition mkPaintingType {n} {C: νType n} {p} {Hp: p <= n.+1} {D}
   (E: (mkFrame n.+1).(frame n.+1) D -> HSet)
   (d: (mkFrame p).(frame p) D): HSet.
 Proof.
   revert d; apply le_induction with (Hp := Hp); clear p Hp.
   * now exact E. (* p = n *)
-  * intros p Hp mkpaintingSp d. (* p = S n *)
-    now exact {l : mkLayer d & mkpaintingSp (d; l)}.
+  * intros p Hp mkPaintingTypeSp d. (* p = S n *)
+    now exact {l : mkLayer d & mkPaintingTypeSp (d; l)}.
 Defined.
 
 Lemma mkpainting_computes {n p} {C: νType n} {Hp: p.+1 <= n.+1} {D}
   {E: (mkFrame n.+1).(frame n.+1) D -> HSet} {d}:
-  mkpainting (Hp := ↓ Hp) E d =
-  {l : mkLayer d & mkpainting (Hp := Hp) E (d; l)} :> Type.
+  mkPaintingType (Hp := ↓ Hp) E d =
+  {l : mkLayer d & mkPaintingType (Hp := Hp) E (d; l)} :> Type.
 Proof.
-  unfold mkpainting; now rewrite le_induction_step_computes.
+  unfold mkPaintingType; now rewrite le_induction_step_computes.
 Qed.
 
 (** Now, [restrPainting], and the corresponding computational properties. *)
 
 Definition mkRestrPainting {n} {C: νType n} p q {Hpq: p.+1 <= q.+1}
-  {Hq: q.+1 <= n.+1} {ε} {D}
-  (E: (mkFrame n.+1).(frame n.+1) D -> HSet)
-  (d: (mkFrame p).(frame p) D)
-  (Painting: mkpainting (Hp := ↓ (Hpq ↕ Hq)) E d):
+  {Hq: q.+1 <= n.+1} {ε} {D} E (d: (mkFrame p).(frame p) D)
+  (c: mkPaintingType (Hp := ↓ (Hpq ↕ Hq)) E d):
     mkPaintingPrev.(painting') ((mkFrame p).(restrFrame p) q ε d).
 Proof.
-  intros *; revert d Painting; simpl.
-  pattern p, Hpq. (* Bug? Why is this needed? *)
-  apply le_induction'.
+  revert d c; simpl. apply le_induction' with (Hp := Hpq).
   * intros d c. destruct (rew [id] mkpainting_computes in c) as (l, _).
     now exact (l ε).
   * clear p Hpq; intros p Hpq mkRestrPaintingSp d c; invert_le Hpq.
@@ -445,8 +441,7 @@ Qed.
 Definition mkCohPainting_base {n} {C: νType n} {r q}
   {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n.+1} {ε ω}
   {D} {E: (mkFrame n.+1).(frame n.+1) D -> HSet}
-  (d: (mkFrame r).(frame r) D)
-  (c: mkpainting E d):
+  (d: (mkFrame r).(frame r) D) (c: mkPaintingType E d):
   rew [mkPaintingPrev.(painting'')] (mkFrame r).(cohFrame) r q d in
     mkPaintingPrev.(restrPainting') r q ε
       (mkRestrPainting r r (ε := ω) E d c) =
@@ -463,7 +458,7 @@ Definition mkCohPaintingHyp {n} {C: νType n}
   p r q {Hpr: p.+2 <= r.+3} {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1}
   ε ω {D} {E: (mkFrame n.+1).(frame n.+1) D -> HSet}
   {d: (mkFrame p).(frame p) D}
-  (c: mkpainting E d) :=
+  (c: mkPaintingType E d) :=
   rew [mkPaintingPrev.(painting'')] (mkFrame p).(cohFrame) r.+1 q.+1 d in
   C.(Painting).(restrPainting) p q.+1 (ε := ε)
     (mkRestrPainting p r.+1 E d c) =
@@ -474,10 +469,9 @@ Definition mkCohPaintingHyp {n} {C: νType n}
 Definition mkCohPainting_step {n} {C: νType n} {p r q} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {ε ω}
   {D} {E: (mkFrame n.+1).(frame n.+1) D -> HSet}
-  {d: (mkFrame p).(frame p) D}
-  {c: mkpainting E d}
+  {d: (mkFrame p).(frame p) D} {c: mkPaintingType E d}
   {IHP: forall (d: (mkFrame p.+1).(frame p.+1) D)
-        (c: mkpainting E d), mkCohPaintingHyp p.+1 r q ε ω c}:
+        (c: mkPaintingType E d), mkCohPaintingHyp p.+1 r q ε ω c}:
         mkCohPaintingHyp p r q ε ω c.
 Proof.
   unfold mkCohPaintingHyp in *.
@@ -505,7 +499,7 @@ Qed.
 Instance mkPainting {n} {C: νType n}:
   PaintingBlock n.+1 mkprefix mkPaintingPrev mkFrame.
   unshelve esplit; intros p.
-  * intros *; now exact mkpainting.
+  * intros *; now exact mkPaintingType.
   * intros q Hpq Hq ε d; now exact (mkRestrPainting p q).
   * intros *. revert d c. pattern p, Hpr. apply le_induction''.
     + now exact mkCohPainting_base.
@@ -635,11 +629,17 @@ Class DgnPaintingBlock {n'} (C: νType n'.+1) {Q: DgnFrameBlockPrev C}
     rew <- [C.(PaintingPrev).(painting')] FrameBlock.(cohDgnRestrFrame) q in
     C.(Painting).(restrPainting) p q (ε := ε) (E := E) (dgnPainting p c) =
     Prev.(dgnPainting') p (C.(PaintingPrev).(restrPainting') _ q ε c);
+  dgnLift {p} {Hp: p.+1 <= n'.+1} {D E} {d: C.(FramePrev).(frame') n' D}
+    (c: C.(PaintingPrev).(painting') d):
+    let l ε :=
+      rew <- [C.(PaintingPrev).(painting')] FrameBlock.(idDgnRestrFrame) in c in
+     E (rew <- [id] C.(eqFrameSp) in (FrameBlock.(dgnFrame) d; l));
 }.
 
 Arguments dgnPainting {n' C Q Prev FrameBlock} _ p {Hp D E d} c.
 Arguments idDgnRestrPainting {n' C Q Prev FrameBlock} _ {p ε Hp D E d c}.
 Arguments cohDgnRestrPainting {n' C Q Prev FrameBlock} _ {p} q {ε Hpq Hq D E d c}.
+Arguments dgnLift {n' C Q Prev FrameBlock} _ {p Hp D E d} c.
 
 Class Dgn {n'} (C: νType n'.+1) := {
   DgnFramePrev: DgnFrameBlockPrev C;
@@ -703,7 +703,7 @@ Defined.
 Definition mkCohDgnRestrLayer {n' p} q {ε} {C: νType n'.+1} {G: Dgn C}
   {Hp: p.+3 <= q.+3} {Hq: q.+3 <= n'.+2}
   {FrameBlock: DgnFrameBlock (mkνTypeSn C) p mkDgnFramePrev} {D}
-  {d: mkFramePrev.(frame') p D} {l: mkLayer' (C:=C) d} :
+  {d: mkFramePrev.(frame') p D} {l: mkLayer' (C := C) d}:
     rew [mkLayer'] FrameBlock.(cohDgnRestrFrame) q.+1 in
      G.(DgnLayer) (C.(RestrLayer) p q ε l) = mkRestrLayer p q (mkDgnLayer l).
 Proof.
@@ -761,12 +761,31 @@ Instance mkDgnFrameSp {n' p} {C: νType n'.+1} {G: Dgn C}
 Defined.
 
 #[local]
-Instance mkDgnFrameBlock {n' p} {C: νType n'.+1} {G: Dgn C}:
+Instance mkDgnFrame {n' p} {C: νType n'.+1} {G: Dgn C}:
   DgnFrameBlock (mkνTypeSn C) p mkDgnFramePrev.
   induction p.
   * now exact mkDgnFrame0.
   * now exact mkDgnFrameSp.
 Defined.
+
+#[local]
+Instance mkDgnPaintingPrev {n'} {C: νType n'.+1} {G: Dgn C}:
+  DgnPaintingBlockPrev (mkνTypeSn C) mkDgnFramePrev := {|
+  dgnPainting' p Hp (D: (mkνTypeSn C).(prefix)) d c := G.(DgnPainting).(dgnPainting) p c;
+|}.
+
+Definition mkDgnPaintingType {n' p} {C: νType n'.+1} {G: Dgn C}
+  {Hp: p.+1 <= n'.+2} {D E} {d: mkFramePrev.(frame') p D}
+  (c: mkPaintingPrev.(painting') d): mkPaintingType E (mkDgnFrame.(dgnFrame) d).
+Proof.
+  revert d c; simpl. apply le_induction' with (Hp := Hp); clear p Hp.
+  * intros d c. rewrite mkpainting_computes. simpl. unshelve esplit.
+    - intros ε; rewrite sigT_commute. admit.
+    - admit.
+    (* now exact (G.(DgnPainting).(dgnLift) c). *) (* p = n *)
+  * intros p Hp mkPaintingTypeSp d. (* p = S n *)
+    (* now exact {l : mkLayer d & mkPaintingTypeSp (d; l)}. *)
+Admitted.
 End νType.
 
 Definition AugmentedSemiSimplicial := νTypes hunit.
