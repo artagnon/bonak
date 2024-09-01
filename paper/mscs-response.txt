@@ -7,7 +7,7 @@ indexed one.
 > The paper is supported by a formalisation, the ideas of which are explained,
 > but the formalisation itself is not made available.
 
-The formalization is available and there is a link to it in the paper in the
+The formalization is available and there was a link to it in the paper in the
 "Contribution" section. Kindly see https://github.com/artagnon/bonak.
 
 > The definition of ν-sets is new. The fact that augmented semisimplical types
@@ -45,6 +45,10 @@ The formalization is actually pretty compact, and well-documented: we
 documented it using coqdoc, and there is a link to the coqdoc documentation on
 the GitHub page. For your reference, here's a link to the coqdoc of the main
 file: https://artagnon.github.io/bonak/Bonak.νType.νType.html.
+
+Otherwise, Sections 5.4 to 5.6 already explained at a high-level the
+specificity of the formalisation. We believe that more precisions
+would not help more than the formalisation itself.
 
 > The title says "parametricity-based", and the parametricity-based intuition
 > is explained very well, however the construction of ν-sets itself does not
