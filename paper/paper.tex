@@ -414,7 +414,7 @@ To obtain this, we extend $\DeltaPlus$ and $\Cube$ in a straightforward manner i
 A $\nu$-set is thus a contravariant functor $\phi$ from the $\nu$-semi-shape category to $\Set$ and we call $n$-$\nu$-semi-shape an element of $\phi(n)$. As in the augmented semi-simplicial and semi-cubical cases, the standard $(n + 1)$-$\nu$-semi-shape is obtained by connecting together $\nu$ copies of the standard $n$-$\nu$-semi-shape with an extra copy stretched in the new dimension. We clarify in the next sections, how this process of construction is similar to the parametricity translation developed for functional programming~\citep{reynolds83} and more generally for type theory~\citep{bernardy10,bernardy11,atkey14,bernardy15}.
 
 \section{Type theory}
-Martin-Löf's Type theory~(\citeyear{martinlof75,martinlof84}) is a logical formalism based on the notion of a \emph{type} rather than that of a \emph{set}. It can be seen as a foundation of mathematics alternative to set theory and is the core of several tools for the formalization of mathematics such as Agda~(\citeyear{agda23}), Coq~(\citeyear{coq23}) and Lean~(\citeyear{lean15}). In type theory, propositions are types and proofs are programs. Type theory includes \emph{definitional equality}, by which all propositions and proofs are quotiented.
+Martin-Löf's Type theory~(\citeyear{martinlof75,martinlof84}) is a logical formalism based on the notion of a \emph{type} rather than that of a \emph{set}. It can be seen as a foundation of mathematics alternative to set theory and is the core of several tools for the formalization of mathematics such as Agda, Coq and Lean. In type theory, propositions are types and proofs are programs. Type theory includes \emph{definitional equality}, by which all propositions and proofs are quotiented.
 
 Type theory is a flexible formalism supporting different models. Some models are based on topological spaces, where equality is interpreted as path, and substitutivity of equality as transport~\citep{kapulkin21}. These models support the univalence principle stating that equality of types mimics equivalence of types, leading to the development of Homotopy Type Theory~\citep{hottbook}.
 
@@ -830,7 +830,7 @@ match n, m with
 end.
 \end{minted}
 
-Here, $\SProp$ is a definitionally proof-irrelevant impredicative universe morally\footnote{In Coq~(\citeyear{coq23}), it is however a stand-alone universe unrelated to the universe hierarchy.} living at the bottom of the universe hierarchy~\citep{gilbert19}. By placing the definition in \SProp, we have definitional equality of inequality proofs. However, for the purpose of unification, this definition does not go far enough. Consider the unification problems:
+Here, $\SProp$ is a definitionally proof-irrelevant impredicative universe morally\footnote{In Coq, it is however a stand-alone universe unrelated to the universe hierarchy.} living at the bottom of the universe hierarchy~\citep{gilbert19}. By placing the definition in \SProp, we have definitional equality of inequality proofs. However, for the purpose of unification, this definition does not go far enough. Consider the unification problems:
 
 \begin{minted}{coq}
 leR_trans ?p leR_refl = ?p

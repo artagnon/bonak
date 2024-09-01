@@ -113,6 +113,10 @@ Yes, thanks for catching this.
 > they are by far the older software. (And in the reference to Lean, “Lean”
 > should be capitalized.)
 
+We thought about this issue for a bit, and we have decided to remove the
+references, as Coq, Lean, and Agda are fairly standard, and the citations add
+no value.
+
 > As I’m sure you know, it’s not really correct to say that there are models of
 > type theory based on “topological spaces” with equality interpreted as paths.
 > These are actually “homotopy-theoretic” models based on simplicial sets,
