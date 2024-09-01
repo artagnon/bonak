@@ -97,7 +97,26 @@ correctly enough.
 > p3: I’m not clear on the difference between the constructions you describe.
 > Aren’t “a presheaf over increasing injective maps between finite ordinals” and
 > “a presheaf over face maps” and “increasing injective functions over finite
-> ordinaels” all the same thing?
+> ordinals” all the same thing?
+
+We can split the question in two:
+1) It is confusing to use once the terminology "increasing injective
+   maps between finite ordinals" and once the terminology "increasing
+   injective functions over finite ordinals"; so, we used only the
+   first formulation in the revision.
+2) Even if equivalent as categories, relying on increasing injective
+   maps or relying on face maps lead to distinct presentations of the
+   augmented semi-simplicial category. This in turn leads to
+   definitions of indexed presheaves that rely on different choices of
+   matching object, each of them coming with its specific
+   combinatorics. We believe that it is clear enough that different
+   presentations lead to different formalisations, and, otherwise, an
+   alternative could be to add between parentheses the sentence "each
+   choice of presentation implies specific combinatorics in the
+   formalisation".
+
+Note that we also fixed the reference to Annenkov et al. (2017) which
+should have been Altenkirch et al. (2016).
 
 > p4: There’s an argument that what you call a “ν-set” can be called a “ν-ary
 > cubical set”. For instance, an augmented semi-simplicial set is equivalent to
