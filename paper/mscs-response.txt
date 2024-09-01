@@ -86,6 +86,9 @@ work.
 > B[a↦a_L], the other B[a↦a_R]. You should probably use nondependent function
 > space for the informal explanation, or make the dependencies explicit.
 
+We had left implicit that B depends on a and thus B* on a_L, a_R and a
+proof of A*(a_L,a_R). We made this explicit in the revision.
+
 > Bottom of p2: “X2 can be seen as a family over X1 × X1 × X1 × X1” — I think
 > this is a bit misleading, the quadruple product should really be a pullback
 > over four copies of X0.
