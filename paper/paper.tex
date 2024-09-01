@@ -209,7 +209,7 @@ A \emph{presheaf} on an category is a family of sets indexed by the object of th
     X_0: \U & X_1: \U \arrow[l, "\partial^L" description, shift left=2] \arrow[l, "\partial^R" description, shift right=2] & X_2: \U \arrow[l, "\partial^{L\kstar}" description, shift left=6] \arrow[l, "\partial^{R\kstar}" description, shift left=2] \arrow[l, "\partial^{\kstar L}" description, shift right=2] \arrow[l, "\partial^{\kstar R}" description, shift right=6] & \ldots
   \end{tikzcd}
 \end{equation*}
-up to cubical faces identities. Here, $X_1$ can be seen as a family over $X_0 \times X_0$, and $X_2$ can be seen as a family over $X_1 \times X_1 \times X_1 \times X_1$, in the fibered presentation. This suggests an alternative indexed presentation of the presheaf as a stratified sequence of families indexed by families of lower rank, taking into account the coherence conditions to prevent duplications. Formulated in type theory, it takes the form:
+up to cubical faces identities. Here, $X_1$ can be seen as a family over $X_0 \times X_0$, and $X_2$ can be seen as a family over $X_1 \times X_1 \times X_1 \times X_1$, in the fibered presentation, together with coherence conditions between the $X_1$ seen as families over $X_0 \times X_0$. This suggests an alternative indexed presentation of the presheaf as a stratified sequence of families indexed by families of lower rank, taking into account those coherence conditions to prevent duplications. Formulated in type theory, it takes the form:
 \begin{equation*}
   \begin{array}{llr}
     X_0 & :              & \U                                                                        \\

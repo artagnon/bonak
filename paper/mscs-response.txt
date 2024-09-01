@@ -90,6 +90,10 @@ work.
 > this is a bit misleading, the quadruple product should really be a pullback
 > over four copies of X0.
 
+We agree that this is hiding something and misleading. We added a
+mention to the coherence conditions, hoping it addresses the point
+correctly enough.
+
 > p3: I’m not clear on the difference between the constructions you describe.
 > Aren’t “a presheaf over increasing injective maps between finite ordinals” and
 > “a presheaf over face maps” and “increasing injective functions over finite
