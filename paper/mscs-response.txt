@@ -86,6 +86,8 @@ The formalization is available and there is a link to it in the paper in the
 
 > In definitions 2, 8, and 14, “less than” should be “less than or equal to”.
 
+Yes, thanks for catching this.
+
 > I believe very strongly that when talking about “augmented semi-simplicial
 > sets”, the numerical indexing should be the geometric simplicial one, which
 > starts with a monochromatic singleton as the (−1)-simplex, moves on to a

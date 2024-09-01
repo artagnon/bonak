@@ -246,7 +246,7 @@ While ordinary semi-simplicial sets are presheaves over the semi-simplex categor
 \end{notation}
 
 \begin{definition}[$\DeltaPlus$]
-  The definition of $\DeltaPlus$ is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
+  The definition of $\DeltaPlus$ is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than or equal to that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
   \begin{align*}
     \Obj_{\DeltaPlus}       & := \Nat                                                                         \\
     \Hom_{\DeltaPlus}(p, n) & := \{l \in \{0, \kstar\}^n \mid \text{number of $\kstar$ in $l = p$}\}          \\
@@ -329,7 +329,7 @@ Semi-cubical sets are defined like augmented semi-simplicial sets except that $\
     \id                & := \kstar \ldots \kstar \text{ $n$ times}
   \end{align*}
 
-  Again, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
+  Again, if $g \circ f$ is well-defined, then the length of $f$ is less than or equal to that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
 \end{definition}
 
 \begin{definition}[\CSet]
@@ -397,7 +397,7 @@ Let us call $\nu$-sets, the generalization of augmented semi-simplicial sets and
 To obtain this, we extend $\DeltaPlus$ and $\Cube$ in a straightforward manner into a category which we call $\hexagon$.
 
 \begin{definition}[$\hexagon$]
-  The definition of $\nu$-semi-shape category is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
+  The definition of $\nu$-semi-shape category is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than or equal to that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
   \begin{align*}
     \Obj_{\hexagon}       & := \Nat                                                                          \\
     \Hom_{\hexagon}(p, n) & := \{l \in (\nu \sqcup \{\kstar\})^n \mid \text{number of $\kstar$ in $l = p$}\} \\
