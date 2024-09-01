@@ -86,7 +86,7 @@ The formalization is available and there is a link to it in the paper in the
 
 > In definitions 2, 8, and 14, “less than” should be “less than or equal to”.
 
-> I believe very strongly that when talkingabout “augmentedsemi-simplicial
+> I believe very strongly that when talking about “augmented semi-simplicial
 > sets”, the numerical indexing should be the geometric simplicial one, which
 > starts with a monochromatic singleton as the (−1)-simplex, moves on to a
 > “point” as the 0-simplex (Example 5), a “line” as the 1-simplex (Ex- ample
@@ -97,6 +97,8 @@ The formalization is available and there is a link to it in the paper in the
 > “2-simplex”, that is just confusing.
 
 > In example 13, the references to “cylinders” should probably be “prisms”.
+
+Yes, thanks for this improvement.
 
 > In the table on p11, “types” should be “sets”.
 
@@ -111,13 +113,13 @@ Yes, thanks for catching this.
 
 > As I’m sure you know, it’s not really correct to say that there are models of
 > type theory based on “topological spaces” with equality interpreted as paths.
-> These are actually “homotopy-theoretic” models based on simpli- cial sets,
+> These are actually “homotopy-theoretic” models based on simplicial sets,
 > cubical sets, or related structures.
 
-> The “coinductive type of infinite dependent tuples” mentioned at the bot- tom
+> The “coinductive type of infinite dependent tuples” mentioned at the bottom
 > of p12 is not nearly as standard a part of type theory as the other
-> type-formers mentioned in that paragraph. Please give the definition ex-
-> plicitly and include a reference.
+> type-formers mentioned in that paragraph. Please give the definition
+> explicitly and include a reference.
 
 > Bottom of p13: “the reflection rules also implies” should be “rule”.
 
