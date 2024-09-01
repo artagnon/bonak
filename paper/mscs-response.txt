@@ -121,6 +121,8 @@ Yes, thanks for catching this.
 
 > Bottom of p13: “the reflection rules also implies” should be “rule”.
 
+Fixed now.
+
 > On p16, it would probably be a good idea to mention again in the descrip-
 > tion of section 5.3 that even though it uses intensional type theory, it
 > still assumes “local UIP” by requiring the types to be h-sets.
