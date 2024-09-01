@@ -212,8 +212,8 @@ A \emph{presheaf} on an category is a family of sets indexed by the object of th
 up to cubical faces identities. Here, $X_1$ can be seen as a family over $X_0 \times X_0$, and $X_2$ can be seen as a family over $X_1 \times X_1 \times X_1 \times X_1$, in the fibered presentation. This suggests an alternative indexed presentation of the presheaf as a stratified sequence of families indexed by families of lower rank, taking into account the coherence conditions to prevent duplications. Formulated in type theory, it takes the form:
 \begin{equation*}
   \begin{array}{llr}
-    X_0 & :              & \U                                                                            \\
-    X_1 & :              & X_0 \times X_0 \rightarrow  \U                                                 \\
+    X_0 & :              & \U                                                                        \\
+    X_1 & :              & X_0 \times X_0 \rightarrow  \U                                            \\
     X_2 & : \Pi a b c d. & X_1(a,b) \times X_1 (c,d) \times X_1(a,c) \times X_1 (b,d) \rightarrow \U \\
     \ldots
   \end{array}
@@ -248,14 +248,14 @@ While ordinary semi-simplicial sets are presheaves over the semi-simplex categor
 \begin{definition}[$\DeltaPlus$]
   The definition of $\DeltaPlus$ is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
   \begin{align*}
-    \Obj_{\DeltaPlus}       & := \Nat                                                                             \\
-    \Hom_{\DeltaPlus}(p, n) & := \{l \in \{0, \kstar\}^n \mid \text{number of $\kstar$ in $l = p$}\}              \\
+    \Obj_{\DeltaPlus}       & := \Nat                                                                         \\
+    \Hom_{\DeltaPlus}(p, n) & := \{l \in \{0, \kstar\}^n \mid \text{number of $\kstar$ in $l = p$}\}          \\
     g \circ f               & :=
     \begin{cases}
-      f                  & \text{if $g = \epsilon$}                                                        \\
-      0\,(g' \circ f)  & \text{if $g = 0\,g'$}                                                 \\
+      f                & \text{if $g = \epsilon$}                                           \\
+      0\,(g' \circ f)  & \text{if $g = 0\,g'$}                                              \\
       a\,(g' \circ f') & \text{if $g = \kstar\,g'$, $f = a\,f'$, where $a = 0$ or $\kstar$} \\
-    \end{cases}                \\
+    \end{cases}                     \\
     \id                     & := \kstar \ldots \kstar \text{ $n$ times for $\id \in \Hom_{\DeltaPlus}(n, n)$}
   \end{align*}
 \end{definition}
@@ -318,14 +318,14 @@ Semi-cubical sets are defined like augmented semi-simplicial sets except that $\
   The definition of $\Cube$ is shown below. The symbols $L$ and $R$ indicate opposite faces of a cube.
 
   \begin{align*}
-    \Obj_{\Cube}       & := \Nat                                                                          \\
-    \Hom_{\Cube}(p, n) & := \{l \in \{L, R, \kstar\}^n \mid \text{number of $\kstar$ in $l = p$}\}        \\
+    \Obj_{\Cube}       & := \Nat                                                                   \\
+    \Hom_{\Cube}(p, n) & := \{l \in \{L, R, \kstar\}^n \mid \text{number of $\kstar$ in $l = p$}\} \\
     g \circ f          & :=
     \begin{cases}
-      f                  & \text{if $g = \epsilon$}                                                               \\
-      a\,(g' \circ f)  & \text{if $g = a\,g'$}, \text{where $a = L$ or $R$}                           \\
+      f                & \text{if $g = \epsilon$}                                                 \\
+      a\,(g' \circ f)  & \text{if $g = a\,g'$}, \text{where $a = L$ or $R$}                       \\
       a\,(g' \circ f') & \text{if $g = \kstar\,g'$, $f = a\,f'$, where $a = L$, $R$, or $\kstar$} \\
-    \end{cases} \\
+    \end{cases}    \\
     \id                & := \kstar \ldots \kstar \text{ $n$ times}
   \end{align*}
 
@@ -399,14 +399,14 @@ To obtain this, we extend $\DeltaPlus$ and $\Cube$ in a straightforward manner i
 \begin{definition}[$\hexagon$]
   The definition of $\nu$-semi-shape category is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
   \begin{align*}
-    \Obj_{\hexagon}       & := \Nat                                                                           \\
-    \Hom_{\hexagon}(p, n) & := \{l \in (\nu \sqcup \{\kstar\})^n \mid \text{number of $\kstar$ in $l = p$}\}    \\
+    \Obj_{\hexagon}       & := \Nat                                                                          \\
+    \Hom_{\hexagon}(p, n) & := \{l \in (\nu \sqcup \{\kstar\})^n \mid \text{number of $\kstar$ in $l = p$}\} \\
     g \circ f             & :=
     \begin{cases}
-      f                  & \text{if $g = \epsilon$}                                                                 \\
-      a\,(g' \circ f)  & \text{if $g = a\,g'$}, \text{where $a \in \nu$}                                \\
+      f                & \text{if $g = \epsilon$}                                                   \\
+      a\,(g' \circ f)  & \text{if $g = a\,g'$}, \text{where $a \in \nu$}                            \\
       a\,(g' \circ f') & \text{if $g = \kstar\,g'$, $f = a\,f'$, where $a \in \nu$ or $a = \kstar$} \\
-    \end{cases}   \\
+    \end{cases}            \\
     \id                   & := \kstar \ldots \kstar \text{ $n$ times for $\id \in \Hom_{\hexagon}(n, n)$}
   \end{align*}
 \end{definition}
@@ -446,8 +446,8 @@ Note that the reflection rule implies UIP so that $\U$ and $\Type$ are equivalen
 Recall from the introduction, the form taken by the indexed presentation of a semi-cubical set:
 \begin{equation*}
   \begin{array}{llr}
-    X_0 & :              & \U                                                                            \\
-    X_1 & :              & X_0 \times X_0 \rightarrow \U                                                 \\
+    X_0 & :              & \U                                                                        \\
+    X_1 & :              & X_0 \times X_0 \rightarrow \U                                             \\
     X_2 & : \Pi a b c d. & X_1(a,b) \times X_1 (c,d) \times X_1(a,c) \times X_1 (b,d) \rightarrow \U \\
     \ldots
   \end{array}
