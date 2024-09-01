@@ -64,3 +64,73 @@ The formalization is available and there is a link to it in the paper in the
 > f_L and f_R are different dependent functions, so one of them has type
 > B[a↦a_L], the other B[a↦a_R]. You should probably use nondependent function
 > space for the informal explanation, or make the dependencies explicit.
+
+> Bottom of p2: “X2 can be seen as a family over X1 × X1 × X1 × X1” — I think
+> this is a bit misleading, the quadruple product should really be a pullback
+> over four copies of X0.
+
+> p3: I’m not clear on the difference between the constructions you describe.
+> Aren’t “a presheaf over increasing injective maps between finite ordinals” and
+> “a presheaf over face maps” and “increasing injective functions over finite
+> ordinaels” all the same thing?
+
+> p4: There’s an argument that what you call a “ν-set” can be called a “ν-ary
+> cubical set”. For instance, an augmented semi-simplicial set is equivalent to
+> a “unary” cubical set, where “unary cubes” can be thought of geometrically as
+> products of a half-open interval [0, 1). When ν = 3, a “ternary cube” can be
+> thought of as products of a closed interval with a distinguished midpoint, so
+> that for instance a ternary 2-cube looks like a window with a cross on it;
+> and so on. (The earliest reference I know of for the notion of ν-ary cubes is
+> the Nuyts–Devriese paper “Transpension: the right adjoint to the pi-type”,
+> Example 6.14.)
+
+> In definitions 2, 8, and 14, “less than” should be “less than or equal to”.
+
+> I believe very strongly that when talkingabout “augmentedsemi-simplicial
+> sets”, the numerical indexing should be the geometric simplicial one, which
+> starts with a monochromatic singleton as the (−1)-simplex, moves on to a
+> “point” as the 0-simplex (Example 5), a “line” as the 1-simplex (Ex- ample
+> 6), a “triangle” as the 2-simplex (Example 7), and so on. If you want the
+> numbering to start at 0, then you should use cubical language and speak of
+> unary 0-cubes, 1-cubes, 2-cubes and so on, corresponding to (−1)-simplices,
+> 0-simplices, and 1-simplices, respectively. But don’t call a line a
+> “2-simplex”, that is just confusing.
+
+> In example 13, the references to “cylinders” should probably be “prisms”.
+
+> In the table on p11, “types” should be “sets”.
+
+> The citations at the beginning of section 3 to Agda, Coq, and Lean are
+> difficult to find in the references list, since the citations do not include
+> the sort key used for the references. It also looks weird to see Agda and Coq
+> cited with dates of “2023”, eight years later than Lean’s “2015” even though
+> they are by far the older software. (And in the reference to Lean, “Lean”
+> should be capitalized.)
+
+> As I’m sure you know, it’s not really correct to say that there are models of
+> type theory based on “topological spaces” with equality interpreted as paths.
+> These are actually “homotopy-theoretic” models based on simpli- cial sets,
+> cubical sets, or related structures.
+
+> The “coinductive type of infinite dependent tuples” mentioned at the bot- tom
+> of p12 is not nearly as standard a part of type theory as the other
+> type-formers mentioned in that paragraph. Please give the definition ex-
+> plicitly and include a reference.
+
+> Bottom of p13: “the reflection rules also implies” should be “rule”.
+
+> On p16, it would probably be a good idea to mention again in the descrip-
+> tion of section 5.3 that even though it uses intensional type theory, it
+> still assumes “local UIP” by requiring the types to be h-sets.
+
+> Elements of νSet<0 should not be called “0-truncated”. They could be called
+> (−1)-truncated, or perhaps (< 0)-truncated. But a “0-truncated” cubical set
+> means “(≤ 0)-truncated” one, which has 0-cubes.
+
+> I would recommend moving section 5.2 about intuition to come before table 3,
+> at least.
+
+> I’m grateful that the figure on p23 is fairly readable when printed in black
+> and white. But the text in the first paragrah on that page is not very
+> readable in black and white as it refers to things by their colors.
+
