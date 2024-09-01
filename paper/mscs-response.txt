@@ -17,6 +17,9 @@ The formalization is available and there was a link to it in the paper in the
 > formalisation. It is not emphasised and maybe unknown to the authors that
 > there are constructions which generalise ν-sets, e.g. Theorem 4.8 in the
 > cited Annenkov-Capriotti-Kraus 2017 (ACK), which is also formalised in Lean.
+
+TODO
+
 > However it is still useful to give explicit constructions such as the one in
 > the paper: first of all, the current paper's constructions are in extensional
 > type theory as opposed to two-level type theory of ACK (but the two-level
@@ -29,14 +32,20 @@ The formalization is available and there was a link to it in the paper in the
 > construction of semi-simplicial types which is not exactly a special case of
 > the general construction.
 
+TODO
+
 > It would be nice to have a comparison between the explicit construction of
 > semisimplicial types in (Altenkirch-Capriotti-Kraus: Extending Homotopy Type
 > Theory with Strict Equality, CSL 2016) and the current paper. Their approach
 > seems simpler, but probably it doesn't generalise to νs other than 1.
 
+TODO
+
 > The "coinductive type of infinite dependent tuples" is not described in
 > detail. What are the exact rules for these types? Does Coq support such a
 > type? If not, how is this assumed in the formalisation.
+
+TODO
 
 > I suggest adding a URL to the formalisation and a new section which explains
 > the exact contents of the formalisation.
@@ -133,7 +142,7 @@ should have been Altenkirch et al. (2016).
 
 > In definitions 2, 8, and 14, “less than” should be “less than or equal to”.
 
-Yes, thanks for catching this.
+Yes, thanks for catching this. This is fixed in the revision.
 
 > I believe very strongly that when talking about “augmented semi-simplicial
 > sets”, the numerical indexing should be the geometric simplicial one, which
@@ -169,10 +178,14 @@ no value.
 > These are actually “homotopy-theoretic” models based on simplicial sets,
 > cubical sets, or related structures.
 
+TODO
+
 > The “coinductive type of infinite dependent tuples” mentioned at the bottom
 > of p12 is not nearly as standard a part of type theory as the other
 > type-formers mentioned in that paragraph. Please give the definition
 > explicitly and include a reference.
+
+TODO
 
 > Bottom of p13: “the reflection rules also implies” should be “rule”.
 
@@ -182,14 +195,21 @@ Fixed now.
 > of section 5.3 that even though it uses intensional type theory, it still
 > assumes “local UIP” by requiring the types to be h-sets.
 
+TODO
+
 > Elements of νSet<0 should not be called “0-truncated”. They could be called
 > (−1)-truncated, or perhaps (< 0)-truncated. But a “0-truncated” cubical set
 > means “(≤ 0)-truncated” one, which has 0-cubes.
 
+TODO
+
 > I would recommend moving section 5.2 about intuition to come before table 3,
 > at least.
+
+TODO
 
 > I’m grateful that the figure on p23 is fairly readable when printed in black
 > and white. But the text in the first paragrah on that page is not very
 > readable in black and white as it refers to things by their colors.
 
+TODO
