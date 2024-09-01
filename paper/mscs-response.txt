@@ -58,6 +58,12 @@ would not help more than the formalisation itself.
 > parametricity translation on this type theory. Is there a deeper connection
 > with the parametricity translation that I overlooked?
 
+Our construction expresses directly (without having to stepwise embed
+the syntax of type theorey) the n-th iteration of (a subset of)
+Bernardy et al's parametricity translation. In our opinion, this
+deserves to be called parametricity but we agree that this is also a
+question of definition.
+
 > How do we know that the construction of ν-sets really provides indexed
 > versions of semisimplicial, semicubical sets? This is not proven in the
 > paper, however the first three levels are unfolded (page 22), which is
