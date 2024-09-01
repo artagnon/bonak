@@ -69,7 +69,13 @@ question of definition.
 > paper, however the first three levels are unfolded (page 22), which is
 > convincing. A correctness theorem would show that presheaves over the
 > ν-semi-shape category (which is a very simple definition, verifiable by
-> looking at it) are equivalent to ν-sets. If there is no formal proof, the
+> looking at it) are equivalent to ν-sets.
+
+We believe that a formal proof would require iterating countably many
+times the fibered/indexed correspondence. We leave that for future
+work.
+
+> If there is no formal proof, the
 > authors could still provide a convincing argument for correctness along the
 > lines of "we computed the first 5 levels of 1-sets and 2-sets and by
 > inspection we observed that they really correspond to augmented
