@@ -100,6 +100,8 @@ The formalization is available and there is a link to it in the paper in the
 
 > In the table on p11, “types” should be “sets”.
 
+Yes, thanks for catching this.
+
 > The citations at the beginning of section 3 to Agda, Coq, and Lean are
 > difficult to find in the references list, since the citations do not include
 > the sort key used for the references. It also looks weird to see Agda and Coq
