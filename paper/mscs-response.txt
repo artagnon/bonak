@@ -91,8 +91,8 @@ Yes, thanks for catching this.
 > I believe very strongly that when talking about “augmented semi-simplicial
 > sets”, the numerical indexing should be the geometric simplicial one, which
 > starts with a monochromatic singleton as the (−1)-simplex, moves on to a
-> “point” as the 0-simplex (Example 5), a “line” as the 1-simplex (Ex- ample
-> 6), a “triangle” as the 2-simplex (Example 7), and so on. If you want the
+> “point” as the 0-simplex (Example 5), a “line” as the 1-simplex (Example 6),
+> a “triangle” as the 2-simplex (Example 7), and so on. If you want the
 > numbering to start at 0, then you should use cubical language and speak of
 > unary 0-cubes, 1-cubes, 2-cubes and so on, corresponding to (−1)-simplices,
 > 0-simplices, and 1-simplices, respectively. But don’t call a line a
@@ -127,9 +127,9 @@ Yes, thanks for catching this.
 
 Fixed now.
 
-> On p16, it would probably be a good idea to mention again in the descrip-
-> tion of section 5.3 that even though it uses intensional type theory, it
-> still assumes “local UIP” by requiring the types to be h-sets.
+> On p16, it would probably be a good idea to mention again in the description
+> of section 5.3 that even though it uses intensional type theory, it still
+> assumes “local UIP” by requiring the types to be h-sets.
 
 > Elements of νSet<0 should not be called “0-truncated”. They could be called
 > (−1)-truncated, or perhaps (< 0)-truncated. But a “0-truncated” cubical set
