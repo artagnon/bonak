@@ -56,8 +56,8 @@ the GitHub page. For your reference, here's a link to the coqdoc of the main
 file: https://artagnon.github.io/bonak/Bonak.νType.νType.html.
 
 Otherwise, Sections 5.4 to 5.6 already explained at a high-level the
-specificity of the formalisation. We believe that more precisions
-would not help more than the formalisation itself.
+specificity of the formalization. We believe that more precisions would not
+help more than the formalization itself.
 
 > The title says "parametricity-based", and the parametricity-based intuition
 > is explained very well, however the construction of ν-sets itself does not
@@ -67,11 +67,10 @@ would not help more than the formalisation itself.
 > parametricity translation on this type theory. Is there a deeper connection
 > with the parametricity translation that I overlooked?
 
-Our construction expresses directly (without having to stepwise embed
-the syntax of type theorey) the n-th iteration of (a subset of)
-Bernardy et al's parametricity translation. In our opinion, this
-deserves to be called parametricity but we agree that this is also a
-question of definition.
+Our construction expresses directly (without having to stepwise embed the
+syntax of type theory) the n-th iteration of (a subset of) Bernardy et al's
+parametricity translation. In our opinion, this deserves to be called
+parametricity but we agree that this is also a question of definition.
 
 > How do we know that the construction of ν-sets really provides indexed
 > versions of semisimplicial, semicubical sets? This is not proven in the
@@ -80,15 +79,15 @@ question of definition.
 > ν-semi-shape category (which is a very simple definition, verifiable by
 > looking at it) are equivalent to ν-sets.
 
-We believe that a formal proof would require iterating countably many
-times the fibered/indexed correspondence. We leave that for future
-work.
+We believe that a formal proof would require iterating countably many times the
+fibered/indexed correspondence. This is quite non-trivial, and we think this is
+a line of research that can be pursued in future work.
 
-> If there is no formal proof, the
-> authors could still provide a convincing argument for correctness along the
-> lines of "we computed the first 5 levels of 1-sets and 2-sets and by
-> inspection we observed that they really correspond to augmented
-> semisimplicial and semicubical sets". I suggest doing one of these.
+> If there is no formal proof, the authors could still provide a convincing
+> argument for correctness along the lines of "we computed the first 5 levels
+> of 1-sets and 2-sets and by inspection we observed that they really
+> correspond to augmented semisimplicial and semicubical sets". I suggest doing
+> one of these.
 
 > Minor remark: on page 14, B*(f_L(a_L), f_R(a_R)) is not well-typed, because
 > f_L and f_R are different dependent functions, so one of them has type
@@ -102,9 +101,8 @@ proof of A*(a_L,a_R). We made this explicit in the revision.
 > this is a bit misleading, the quadruple product should really be a pullback
 > over four copies of X0.
 
-We agree that this is hiding something and misleading. We added a
-mention to the coherence conditions, hoping it addresses the point
-correctly enough.
+We agree that this is hiding something and misleading. We added a mention to
+the coherence conditions, hoping it addresses the point correctly enough.
 
 > p3: I’m not clear on the difference between the constructions you describe.
 > Aren’t “a presheaf over increasing injective maps between finite ordinals” and
@@ -112,23 +110,22 @@ correctly enough.
 > ordinals” all the same thing?
 
 We can split the question in two:
-1) It is confusing to use once the terminology "increasing injective
-   maps between finite ordinals" and once the terminology "increasing
-   injective functions over finite ordinals"; so, we used only the
-   first formulation in the revision.
-2) Even if equivalent as categories, relying on increasing injective
-   maps or relying on face maps lead to distinct presentations of the
-   augmented semi-simplicial category. This in turn leads to
-   definitions of indexed presheaves that rely on different choices of
-   matching object, each of them coming with its specific
-   combinatorics. We believe that it is clear enough that different
-   presentations lead to different formalisations, and, otherwise, an
-   alternative could be to add between parentheses the sentence "each
-   choice of presentation implies specific combinatorics in the
-   formalisation".
 
-Note that we also fixed the reference to Annenkov et al. (2017) which
-should have been Altenkirch et al. (2016).
+1. It is confusing to use once the terminology "increasing injective maps
+between finite ordinals" and once the terminology "increasing injective
+functions over finite ordinals"; so, we used only the first formulation in the
+revision.
+2. Even if equivalent as categories, relying on increasing injective maps or
+relying on face maps lead to distinct presentations of the augmented
+semi-simplicial category. This in turn leads to definitions of indexed
+presheaves that rely on different choices of matching object, each of them
+coming with its specific combinatorics. We believe that it is clear enough that
+different presentations lead to different formalisations, and, otherwise, an
+alternative could be to add between parentheses the sentence "each choice of
+presentation implies specific combinatorics in the formalisation".
+
+Note that we also fixed the reference to Annenkov et al. (2017) which should
+have been Altenkirch et al. (2016).
 
 > p4: There’s an argument that what you call a “ν-set” can be called a “ν-ary
 > cubical set”. For instance, an augmented semi-simplicial set is equivalent to
