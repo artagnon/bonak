@@ -196,7 +196,7 @@ Fixed now.
 > of section 5.3 that even though it uses intensional type theory, it still
 > assumes “local UIP” by requiring the types to be h-sets.
 
-TODO
+Fixed, thanks.
 
 > Elements of νSet<0 should not be called “0-truncated”. They could be called
 > (−1)-truncated, or perhaps (< 0)-truncated. But a “0-truncated” cubical set
