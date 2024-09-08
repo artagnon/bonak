@@ -426,12 +426,12 @@ Types are organized in a hierarchy of universes written $\Type_m$ for $m$ a natu
   \seqr{}{\Gamma \vdash A : \Type_m \qquad \Gamma, a:A \vdash B(a) : \Type_m \qquad \Gamma, a:A, b:B \vdash f(a,b):A \qquad \Gamma \vdash u:A}
   {\Gamma \vdash Stream_{A,B,f}\, u : \Type_m}                                                                                                                                                                                         \\
 \mbox{\emph{introduction and eliminations}}\\
-  \seqr{}{\Gamma \vdash u : A \qquad \Gamma \vdash v : B(u) \qquad \Gamma \vdash s : Stream_{A,B,f}\,f(u,v)}{\Gamma \vdash \{this:=u; next:=v\} : Stream_{A,B,f}\, u}                                      \\
+  \seqr{}{\Gamma \vdash u : A \qquad \Gamma \vdash v : B(u) \qquad \Gamma \vdash s : Stream_{A,B,f}\,f(u,v)}{\Gamma \vdash \{this:=v; next:=s\} : Stream_{A,B,f}\, u}                                      \\
   \seqr{}{\Gamma \vdash t : Stream_{A,B,f}\, u}{\Gamma \vdash t.this : B(u)}                                                                                                                                                  \;\;
   \seqr{}{\Gamma \vdash t : Stream_{A,B,f}\, u}{\Gamma \vdash t.next : Stream_{A,B,f}\, f(u,v) \equiv u}                                                                                                            \\
 \mbox{\emph{computation}}\\
-  \seqr{}{\Gamma \vdash u : A \qquad \Gamma \vdash v : B(u) \qquad \Gamma \vdash s : Stream_{A,B,f}\,f(u,v)}{\Gamma \vdash \{this:=u; next:=v\}.this \equiv u : B(u)}                             \\
-  \seqr{}{\Gamma \vdash u : A \qquad \Gamma \vdash v : B(u) \qquad \Gamma \vdash s : Stream_{A,B,f}\,f(u,v)}{\Gamma \vdash \{this:=u; next:=v\}.next \equiv v : Stream_{A,B,f}\,f(u,v)} \\
+  \seqr{}{\Gamma \vdash u : A \qquad \Gamma \vdash v : B(u) \qquad \Gamma \vdash s : Stream_{A,B,f}\,f(u,v)}{\Gamma \vdash \{this:=v; next:=s\}.this \equiv v : B(u)}                             \\
+  \seqr{}{\Gamma \vdash u : A \qquad \Gamma \vdash v : B(u) \qquad \Gamma \vdash s : Stream_{A,B,f}\,f(u,v)}{\Gamma \vdash \{this:=v; next:=s\}.next \equiv s : Stream_{A,B,f}\,f(u,v)} \\
 \end{align*}
 
 A type-theoretic notion of sets can be recovered in each universe as $\U[m]$, denoting the subtype of $\Type_m$ for which paths are degenerated, using Uniqueness of Identity Proofs (UIP). Technically, this is expressed as a structure equipping a domain $\Dom$ with the property $\UIP$:
