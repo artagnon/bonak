@@ -433,6 +433,7 @@ Types are organized in a hierarchy of universes written $\Type_m$ for $m$ a natu
   \seqr{}{\Gamma \vdash u : A \qquad \Gamma \vdash v : B(u) \qquad \Gamma \vdash s : Stream_{A,B,f}\,f(u,v)}{\Gamma \vdash \{this:=v; next:=s\}.this \equiv v : B(u)}                             \\
   \seqr{}{\Gamma \vdash u : A \qquad \Gamma \vdash v : B(u) \qquad \Gamma \vdash s : Stream_{A,B,f}\,f(u,v)}{\Gamma \vdash \{this:=v; next:=s\}.next \equiv s : Stream_{A,B,f}\,f(u,v)} \\
 \end{align*}
+Note: a possible alternative notation for $Stream_{A,B,f}$ could be $\Sigma^X_{u:A} b:B(u). X(f(u,b))$. That would be closer from the notation in Table 1.
 
 A type-theoretic notion of sets can be recovered in each universe as $\U[m]$, denoting the subtype of $\Type_m$ for which paths are degenerated, using Uniqueness of Identity Proofs (UIP). Technically, this is expressed as a structure equipping a domain $\Dom$ with the property $\UIP$:
 \begin{align*}
