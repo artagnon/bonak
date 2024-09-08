@@ -202,7 +202,7 @@ Fixed, thanks.
 > (−1)-truncated, or perhaps (< 0)-truncated. But a “0-truncated” cubical set
 > means “(≤ 0)-truncated” one, which has 0-cubes.
 
-TODO
+Fixed, thanks.
 
 > I would recommend moving section 5.2 about intuition to come before table 3,
 > at least.
