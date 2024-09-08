@@ -175,7 +175,7 @@ no value.
 > These are actually “homotopy-theoretic” models based on simplicial sets,
 > cubical sets, or related structures.
 
-TODO
+Thanks, fixed now.
 
 > The “coinductive type of infinite dependent tuples” mentioned at the bottom
 > of p12 is not nearly as standard a part of type theory as the other
