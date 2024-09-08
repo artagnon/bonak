@@ -213,4 +213,4 @@ TODO
 > and white. But the text in the first paragrah on that page is not very
 > readable in black and white as it refers to things by their colors.
 
-TODO
+Fixed, although we have traded off a bit of beauty for it.
