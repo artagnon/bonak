@@ -98,6 +98,12 @@ fibered/indexed correspondence.
 > correspond to augmented semisimplicial and semicubical sets". I suggest doing
 > one of these.
 
+To quote a part of the introduction:
+
+  The idea for such an indexed presentation of presheaves over a direct
+  category was mentioned at the Univalent Foundations year in the context of
+  defining semi-simplicial types.
+
 > Minor remark: on page 14, B*(f_L(a_L), f_R(a_R)) is not well-typed, because
 > f_L and f_R are different dependent functions, so one of them has type
 > B[a↦a_L], the other B[a↦a_R]. You should probably use nondependent function
