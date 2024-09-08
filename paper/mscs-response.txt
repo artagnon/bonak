@@ -82,9 +82,15 @@ parametricity but we agree that this is also a question of definition.
 > ν-semi-shape category (which is a very simple definition, verifiable by
 > looking at it) are equivalent to ν-sets.
 
+We are aware of this, and it was already mentioned as the last point in the
+"Future work" section. To quote it:
+
+  Another direction for future work is to give a general definition of presheaf
+  in indexed form over a direct category, and to show the equivalence with the
+  standard definition of presheaf.
+
 We believe that a formal proof would require iterating countably many times the
-fibered/indexed correspondence. This is quite non-trivial, and we think this is
-a line of research that can be pursued in future work.
+fibered/indexed correspondence.
 
 > If there is no formal proof, the authors could still provide a convincing
 > argument for correctness along the lines of "we computed the first 5 levels
