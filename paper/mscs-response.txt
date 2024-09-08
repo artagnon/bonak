@@ -45,7 +45,10 @@ TODO
 > detail. What are the exact rules for these types? Does Coq support such a
 > type? If not, how is this assumed in the formalisation.
 
-TODO
+Coq supports a general scheme of coinductive types, which also includes this
+particular type. Thanks, we have now written down the rules for this type, as
+it is quite non-standard. See also: response to similar comment from other
+reviewer.
 
 > I suggest adding a URL to the formalisation and a new section which explains
 > the exact contents of the formalisation.
@@ -182,7 +185,8 @@ Thanks, fixed now.
 > type-formers mentioned in that paragraph. Please give the definition
 > explicitly and include a reference.
 
-TODO
+Thanks, this is indeed quite non-standard, and we have fixed this now. See
+also: response to similar comment from other reviewer.
 
 > Bottom of p13: “the reflection rules also implies” should be “rule”.
 
