@@ -59,7 +59,7 @@ the GitHub page. For your reference, here's a link to the coqdoc of the main
 file: https://artagnon.github.io/bonak/Bonak.νType.νType.html.
 
 Otherwise, Sections 5.4 to 5.6 already explained at a high-level the
-specificity of the formalization. We believe that more precisions would not
+specificity of the formalization. We believe that being more precise would not
 help more than the formalization itself.
 
 > The title says "parametricity-based", and the parametricity-based intuition
@@ -73,7 +73,7 @@ help more than the formalization itself.
 Our construction expresses directly (without having to stepwise embed the
 syntax of type theory) the n-th iteration of (a subset of) Bernardy et al's
 parametricity translation. In our opinion, this deserves to be called
-parametricity but we agree that this is also a question of definition.
+parametricity but we also agree that this is a question of definition.
 
 > How do we know that the construction of ν-sets really provides indexed
 > versions of semisimplicial, semicubical sets? This is not proven in the
@@ -116,8 +116,9 @@ proof of A*(a_L,a_R). We made this explicit in the revision.
 > this is a bit misleading, the quadruple product should really be a pullback
 > over four copies of X0.
 
-We agree that this is hiding something and misleading. We added a mention to
-the coherence conditions, hoping it addresses the point correctly enough.
+We agree that this is hiding something and misleading. We added a point to
+mention the coherence conditions, hoping that it addresses the point
+sufficiently.
 
 > p3: I’m not clear on the difference between the constructions you describe.
 > Aren’t “a presheaf over increasing injective maps between finite ordinals” and
@@ -126,9 +127,9 @@ the coherence conditions, hoping it addresses the point correctly enough.
 
 We can split the question in two:
 
-1. It is confusing to use once the terminology "increasing injective maps
-between finite ordinals" and once the terminology "increasing injective
-functions over finite ordinals"; so, we used only the first formulation in the
+1. It is confusing to use the terminology "increasing injective maps
+between finite ordinals" in one instance, and "increasing injective functions
+over finite ordinals" in another; so, we use only the first terminology in the
 revision.
 2. Even if equivalent as categories, relying on increasing injective maps or
 relying on face maps lead to distinct presentations of the augmented
@@ -151,6 +152,9 @@ have been Altenkirch et al. (2016).
 > and so on. (The earliest reference I know of for the notion of ν-ary cubes is
 > the Nuyts–Devriese paper “Transpension: the right adjoint to the pi-type”,
 > Example 6.14.)
+
+This is an interesting point, and we have added the "v-ary cubical set"
+terminology within parathesis.
 
 > In definitions 2, 8, and 14, “less than” should be “less than or equal to”.
 
@@ -219,7 +223,12 @@ Fixed, thanks.
 > I would recommend moving section 5.2 about intuition to come before table 3,
 > at least.
 
-TODO
+Actually, in the initial version of the paper, we had the intution section come
+before the formal definition. However, a reviewer expressed strong interest in
+seeing the formal definition come before the intution. Doing what you suggest
+would require quite a major rewrite of the text in the section, and as
+different reviewers have different preferences, we have decided not to
+implement this suggestion. Sorry.
 
 > I’m grateful that the figure on p23 is fairly readable when printed in black
 > and white. But the text in the first paragrah on that page is not very
