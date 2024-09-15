@@ -170,6 +170,8 @@ Yes, thanks for catching this. This is fixed in the revision.
 > 0-simplices, and 1-simplices, respectively. But don’t call a line a
 > “2-simplex”, that is just confusing.
 
+This is a good point, thanks. Fixed now.
+
 > In example 13, the references to “cylinders” should probably be “prisms”.
 
 Yes, thanks for this improvement.
