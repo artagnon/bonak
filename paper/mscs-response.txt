@@ -237,7 +237,7 @@ different reviewers have different preferences, we have decided not to
 implement this suggestion. Sorry.
 
 > I’m grateful that the figure on p23 is fairly readable when printed in black
-> and white. But the text in the first paragrah on that page is not very
+> and white. But the text in the first paragraph on that page is not very
 > readable in black and white as it refers to things by their colors.
 
 Fixed, although we have traded off a bit of beauty for it.
