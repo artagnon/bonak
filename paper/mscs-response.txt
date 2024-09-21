@@ -1,8 +1,10 @@
 > The paper defines ν-sets, a generalisation of indexed (Reedy fibrant)
 > augmented semi-simplicial (ν=1) and semi-cubical (ν=2) sets.
 
-Small correction: it's the fibered presentation that is Reedy fibrant, not the
-indexed one.
+There are definitions of ν-sets both in the presheaf (Section 2) and
+indexed (Section 5) forms. Also, to our knowledge, Reedy fibrant
+presheaves are only the image of indexed presheaves as ordinary
+presheaves. We added a note on that in the introduction.
 
 > The paper is supported by a formalisation, the ideas of which are explained,
 > but the formalisation itself is not made available.
@@ -18,9 +20,9 @@ The formalization is available and there was a link to it in the paper in the
 > there are constructions which generalise ν-sets, e.g. Theorem 4.8 in the
 > cited Annenkov-Capriotti-Kraus 2017 (ACK), which is also formalised in Lean.
 
-Thanks, we added a section on Reedy fibrant presheaves in the introduction,
-mentioning the existence of generic constructions over them, especially in ACK.
-Let us know if you think that more should be said.
+Thanks, we mentioned the existence of such generic constructions
+involving direct categories in the section referring to Reedy fibrant
+presheaves. Let us know if you think that more should be said.
 
 > However it is still useful to give explicit constructions such as the one in
 > the paper: first of all, the current paper's constructions are in extensional
@@ -135,16 +137,13 @@ between finite ordinals" in one instance, and "increasing injective functions
 over finite ordinals" in another; so, we use only the first terminology in the
 revision.
 2. Even if equivalent as categories, relying on increasing injective maps or
-relying on face maps lead to distinct presentations of the augmented
+relying on face maps leads to distinct presentations of the augmented
 semi-simplicial category. This in turn leads to definitions of indexed
 presheaves that rely on different choices of matching object, each of them
 coming with its specific combinatorics. We believe that it is clear enough that
 different presentations lead to different formalisations, and, otherwise, an
 alternative could be to add between parentheses the sentence "each choice of
 presentation implies specific combinatorics in the formalisation".
-
-Note that we also fixed the reference to Annenkov et al. (2017) which should
-have been Altenkirch et al. (2016).
 
 > p4: There’s an argument that what you call a “ν-set” can be called a “ν-ary
 > cubical set”. For instance, an augmented semi-simplicial set is equivalent to
@@ -156,10 +155,11 @@ have been Altenkirch et al. (2016).
 > the Nuyts–Devriese paper “Transpension: the right adjoint to the pi-type”,
 > Example 6.14.)
 
-This is an interesting point, but it should be noted that the term "v-ary
-cubical sets" would be misleading, as the term "unary cubical sets" is used to
-refer to a kind of cubical set, and not semi-cubical set. Since we only
-construct semi-cubical sets (i.e. without permutations), we decided to keep the
+This is an interesting point, but it should be noted that the term
+"v-ary cubical sets" would be misleading, as the term "unary cubical
+sets" is used to refer to a kind of cubical set with degeneracies and
+permutations, and not semi-cubical set. Since we only construct
+semi-cubical sets (i.e. without permutations), we decided to keep the
 term v-set, and justify its introduction.
 
 > In definitions 2, 8, and 14, “less than” should be “less than or equal to”.
@@ -288,12 +288,12 @@ Fixed, thanks.
 > I would recommend moving section 5.2 about intuition to come before table 3,
 > at least.
 
-Actually, in the initial version of the paper, we had the intution section come
+Actually, in the initial version of the paper, we had the intuition section come
 before the formal definition. However, a reviewer expressed strong interest in
-seeing the formal definition come before the intution. Doing what you suggest
+seeing the formal definition come before the intuition. Doing what you suggest
 would require quite a major rewrite of the text in the section, and as
 different reviewers have different preferences, we have decided not to
-implement this suggestion. Sorry.
+implement this suggestion. We hope you won't mind.
 
 > I’m grateful that the figure on p23 is fairly readable when printed in black
 > and white. But the text in the first paragraph on that page is not very
