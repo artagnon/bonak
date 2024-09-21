@@ -104,7 +104,7 @@ fibered/indexed correspondence.
 > correspond to augmented semisimplicial and semicubical sets". I suggest doing
 > one of these.
 
-Thanks, we have changed the last paragraph of future work to include this.
+Thanks, we have changed the last paragraph of "Future work" to include this.
 
 > Minor remark: on page 14, B*(f_L(a_L), f_R(a_R)) is not well-typed, because
 > f_L and f_R are different dependent functions, so one of them has type
@@ -156,15 +156,15 @@ have been Altenkirch et al. (2016).
 > the Nuyts–Devriese paper “Transpension: the right adjoint to the pi-type”,
 > Example 6.14.)
 
-This is an interesting point, but it should be noted that the terminology
-"v-ary cubical sets" would be misleading, as the terminology "unary cubical
-sets" is used to refer to a kind of cubical set, and not semi-cubical set.
-Since we only construct semi-cubical sets, we decided to keep the notation
-v-set, and explain why we invented a new term.
+This is an interesting point, but it should be noted that the term "v-ary
+cubical sets" would be misleading, as the term "unary cubical sets" is used to
+refer to a kind of cubical set, and not semi-cubical set. Since we only
+construct semi-cubical sets (i.e. without permutations), we decided to keep the
+term v-set, and justify its introduction.
 
 > In definitions 2, 8, and 14, “less than” should be “less than or equal to”.
 
-Yes, thanks for catching this. This is fixed in the revision.
+Yes, thanks for catching this. Fixed in the revision.
 
 > I believe very strongly that when talking about “augmented semi-simplicial
 > sets”, the numerical indexing should be the geometric simplicial one, which
