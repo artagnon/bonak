@@ -43,7 +43,10 @@ Annenkov-Capriotti-Kraus). We fixed the reference. Thanks.
 > Theory with Strict Equality, CSL 2016) and the current paper. Their approach
 > seems simpler, but probably it doesn't generalise to νs other than 1.
 
-TODO
+We added a comparison at two places. One between Herbelin's 2013
+construction at the time of presenting the history of constructions of
+semi-simplicial sets in indexed form and one in the section
+contribution.
 
 > The "coinductive type of infinite dependent tuples" is not described in
 > detail. What are the exact rules for these types? Does Coq support such a
