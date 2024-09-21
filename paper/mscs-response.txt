@@ -18,9 +18,9 @@ The formalization is available and there was a link to it in the paper in the
 > there are constructions which generalise ν-sets, e.g. Theorem 4.8 in the
 > cited Annenkov-Capriotti-Kraus 2017 (ACK), which is also formalised in Lean.
 
-We added a section on Reedy fibrant presheaves in the introduction, mentioning
-the existence of generic constructions over them, especially in ACK. Let us
-know if you think that more should be said.
+Thanks, we added a section on Reedy fibrant presheaves in the introduction,
+mentioning the existence of generic constructions over them, especially in ACK.
+Let us know if you think that more should be said.
 
 > However it is still useful to give explicit constructions such as the one in
 > the paper: first of all, the current paper's constructions are in extensional
@@ -43,10 +43,9 @@ Annenkov-Capriotti-Kraus). We fixed the reference. Thanks.
 > Theory with Strict Equality, CSL 2016) and the current paper. Their approach
 > seems simpler, but probably it doesn't generalise to νs other than 1.
 
-We added a comparison at two places. One between Herbelin's 2013
+Thanks, we added a comparison at two places. One between Herbelin's 2013
 construction at the time of presenting the history of constructions of
-semi-simplicial sets in indexed form and one in the section
-contribution.
+semi-simplicial sets in indexed form and one in the section contribution.
 
 > The "coinductive type of infinite dependent tuples" is not described in
 > detail. What are the exact rules for these types? Does Coq support such a
