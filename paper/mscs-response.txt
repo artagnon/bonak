@@ -34,9 +34,9 @@ know if you think that more should be said.
 > construction of semi-simplicial types which is not exactly a special case of
 > the general construction.
 
-The construction in Altenkirch-Capriotti-Kraus was actually already
-mentioned in the submitted version but with the wrong reference
-(referring instead to Annenkov-Capriotti-Kraus). We fixed the reference.
+The construction in Altenkirch-Capriotti-Kraus was actually already mentioned
+in the submitted version but with the wrong reference (referring instead to
+Annenkov-Capriotti-Kraus). We fixed the reference.
 
 > It would be nice to have a comparison between the explicit construction of
 > semisimplicial types in (Altenkirch-Capriotti-Kraus: Extending Homotopy Type
