@@ -18,7 +18,9 @@ The formalization is available and there was a link to it in the paper in the
 > there are constructions which generalise ν-sets, e.g. Theorem 4.8 in the
 > cited Annenkov-Capriotti-Kraus 2017 (ACK), which is also formalised in Lean.
 
-TODO
+We added a section on Reedy fibrant presheaves in the introduction,
+mentioning the existence of generic constructions over them,
+especially in ACK(S). Tell us if you think that more should be said.
 
 > However it is still useful to give explicit constructions such as the one in
 > the paper: first of all, the current paper's constructions are in extensional
@@ -32,7 +34,9 @@ TODO
 > construction of semi-simplicial types which is not exactly a special case of
 > the general construction.
 
-TODO
+The construction in Altenkirch-Capriotti-Kraus was actually already
+mentioned in the submitted version but with the wrong reference
+(referring instead to Annenkov-Capriotti-Kraus). We fixed the reference.
 
 > It would be nice to have a comparison between the explicit construction of
 > semisimplicial types in (Altenkirch-Capriotti-Kraus: Extending Homotopy Type
