@@ -6,9 +6,9 @@ The name _bonak_ comes from an imaginary monster in Daisy Johnson's novel [Every
 
 Some features of this project:
 
-1. We do not make use of [HoTT](https://github.com/HoTT/HoTT), or any fancy libraries for that matter. Bonak is written is vanilla Coq, making use of the core standard libarary. In particular, we make heavy use of [SProp](https://coq.inria.fr/refman/addendum/sprop.html) for proof irrelevance.
+1. We do not make use of [HoTT](https://github.com/HoTT/HoTT), or any fancy libraries for that matter. Bonak is written is vanilla Coq, making use of the core standard library. In particular, we make heavy use of [SProp](https://coq.inria.fr/refman/addendum/sprop.html) for definitional proof irrelevance.
 2. Bonak has led to many bugs being filed and fixed in core Coq. It pushes the boundaries of proof assistant technology, and can serve as a benchmark against which to improve core Coq features.
-3. As the main contribution of Bonak is the Coq code, we have placed high emphasis on code cleanliness and readability. As a result, it's quite plesant to step through the code, and have a succinct goal at all times.
+3. As the main contribution of Bonak is the Coq code, we have placed high emphasis on code cleanliness and readability. As a result, it's quite pleasant to step through the code, and have a succinct goal at all times.
 4. Bonak is tiny! In ~800 lines of Coq code, we have managed to prove something remarkable. We did have a lot of false starts, and tried various approaches, before settling on what we have today.
 
 Our axioms are:
@@ -20,9 +20,6 @@ Axioms:
 functional_extensionality_dep
   : forall (A : Type) (B : A -> Type) (f g : forall x : A, B x),
 	(forall x : A, f x = g x) -> f = g
-fext_computes
-  : forall (A : Type) (B : A -> HSet) (f : forall a : A, B a),
-    functional_extensionality_dep f f (fun a : A => eq_refl) = eq_refl
 ```
 
 ## Current status
