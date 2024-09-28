@@ -784,26 +784,34 @@ Definition mkDgnPaintingType {n' p} {C: νType n'.+1} {G: Dgn C}
 Proof.
   revert d c; apply le_induction' with (Hp := Hp); clear p Hp.
   * intros d c. rewrite mkpainting_computes. unshelve esplit.
-    - exact (fun ε : arity => rew <- [(mkPaintingPrev.(painting'))] (mkDgnFrame).(idDgnRestrFrame) (ε := ε) in c).
+    - now exact (fun ε : arity => rew <- [(mkPaintingPrev.(painting'))]
+      (mkDgnFrame).(idDgnRestrFrame) (ε := ε) in c).
     - unfold mkPaintingType.
       rewrite le_induction_base_computes. (* TODO: make a "painting"-level lemma *)
-      exact (L.(dgnLift) (E := E) c).
+      now exact (L.(dgnLift) (E := E) c).
   * intros * mkDgnPaintingS * c.
     destruct (rew [id] C.(eqPaintingSp) in c) as (l, c').
     specialize (mkDgnPaintingS (rew <- [id] C.(eqFrameSp) in (d; l)) c').
     simpl in mkDgnPaintingS; rewrite rew_rew' in mkDgnPaintingS.
     rewrite mkpainting_computes.
     unshelve esplit.
-    - exact (mkDgnLayer l).
-    - apply mkDgnPaintingS.
+    - now exact (mkDgnLayer l).
+    - now apply mkDgnPaintingS.
 Defined.
 
-Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}:
+Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
+  (L: DgnLift (mkνTypeSn C) mkDgnFramePrev (fun p => mkDgnFrame)):
   DgnPaintingBlock (mkνTypeSn C)  mkDgnPaintingPrev (fun p => mkDgnFrame).
   unshelve esplit.
   - intros. apply mkDgnPaintingType.
-    * admit.
-    * exact X.
+    * now exact L.
+    * now exact X.
+  - intros. revert d c. pattern p, Hp; apply le_induction'; clear p Hp.
+    * intros d c. simpl (mkνTypeSn C).(Painting).(restrPainting).
+      unfold mkRestrPainting; rewrite le_induction'_base_computes.
+      unfold mkDgnPaintingType; rewrite le_induction'_base_computes.
+      now repeat rewrite rew_rew'.
+    * intros p Hp IHP d c. simpl.
 Admitted.
 
 End νType.
