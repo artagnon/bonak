@@ -45,7 +45,7 @@ Qed.
 
 Theorem rew_permute A (P Q: A -> Type) (x y: A) (H: forall z, Q z = P z)
   (H': x = y) (a: P x) :
-  rew <- [id] H y in rew H' in a =
+  rew <- [id] H y in rew [P] H' in a =
   rew [Q] H' in rew <- [id] H x in a.
 Proof.
   now destruct H'.
@@ -53,7 +53,7 @@ Qed.
 
 Theorem rew_permute' A (P Q: A -> Type) (x y: A) (H: forall z, P z = Q z)
   (H': x = y) (a: P x) :
-  rew [id] H y in rew H' in a =
+  rew [id] H y in rew [P] H' in a =
   rew [Q] H' in rew [id] H x in a.
 Proof.
   now destruct H'.
@@ -82,4 +82,16 @@ Lemma map_subst_app {A B} {x y} {𝛉: A} (H: x = y :> B) (P: A -> B -> Type)
   rew [P 𝛉] H in f 𝛉 = (rew [fun x => forall 𝛉, P 𝛉 x] H in f) 𝛉.
 Proof.
   now destruct H.
+Defined.
+
+Lemma sigT_commute A (P : A -> Type) B (Q : B -> Type) C c
+  (d : forall a, P a -> { b & Q b}) (e : forall b, Q b -> C) :
+  match match c with (a; p) => d a p end with
+  | (b; q) => e b q
+  end =
+  match c with
+  | (a; p) => match d a p with (b; q) => e b q end
+  end.
+Proof.
+  now destruct c.
 Defined.
