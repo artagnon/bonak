@@ -13,13 +13,11 @@ Some features of this project:
 
 Our axioms are:
 
-```text
-Section Variables:
-side : HSet
+```coq
 Axioms:
-functional_extensionality_dep
-  : forall (A : Type) (B : A -> Type) (f g : forall x : A, B x),
-	(forall x : A, f x = g x) -> f = g
+  functional_extensionality_dep
+    : forall (A : Type) (B : A -> Type) (f g : forall x : A, B x),
+      (forall x : A, f x = g x) -> f = g
 ```
 
 ## Current status

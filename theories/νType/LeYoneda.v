@@ -353,20 +353,4 @@ Ltac solve_leY :=
   | [ |- ?c ] => debug ltac:(idtac "Not a leY:" c); fail
   end.
 
-Example ex1 (n p q r : nat)
-  (Hpr : p.+2 <= r.+2)
-  (Hrq : r.+2 <= q.+2)
-  (Hq : q.+2 <= n) : forall C, (p.+1 <= q.+2 -> p.+1 <= q.+1 -> p.+2 <= r.+2 -> p.+2 <= n -> C) -> C.
-intros C H. apply H.
-solve_leY.
-solve_leY.
-solve_leY.
-solve_leY.
-Qed.
-
 Hint Extern 0 (leY _ _) => solve_leY : typeclass_instances.
-
-Example ex2 {n} p q r {Hpr : p.+2 <= r.+2} {Hrq : r.+2 <= q.+2} {Hq : q.+2 <= n}
-  {H: forall p q r, p.+1 <= r.+1 -> r <= q -> q <= n -> p <= n}: p <= n.
-  now apply (H p q r _ _ _).
-Qed.
