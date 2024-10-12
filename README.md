@@ -13,7 +13,7 @@ Some features of this project:
 3. As the main contribution of Bonak is the Coq code, we have placed high emphasis on code cleanliness and readability. As a result, it's quite pleasant to step through the code, and have a succinct goal at all times.
 4. Bonak is tiny! In ~900 lines of Coq code, we have managed to prove something remarkable. We did have a lot of false starts, and tried various approaches, before settling on what we have today.
 
-Our axioms are:
+## Axioms
 
 ```coq
 Axioms:
@@ -22,6 +22,8 @@ Axioms:
       (forall x : A, f x = g x) -> f = g
 ```
 
+Our approach is generic over the arity of the parametricity translation: we use functional extensionality for this, but it can, in principle, be done without this axiom for any fixed finite arity.
+
 ## Current status
 
-Our approach is generic over the arity of the parametricity translation: we use functional extensionality for this, but it can, in principle, be done without this axiom for any fixed finite arity. `master` is a complete version of our formalization, without any incomplete proofs. We are currently in the process of adding degeneracies, to yield simplicial and cubical sets.
+`master` is a complete version of the formalization of semi-simplicial and semi-cubical sets. We are currently in the process of adding degeneracies, to yield simplicial and cubical sets.
