@@ -391,7 +391,7 @@ Defined.
 
 Lemma mkPaintingType_base_computes {n'} {C: νType n'}
   {D E} {d: (mkFrame n'.+1).(frame n'.+1) D}:
-  mkPaintingType E d = E d.
+  mkPaintingType E d = E d :> Type.
 Proof.
   unfold mkPaintingType; now rewrite le_induction_base_computes.
 Qed.
@@ -672,6 +672,7 @@ Arguments DgnFrame {n' C} _ {p}.
 Arguments DgnPaintingPrev {n' C} _.
 Arguments DgnPainting {n' C} _.
 Arguments DgnLayer {n' C} _ {p Hp D d} l.
+Arguments eqDgnFrameSp {n' C} _ {p q Hpq Hq D d} l.
 
 #[local]
 Instance mkDgnFramePrev {n'} {C: νType n'.+1} {G: Dgn C}:
@@ -806,9 +807,24 @@ Proof.
     - now apply mkDgnPaintingS.
 Defined.
 
+
+Lemma mkDgnPaintingType_base_computes {n'} {C: νType n'.+1} {G: Dgn C} {ε D E}
+  {L: DgnLift (mkνTypeSn C) mkDgnFramePrev (fun p => mkDgnFrame)}
+  {d: mkFramePrev.(frame') n'.+1 D} {c: mkPaintingPrev.(painting') d}:
+    rew [mkPaintingPrev.(painting')] mkDgnFrame.(idDgnRestrFrame) in
+    match rew [id] mkPaintingType_step_computes in
+      mkDgnPaintingType (E := E) (c := c) L
+    with
+    | (l; _) => l ε
+    end = c.
+Proof.
+  unfold mkDgnPaintingType; rewrite le_induction'_base_computes.
+  now repeat rewrite rew_rew'.
+Qed.
+
 Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
   (L: DgnLift (mkνTypeSn C) mkDgnFramePrev (fun p => mkDgnFrame)):
-  DgnPaintingBlock (mkνTypeSn C)  mkDgnPaintingPrev (fun p => mkDgnFrame).
+  DgnPaintingBlock (mkνTypeSn C) mkDgnPaintingPrev (fun p => mkDgnFrame).
   unshelve esplit.
   - intros. apply mkDgnPaintingType.
     * now exact L.
@@ -816,9 +832,9 @@ Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
   - intros. revert d c. pattern p, Hp; apply le_induction'; clear p Hp.
     * intros d c. simpl (mkνTypeSn C).(Painting).(restrPainting).
       cbv beta; rewrite mkRestrPainting_base_computes.
-      unfold mkDgnPaintingType; rewrite le_induction'_base_computes.
-      now repeat rewrite rew_rew'.
+      now rewrite mkDgnPaintingType_base_computes.
     * intros p Hp IHP d c. simpl.
+      rewrite mkRestrPainting_step_computes.
 Admitted.
 
 End νType.
