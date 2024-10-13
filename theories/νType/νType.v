@@ -389,9 +389,9 @@ Proof.
     now exact {l : mkLayer d & mkPaintingTypeSp (d; l)}.
 Defined.
 
-Lemma mkPaintingType_base_computes {n'} {C: νType n'}
-  {D E} {d: (mkFrame n'.+1).(frame n'.+1) D}:
-  mkPaintingType E d = E d :> Type.
+Lemma mkPaintingType_base_computes {n} {C: νType n}
+  {D E} {d: (mkFrame n.+1).(frame n.+1) D}:
+  mkPaintingType E d = E d.
 Proof.
   unfold mkPaintingType; now rewrite le_induction_base_computes.
 Qed.
