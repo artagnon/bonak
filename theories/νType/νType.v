@@ -689,7 +689,7 @@ Definition mkDgnLayer {n' p} {C: νType n'.+1} {G: Dgn C}
   fun ω => rew [C.(Painting).(painting) D.2]
     Frame.(cohReflRestrFrame) p in G.(DgnPainting).(reflPainting) p (l ω).
 
-Definition mkidReflRestrLayer {n' p ε} {C: νType n'.+1} {G: Dgn C}
+Definition mkIdReflRestrLayer {n' p ε} {C: νType n'.+1} {G: Dgn C}
   {Hp: p.+2 <= n'.+2}
   {FrameBlock: DgnFrameBlock (mkνTypeSn C) p mkDgnFramePrev} {D}
   {d: mkFramePrev.(frame') p D} {l: mkLayer' d}:
@@ -762,7 +762,7 @@ Instance mkDgnFrameSp {n' p} {C: νType n'.+1} {G: Dgn C}
     rewrite <- rew_opp_l with (P := id) (H := C.(eqFrameSp)).
     destruct (rew [id] _ in d') as (d, l); clear d'.
     f_equal.
-    now exact (= Frame.(idReflRestrFrame); mkidReflRestrLayer).
+    now exact (= Frame.(idReflRestrFrame); mkIdReflRestrLayer).
   * (* cohReflRestrFrame *)
     intros q ε Hpq Hq D d'; simpl. invert_le Hpq. invert_le Hq.
     rewrite <- rew_opp_l with (P := id) (H := C.(eqFrameSp)) (a := d').
@@ -810,7 +810,7 @@ Proof.
     - now apply IHP.
 Defined.
 
-Lemma mkDgnPaintingType_base_computes {n'} {C: νType n'.+1} {G: Dgn C} {ε D E}
+Lemma mkReflPainting_base_computes {n'} {C: νType n'.+1} {G: Dgn C} {ε D E}
   {L: DgnLift (mkνTypeSn C) mkDgnFramePrev (fun p => mkDgnFrame)}
   {d: mkFramePrev.(frame') n'.+1 D} {c: mkPaintingPrev.(painting') d}:
     rew [mkPaintingPrev.(painting')] mkDgnFrame.(idReflRestrFrame) in
@@ -836,7 +836,7 @@ Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
     intros. revert d c. pattern p, Hp; apply le_induction'; clear p Hp.
     * intros d c. simpl (mkνTypeSn C).(Painting).(restrPainting).
       cbv beta; rewrite mkRestrPainting_base_computes.
-      now rewrite mkDgnPaintingType_base_computes.
+      now rewrite mkReflPainting_base_computes.
     * intros p Hp IHP d c. simpl.
       rewrite mkRestrPainting_step_computes.
       destruct (rew [id] C.(eqPaintingSp) in c) as (l, c').
