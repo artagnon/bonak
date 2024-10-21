@@ -485,7 +485,7 @@ Proof.
   do 2 rewrite mkRestrPainting_step_computes.
   destruct (rew [id] mkPaintingType_step_computes in c) as (l, c'); clear c.
   rewrite (C.(eqRestrPaintingSp) p q), (C.(eqRestrPaintingSp) p r).
-  rewrite <- rew_permute with (H := @eqPaintingSp' _ _ _ _ _).
+  rewrite <- rew_permute with (H := C.(@eqPaintingSp' _) _ _ _).
   f_equal.
   unshelve eapply (rew_existT_curried
     (Q := fun x =>
@@ -802,8 +802,8 @@ Proof.
       now exact (L.(dgnLift) (E := E) c).
   * intros p Hp IHP d c.
     destruct (rew [id] C.(eqPaintingSp) in c) as (l, c').
-    specialize (IHP (rew <- [id] C.(eqFrameSp) in (d; l)) c').
-    simpl in IHP; rewrite rew_rew' in IHP.
+    simpl in IHP; specialize (IHP (rew <- [id] C.(eqFrameSp) in (d; l)) c').
+    rewrite rew_rew' in IHP.
     rewrite mkPaintingType_step_computes.
     unshelve esplit.
     - now exact (mkReflLayer l).
@@ -852,15 +852,33 @@ Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
       rewrite mkReflPainting_base_computes. now repeat rewrite rew_rew'.
     * intros p Hp IHP d c. simpl.
       rewrite mkRestrPainting_step_computes.
-      destruct (rew [id] C.(eqPaintingSp) in c) as (l, c').
       rewrite mkReflPainting_step_computes.
-      specialize (IHP (rew <- [id] C.(eqFrameSp) in (d; l)) c').
+      (* Coq bug? Why doesn't a direct destruct work? *)
+      transitivity (rew <- [id] C.(eqPaintingSp) in rew [id] C.(eqPaintingSp) in c).
+      2: now rewrite rew_rew.
+      set (c' := rew [id] C.(eqPaintingSp) in c).
+      change (rew [id] C.(eqPaintingSp) in c) with c'.
+      destruct c' as (l, c''). clear c; rename c'' into c.
+      rewrite rew_rew'.
+      rewrite <- rew_permute with (H := C.(@eqPaintingSp _) _ _ _ _).
+      f_equal.
+      unshelve eapply (rew_existT_curried
+        (Q := fun x =>
+          C.(Painting).(painting) _ (rew <- [id] C.(eqFrameSp) in x))).
+      now exact mkIdReflRestrLayer.
+      rewrite <- IHP.
+      rewrite rew_map with
+        (P := fun x => C.(Painting).(painting) D.2 x)
+        (f := fun x => rew <- [id] C.(eqFrameSp) in x).
+      (* Coq anamoly:
+      rewrite <- map_subst with (f := mkRestrPainting p.+1 n'.+1 E (mkDgnFrame.(reflFrame) d; mkReflLayer l)).
+      *)
       admit.
   - (* cohReflRestrPainting *)
     intros. revert d c. pattern p, Hpq; apply le_induction''; clear p Hpq.
     * intros d c; simpl. rewrite mkRestrPainting_base_computes.
       rewrite mkReflPainting_step_computes. admit.
-    * intros p Hp IHP d c; simpl. admit.
+    * intros p Hp IHP d c; simpl. rewrite mkReflPainting_step_computes. admit.
 Admitted.
 
 End νType.
