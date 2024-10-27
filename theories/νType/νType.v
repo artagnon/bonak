@@ -667,6 +667,14 @@ Class Dgn {n'} (C: νType n'.+1) := {
     {d: C.(FramePrev).(frame') p D} (l: C.(Layer') d):
     DgnFrame.(reflFrame) (rew <- [id] C.(eqFrameSp') in (d; l)) =
     rew <- [id] C.(eqFrameSp) in (DgnFrame.(reflFrame) d; ReflLayer l);
+  eqReflPaintingSp p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n'.+1} {D E d}
+    {l: C.(Layer') d}
+    {c: C.(PaintingPrev).(painting') (D := D)
+      (rew <- [id] C.(eqFrameSp') in (d; l))}:
+    DgnPainting.(reflPainting) p (rew <- [id] C.(eqPaintingSp') in (l; c)) =
+    rew <- [id] C.(eqPaintingSp) in
+      (ReflLayer l; rew [C.(Painting).(painting) E] eqReflFrameSp l in
+        DgnPainting.(reflPainting) p.+1 c);
 }.
 
 Arguments DgnFramePrev {n' C} _.
@@ -675,6 +683,7 @@ Arguments DgnPaintingPrev {n' C} _.
 Arguments DgnPainting {n' C} _.
 Arguments ReflLayer {n' C} _ {p Hp D d} l.
 Arguments eqReflFrameSp {n' C} _ {p q Hpq Hq D d} l.
+Arguments eqReflPaintingSp {n' C} _ p q {Hpq Hq D E d l c}.
 
 #[local]
 Instance mkDgnFramePrev {n'} {C: νType n'.+1} {G: Dgn C}:
@@ -897,8 +906,26 @@ Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
   - (* cohReflRestrPainting *)
     intros. revert d c. pattern p, Hpq; apply le_induction''; clear p Hpq.
     * intros d c; simpl. rewrite mkRestrPainting_base_computes.
-      rewrite mkReflPainting_step_computes. admit.
-    * intros p Hp IHP d c; simpl. rewrite mkReflPainting_step_computes. admit.
+      rewrite mkReflPainting_step_computes.
+      set (c' := rew [id] C.(eqPaintingSp) in c).
+      change (rew [id] C.(eqPaintingSp) in c) with c'.
+      replace c with (rew <- [id] C.(eqPaintingSp) in c') by apply rew_rew.
+      destruct c' as (l, c''); clear c; rename c'' into c.
+      rewrite rew_rew'. unfold mkReflLayer. rewrite rew_rew.
+      now rewrite (C.(eqRestrPainting0) c).
+    * intros p Hp IHP d c; simpl. invert_le Hp.
+      rewrite mkRestrPainting_step_computes.
+      rewrite mkReflPainting_step_computes.
+      set (c' := rew [id] C.(eqPaintingSp) in c).
+      change (rew [id] C.(eqPaintingSp) in c) with c'.
+      replace c with (rew <- [id] C.(eqPaintingSp) in c') by apply rew_rew.
+      destruct c' as (l, c''); clear c; rename c'' into c.
+      rewrite rew_rew'.
+      rewrite (C.(eqRestrPaintingSp) p q).
+      rewrite (G.(eqReflPaintingSp) p q).
+      apply rew_swap with (P := C.(Painting).(painting) D.2),
+            rew_swap with (P := id).
+      admit.
 Admitted.
 
 End νType.
