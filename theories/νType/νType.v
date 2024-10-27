@@ -315,7 +315,7 @@ Proof.
   rewrite <- (C.(Painting).(cohPainting) p r q).
   repeat rewrite rew_compose.
   apply rew_swap with (P := fun x => C.(PaintingPrev).(painting'') x).
-  rewrite rew_app. now trivial.
+  rewrite rew_app_rl. now trivial.
   now apply (C.(FramePrev).(frame'') p _).(UIP).
 Qed.
 
@@ -718,7 +718,7 @@ Proof.
   repeat rewrite rew_compose.
   apply rew_swap with
     (P := fun x => C.(PaintingPrev).(painting') x).
-  rewrite rew_app. now trivial.
+  rewrite rew_app_rl. now trivial.
   now apply (C.(FramePrev).(frame') p D.1).(UIP).
 Defined.
 
@@ -744,7 +744,7 @@ Proof.
   repeat rewrite rew_compose.
   apply rew_swap with
     (P := fun x => C.(PaintingPrev).(painting') x).
-  rewrite rew_app. now trivial.
+  rewrite rew_app_rl. now trivial.
   now apply (C.(FramePrev).(frame') p D.1).(UIP).
 Defined.
 
@@ -899,9 +899,8 @@ Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
         (P := fun x => (mkPaintingPrev.(painting') x).(Dom))
         (f := fun x => (mkFrame p.+1).(restrFrame) n'.+1 _ (h x)).
       apply rew_swap_rl with (P := C.(Painting).(painting) D.2).
-      symmetry.
-      apply rew_app with
-        (P := fun x : C.(Frame).(frame _) D.1 => C.(Painting).(painting) D.2 x).
+      apply rew_app_rl_opp with
+        (P := fun x => C.(Painting).(painting) D.2 x).
       now apply (C.(Frame).(frame p.+1) D.1).(UIP).
   - (* cohReflRestrPainting *)
     intros. revert d c. pattern p, Hpq; apply le_induction''; clear p Hpq.
@@ -927,6 +926,8 @@ Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
       unshelve eapply (rew_existT_curried
         (Q := fun x =>
           C.(Painting).(painting) _ (rew <- [id] C.(eqFrameSp) in x))).
+      rewrite <- mkCohReflRestrLayer with (d := d).
+      now rewrite rew_compose, eq_trans_sym_inv_r.
       admit.
 Admitted.
 
