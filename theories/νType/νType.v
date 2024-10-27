@@ -870,10 +870,30 @@ Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
       rewrite rew_map with
         (P := fun x => C.(Painting).(painting) D.2 x)
         (f := fun x => rew <- [id] C.(eqFrameSp) in x).
-      (* Coq anamoly:
-      rewrite <- map_subst with (f := mkRestrPainting p.+1 n'.+1 E (mkDgnFrame.(reflFrame) d; mkReflLayer l)).
+      apply rew_swap_rl with (P := C.(Painting).(painting) D.2).
+      rewrite rew_compose.
+      simpl (mkνTypeSn C).(Painting).(restrPainting). cbv beta.
+      (* Coq anomaly "in retyping: Non-functional construction"
+        rewrite <- map_subst with (f := mkRestrPainting p.+1 n'.+1 E (mkDgnFrame.(reflFrame) d; mkReflLayer l)).
       *)
-      admit.
+      eset (h := fun d => match d with (d'; l') => existT
+            (fun a : (mkFrame p).(frame _) D => mkLayer a)
+            (mkDgnFrame.(reflFrame) d') (mkReflLayer l') end).
+      change (fun _ => (mkPaintingType n'.+1 p.+1 E _)) with
+        (fun d => (mkPaintingType n'.+1 p.+1 E (h d))).
+      set (P := (fun d => (mkPaintingType n'.+1 p.+1 E (h d)))).
+      set (e' := rew_rew' _ _).
+      rewrite <- (map_subst (P := P)
+            (fun d c => mkRestrPainting p.+1 n'.+1 E _ c) e' _).
+      clear P; subst e'.
+      rewrite rew_map with
+        (P := fun x => (mkPaintingPrev.(painting') x).(Dom))
+        (f := fun x => (mkFrame p.+1).(restrFrame) n'.+1 _ (h x)).
+      apply rew_swap_rl with (P := C.(Painting).(painting) D.2).
+      symmetry.
+      apply rew_app with
+        (P := fun x : C.(Frame).(frame _) D.1 => C.(Painting).(painting) D.2 x).
+      now apply (C.(Frame).(frame p.+1) D.1).(UIP).
   - (* cohReflRestrPainting *)
     intros. revert d c. pattern p, Hpq; apply le_induction''; clear p Hpq.
     * intros d c; simpl. rewrite mkRestrPainting_base_computes.

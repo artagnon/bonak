@@ -65,6 +65,12 @@ Proof.
   now destruct H.
 Qed.
 
+Lemma rew_swap_rl : forall A (P : A -> Type) a b (H: a = b) (x : P a) (y : P b),
+  x = rew <- H in y -> rew H in x = y.
+Proof.
+  now destruct H.
+Qed.
+
 Lemma rew_app A (P : A -> Type) (x y : A) (H H' : x = y) (a : P x) :
   H = H' -> rew <- [P] H in rew [P] H' in a = a.
 Proof.
