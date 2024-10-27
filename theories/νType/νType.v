@@ -485,7 +485,7 @@ Proof.
   do 2 rewrite mkRestrPainting_step_computes.
   destruct (rew [id] mkPaintingType_step_computes in c) as (l, c'); clear c.
   rewrite (C.(eqRestrPaintingSp) p q), (C.(eqRestrPaintingSp) p r).
-  rewrite <- rew_permute with (H := C.(@eqPaintingSp' _) _ _ _).
+  rewrite <- rew_permute_rl with (H := C.(@eqPaintingSp' _) _ _ _).
   f_equal.
   unshelve eapply (rew_existT_curried
     (Q := fun x =>
@@ -869,7 +869,7 @@ Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
       change (rew [id] C.(eqPaintingSp) in c) with c'.
       destruct c' as (l, c''). clear c; rename c'' into c.
       rewrite rew_rew'.
-      rewrite <- rew_permute with (H := C.(@eqPaintingSp _) _ _ _ _).
+      rewrite <- rew_permute_rl with (H := C.(@eqPaintingSp _) _ _ _ _).
       f_equal.
       unshelve eapply (rew_existT_curried
         (Q := fun x =>
@@ -921,10 +921,12 @@ Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
       replace c with (rew <- [id] C.(eqPaintingSp) in c') by apply rew_rew.
       destruct c' as (l, c''); clear c; rename c'' into c.
       rewrite rew_rew'.
-      rewrite (C.(eqRestrPaintingSp) p q).
-      rewrite (G.(eqReflPaintingSp) p q).
-      apply rew_swap with (P := C.(Painting).(painting) D.2),
-            rew_swap with (P := id).
+      rewrite (C.(eqRestrPaintingSp) p q), (G.(eqReflPaintingSp) p q).
+      rewrite <- rew_permute_rr with (H := C.(@eqPaintingSp _) _ _ _ _).
+      f_equal.
+      unshelve eapply (rew_existT_curried
+        (Q := fun x =>
+          C.(Painting).(painting) _ (rew <- [id] C.(eqFrameSp) in x))).
       admit.
 Admitted.
 

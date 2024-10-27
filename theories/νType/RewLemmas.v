@@ -43,7 +43,7 @@ Proof.
    now destruct Hu, Hv, H.
 Qed.
 
-Theorem rew_permute A (P Q: A -> Type) (x y: A) (H: forall z, Q z = P z)
+Theorem rew_permute_rl A (P Q: A -> Type) (x y: A) (H: forall z, Q z = P z)
   (H': x = y) (a: P x) :
   rew <- [id] H y in rew [P] H' in a =
   rew [Q] H' in rew <- [id] H x in a.
@@ -51,10 +51,18 @@ Proof.
   now destruct H'.
 Qed.
 
-Theorem rew_permute' A (P Q: A -> Type) (x y: A) (H: forall z, P z = Q z)
+Theorem rew_permute_ll A (P Q: A -> Type) (x y: A) (H: forall z, P z = Q z)
   (H': x = y) (a: P x) :
   rew [id] H y in rew [P] H' in a =
   rew [Q] H' in rew [id] H x in a.
+Proof.
+  now destruct H'.
+Qed.
+
+Theorem rew_permute_rr A (P Q: A -> Type) (x y: A) (H: forall z, Q z = P z)
+  (H': y = x) (a: P x) :
+  rew <- [id] H y in rew <- [P] H' in a =
+  rew <- [Q] H' in rew <- [id] H x in a.
 Proof.
   now destruct H'.
 Qed.
