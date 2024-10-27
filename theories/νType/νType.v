@@ -881,9 +881,9 @@ Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
         apply rew_swap_rl with (P := C.(Painting).(painting) D.2).
         rewrite rew_compose.
         simpl (mkνTypeSn C).(Painting).(restrPainting). cbv beta.
-        set (h := fun d => match d with (d'; l') => existT
-            (fun a : (mkFrame p).(frame _) D => mkLayer a)
-            (mkDgnFrame.(reflFrame) d') (mkReflLayer l') end).
+        set (h := fun d => match d with (d'; l') =>
+            (mkDgnFrame.(reflFrame) d'; mkReflLayer l')_[fun a : (mkFrame p).(frame _) D => mkLayer a]
+            end).
         set (e' := rew_rew' _ _);
         rewrite <- (map_subst (P := fun d => mkPaintingType n'.+1 p.+1 E (h d))
             (fun d c => mkRestrPainting p.+1 n'.+1 E _ c) e' _); subst e'.
@@ -925,9 +925,9 @@ Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
         apply rew_swap_rl with
             (P := fun x => C.(Painting).(painting) D.2
             (rew <- [id] C.(eqFrameSp) in x)).
-        set (h := fun d => match d with (d'; l') => existT
-            (fun a : (mkFrame p).(frame _) D => mkLayer a)
-            (mkDgnFrame.(reflFrame) d') (mkReflLayer l') end).
+        set (h := fun d => match d with (d'; l') =>
+            (mkDgnFrame.(reflFrame) d'; mkReflLayer l')_[fun a : (mkFrame p).(frame _) D => mkLayer a]
+            end).
         set (e' := rew_rew' _ _);
         rewrite <- (map_subst (P := fun d => mkPaintingType n'.+2 p.+1 E (h d))
             (fun d c => mkRestrPainting p.+1 q.+1 E _ c) e' _); subst e'.
