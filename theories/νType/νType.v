@@ -774,8 +774,8 @@ Instance mkDgnFrameSp {n' p} {C: νType n'.+1} {G: Dgn C}
     now exact (= Frame.(idReflRestrFrame); mkIdReflRestrLayer).
   * (* cohReflRestrFrame *)
     intros q ε Hpq Hq D d'; simpl. invert_le Hpq. invert_le Hq.
-    rewrite <- rew_opp_l with (P := id) (H := C.(eqFrameSp)) (a := d').
-    rewrite rew_opp_r.
+    rewrite <- rew_opp_l with (P := id) (H := C.(eqFrameSp)) (a := d'),
+            rew_opp_r.
     destruct (rew [id] _ in d') as (d, l); clear d'.
     rewrite C.(eqRestrFrameSp), G.(eqReflFrameSp).
     f_equal.
@@ -806,7 +806,7 @@ Proof.
   revert d c; apply le_induction' with (Hp := Hp); clear p Hp.
   * intros d c. rewrite mkPaintingType_step_computes. unshelve esplit.
     - now exact (fun ε : arity => rew <- [mkPaintingPrev.(painting')]
-      (mkDgnFrame).(idReflRestrFrame) (ε := ε) in c).
+        (mkDgnFrame).(idReflRestrFrame) (ε := ε) in c).
     - rewrite mkPaintingType_base_computes.
       now exact (L.(dgnLift) (E := E) c).
   * intros p Hp IHP d c.
@@ -856,12 +856,11 @@ Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
     * now exact X.
   - (* idReflRestrPainting *)
     intros. revert d c. pattern p, Hp; apply le_induction'; clear p Hp.
-    * intros d c. simpl (mkνTypeSn C).(Painting).(restrPainting).
-      cbv beta; rewrite mkRestrPainting_base_computes.
-      rewrite mkReflPainting_base_computes. now repeat rewrite rew_rew'.
+    * intros d c; simpl (mkνTypeSn C).(Painting).(restrPainting); cbv beta.
+      rewrite mkRestrPainting_base_computes, mkReflPainting_base_computes.
+      now repeat rewrite rew_rew'.
     * intros p Hp IHP d c. simpl.
-      rewrite mkRestrPainting_step_computes.
-      rewrite mkReflPainting_step_computes.
+      rewrite mkRestrPainting_step_computes, mkReflPainting_step_computes.
       (* Coq bug? Why doesn't a direct destruct work? *)
       transitivity (rew <- [id] C.(eqPaintingSp) in rew [id] C.(eqPaintingSp) in c).
       2: now rewrite rew_rew.
