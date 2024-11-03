@@ -67,50 +67,50 @@ Proof.
   now destruct H'.
 Qed.
 
-Lemma rew_swap : forall A (P : A -> Type) a b (H: a = b) (x : P a) (y : P b),
+Lemma rew_swap : forall A (P: A -> Type) a b (H: a = b) (x: P a) (y: P b),
   x = rew <- H in y <-> rew H in x = y.
 Proof.
   now destruct H.
 Qed.
 
-Lemma rew_swap_rl : forall A (P : A -> Type) a b (H: a = b) (x : P a) (y : P b),
+Lemma rew_swap_rl : forall A (P: A -> Type) a b (H: a = b) (x: P a) (y: P b),
   x = rew <- H in y -> rew H in x = y.
 Proof.
   now destruct H.
 Qed.
 
-Lemma rew_swap_lr : forall A (P : A -> Type) a b (H: a = b) (x : P b) (y : P a),
+Lemma rew_swap_lr : forall A (P: A -> Type) a b (H: a = b) (x: P b) (y: P a),
   x = rew H in y -> rew <- H in x = y.
 Proof.
   now destruct H.
 Qed.
 
-Lemma rew_app_rl A (P : A -> Type) (x y : A) (H H' : x = y) (a : P x) :
+Lemma rew_app_rl A (P : A -> Type) (x y: A) (H H': x = y) (a: P x) :
   H = H' -> rew <- [P] H in rew [P] H' in a = a.
 Proof.
   intros * ->. now destruct H'.
 Qed.
 
-Lemma rew_app_rl_opp A (P : A -> Type) (x y : A) (H H' : x = y) (a : P x) :
+Lemma rew_app_rl_opp A (P : A -> Type) (x y: A) (H H': x = y) (a: P x) :
   H = H' -> a = rew <- [P] H in rew [P] H' in a.
 Proof.
   intros * ->. now destruct H'.
 Qed.
 
-Lemma rew_app_lr A (P : A -> Type) (x y : A) (H H' : y = x) (a : P x) :
+Lemma rew_app_lr A (P : A -> Type) (x y: A) (H H': y = x) (a: P x) :
   H = H' -> rew [P] H in rew <- [P] H' in a = a.
 Proof.
   intros * ->. now destruct H'.
 Qed.
 
-Lemma rew_app_lr_opp A (P : A -> Type) (x y : A) (H H' : y = x) (a : P x) :
+Lemma rew_app_lr_opp A (P: A -> Type) (x y : A) (H H': y = x) (a: P x) :
   H = H' -> a = rew [P] H in rew <- [P] H' in a.
 Proof.
   intros * ->. now destruct H'.
 Qed.
 
 Lemma eq_ind_r_refl {A} {x y: A} {H: x = y} :
-  eq_ind_r (fun x => eq x y) eq_refl H = H.
+  eq_ind_r (fun x => x = y) eq_refl H = H.
 Proof.
   now destruct H.
 Qed.
