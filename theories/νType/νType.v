@@ -490,15 +490,15 @@ Proof.
   unshelve eapply (rew_existT_curried
     (Q := fun x =>
       C.(PaintingPrev).(painting') (rew <- [id] C.(eqFrameSp') in x))).
-  now exact (mkCohLayer l).
-  rewrite <- IHP with (d := (d; l)) (c := c').
-  simpl (mkFrame p.+1). unfold mkPaintingPrev, painting''.
-  unfold mkFrameSp, cohFrame.
-  rewrite rew_map with (P := fun x => C.(PaintingPrev).(painting') x)
+  - now exact (mkCohLayer l).
+  - rewrite <- IHP with (d := (d; l)) (c := c').
+    simpl (mkFrame p.+1). unfold mkPaintingPrev, painting''.
+    unfold mkFrameSp, cohFrame.
+    rewrite rew_map with (P := fun x => C.(PaintingPrev).(painting') x)
                        (f := fun x => rew <- [id] C.(eqFrameSp') in x).
-  repeat rewrite rew_compose.
-  repeat rewrite <- eq_trans_assoc.
-  now rewrite eq_trans_sym_inv_l, eq_trans_refl_r.
+    repeat rewrite rew_compose.
+    repeat rewrite <- eq_trans_assoc.
+    now rewrite eq_trans_sym_inv_l, eq_trans_refl_r.
 Qed.
 
 (** Build a [PaintingBlock n.+1] using what we just defined *)
@@ -874,79 +874,79 @@ Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
       unshelve eapply (rew_existT_curried
         (Q := fun x =>
           C.(Painting).(painting) _ (rew <- [id] C.(eqFrameSp) in x))).
-      now exact mkIdReflRestrLayer.
-      rewrite <- IHP.
-      rewrite rew_map with
-        (P := fun x => C.(Painting).(painting) D.2 x)
-        (f := fun x => rew <- [id] C.(eqFrameSp) in x).
-      apply rew_swap_rl with (P := C.(Painting).(painting) D.2).
-      rewrite rew_compose.
-      simpl (mkνTypeSn C).(Painting).(restrPainting). cbv beta.
-      set (h := fun d => match d with (d'; l') => existT
+      + now exact mkIdReflRestrLayer.
+      + rewrite <- IHP,
+                rew_map with
+                  (P := fun x => C.(Painting).(painting) D.2 x)
+                  (f := fun x => rew <- [id] C.(eqFrameSp) in x).
+        apply rew_swap_rl with (P := C.(Painting).(painting) D.2).
+        rewrite rew_compose.
+        simpl (mkνTypeSn C).(Painting).(restrPainting). cbv beta.
+        set (h := fun d => match d with (d'; l') => existT
             (fun a : (mkFrame p).(frame _) D => mkLayer a)
             (mkDgnFrame.(reflFrame) d') (mkReflLayer l') end).
-      change (fun _ => (mkPaintingType n'.+1 p.+1 E _)) with
-        (fun d => (mkPaintingType n'.+1 p.+1 E (h d))).
-      set (P := (fun d => (mkPaintingType n'.+1 p.+1 E (h d)))).
-      set (e' := rew_rew' _ _).
-      rewrite <- (map_subst (P := P)
-            (fun d c => mkRestrPainting p.+1 n'.+1 E _ c) e' _).
-      clear P; subst e'.
-      rewrite rew_map with
-        (P := fun x => (mkPaintingPrev.(painting') x).(Dom))
-        (f := fun x => (mkFrame p.+1).(restrFrame) n'.+1 _ (h x)).
-      apply rew_swap_rl with (P := C.(Painting).(painting) D.2).
-      apply rew_app_rl_opp with
-        (P := fun x => C.(Painting).(painting) D.2 x).
-      now apply (C.(Frame).(frame p.+1) D.1).(UIP).
+        set (e' := rew_rew' _ _);
+        rewrite <- (map_subst (P := fun d => mkPaintingType n'.+1 p.+1 E (h d))
+            (fun d c => mkRestrPainting p.+1 n'.+1 E _ c) e' _); subst e'.
+        rewrite rew_map with
+            (P := fun x => (mkPaintingPrev.(painting') x).(Dom))
+            (f := fun x => (mkFrame p.+1).(restrFrame) n'.+1 _ (h x)).
+        apply rew_swap_rl with (P := C.(Painting).(painting) D.2),
+              rew_app_rl_opp with
+                (P := fun x => C.(Painting).(painting) D.2 x).
+        now apply (C.(Frame).(frame p.+1) D.1).(UIP).
   - (* cohReflRestrPainting *)
     intros; simpl.
     revert d c. pattern p, Hpq; apply le_induction''; clear p Hpq.
-    * intros d c; simpl. rewrite mkRestrPainting_base_computes.
-      rewrite mkReflPainting_step_computes.
+    * intros d c; simpl.
+      rewrite mkRestrPainting_base_computes, mkReflPainting_step_computes.
       set (c' := rew [id] C.(eqPaintingSp) in c).
       change (rew [id] C.(eqPaintingSp) in c) with c'.
       replace c with (rew <- [id] C.(eqPaintingSp) in c') by apply rew_rew.
       destruct c' as (l, c''); clear c; rename c'' into c.
-      rewrite rew_rew'. unfold mkReflLayer. rewrite rew_rew.
+      rewrite rew_rew', rew_rew.
       now rewrite (C.(eqRestrPainting0) c).
     * intros p Hp IHP d c; simpl. invert_le Hp; invert_le Hq.
-      rewrite mkRestrPainting_step_computes.
-      rewrite mkReflPainting_step_computes.
+      rewrite mkRestrPainting_step_computes, mkReflPainting_step_computes.
       set (c' := rew [id] C.(eqPaintingSp) in c).
       change (rew [id] C.(eqPaintingSp) in c) with c'.
       replace c with (rew <- [id] C.(eqPaintingSp) in c') by apply rew_rew.
       destruct c' as (l, c''); clear c; rename c'' into c.
-      rewrite rew_rew'.
-      rewrite (C.(eqRestrPaintingSp) p q), (G.(eqReflPaintingSp) p q).
-      rewrite <- rew_permute_rr with (H := C.(@eqPaintingSp _) _ _ _ _).
+      rewrite rew_rew',
+          (C.(eqRestrPaintingSp) p q),
+          (G.(eqReflPaintingSp) p q),
+          <- rew_permute_rr with (H := C.(@eqPaintingSp _) _ _ _ _).
       f_equal.
       unshelve eapply (rew_existT_curried
         (Q := fun x =>
           C.(Painting).(painting) _ (rew <- [id] C.(eqFrameSp) in x))).
-      rewrite <- mkCohReflRestrLayer with (d := d).
-      now rewrite rew_compose, eq_trans_sym_inv_r.
-      change (@eq_ind ?A ?x ?P ?f ?a ?e) with (@eq_rect A x P f a e).
-      repeat change (@eq_ind_r ?A ?x ?P ?f ?a ?e) with (@eq_rect_r A x P f a e).
-      Disable Notation "'rew' [ P ] H 'in' H'" (only printing).
-      Disable Notation "'rew' <- [ P ] H 'in' H'" (only printing).
-      rewrite <- map_subst.
-      rewrite <- IHP.
-      apply rew_swap_rl with
-        (P := fun x => C.(Painting).(painting) D.2
-          (rew <- [id] C.(eqFrameSp) in x)).
-      set (h := fun d => match d with (d'; l') => existT
+      + now rewrite <- mkCohReflRestrLayer with (d := d),
+                  rew_compose, eq_trans_sym_inv_r.
+      + rewrite <- map_subst, <- IHP.
+        apply rew_swap_rl with
+            (P := fun x => C.(Painting).(painting) D.2
+            (rew <- [id] C.(eqFrameSp) in x)).
+        set (h := fun d => match d with (d'; l') => existT
             (fun a : (mkFrame p).(frame _) D => mkLayer a)
             (mkDgnFrame.(reflFrame) d') (mkReflLayer l') end).
-      change (fun _ => (mkPaintingType n'.+2 p.+1 E _)) with
-        (fun d => (mkPaintingType n'.+2 p.+1 E (h d))).
-      set (P := (fun d => (mkPaintingType n'.+2 p.+1 E (h d)))).
-      set (e' := rew_rew' _ _).
-      rewrite <- (map_subst (P := P)
-            (fun d c => mkRestrPainting p.+1 q.+1 E _ c) e' _).
-      clear P; subst e'.
-      admit.
-Admitted.
+        set (e' := rew_rew' _ _);
+        rewrite <- (map_subst (P := fun d => mkPaintingType n'.+2 p.+1 E (h d))
+            (fun d c => mkRestrPainting p.+1 q.+1 E _ c) e' _); subst e'.
+        set (P := fun x => (C.(Painting).(painting) D.2 x).(Dom)).
+        rewrite rew_map with (P := P) (f := G.(DgnFrame).(reflFrame)),
+              rew_map' with (P := P)
+                (f := fun x => rew <- [id] C.(eqFrameSp) in x),
+              rew_map with (P := P)
+                (f := fun d => ((mkFrame p.+1).(restrFrame) q.+1 ε (h d))).
+        apply rew_swap_rl with (P := P).
+        rewrite rew_compose_rl,
+                rew_compose_lr with (P := P).
+        set (t0 := eq_trans _ _); set (t1 := eq_trans _ _);
+        clearbody t0; clearbody t1.
+        repeat rewrite rew_compose.
+        now rewrite ((C.(Frame).(frame p.+1) D.1).(UIP)
+            (h := eq_trans _ _) (g := eq_refl)).
+Defined.
 
 End νType.
 

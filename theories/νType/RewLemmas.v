@@ -109,6 +109,24 @@ Proof.
   intros * ->. now destruct H'.
 Qed.
 
+Theorem rew_map' A B (P: B -> Type) (f: A -> B) x1 x2 (H: x1 = x2)
+  (y: P (f x2)): rew <- [fun x => P (f x)] H in y = rew <- f_equal f H in y.
+Proof.
+  now destruct H.
+Defined.
+
+Lemma rew_compose_rl A (P: A -> Type) x1 x2 x3 (H1: x1 = x2) (H2: x3 = x2)
+  (y: P x1): rew <- H2 in rew H1 in y = rew (eq_trans H1 (eq_sym H2)) in y.
+Proof.
+ now destruct H2.
+Defined.
+
+Lemma rew_compose_lr A (P: A -> Type) x1 x2 x3 (H1: x2 = x1) (H2: x2 = x3)
+  (y: P x1) : rew H2 in rew <- H1 in y = rew (eq_trans (eq_sym H1) H2) in y.
+Proof.
+  now destruct H2.
+Defined.
+
 Lemma eq_ind_r_refl {A} {x y: A} {H: x = y} :
   eq_ind_r (fun x => x = y) eq_refl H = H.
 Proof.
