@@ -979,6 +979,19 @@ Proof.
   - intros; now le_contra Hq.
 Defined.
 
+#[local]
+Instance mkDgnSn {n'} {C: νType n'.+1} {G: Dgn C}:
+  Dgn C -> Dgn (mkνTypeSn C).
+Proof.
+  unshelve esplit.
+  - intros. now exact mkDgnFramePrev.
+  - intros. now exact mkDgnFrame.
+  - intros. now exact mkDgnPaintingPrev.
+  - intros. admit.
+  - intros. admit.
+  - intros. admit.
+Admitted.
+
 End νType.
 
 Definition AugmentedSemiSimplicial := νTypes hunit.
