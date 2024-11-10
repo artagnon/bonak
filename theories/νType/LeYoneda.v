@@ -39,25 +39,28 @@ Theorem leY_irrelevance: forall {n m} (H H': n <= m), H =S H'.
 Qed.
 
 (** A simple contraction used in the next lemma *)
-Lemma leR_contra {p}: leR p.+1 O -> SFalse.
+Lemma leR_O_contra {n}: leR n.+1 O -> SFalse.
   now auto.
 Qed.
 
 (** Contradiction of type n.+1 <= 0 *)
-Theorem leY_contra {n}: n.+1 <= O -> False.
+Theorem leY_O_contra {n}: n.+1 <= O -> False.
   intros. cut SFalse. intro Hn; elim Hn. unfold leY in H.
-  specialize H with (p := 1); eapply leR_contra.
+  specialize H with (p := 1); eapply leR_O_contra.
   apply H; clear H. now auto.
 Qed.
 
-Lemma leR_0 {n}: leR O n.
-  destruct n. all: now auto.
+
+(** A simple contraction used in the next lemma *)
+Lemma leR_contra {n}: leR n.+1 n -> SFalse.
+  induction n. now auto. now apply IHn.
 Qed.
 
-Lemma leY_0 {n}: O <= n.
-  unfold leY. destruct p.
-  - intros O. now apply leR_0.
-  - intros H. now apply leR_contra in H.
+(** Contradiction of type n.+1 <= n *)
+Theorem leY_contra {n}: n.+1 <= n -> False.
+  intros. cut SFalse. intro Hn; elim Hn. unfold leY in H.
+  specialize H with (p := n.+1); eapply leR_contra.
+  now apply H, leR_refl.
 Qed.
 
 (** Reflexivity in leY *)
@@ -76,7 +79,7 @@ Infix "↕" := leY_trans (at level 45).
 
 Lemma leR_up {n m} (Hnm: leR n m): leR n m.+1.
   revert m Hnm. induction n. now auto. destruct m. intros H.
-  now apply leR_contra in H. now apply IHn.
+  now apply leR_O_contra in H. now apply IHn.
 Qed.
 
 Lemma leY_up {n m} (Hnm: n <= m): n <= m.+1.
@@ -87,7 +90,7 @@ Notation "↑ h" := (leY_up h) (at level 40).
 
 Lemma leR_down {n m} (Hnm: leR n.+1 m): leR n m.
   revert m Hnm. induction n. now auto. destruct m. intros H.
-  now apply leR_contra in H. now apply IHn.
+  now apply leR_O_contra in H. now apply IHn.
 Qed.
 
 Lemma leY_down {n m} (Hnm: n.+1 <= m): n <= m.
@@ -132,7 +135,7 @@ Defined.
 
 Ltac le_contra Hq :=
   exfalso; clear -Hq; repeat apply leY_lower_both in Hq;
-  now apply leY_contra in Hq.
+  now apply leY_O_contra in Hq.
 
 (** A tactic to:
     - turn inequalities of the form p.+2 <= q.+1 into p.+2 <= q.+2
@@ -192,7 +195,7 @@ Proof.
   - unfold leI_of_leY; simpl. intros _. induction (leI_up leI_0). now auto.
     simpl. now rewrite IHl.
   - intros Hp. exfalso.
-    now apply leY_lower_both, leY_contra in Hp.
+    now apply leY_lower_both, leY_O_contra in Hp.
   - intros Hp.
     change (leI_of_leY (↓ Hp)) with (leI_raise_both (leI_of_leY (↓ ⇓ Hp))).
     now rewrite IHp.

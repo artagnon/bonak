@@ -522,31 +522,31 @@ Instance mkνType0: νType 0.
   unshelve esplit.
   - now exact hunit.
   - unshelve esplit.
-    * intros p Hp; now apply leY_contra in Hp.
-    * intros p Hp; now apply leY_contra in Hp.
-    * intros *; exfalso; now apply leY_contra in Hq.
+    * intros p Hp; now apply leY_O_contra in Hp.
+    * intros p Hp; now apply leY_O_contra in Hp.
+    * intros *; exfalso; now apply leY_O_contra in Hq.
   - unshelve esplit.
     * intros Hp _; now exact hunit.
-    * intros *; exfalso; now apply leY_contra in Hq.
-    * intros *; exfalso; clear -Hq; now apply leY_contra in Hq.
+    * intros *; exfalso; now apply leY_O_contra in Hq.
+    * intros *; exfalso; clear -Hq; now apply leY_O_contra in Hq.
   - unshelve esplit; intros *.
-    * exfalso; now apply leY_contra in Hp.
-    * exfalso; now apply leY_contra in Hp.
-    * exfalso; clear -Hq; now apply leY_contra in Hq.
+    * exfalso; now apply leY_O_contra in Hp.
+    * exfalso; now apply leY_O_contra in Hp.
+    * exfalso; clear -Hq; now apply leY_O_contra in Hq.
   - unshelve esplit.
     * intros p Hp D E d. now exact (E d).
-    * simpl; intros *; exfalso; now apply leY_contra in Hq.
-    * simpl; intros *; exfalso; now apply leY_contra in Hq.
+    * simpl; intros *; exfalso; now apply leY_O_contra in Hq.
+    * simpl; intros *; exfalso; now apply leY_O_contra in Hq.
   - now intros *.
-  - intros *; exfalso; now apply leY_contra in len1.
-  - intros *; exfalso; now apply leY_contra in Hp.
-  - intros *; exfalso; now apply leY_contra in Hp.
-  - intros *; exfalso; clear -Hq; now apply leY_contra in Hq.
-  - intros *; exfalso; clear -Hp; now apply leY_contra in Hp.
-  - intros *; exfalso; clear -Hp; now apply leY_contra in Hp.
-  - intros *; exfalso; now apply leY_contra in Hq.
-  - intros *; exfalso; clear -Hp; now apply leY_contra in Hp.
-  - intros *; exfalso; clear -Hq; now apply leY_contra in Hq.
+  - intros *; exfalso; now apply leY_O_contra in len1.
+  - intros *; exfalso; now apply leY_O_contra in Hp.
+  - intros *; exfalso; now apply leY_O_contra in Hp.
+  - intros *; exfalso; clear -Hq; now apply leY_O_contra in Hq.
+  - intros *; exfalso; clear -Hp; now apply leY_O_contra in Hp.
+  - intros *; exfalso; clear -Hp; now apply leY_O_contra in Hp.
+  - intros *; exfalso; now apply leY_O_contra in Hq.
+  - intros *; exfalso; clear -Hp; now apply leY_O_contra in Hp.
+  - intros *; exfalso; clear -Hq; now apply leY_O_contra in Hq.
 Defined.
 
 (** We are now ready to build an [νType n.+1] from an [νType n] *)
@@ -957,24 +957,20 @@ Defined.
 Instance mkDgn0: Dgn (νTypeAt 1).
 Proof.
   unshelve esplit.
-  - split; intros; exfalso; clear X. now apply leY_lower_both, leY_contra in Hp.
+  - split; intros; exfalso; clear -Hp; invert_le Hp; now apply leY_contra in Hp.
   - intros; unshelve esplit.
-    * simpl; intros. destruct p. now exact tt.
-      exfalso; now apply leY_lower_both, leY_contra in Hp.
-    * simpl; intros. destruct p, d. now exact eq_refl.
-      exfalso; now apply leY_lower_both, leY_contra in Hp.
-    * simpl; intros. exfalso; now apply leY_lower_both, leY_contra in Hq.
-  - split; intros; exfalso; clear X D d.
-    now apply leY_lower_both, leY_contra in Hp.
+    * simpl; intros. invert_le Hp. now exact tt.
+    * simpl; intros. invert_le Hp; destruct d. now exact eq_refl.
+    * simpl; intros. exfalso; invert_le Hq; now apply leY_contra in Hq.
+  - split; intros; exfalso; clear -Hp; invert_le Hp; now apply leY_contra in Hp.
   - intros; unshelve esplit.
     * simpl; intros. destruct p, d. admit.
-      exfalso; now apply leY_lower_both, leY_contra in Hp.
+      exfalso; invert_le Hp; now apply leY_contra in Hp.
     * simpl; intros. destruct p, d. admit.
-      exfalso; now apply leY_lower_both, leY_contra in Hp.
-    * simpl; intros; exfalso; now apply leY_lower_both, leY_contra in Hq.
-  - simpl; intros; exfalso; clear l; now apply leY_lower_both, leY_contra in Hq.
-  - simpl; intros; exfalso; clear c l;
-    now apply leY_lower_both, leY_contra in Hq.
+      exfalso; invert_le Hp; now apply leY_contra in Hp.
+    * simpl; intros; exfalso; invert_le Hq; now apply leY_contra in Hq.
+  - simpl; intros; exfalso; clear -Hq; invert_le Hq; now apply leY_contra in Hq.
+  - simpl; intros; exfalso; clear -Hq; invert_le Hq; now apply leY_contra in Hq.
 Admitted.
 
 End νType.
