@@ -905,7 +905,7 @@ Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
       destruct c' as (l, c''); clear c; rename c'' into c.
       rewrite rew_rew', rew_rew.
       now rewrite (C.(eqRestrPainting0) c).
-    * intros p Hp IHP d c; simpl. invert_le Hp; invert_le Hq.
+    * intros p Hp IHP d c; simpl. invert_le Hp.
       rewrite mkRestrPainting_step_computes, mkReflPainting_step_computes.
       set (c' := rew [id] C.(eqPaintingSp) in c).
       change (rew [id] C.(eqPaintingSp) in c) with c'.
@@ -929,7 +929,7 @@ Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
             (mkDgnFrame.(reflFrame) d'; mkReflLayer l')_[fun a : (mkFrame p).(frame _) D => mkLayer a]
             end).
         set (e' := rew_rew' _ _);
-        rewrite <- (map_subst (P := fun d => mkPaintingType n'.+2 p.+1 E (h d))
+        rewrite <- (map_subst (P := fun d => mkPaintingType n'.+1 p.+1 E (h d))
             (fun d c => mkRestrPainting p.+1 q.+1 E _ c) e' _); subst e'.
         set (P := fun x => (C.(Painting).(painting) D.2 x).(Dom)).
         rewrite rew_map with (P := P) (f := G.(DgnFrame).(reflFrame)),
