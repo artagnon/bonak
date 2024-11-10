@@ -878,7 +878,10 @@ Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
                 rew_map with
                   (P := fun x => C.(Painting).(painting) D.2 x)
                   (f := fun x => rew <- [id] C.(eqFrameSp) in x).
-        apply rew_swap_rl with (P := C.(Painting).(painting) D.2).
+        (* Coq anomaly "in retyping: Non-functional construction"
+        rewrite <- map_subst with (f := mkRestrPainting p.+1 n'.+1 E (mkDgnFrame.(reflFrame) d; mkReflLayer l)).
+        *)
+        apply rew_swap_rl with (P := C.(Painting).(painting) D.2). (* Why P needed? *)
         rewrite rew_compose.
         simpl (mkνTypeSn C).(Painting).(restrPainting). cbv beta.
         set (h := fun d => match d with (d'; l') =>
