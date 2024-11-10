@@ -954,7 +954,12 @@ Instance mkDgnPainting {n'} {C: νType n'.+1} {G: Dgn C}
 Defined.
 
 #[local]
-Instance mkDgn0: Dgn (νTypeAt 1).
+Instance mkDgn0 (Lift : forall
+     (D : (νTypeAt 1).(prefix))
+     (E : (νTypeAt 1).(Frame).(frame _) D -> HSet)
+     (c : (νTypeAt 1).(PaintingPrev).(painting') tt),
+     E ((tt;fun _ => c):sigT (fun _ => arity -> (νTypeAt 1).(PaintingPrev).(painting') tt))):
+  Dgn (νTypeAt 1).
 Proof.
   unshelve esplit.
   - split; intros; exfalso; clear -Hp; invert_le Hp; now apply leY_contra in Hp.
@@ -964,14 +969,15 @@ Proof.
     * simpl; intros; exfalso; invert_le Hq; now apply leY_contra in Hq.
   - split; intros; exfalso; clear -Hp; invert_le Hp; now apply leY_contra in Hp.
   - intros; unshelve esplit.
-    * simpl; intros; invert_le Hp; destruct d.
+    * simpl; intros * c; invert_le Hp; destruct d.
       rewrite mkPaintingType_step_computes. unshelve esplit. now trivial.
-      rewrite mkPaintingType_base_computes. destruct E. admit.
-    * simpl; intros; invert_le Hp; destruct d. admit.
+      rewrite mkPaintingType_base_computes. apply Lift.
+    * simpl; intros; invert_le Hp; destruct d. simpl.
+      rewrite mkRestrPainting_base_computes. now rewrite rew_rew'.
     * simpl; intros; exfalso; invert_le Hq; now apply leY_contra in Hq.
   - intros; exfalso; clear -Hq; invert_le Hq; now apply leY_contra in Hq.
   - intros; exfalso; clear -Hq; invert_le Hq; now apply leY_contra in Hq.
-Admitted.
+Defined.
 
 End νType.
 
