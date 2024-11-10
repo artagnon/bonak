@@ -959,18 +959,16 @@ Proof.
   unshelve esplit.
   - split; intros; exfalso; clear -Hp; invert_le Hp; now apply leY_contra in Hp.
   - intros; unshelve esplit.
-    * simpl; intros. invert_le Hp. now exact tt.
-    * simpl; intros. invert_le Hp; destruct d. now exact eq_refl.
-    * simpl; intros. exfalso; invert_le Hq; now apply leY_contra in Hq.
+    * simpl; intros; invert_le Hp. now exact tt.
+    * simpl; intros; invert_le Hp; destruct d. now exact eq_refl.
+    * simpl; intros; exfalso; invert_le Hq; now apply leY_contra in Hq.
   - split; intros; exfalso; clear -Hp; invert_le Hp; now apply leY_contra in Hp.
   - intros; unshelve esplit.
-    * simpl; intros. destruct p, d. admit.
-      exfalso; invert_le Hp; now apply leY_contra in Hp.
-    * simpl; intros. destruct p, d. admit.
-      exfalso; invert_le Hp; now apply leY_contra in Hp.
+    * simpl; intros; invert_le Hp; destruct d. admit.
+    * simpl; intros; invert_le Hp; destruct d. admit.
     * simpl; intros; exfalso; invert_le Hq; now apply leY_contra in Hq.
-  - simpl; intros; exfalso; clear -Hq; invert_le Hq; now apply leY_contra in Hq.
-  - simpl; intros; exfalso; clear -Hq; invert_le Hq; now apply leY_contra in Hq.
+  - intros; exfalso; clear -Hq; invert_le Hq; now apply leY_contra in Hq.
+  - intros; exfalso; clear -Hq; invert_le Hq; now apply leY_contra in Hq.
 Admitted.
 
 End νType.
