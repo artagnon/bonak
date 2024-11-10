@@ -846,7 +846,8 @@ Proof.
   unfold mkReflPainting; now rewrite le_induction'_step_computes.
 Qed.
 
-Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
+#[local]
+Instance mkDgnPainting {n'} {C: νType n'.+1} {G: Dgn C}
   (L: DgnLift (mkνTypeSn C) mkDgnFramePrev (fun p => mkDgnFrame)):
   DgnPaintingBlock (mkνTypeSn C) mkDgnPaintingPrev (fun p => mkDgnFrame).
   unshelve esplit.
@@ -951,6 +952,30 @@ Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
         now rewrite ((C.(Frame).(frame p.+1) D.1).(UIP)
             (h := eq_trans _ _) (g := eq_refl)).
 Defined.
+
+#[local]
+Instance mkDgn0: Dgn (νTypeAt 1).
+Proof.
+  unshelve esplit.
+  - split; intros; exfalso; clear X. now apply leY_lower_both, leY_contra in Hp.
+  - intros; unshelve esplit.
+    * simpl; intros. destruct p. now exact tt.
+      exfalso; now apply leY_lower_both, leY_contra in Hp.
+    * simpl; intros. destruct p, d. now exact eq_refl.
+      exfalso; now apply leY_lower_both, leY_contra in Hp.
+    * simpl; intros. exfalso; now apply leY_lower_both, leY_contra in Hq.
+  - split; intros; exfalso; clear X D d.
+    now apply leY_lower_both, leY_contra in Hp.
+  - intros; unshelve esplit.
+    * simpl; intros. destruct p, d. admit.
+      exfalso; now apply leY_lower_both, leY_contra in Hp.
+    * simpl; intros. destruct p, d. admit.
+      exfalso; now apply leY_lower_both, leY_contra in Hp.
+    * simpl; intros; exfalso; now apply leY_lower_both, leY_contra in Hq.
+  - simpl; intros; exfalso; clear l; now apply leY_lower_both, leY_contra in Hq.
+  - simpl; intros; exfalso; clear c l;
+    now apply leY_lower_both, leY_contra in Hq.
+Admitted.
 
 End νType.
 
