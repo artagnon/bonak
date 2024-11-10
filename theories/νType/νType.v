@@ -885,7 +885,8 @@ Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
         rewrite rew_compose.
         simpl (mkνTypeSn C).(Painting).(restrPainting). cbv beta.
         set (h := fun d => match d with (d'; l') =>
-            (mkDgnFrame.(reflFrame) d'; mkReflLayer l')_[fun a : (mkFrame p).(frame _) D => mkLayer a]
+            (mkDgnFrame.(reflFrame) d' as a in (mkFrame p).(frame _) D;
+             mkReflLayer l' in mkLayer a)
             end).
         set (e' := rew_rew' _ _);
         rewrite <- (map_subst (P := fun d => mkPaintingType n'.+1 p.+1 E (h d))
@@ -929,7 +930,8 @@ Instance mkDgnPaintingBlock {n'} {C: νType n'.+1} {G: Dgn C}
             (P := fun x => C.(Painting).(painting) D.2
             (rew <- [id] C.(eqFrameSp) in x)).
         set (h := fun d => match d with (d'; l') =>
-            (mkDgnFrame.(reflFrame) d'; mkReflLayer l')_[fun a : (mkFrame p).(frame _) D => mkLayer a]
+            (mkDgnFrame.(reflFrame) d' as a in (mkFrame p).(frame _) D;
+             mkReflLayer l' in mkLayer a)
             end).
         set (e' := rew_rew' _ _);
         rewrite <- (map_subst (P := fun d => mkPaintingType n'.+1 p.+1 E (h d))

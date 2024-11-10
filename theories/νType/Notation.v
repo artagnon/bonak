@@ -1,7 +1,9 @@
 (** Miscellaneous notations and lemmas *)
 
-Notation "( x ; y )_[ P ]" := (existT P x y) (at level 0, format "'[' ( x ;  '/  ' y )_[ '/  ' P ] ']'").
-Notation "( x ; y )" := (existT _ x y) (at level 0, format "'[' ( x ;  '/  ' y ) ']'").
+Notation "( x 'as' z 'in' T ; y 'in' P )" := (existT (fun z : T => P) x y)
+  (at level 0, format "'[' ( '[' x  '/ ' 'as'  z  '/ ' 'in'  T ']' ;  '/ ' '[' y  '/ ' 'in'  P ']' ) ']'").
+Disable Notation "( x 'as' z 'in' T ; y 'in' P )" (only printing). (* Don't use for printing by default *)
+Notation "( x ; y )" := (existT _ x y) (at level 0, format "'[' ( x ;  '/ ' y ) ']'").
 Notation "x .1" := (projT1 x) (at level 1, left associativity, format "x .1").
 Notation "x .2" := (projT2 x) (at level 1, left associativity, format "x .2").
 Notation "x .+1" := (S x) (at level 1, left associativity, format "x .+1").
