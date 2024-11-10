@@ -50,19 +50,6 @@ Theorem leY_O_contra {n}: n.+1 <= O -> False.
   apply H; clear H. now auto.
 Qed.
 
-
-(** A simple contraction used in the next lemma *)
-Lemma leR_contra {n}: leR n.+1 n -> SFalse.
-  induction n. now auto. now apply IHn.
-Qed.
-
-(** Contradiction of type n.+1 <= n *)
-Theorem leY_contra {n}: n.+1 <= n -> False.
-  intros. cut SFalse. intro Hn; elim Hn. unfold leY in H.
-  specialize H with (p := n.+1); eapply leR_contra.
-  now apply H, leR_refl.
-Qed.
-
 (** Reflexivity in leY *)
 Definition leY_refl n: n <= n :=
   fun _ x => x. (* Coq bug! *)

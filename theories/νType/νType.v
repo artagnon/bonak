@@ -522,31 +522,31 @@ Instance mkνType0: νType 0.
   unshelve esplit.
   - now exact hunit.
   - unshelve esplit.
-    * intros p Hp; now apply leY_O_contra in Hp.
-    * intros p Hp; now apply leY_O_contra in Hp.
-    * intros *; exfalso; now apply leY_O_contra in Hq.
+    * intros; now le_contra Hp.
+    * intros; now le_contra Hp.
+    * intros;now le_contra Hq.
   - unshelve esplit.
     * intros Hp _; now exact hunit.
-    * intros *; exfalso; now apply leY_O_contra in Hq.
-    * intros *; exfalso; clear -Hq; now apply leY_O_contra in Hq.
-  - unshelve esplit; intros *.
-    * exfalso; now apply leY_O_contra in Hp.
-    * exfalso; now apply leY_O_contra in Hp.
-    * exfalso; clear -Hq; now apply leY_O_contra in Hq.
+    * intros; now le_contra Hq.
+    * intros; now le_contra Hq.
+  - unshelve esplit; intros.
+    * now le_contra Hp.
+    * now le_contra Hp.
+    * now le_contra Hq.
   - unshelve esplit.
     * intros p Hp D E d. now exact (E d).
-    * simpl; intros *; exfalso; now apply leY_O_contra in Hq.
-    * simpl; intros *; exfalso; now apply leY_O_contra in Hq.
-  - now intros *.
-  - intros *; exfalso; now apply leY_O_contra in len1.
-  - intros *; exfalso; now apply leY_O_contra in Hp.
-  - intros *; exfalso; now apply leY_O_contra in Hp.
-  - intros *; exfalso; clear -Hq; now apply leY_O_contra in Hq.
-  - intros *; exfalso; clear -Hp; now apply leY_O_contra in Hp.
-  - intros *; exfalso; clear -Hp; now apply leY_O_contra in Hp.
-  - intros *; exfalso; now apply leY_O_contra in Hq.
-  - intros *; exfalso; clear -Hp; now apply leY_O_contra in Hp.
-  - intros *; exfalso; clear -Hq; now apply leY_O_contra in Hq.
+    * intros; now le_contra Hq.
+    * intros; now le_contra Hq.
+  - now intros.
+  - intros; now le_contra len1.
+  - intros; now le_contra Hp.
+  - intros; now le_contra Hp.
+  - intros; now le_contra Hq.
+  - intros; now le_contra Hp.
+  - intros; now le_contra Hp.
+  - intros; now le_contra Hq.
+  - intros; now le_contra Hp.
+  - intros; now le_contra Hq.
 Defined.
 
 (** We are now ready to build an [νType n.+1] from an [νType n] *)
@@ -953,30 +953,30 @@ Instance mkDgnPainting {n'} {C: νType n'.+1} {G: Dgn C}
             (h := eq_trans _ _) (g := eq_refl)).
 Defined.
 
+Definition DgnLift0 := forall (D : (νTypeAt 1).(prefix))
+  (E : (νTypeAt 1).(Frame).(frame _) D -> HSet)
+  (c : (νTypeAt 1).(PaintingPrev).(painting') tt),
+    E ((tt; fun _ => c): sigT (fun _ => arity -> (νTypeAt 1).(PaintingPrev).(painting') tt)).
+
 #[local]
-Instance mkDgn0 (Lift : forall
-     (D : (νTypeAt 1).(prefix))
-     (E : (νTypeAt 1).(Frame).(frame _) D -> HSet)
-     (c : (νTypeAt 1).(PaintingPrev).(painting') tt),
-     E ((tt;fun _ => c):sigT (fun _ => arity -> (νTypeAt 1).(PaintingPrev).(painting') tt))):
-  Dgn (νTypeAt 1).
+Instance mkDgn0 {L: DgnLift0}: Dgn (νTypeAt 1).
 Proof.
   unshelve esplit.
-  - split; intros; exfalso; clear -Hp; invert_le Hp; now apply leY_contra in Hp.
+  - split; intros; now le_contra Hp.
   - intros; unshelve esplit.
     * simpl; intros; invert_le Hp. now exact tt.
     * simpl; intros; invert_le Hp; destruct d. now exact eq_refl.
-    * simpl; intros; exfalso; invert_le Hq; now apply leY_contra in Hq.
-  - split; intros; exfalso; clear -Hp; invert_le Hp; now apply leY_contra in Hp.
+    * simpl; intros; now le_contra Hq.
+  - split; intros; now le_contra Hp.
   - intros; unshelve esplit.
     * simpl; intros * c; invert_le Hp; destruct d.
       rewrite mkPaintingType_step_computes. unshelve esplit. now trivial.
-      rewrite mkPaintingType_base_computes. apply Lift.
+      rewrite mkPaintingType_base_computes. now apply L.
     * simpl; intros; invert_le Hp; destruct d. simpl.
-      rewrite mkRestrPainting_base_computes. now rewrite rew_rew'.
-    * simpl; intros; exfalso; invert_le Hq; now apply leY_contra in Hq.
-  - intros; exfalso; clear -Hq; invert_le Hq; now apply leY_contra in Hq.
-  - intros; exfalso; clear -Hq; invert_le Hq; now apply leY_contra in Hq.
+      now rewrite mkRestrPainting_base_computes, rew_rew'.
+    * simpl; intros; now le_contra Hq.
+  - intros; now le_contra Hq.
+  - intros; now le_contra Hq.
 Defined.
 
 End νType.
