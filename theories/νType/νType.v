@@ -964,7 +964,9 @@ Proof.
     * simpl; intros; exfalso; invert_le Hq; now apply leY_contra in Hq.
   - split; intros; exfalso; clear -Hp; invert_le Hp; now apply leY_contra in Hp.
   - intros; unshelve esplit.
-    * simpl; intros; invert_le Hp; destruct d. admit.
+    * simpl; intros; invert_le Hp; destruct d.
+      rewrite mkPaintingType_step_computes. unshelve esplit. now trivial.
+      rewrite mkPaintingType_base_computes. destruct E. admit.
     * simpl; intros; invert_le Hp; destruct d. admit.
     * simpl; intros; exfalso; invert_le Hq; now apply leY_contra in Hq.
   - intros; exfalso; clear -Hq; invert_le Hq; now apply leY_contra in Hq.
