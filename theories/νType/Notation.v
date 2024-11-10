@@ -1,4 +1,4 @@
-(** Miscellaneous notations and lemmas *)
+(** Miscellaneous notations *)
 
 Notation "( x 'as' z 'in' T ; y 'in' P )" := (existT (fun z : T => P) x y)
   (at level 0, format "'[' ( '[' x  '/ ' 'as'  z  '/ ' 'in'  T ']' ;  '/ ' '[' y  '/ ' 'in'  P ']' ) ']'").
