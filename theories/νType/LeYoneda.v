@@ -128,20 +128,35 @@ Definition construct_Hq {n n'} (Hn': n' = n.+1): n.+1 <= n'.
   now subst n'.
 Defined.
 
-(** A tactic to turn inequalities of the form p.+2 <= q.+1 into p.+2 <= q.+2;
-    find_raise is a helper for the tactic *)
+(** A tactic to derive contradiction from hypotheses of the form p.+2 <= 1 *)
+
+Ltac le_contra Hq :=
+  exfalso; clear -Hq; repeat apply leY_lower_both in Hq;
+  now apply leY_contra in Hq.
+
+(** A tactic to:
+    - turn inequalities of the form p.+2 <= q.+1 into p.+2 <= q.+2
+    - turn inequalities of the form p.+2 <= 2 into a substitution of p by 0
+    - turn inequalities of the form p.+2 <= 1 into a contradiction *)
 
 Ltac find_raise q :=
   match q with
   | ?q.+1 => find_raise q
-  | _ => constr:(q)
+  | 0 => constr:(@None nat)
+  | _ => constr:(Some q)
   end.
 
 Ltac invert_le Hpq :=
   match type of Hpq with
-  | ?p.+1 <= ?q => let c := find_raise q in destruct c;
-                   [exfalso; clear -Hpq; repeat apply leY_lower_both in Hpq;
-                   now apply leY_contra in Hpq |]
+  | ?p.+1 <= ?q =>
+     match find_raise q with
+     | Some ?c => destruct c; [le_contra Hpq|]
+     | None =>
+       match find_raise p with
+       | Some ?c => destruct c; [|le_contra Hpq]
+       | None => le_contra Hpq
+       end
+     end
   end.
 
 (** Connecting leI with leY *)
