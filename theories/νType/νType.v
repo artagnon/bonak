@@ -590,109 +590,127 @@ Definition νTypes := νTypeFrom 0 tt.
 
 (** Degeneracies *)
 
-Class DgnFrameBlockPrev {n'} (C: νType n'.+1) := {
-  reflFrame' p {Hp: p.+2 <= n'.+1} {D}:
+Class mkRefl T := intro_mkrefl : T -> Type@{m'}.
+Class mk {T} (f: T -> Type@{m'}) (t: T) := intro_mk : f t.
+
+Class DgnFrameBlockPrev {n'} (C: νType n'.+1)
+  {reflPrefix: mkRefl C.(prefix)} := {
+  reflFrame' p {Hp: p.+2 <= n'.+1} {D} {R: mk reflPrefix D}:
     C.(FramePrev).(frame'') p D -> C.(FramePrev).(frame') p D;
 }.
 
-Arguments reflFrame' {n' C} _ p {Hp D} d.
+Arguments reflFrame' {n' C reflPrefix} _ p {Hp D R} d.
 
-Class DgnFrameBlock {n'} (C: νType n'.+1) p (Prev: DgnFrameBlockPrev C) := {
-  reflFrame {Hp: p.+1 <= n'.+1} {D}:
+Class DgnFrameBlock {n'} (C: νType n'.+1) {reflPrefix: mkRefl C.(prefix)}
+  p (Prev: DgnFrameBlockPrev C) := {
+  reflFrame {Hp: p.+1 <= n'.+1} {D} {R: mk reflPrefix D}:
     C.(FramePrev).(frame') p D -> C.(Frame).(frame p) D;
-  idReflRestrFrame {ε} {Hp: p.+1 <= n'.+1} {D}
+  idReflRestrFrame {ε} {Hp: p.+1 <= n'.+1} {D} {R: mk reflPrefix D}
     {d: C.(FramePrev).(frame') p D}:
     C.(Frame).(restrFrame) n' ε (reflFrame d) = d;
   cohReflRestrFrame q {ε} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n'.+1} {D}
-    {d: C.(FramePrev).(frame') p D}:
+    {R: mk reflPrefix D} {d: C.(FramePrev).(frame') p D}:
     Prev.(reflFrame') p (C.(FramePrev).(restrFrame') p q ε d) =
       C.(Frame).(restrFrame) q ε (reflFrame d);
 }.
 
-Arguments reflFrame {n' C p Prev} _ {Hp D} d.
-Arguments idReflRestrFrame {n' C p Prev} _ {ε Hp D d}.
-Arguments cohReflRestrFrame {n' C p Prev} _ q {ε Hpq Hq D d}.
+Arguments reflFrame {n' C reflPrefix p Prev} _ {Hp D R} d.
+Arguments idReflRestrFrame {n' C reflPrefix p Prev} _ {ε Hp D R d}.
+Arguments cohReflRestrFrame {n' C reflPrefix p Prev} _ q {ε Hpq Hq D R d}.
 
-Class DgnPaintingBlockPrev {n'} (C: νType n'.+1) (Prev: DgnFrameBlockPrev C) := {
-  reflPainting' p {Hp: p.+2 <= n'.+1} {D} {d: C.(FramePrev).(frame'') p D}:
+Class DgnPaintingBlockPrev {n'} (C: νType n'.+1) {reflPrefix: mkRefl C.(prefix)}
+  (Prev: DgnFrameBlockPrev C) := {
+  reflPainting' p {Hp: p.+2 <= n'.+1} {D} {R: mk reflPrefix D}
+    {d: C.(FramePrev).(frame'') p D}:
     C.(PaintingPrev).(painting'') d ->
     C.(PaintingPrev).(painting') (Prev.(reflFrame') p d);
 }.
 
-Arguments reflPainting' {n' C Prev} _ p {Hp D d} c.
+Arguments reflPainting' {n' C reflPrefix Prev} _ p {Hp D R d} c.
 
-Class HasRefl {n'} {C: νType n'.+1} {DgnFramePrev : DgnFrameBlockPrev C}
-  {DgnFrame: forall {p}, DgnFrameBlock C p DgnFramePrev} {D} (E: _ -> HSet) :=
+Class HasRefl {n'} {C: νType n'.+1} {reflPrefix: mkRefl C.(prefix)}
+  {DgnFramePrev: DgnFrameBlockPrev C}
+  {DgnFrame: forall {p}, DgnFrameBlock C p DgnFramePrev} {D}
+  {R: mk reflPrefix D} (E: _ -> HSet) :=
   hasRefl: forall (d: C.(FramePrev).(frame') n' D)
     (c: C.(PaintingPrev).(painting') d),
     let l ε :=
       rew <- [C.(PaintingPrev).(painting')] DgnFrame.(idReflRestrFrame) in c in
      E (rew <- [id] C.(eqFrameSp) in (DgnFrame.(reflFrame) d; l)).
 
-Class DgnPaintingBlock {n'} (C: νType n'.+1) {Q: DgnFrameBlockPrev C}
+Class DgnPaintingBlock {n'} (C: νType n'.+1) {reflPrefix: mkRefl C.(prefix)}
+  {Q: DgnFrameBlockPrev C}
   (Prev: DgnPaintingBlockPrev C Q)
   (FrameBlock: forall {p}, DgnFrameBlock C p Q) := {
-  reflPainting p {Hp: p.+1 <= n'.+1} {D E}
-   {L: HasRefl E}
-   {d: C.(FramePrev).(frame') p D}:
+  reflPainting p {Hp: p.+1 <= n'.+1} {D} {R: mk reflPrefix D} {E}
+    {L: HasRefl E} {d: C.(FramePrev).(frame') p D}:
     C.(PaintingPrev).(painting') d ->
     C.(Painting).(painting) E (FrameBlock.(reflFrame) d);
-  idReflRestrPainting {p ε} {Hp: p.+1 <= n'.+1} {D E} {L: HasRefl E}
+  idReflRestrPainting {p ε} {Hp: p.+1 <= n'.+1} {D} {R: mk reflPrefix D}
+    {E} {L: HasRefl E}
     {d: C.(FramePrev).(frame') p D} {c: C.(PaintingPrev).(painting') d}:
     rew [C.(PaintingPrev).(painting')] FrameBlock.(idReflRestrFrame) in
     C.(Painting).(restrPainting) p n' (ε := ε) (E := E) (reflPainting p c) = c;
-  cohReflRestrPainting {p} q {ε} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n'.+1} {D E}
-    {L: HasRefl E} {d: C.(FramePrev).(frame') p D}
+  cohReflRestrPainting {p} q {ε} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n'.+1} {D}
+    {R: mk reflPrefix D} {E} {L: HasRefl E} {d: C.(FramePrev).(frame') p D}
     {c: C.(PaintingPrev).(painting') d}:
     rew <- [C.(PaintingPrev).(painting')] FrameBlock.(cohReflRestrFrame) q in
     C.(Painting).(restrPainting) p q (ε := ε) (E := E) (reflPainting p c) =
     Prev.(reflPainting') p (C.(PaintingPrev).(restrPainting') _ q ε c);
 }.
 
-Arguments reflPainting {n' C Q Prev FrameBlock} _ p {Hp D E L d} c.
-Arguments idReflRestrPainting {n' C Q Prev FrameBlock} _ {p ε Hp D E L d c}.
-Arguments cohReflRestrPainting {n' C Q Prev FrameBlock} _ {p} q
-  {ε Hpq Hq D E L d c}.
+Arguments reflPainting {n' C reflPrefix Q Prev FrameBlock} _ p {Hp D R E L d} c.
+Arguments idReflRestrPainting {n' C reflPrefix Q Prev FrameBlock} _ {p ε Hp D R
+  E L d c}.
+Arguments cohReflRestrPainting {n' C reflPrefix Q Prev FrameBlock} _ {p} q
+  {ε Hpq Hq D R E L d c}.
 
 (** Dgn is the extra structure to support degeneracies, which we call Refl *)
 
 Class Dgn {n'} (C: νType n'.+1) := {
+  ReflPrefix: mkRefl C.(prefix);
   DgnFramePrev: DgnFrameBlockPrev C;
   DgnFrame {p}: DgnFrameBlock C p DgnFramePrev;
   DgnPaintingPrev: DgnPaintingBlockPrev C DgnFramePrev;
   DgnPainting: DgnPaintingBlock C DgnPaintingPrev (@DgnFrame);
-  ReflLayer {p} {Hp: p.+2 <= n'.+1} {D} {d: C.(FramePrev).(frame') p D}
+  ReflLayer {p} {Hp: p.+2 <= n'.+1} {D} {R: mk ReflPrefix D}
+    {d: C.(FramePrev).(frame') p D}
     (l: C.(Layer') d): C.(Layer) (DgnFrame.(reflFrame) d) :=
     fun ε => rew [C.(PaintingPrev).(painting')]
     DgnFrame.(cohReflRestrFrame) p in DgnPaintingPrev.(reflPainting') p (l ε);
   eqReflFrameSp {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n'.+1} {D}
-    {d: C.(FramePrev).(frame') p D} (l: C.(Layer') d):
+    {R: mk ReflPrefix D} {d: C.(FramePrev).(frame') p D} (l: C.(Layer') d):
     DgnFrame.(reflFrame) (rew <- [id] C.(eqFrameSp') in (d; l)) =
     rew <- [id] C.(eqFrameSp) in (DgnFrame.(reflFrame) d; ReflLayer l);
-  eqReflPaintingSp p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n'.+1} {D E}
-    {L: HasRefl E} {d} {l: C.(Layer') d}
+  eqReflPaintingSp p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n'.+1} {D}
+    {R: mk ReflPrefix D} {E} {L: HasRefl E} {d} {l: C.(Layer') d}
     {c: C.(PaintingPrev).(painting') (D := D)
       (rew <- [id] C.(eqFrameSp') in (d; l))}:
     DgnPainting.(reflPainting) p (rew <- [id] C.(eqPaintingSp') in (l; c)) =
     rew <- [id] C.(eqPaintingSp) in
       (ReflLayer l; rew [C.(Painting).(painting) E] eqReflFrameSp l in
         DgnPainting.(reflPainting) p.+1 c);
-  DgnLift: forall D E, HasRefl (D := D) E;
 }.
 
+Arguments ReflPrefix {n' C} _.
 Arguments DgnFramePrev {n' C} _.
 Arguments DgnFrame {n' C} _ {p}.
 Arguments DgnPaintingPrev {n' C} _.
 Arguments DgnPainting {n' C} _.
-Arguments ReflLayer {n' C} _ {p Hp D d} l.
-Arguments eqReflFrameSp {n' C} _ {p q Hpq Hq D d} l.
-Arguments eqReflPaintingSp {n' C} _ p q {Hpq Hq D E L d l c}.
-Arguments DgnLift {n' C} _ {D} E.
+Arguments ReflLayer {n' C} _ {p Hp D R d} l.
+Arguments eqReflFrameSp {n' C} _ {p q Hpq Hq D R d} l.
+Arguments eqReflPaintingSp {n' C} _ p q {Hpq Hq D R E L d l c}.
+
+#[local]
+Instance mkReflPrefix {n'} {C: νType n'.+1} {G: Dgn C}: mkRefl
+  (mkνTypeSn C).(prefix) :=
+  fun D => sigT (fun R : mk G.(ReflPrefix) D.1 =>
+  HasRefl (DgnFrame := fun p => G.(DgnFrame)) D.2).
 
 #[local]
 Instance mkDgnFramePrev {n'} {C: νType n'.+1} {G: Dgn C}:
   DgnFrameBlockPrev (mkνTypeSn C) := {|
-  reflFrame' p Hp (D: (mkνTypeSn C).(prefix)) d := G.(DgnFrame).(reflFrame) d;
+  reflFrame' p Hp (D: (mkνTypeSn C).(prefix)) := G.(DgnFrame).(reflFrame);
 |}.
 
 Definition mkReflLayer {n' p} {C: νType n'.+1} {G: Dgn C}
