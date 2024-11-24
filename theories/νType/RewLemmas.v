@@ -139,3 +139,8 @@ Lemma map_subst_app {A B} {x y} {𝛉: A} (H: x = y :> B) (P: A -> B -> Type)
 Proof.
   now destruct H.
 Defined.
+
+Lemma rew_eq_refl : forall A B (x y: A) (f : A -> B) (H: x = y),
+rew <- [fun x => f x = f y] H in eq_refl (f y) = f_equal f H.
+now destruct H.
+Defined.

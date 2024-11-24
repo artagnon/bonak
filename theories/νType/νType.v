@@ -1010,12 +1010,9 @@ Instance mkDgnSn {n'} {C: νType n'.+1}:
 Proof.
   unshelve esplit.
   - intros; simpl; now rewrite rew_rew'.
-  - intros; simpl. rewrite mkReflPainting_step_computes, rew_rew'. f_equal.
+  - intros; simpl. rewrite mkReflPainting_step_computes, rew_rew'.
     change (eq_ind_r (x := ?x) ?P) with (eq_rect_r (x := x) P).
-    change (rew <- eq_refl in ?p) with p.
-    unshelve eapply eq_existT_curried. now trivial. simpl.
-    rewrite rew_map with (P := mkPaintingType n'.+1 p.+1 E).
-    elim F.
+    now rewrite rew_map with (P := mkPaintingType n'.+1 p.+1 E), rew_eq_refl.
 Defined.
 
 Fixpoint νDgnTypeAt n': Dgn (νTypeAt n'.+1) :=
