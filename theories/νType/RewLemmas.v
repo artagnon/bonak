@@ -25,14 +25,6 @@ Proof.
   now destruct H.
 Qed.
 
-Lemma rew_sigT {A x} {P: A -> Type} (Q: forall a, P a -> Type)
-  (u: { p: P x & Q x p }) {y} (H: x = y)
-    : rew [fun x => { p : P x & Q x p }] H in u
-      = (rew H in u.1; rew dependent [fun x H => Q x (rew H in u.1)] H in u.2).
-Proof.
-  now destruct H, u.
-Qed.
-
 Lemma rew_existT_curried {A x} {P: A -> Type} {Q: {a & P a} -> Type}
    {y} {H: x = y}
    {u: P x} {v: Q (x; u)}
@@ -47,6 +39,14 @@ Theorem rew_permute_rl A (P Q: A -> Type) (x y: A) (H: forall z, Q z = P z)
   (H': x = y) (a: P x) :
   rew <- [id] H y in rew [P] H' in a =
   rew [Q] H' in rew <- [id] H x in a.
+Proof.
+  now destruct H'.
+Qed.
+
+Theorem rew_permute_lr A (P Q: A -> Type) (x y: A) (H: forall z, P z = Q z)
+  (H': y = x) (a: P x) :
+  rew [id] H y in rew <- [P] H' in a =
+  rew <- [Q] H' in rew [id] H x in a.
 Proof.
   now destruct H'.
 Qed.
@@ -138,16 +138,4 @@ Lemma map_subst_app {A B} {x y} {𝛉: A} (H: x = y :> B) (P: A -> B -> Type)
   rew [P 𝛉] H in f 𝛉 = (rew [fun x => forall 𝛉, P 𝛉 x] H in f) 𝛉.
 Proof.
   now destruct H.
-Defined.
-
-Lemma sigT_commute A (P : A -> Type) B (Q : B -> Type) C c
-  (d : forall a, P a -> { b & Q b}) (e : forall b, Q b -> C) :
-  match match c with (a; p) => d a p end with
-  | (b; q) => e b q
-  end =
-  match c with
-  | (a; p) => match d a p with (b; q) => e b q end
-  end.
-Proof.
-  now destruct c.
 Defined.

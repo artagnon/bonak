@@ -951,8 +951,8 @@ Instance mkDgnPainting {n'} {C: νType n'.+1} {G: Dgn C}:
       unshelve eapply (rew_existT_curried
         (Q := fun x =>
           C.(Painting).(painting) _ (rew <- [id] C.(eqFrameSp) in x))).
-      + now rewrite <- mkCohReflRestrLayer with (d := d),
-                  rew_compose, eq_trans_sym_inv_r.
+      + now rewrite <- mkCohReflRestrLayer with (d := d), rew_compose,
+                       eq_trans_sym_inv_r.
       + rewrite <- map_subst, <- IHP.
         apply rew_swap_rl with
             (P := fun x => C.(Painting).(painting) D.2
@@ -1012,7 +1012,10 @@ Proof.
   - intros; simpl; now rewrite rew_rew'.
   - intros; simpl. rewrite mkReflPainting_step_computes, rew_rew'. f_equal.
     change (eq_ind_r (x := ?x) ?P) with (eq_rect_r (x := x) P).
-    change (rew <- eq_refl in ?p) with p. Arguments eq_refl {A} x. elim F.
+    change (rew <- eq_refl in ?p) with p.
+    unshelve eapply eq_existT_curried. now trivial. simpl.
+    rewrite rew_map with (P := mkPaintingType n'.+1 p.+1 E).
+    elim F.
 Defined.
 
 Fixpoint νDgnTypeAt n': Dgn (νTypeAt n'.+1) :=
