@@ -906,10 +906,7 @@ Instance mkDgnPainting {n'} {C: νType n'.+1} {G: Dgn C}:
                 rew_map with
                   (P := fun x => C.(Painting).(painting) D.2 x)
                   (f := fun x => rew <- [id] C.(eqFrameSp) in x).
-        (* Coq anomaly "in retyping: Non-functional construction"
-        rewrite <- map_subst with (f := mkRestrPainting p.+1 n'.+1 E (mkDgnFrame.(reflFrame) d; mkReflLayer l)).
-        *)
-        apply rew_swap_rl with (P := C.(Painting).(painting) D.2). (* Why P needed? *)
+        apply rew_swap_rl with (P := C.(Painting).(painting) D.2).
         rewrite rew_compose.
         simpl (mkνTypeSn C).(Painting).(restrPainting). cbv beta.
         set (h := fun d => match d with (d'; l') =>
@@ -923,8 +920,7 @@ Instance mkDgnPainting {n'} {C: νType n'.+1} {G: Dgn C}:
             (P := fun x => (mkPaintingPrev.(painting') x).(Dom))
             (f := fun x => (mkFrame p.+1).(restrFrame) n'.+1 _ (h x)).
         apply rew_swap_rl with (P := C.(Painting).(painting) D.2),
-              rew_app_rl_opp with
-                (P := fun x => C.(Painting).(painting) D.2 x).
+              rew_app_rl_opp with (P := fun x => C.(Painting).(painting) D.2 x).
         now apply (C.(Frame).(frame p.+1) D.1).(UIP).
   - (* cohReflRestrPainting *)
     intros; simpl.
@@ -944,9 +940,9 @@ Instance mkDgnPainting {n'} {C: νType n'.+1} {G: Dgn C}:
       replace c with (rew <- [id] C.(eqPaintingSp) in c') by apply rew_rew.
       destruct c' as (l, c''); clear c; rename c'' into c.
       rewrite rew_rew',
-          (C.(eqRestrPaintingSp) p q),
-          (G.(eqReflPaintingSp) p q),
-          <- rew_permute_rr with (H := C.(@eqPaintingSp _) _ _ _ _).
+              (C.(eqRestrPaintingSp) p q),
+              (G.(eqReflPaintingSp) p q),
+              <- rew_permute_rr with (H := C.(@eqPaintingSp _) _ _ _ _).
       f_equal.
       unshelve eapply (rew_existT_curried
         (Q := fun x =>
@@ -966,10 +962,10 @@ Instance mkDgnPainting {n'} {C: νType n'.+1} {G: Dgn C}:
             (fun d c => mkRestrPainting p.+1 q.+1 E _ c) e' _); subst e'.
         set (P := fun x => (C.(Painting).(painting) D.2 x).(Dom)).
         rewrite rew_map with (P := P) (f := G.(DgnFrame).(reflFrame)),
-              rew_map' with (P := P)
-                (f := fun x => rew <- [id] C.(eqFrameSp) in x),
-              rew_map with (P := P)
-                (f := fun d => ((mkFrame p.+1).(restrFrame) q.+1 ε (h d))).
+                rew_map' with (P := P)
+                  (f := fun x => rew <- [id] C.(eqFrameSp) in x),
+                rew_map with (P := P)
+                  (f := fun d => ((mkFrame p.+1).(restrFrame) q.+1 ε (h d))).
         apply rew_swap_rl with (P := P).
         rewrite rew_compose_rl,
                 rew_compose_lr with (P := P).
@@ -1001,8 +997,6 @@ Proof.
   - intros; now le_contra Hq.
   - intros; now le_contra Hq.
 Defined.
-
-Axiom F : False.
 
 #[local]
 Instance mkDgnSn {n'} {C: νType n'.+1}:
