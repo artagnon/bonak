@@ -585,6 +585,9 @@ CoInductive νTypeFrom n (X: (νTypeAt n).(prefix)): Type@{m'} := cons {
   next: νTypeFrom n.+1 (X; this);
 }.
 
+Arguments this {n X} _ d.
+Arguments next {n X} _.
+
 (** The final construction *)
 Definition νTypes := νTypeFrom 0 tt.
 
@@ -1018,18 +1021,20 @@ Fixpoint νDgnTypeAt n': Dgn (νTypeAt n'.+1) :=
   | n'.+1 => mkDgnSn (νDgnTypeAt n')
   end.
 
-CoInductive νDgnTypeFrom n' (X: (νTypeAt n'.+1).(prefix))
+CoInductive νDgnTypeFrom n' (X: (νTypeAt n'.+1).(prefix)) (M: νTypeFrom n'.+1 X)
   (L: (νDgnTypeAt n').(ReflPrefix) X): Type@{m'} := cons' {
-  this': (νTypeAt n'.+1).(Frame).(frame n'.+1) X -> HSet@{m};
-  dgn: HasRefl this';
-  next': νDgnTypeFrom n'.+1 (X; this') (L; dgn);
+  dgn: HasRefl M.(this);
+  dgnNext: νDgnTypeFrom n'.+1 (X; M.(this)) M.(next) (L; dgn);
 }.
 
+Definition νDgnTypes (X: νTypes) := νDgnTypeFrom 0 (tt; X.(this)) X.(next) tt.
 End νType.
 
 Definition AugmentedSemiSimplicial := νTypes hunit.
 Definition SemiSimplicial := νTypeFrom hunit 1 (tt; fun _ => hunit).
 Definition SemiCubical := νTypes hbool.
+Definition AugmentedSimplicial := sigT (νDgnTypes hunit).
+Definition Cubical := sigT (νDgnTypes hbool).
 
 (** Some examples *)
 
@@ -1042,3 +1047,11 @@ Print SemiSimplicial2.
 Example SemiCubical2 := Eval lazy -[projT2] in
  (νTypeAt hbool 2).(prefix _).
 Print SemiCubical2.
+
+Example Simplicial1 := Eval lazy -[projT1 projT2] in
+ (νDgnTypeAt hunit 1).(ReflPrefix _).
+Print Simplicial1.
+
+Example Cubical1 := Eval lazy -[projT1 projT2] in
+ (νDgnTypeAt hbool 1).(ReflPrefix _).
+Print Cubical1.
