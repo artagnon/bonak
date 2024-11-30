@@ -257,11 +257,11 @@ Arguments eqRestrPaintingSp {n} _ p q {Hpq Hq ε D E d l Q}.
 (** The construction of [νType n+1] from [νType n] *)
 
 (** Extending the initial prefix *)
-Definition mkprefix {n} {C: νType n}: Type@{m'} :=
+Definition mkPrefix {n} {C: νType n}: Type@{m'} :=
   sigT (fun D : C.(prefix) => C.(Frame).(frame n) D -> HSet@{m}).
 
 (** Memoizing the previous levels of [Frame] *)
-Definition mkFramePrev {n} {C: νType n}: FrameBlockPrev n.+1 mkprefix := {|
+Definition mkFramePrev {n} {C: νType n}: FrameBlockPrev n.+1 mkPrefix := {|
   frame' p (Hp: p.+1 <= n.+1) D := C.(Frame).(frame p) D.1;
   frame'' p (Hp: p.+2 <= n.+1) D := C.(FramePrev).(frame') p D.1;
   restrFrame' p q (Hpq: p.+2 <= q.+2) (Hq: q.+2 <= n.+1) ε D d :=
@@ -272,7 +272,7 @@ Definition mkFramePrev {n} {C: νType n}: FrameBlockPrev n.+1 mkprefix := {|
    of Frame. These will be used in the proof script of mkFrame. *)
 
 Definition mkLayer {n} {C: νType n} {p} {Hp: p.+1 <= n.+1}
-  {Frame: FrameBlock n.+1 p mkprefix mkFramePrev}
+  {Frame: FrameBlock n.+1 p mkPrefix mkFramePrev}
   {D} (d: Frame.(frame p) D): HSet :=
   hforall ε, C.(Painting).(painting) D.2 (Frame.(restrFrame) p ε d).
 
@@ -280,7 +280,7 @@ Definition mkLayer' {n} {C: νType n} {p} {Hp: p.+2 <= n.+1}
   {D} (d: mkFramePrev.(frame' (n := n.+1)) p D): HSet := C.(Layer) d.
 
 Definition mkRestrLayer {n} {C: νType n} p q {Hpq: p.+2 <= q.+2}
-  {Hq: q.+2 <= n.+1} {ε} {Frame: FrameBlock n.+1 p mkprefix mkFramePrev}
+  {Hq: q.+2 <= n.+1} {ε} {Frame: FrameBlock n.+1 p mkPrefix mkFramePrev}
   {D} {d: Frame.(frame p) D}:
   mkLayer d -> mkLayer' (Frame.(restrFrame) q.+1 ε d) :=
   fun l ω => rew [C.(PaintingPrev).(painting')] Frame.(cohFrame) p q d in
@@ -288,7 +288,7 @@ Definition mkRestrLayer {n} {C: νType n} p q {Hpq: p.+2 <= q.+2}
 
 Definition mkCohLayer {n} {C: νType n} {p r q} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {ε ω}
-  {Frame: FrameBlock n.+1 p mkprefix mkFramePrev}
+  {Frame: FrameBlock n.+1 p mkPrefix mkFramePrev}
   {D} {d: Frame.(frame p) D} (l: mkLayer d):
   let sl := C.(RestrLayer) p q ε (mkRestrLayer p r l) in
   let sl' := C.(RestrLayer) p r ω (mkRestrLayer p q.+1 l) in
@@ -321,7 +321,7 @@ Qed.
 
 (** The Frame at level n.+1 with p = O *)
 #[local]
-Instance mkFrame0 {n} {C: νType n}: FrameBlock n.+1 O mkprefix mkFramePrev.
+Instance mkFrame0 {n} {C: νType n}: FrameBlock n.+1 O mkPrefix mkFramePrev.
   unshelve esplit.
   * intros; now exact hunit. (* FrameSn *)
   * simpl; intros; rewrite C.(eqFrame0); now exact tt. (* restrFrameSn *)
@@ -332,8 +332,8 @@ Defined.
 (** The Frame at level n.+1 for p.+1 knowing the Frame at level n.+1 for p *)
 #[local]
 Instance mkFrameSp {n} {C: νType n} {p}
-  {Frame: FrameBlock n.+1 p mkprefix mkFramePrev}:
-  FrameBlock n.+1 p.+1 mkprefix mkFramePrev.
+  {Frame: FrameBlock n.+1 p mkPrefix mkFramePrev}:
+  FrameBlock n.+1 p.+1 mkPrefix mkFramePrev.
   unshelve esplit.
   * intros Hp D; exact {d : Frame.(frame p) D & mkLayer d}.
   * simpl; intros * ε * (d, l); invert_le Hpq. (* restrFramep *)
@@ -355,7 +355,7 @@ Defined.
 
 (** Finally, we can define mkFrame at level n.+1 for all p *)
 #[local]
-Instance mkFrame {n} {C: νType n} p: FrameBlock n.+1 p mkprefix mkFramePrev.
+Instance mkFrame {n} {C: νType n} p: FrameBlock n.+1 p mkPrefix mkFramePrev.
   induction p.
   * now exact mkFrame0. (* p = O *)
   * now exact mkFrameSp. (* p = S _ *)
@@ -367,7 +367,7 @@ Defined.
 (** First, memoizing the previous levels of [Painting] *)
 #[local]
 Instance mkPaintingPrev {n} {C: νType n}:
-  PaintingBlockPrev n.+1 mkprefix mkFramePrev :=
+  PaintingBlockPrev n.+1 mkPrefix mkFramePrev :=
 {|
   painting' p (Hp: p.+1 <= n.+1) D := C.(Painting).(painting) D.2:
     mkFramePrev.(frame') p D -> HSet; (* Coq bug? *)
@@ -504,7 +504,7 @@ Qed.
 (** Build a [PaintingBlock n.+1] using what we just defined *)
 #[local]
 Instance mkPainting {n} {C: νType n}:
-  PaintingBlock n.+1 mkprefix mkPaintingPrev mkFrame.
+  PaintingBlock n.+1 mkPrefix mkPaintingPrev mkFrame.
   unshelve esplit; intros p.
   * intros *; now apply mkPaintingType.
   * intros q Hpq Hq ε d; now exact (mkRestrPainting p q).
@@ -553,7 +553,7 @@ Defined.
 #[local]
 Instance mkνTypeSn {n} (C: νType n): νType n.+1 :=
 {|
-    prefix := mkprefix;
+    prefix := mkPrefix;
     FramePrev := mkFramePrev;
     Frame := mkFrame;
     PaintingPrev := mkPaintingPrev;
