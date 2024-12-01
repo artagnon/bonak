@@ -88,31 +88,7 @@ Variable arity: HSet.
 (** [FrameBlockPrev] consists of the levels we remember before the
     current one and for each such previous data, [FrameBlock]
     consists of the data to maintain at the current level. *)
-Class FrameBlockPrev n (prefix: Type@{m'}) := {
-  frame' p {Hp: p.+1 <= n}: prefix -> HSet@{m};
-  frame'' p {Hp: p.+2 <= n}: prefix -> HSet@{m};
-  restrFrame' p q {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) (ε: arity) {D}:
-    frame' p D -> frame'' p D;
-}.
 
-Arguments frame' {n prefix} _ p {Hp} D.
-Arguments frame'' {n prefix} _ p {Hp} D.
-Arguments restrFrame' {n prefix} _ p q {Hpq Hq} ε {D} d.
-
-Class FrameBlock n p (prefix: Type@{m'})
-  (FramePrev: FrameBlockPrev n prefix) := {
-  frame {Hp: p <= n}: prefix -> HSet@{m};
-  restrFrame q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n} (ε: arity) {D}:
-    frame D -> FramePrev.(frame') p D;
-  cohFrame r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
-    {ε ω} {D} (d: frame D):
-    FramePrev.(restrFrame') p q ε (restrFrame r ω d) =
-    FramePrev.(restrFrame') p r ω (restrFrame q.+1 ε d);
-}.
-
-Arguments frame {n} p {prefix FramePrev} _ {Hp} D.
-Arguments restrFrame {n p prefix FramePrev} _ q {Hpq Hq} ε {D} d.
-Arguments cohFrame {n p prefix FramePrev} _ r q {Hpr Hrq Hq ε ω D} d.
 (* We want ε and ω to be printed, but have them inferred;
    Coq doesn't support this. *)
 
@@ -122,45 +98,8 @@ Arguments cohFrame {n p prefix FramePrev} _ r q {Hpr Hrq Hq ε ω D} d.
 (** We build paintings using an iterated construction: a painting at level n
     depends on paintings at level n-1 and n-2; just as we have frame' and
      frame'', we have painting' and painting''. *)
-Class PaintingBlockPrev n (prefix: Type@{m'})
-  (FramePrev : FrameBlockPrev n prefix) := {
-  painting' {p} {Hp: p.+1 <= n} {D}:
-    FramePrev.(frame') p D -> HSet@{m};
-  painting'' {p} {Hp: p.+2 <= n} {D}:
-    FramePrev.(frame'') p D -> HSet@{m};
-  restrPainting' p q {Hpq: p.+2 <= q.+2} (Hq: q.+2 <= n) ε {D}
-    {d: FramePrev.(frame') p D}:
-    painting' d -> painting'' (FramePrev.(restrFrame') p q ε d);
-}.
-
-Arguments painting' {n prefix FramePrev} _ {p Hp D} d.
-Arguments painting'' {n prefix FramePrev} _ {p Hp D} d.
-Arguments restrPainting' {n prefix FramePrev} _ p q {Hpq Hq} ε {D} [d] b.
 
 (** Painting consists of painting, restrPainting, and coherence conditions between them *)
-Class PaintingBlock n (prefix: Type@{m'})
-  {FramePrev: FrameBlockPrev n prefix}
-  (PaintingPrev: PaintingBlockPrev n prefix FramePrev)
-  (Frame: forall {p}, FrameBlock n p prefix FramePrev) := {
-  painting {p} {Hp: p <= n} {D}:
-    (Frame.(frame n) D -> HSet@{m}) -> Frame.(frame p) D -> HSet@{m};
-  restrPainting p q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n} ε {D}
-    {E: Frame.(frame n) D -> HSet@{m}} {d: Frame.(frame p) D}
-    (c: painting E d):
-    PaintingPrev.(painting') (Frame.(restrFrame) q ε d);
-  cohPainting p r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
-    ε ω {D} (E: Frame.(frame n) D -> HSet@{m}) (d: Frame.(frame p) D)
-    (c: painting E d):
-    rew [PaintingPrev.(painting'')] (Frame.(cohFrame) r q d) in
-    PaintingPrev.(restrPainting') p q ε (restrPainting p r ω c) =
-      (PaintingPrev.(restrPainting') p r ω (restrPainting p q.+1 ε c));
-}.
-
-Arguments painting {n prefix FramePrev PaintingPrev Frame} _ {p Hp D} E.
-Arguments restrPainting {n prefix FramePrev PaintingPrev Frame} _ p q
-  {Hpq Hq ε D E} [d] c.
-Arguments cohPainting {n prefix FramePrev PaintingPrev Frame} _ p r q
-  {Hpr Hrq Hq ε ω D E d} c.
 
 (** An ν-parametric type truncated at level [n] consists of:
 
@@ -179,6 +118,82 @@ Arguments cohPainting {n prefix FramePrev PaintingPrev Frame} _ p r q
 
 Class νType n := {
   prefix: Type@{m'};
+  frame'' p {Hp: p.+2 <= n}: prefix -> HSet@{m};
+  painting'' {p} {Hp: p.+2 <= n} {D}: frame'' p D -> HSet@{m};
+  restrFrameAux' p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity) {D}
+  (frame': forall p {Hp: p.+1 <= n}, prefix -> HSet@{m}):
+    frame' p D -> frame'' p D;
+  LayerAux' {p} {Hp: p.+2 <= n} {D}
+  (frame': forall p {Hp: p.+1 <= n}, prefix -> HSet@{m}) (d: frame' p D) :=
+    hforall ε, painting'' (restrFrameAux' p p ε frame' d);
+  frame' := fix frame' p {Hp: p.+1 <= n} (D: prefix): HSet@{m} := match p with
+  | O => hunit
+  | S p => {d: frame' p D & LayerAux' (fun Hp D => frame' p) d}
+  end;
+  restrFrame' p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity) {D}
+  (d: frame' p D) :=
+  restrFrameAux' p q ε frame' d;
+  Layer' {p} {Hp: p.+2 <= n} {D} (d: frame' p D) := LayerAux' frame' d;
+  painting' {p} {Hp: p.+1 <= n} {D}: frame' p D -> HSet@{m};
+  cohFrameAux {p} r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
+    {ε ω} {D}
+    (frame: forall p {Hp: p <= n}, prefix -> HSet@{m})
+    (restrFrame: forall {p} q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n}
+      (ε: arity) {D}, frame _ D -> frame' p D)
+    (d: frame p D):
+    restrFrame' p q ε (restrFrame r ω d) =
+    restrFrame' p r ω (restrFrame q.+1 ε d);
+  restrPainting' p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} ε {D}
+    {d: frame' p D}:
+    painting' d -> painting'' (restrFrame' p q ε d);
+  LayerAux {p} {Hp: p.+1 <= n} {D}
+    (frame: forall p {Hp: p <= n}, prefix -> HSet@{m})
+    (restrFrame: forall {p} q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n}
+      (ε: arity) {D}, frame _ D -> frame' p D)
+    (d: frame p D) :=
+    hforall ε, painting' (restrFrame p ε d);
+  RestrLayerAux {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} ε {D}
+    (frame: forall p {Hp: p <= n}, prefix -> HSet@{m})
+    (restrFrame: forall {p} q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n}
+      (ε: arity) {D}, frame _ D -> frame' p D)
+    {d: frame p D}:
+    LayerAux frame (@restrFrame) d -> Layer' (restrFrame q.+1 ε d);
+    (* fun l ω => rew [painting''] cohFrameAux p q frame (@restrFrame) d in
+      restrPainting' p q ε (l ω); *)
+  (* frame p {Hp: p <= n}: prefix -> HSet@{m};
+  restrFrame {p} q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n} (ε: arity) {D}:
+    frame _ D -> frame' p D; *)
+  frame :=
+    fix frame p {Hp: p <= n} D := match p with
+    | O => hunit
+    | S p => {d: frame p D & LayerAux frame (@restrFrame _ _ _ _ _ _ frame _) d}
+    end
+    with restrFrame {p} q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n} (ε: arity) {D}
+    {frameAux: forall p {Hp: p <= n}, prefix -> HSet@{m}}
+    (d: frameAux _ D) :=
+    match p with
+    | O => tt
+    | S p => (restrFrame q.+1 ε d; fun l =>
+      RestrLayerAux ε frame (@restrFrame _ _ _ _ _ _ frame _) l)
+    end for frame;
+  cohFrame {p} r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
+    {ε ω} {D} := cohFrameAux r q frame (@restrFrame);
+  Layer {p} {Hp: p.+1 <= n} {D} (d: frame D) :=
+    LayerAux frame (@restrFrame) d;
+  RestrLayer {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} ε {D}
+    {d: frame D} := RestrLayerAux ε frame (@restrFrame);
+  painting {p} {Hp: p <= n} {D}:
+    (frame n D -> HSet@{m}) -> frame D -> HSet@{m};
+  restrPainting p q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n} ε {D}
+    {E: frame n D -> HSet@{m}} {d: frame D}
+    (c: painting E d): painting' (restrFrame q ε d);
+  cohPainting p r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
+    ε ω {D} (E: frame n D -> HSet@{m}) (d: frame D)
+    (c: painting E d):
+    rew [painting''] cohFrame r q d in
+    restrPainting' p q ε (restrPainting p r ω c) =
+      (restrPainting' p r ω (restrPainting p q.+1 ε c));
+  }.
   FramePrev: FrameBlockPrev n prefix;
   Frame {p}: FrameBlock n p prefix FramePrev;
   PaintingPrev: PaintingBlockPrev n prefix FramePrev;
