@@ -149,33 +149,51 @@ Class νType n := {
   LayerAux {p} {Hp: p.+1 <= n} {D}
     (frame: forall p {Hp: p <= n}, prefix -> HSet@{m})
     (restrFrame: forall {p} q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n}
-      (ε: arity) {D}, frame _ D -> frame' p D)
+      (ε: arity) {D}, frame p D -> frame' p D)
     (d: frame p D) :=
     hforall ε, painting' (restrFrame p ε d);
   RestrLayerAux {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} ε {D}
     (frame: forall p {Hp: p <= n}, prefix -> HSet@{m})
     (restrFrame: forall {p} q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n}
-      (ε: arity) {D}, frame _ D -> frame' p D)
+      (ε: arity) {D}, frame p D -> frame' p D)
     {d: frame p D}:
     LayerAux frame (@restrFrame) d -> Layer' (restrFrame q.+1 ε d);
     (* fun l ω => rew [painting''] cohFrameAux p q frame (@restrFrame) d in
       restrPainting' p q ε (l ω); *)
-  (* frame p {Hp: p <= n}: prefix -> HSet@{m};
-  restrFrame {p} q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n} (ε: arity) {D}:
-    frame _ D -> frame' p D; *)
+  eqFrame0 {len0: 0 <= n} {D}
+    {frame: forall p {Hp: p <= n}, prefix -> HSet@{m}}
+    {restrFrame: forall {p} q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n}
+      (ε: arity) {D}, frame p D -> frame' p D}:
+    frame 0 D = hunit :> Type;
+  eqFrameSp {p} {Hp: p.+1 <= n} {D}
+    {frame: forall p {Hp: p <= n}, prefix -> HSet@{m}}
+    {restrFrame: forall {p} q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n}
+      (ε: arity) {D}, frame p D -> frame' p D}:
+    frame p.+1 D = {d: frame p D & LayerAux frame (@restrFrame) d} :> Type;
+  eqFrameSp' {p} {Hp: p.+2 <= n} {D}
+    {frame: forall p {Hp: p <= n}, prefix -> HSet@{m}}
+    {restrFrame: forall {p} q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n}
+      (ε: arity) {D}, frame p D -> frame' p D}:
+    frame' p.+1 D = {d: frame' p D & Layer' d} :> Type;
   frame :=
     fix frame p {Hp: p <= n} D := match p with
     | O => hunit
-    | S p => {d: frame p D & LayerAux frame (@restrFrame _ _ _ _ _ _ frame _) d}
-    end
-    with restrFrame {p} q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n} (ε: arity) {D}
-    {frameAux: forall p {Hp: p <= n}, prefix -> HSet@{m}}
-    (d: frameAux _ D) :=
-    match p with
-    | O => tt
-    | S p => (restrFrame q.+1 ε d; fun l =>
-      RestrLayerAux ε frame (@restrFrame _ _ _ _ _ _ frame _) l)
-    end for frame;
+    | S p' => let restrFrame :=
+      (fix restrFrame {p} q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n}
+        (ε: arity) {D} (d: frame _ D) :=
+        match p with
+        | O => rew <- [id] eqFrame0 in tt
+        | S p =>
+          match (rew [id] eqFrameSp in d) with
+          | (d; l) => rew <- [id] eqFrameSp' in
+              (restrFrame q.+1 ε d;
+              RestrLayerAux ε (fun Hp D => frame p)
+                (fun _ q Hpq Hq ε D => restrFrame (p := p) q ε) l)
+          end
+        end)
+        in {d: frame p' D & LayerAux (fun Hp D => frame p')
+            (fun _ q Hpq Hq ε D => restrFrame (p := p') q ε) d}
+    end;
   cohFrame {p} r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
     {ε ω} {D} := cohFrameAux r q frame (@restrFrame);
   Layer {p} {Hp: p.+1 <= n} {D} (d: frame D) :=
