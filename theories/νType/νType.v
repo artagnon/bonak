@@ -128,35 +128,36 @@ Arguments RestrFrame {n p prefix Frame'} _ q {Hpq Hq} ε {D} d.
 Class νType n := {
   prefix: Type@{m'};
   frame'' p {Hp: p.+2 <= n}: prefix -> HSet@{m};
-  painting'' {p} {Hp: p.+2 <= n} {D}: frame'' p D -> HSet@{m};
-  restrFrameAux' p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity) {D}
+  painting'' {p} {Hp: p.+2 <= n} {D: prefix}: frame'' p D -> HSet@{m};
+  restrFrameAux' p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity) {D: prefix}
   (frame': HSet@{m}):
     frame' -> frame'' p D;
-  LayerAux' {p} {Hp: p.+2 <= n} {D} (frame': HSet@{m}) (d: frame') :=
+  LayerAux' {p} {Hp: p.+2 <= n} {D: prefix} (frame': HSet@{m}) (d: frame') :=
     hforall ε, painting'' (D := D) (restrFrameAux' p p ε frame' d);
   frame' := fix frame' p: forall (Hp: p.+1 <= n) (D: prefix), HSet@{m} :=
   match p with
   | O => fun Hp D => hunit
   | S p => fun Hp D => {d: frame' p _ D & LayerAux' (frame' p _ D) d (D := D)}
   end;
-  restrFrame' p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity) {D}
+  restrFrame' p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity) {D: prefix}
   (d: frame' p _ D) :=
-  restrFrameAux' p q ε (frame' p _ D) d (D := D);
-  Layer' {p} {Hp: p.+2 <= n} {D} (d: frame' p _ D) :=
-    LayerAux' (frame' p _ D) d (D := D);
-  painting' {p} {Hp: p.+1 <= n} {D}: frame' p _ D -> HSet@{m};
+  restrFrameAux' p q ε (frame' p _ D) d;
+  Layer' {p} {Hp: p.+2 <= n} {D: prefix} (d: frame' p _ D) :=
+    LayerAux' (frame' p _ D) d;
+  painting' {p} {Hp: p.+1 <= n} {D: prefix}: frame' p _ D -> HSet@{m};
   cohFrameAux {p} r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
-    {ε ω} {D} (frameBlock: FrameBlock n p prefix frame')
+    {ε ω: arity} {D: prefix} (frameBlock: FrameBlock n p prefix frame')
     (d: frameBlock.(Frame p) D):
     restrFrame' p q ε (frameBlock.(RestrFrame) r ω d) =
     restrFrame' p r ω (frameBlock.(RestrFrame) q.+1 ε d);
-  restrPainting' p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} ε {D}
+  restrPainting' p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity) {D: prefix}
     {d: frame' p _ D}:
     painting' d -> painting'' (restrFrame' p q ε d);
-  LayerAux {p} {Hp: p.+1 <= n} {D} (frameBlock: FrameBlock n p prefix frame')
+  LayerAux {p} {Hp: p.+1 <= n} {D: prefix}
+    (frameBlock: FrameBlock n p prefix frame')
     (d: frameBlock.(Frame p) D) :=
     hforall ε, painting' (frameBlock.(RestrFrame) p ε d);
-  RestrLayerAux {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} ε {D}
+  RestrLayerAux {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} ε {D: prefix}
     (frameBlock: FrameBlock n p prefix frame')
     {d: frameBlock.(Frame p) D}:
     LayerAux frameBlock d -> Layer' (frameBlock.(RestrFrame) q.+1 ε d) :=
@@ -183,11 +184,10 @@ Class νType n := {
     frameBlock.(RestrFrame (p := p)) q ε (D := D) d;
   cohFrame {p} r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
     {ε ω: arity} {D: prefix} := cohFrameAux (ε := ε) (ω := ω) (D := D) r q frameBlock;
-}.
   Layer {p} {Hp: p.+1 <= n} {D} (d: frame p D) :=
     LayerAux frameBlock d;
-  RestrLayer {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} ε {D}
-    {d: frame p D} := RestrLayerAux ε frameBlock;
+  RestrLayer {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} {ε: arity} {D: prefix}
+    {d: frame p D} := RestrLayerAux (D := D) ε frameBlock (d := d);
   painting {p} {Hp: p <= n} {D}:
     (frame n D -> HSet@{m}) -> frame p D -> HSet@{m};
   restrPainting p q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n} ε {D}
