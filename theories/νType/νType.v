@@ -122,31 +122,30 @@ Definition FrameFix' {n prefix}
 
 Arguments FrameFix' {n prefix} layerAux' p {Hp} D.
 
-Definition FrameFix n prefix
-  {layerAux': forall p {Hp: p.+2 <= n} (D: prefix) (frame': HSet@{m})
+Definition FrameFix {n prefix}
+  {layerAux': forall {p} {Hp: p.+2 <= n} {D: prefix} (frame': HSet@{m})
     (d: frame'), HSet@{m}}
-  (frame' := fun p {Hp} D => FrameFix' layerAux' p (Hp := Hp) D)
-  (layer' := fun {p Hp D} => layerAux' p (Hp := Hp) D (frame' p D))
-  {layerAux: forall {p} {Hp: p.+1 <= n} {D: prefix}
+  (frame' := fun p {Hp} D => FrameFix' (@layerAux') p (Hp := Hp) D)
+  (layer' := fun {p Hp D} => layerAux' (Hp := Hp) (frame' p D))
+  {layerAux: forall {p} {Hp: p.+1 <= n} {D}
     (frameBlock: FrameBlock n p prefix frame')
     (d: frameBlock.(Frame p) D), HSet@{m}}
-  {restrLayerAux: forall {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} ε {D: prefix}
-    (frameBlock: FrameBlock n p prefix frame')
-    {d: frameBlock.(Frame p) D},
-    layerAux frameBlock d ->
-      layer' (frameBlock.(RestrFrame) q.+1 ε d)} :=
+  {restrLayerAux: forall {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} ε {D}
+    (frameBlock: FrameBlock n p prefix frame') {d},
+    layerAux frameBlock d -> layer' (frameBlock.(RestrFrame) q.+1 ε d)} :=
   fix frameBlock {p}: FrameBlock n p prefix frame' :=
   match p return FrameBlock n p prefix frame' with
   | O => {| Frame _ _ := hunit; RestrFrame _ _ _ _ _ _ := tt :> hunit |}
   | S p => {|
     Frame Hp D :=
-      {d: frameBlock.(Frame p) (Hp := ↓ Hp) D & layerAux frameBlock d};
+      {d: frameBlock.(Frame p) D & layerAux frameBlock d};
     RestrFrame q :=
-      match q return forall {Hpq: p.+2 <= q.+1} {Hq: q.+1 <= n} (ε: arity) {D}, _ -> frame' p.+1 D with
-      | O => fun Hpq Hq ε D d => ltac:(le_contra Hpq)
-      | S q => fun Hpq Hq ε D (d: {d: frameBlock.(Frame p) D & layerAux frameBlock d}) =>
-        (frameBlock.(RestrFrame (p := p)) (Hpq := ↓ Hpq) q.+1 ε d.1 as d in frame' p D;
-        restrLayerAux ε frameBlock d.2 in layer' d): frame' p.+1 D
+      match q return forall (Hpq: p.+2 <= q.+1) (Hq: q.+1 <= n) ε D, _ ->
+        frame' p.+1 D
+      with
+      | O => fun Hpq _ _ _ => ltac:(le_contra Hpq)
+      | S q => fun Hpq _ ε D d =>
+        (frameBlock.(RestrFrame) q.+1 ε d.1; restrLayerAux ε frameBlock d.2)
       end
   |}
   end.
