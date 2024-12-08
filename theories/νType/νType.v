@@ -95,8 +95,7 @@ Class LayerAuxType {n prefix frame'} :=
     (frameBlock: FrameBlock n p prefix frame')
     (d: frameBlock.(Frame p) D), HSet@{m}.
 
-Definition FrameFix' {n prefix}
-  (layerAux': LayerAuxType') :=
+Definition FrameFix' {n prefix} (layerAux': LayerAuxType') :=
   fix frame' p: forall (Hp: p.+1 <= n) (D: prefix), HSet@{m} :=
   match p with
   | O => fun Hp D => hunit
@@ -139,6 +138,24 @@ Definition FrameFix {n prefix}
 
 Arguments FrameFix {n prefix} layerAux' layerAux restrLayerAux {p}.
 
+Class CohFrameBlock n p (prefix: Type@{m'}) {layerAux': LayerAuxType'}
+  (frame'' := fun p {Hp: p.+2 <= n} (D: prefix) => HSet@{m})
+  (frame' := fun p {Hp} D => FrameFix' layerAux' p (Hp := Hp) D)
+  (restrFrameAux' := fun p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity)
+    {D: prefix} (frame': HSet@{m}) (d: frame') => frame'' p D)
+  (restrFrame' := fun p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity)
+    {D: prefix} (d: frame' p D) =>
+    restrFrameAux' p q (Hpq := Hpq) (Hq := Hq) (D := D) ε (frame' p D) d) := {
+  F: FrameBlock n p prefix (FrameFix' layerAux');
+  CohFrame r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
+    {ε ω} {D} (d: F.(Frame p) D):
+    restrFrame' p q (Hpq := Hpr ↕ Hrq) (Hq := Hq) ε (F.(RestrFrame) r ω d) =
+    restrFrame' p r ω (Hpq := Hpr) (Hq := Hrq ↕ Hq) (F.(RestrFrame) q.+1 ε d);
+}.
+
+Arguments F {n p prefix layerAux'} _.
+Arguments CohFrame {n p prefix layerAux'} _ r q {Hpr Hrq Hq ε ω} {D} d.
+
 (** An ν-parametric type truncated at level [n] consists of:
 
   - a [prefix] of parametric types up to dimension [n],
@@ -169,25 +186,22 @@ Class νType n := {
   frame'' p {Hp: p.+2 <= n}: prefix -> HSet@{m};
   painting'' {p} {Hp: p.+2 <= n} {D: prefix}: frame'' p D -> HSet@{m};
   restrFrameAux' p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity) {D: prefix}
-  (frame': HSet@{m}):
-    frame' -> frame'' p D;
+    (frame': HSet@{m}): frame' -> frame'' p D;
   layerAux' {p} {Hp: p.+2 <= n} {D: prefix} (frame': HSet@{m}) (d: frame') :=
     hforall ε, painting'' (D := D) (restrFrameAux' p p ε frame' d);
-  frame' := FrameFix' (@layerAux');
+  frame' p {Hp} D := FrameFix' (@layerAux') p (Hp := Hp) D;
   restrFrame' p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity) {D: prefix}
-    (d: frame' p _ D) :=
-    restrFrameAux' p q ε (frame' p _ D) d;
-  layer' {p} {Hp: p.+2 <= n} {D: prefix} (d: frame' p _ D) :=
-    layerAux' (frame' p _ D) d;
-  painting' {p} {Hp: p.+1 <= n} {D: prefix}: frame' p _ D -> HSet@{m};
+    (d: frame' p D) := restrFrameAux' p q ε (frame' p D) d;
+  layer' {p} {Hp: p.+2 <= n} {D: prefix} (d: frame' p D) :=
+    layerAux' (frame' p D) d;
+  painting' {p} {Hp: p.+1 <= n} {D: prefix}: frame' p D -> HSet@{m};
   cohFrameAux {p} r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
     {ε ω: arity} {D: prefix} (frameBlock: FrameBlock n p prefix frame')
     (d: frameBlock.(Frame p) D):
     restrFrame' p q ε (frameBlock.(RestrFrame) r ω d) =
     restrFrame' p r ω (frameBlock.(RestrFrame) q.+1 ε d);
   restrPainting' p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity) {D: prefix}
-    {d: frame' p _ D}:
-    painting' d -> painting'' (restrFrame' p q ε d);
+    {d: frame' p D}: painting' d -> painting'' (restrFrame' p q ε d);
   layerAux {p} {Hp: p.+1 <= n} {D: prefix}
     (frameBlock: FrameBlock n p prefix frame')
     (d: frameBlock.(Frame p) D) :=
@@ -308,7 +322,7 @@ Proof.
   repeat rewrite rew_compose.
   apply rew_swap with (P := fun x => C.(painting'') x).
   rewrite rew_app_rl. now trivial.
-  now apply (C.(frame'') p _).(UIP).
+  now apply (C.(frame'') p D.1).(UIP).
 Qed.
 
 #[local]
