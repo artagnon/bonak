@@ -115,7 +115,7 @@ Class RestrLayerAuxType {n prefix}
     layerAux p _ D frameBlock d ->
       layer' (frameBlock.(RestrFrame) q.+1 ε d).
 
-Definition FrameFix {n prefix}
+Definition FrameBlockFix {n prefix}
   (layerAux': LayerAuxType')
   (frame' := fun p {Hp} D => FrameFix' layerAux' p (Hp := Hp) D)
   (layerAux: LayerAuxType)
@@ -136,25 +136,23 @@ Definition FrameFix {n prefix}
   |}
   end.
 
-Arguments FrameFix {n prefix} layerAux' layerAux restrLayerAux {p}.
+Arguments FrameBlockFix {n prefix} layerAux' layerAux restrLayerAux {p}.
 
-Class CohFrameBlock n p (prefix: Type@{m'}) {layerAux': LayerAuxType'}
-  (frame'' := fun p {Hp: p.+2 <= n} (D: prefix) => HSet@{m})
-  (frame' := fun p {Hp} D => FrameFix' layerAux' p (Hp := Hp) D)
-  (restrFrameAux' := fun p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity)
-    {D: prefix} (frame': HSet@{m}) (d: frame') => frame'' p D)
-  (restrFrame' := fun p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity)
-    {D: prefix} (d: frame' p D) =>
-    restrFrameAux' p q (Hpq := Hpq) (Hq := Hq) (D := D) ε (frame' p D) d) := {
-  F: FrameBlock n p prefix (FrameFix' layerAux');
+Class CohFrameBlock n p (prefix: Type@{m'})
+  (frame'': forall p {Hp: p.+2 <= n}, prefix -> HSet@{m})
+  (frame': forall p {Hp: p.+1 <= n}, prefix -> HSet@{m})
+  (restrFrame' : forall p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity)
+    {D: prefix}, frame' p D -> frame'' p D) := {
+  F: FrameBlock n p prefix frame';
   CohFrame r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
     {ε ω} {D} (d: F.(Frame p) D):
     restrFrame' p q (Hpq := Hpr ↕ Hrq) (Hq := Hq) ε (F.(RestrFrame) r ω d) =
     restrFrame' p r ω (Hpq := Hpr) (Hq := Hrq ↕ Hq) (F.(RestrFrame) q.+1 ε d);
 }.
 
-Arguments F {n p prefix layerAux'} _.
-Arguments CohFrame {n p prefix layerAux'} _ r q {Hpr Hrq Hq ε ω} {D} d.
+Arguments F {n p prefix frame'' frame' restrFrame'} _.
+Arguments CohFrame {n p prefix frame'' frame' restrFrame'} _ r q
+  {Hpr Hrq Hq ε ω} {D} d.
 
 (** An ν-parametric type truncated at level [n] consists of:
 
@@ -212,7 +210,8 @@ Class νType n := {
     layerAux frameBlock d -> layer' (frameBlock.(RestrFrame) q.+1 ε d) :=
     fun l ω => rew [painting''] cohFrameAux p q frameBlock d in
       restrPainting' p q ε (l ω);
-  frameBlock {p} := FrameFix (@layerAux') (@layerAux) (@restrLayerAux) (p := p);
+  frameBlock {p} := FrameBlockFix (@layerAux') (@layerAux) (@restrLayerAux)
+    (p := p);
   frame p {Hp : p <= n} (D: prefix) := frameBlock.(Frame p) D;
   restrFrame p q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n} ε {D: prefix} d :=
     frameBlock.(RestrFrame (p := p)) q ε (D := D) d;
@@ -267,6 +266,7 @@ Definition mkPrefix {n} {C: νType n}: Type@{m'} :=
 
 Definition mkFrame'' {n} {C: νType n} p {Hp: p.+2 <= n.+1} (D: mkPrefix) :=
   C.(frame') p D.1.
+
 Definition mkFrame' {n} {C: νType n} p {Hp: p.+1 <= n.+1} (D: mkPrefix) :=
   C.(frame) p D.1.
 
@@ -278,28 +278,25 @@ Definition mkLayer {n} {C: νType n} {p} {Hp: p.+1 <= n.+1}
 Definition mkLayer' {n} {C: νType n} {p} {Hp: p.+2 <= n.+1} {D: mkPrefix}
   (d: mkFrame' p D): HSet := C.(layer) d.
 
+Definition mkRestrFrameAux' {n} {C: νType n} p q {Hpq: p.+2 <= q.+2}
+  {Hq: q.+2 <= n.+1} (ε: arity) {D: mkPrefix} :=
+    C.(restrFrame) p q ε (D := D.1).
+
 Definition mkRestrLayer {n} {C: νType n} p q {Hpq: p.+2 <= q.+2}
-  {Hq: q.+2 <= n.+1} {ε} {F: FrameBlock n.+1 p mkPrefix mkFrame'}
-  {cohFrame: forall r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2}
-    {Hq: q.+2 <= n.+1} {ε ω} {D} (d: F.(Frame p) D),
-    C.(restrFrame) p q ε (F.(RestrFrame) r ω d) =
-    C.(restrFrame) p r ω (F.(RestrFrame) q.+1 ε d)}
-  {D} {d: F.(Frame p) D}:
-  mkLayer d -> mkLayer' (F.(RestrFrame) q.+1 ε d) :=
-  fun l ω => rew [C.(painting')] cohFrame p q d in
+  {Hq: q.+2 <= n.+1} {ε}
+  {CF: CohFrameBlock n.+1 p mkPrefix mkFrame'' mkFrame' mkRestrFrameAux'}
+  {D} {d: CF.(F).(Frame p) D}:
+  mkLayer d -> mkLayer' (CF.(F).(RestrFrame) q.+1 ε d) :=
+  fun l ω => rew [C.(painting')] CF.(CohFrame) p q d in
     C.(restrPainting) p q ε (l ω).
 
 Definition mkCohLayer {n} {C: νType n} {p r q} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {ε ω}
-  {F: FrameBlock n.+1 p mkPrefix mkFrame'}
-  {cohFrame: forall r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2}
-    {Hq: q.+2 <= n.+1} {ε ω} {D} (d: F.(Frame p) D),
-    C.(restrFrame) p q ε (F.(RestrFrame) r ω d) =
-    C.(restrFrame) p r ω (F.(RestrFrame) q.+1 ε d)}
-  {D} {d: F.(Frame p) D} (l: mkLayer d):
-  rew [C.(layer')] cohFrame r.+1 q.+1 d in
-    C.(restrLayer) p q ε (mkRestrLayer (cohFrame := cohFrame) p r l) =
-    C.(restrLayer) p r ω (mkRestrLayer (cohFrame := cohFrame) p q.+1 l).
+  {CF: CohFrameBlock n.+1 p mkPrefix mkFrame'' mkFrame' mkRestrFrameAux'}
+  {D} {d: CF.(F).(Frame p) D} (l: mkLayer d):
+  rew [C.(layer')] CF.(CohFrame) r.+1 q.+1 d in
+    C.(restrLayer) p q ε (mkRestrLayer p r l) =
+    C.(restrLayer) p r ω (mkRestrLayer p q.+1 l).
 Proof.
   intros *.
   apply functional_extensionality_dep; intros 𝛉; unfold layer'.
@@ -326,55 +323,40 @@ Proof.
 Qed.
 
 #[local]
-Instance mkFrame {n} {C: νType n} {p}
-  {F: FrameBlock n.+1 p mkPrefix mkFrame'}
-  {cohFrame: forall r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2}
-    {Hq: q.+2 <= n.+1} {ε ω} {D} (d: F.(Frame p) D),
-    C.(restrFrame) p q ε (F.(RestrFrame) r ω d) =
-    C.(restrFrame) p r ω (F.(RestrFrame) q.+1 ε d)}:
-  FrameBlock n.+1 p.+1 mkPrefix mkFrame'.
-  induction p.
-  * intros Hp D; exact {d : Frame.(frame p) D & mkLayer d}.
-  * simpl; intros * ε * (d, l); invert_le Hpq. (* restrFramep *)
-    now exact (rew <- [id] C.(eqFrameSp) in
-      (Frame.(restrFrame) _ ε d; mkRestrLayer p q l)).
+Instance mkCohFrameBlock0 {n} {C: νType n}:
+  CohFrameBlock n.+1 O mkPrefix mkFrame'' mkFrame' mkRestrFrameAux'.
+  unshelve esplit.
+  * unshelve esplit.
+    - intros. now exact hunit. (* Frame0 *)
+    - intros. now exact tt. (* restrFrame0 *)
+  * now intros.
+Defined.
+
+#[local]
+Instance mkCohFrameBlockSp {n} {C: νType n} {p}
+  {CF: CohFrameBlock n.+1 p mkPrefix mkFrame'' mkFrame' mkRestrFrameAux'}:
+  CohFrameBlock n.+1 p.+1 mkPrefix mkFrame'' mkFrame' mkRestrFrameAux'.
+  unshelve esplit.
+  * unshelve esplit.
+    - intros Hp D. now exact {d : CF.(F).(Frame p) D & mkLayer d}.
+    - simpl; intros * ε * (d, l); invert_le Hpq. (* restrFramep *)
+      now exact (CF.(F).(RestrFrame) _ ε d; mkRestrLayer p q l).
   * simpl; intros q r Hpr Hrq Hq ε ω D (d, l). (* cohframep *)
     invert_le Hpr; invert_le Hrq.
-
-    (* A roundabout way to simplify the proof of mkCohPainting_step *)
-    etransitivity.
-    apply C.(eqRestrFrameSp).
-    etransitivity.
-    2: symmetry; apply C.(eqRestrFrameSp).
-
-    apply f_equal with (B := C.(FramePrev).(frame') _ D.1)
-      (f := fun x => rew <- (C.(eqFrameSp') (p := p)) in x).
-    now exact (= Frame.(cohFrame) q.+1 r.+1 d; mkCohLayer l).
+    now exact (= CF.(CohFrame) q.+1 r.+1 d; mkCohLayer l).
 Defined.
 
 (** Finally, we can define mkFrame at level n.+1 for all p *)
 #[local]
-Instance mkFrame {n} {C: νType n} p: FrameBlock n.+1 p mkPrefix mkFramePrev.
+Instance mkCohFrameBlock {n} {C: νType n} p:
+  CohFrameBlock n.+1 p mkPrefix mkFrame'' mkFrame' mkRestrFrameAux'.
   induction p.
-  * now exact mkFrame0. (* p = O *)
-  * now exact mkFrameSp. (* p = S _ *)
+  * now exact mkCohFrameBlock0. (* p = O *)
+  * now exact mkCohFrameBlockSp. (* p = S _ *)
 Defined.
 
 (** For [Painting], we take a different strategy. We first define [mkpainting],
     [mkRestrPainting], and lemmas corresponding to their computational properties *)
-
-(** First, memoizing the previous levels of [Painting] *)
-#[local]
-Instance mkPaintingPrev {n} {C: νType n}:
-  PaintingBlockPrev n.+1 mkPrefix mkFramePrev :=
-{|
-  painting' p (Hp: p.+1 <= n.+1) D := C.(Painting).(painting) D.2:
-    mkFramePrev.(frame') p D -> HSet; (* Coq bug? *)
-  painting'' p (Hp: p.+2 <= n.+1) D (d: mkFramePrev.(frame'') p D) :=
-    C.(PaintingPrev).(painting') d;
-  restrPainting' p q (Hpq: p.+2 <= q.+2) (Hq: q.+2 <= n.+1) (ε: arity) D d b :=
-    C.(Painting).(restrPainting) p q (E := D.2) b;
-|}.
 
 (** Then, the component [painting] of [Painting], built by upwards induction from [p] to [n] *)
 
