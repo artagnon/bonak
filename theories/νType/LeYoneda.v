@@ -318,10 +318,12 @@ Ltac slide_down n n' H success :=
 Ltac find p q n0 success :=
   debug ltac:(idtac "Search a proof of" p "<=" q);
   match is_less q p O with
-  | Some ?n => debug ltac:(idtac "is_less " p q n); success p O n constr:(eq_refl q)
+  | Some ?n => debug ltac:(idtac "is_less " p q n);
+               success p O n constr:(eq_refl q)
   | None =>
-    match goal with
-    | [ H : leY ?p' ?q' |- _ ] =>
+    let rec aux := match goal with
+    | [ H: leI ?p' ?q' |- _ ] => apply leY_of_leI in H; aux
+    | [ H: leY ?p' ?q' |- _ ] =>
       debug ltac:(idtac "Try" H ":" p' "<=" q' "for" p "<=" q);
       match is_less q q' O with
       | Some ?n =>
@@ -330,8 +332,7 @@ Ltac find p q n0 success :=
         | Some ?n' => let n1 := eval compute in (n + n0) in
           debug ltac:(idtac "Found hyp" p' p n' n1 H); success p' n' n1 H
         | None =>
-          debug ltac:(idtac "Midpoint" p' "<=" q' "|-" p "<=" q
-                        "n :=" n);
+          debug ltac:(idtac "Midpoint" p' "<=" q' "|-" p "<=" q "n :=" n);
           let n1 := eval compute in (n + n0) in
           find p p' n1
             ltac:(fun p0 n n' H' =>
@@ -343,13 +344,14 @@ Ltac find p q n0 success :=
         end
       | None => debug ltac:(idtac "Try next hyp"); fail
       end
-    end
+    end in aux
   end.
 
 Ltac solve_leY :=
-  debug ltac:(idtac "Trying to solve leY");
   lazymatch goal with
+  | [ |- leI ?p ?q ] => apply leI_of_leY; solve_leY
   | [ |- leY ?p ?q ] =>
+  debug ltac:(idtac "Trying to solve leY");
     apply leY_refl ||
     let success x n n' H :=
       slide_down n n' H ltac:(fun proof =>
@@ -361,7 +363,7 @@ Ltac solve_leY :=
 Example ex1 (n p q r : nat)
   (Hpr : p.+2 <= r.+2)
   (Hrq : r.+2 <= q.+2)
-  (Hq : q.+2 <= n) : forall C, (p.+1 <= q.+2 -> p.+1 <= q.+1 -> p.+2 <= r.+2 -> p.+2 <= n -> C) -> C.
+  (Hq : q.+2 <= n) : forall C, (p.+1 <~ q.+2 -> p.+1 <~ q.+1 -> p.+2 <= r.+2 -> p.+2 <= n -> C) -> C.
 intros C H. apply H.
 solve_leY.
 solve_leY.
@@ -371,7 +373,7 @@ Qed.
 
 Hint Extern 0 (leY _ _) => solve_leY : typeclass_instances.
 
-Example ex2 {n} p q r {Hpr : p.+2 <= r.+2} {Hrq : r.+2 <= q.+2} {Hq : q.+2 <= n}
+Example ex2 {n} p q r {Hpr : p.+2 <~ r.+2} {Hrq : r.+2 <~ q.+2} {Hq : q.+2 <= n}
   {H: forall p q r, p.+1 <= r.+1 -> r <= q -> q <= n -> p <= n}: p <= n.
   now apply (H p q r _ _ _).
 Qed.

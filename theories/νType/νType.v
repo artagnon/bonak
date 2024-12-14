@@ -12,6 +12,7 @@ Set Warnings "-notation-overridden".
 From Bonak Require Import HSet.
 
 From Bonak Require Import LeYoneda.
+From Bonak Require Import LeInductive.
 
 Set Primitive Projections.
 Set Printing Projections.
@@ -223,8 +224,11 @@ Class νType n := {
   layer {p} {Hp: p.+1 <= n} {D} (d: frame p D) := layerAux restrFrameBlock d;
   restrLayer p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity) {D: prefix}
     {d: frame p D} := restrLayerAux (D := D) ε restrFrameBlock (d := d);
-  painting {p} {Hp: p <= n} {D}:
-    (frame n D -> HSet@{m}) -> frame p D -> HSet@{m};
+  painting {p} {Hp: p <= n} {D} (E: frame n D -> HSet@{m}):
+    forall (d: frame p D), HSet@{m} :=
+    le_induction Hp (fun p Hp => frame p D -> HSet) E
+    (fun p (Hp: p.+1 <= n) (Hind: frame p.+1 D -> HSet) (d: frame p D) =>
+      {l : layer d & Hind (d; l)});
   restrPainting p q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n} ε {D}
     {E: frame n D -> HSet@{m}} {d: frame p D}
     (c: painting E d): painting' (restrFrame p q ε d);
@@ -350,7 +354,7 @@ Defined.
 
 (** Finally, we can define mkFrame at level n.+1 for all p *)
 #[local]
-Instance mkCohFrameBlock {n} {C: νType n} p:
+Instance mkCohFrameBlock {n} {C: νType n} {p}:
   CohFrameBlock n.+1 p mkPrefix mkFrame'' mkFrame' mkRestrFrameAux'.
   induction p.
   * now exact mkCohFrameBlock0. (* p = O *)
@@ -360,20 +364,27 @@ Defined.
 (** For [Painting], we take a different strategy. We first define [mkpainting],
     [mkRestrPainting], and lemmas corresponding to their computational properties *)
 
+(** First, memoizing the previous levels of [Painting] *)
+Definition mkPainting'' {n} {C: νType n} {p} {Hp: p.+2 <= n.+1} {D: mkPrefix}:
+  mkFrame'' p D -> HSet@{m} :=
+  C.(painting').
+
 (** Then, the component [painting] of [Painting], built by upwards induction from [p] to [n] *)
 
-Definition mkPaintingType n {C: νType n} p {Hp: p <= n.+1} {D}
-  (E: (mkCohFrameBlock n.+1).(frame n.+1) D -> HSet)
-  (d: (mkCohFrameBlock p).(frame p) D): HSet.
-Proof.
-  revert d; apply le_induction with (Hp := Hp); clear p Hp.
-  * now exact E. (* p = n *)
-  * intros p Hp mkPaintingTypeSp d. (* p = S n *)
-    now exact {l : mkLayer d & mkPaintingTypeSp (d; l)}.
-Defined.
+Definition mkPainting' {n} {C: νType n} {p} {Hp: p <= n.+1} {D: mkPrefix} d:
+  HSet := C.(painting) D.2 d.
+
+Definition mkPaintingType n {C: νType n} p {Hp: p <= n.+1} D E d: HSet :=
+  let layer {p} {Hp: p.+1 <= n.+1} d :=
+    hforall ε, mkPainting' (mkCohFrameBlock.(RF).(RestrFrame) p ε d) in
+  le_induction Hp (fun p Hp => mkCohFrameBlock.(RF).(Frame p) D -> HSet) E
+  (fun p (Hp: p.+1 <= n.+1)
+  (Hind: mkCohFrameBlock.(RF).(Frame p.+1) D -> HSet)
+    (d: mkCohFrameBlock.(RF).(Frame p) D) =>
+    {l : layer d & Hind (d; l)}).
 
 Lemma mkPaintingType_base_computes {n} {C: νType n}
-  {D E} {d: (mkFrame n.+1).(frame n.+1) D}:
+  {D E} {d: (mkCohFrameBlock n.+1).(RF).(Frame n.+1) D}:
   mkPaintingType n n.+1 E d = E d.
 Proof.
   unfold mkPaintingType; now rewrite le_induction_base_computes.
