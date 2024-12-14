@@ -76,7 +76,7 @@ Variable arity: HSet.
     restrictions and coherence conditions on frame restrictions.
 *)
 
-Class FrameBlock n p (prefix: Type@{m'})
+Class RestrFrameBlock n p (prefix: Type@{m'})
   (Frame': forall p {Hp: p.+1 <= n}, prefix -> HSet@{m}) := {
   Frame {Hp: p <= n}: prefix -> HSet@{m};
   RestrFrame q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n} (ε: arity) {D}:
@@ -92,8 +92,8 @@ Class LayerAuxType' {n prefix} :=
 
 Class LayerAuxType {n prefix frame'} :=
   LayerAux_t: forall p (Hp: p.+1 <= n) D
-    (frameBlock: FrameBlock n p prefix frame')
-    (d: frameBlock.(Frame p) D), HSet@{m}.
+    (restrFrameBlock: RestrFrameBlock n p prefix frame')
+    (d: restrFrameBlock.(Frame p) D), HSet@{m}.
 
 Definition FrameFix' {n prefix} (layerAux': LayerAuxType') :=
   fix frame' p: forall (Hp: p.+1 <= n) (D: prefix), HSet@{m} :=
@@ -110,47 +110,47 @@ Class RestrLayerAuxType {n prefix}
   (frame' := fun p {Hp} D => FrameFix' layerAux' p (Hp := Hp) D)
   (layer' := fun {p Hp D} => layerAux' p Hp D (frame' p D)) :=
   RestrLayerAux_t: forall p q (Hpq: p.+2 <= q.+2) (Hq: q.+2 <= n) ε
-    (D: prefix) (frameBlock: FrameBlock n p prefix frame')
-    (d: frameBlock.(Frame p) D),
-    layerAux p _ D frameBlock d ->
-      layer' (frameBlock.(RestrFrame) q.+1 ε d).
+    (D: prefix) (restrFrameBlock: RestrFrameBlock n p prefix frame')
+    (d: restrFrameBlock.(Frame p) D),
+    layerAux p _ D restrFrameBlock d ->
+      layer' (restrFrameBlock.(RestrFrame) q.+1 ε d).
 
-Definition FrameBlockFix {n prefix}
+Definition RestrFrameBlockFix {n prefix}
   (layerAux': LayerAuxType')
   (frame' := fun p {Hp} D => FrameFix' layerAux' p (Hp := Hp) D)
   (layerAux: LayerAuxType)
   (restrLayerAux: RestrLayerAuxType) :=
-  fix frameBlock {p}: FrameBlock n p prefix frame' :=
+  fix restrFrameBlock {p}: RestrFrameBlock n p prefix frame' :=
   match p with
   | O => {| Frame _ _ := hunit; RestrFrame _ _ _ _ _ _ := tt :> hunit |}
   | S p => {|
-    Frame Hp D := {d: frameBlock.(Frame p) D & layerAux p Hp D frameBlock d};
+    Frame Hp D := {d: restrFrameBlock.(Frame p) D & layerAux p Hp D restrFrameBlock d};
     RestrFrame q := match q
     return forall (Hpq: p.+2 <= q.+1) (Hq: q.+1 <= n) _ D, _ -> frame' p.+1 D
     with
     | O => fun Hpq _ _ _ => ltac:(le_contra Hpq)
     | S q => fun Hpq Hq ε D d =>
-      (frameBlock.(RestrFrame) q.+1 ε d.1;
-       restrLayerAux p q Hpq Hq ε D frameBlock _ d.2)
+      (restrFrameBlock.(RestrFrame) q.+1 ε d.1;
+       restrLayerAux p q Hpq Hq ε D restrFrameBlock _ d.2)
     end
   |}
   end.
 
-Arguments FrameBlockFix {n prefix} layerAux' layerAux restrLayerAux {p}.
+Arguments RestrFrameBlockFix {n prefix} layerAux' layerAux restrLayerAux {p}.
 
 Class CohFrameBlock n p (prefix: Type@{m'})
   (frame'': forall p {Hp: p.+2 <= n}, prefix -> HSet@{m})
   (frame': forall p {Hp: p.+1 <= n}, prefix -> HSet@{m})
   (restrFrame' : forall p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity)
     {D: prefix}, frame' p D -> frame'' p D) := {
-  F: FrameBlock n p prefix frame';
+  RF: RestrFrameBlock n p prefix frame';
   CohFrame r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
-    {ε ω} {D} (d: F.(Frame p) D):
-    restrFrame' p q (Hpq := Hpr ↕ Hrq) (Hq := Hq) ε (F.(RestrFrame) r ω d) =
-    restrFrame' p r ω (Hpq := Hpr) (Hq := Hrq ↕ Hq) (F.(RestrFrame) q.+1 ε d);
+    {ε ω} {D} (d: RF.(Frame p) D):
+    restrFrame' p q (Hpq := Hpr ↕ Hrq) (Hq := Hq) ε (RF.(RestrFrame) r ω d) =
+    restrFrame' p r ω (Hpq := Hpr) (Hq := Hrq ↕ Hq) (RF.(RestrFrame) q.+1 ε d);
 }.
 
-Arguments F {n p prefix frame'' frame' restrFrame'} _.
+Arguments RF {n p prefix frame'' frame' restrFrame'} _.
 Arguments CohFrame {n p prefix frame'' frame' restrFrame'} _ r q
   {Hpr Hrq Hq ε ω} {D} d.
 
@@ -194,33 +194,35 @@ Class νType n := {
     layerAux' (frame' p D) d;
   painting' {p} {Hp: p.+1 <= n} {D: prefix}: frame' p D -> HSet@{m};
   cohFrameAux {p} r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
-    {ε ω: arity} {D: prefix} (frameBlock: FrameBlock n p prefix frame')
-    (d: frameBlock.(Frame p) D):
-    restrFrame' p q ε (frameBlock.(RestrFrame) r ω d) =
-    restrFrame' p r ω (frameBlock.(RestrFrame) q.+1 ε d);
+    {ε ω: arity} {D: prefix}
+    (restrFrameBlock: RestrFrameBlock n p prefix frame')
+    (d: restrFrameBlock.(Frame p) D):
+    restrFrame' p q ε (restrFrameBlock.(RestrFrame) r ω d) =
+    restrFrame' p r ω (restrFrameBlock.(RestrFrame) q.+1 ε d);
   restrPainting' p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity) {D: prefix}
     {d: frame' p D}: painting' d -> painting'' (restrFrame' p q ε d);
   layerAux {p} {Hp: p.+1 <= n} {D: prefix}
-    (frameBlock: FrameBlock n p prefix frame')
-    (d: frameBlock.(Frame p) D) :=
-    hforall ε, painting' (frameBlock.(RestrFrame) p ε d);
+    (restrFrameBlock: RestrFrameBlock n p prefix frame')
+    (d: restrFrameBlock.(Frame p) D) :=
+    hforall ε, painting' (restrFrameBlock.(RestrFrame) p ε d);
   restrLayerAux {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} ε {D: prefix}
-    (frameBlock: FrameBlock n p prefix frame')
-    {d: frameBlock.(Frame p) D}:
-    layerAux frameBlock d -> layer' (frameBlock.(RestrFrame) q.+1 ε d) :=
-    fun l ω => rew [painting''] cohFrameAux p q frameBlock d in
+    (restrFrameBlock: RestrFrameBlock n p prefix frame')
+    {d: restrFrameBlock.(Frame p) D}:
+    layerAux restrFrameBlock d ->
+    layer' (restrFrameBlock.(RestrFrame) q.+1 ε d) :=
+    fun l ω => rew [painting''] cohFrameAux p q restrFrameBlock d in
       restrPainting' p q ε (l ω);
-  frameBlock {p} := FrameBlockFix (@layerAux') (@layerAux) (@restrLayerAux)
-    (p := p);
-  frame p {Hp : p <= n} (D: prefix) := frameBlock.(Frame p) D;
+  restrFrameBlock {p} := RestrFrameBlockFix (@layerAux') (@layerAux)
+    (@restrLayerAux) (p := p);
+  frame p {Hp : p <= n} (D: prefix) := restrFrameBlock.(Frame p) D;
   restrFrame p q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n} ε {D: prefix} d :=
-    frameBlock.(RestrFrame (p := p)) q ε (D := D) d;
+    restrFrameBlock.(RestrFrame (p := p)) q ε (D := D) d;
   cohFrame {p} r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
     {ε ω: arity} {D: prefix} :=
-    cohFrameAux (ε := ε) (ω := ω) (D := D) r q frameBlock;
-  layer {p} {Hp: p.+1 <= n} {D} (d: frame p D) := layerAux frameBlock d;
+    cohFrameAux (ε := ε) (ω := ω) (D := D) r q restrFrameBlock;
+  layer {p} {Hp: p.+1 <= n} {D} (d: frame p D) := layerAux restrFrameBlock d;
   restrLayer p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity) {D: prefix}
-    {d: frame p D} := restrLayerAux (D := D) ε frameBlock (d := d);
+    {d: frame p D} := restrLayerAux (D := D) ε restrFrameBlock (d := d);
   painting {p} {Hp: p <= n} {D}:
     (frame n D -> HSet@{m}) -> frame p D -> HSet@{m};
   restrPainting p q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n} ε {D}
@@ -271,7 +273,7 @@ Definition mkFrame' {n} {C: νType n} p {Hp: p.+1 <= n.+1} (D: mkPrefix) :=
   C.(frame) p D.1.
 
 Definition mkLayer {n} {C: νType n} {p} {Hp: p.+1 <= n.+1}
-  {F: FrameBlock n.+1 p mkPrefix mkFrame'}
+  {F: RestrFrameBlock n.+1 p mkPrefix mkFrame'}
   {D} (d: F.(Frame p) D): HSet :=
   hforall ε, C.(painting) D.2 (F.(RestrFrame) p ε d).
 
@@ -285,15 +287,15 @@ Definition mkRestrFrameAux' {n} {C: νType n} p q {Hpq: p.+2 <= q.+2}
 Definition mkRestrLayer {n} {C: νType n} p q {Hpq: p.+2 <= q.+2}
   {Hq: q.+2 <= n.+1} {ε}
   {CF: CohFrameBlock n.+1 p mkPrefix mkFrame'' mkFrame' mkRestrFrameAux'}
-  {D} {d: CF.(F).(Frame p) D}:
-  mkLayer d -> mkLayer' (CF.(F).(RestrFrame) q.+1 ε d) :=
+  {D} {d: CF.(RF).(Frame p) D}:
+  mkLayer d -> mkLayer' (CF.(RF).(RestrFrame) q.+1 ε d) :=
   fun l ω => rew [C.(painting')] CF.(CohFrame) p q d in
     C.(restrPainting) p q ε (l ω).
 
 Definition mkCohLayer {n} {C: νType n} {p r q} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {ε ω}
   {CF: CohFrameBlock n.+1 p mkPrefix mkFrame'' mkFrame' mkRestrFrameAux'}
-  {D} {d: CF.(F).(Frame p) D} (l: mkLayer d):
+  {D} {d: CF.(RF).(Frame p) D} (l: mkLayer d):
   rew [C.(layer')] CF.(CohFrame) r.+1 q.+1 d in
     C.(restrLayer) p q ε (mkRestrLayer p r l) =
     C.(restrLayer) p r ω (mkRestrLayer p q.+1 l).
@@ -338,9 +340,9 @@ Instance mkCohFrameBlockSp {n} {C: νType n} {p}
   CohFrameBlock n.+1 p.+1 mkPrefix mkFrame'' mkFrame' mkRestrFrameAux'.
   unshelve esplit.
   * unshelve esplit.
-    - intros Hp D. now exact {d : CF.(F).(Frame p) D & mkLayer d}.
+    - intros Hp D. now exact {d : CF.(RF).(Frame p) D & mkLayer d}.
     - simpl; intros * ε * (d, l); invert_le Hpq. (* restrFramep *)
-      now exact (CF.(F).(RestrFrame) _ ε d; mkRestrLayer p q l).
+      now exact (CF.(RF).(RestrFrame) _ ε d; mkRestrLayer p q l).
   * simpl; intros q r Hpr Hrq Hq ε ω D (d, l). (* cohframep *)
     invert_le Hpr; invert_le Hrq.
     now exact (= CF.(CohFrame) q.+1 r.+1 d; mkCohLayer l).
@@ -361,8 +363,8 @@ Defined.
 (** Then, the component [painting] of [Painting], built by upwards induction from [p] to [n] *)
 
 Definition mkPaintingType n {C: νType n} p {Hp: p <= n.+1} {D}
-  (E: (mkFrame n.+1).(frame n.+1) D -> HSet)
-  (d: (mkFrame p).(frame p) D): HSet.
+  (E: (mkCohFrameBlock n.+1).(frame n.+1) D -> HSet)
+  (d: (mkCohFrameBlock p).(frame p) D): HSet.
 Proof.
   revert d; apply le_induction with (Hp := Hp); clear p Hp.
   * now exact E. (* p = n *)
