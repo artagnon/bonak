@@ -266,7 +266,7 @@ Arguments cohPainting {n} _ p r q {Hpr Hrq Hq} ε ω {D} E [d] c.
 
 (** Extending the initial prefix *)
 Definition mkPrefix {n} {C: νType n}: Type@{m'} :=
-  sigT (fun D : C.(prefix) => C.(frame) n D -> HSet).
+  { D : C.(prefix) &_T C.(frame) n D -> HSet }.
 
 (** The coherence conditions that Frame needs to satisfy to build the next level
    of Frame. These will be used in the proof script of mkFrame. *)
@@ -699,8 +699,8 @@ Arguments eqReflPaintingSp {n' C} _ p q {Hpq Hq D R E L d l c}.
 #[local]
 Instance mkReflPrefix {n'} {C: νType n'.+1} {G: Dgn C}: mkRefl
   (mkνTypeSn C).(prefix) :=
-  fun D => sigT (fun R : mk G.(ReflPrefix) D.1 =>
-  HasRefl (DgnFrame := fun p => G.(DgnFrame)) D.2).
+  fun D => { R : mk G.(ReflPrefix) D.1 &_T
+  HasRefl (DgnFrame := fun p => G.(DgnFrame)) D.2 }.
 
 #[local]
 Instance mkDgnFramePrev {n'} {C: νType n'.+1} {G: Dgn C}:
@@ -1019,8 +1019,8 @@ End νType.
 Definition AugmentedSemiSimplicial := νTypes hunit.
 Definition SemiSimplicial := νTypeFrom hunit 1 (tt; fun _ => hunit).
 Definition SemiCubical := νTypes hbool.
-Definition AugmentedSimplicial := sigT (νDgnTypes hunit).
-Definition Cubical := sigT (νDgnTypes hbool).
+Definition AugmentedSimplicial := { X &_T νDgnTypes hunit X }.
+Definition Cubical := { X &_T νDgnTypes hbool X }.
 
 (** Some examples *)
 
