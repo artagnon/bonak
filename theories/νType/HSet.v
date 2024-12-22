@@ -101,8 +101,6 @@ Proof.
   exists (forall a: A, B a). intros x y h g. now apply hpiT_UIP.
 Defined.
 
-Notation "'hforall' x , B" := (hpiT (fun x => B))
-  (x binder, at level 200): type_scope.
-
-Notation "'hforall' x : A , B" := (hpiT (fun x: A => B))
-  (x binder, at level 200): type_scope.
+Notation "'hforall' x .. y , P" := (hpiT (fun x => .. (hpiT (fun y => P)) ..))
+  (at level 10, x binder, y binder, P at level 200,
+  format "'[  ' '[  ' 'hforall'  x  ..  y ']' ,  '/' P ']'") : type_scope.
