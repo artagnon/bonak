@@ -77,6 +77,26 @@ Variable arity: HSet.
     restrictions and coherence conditions on frame restrictions.
 *)
 
+Class RestrFrameTypeBlock' n prefix p {Hp: p <= n}
+  (frame'': forall p {Hp: p.+2 <= n}, prefix -> HSet) := {
+  RestrFrameType': Type;
+  Frame': RestrFrameType' -> HSet;
+}.
+
+Definition RestrFrameTypeBlockFix' n prefix
+  (frame'' : forall p {Hp: p.+2 <= n}, prefix -> HSet)
+  (painting'' : forall {p} {Hp: p.+2 <= n} D, frame'' p D -> HSet) D:
+   forall p {Hp: p.+1 <= n}, RestrFrameTypeBlock' n prefix p frame''
+ :=
+  fix aux p := match p with
+     | 0 => fun Hp =>
+       {| RestrFrameType' := unit; Frame' _ := hunit |}
+     | p.+1 => fun Hp: (p.+2 <= n) =>
+       {| RestrFrameType' :=
+            { R : (aux p (↓Hp)).(RestrFrameType') &_T forall (ε: arity), (aux p _).(Frame') R -> frame'' p D };
+          Frame' R := {d: (aux p _).(Frame') R.1 & hforall ε, painting'' D (R.2 ε d)} |}
+     end.
+
 Class RestrFrameBlock n p (prefix: Type@{m'})
   (Frame': forall p {Hp: p.+1 <= n}, prefix -> HSet) := {
   Frame {Hp: p <= n}: prefix -> HSet;
@@ -185,15 +205,10 @@ Class νType n := {
   prefix: Type@{m'};
   frame'' p {Hp: p.+2 <= n}: prefix -> HSet;
   painting'' {p} {Hp: p.+2 <= n} {D: prefix}: frame'' p D -> HSet;
-  restrFrameAux' p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity) {D: prefix}
-    (frame': HSet): frame' -> frame'' p D;
-  layerAux' {p} {Hp: p.+2 <= n} {D: prefix} (frame': HSet) (d: frame') :=
-    hforall ε, painting'' (D := D) (restrFrameAux' p p ε frame' d);
-  frame' p {Hp} D := FrameFix' (@layerAux') p (Hp := Hp) D;
-  restrFrame' p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity) {D: prefix}
-    (d: frame' p D) := restrFrameAux' p q ε (frame' p D) d;
-  layer' {p} {Hp: p.+2 <= n} {D: prefix} (d: frame' p D) :=
-    layerAux' (frame' p D) d;
+  restrFrame' p {Hp: p.+2 <= n} {D: prefix}:
+    (RestrFrameTypeBlockFix' n prefix frame'' (@painting'') D p).(RestrFrameType');
+  frame' p {Hp} D :=
+    (RestrFrameTypeBlockFix' n prefix frame'' (@painting'') D p).(Frame') (restrFrame' p);
   painting' {p} {Hp: p.+1 <= n} {D: prefix}: frame' p D -> HSet;
   cohFrameAux {p} r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
     {ε ω: arity} {D: prefix}
