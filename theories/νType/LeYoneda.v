@@ -153,7 +153,7 @@ Ltac invert_le Hpq :=
 
 Lemma leY_of_leI {n p}: p <~ n -> p <= n.
 Proof.
-  intros [refl | q r]. now apply leY_refl. apply leY_down. induction l.
+  intros [| q r]. now apply leY_refl. apply leY_down. induction r.
   now apply leY_refl. now apply leY_down.
 Qed.
 

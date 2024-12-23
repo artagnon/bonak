@@ -2,10 +2,13 @@ From Bonak Require Import Notation.
 
 (** An inductive definition of le *)
 Reserved Infix "<~" (at level 70).
-Inductive leI: nat -> nat -> Type :=
-| leI_refl n: n <~ n
-| leI_down {n p}: p.+1 <~ n -> p <~ n
-where "n <~ m" := (leI n m): nat_scope.
+Inductive leI n: nat -> Type :=
+| leI_refl: n <~ n
+| leI_down {p}: p.+1 <~ n -> p <~ n
+where "p <~ n" := (leI n p): nat_scope.
+
+Arguments leI_refl n.
+Arguments leI_down {n p} H.
 
 Lemma leI_up {n p: nat}: n <~ p -> n <~ p.+1.
   induction 1. constructor. now constructor. now constructor.
@@ -16,7 +19,8 @@ Lemma leI_0 {p}: O <~ p.
 Defined.
 
 Lemma leI_lower_both {n p}: p.+1 <~ n.+1 -> p <~ n.
-  induction 1 using leI_rec with (P := fun p n _ => pred p <~ pred n).
+  intro H. change p with (pred (S p)).
+  induction H.
   now constructor. destruct p0. now apply leI_0. now constructor.
 Defined.
 
