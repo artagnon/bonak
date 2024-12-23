@@ -132,37 +132,41 @@ Definition take_head n
 Definition take_tail n
   {frame'': forall p {Hp: p.+2 <= n.+1}, HSet}
   {painting'': forall p {Hp: p.+2 <= n.+1}, frame'' p -> HSet}
-  {H: (mkRestrFrameTypeBlock'
+  {restrFrames: (mkRestrFrameTypeBlock'
   (frame'' := frame'') (painting'' := painting'') n.+1 n).(RestrFrameType')}
-  p Hp := (take_head (restrFrames := H) n p.+1 Hp).2: arity ->
-    (mkRestrFrameTypeBlock' n.+1 p).(Frame')
-    (take_head (restrFrames := H) n p.+1 _).1 ->
-    frame'' p.
+  p Hp: arity -> (mkRestrFrameTypeBlock' n.+1 p).(Frame')
+        (take_head (restrFrames := restrFrames) n p.+1 _).1 -> frame'' p :=
+  (take_head (restrFrames := restrFrames) n p.+1 Hp).2.
 
-Lemma take_head_proj1 n p Hp
+Lemma eqFrameSp {n p} {Hp: p.+2 <~ n}
   {frame'': forall p {Hp: p.+2 <= n.+1}, HSet}
   {painting'': forall p {Hp: p.+2 <= n.+1}, frame'' p -> HSet}
   {restrFrames: (mkRestrFrameTypeBlock'
-    (frame'' := frame'') (painting'' := painting'') n.+1 n).(RestrFrameType')}:
-  (take_head (frame'' := frame'') (painting'' := painting'')
-    (restrFrames := restrFrames) n p.+1 Hp).1 =
-    take_head (restrFrames := restrFrames) n p (leI_down Hp).
+    (frame'' := frame'') (painting'' := painting'') n.+1 n).(RestrFrameType')}
+  (restrFrame := fun p {Hp} => take_tail (restrFrames := restrFrames) n p Hp)
+  (frame' := fun p {Hp: p.+1 <~ n} =>
+    (mkRestrFrameTypeBlock' n.+1 p).(Frame') (take_head n p.+1 Hp).1):
+  frame' p.+1 (Hp := Hp) =
+    {d: frame' p & hforall ε, painting'' p
+    (restrFrame p (Hp := leI_down Hp) ε d)}.
 Proof.
-  induction p. now trivial.
-Admitted.
+  unfold frame'. now simpl.
+Qed.
 
 Definition Painting' n p {Hp}
-  (frame'': forall p {Hp: p.+2 <= n.+1}, HSet)
-  (painting'': forall p {Hp: p.+2 <= n.+1}, frame'' p -> HSet)
-  (restrFrames': (mkRestrFrameTypeBlock' n.+1 n).(RestrFrameType'))
-  (restrFrame := fun p {Hp} => take_tail n p Hp)
-  (frame' := fun p {Hp: p.+1 <= n.+1} =>
-    (mkRestrFrameTypeBlock' n.+1 p).(Frame') (take_head n p.+1 _).1)
-    {E: frame' n -> HSet}: frame' p -> HSet :=
+  {frame'': forall p {Hp: p.+2 <= n.+1}, HSet}
+  {painting'': forall p {Hp: p.+2 <= n.+1}, frame'' p -> HSet}
+  {restrFrames: (mkRestrFrameTypeBlock' (frame'' := frame'')
+    (painting'' := painting'')n.+1 n).(RestrFrameType')}
+  (restrFrame := fun p {Hp} => take_tail (restrFrames := restrFrames) n p Hp)
+  (frame' := fun p {Hp: p.+1 <~ n} =>
+    (mkRestrFrameTypeBlock' (frame'' := frame'') (painting'' := painting'')
+    n.+1 p).(Frame') (take_head (restrFrames := restrFrames) n p.+1 Hp).1)
+  {E: frame' n -> HSet}: frame' p -> HSet :=
   le_induction' Hp (fun p Hp => frame' p -> HSet) E
     (fun p Hp (Hind: frame' p.+1 -> HSet) (d: frame' p) =>
     {l: hforall ε, painting'' p (restrFrame p ε d) &
-        Hind (d; l)}).
+      Hind (rew <- eqFrameSp in (d; l))}).
 
 Definition CohFrameTypeBlockFix n
   (frame'': forall p {Hp: p.+2 <= n}, HSet)
