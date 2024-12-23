@@ -77,25 +77,112 @@ Variable arity: HSet.
     restrictions and coherence conditions on frame restrictions.
 *)
 
-Class RestrFrameTypeBlock' n prefix p {Hp: p <= n}
-  (frame'': forall p {Hp: p.+2 <= n}, prefix -> HSet) := {
+Class RestrFrameTypeBlock' := {
   RestrFrameType': Type;
   Frame': RestrFrameType' -> HSet;
 }.
 
 Definition RestrFrameTypeBlockFix' n prefix
-  (frame'' : forall p {Hp: p.+2 <= n}, prefix -> HSet)
-  (painting'' : forall {p} {Hp: p.+2 <= n} D, frame'' p D -> HSet) D:
-   forall p {Hp: p.+1 <= n}, RestrFrameTypeBlock' n prefix p frame''
- :=
-  fix aux p := match p with
-     | 0 => fun Hp =>
-       {| RestrFrameType' := unit; Frame' _ := hunit |}
-     | p.+1 => fun Hp: (p.+2 <= n) =>
-       {| RestrFrameType' :=
-            { R : (aux p (↓Hp)).(RestrFrameType') &_T forall (ε: arity), (aux p _).(Frame') R -> frame'' p D };
-          Frame' R := {d: (aux p _).(Frame') R.1 & hforall ε, painting'' D (R.2 ε d)} |}
-     end.
+  (frame'': forall p {Hp: p.+2 <= n}, prefix -> HSet)
+  (painting'': forall {p} {Hp: p.+2 <= n} D, frame'' p D -> HSet) D :=
+  fix aux p: forall (Hp: p.+1 <= n), RestrFrameTypeBlock' :=
+  match p with
+    | O => fun Hp =>
+      {| RestrFrameType' := unit; Frame' _ := hunit |}
+    | S p => fun (Hp: p.+2 <= n) =>
+      {|
+        RestrFrameType' :=
+          { R : (aux p _).(RestrFrameType') &T
+          forall (ε: arity), (aux p _).(Frame') R -> frame'' p D };
+        Frame' R :=
+          { d: (aux p _).(Frame') R.1 & hforall ε, painting'' D (R.2 ε d) }
+      |}
+  end.
+
+Eval compute in fun x y z D => RestrFrameTypeBlockFix' 3 x y z D 2.
+
+Class CohFrameTypeBlock n prefix
+  (frame'': forall p {Hp: p.+2 <= n}, prefix -> HSet)
+  (painting'': forall {p} {Hp: p.+2 <= n} D, frame'' p D -> HSet) D := {
+  CohFrameType: Type;
+  Frame: forall Q: CohFrameType,
+   forall p {Hp: p.+1 <= n},
+   forall (R: (RestrFrameTypeBlockFix' n prefix frame'' (@painting'') D p Hp).(RestrFrameType')), HSet;
+  RestrFrame: forall Q: CohFrameType,
+   forall {p} q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n} (ε: arity),
+   forall (R: (RestrFrameTypeBlockFix' n prefix frame'' (@painting'') D p _).(RestrFrameType')),
+   Frame Q p R ->
+   (RestrFrameTypeBlockFix' n prefix frame'' (@painting'') D p _).(Frame') R;
+}.
+
+(* Definition Painting' n prefix D E
+  (frame'': forall p {Hp: p.+2 <= n}, prefix -> HSet)
+  (painting'': forall {p} {Hp: p.+2 <= n} D, frame'' p D -> HSet)
+  (restrFrame': forall p {Hp: p.+2 <= n},
+    (RestrFrameTypeBlockFix' n prefix frame'' (@painting'') D p.+1
+     _).(RestrFrameType'))
+  p Hp :=
+  let frame' p {Hp: p.+2 <= n} :=
+    (RestrFrameTypeBlockFix' n prefix frame'' (@painting'') D p.+1 _).(Frame')
+    (restrFrame' p) in
+  le_induction Hp (fun p Hp => frame' p -> HSet) E
+    (fun p Hp (Hind: frame' p.+1 -> HSet) (d: frame' p) =>
+    {l: hforall ε, painting'' D ((restrFrame' p).2 ε d) &
+        Hind (d; l)}). *)
+
+Conjecture Painting': forall n prefix D
+  (frame'': forall p {Hp: p.+2 <= n}, prefix -> HSet)
+  (painting'': forall {p} {Hp: p.+2 <= n} D, frame'' p D -> HSet)
+  (restrFrame': forall p {Hp: p.+1 <= n},
+    (RestrFrameTypeBlockFix' n prefix frame'' (@painting'') D p
+     Hp).(RestrFrameType')),
+  let frame' p {Hp: p.+1 <= n} :=
+    (RestrFrameTypeBlockFix' n prefix frame'' (@painting'') D p Hp).(Frame')
+    (restrFrame' p) in
+  forall p (Hp: p.+1 <= n), frame' p -> HSet@{m}.
+
+Definition CohFrameTypeBlockFix n prefix
+  (frame'': forall p {Hp: p.+2 <= n}, prefix -> HSet)
+  (painting'': forall {p} {Hp: p.+2 <= n} D, frame'' p D -> HSet)
+  D
+  (restrFrame': forall p {Hp: p.+1 <= n},
+    (RestrFrameTypeBlockFix' n prefix frame'' (@painting'') D p
+     Hp).(RestrFrameType'))
+  (frame' := fun p {Hp: p.+1 <= n} =>
+    (RestrFrameTypeBlockFix' n prefix frame'' (@painting'') D p Hp).(Frame')
+    (restrFrame' p)) :=
+  fix aux p: forall (Hp: p <= n),
+  forall (R: (RestrFrameTypeBlockFix' n prefix frame'' (@painting'') D p _).(RestrFrameType')),
+  forall (restrPainting': forall p (Hp: p.+2 <= n) ε
+    {d: frame' p},
+    Painting' _ _ _ _ _ _ p _ d -> painting'' D (R p)),
+  CohFrameTypeBlock n prefix frame'' painting'' D :=
+  match p with
+    | O => fun Hp _ =>
+      {| CohFrameType := unit;
+         Frame _ _ _ _ := hunit;
+         RestrFrame _ _ _ _ _ _ _ _ := tt :> hunit|}
+    | S p => fun (Hp: p.+1 <= n) R =>
+      {|
+        CohFrameType :=
+          { Q : (aux p _ R.1).(CohFrameType) &T
+          forall q (Hrq: p.+2 <= q.+2) (Hq: q.+2 <= n) (ε ω: arity)
+           (d: (aux p _ R.1).(Frame) Q.1 D),
+           R.2 q ε ((aux p _ R.1).(RestrFrame) Q.1 p ω R d) =
+           R.2 p ω ((aux p _ R.1).(RestrFrame) Q.1 q.+1 ε R d) };
+        Frame Q :=
+          { d: (aux p _ Q.1).(Frame) &
+            hforall ε, Painting' ((aux p _ Q.1).(RestrFrame) ε d) };
+        RestrFrame Q q := match q
+        return forall (Hpq: p.+2 <= q.+1) (Hq: q.+1 <= n) _ D, _ -> _
+        with
+        | O => fun Hpq _ _ _ => ltac:(le_contra Hpq)
+        | S q => fun Hpq Hq ε D d =>
+          ((aux p _ R.1).(RestrFrame) Q.1 q.+1 ε d.1;
+          fun l ω => rew [painting''] Q.2 q d in restrPainting' p q ε (l ω) d.2)
+        end;
+      |}
+  end.
 
 Class RestrFrameBlock n p (prefix: Type@{m'})
   (Frame': forall p {Hp: p.+1 <= n}, prefix -> HSet) := {
