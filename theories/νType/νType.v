@@ -126,7 +126,7 @@ Definition take_head n
   match Hp in p <~ _ return (mkRestrFrameTypeBlock' n.+1 p
     (Hp := leY_of_leI (leI_raise_both Hp))).(RestrFrameType') with
   | leI_refl _ => restrFrames
-  | leI_down Hp => (aux _.+1 Hp).1
+  | leI_down Hp => (aux _ Hp).1
   end.
 
 Definition take_tail n
@@ -135,7 +135,7 @@ Definition take_tail n
   {restrFrames: (mkRestrFrameTypeBlock'
   (frame'' := frame'') (painting'' := painting'') n.+1 n).(RestrFrameType')}
   p Hp: arity -> (mkRestrFrameTypeBlock' n.+1 p).(Frame')
-        (take_head (restrFrames := restrFrames) n p.+1 _).1 -> frame'' p :=
+        (take_head (restrFrames := restrFrames) n p.+1 Hp).1 -> frame'' p :=
   (take_head (restrFrames := restrFrames) n p.+1 Hp).2.
 
 Lemma eqFrameSp {n p} {Hp: p.+2 <~ n}
@@ -153,12 +153,13 @@ Proof.
   unfold frame'. now simpl.
 Qed.
 
-Definition Painting' n p {Hp}
+Definition Painting' n p {Hp: p.+1 <= n.+1}
   {frame'': forall p {Hp: p.+2 <= n.+1}, HSet}
   {painting'': forall p {Hp: p.+2 <= n.+1}, frame'' p -> HSet}
   {restrFrames: (mkRestrFrameTypeBlock' (frame'' := frame'')
-    (painting'' := painting'')n.+1 n).(RestrFrameType')}
-  (restrFrame := fun p {Hp} => take_tail (restrFrames := restrFrames) n p Hp)
+    (painting'' := painting'') n.+1 n).(RestrFrameType')}
+  (restrFrame := fun p {Hp: p.+1 <~ n} =>
+    take_tail (restrFrames := restrFrames) n p Hp)
   (frame' := fun p {Hp: p.+1 <~ n} =>
     (mkRestrFrameTypeBlock' (frame'' := frame'') (painting'' := painting'')
     n.+1 p).(Frame') (take_head (restrFrames := restrFrames) n p.+1 Hp).1)
