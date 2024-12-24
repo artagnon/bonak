@@ -191,6 +191,7 @@ Variable RestrPainting': forall p q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n.+1} ε
    ...
    p     : { cohFrameTypes_{0..p-1} = {cohFrameType0 ... cohFrameType_{p-1}} ; restrFramep(cohFrames_{0..p-1}):restrFrameTypes_{0..p} }
 *)
+
 Axiom F : False.
 Definition CohFrameTypeBlockFix :=
   fix aux p: forall (Hp: p <= n), CohFrameTypeBlock p :=
@@ -207,19 +208,19 @@ Definition CohFrameTypeBlockFix :=
           let Frame :=
             (mkRestrFrameTypeGen n.+1 _ _ p).(FrameGen)
             ((aux p _).(RestrFrames) Q).1 in
-          forall r q (Hpr: p.+1 <= r.+1) (Hrq: r.+1 <= q.+1) (Hq: q.+1 <= n)
+          forall r q (Hpr: p.+2 <= r.+2) (Hrq: r.+2 <= q.+2) (Hq: q.+2 <= n.+1)
             (ε ω: arity) (d: Frame),
           RestrFrame' p q ε (((aux p _).(RestrFrames) Q).2 r _ _ ω d) =
           RestrFrame' p r ω (((aux p _).(RestrFrames) Q).2 q.+1 _ _ ε d) };
         RestrFrames Q :=
         let restrFrame q := match q with
         | O => fun (Hpq: p.+2 <= 1) _ _ _ => (*ltac:(le_contra Hpq)*) False_rect _ F
-        | S q => fun (Hpq: p.+2 <= q.+2) (Hq: q.+2 <= n) ε d =>
+        | S q => fun (Hpq: p.+2 <= q.+2) (Hq: q.+2 <= n.+1) ε d =>
           (((aux p _).(RestrFrames) Q.1).2 q.+1 _ _ ε d.1;
           fun l ω =>
-            rew [Painting'' _] Q.2 p q _ _ _ ε ω d.1 in
+            rew [Painting'' _] Q.2 p q (leY_refl p.+2) Hpq Hq ε ω d.1 in
               RestrPainting' p q ε
-              (((aux p _).(RestrFrames) Q.1).2 p _ _ ω d.2) (l ω))
+              (((aux p _).(RestrFrames) Q.1).2 p (leY_refl _) (↓ (leY_trans Hpq Hq)) ω d.2) (l ω))
         end in ((aux p _).(RestrFrames); restrFrame)
       |}
   end.
