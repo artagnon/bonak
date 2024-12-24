@@ -77,93 +77,95 @@ Variable arity: HSet.
     restrictions and coherence conditions on frame restrictions.
 *)
 
-Class RestrFrameTypeBlock' := {
-  RestrFrameType': Type;
-  Frame': RestrFrameType' -> HSet;
+Section RestrFramesDef'.
+(* Assume what is needed to build restrFrameType and Frame(restrFrames) *)
+Variable n: nat.
+Variable frame'': forall p {Hp: p.+1 <= n}, HSet.
+Variable painting'': forall p {Hp: p.+1 <= n}, frame'' p -> HSet.
+
+Class RestrFrameTypeBlockGen := {
+  RestrFrameTypeGen: Type;
+  FrameGen: RestrFrameTypeGen -> HSet;
 }.
 
-(* Build the list of pairs of the type RestrFrameType' of restrFrame'_{p-1}
+(* Build the list of pairs of the type RestrFrameTypeGen of restrFrame'_{p-1}
    and of the definition of frame'_p in function of effective restrFrames' of these types *)
-Definition RestrFrameTypeBlockFix' n
-  (frame'': forall p {Hp: p.+1 <= n}, HSet)
-  (painting'': forall p {Hp: p.+1 <= n}, frame'' p -> HSet) :=
-  fix aux p: forall (Hp: p <= n), RestrFrameTypeBlock' :=
+Definition RestrFrameTypeGenFix :=
+  fix aux p: forall (Hp: p <= n), RestrFrameTypeBlockGen :=
   match p with
   | O => fun (Hp: 0 <= n) =>
-    {| RestrFrameType' := unit; Frame' _ := hunit |}
+    {| RestrFrameTypeGen := unit; FrameGen _ := hunit |}
   | S p => fun (Hp: p.+1 <= n) =>
     {|
-      RestrFrameType' :=
-        { R : (aux p _).(RestrFrameType') &T
-        forall (ε: arity), (aux p _).(Frame') R -> frame'' p };
-      Frame' R :=
-        { d: (aux p _).(Frame') R.1 & hforall ε, painting'' p (R.2 ε d) }
+      RestrFrameTypeGen :=
+        { R : (aux p _).(RestrFrameTypeGen) &T
+        forall (ε: arity), (aux p _).(FrameGen) R -> frame'' p };
+      FrameGen R :=
+        { d: (aux p _).(FrameGen) R.1 & hforall ε, painting'' p (R.2 ε d) }
     |}
   end.
 
 #[local]
-Instance mkRestrFrameTypeBlock' n p {Hp}
-  {frame'': forall p {Hp: p.+1 <= n}, HSet}
-  {painting'': forall p {Hp: p.+1 <= n}, frame'' p -> HSet}:
-  RestrFrameTypeBlock' := RestrFrameTypeBlockFix' n frame'' painting'' p Hp.
+Instance mkRestrFrameTypeGen p {Hp}:
+  RestrFrameTypeBlockGen := RestrFrameTypeGenFix p Hp.
 
-Class CohFrameTypeBlock n
-  (frame'': forall p {Hp: p.+2 <= n}, HSet)
-  (painting'': forall p {Hp: p.+2 <= n}, frame'' p -> HSet)
-  (frame': forall p {Hp: p.+1 <= n}, HSet@{m}) p {Hp: p.+1 <= n} := {
-  CohFrameType: Type;
-  Frame: forall Q: CohFrameType, HSet;
-  RestrFrame: forall Q: CohFrameType,
-   forall q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n} (ε: arity),
-   Frame Q -> frame' p;
-}.
+(* Additionally assume what is needed to build Frame and Painting *)
+Variable restrFrames': (mkRestrFrameTypeGen n).(RestrFrameTypeGen).
 
-Definition take_head n
-  {frame'': forall p {Hp: p.+1 <= n}, HSet}
-  {painting'': forall p {Hp: p.+1 <= n}, frame'' p -> HSet}
-  {restrFrames': (mkRestrFrameTypeBlock'
-    (frame'' := frame'') (painting'' := painting'') n n).(RestrFrameType')}:
-  forall p {Hp: p <~ n}, (mkRestrFrameTypeBlock' n p).(RestrFrameType') :=
+Definition take_head: forall p {Hp: p <~ n},
+  (mkRestrFrameTypeGen p).(RestrFrameTypeGen) :=
   fix aux p Hp := match Hp with
   | leI_refl _ => restrFrames'
   | @leI_down _ p Hp => (aux p.+1 Hp).1
   end.
 
-Definition take_tail n
-  {frame'': forall p {Hp: p.+1 <= n}, HSet}
-  {painting'': forall p {Hp: p.+1 <= n}, frame'' p -> HSet}
-  {restrFrames': (mkRestrFrameTypeBlock'
-  (frame'' := frame'') (painting'' := painting'') n n).(RestrFrameType')}
-  p {Hp: p.+1 <~ n} := (take_head (restrFrames' := restrFrames') n p.+1).2:
-    arity ->
-    (mkRestrFrameTypeBlock' n p).(Frame')
-    (take_head (restrFrames' := restrFrames') n p.+1).1 ->
-    frame'' p.
+Definition take_tail p {Hp: p.+1 <~ n} := (take_head p.+1).2:
+  arity -> (mkRestrFrameTypeGen p).(FrameGen) (take_head p.+1).1 -> frame'' p.
 
-Definition Painting' n p {Hp: p <~ n}
+Definition mkFrameGen := fun p {Hp: p.+1 <~ n} =>
+  (mkRestrFrameTypeGen p).(FrameGen) (take_head p (Hp := leI_down Hp)).
+
+Definition mkRestrFrameGen := fun p {Hp: p.+1 <~ n} => take_tail p (Hp := Hp).
+End RestrFramesDef'.
+
+Section PaintingGenDef.
+Variable n: nat.
+Variable frame'': forall p {Hp: p.+1 <= n.+1}, HSet.
+Variable painting'': forall p {Hp: p.+1 <= n.+1}, frame'' p -> HSet.
+Variable restrFrames':
+  (mkRestrFrameTypeGen n.+1 frame'' painting'' n.+1).(RestrFrameTypeGen).
+Let Frame := mkFrameGen n.+1 frame'' painting'' restrFrames'.
+Let RestrFrame := mkRestrFrameGen n.+1 frame'' painting'' restrFrames'.
+
+Definition PaintingGen p {Hp: p <~ n}
+  {E: Frame n _ -> HSet} := (fix aux p Hp :=
+  match Hp in p <~ _ return Frame p (leI_raise_both Hp) -> HSet with
+  | leI_refl _ => E
+  | @leI_down _ p Hp => fun d =>
+       {l: hforall ε, painting'' p (RestrFrame p _ ε d) &
+        (aux p.+1 Hp) (d; l)}
+  end) p Hp.
+End PaintingGenDef.
+
+Class CohFrameTypeBlock n
+  (frame'': forall p {Hp: p.+1 <= n}, HSet)
+  (painting'': forall p {Hp: p.+1 <= n}, frame'' p -> HSet)
+  (frame': forall p {Hp: p <= n}, HSet@{m}) p {Hp: p <= n} := {
+  CohFrameType: Type;
+  RestrFrame: forall Q: CohFrameType,
+   forall q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n} (ε: arity),
+   Frame Q -> frame' p;
+}.
+
+Definition CohFrameTypeBlockFix n
   {frame'': forall p {Hp: p.+1 <= n.+1}, HSet}
   {painting'': forall p {Hp: p.+1 <= n.+1}, frame'' p -> HSet}
-  {restrFrames': (mkRestrFrameTypeBlock' n.+1 n.+1).(RestrFrameType')}
+  {restrFrames': (mkRestrFrameTypeBlock' n.+1 n.+1).(RestrFrameTypeGen)}
   (frame' := fun p {Hp: p.+1 <~ n.+1} =>
-    (mkRestrFrameTypeBlock' n.+1 p).(Frame')
+    (mkRestrFrameTypeBlock' n.+1 p).(FrameGen)
     (take_head (restrFrames' := restrFrames') n.+1 p (Hp := leI_down Hp)))
   (restrFrame' := fun p {Hp: p.+1 <~ n.+1} => take_tail
     (restrFrames' := restrFrames') n.+1 p (Hp := Hp))
-  {E: frame' n -> HSet} := (fix aux p Hp :=
-  match Hp in p <~ _ return frame' p (Hp := leI_raise_both Hp) -> HSet with
-  | leI_refl _ => E
-  | @leI_down _ p Hp => fun d =>
-       {l: hforall ε, painting'' p (restrFrame' p ε d) &
-        (aux p.+1 Hp) (d; l)}
-  end) p Hp.
-
-Definition CohFrameTypeBlockFix n
-  (frame'': forall p {Hp: p.+2 <= n}, HSet)
-  (painting'': forall p {Hp: p.+2 <= n}, frame'' p -> HSet)
-  (R: forall p, (mkRestrFrameTypeBlock' n p).(RestrFrameType'))
-  (frame' := fun p {Hp: p.+1 <= n} =>
-    (mkRestrFrameTypeBlock' n p).(Frame') (R p.+1).1)
-  (painting': forall p {Hp: p.+1 <= n}, frame' p -> HSet@{m})
   (restrPainting': forall p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} ε
     {d: frame' p}, painting' p d -> painting'' p ((R p.+1).2 ε d)) :=
   fix aux p: forall (Hp: p <= n),
@@ -171,7 +173,6 @@ Definition CohFrameTypeBlockFix n
   match p with
     | O => fun _ =>
       {| CohFrameType := unit;
-         Frame _ := hunit;
          RestrFrame _ _ _ _ _ _ := tt :> hunit
       |}
     | S p => fun (Hp: p.+1 <= n) =>
@@ -182,9 +183,6 @@ Definition CohFrameTypeBlockFix n
            (d: (aux p _).(Frame) Q.1),
            (R q).2 ε ((aux p _).(RestrFrame) Q.1 p ω d) =
            (R p).2 ω ((aux p _).(RestrFrame) Q.1 q.+1 ε d) };
-        Frame Q :=
-          { d: (aux p _).(Frame) Q.1 &
-            hforall ε, painting' ((aux p _).(RestrFrame) Q.1 ε d) };
         RestrFrame Q q := match q
         return forall (Hpq: p.+2 <= q.+1) (Hq: q.+1 <= n) _, _ -> _
         with
@@ -307,7 +305,7 @@ Class νType n := {
   restrFrame' p {Hp: p.+2 <= n} {D: prefix}:
     (RestrFrameTypeBlockFix' n prefix frame'' (@painting'') D p).(RestrFrameType');
   frame' p {Hp} D :=
-    (RestrFrameTypeBlockFix' n prefix frame'' (@painting'') D p).(Frame') (restrFrame' p);
+    (RestrFrameTypeBlockFix' n prefix frame'' (@painting'') D p).(FrameGen) (restrFrame' p);
   painting' {p} {Hp: p.+1 <= n} {D: prefix}: frame' p D -> HSet;
   cohFrameAux {p} r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
     {ε ω: arity} {D: prefix}
@@ -386,7 +384,7 @@ Definition mkPrefix {n} {C: νType n}: Type@{m'} :=
    of Frame. These will be used in the proof script of mkFrame. *)
 
 Definition mkFrame'' {n} {C: νType n} p {Hp: p.+2 <= n.+1} (D: mkPrefix) :=
-  C.(frame') p D.1.
+  C.(FrameGen) p D.1.
 
 Definition mkFrame' {n} {C: νType n} p {Hp: p.+1 <= n.+1} (D: mkPrefix) :=
   C.(frame) p D.1.
@@ -705,7 +703,7 @@ Class mk {T} (f: T -> Type@{m'}) (t: T) := intro_mk : f t.
 Class DgnFrameBlockPrev {n'} (C: νType n'.+1)
   {reflPrefix: mkRefl C.(prefix)} := {
   reflFrame' p {Hp: p.+2 <= n'.+1} {D} {R: mk reflPrefix D}:
-    C.(FramePrev).(frame'') p D -> C.(FramePrev).(frame') p D;
+    C.(FramePrev).(frame'') p D -> C.(FramePrev).(FrameGen) p D;
 }.
 
 Arguments reflFrame' {n' C reflPrefix} _ p {Hp D R} d.
@@ -713,12 +711,12 @@ Arguments reflFrame' {n' C reflPrefix} _ p {Hp D R} d.
 Class DgnFrameBlock {n'} (C: νType n'.+1) {reflPrefix: mkRefl C.(prefix)}
   p (Prev: DgnFrameBlockPrev C) := {
   reflFrame {Hp: p.+1 <= n'.+1} {D} {R: mk reflPrefix D}:
-    C.(FramePrev).(frame') p D -> C.(Frame).(frame p) D;
+    C.(FramePrev).(FrameGen) p D -> C.(Frame).(frame p) D;
   idReflRestrFrame {ε} {Hp: p.+1 <= n'.+1} {D} {R: mk reflPrefix D}
-    {d: C.(FramePrev).(frame') p D}:
+    {d: C.(FramePrev).(FrameGen) p D}:
     C.(Frame).(restrFrame) n' ε (reflFrame d) = d;
   cohReflRestrFrame q {ε} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n'.+1} {D}
-    {R: mk reflPrefix D} {d: C.(FramePrev).(frame') p D}:
+    {R: mk reflPrefix D} {d: C.(FramePrev).(FrameGen) p D}:
     Prev.(reflFrame') p (C.(FramePrev).(restrFrame') p q ε d) =
       C.(Frame).(restrFrame) q ε (reflFrame d);
 }.
@@ -741,7 +739,7 @@ Class HasRefl {n'} {C: νType n'.+1} {reflPrefix: mkRefl C.(prefix)}
   {DgnFramePrev: DgnFrameBlockPrev C}
   {DgnFrame: forall {p}, DgnFrameBlock C p DgnFramePrev} {D}
   {R: mk reflPrefix D} (E: _ -> HSet) :=
-  hasRefl: forall (d: C.(FramePrev).(frame') n' D)
+  hasRefl: forall (d: C.(FramePrev).(FrameGen) n' D)
     (c: C.(PaintingPrev).(painting') d),
     let l ε :=
       rew <- [C.(PaintingPrev).(painting')] DgnFrame.(idReflRestrFrame) in c in
@@ -752,16 +750,16 @@ Class DgnPaintingBlock {n'} (C: νType n'.+1) {reflPrefix: mkRefl C.(prefix)}
   (Prev: DgnPaintingBlockPrev C Q)
   (FrameBlock: forall {p}, DgnFrameBlock C p Q) := {
   reflPainting p {Hp: p.+1 <= n'.+1} {D} {R: mk reflPrefix D} {E}
-    {L: HasRefl E} {d: C.(FramePrev).(frame') p D}:
+    {L: HasRefl E} {d: C.(FramePrev).(FrameGen) p D}:
     C.(PaintingPrev).(painting') d ->
     C.(Painting).(painting) E (FrameBlock.(reflFrame) d);
   idReflRestrPainting {p ε} {Hp: p.+1 <= n'.+1} {D} {R: mk reflPrefix D}
     {E} {L: HasRefl E}
-    {d: C.(FramePrev).(frame') p D} {c: C.(PaintingPrev).(painting') d}:
+    {d: C.(FramePrev).(FrameGen) p D} {c: C.(PaintingPrev).(painting') d}:
     rew [C.(PaintingPrev).(painting')] FrameBlock.(idReflRestrFrame) in
     C.(Painting).(restrPainting) p n' (ε := ε) (E := E) (reflPainting p c) = c;
   cohReflRestrPainting {p} q {ε} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n'.+1} {D}
-    {R: mk reflPrefix D} {E} {L: HasRefl E} {d: C.(FramePrev).(frame') p D}
+    {R: mk reflPrefix D} {E} {L: HasRefl E} {d: C.(FramePrev).(FrameGen) p D}
     {c: C.(PaintingPrev).(painting') d}:
     rew <- [C.(PaintingPrev).(painting')] FrameBlock.(cohReflRestrFrame) q in
     C.(Painting).(restrPainting) p q (ε := ε) (E := E) (reflPainting p c) =
@@ -783,12 +781,12 @@ Class Dgn {n'} (C: νType n'.+1) := {
   DgnPaintingPrev: DgnPaintingBlockPrev C DgnFramePrev;
   DgnPainting: DgnPaintingBlock C DgnPaintingPrev (@DgnFrame);
   ReflLayer {p} {Hp: p.+2 <= n'.+1} {D} {R: mk ReflPrefix D}
-    {d: C.(FramePrev).(frame') p D}
+    {d: C.(FramePrev).(FrameGen) p D}
     (l: C.(layer') d): C.(Layer) (DgnFrame.(reflFrame) d) :=
     fun ε => rew [C.(PaintingPrev).(painting')]
     DgnFrame.(cohReflRestrFrame) p in DgnPaintingPrev.(reflPainting') p (l ε);
   eqReflFrameSp {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n'.+1} {D}
-    {R: mk ReflPrefix D} {d: C.(FramePrev).(frame') p D} (l: C.(layer') d):
+    {R: mk ReflPrefix D} {d: C.(FramePrev).(FrameGen) p D} (l: C.(layer') d):
     DgnFrame.(reflFrame) (rew <- [id] C.(eqFrameSp') in (d; l)) =
     rew <- [id] C.(eqFrameSp) in (DgnFrame.(reflFrame) d; ReflLayer l);
   eqReflPaintingSp p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n'.+1} {D}
@@ -825,7 +823,7 @@ Instance mkDgnFramePrev {n'} {C: νType n'.+1} {G: Dgn C}:
 
 Definition mkReflLayer {n' p} {C: νType n'.+1} {G: Dgn C}
   {Hp: p.+2 <= n'.+2} {Frame: DgnFrameBlock (mkνTypeSn C) p mkDgnFramePrev}
-  {D} {R: mk mkReflPrefix D} {d: mkFramePrev.(frame') p D} (l: mklayer' d):
+  {D} {R: mk mkReflPrefix D} {d: mkFramePrev.(FrameGen) p D} (l: mklayer' d):
   mkLayer (Frame.(reflFrame) d) :=
   fun ω => rew [C.(Painting).(painting) D.2]
     Frame.(cohReflRestrFrame) p in G.(DgnPainting).(reflPainting) (L := R.2) p
@@ -834,7 +832,7 @@ Definition mkReflLayer {n' p} {C: νType n'.+1} {G: Dgn C}
 Definition mkIdReflRestrLayer {n' p ε} {C: νType n'.+1} {G: Dgn C}
   {Hp: p.+2 <= n'.+2}
   {FrameBlock: DgnFrameBlock (mkνTypeSn C) p mkDgnFramePrev} {D}
-  {R: mk mkReflPrefix D} {d: mkFramePrev.(frame') p D} {l: mklayer' d}:
+  {R: mk mkReflPrefix D} {d: mkFramePrev.(FrameGen) p D} {l: mklayer' d}:
   rew [mklayer'] FrameBlock.(idReflRestrFrame) (ε := ε) in
     mkRestrLayer p n' (mkReflLayer l) = l.
 Proof.
@@ -853,13 +851,13 @@ Proof.
   apply rew_swap with
     (P := fun x => C.(PaintingPrev).(painting') x).
   rewrite rew_app_rl. now trivial.
-  now apply (C.(FramePrev).(frame') p D.1).(UIP).
+  now apply (C.(FramePrev).(FrameGen) p D.1).(UIP).
 Defined.
 
 Definition mkCohReflRestrLayer {n' p} q {ε} {C: νType n'.+1} {G: Dgn C}
   {Hp: p.+3 <= q.+3} {Hq: q.+3 <= n'.+2}
   {FrameBlock: DgnFrameBlock (mkνTypeSn C) p mkDgnFramePrev} {D}
-  {R: mk mkReflPrefix D} {d: mkFramePrev.(frame') p D} {l: mklayer' (C := C) d}:
+  {R: mk mkReflPrefix D} {d: mkFramePrev.(FrameGen) p D} {l: mklayer' (C := C) d}:
     rew [mklayer'] FrameBlock.(cohReflRestrFrame) q.+1 in
      G.(ReflLayer) (C.(RestrLayer) p q ε l) = mkRestrLayer p q (mkReflLayer l).
 Proof.
@@ -880,7 +878,7 @@ Proof.
   apply rew_swap with
     (P := fun x => C.(PaintingPrev).(painting') x).
   rewrite rew_app_rl. now trivial.
-  now apply (C.(FramePrev).(frame') p D.1).(UIP).
+  now apply (C.(FramePrev).(FrameGen) p D.1).(UIP).
 Defined.
 
 #[local]
@@ -934,7 +932,7 @@ Instance mkDgnPaintingPrev {n'} {C: νType n'.+1} {G: Dgn C}:
 
 Definition mkReflPainting {n'} p {C: νType n'.+1} {G: Dgn C}
   {Hp: p.+1 <= n'.+2} {D} {R: mk mkReflPrefix D} {E} {L: HasRefl E}
-  {d: mkFramePrev.(frame') p D} (c: mkPaintingPrev.(painting') d):
+  {d: mkFramePrev.(FrameGen) p D} (c: mkPaintingPrev.(painting') d):
   mkPaintingType n'.+1 p E (mkDgnFrame.(reflFrame) d).
 Proof.
   revert d c; apply le_induction' with (Hp := Hp); clear p Hp.
@@ -954,7 +952,7 @@ Proof.
 Defined.
 
 Lemma mkReflPainting_base_computes {n'} {C: νType n'.+1} {G: Dgn C} {D}
-  {R: mk mkReflPrefix D} {E} {L: HasRefl E} {d: mkFramePrev.(frame') n'.+1 D}
+  {R: mk mkReflPrefix D} {E} {L: HasRefl E} {d: mkFramePrev.(FrameGen) n'.+1 D}
   {c: mkPaintingPrev.(painting') d}:
   mkReflPainting n'.+1 (E := E) c =
   rew <- [id] mkPaintingType_step_computes in
@@ -967,7 +965,7 @@ Qed.
 
 Lemma mkReflPainting_step_computes {n' p} {C: νType n'.+1} {G: Dgn C}
   {Hp: p.+2 <= n'.+2} {D} {R: mk mkReflPrefix D}
-  {E} {L: HasRefl E} {d: mkFramePrev.(frame') p D}
+  {E} {L: HasRefl E} {d: mkFramePrev.(FrameGen) p D}
   {c: mkPaintingPrev.(painting') d}:
   mkReflPainting p (E := E) c = match (rew [id] C.(eqPaintingSp) in c) with
   | (l; c') => rew <- [id] mkPaintingType_step_computes in
