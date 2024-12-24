@@ -82,14 +82,16 @@ Class RestrFrameTypeBlock' := {
   Frame': RestrFrameType' -> HSet;
 }.
 
+(* Build the list of pairs of the type RestrFrameType' of restrFrame'_{p-1}
+   and of the definition of frame'_p in function of effective restrFrames' of these types *)
 Definition RestrFrameTypeBlockFix' n
-  (frame'': forall p {Hp: p.+2 <= n}, HSet)
-  (painting'': forall p {Hp: p.+2 <= n}, frame'' p -> HSet) :=
-  fix aux p: forall (Hp: p.+1 <= n), RestrFrameTypeBlock' :=
+  (frame'': forall p {Hp: p.+1 <= n}, HSet)
+  (painting'': forall p {Hp: p.+1 <= n}, frame'' p -> HSet) :=
+  fix aux p: forall (Hp: p <= n), RestrFrameTypeBlock' :=
   match p with
-  | O => fun (Hp: 1 <= n) =>
+  | O => fun (Hp: 0 <= n) =>
     {| RestrFrameType' := unit; Frame' _ := hunit |}
-  | S p => fun (Hp: p.+2 <= n) =>
+  | S p => fun (Hp: p.+1 <= n) =>
     {|
       RestrFrameType' :=
         { R : (aux p _).(RestrFrameType') &T
@@ -101,8 +103,8 @@ Definition RestrFrameTypeBlockFix' n
 
 #[local]
 Instance mkRestrFrameTypeBlock' n p {Hp}
-  {frame'': forall p {Hp: p.+2 <= n}, HSet}
-  {painting'': forall p {Hp: p.+2 <= n}, frame'' p -> HSet}:
+  {frame'': forall p {Hp: p.+1 <= n}, HSet}
+  {painting'': forall p {Hp: p.+1 <= n}, frame'' p -> HSet}:
   RestrFrameTypeBlock' := RestrFrameTypeBlockFix' n frame'' painting'' p Hp.
 
 Class CohFrameTypeBlock n
@@ -117,57 +119,45 @@ Class CohFrameTypeBlock n
 }.
 
 Definition take_head n
-  {frame'': forall p {Hp: p.+2 <= n.+1}, HSet}
-  {painting'': forall p {Hp: p.+2 <= n.+1}, frame'' p -> HSet}
-  {restrFrames: (mkRestrFrameTypeBlock'
-    (frame'' := frame'') (painting'' := painting'') n.+1 n).(RestrFrameType')}:
-  forall p Hp, (mkRestrFrameTypeBlock' n.+1 p).(RestrFrameType') :=
+  {frame'': forall p {Hp: p.+1 <= n}, HSet}
+  {painting'': forall p {Hp: p.+1 <= n}, frame'' p -> HSet}
+  {restrFrames': (mkRestrFrameTypeBlock'
+    (frame'' := frame'') (painting'' := painting'') n n).(RestrFrameType')}:
+  forall p (Hp: p <~ n), (mkRestrFrameTypeBlock' n p).(RestrFrameType') :=
   fix aux p (Hp: p <~ n) :=
-  match Hp in p <~ _ return (mkRestrFrameTypeBlock' n.+1 p
-    (Hp := leY_of_leI (leI_raise_both Hp))).(RestrFrameType') with
-  | leI_refl _ => restrFrames
-  | leI_down Hp => (aux _ Hp).1
+  match Hp in p <~ _ return (mkRestrFrameTypeBlock' n p
+    (Hp := leY_of_leI Hp)).(RestrFrameType') with
+  | leI_refl _ => restrFrames'
+  | leI_down Hp => (aux _.+1 Hp).1
   end.
 
 Definition take_tail n
-  {frame'': forall p {Hp: p.+2 <= n.+1}, HSet}
-  {painting'': forall p {Hp: p.+2 <= n.+1}, frame'' p -> HSet}
-  {restrFrames: (mkRestrFrameTypeBlock'
-  (frame'' := frame'') (painting'' := painting'') n.+1 n).(RestrFrameType')}
-  p Hp: arity -> (mkRestrFrameTypeBlock' n.+1 p).(Frame')
-        (take_head (restrFrames := restrFrames) n p.+1 Hp).1 -> frame'' p :=
-  (take_head (restrFrames := restrFrames) n p.+1 Hp).2.
+  {frame'': forall p {Hp: p.+1 <= n}, HSet}
+  {painting'': forall p {Hp: p.+1 <= n}, frame'' p -> HSet}
+  {restrFrames': (mkRestrFrameTypeBlock'
+  (frame'' := frame'') (painting'' := painting'') n n).(RestrFrameType')}
+  p {Hp: p.+1 <~ n} := (take_head (restrFrames' := restrFrames') n p.+1 Hp).2:
+    arity ->
+    (mkRestrFrameTypeBlock' n p).(Frame')
+    (take_head (restrFrames' := restrFrames') n p.+1 Hp).1 ->
+    frame'' p.
 
-Lemma eqFrameSp {n p} {Hp: p.+2 <~ n}
-  {frame'': forall p {Hp: p.+2 <= n.+1}, HSet}
-  {painting'': forall p {Hp: p.+2 <= n.+1}, frame'' p -> HSet}
-  {restrFrames: (mkRestrFrameTypeBlock'
-    (frame'' := frame'') (painting'' := painting'') n.+1 n).(RestrFrameType')}
-  (restrFrame := fun p {Hp} => take_tail (restrFrames := restrFrames) n p Hp)
-  (frame' := fun p {Hp: p.+1 <~ n} =>
-    (mkRestrFrameTypeBlock' n.+1 p).(Frame') (take_head n p.+1 Hp).1):
-  frame' p.+1 (Hp := Hp) =
-    {d: frame' p & hforall ε, painting'' p
-    (restrFrame p (Hp := leI_down Hp) ε d)}.
-Proof.
-  unfold frame'. now simpl.
-Qed.
-
-Definition Painting' n p {Hp: p.+1 <= n.+1}
-  {frame'': forall p {Hp: p.+2 <= n.+1}, HSet}
-  {painting'': forall p {Hp: p.+2 <= n.+1}, frame'' p -> HSet}
-  {restrFrames: (mkRestrFrameTypeBlock' (frame'' := frame'')
-    (painting'' := painting'') n.+1 n).(RestrFrameType')}
-  (restrFrame := fun p {Hp: p.+1 <~ n} =>
-    take_tail (restrFrames := restrFrames) n p Hp)
-  (frame' := fun p {Hp: p.+1 <~ n} =>
-    (mkRestrFrameTypeBlock' (frame'' := frame'') (painting'' := painting'')
-    n.+1 p).(Frame') (take_head (restrFrames := restrFrames) n p.+1 Hp).1)
-  {E: frame' n -> HSet}: frame' p -> HSet :=
-  le_induction' Hp (fun p Hp => frame' p -> HSet) E
-    (fun p Hp (Hind: frame' p.+1 -> HSet) (d: frame' p) =>
-    {l: hforall ε, painting'' p (restrFrame p ε d) &
-      Hind (rew <- eqFrameSp in (d; l))}).
+Definition Painting' n p {Hp:p <~ n}
+  {frame'': forall p {Hp: p.+1 <= n.+1}, HSet}
+  {painting'': forall p {Hp: p.+1 <= n.+1}, frame'' p -> HSet}
+  {restrFrames': (mkRestrFrameTypeBlock' n.+1 n.+1).(RestrFrameType')}
+  (frame' := fun p {Hp: p.+1 <~ n.+1} =>
+    (mkRestrFrameTypeBlock' (frame'' := frame'') (painting'' := painting'') n.+1 p).(Frame')
+      (take_head (restrFrames' := restrFrames') n.+1 p (leI_down Hp)))
+ (restrFrame' : forall p {Hp:p.+1 <~ n.+1} , arity -> frame' p -> frame'' p
+   := fun p {Hp:p.+1 <~ n.+1} => take_restrFrame' (restrFrames' := restrFrames') n.+1 p (Hp:=Hp))
+   {E: frame' n (Hp:=leI_refl _) -> HSet}: frame' p (Hp:=leI_raise_both Hp) -> HSet.
+induction Hp.
+exact E.
+intros d.
+exact {l: hforall ε, painting'' p _ (restrFrame' p _ ε d) &
+        IHHp (d; l)}.
+Defined.
 
 Definition CohFrameTypeBlockFix n
   (frame'': forall p {Hp: p.+2 <= n}, HSet)
