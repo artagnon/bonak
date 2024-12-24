@@ -27,3 +27,11 @@ Defined.
 Lemma leI_raise_both {n p}: p <~ n -> p.+1 <~ n.+1.
   induction 1. now constructor. now constructor.
 Defined.
+
+Lemma leI_trans {n p q}: p <~ n -> n <~ q -> p <~ q.
+Proof.
+  intros H1 H2.
+  induction H1.
+  - easy.
+  - now constructor.
+Defined.
