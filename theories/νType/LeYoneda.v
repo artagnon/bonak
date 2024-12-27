@@ -465,9 +465,9 @@ Proof.
   solve_leY.
 Qed.
 
-Hint Extern 0 (leY _ _) => solve_leY : typeclass_instances.
+(* Hint Extern 0 (leY _ _) => solve_leY : typeclass_instances. *)
 
-Example ex2 {n} p q r {Hpr : p.+2 <~ r.+2} {Hrq : r.+2 <~ q.+2} {Hq : q.+2 <= n}
+(* Example ex2 {n} p q r {Hpr : p.+2 <~ r.+2} {Hrq : r.+2 <~ q.+2} {Hq : q.+2 <= n}
   {H: forall p q r, p.+1 <= r.+1 -> r <= q -> q <= n -> p <= n}: p <= n.
 Proof.
   now apply (H p q r _ _ _).
@@ -476,4 +476,4 @@ Qed.
 Example ex3 n p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n}
   {H: p.+1 <= n.+1 -> True}: True.
   now apply (H _).
-Qed.
+Qed. *)
