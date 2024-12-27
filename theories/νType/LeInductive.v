@@ -7,7 +7,6 @@ Inductive leI n: nat -> Type :=
 | leI_down {p}: p.+1 <~ n -> p <~ n
 where "p <~ n" := (leI n p): nat_scope.
 
-Arguments leI_refl n.
 Arguments leI_down {n p} H.
 
 Lemma leI_up {n p: nat}: n <~ p -> n <~ p.+1.

@@ -191,8 +191,6 @@ Variable RestrPainting': forall p q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n.+1} ε
    ...
    p     : { cohFrameTypes_{0..p-1} = {cohFrameType0 ... cohFrameType_{p-1}} ; restrFramep(cohFrames_{0..p-1}):restrFrameTypes_{0..p} }
 *)
-
-Axiom F : False.
 Definition CohFrameTypeBlockFix :=
   fix aux p: forall (Hp: p <= n), CohFrameTypeBlock p :=
   match p return forall (Hp: p <= n), CohFrameTypeBlock p with
@@ -205,15 +203,15 @@ Definition CohFrameTypeBlockFix :=
       {|
         CohFrameType :=
           { Q : (aux p _).(CohFrameType) &T
-          forall r q (Hpr: p.+2 <= r.+2) (Hrq: r.+2 <= q.+2) (Hq: q.+2 <= n.+1)
+          forall r q (Hpr: p.+1 <= r.+1) (Hrq: r.+1 <= q.+1) (Hq: q.+1 <= n)
             (ε ω: arity) d,
           RestrFrame' p q ε (((aux p _).(RestrFrames) Q).2 r _ _ ω d) =
           RestrFrame' p r ω (((aux p _).(RestrFrames) Q).2 q.+1 _ _ ε d) };
         RestrFrames Q :=
         let restrFrame q := match q with
-        | O => fun (Hpq: p.+2 <= 1) _ _ _ => ltac:(le_contra Hpq)
+        | O => fun (Hpq: p.+2 <= 1) _ _ _ => False_rect _ (leY_O_contra (leY_lower_both Hpq))
         | S q => fun (Hpq: p.+2 <= q.+2) (Hq: q.+2 <= n.+1) ε d =>
-          (((aux p _).(RestrFrames) Q.1).2 q.+1 _ _ ε d.1;
+          (((aux p _).(RestrFrames) Q.1).2 q _ _ ε d.1;
           fun ω =>
             rew [Painting'' _] Q.2 p q _ _ _ ε ω d.1 in
               RestrPainting' p q ε
@@ -223,21 +221,11 @@ Definition CohFrameTypeBlockFix :=
   end.
 End CohFrameGenDef.
 (*
-Trying to instantiate ?d143 with a term of type
-((RestrFrameTypeGenFix n Frame'2 Painting' p (↓ (⇑ ?l103@{aux:=aux; p0:=p0; p:=p; Hp:=Hp; q1:=0})))
- .(FrameGen) ((aux p ?l103@{aux:=aux; p0:=p0; p:=p; Hp:=Hp; q1:=0}).(RestrFrames) Q.1).1).(
-Dom) while a term of type
-((RestrFrameTypeGenFix n Frame'2 Painting' p (↓ (⇑ ?l103@{p0:=p0; p:=p; q1:=0}))).(FrameGen)
-   ((aux p ?l103@{p0:=p0; p:=p; q1:=0}).(RestrFrames) Q.1).1).(Dom)
-is expected.
-*)
-(*
-(Frame.(@restrFrame _ _ _ _) q0.+1 _ _ ε d
-rew [C.(@PaintingPrev _).(@painting' _ _ _) p _]
-    Frame.(@cohFrame _ _ _ _) p q _ Hpq Hq ε ω d in
-C.(@Painting _).(@restrPainting _ _ _ _ _) p q ε E
-  (Frame.(@restrFrame _ _ _ _) p _ _) (l ω)
-*)
+Illegal application (Non-functional construction):
+The expression "d.2" of type "?T@{q1:=q0.+1; H:=Hq; H0:=ε} d.1"
+cannot be applied to the term
+ "ω" : "?T0@{p0:=p; p:=p0; q0:=q; q:=q0; x:=((aux p0 ?Hp0).(RestrFrames) Q.1).2 q0 ?Hpq3 ?Hq3 ε d.1}"
+ *)
 Class RestrFrameBlock n p (prefix: Type@{m'})
   (Frame': forall p {Hp: p.+1 <= n}, prefix -> HSet) := {
   Frame {Hp: p <= n}: prefix -> HSet;
