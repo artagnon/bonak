@@ -203,14 +203,19 @@ Definition CohFrameTypeBlockFix :=
       {|
         CohFrameType :=
           { Q : (aux p _).(CohFrameType) &T
+           let Frame :=
+             (mkRestrFrameTypeGen n _ _ p).(FrameGen)
+             ((aux p _).(RestrFrames) Q).1 in
           forall r q (Hpr: p.+1 <= r.+1) (Hrq: r.+1 <= q.+1) (Hq: q.+1 <= n)
-            (ε ω: arity) d,
+            (ε ω: arity) (d: Frame),
           RestrFrame' p q ε (((aux p _).(RestrFrames) Q).2 r _ _ ω d) =
           RestrFrame' p r ω (((aux p _).(RestrFrames) Q).2 q.+1 _ _ ε d) };
         RestrFrames Q :=
+        let Frame :=
+          (mkRestrFrameTypeGen n _ Painting' p.+1).(FrameGen) _ in
         let restrFrame q := match q with
         | O => fun (Hpq: p.+2 <= 1) _ _ _ => False_rect _ (leY_O_contra (leY_lower_both Hpq))
-        | S q => fun (Hpq: p.+2 <= q.+2) (Hq: q.+2 <= n.+1) ε d =>
+        | S q => fun (Hpq: p.+2 <= q.+2) (Hq: q.+2 <= n.+1) ε (d: Frame) =>
           (((aux p _).(RestrFrames) Q.1).2 q _ _ ε d.1;
           fun ω =>
             rew [Painting'' _] Q.2 p q _ _ _ ε ω d.1 in
