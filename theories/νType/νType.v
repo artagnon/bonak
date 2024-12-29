@@ -176,17 +176,16 @@ Variable E: Frame' n (Hp := leI_refl _) -> HSet.
 Let Painting' p {Hp} := PaintingGen n Frame'' Painting'' RestrFrames' p
   (Hp := Hp) (E := E).
 
-Class CohFrameTypeBlock p {Hp: p <~ n} := {
+Class CohFrameTypeBlock p {Hp: p.+1 <~ n.+1} := {
   CohFrameType: Type;
-  RestrFrames: CohFrameType -> (mkRestrFrameTypeGen (Hp := leI_raise_both Hp) n
+  RestrFrames: CohFrameType -> (mkRestrFrameTypeGen n (Hp := Hp)
     (fun p Hp => Frame' p) Painting' p.+1).(RestrFrameTypeGen);
 }.
 
-Variable RestrPainting': forall p q {Hpq: p <~ q} {Hq: q <~ n} ε
-  (d: Frame' (Hp := leI_trans Hpq Hq) p),
-  Painting' p (Hp := leI_trans Hpq Hq) d ->
-  Painting'' p (RestrFrame' p q ε (Hp := leI_raise_both (leI_trans Hpq Hq))
-  (Hpq := leI_raise_both Hpq) (Hq := leI_raise_both Hq) d).
+Variable RestrPainting': forall p q {Hp: p.+1 <~ n.+1} {Hpq: p.+1 <~ q.+1}
+  {Hq: q.+1 <~ n.+1} ε (d: Frame' p),
+  Painting' p (Hp := leI_lower_both Hp) d ->
+  Painting'' p (RestrFrame' p q ε (Hpq := Hpq) (Hq := Hq) d).
 
 (* Build the list of pairs of the type CohFrameTypeGen of restrFrame'_{p-1}
    and of the definition of frame'_p in function of effective RestrFrames' of these types._
@@ -207,35 +206,38 @@ Definition CohFrameTypeBlockFix :=
     | S p => fun (Hp: p.+1 <~ n) =>
       {|
         CohFrameType :=
-          { Q : (aux p (leI_down Hp)).(CohFrameType) &T
+          { Q : (aux p _).(CohFrameType) &T
            let Frame :=
              (mkRestrFrameTypeGen n _ _ p).(FrameGen)
              ((aux p _).(RestrFrames) Q).1 in
-          forall r q (Hpr: p.+1 <~ r.+1) (Hrq: r.+1 <~ q.+1) (Hq: q.+1 <~ n)
+          forall r q (Hpr: p.+2 <~ r.+2) (Hrq: r.+2 <~ q.+2) (Hq: q.+2 <~ n.+1)
             (ε ω: arity) (d: Frame),
-          RestrFrame' p q ε (((aux p (leI_down Hp)).(RestrFrames) Q).2 r
-            Hpr (leI_up (leI_trans Hrq Hq)) ω d) =
-          RestrFrame' p r ω (((aux p (leI_down Hp)).(RestrFrames) Q).2 q.+1
-            (leI_up (leI_trans Hpr Hrq)) (leI_raise_both Hq) ε d) };
+          RestrFrame' p q ε (((aux p _).(RestrFrames) Q).2 r
+            (leI_lower_both Hpr) (leI_down (leI_trans Hrq Hq)) ω d) =
+          RestrFrame' p r ω (((aux p _).(RestrFrames) Q).2 q.+1
+            (leI_down (leI_trans Hpr Hrq)) Hq ε d) };
         RestrFrames Q :=
         let Frame :=
           (mkRestrFrameTypeGen n _ Painting' p.+1).(FrameGen) _ in
         let restrFrame q := match q with
         | O => fun (Hpq: p.+2 <~ 1) _ _ _ => False_rect _ (leI_O_contra (leI_lower_both Hpq))
         | S q => fun (Hpq: p.+2 <~ q.+2) (Hq: q.+2 <~ n.+1) ε (d: Frame) =>
-          (((aux p (leI_down Hp)).(RestrFrames) Q.1).2 q (leI_lower_both Hpq) (leI_down Hq) ε d.1;
+          (((aux p _).(RestrFrames) Q.1).2 q _ _ ε d.1;
           fun ω =>
             rew [Painting'' _] Q.2 p q (leI_refl _) Hpq Hq ε ω d.1 in
-              RestrPainting' p q ε _ (Hpq := leI_lower_both (leI_lower_both Hpq)) (Hq := leI_down (leI_lower_both Hq)) (d.2 ω))
+              RestrPainting' p q ε _ (d.2 ω))
         end in ((aux p _).(RestrFrames) Q.1; restrFrame)
       |}
   end.
 End CohFrameGenDef.
 (*
-Illegal application (Non-functional construction):
-The expression "d.2" of type "?T@{q1:=q0.+1; H:=Hq; H0:=ε} d.1"
-cannot be applied to the term
- "ω" : "?T0@{p0:=p; p:=p0; q0:=q; q:=q0; x:=((aux p0 ?Hp0).(RestrFrames) Q.1).2 q0 ?Hpq3 ?Hq3 ε d.1}"
+The term "((aux p0 (leI_down Hp)).(RestrFrames) Q.1; restrFrame)" has type
+ "{x
+  : (mkRestrFrameTypeGen n (fun (p : nat) (Hp : p <~ n) => Frame' p)
+       Painting' p0.+1).(RestrFrameTypeGen) &T ?P@{p0:=p; p:=p0} x}"
+while it is expected to have type
+ "(mkRestrFrameTypeGen n (fun (p : nat) (Hp : p <~ n) => Frame' p) Painting'
+     ?p@{p0:=p; p:=p0}.+1).(RestrFrameTypeGen)".
  *)
 Class RestrFrameBlock n p (prefix: Type@{m'})
   (Frame': forall p {Hp: p.+1 <= n}, prefix -> HSet) := {
