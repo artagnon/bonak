@@ -161,7 +161,7 @@ Lemma leI_of_leY {n p}: p <= n -> p <~ n.
 Proof.
   intros H. unfold "<=" in H. specialize H with (1 := leR_refl).
   revert n H. induction p, n. now constructor.
-  intros _; now apply leI_0. intros H; now contradiction.
+  intros _; now apply leI_O. intros H; now contradiction.
   intros H. simpl in H. apply IHp in H. now apply leI_raise_both.
 Defined.
 
@@ -179,7 +179,7 @@ Lemma leI_down_morphism {n p} (Hp: p.+1 <= n.+1):
 Proof.
   revert n Hp. induction p, n.
   - unfold leI_of_leY at 1; now simpl.
-  - unfold leI_of_leY; simpl. intros _. induction (leI_up leI_0). now auto.
+  - unfold leI_of_leY; simpl. intros _. induction (leI_up leI_O). now auto.
     simpl. now rewrite IHl.
   - intros Hp. exfalso.
     now apply leY_lower_both, leY_O_contra in Hp.

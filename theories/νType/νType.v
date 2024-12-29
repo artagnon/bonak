@@ -109,7 +109,7 @@ Definition RestrFrameTypeGenFix :=
         { R : (aux p (leI_down Hp)).(RestrFrameTypeGen) &T
           forall q (Hpq: p.+1 <~ q.+1) (Hq: q.+1 <~ n.+1) (ε: arity),
           (aux p _).(FrameGen) R -> FramePrev p
-          (Hp := leI_lower_both (leI_trans Hpq Hq))};
+          (Hp := leI_lower_both Hp)};
       FrameGen R :=
         { d: (aux p (leI_down Hp)).(FrameGen) R.1 &
           hforall ε, PaintingPrev p (R.2 p (leI_refl _) Hp ε d) }
@@ -202,25 +202,26 @@ Definition CohFrameTypeBlockFix :=
     | O => fun _ =>
       {| CohFrameType := unit;
          RestrFrames _ := (tt :> hunit; fun _ _ _ _ _ => tt :> hunit)
+          : (mkRestrFrameTypeGen n _ Painting' 1).(RestrFrameTypeGen)
       |}
-    | S p => fun (Hp: p.+1 <= n) =>
+    | S p => fun (Hp: p.+1 <~ n) =>
       {|
         CohFrameType :=
-          { Q : (aux p _).(CohFrameType) &T
+          { Q : (aux p (leI_down Hp)).(CohFrameType) &T
           forall r q (Hpr: p.+1 <~ r.+1) (Hrq: r.+1 <~ q.+1) (Hq: q.+1 <~ n)
             (ε ω: arity) d,
-          RestrFrame' p q ε (((aux p _).(RestrFrames) Q).2 r
-            Hpr (↑ (Hrq ↕ Hq)) ω d) =
-          RestrFrame' p r ω (((aux p _).(RestrFrames) Q).2 q.+1
-            (↑ (Hpr ↕ Hrq)) (⇑ Hq) ε d) };
+          RestrFrame' p q ε (((aux p (leI_down Hp)).(RestrFrames) Q).2 r
+            Hpr (leI_up (leI_trans Hrq Hq)) ω d) =
+          RestrFrame' p r ω (((aux p (leI_down Hp)).(RestrFrames) Q).2 q.+1
+            (leI_up (leI_trans Hpr Hrq)) (leI_raise_both Hq) ε d) };
         RestrFrames Q :=
         let restrFrame q := match q with
-        | O => fun (Hpq: p.+2 <~ 1) _ _ _ => leY_O_contra (leY_lower_both Hpq)
+        | O => fun (Hpq: p.+2 <~ 1) _ _ _ => leI_O_contra (leI_lower_both Hpq)
         | S q => fun (Hpq: p.+2 <~ q.+2) (Hq: q.+2 <~ n.+1) ε d =>
-          (((aux p _).(RestrFrames) Q.1).2 q (leI_lower_both Hpq) (leI_down Hq) ε d.1;
+          (((aux p (leI_down Hp)).(RestrFrames) Q.1).2 q (leI_lower_both Hpq) (leI_down Hq) ε d.1;
           fun ω =>
             rew [Painting'' _] Q.2 p q (leI_refl _) Hpq Hq ε ω d.1 in
-              RestrPainting' p q ε _ (Hpq := leI_lower_both Hpq) (Hq := leI_down Hq) (d.2 ω))
+              RestrPainting' p q ε _ (Hpq := leI_lower_both (leI_lower_both Hpq)) (Hq := leI_down (leI_lower_both Hq)) (d.2 ω))
         end in ((aux p _).(RestrFrames) Q.1; restrFrame)
       |}
   end.
