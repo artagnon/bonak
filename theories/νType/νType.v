@@ -106,10 +106,9 @@ Definition RestrFrameTypesFix :=
   | S p => fun (Hp: p.+1 <~ n.+1) =>
     {|
       RestrFrameTypes :=
-        { R : (aux p (leI_down Hp)).(RestrFrameTypes) &T
+        { R : (aux p _).(RestrFrameTypes) &T
           forall q (Hpq: p.+1 <~ q.+1) (Hq: q.+1 <~ n.+1) (ε: arity),
-          (aux p _).(Frames) R -> FramePrev p
-          (Hp := leI_lower_both Hp)};
+          (aux p _).(Frames) R -> FramePrev p (Hp := leI_lower_both Hp)};
       Frames R :=
         { d: (aux p (leI_down Hp)).(Frames) R.1 &
           hforall ε, PaintingPrev p (R.2 p (leI_refl _) Hp ε d) }
@@ -219,7 +218,7 @@ Definition CohFrameTypeBlockFix :=
       | O => fun (Hpq: p.+2 <~ 1) _ _ _ =>
         False_rect _ (leI_O_contra (leI_lower_both Hpq))
       | S q => fun (Hpq: p.+2 <~ q.+2) (Hq: q.+2 <~ n) ε (d: Frame) =>
-        (((aux p _).(RestrFrames) Q.1).2 q _ _ ε d.1;
+        (((aux p _).(RestrFrames) Q.1).2 q.+1 _ _ ε d.1;
         fun ω => rew [Painting'' _] Q.2 p q (leI_refl _)
           (leI_lower_both Hpq) (leI_down Hq) ε ω d.1 in
           RestrPainting' p q ε _ (d.2 ω))
