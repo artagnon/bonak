@@ -77,7 +77,7 @@ Variable arity: HSet.
     restrictions and coherence conditions on frame restrictions.
 *)
 
-Section RestrFramesGenDef.
+Section RestrFramesDef.
 (* Assume what is needed to build restrFrameType and Frame(restrFrames)
    at level n.+1 for respectively p < n and p <=  n.
    In particular, n is here the level where live FramePrev and PaintingPrev. *)
@@ -85,7 +85,7 @@ Variable n: nat.
 Variable FramePrev: forall p {Hp: p <~ n}, HSet.
 Variable PaintingPrev: forall p {Hp: p <~ n}, FramePrev p (Hp := Hp) -> HSet.
 
-Class RestrFrameTypeBlockGen := {
+Class RestrFrameTypeBlock := {
   RestrFrameTypes: Type;
   Frames: RestrFrameTypes -> HSet;
 }.
@@ -99,7 +99,7 @@ Class RestrFrameTypeBlockGen := {
    p     : { restrFrameTypes = {RestrFrameType0 ... restrFrameType_{p-1}} ; frame1(restrFrames_{0..p-1}) }
  *)
 Definition RestrFrameTypesFix :=
-  fix aux p: forall (Hp: p <~ n), RestrFrameTypeBlockGen :=
+  fix aux p: forall (Hp: p <~ n), RestrFrameTypeBlock :=
   match p with
   | O => fun (Hp: 0 <~ n) =>
     {|
@@ -123,7 +123,7 @@ Definition RestrFrameTypesFix :=
 
 #[local]
 Instance mkRestrFrameTypes p {Hp: p <~ n}:
-  RestrFrameTypeBlockGen := RestrFrameTypesFix p Hp.
+  RestrFrameTypeBlock := RestrFrameTypesFix p Hp.
 
 (* Additionally assume that we have restrFrames available up to level n so as
    to build Frame and Painting at level n.+1 for any p <= n. *)
@@ -152,7 +152,7 @@ Let Frame p {Hp: p <~ n} := mkFrames p (Hp := Hp).
 Let RestrFrame p {Hp: p.+1 <~ n} q {Hpq Hq} :=
   mkRestrFrames p (Hp := Hp) q (Hpq := Hpq) (Hq := Hq).
 
-Definition PaintingGen p {Hp: p <~ n}
+Definition mkPainting p {Hp: p <~ n}
   {E: Frame n -> HSet} := (fix aux p Hp :=
   match Hp in p <~ _ return Frame p (Hp := Hp) -> HSet with
   | leI_refl _ => E
@@ -161,7 +161,7 @@ Definition PaintingGen p {Hp: p <~ n}
         (aux p.+1 Hp) (d; l)}
   end) p Hp.
 
-End RestrFramesGenDef.
+End RestrFramesDef.
 
 Section CohFramesDef.
 (* We build CohFrameType and RestrFrame at level n.+2
@@ -179,7 +179,7 @@ Let RestrFrame' p {Hp: p.+1 <~ n} q {Hpq Hq} :=
   (Hp := Hp) q (Hpq := Hpq) (Hq := Hq).
 Variable E: Frame' n (Hp := leI_refl _) -> HSet.
 Let Painting' p {Hp: p <~ n} :=
-  PaintingGen n Frame'' Painting'' RestrFrames' p (Hp := Hp) (E := E).
+  mkPainting n Frame'' Painting'' RestrFrames' p (Hp := Hp) (E := E).
 
 Definition ThisRestrFrameTypes p {Hp: p <~ n} :=
   (mkRestrFrameTypes n Frame' Painting' p (Hp := Hp)).(RestrFrameTypes).
@@ -246,8 +246,8 @@ cannot satisfy constraint
       (((aux p0 ?Hp1@{p0:=p; p:=p0}).(RestrFrames) Q.1).2 q
          (leI_down (leI_trans (leI_refl p0.+2) Hpq)) H H0 H1.1))}" ==
 "(fun
-    R : ((fix aux (p : nat) : p <~ n -> RestrFrameTypeBlockGen :=
-            match p as p0 return (p0 <~ n -> RestrFrameTypeBlockGen) with
+    R : ((fix aux (p : nat) : p <~ n -> RestrFrameTypeBlock :=
+            match p as p0 return (p0 <~ n -> RestrFrameTypeBlock) with
             | 0 =>
                 fun Hp : 0 <~ n =>
                 {|
@@ -289,8 +289,8 @@ cannot satisfy constraint
   p0.+2 <~ q.+1 ->
   q.+1 <~ n ->
   arity ->
-  ((fix aux (p : nat) : p <~ n -> RestrFrameTypeBlockGen :=
-      match p as p0 return (p0 <~ n -> RestrFrameTypeBlockGen) with
+  ((fix aux (p : nat) : p <~ n -> RestrFrameTypeBlock :=
+      match p as p0 return (p0 <~ n -> RestrFrameTypeBlock) with
       | 0 =>
           fun Hp : 0 <~ n =>
           {|
