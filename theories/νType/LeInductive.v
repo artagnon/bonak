@@ -9,7 +9,7 @@ where "p <~ n" := (leI n p): nat_scope.
 
 Arguments leI_down {n p} H.
 
-Lemma leI_up {n p: nat}: n <~ p -> n <~ p.+1.
+Lemma leI_up {n p}: n <~ p -> n <~ p.+1.
   induction 1. constructor. now constructor. now constructor.
 Defined.
 
