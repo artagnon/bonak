@@ -206,21 +206,23 @@ Variable RestrPainting': forall p q {Hp: p.+1 <~ n} {Hpq: p.+1 <~ q.+1}
    p     : { cohFrameTypes_{0..p-1} = {cohFrameType0 ... cohFrameType_{p-1}} ; restrFramep(cohFrames_{0..p-1}):restrFrameTypes_{0..p} }
 *)
 Definition CohFrameTypeBlockFix :=
-  fix aux p: forall (Hp: p <~ n), CohFrameTypeBlock p :=
+  fix aux p: forall (Hp: p.+1 <~ n), CohFrameTypeBlock p :=
   match p return forall Hp, CohFrameTypeBlock p with
     | O => fun _ =>
     {|
       CohFrameType := { Q: unit &T tt = tt };
       RestrFrames _ := ((tt; fun _ _ _ _ _ => tt); fun _ _ _ _ _ => tt): ThisRestrFrameTypes 1
     |}
-    | S p => fun (Hp: p.+1 <~ n) =>
+    | S p => fun (Hp: p.+2 <~ n) =>
     {|
       CohFrameType := { Q: (aux p _).(CohFrameType) &T
-        forall r q (Hpr: p.+2 <~ r.+2) (Hrq: r.+2 <~ q.+2) (Hq: q.+2 <~ n)
-          (ε ω: arity) d,
-        RestrFrame' p q ε (((aux p _).(RestrFrames) Q).2 r
-          (leI_lower_both Hpr) (leI_down (leI_trans Hrq Hq)) ω d) =
-        RestrFrame' p r ω (((aux p _).(RestrFrames) Q).2 q.+1
+        forall r q (Hpr: p.+2 <~ r.+2) (Hrq: r.+2 <~ q.+2) (Hr: r.+2 <~ n)
+          (Hq: q.+2 <~ n) (ε ω: arity) d,
+        RestrFrame' p q ε (Hpq := leI_lower_both (leI_trans Hpr Hrq))
+          (Hq := leI_down Hq) (((aux p (leI_down Hp)).(RestrFrames) Q).2 r
+          (leI_lower_both Hpr) (leI_down Hr) ω d) =
+        RestrFrame' p r ω (Hpq := leI_lower_both Hpr) (Hq := leI_down Hr)
+          (((aux p (leI_down Hp)).(RestrFrames) Q).2 q.+1
           (leI_down (leI_trans Hpr Hrq)) Hq ε d) };
       RestrFrames Q :=
       let Frame := mkThisFrame p.+1 _ in
@@ -228,10 +230,11 @@ Definition CohFrameTypeBlockFix :=
       | O => fun (Hpq: p.+2 <~ 1) _ _ _ =>
         False_rect _ (leI_O_contra (leI_lower_both Hpq))
       | S q => fun (Hpq: p.+2 <~ q.+2) (Hq: q.+2 <~ n) ε (d: Frame) =>
-        (((aux p _).(RestrFrames) Q.1).2 q.+1 _ _ ε d.1;
-        fun ω => rew [Painting'' _] Q.2 p q (leI_refl _) Hpq Hq ε ω d.1 in
-          RestrPainting' p q ε _ (d.2 ω))
-      end in ((aux p _).(RestrFrames) Q.1; restrFrame): ThisRestrFrameTypes p.+2
+        (((aux p (leI_down Hp)).(RestrFrames) Q.1).2 q.+1 _ _ ε d.1 as rf in _;
+        fun ω => rew [Painting'' p] Q.2 p q (leI_refl _) Hpq Hp Hq ε ω d.1 in
+          RestrPainting' p q ε _ (d.2 ω)
+          in forall ω, Painting'' p (RestrFrame' _ _ _ rf))
+      end in ((aux p (leI_down Hp)).(RestrFrames) Q.1; restrFrame): ThisRestrFrameTypes p.+2
     |}
   end.
 End CohFramesDef.
