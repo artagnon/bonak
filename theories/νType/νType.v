@@ -196,9 +196,9 @@ Let Frame' p {Hp: p <~ n} :=
 Let RestrFrame' p {Hp: p.+1 <~ n} q {Hpq Hq} ε (d: Frame' p): Frame'' p :=
   mkRestrFrame n Frame'' Painting'' RestrFrames' p
   (Hp := Hp) q (Hpq := Hpq) (Hq := Hq) ε d.
-Variable E: Frame' n (Hp := leI_refl _) -> HSet.
+Variable E': Frame' n (Hp := leI_refl _) -> HSet.
 Let Painting' p {Hp: p <~ n} :=
-  mkPainting n Frame'' Painting'' RestrFrames' p (Hp := Hp) (E := E).
+  mkPainting n Frame'' Painting'' RestrFrames' p (Hp := Hp) (E := E').
 
 Definition RestrFrameTypes p {Hp: p <~ n} :=
   (mkRestrFrameTypes n Frame' Painting' p (Hp := Hp)).(RestrFrameTypesDef).
