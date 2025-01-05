@@ -135,23 +135,23 @@ Definition mkRestrFramesFromFull: forall p {Hp: p <~ n},
   | @leI_down _ p Hp => (aux p.+1 Hp).1
   end.
 
-Definition Frame := fun p {Hp: p <~ n} =>
+Definition mkFrame := fun p {Hp: p <~ n} =>
   (mkRestrFrameTypes p).(FrameDef) (mkRestrFramesFromFull p (Hp := Hp)).
 
 Definition mkRestrFrameFromFull p {Hp: p.+1 <~ n} :=
   (mkRestrFramesFromFull p.+1 (Hp := Hp)).2:
   forall q (Hpq: p <~ q) (Hq: q <~ n),
-  arity -> Frame p -> FramePrev p.
+  arity -> mkFrame p -> FramePrev p.
 
-Definition RestrFrame := fun p {Hp: p.+1 <~ n} q {Hpq Hq} =>
+Definition mkRestrFrame := fun p {Hp: p.+1 <~ n} q {Hpq Hq} =>
   mkRestrFrameFromFull p (Hp := Hp) q Hpq Hq.
 
 Definition mkPainting p {Hp: p <~ n}
-  {E: Frame n -> HSet} := (fix aux p Hp :=
-  match Hp in p <~ _ return Frame p (Hp := Hp) -> HSet with
+  {E: mkFrame n -> HSet} := (fix aux p Hp :=
+  match Hp in p <~ _ return mkFrame p (Hp := Hp) -> HSet with
   | leI_refl _ => E
   | @leI_down _ p Hp => fun d =>
-       {l: hforall ε, PaintingPrev p (RestrFrame p p ε d) &
+       {l: hforall ε, PaintingPrev p (mkRestrFrame p p ε d) &
         (aux p.+1 Hp) (d; l)}
   end) p Hp.
 End RestrFramesDef.
@@ -166,9 +166,9 @@ Variable Frame'': forall p {Hp: p <~ n}, HSet.
 Variable Painting'': forall p {Hp: p <~ n}, Frame'' p (Hp := Hp) -> HSet.
 Variable RestrFrames': mkFullRestrFrameTypes n Frame'' Painting''.
 Let Frame' p {Hp: p <~ n} :=
-  Frame n Frame'' Painting'' RestrFrames' p (Hp := Hp).
+  mkFrame n Frame'' Painting'' RestrFrames' p (Hp := Hp).
 Let RestrFrame' p {Hp: p.+1 <~ n} q {Hpq Hq} ε (d: Frame' p): Frame'' p :=
-  RestrFrame n Frame'' Painting'' RestrFrames' p
+  mkRestrFrame n Frame'' Painting'' RestrFrames' p
   (Hp := Hp) q (Hpq := Hpq) (Hq := Hq) ε d.
 Variable E: Frame' n (Hp := leI_refl _) -> HSet.
 Let Painting' p {Hp: p <~ n} :=
