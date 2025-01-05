@@ -156,6 +156,32 @@ Definition mkPainting p {Hp: p <~ n}
   end) p Hp.
 End RestrFramesDef.
 
+Eval compute in (mkFrame 2 _ _ _ 1 (Hp:=leI_down (leI_refl 2))).(Dom).
+(* {a : unit &T
+           forall a0 : arity,
+           ?PaintingPrev 0 (leI_down (leI_down (leI_refl 2)))
+             (?RestrFrames.1.2 0 (leI_refl 1) (leI_down (leI_refl 2)) a0 a)} *)
+
+Eval compute in mkRestrFrameFromFull 2 _ _ _ 1 (Hp:=leI_refl 2).
+(* type is: forall q : nat, 1 <~ q -> q <~ 2 -> arity ->
+       mkFrame 2 ?FramePrev ?PaintingPrev ?RestrFrames 1 ->
+       ?FramePrev 1 (leI_down (leI_refl 2)) *)
+
+Eval compute in
+  fun Painting'' => (mkFrame 3 _ (fun p _ _ => Painting'' p) _ 2 (Hp := (leI_down (leI_refl 3)))).(Dom).
+(* {_ : {_ : unit &T arity -> Painting'' 0} &T arity -> Painting'' 1} *)
+
+Eval compute in
+  fun Painting'' => (mkFrame 2 _ (fun p _ _ => Painting'' p) _ 2 (Hp := ( (leI_refl 2)))).(Dom).
+(* {_ : {_ : unit &T arity -> Painting'' 0} &T arity -> Painting'' 1} *)
+
+Eval compute in mkPainting 2 _ _ _ 2 (Hp:=leI_refl 2) ?[x].
+(* ?E ?x OK *)
+
+Eval compute in
+  fun Painting'' => (mkPainting 2 _ (fun p _ _ => Painting'' p) _ 1 (Hp:=leI_down (leI_refl 2)) ?[x]).(Dom).
+(* {a : arity -> Painting'' 1 &T ?E (?x; a)} *)
+
 Section CohFramesDef.
 (* We build CohFrameType and RestrFrame at level n.+2
    for respectively p <= n and p <= n.+1, assuming:
