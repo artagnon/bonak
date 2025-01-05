@@ -86,11 +86,11 @@ Variable FramePrev: forall p {Hp: p <~ n}, HSet.
 Variable PaintingPrev: forall p {Hp: p <~ n}, FramePrev p (Hp := Hp) -> HSet.
 
 Class RestrFrameTypeBlock := {
-  RestrFrameTypes: Type;
-  FrameDef: RestrFrameTypes -> HSet;
+  RestrFrameTypesDef: Type;
+  FrameDef: RestrFrameTypesDef -> HSet;
 }.
 
-(* Build the list of pairs of the type RestrFrameTypes of restrFrame'_{p-1}
+(* Build the list of pairs of the type RestrFrameTypesDef of restrFrame'_{p-1}
    and of the definition of frame'_p in function of effective RestrFrames' of these types._
    That is, we build for p <= n:
    p = 0 : { restrFrameTypes = unit ; frame0(restrFrames_{0..0-1}) }
@@ -103,13 +103,13 @@ Definition RestrFrameTypesFix :=
   match p with
   | O => fun (Hp: 0 <~ n) =>
     {|
-      RestrFrameTypes := unit;
+      RestrFrameTypesDef := unit;
       FrameDef _ := hunit
     |}
   | S p => fun (Hp: p.+1 <~ n) =>
     {|
-      RestrFrameTypes :=
-        { R: (aux p _).(RestrFrameTypes) &T
+      RestrFrameTypesDef :=
+        { R: (aux p _).(RestrFrameTypesDef) &T
           forall q (Hpq: p <~ q) (Hq: q <~ n) (ε: arity),
           (aux p _).(FrameDef) R -> FramePrev p (Hp := leI_down Hp) };
       FrameDef R :=
@@ -125,11 +125,11 @@ Instance mkRestrFrameTypes p {Hp: p <~ n}:
 (* Additionally assume that we have restrFrames available up to level n so as
    to build Frame and Painting at level n.+1 for any p <= n. *)
 Definition mkFullRestrFrameTypes :=
-  (mkRestrFrameTypes n (Hp := leI_refl _)).(RestrFrameTypes).
+  (mkRestrFrameTypes n (Hp := leI_refl _)).(RestrFrameTypesDef).
 Variable RestrFrames: mkFullRestrFrameTypes.
 
 Definition mkRestrFramesFromFull: forall p {Hp: p <~ n},
-  (mkRestrFrameTypes p (Hp := Hp)).(RestrFrameTypes) :=
+  (mkRestrFrameTypes p (Hp := Hp)).(RestrFrameTypesDef) :=
   fix aux p Hp := match Hp with
   | leI_refl _ => RestrFrames
   | @leI_down _ p Hp => (aux p.+1 Hp).1
@@ -174,15 +174,15 @@ Variable E: Frame' n (Hp := leI_refl _) -> HSet.
 Let Painting' p {Hp: p <~ n} :=
   mkPainting n Frame'' Painting'' RestrFrames' p (Hp := Hp) (E := E).
 
-Definition ThisRestrFrameTypes p {Hp: p <~ n} :=
-  (mkRestrFrameTypes n Frame' Painting' p (Hp := Hp)).(RestrFrameTypes).
+Definition RestrFrameTypes p {Hp: p <~ n} :=
+  (mkRestrFrameTypes n Frame' Painting' p (Hp := Hp)).(RestrFrameTypesDef).
 
-Definition mkThisFrame p {Hp: p <~ n} :=
+Definition FrameOf p {Hp: p <~ n} :=
   (mkRestrFrameTypes n Frame' Painting' p (Hp := Hp)).(FrameDef).
 
 Class CohFrameTypeBlock p {Hp: p.+1 <~ n} := {
   CohFrameTypes: Type;
-  RestrFrames: CohFrameTypes -> ThisRestrFrameTypes p.+1 (Hp := Hp);
+  RestrFrames: CohFrameTypes -> RestrFrameTypes p.+1 (Hp := Hp);
 }.
 
 Variable RestrPainting': forall p q {Hp: p.+1 <~ n} {Hpq: p <~ q}
@@ -204,7 +204,7 @@ Definition CohFrameTypesFix :=
     | O => fun _ =>
     {|
       CohFrameTypes := tt = tt;
-      RestrFrames _ := (tt; fun _ _ _ _ _ => tt): ThisRestrFrameTypes 1
+      RestrFrames _ := (tt; fun _ _ _ _ _ => tt): RestrFrameTypes 1
     |}
     | S p => fun (Hp: p.+2 <~ n) =>
     {|
@@ -222,13 +222,13 @@ Definition CohFrameTypesFix :=
       | O => fun (Hpq: p.+1 <~ 0) _ _ _ =>
         False_rect _ (leI_O_contra Hpq)
       | S q => fun (Hpq: p.+1 <~ q.+1) (Hq: q.+1 <~ n) ε
-        (d: mkThisFrame p.+1 _) =>
+        (d: FrameOf p.+1 _) =>
         (((aux p (leI_down Hp)).(RestrFrames) Q.1).2 q.+1 _ _ ε d.1 as rf in _;
         fun ω => rew [Painting'' p] Q.2 p q (leI_refl _) Hpq (leI_down Hp) Hq
           ε ω d.1 in
           RestrPainting' p q ε _ (d.2 ω)
           in forall ω, Painting'' p (RestrFrame' _ _ _ rf))
-      end in ((aux p _).(RestrFrames) Q.1; restrFrame): ThisRestrFrameTypes p.+2
+      end in ((aux p _).(RestrFrames) Q.1; restrFrame): RestrFrameTypes p.+2
     |}
   end.
 
@@ -251,7 +251,7 @@ Definition mkCohFrameTypesFromFull: forall p {Hp: p <~ n},
   end.
 
 Let Frame p {Hp: p <~ n} :=
-  (mkRestrFrameTypes n.+1 Frame' Painting' p).(Frames)
+  (mkRestrFrameTypes n.+1 Frame' Painting' p).(FrameDef)
   ((mkCohFrameTypes p (Hp := Hp)).(RestrFrames)
     (mkCohFrameTypesFromFull p (Hp := Hp))).1.
 
