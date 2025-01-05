@@ -200,8 +200,16 @@ Variable E': Frame' n (Hp := leI_refl _) -> HSet.
 Let Painting' p {Hp: p <~ n} :=
   mkPainting n Frame'' Painting'' RestrFrames' p (Hp := Hp) (E := E').
 
+(* RestrFrameType(n+1,p), with p=n+1 missing *)
 Definition RestrFrameTypes p {Hp: p <~ n} :=
   (mkRestrFrameTypes n Frame' Painting' p (Hp := Hp)).(RestrFrameTypesDef).
+
+(*
+End CohFramesDef.
+Eval compute in fun Painting'' => Frame' 4 _ (fun p _ _ => Painting'' p) _ 2 (Hp:= (leI_down (leI_down (leI_refl 4)))).
+Eval compute in fun Painting'' => RestrFrameTypes 4 _ (fun p _ _ => Painting'' p) _ _ 2 (Hp:= (leI_down (leI_down (leI_refl 4)))).
+Eval compute in fun Painting'' => RestrFrameTypes 2 _ (fun p _ _ => Painting'' p) _ _ 2 (Hp:= (leI_refl 2)).
+*)
 
 Definition FrameOf p {Hp: p <~ n} :=
   (mkRestrFrameTypes n Frame' Painting' p (Hp := Hp)).(FrameDef).
@@ -266,7 +274,8 @@ Definition mkFullCohFrameTypes :=
   (mkCohFrameTypes n (Hp := leI_refl _)).(CohFrameTypes).
 Variable CohFrames: mkFullCohFrameTypes.
 
-Let mkFullRestrFrames :=
+(* This is all RestrFrame(n+2,p) from p=0 to p=n, so p=n+1 is missing *)
+Definition mkFullRestrFrames :=
   (mkCohFrameTypes n (Hp := leI_refl _)).(RestrFrames) CohFrames.
 
 Definition mkCohFrameTypesFromFull: forall p {Hp: p <~ n},
@@ -276,11 +285,13 @@ Definition mkCohFrameTypesFromFull: forall p {Hp: p <~ n},
   | @leI_down _ p Hp => (aux p.+1 Hp).1
   end.
 
-Let Frame p {Hp: p <~ n} :=
-  (mkRestrFrameTypes n.+1 Frame' Painting' p).(FrameDef)
+(* This is Frame(n+2,p): p=n+1 and p = n+2 are missing *)
+Definition Frame p {Hp: p <~ n} :=
+  FrameOf p
   ((mkCohFrameTypes p (Hp := Hp)).(RestrFrames)
     (mkCohFrameTypesFromFull p (Hp := Hp))).1.
 
+(* This is RestrFrame(n+2,p): p=n and p=n+1 are missing *)
 Let RestrFrame p {Hp: p.+1 <~ n} q {Hpq: p.+1 <~ q.+1} {Hq: q.+1 <~ n.+1}
   ε (d: Frame p): Frame' p :=
   ((mkCohFrameTypes p (Hp := leI_down Hp)).(RestrFrames)
