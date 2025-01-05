@@ -168,9 +168,9 @@ Variable Painting'': forall p {Hp: p <~ n.+1}, Frame'' p (Hp := Hp) -> HSet.
 Variable RestrFrames': mkFullRestrFrameTypes n.+1 Frame'' Painting''.
 Let Frame' p {Hp: p <~ n.+1} :=
   Frame n.+1 Frame'' Painting'' RestrFrames' p (Hp := Hp).
-Let RestrFrame' p {Hp: p.+1 <~ n.+1} q {Hpq Hq} :=
+Let RestrFrame' p {Hp: p.+1 <~ n.+1} q {Hpq Hq} ε (d: Frame' p): Frame'' p :=
   RestrFrame n.+1 Frame'' Painting'' RestrFrames' p
-  (Hp := Hp) q (Hpq := Hpq) (Hq := Hq).
+  (Hp := Hp) q (Hpq := Hpq) (Hq := Hq) ε d.
 Variable E: Frame' n.+1 (Hp := leI_refl _) -> HSet.
 Let Painting' p {Hp: p <~ n.+1} :=
   mkPainting n.+1 Frame'' Painting'' RestrFrames' p (Hp := Hp) (E := E).
@@ -247,40 +247,47 @@ Definition take_head': forall p {Hp: p <~ n},
   | @leI_down _ p Hp => (aux p.+1 Hp).1
   end.
 
-Let RestrFrame := fun p {Hp: p.+1 <~ n} =>
-  (mkCohFrameTypes p (Hp := leI_down Hp)).(RestrFrames)
-  (take_head' p.+1 (Hp := Hp)).1.
+Let mkRestrFrames :=
+  (mkCohFrameTypes n (Hp := leI_refl _)).(RestrFrames) CohFrames.
+
+Let Frame p {Hp: p <~ n} :=
+  (mkRestrFrameTypes n.+1 Frame' Painting' p).(Frames)
+  ((mkCohFrameTypes p (Hp := Hp)).(RestrFrames)
+    (take_head' p (Hp := Hp))).1.
+
+Let RestrFrame p {Hp: p.+1 <~ n} q {Hpq Hq} ε (d: Frame p): Frame' p :=
+  ((mkCohFrameTypes p (Hp := leI_down Hp)).(RestrFrames)
+  (take_head' p.+1 (Hp := Hp)).1).2 q Hpq Hq ε d.
 
 Definition take_tail' p {Hp: p.+1 <~ n} := (take_head' p.+1 (Hp := Hp)).2:
   forall (r q : nat) (Hpr : p.+2 <~ r.+2) (Hrq : r.+2 <~ q.+2)
-         (Hr : r.+2 <~ n.+1) (Hq : q.+2 <~ n.+1) (ε ω : arity) d,
-         RestrFrame' p q ε (RestrFrame p) =
-         RestrFrame' p r ω (RestrFrame p).
+         (Hr : r.+2 <~ n.+1) (Hq : q.+2 <~ n.+1) (ε ω : arity) (d: Frame p),
+         RestrFrame' p q ε (RestrFrame p r ω d) =
+         RestrFrame' p r ω (RestrFrame p q.+1 ε d).
 
-Definition mkCohFrame := fun p {Hp: p.+1 <~ n} q {Hpq Hq} =>
-  take_tail' p (Hp := Hp) q Hpq Hq.
+Definition mkCohFrame := fun p {Hp: p.+1 <~ n} r q {Hpr Hrq} =>
+  take_tail' p (Hp := Hp) q r Hpr Hrq.
 
-Let RestrFrames :=
-  (mkCohFrameTypes n (Hp := leI_refl _)).(RestrFrames) CohFrames.
-
-Let Painting p {Hp: p <~ n.+1} E :=
-  mkPainting n.+1 Frame' Painting' RestrFrames p (Hp := Hp) (E := E).
-
-Let Frame p {Hp: p <~ n.+1} :=
-  mkFrames n.+1 Frame' Painting' RestrFrames p (Hp := Hp).
+Definition Painting p {Hp: p <~ n}
+  (E: Frame n -> HSet) := (fix aux p Hp :=
+  match Hp in p <~ _ return Frame p (Hp := Hp) -> HSet with
+  | leI_refl _ => E
+  | @leI_down _ p Hp => fun d =>
+       {l: hforall ε, Painting' p (RestrFrame p p ε d) &
+        (aux p.+1 Hp) (d; l)}
+  end) p Hp.
 
 Definition mkRestrPainting p {Hp: p <~ n}
   {E: Frame n -> HSet} := (fix aux p Hp :=
   match Hp in p <~ _ return forall q (Hpq: p <~ q) (Hq: q <~ n) ε (d: Frame p),
-  Painting (Hp := leI_down Hp) p d ->
-  Painting' p (RestrFrame' p q ε (Hpq := Hpq) (Hq := Hq) d) with
-  | leI_refl _ => fun q _ _ ε d => d.1 ε
-  | @leI_down _ p Hp => fun q _ _ ε d =>
-       (fun ω => rew [Painting'' p] coh p q (leI_refl _) Hpq Hp Hq ε ω d.1 in
-          RestrPainting' p q ε _ (d.2 ω);
-        (aux p.+1 Hp) q _ _ ε d.2)
+  Painting p E d ->
+  Painting' p (RestrFrame p q ε d) with
+  | leI_refl _ => fun q _ _ ε d (c: Painting p.+1 E d) => c.1 ε
+  | @leI_down _ p Hp => fun q _ _ ε d c  =>
+       (fun ω => rew [Painting'' p] mkCohFrame p q ε ω d.1 in
+          RestrPainting' p q ε _ (c.2 ω);
+        (aux p.+1 Hp) q _ _ ε c.2)
   end) p Hp.
-
 End CohFramesDef.
 
 Class RestrFrameBlock n p (prefix: Type@{m'})
