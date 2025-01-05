@@ -240,7 +240,7 @@ Definition mkFullCohFrameTypes :=
   (mkCohFrameTypes n (Hp := leI_refl _)).(CohFrameTypes).
 Variable CohFrames: mkFullCohFrameTypes.
 
-Let mkRestrFrames :=
+Let mkFullRestrFrames :=
   (mkCohFrameTypes n (Hp := leI_refl _)).(RestrFrames) CohFrames.
 
 Definition mkCohFrameTypesFromFull: forall p {Hp: p <~ n},
