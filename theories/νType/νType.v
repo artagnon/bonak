@@ -135,14 +135,13 @@ Definition mkRestrFramesFromFull: forall p {Hp: p <~ n},
   | @leI_down _ p Hp => (aux p.+1 Hp).1
   end.
 
+Definition Frame := fun p {Hp: p <~ n} =>
+  (mkRestrFrameTypes p).(FrameDef) (mkRestrFramesFromFull p (Hp := Hp)).
+
 Definition mkRestrFrameFromFull p {Hp: p.+1 <~ n} :=
   (mkRestrFramesFromFull p.+1 (Hp := Hp)).2:
   forall q (Hpq: p <~ q) (Hq: q <~ n),
-  arity -> (mkRestrFrameTypes p).(FrameDef) (mkRestrFramesFromFull p.+1).1
-        -> FramePrev p.
-
-Definition Frame := fun p {Hp: p <~ n} =>
-  (mkRestrFrameTypes p).(FrameDef) (mkRestrFramesFromFull p (Hp := Hp)).
+  arity -> Frame p -> FramePrev p.
 
 Definition RestrFrame := fun p {Hp: p.+1 <~ n} q {Hpq Hq} =>
   mkRestrFrameFromFull p (Hp := Hp) q Hpq Hq.
