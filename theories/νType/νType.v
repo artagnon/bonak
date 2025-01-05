@@ -267,7 +267,7 @@ Definition mkCohFrameTypeFromFull p {Hp: p.+1 <~ n} :=
          RestrFrame' p q ε (RestrFrame p r ω d) =
          RestrFrame' p r ω (RestrFrame p q.+1 ε d).
 
-Definition mkCohFrameType := fun p {Hp: p.+1 <~ n} r q {Hpr Hrq} =>
+Definition CohFrameType := fun p {Hp: p.+1 <~ n} r q {Hpr Hrq} =>
   mkCohFrameTypeFromFull p (Hp := Hp) q r Hpr Hrq.
 
 Definition Painting p {Hp: p <~ n}
