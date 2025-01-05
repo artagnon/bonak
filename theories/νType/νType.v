@@ -90,8 +90,8 @@ Class RestrFrameTypeBlock := {
   FrameDef: RestrFrameTypesDef -> HSet;
 }.
 
-(* Build the list of pairs of the type RestrFrameTypesDef of restrFrame'_{p-1}
-   and of the definition of frame'_p in function of effective RestrFrames' of these types._
+(* Build the list of pairs of the type RestrFrameTypesDef of restrFrame_{p-1}
+   and of the definition of frame_p in function of effective RestrFrames of these types._
    That is, we build for p <= n:
    p = 0 : { restrFrameTypes = unit ; frame0(restrFrames_{0..0-1}) }
    p = 1 : { restrFrameTypes = {_:unit & restrFrameType0 ; frame1(restrFrames_{0..0}) }
