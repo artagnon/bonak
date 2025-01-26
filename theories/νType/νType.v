@@ -296,8 +296,8 @@ Definition mkCohFrameTypeFromFull p {Hp: p.+2 <~ n.+2} :=
          RestrFrame' p q ε (RestrFrame p (Hp := leI_down Hp) r ω d) =
          RestrFrame' p r ω (RestrFrame p q.+1 ε d).
 
-Definition CohFrameType := fun p {Hp: p.+2 <~ n.+2} r q {Hpr Hrq} =>
-  mkCohFrameTypeFromFull p (Hp := Hp) q r Hpr Hrq.
+Definition CohFrameType := fun {p} {Hp: p.+2 <~ n.+2} r q {Hpr Hrq Hr Hq} =>
+  mkCohFrameTypeFromFull p (Hp := Hp) q r Hpr Hrq Hr Hq.
 
 Theorem eqFrameSp {p} {Hp: p.+1 <~ n.+2}:
   {d : Frame p &T
@@ -318,8 +318,7 @@ Definition Painting p {Hp: p <~ n.+2}
 
 Axiom leI_irrelevance: forall {n m} {Hnm Hnm': n <~ m}, Hnm = Hnm'.
 
-Definition mkRestrPainting p
-  (E: Frame n.+2 (Hp := leI_refl _) -> HSet):
+Definition mkRestrPainting p (E: Frame n.+2 (Hp := leI_refl _) -> HSet):
     forall q (Hpq: p <~ q) (Hq: q.+1 <~ n.+2) ε (d: Frame p),
   Painting p (Hp := leI_down (leI_trans (leI_raise_both Hpq) Hq)) (E := E) d ->
   Painting' p (RestrFrame p q (Hpq := Hpq) (Hq := leI_lower_both Hq) ε d).
@@ -329,10 +328,10 @@ Definition mkRestrPainting p
   Painting p (Hp := leI_down (leI_trans (leI_raise_both Hpq) Hq)) (E := E) d ->
   Painting' p (RestrFrame p q (Hpq := Hpq) (Hq := leI_lower_both Hq) ε d) with
   | leI_refl _ => fun d (c: Painting q d) => c.1 ε
-  | @leI_down _ p Hpq => fun d c  =>
-       (fun ω => rew [Painting'' p] mkCohFrame p q ε ω d.1 in
-          RestrPainting' p q ε (RestrFrame p p ω d) (c.1 ω);
-        (aux p.+1 _) q _ _ ε c.2)
+  | @leI_down _ p Hpq => fun (d: Frame p) (c: Painting p d) =>
+       (fun ω => rew [Painting'' p] CohFrameType q p ε ω d in
+            RestrPainting' p q ε (RestrFrame p p ω d) (c.1 ω);
+        (aux p.+1 _) (rew [id] eqFrameSp in (d; c.1)) c.2)
   end)).
 
 Class RestrFrameBlock n p (prefix: Type@{m'})
