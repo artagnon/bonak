@@ -299,41 +299,30 @@ Definition mkCohFrameFromFull p {Hp: p.+2 <~ n.+2} :=
 Definition CohFrame := fun {p} {Hp: p.+2 <~ n.+2} r q {Hpr Hrq Hr Hq} =>
   mkCohFrameFromFull p (Hp := Hp) r q Hpr Hrq Hr Hq.
 
-Lemma eqFrameSpDown {p} {Hp: p.+2 <~ n.+2}:
-  {d : Frame p &T
-  forall ε, Painting' p (RestrFrame p p (Hp := leI_down Hp) (Hpq := leI_refl _)
-  (Hq := leI_down (leI_lower_both Hp)) ε d)} = Frame p.+1 (Hp := leI_down Hp).
-Proof.
-  now easy.
-Defined.
-
-Lemma eqFrameSpRefl: {d : Frame n.+1 &T
-  forall ε, Painting' n.+1 (RestrFrame n.+1 n.+1 (Hp := leI_refl _)
-  (Hpq := leI_refl _) (Hq := leI_refl _) ε d)} = Frame n.+2 (Hp := leI_refl _).
-Proof.
-  now easy.
-Defined.
-
 Let eqFrameSpType {p} {Hp: p.+1 <~ n.+2}:= {d: Frame p &T
   forall ε, Painting' p (RestrFrame p p (Hp := Hp) (Hpq := leI_refl _)
   (Hq := leI_lower_both Hp) ε d)} = Frame p.+1 (Hp := Hp).
 
-Definition eqFrameSp {p} {Hp: p.+1 <~ n.+2}:
-  {d: Frame p &T
-  forall ε, Painting' p (RestrFrame p p (Hp := Hp) (Hpq := leI_refl _)
-  (Hq := leI_lower_both Hp) ε d)} = Frame p.+1 (Hp := Hp) :=
+Lemma eqFrameSpDown {p} {Hp: p.+2 <~ n.+2}: eqFrameSpType (Hp := leI_down Hp).
+Proof.
+  now easy.
+Defined.
+
+Lemma eqFrameSpRefl: eqFrameSpType (Hp := leI_refl _).
+Proof.
+  now easy.
+Defined.
+
+Definition eqFrameSp {p} {Hp: p.+1 <~ n.+2}: eqFrameSpType :=
   match Hp in S_p <~ _ return
     match S_p return _ -> Type with 0 =>
-    fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+2) => ({d: Frame p &T
-  forall ε, Painting' p (RestrFrame p p (Hp := Hp) (Hpq := leI_refl _)
-  (Hq := leI_lower_both Hp) ε d)} = Frame p.+1 (Hp := Hp)) end Hp with
+    fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+2) => eqFrameSpType (Hp := Hp) end Hp with
   | leI_refl _ => eqFrameSpRefl
   | @leI_down _ S_p Hp =>
       match S_p return forall Hp',
        match S_p return _ -> Type with 0 =>
-       fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+2) => ({d: Frame p &T
-  forall ε, Painting' p (RestrFrame p p (Hp := Hp) (Hpq := leI_refl _)
-  (Hq := leI_lower_both Hp) ε d)} = Frame p.+1 (Hp := Hp)) end (leI_down Hp')
+       fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+2) =>
+        eqFrameSpType (Hp := Hp) end (leI_down Hp')
     with 0 => fun _ => I | p.+1 => fun Hp => eqFrameSpDown end Hp
   end.
 
