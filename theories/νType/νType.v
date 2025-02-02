@@ -380,10 +380,9 @@ Proof.
   unshelve eapply (leI_invert Hpq); clear p q Hpq.
   - intros p Hq d c; now exact (c.1 ε).
   - intros p q Hpq IH Hq d c. unshelve eapply existT. intros ω.
-    now exact (rew [Painting'' p] CohFrame p q (Hpr := leI_refl _) ε ω d in RestrPainting' p q ε (RestrFrame p p ω d) (c.1 ω)).
-    set (l := c.2); apply IH in l.
-    change (rew [id] eqFrameSp in (d; c.1)).1 with d.
-    now change (rew [id] eqFrameSp in (d; c.1)).2 with c.1.
+    now exact (rew [Painting'' p] CohFrame p q (Hpr := leI_refl _) ε ω d in
+      RestrPainting' p q ε (RestrFrame p p ω d) (c.1 ω)).
+    set (l := c.2); now apply IH in l.
 Defined.
 
 Class RestrFrameBlock n p (prefix: Type@{m'})
