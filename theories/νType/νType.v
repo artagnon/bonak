@@ -326,22 +326,22 @@ Definition eqFrameSp {p} {Hp: p.+1 <~ n.+2}: eqFrameSpType :=
     with 0 => fun _ => I | p.+1 => fun Hp => eqFrameSpDown end Hp
   end.
 
-Let eqFrameSpType' {p} {Hp: p.+1 <~ n.+1}:= {d: Frame' p &T
-  forall ε, Painting'' p (RestrFrame' p p (Hp := Hp) (Hpq := leI_refl _)
-  (Hq := leI_lower_both Hp) ε d)} = Frame' p.+1 (Hp := Hp).
-
-Definition eqFrameSp' {p} {Hp: p.+1 <~ n.+1}: eqFrameSpType' (Hp := Hp).
+Definition eqFrameSp' {p} {Hp: p.+1 <~ n.+1}: {d: Frame' p &T
+  forall ε, Painting'' p (RestrFrame' p p (Hp := Hp)
+  (Hpq := leI_refl _) (Hq := leI_lower_both Hp) ε d)} = Frame' p.+1 (Hp := Hp).
 Proof.
   now easy.
 Defined.
 
-(* Lemma eqRestrFrameSp {p q} {Hpq: p.+1 <~ q.+1} {Hq: q.+1 <~ n.+2} {ε}
-  {d: Frame p} {l}:
+(* Lemma eqRestrFrameSp {p q} {Hp: p.+2 <~ n.+2} {Hpq: p.+1 <~ q.+1}
+  {Hq: q.+1 <~ n.+1} {ε}
+  {d: Frame p} {l: hforall ε, Painting' p (RestrFrame p p ε d)}:
   RestrFrame p.+1 q.+1 ε (rew [id] eqFrameSp in (d; l)) =
-  rew [id] eqFrameSp' in (RestrFrame p q.+1 ε d;
-   fun ω =>
-   rew [Painting'' p] CohFrame p q (Hpr := leI_refl _) ε ω d in
-   RestrPainting' p q ε _ (l ω)). *)
+  rew [id] eqFrameSp' (Hp := leI_lower_both Hp) in
+    (RestrFrame p q.+1 ε d;
+    (fun ω =>
+      rew [Painting'' p] CohFrame p q (Hpr := leI_refl _) ε ω d in
+      RestrPainting' p q ε (RestrFrame p p ω d) (l ω))). *)
 
 Definition Painting p {Hp: p <~ n.+2}
   {E: Frame n.+2 -> HSet} := (fix aux p Hp :=
@@ -397,8 +397,7 @@ Definition mkRestrPainting p (E: Frame n.+2 (Hp := leI_refl _) -> HSet):
     (***)
     set (a:=c.2). apply IH in a.
     change (?P p.+1 ?H ?d) with (Painting' p.+1 d).
-    unfold RestrFrame, mkCohFrameTypes in a.
-    unfold RestrFrame, mkCohFrameTypes.
+    rewrite eqFrameSp'.
     (* We may only need that:
               (rew [id] eqFrameSp' p in (d; c.1)).1 = d
             (rew [id] eqFrameSp' p in (d; c.1)).2 = c.1
