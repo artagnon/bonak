@@ -258,7 +258,7 @@ Definition mkFullRestrFrames :=
 (* This is the prefix of all CohFrame(n+2,i) from i=0 to i=p-1 *)
 Definition mkCohFramesFromFull: forall p {Hp: p.+1 <~ n.+2},
   (mkCohFrameTypes p (Hp := Hp)).(CohFrameTypes) :=
-  (fix aux p (Hp: p.+1 <~ n.+2) :=
+  fix aux p (Hp: p.+1 <~ n.+2) :=
   match Hp in S_p <~ _ return
     match S_p return _ -> Type with 0 =>
     fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+2) =>
@@ -270,7 +270,7 @@ Definition mkCohFramesFromFull: forall p {Hp: p.+1 <~ n.+2},
        fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+2) =>
       (mkCohFrameTypes p (Hp := Hp)).(CohFrameTypes) end (leI_down Hp')
     with 0 => fun _ => I | p.+1 => fun Hp => (aux p.+1 Hp).1 end Hp
-  end).
+  end.
 
 (* This is Frame(n+2,p) *)
 Definition Frame p {Hp: p <~ n.+2} :=
@@ -314,12 +314,28 @@ Proof.
   now easy.
 Defined.
 
-Lemma eqFrameSp {p} {Hp: p.+1 <~ n.+2}:
-  {d: Frame p &T
+Let eqFrameSpType {p} {Hp: p.+1 <~ n.+2}:= {d: Frame p &T
   forall ε, Painting' p (RestrFrame p p (Hp := Hp) (Hpq := leI_refl _)
   (Hq := leI_lower_both Hp) ε d)} = Frame p.+1 (Hp := Hp).
-Proof.
-Admitted.
+
+Definition eqFrameSp {p} {Hp: p.+1 <~ n.+2}:
+  {d: Frame p &T
+  forall ε, Painting' p (RestrFrame p p (Hp := Hp) (Hpq := leI_refl _)
+  (Hq := leI_lower_both Hp) ε d)} = Frame p.+1 (Hp := Hp) :=
+  match Hp in S_p <~ _ return
+    match S_p return _ -> Type with 0 =>
+    fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+2) => ({d: Frame p &T
+  forall ε, Painting' p (RestrFrame p p (Hp := Hp) (Hpq := leI_refl _)
+  (Hq := leI_lower_both Hp) ε d)} = Frame p.+1 (Hp := Hp)) end Hp with
+  | leI_refl _ => eqFrameSpRefl
+  | @leI_down _ S_p Hp =>
+      match S_p return forall Hp',
+       match S_p return _ -> Type with 0 =>
+       fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+2) => ({d: Frame p &T
+  forall ε, Painting' p (RestrFrame p p (Hp := Hp) (Hpq := leI_refl _)
+  (Hq := leI_lower_both Hp) ε d)} = Frame p.+1 (Hp := Hp)) end (leI_down Hp')
+    with 0 => fun _ => I | p.+1 => fun Hp => eqFrameSpDown end Hp
+  end.
 
 (* Lemma eqFrameSp' {p} {Hp: p.+1 <~ n.+1}:
   {d: Frame' p &T
@@ -373,27 +389,24 @@ Admitted. *)
 (* Using proof mode *)
 
 Definition mkRestrPainting p (E: Frame n.+2 (Hp := leI_refl _) -> HSet):
-    forall (Hp: p.+1 <~ n.+2) q (Hpq: p <~ q) (Hq: q.+1 <~ n.+2) ε (d: Frame p),
+    forall q (Hpq: p <~ q) (Hq: q.+1 <~ n.+2) ε (d: Frame p),
   Painting p (Hp := leI_down (leI_trans (leI_raise_both Hpq) Hq)) (E := E) d ->
   Painting' p (RestrFrame p q (Hpq := Hpq) (Hq := leI_lower_both Hq) ε d).
-  intros Hp q Hpq Hq ε. revert Hp Hq.
+  intros q Hpq Hq ε. revert Hq.
   pattern p, q, Hpq.
-  unshelve eapply (leI_invert _ _ _ p q Hpq); cbv beta; clear p q Hpq.
-  - intros p Hp Hq d c.
+  unshelve eapply (leI_invert _ _ _ p q Hpq); clear p q Hpq.
+  - intros p Hq d c.
     apply (c.1 ε).
-  - intros p q Hpq IH Hp Hq d c. simpl leI_trans. unfold leI_lower_both at 1.
+  - intros p q Hpq IH Hq d c. unfold leI_lower_both at 1.
     unfold leI_rec. simpl leI_rect.
     unshelve eapply existT.
     intros ω.
     exact (rew [Painting'' p] CohFrame p q (Hpr := leI_refl _) ε ω d in RestrPainting' p q ε (RestrFrame p p ω d) (c.1 ω)).
     (***)
-    set (a:=c.2). cbv beta in a.
-    simpl leI_rect.
-    apply IH in a.
+    set (a:=c.2). apply IH in a.
     change (?P p.+1 ?H ?d) with (Painting' p.+1 d).
-    2: apply (leI_trans (leI_raise_both Hpq) Hq).
-    unfold RestrFrame in a. unfold mkCohFrameTypes in a.
-    unfold RestrFrame. unfold mkCohFrameTypes.
+    unfold RestrFrame, mkCohFrameTypes in a.
+    unfold RestrFrame, mkCohFrameTypes.
     (* We may only need that:
               (rew [id] eqFrameSp' p in (d; c.1)).1 = d
             (rew [id] eqFrameSp' p in (d; c.1)).2 = c.1
