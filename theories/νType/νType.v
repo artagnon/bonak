@@ -380,24 +380,24 @@ Definition mkRestrPainting p (E: Frame n.+2 (Hp := leI_refl _) -> HSet):
   pattern p, q, Hpq.
   unshelve eapply (leI_invert _ _ _ p q Hpq); cbv beta; clear p q Hpq.
   - intros p Hp Hq d c.
-    apply (c.1ε).
-  - intros p q Hpq IH Hp Hq d c. simpl leI_trans. unfold leI_lower_both at 1. unfold leI_rec. simpl leI_rect.
+    apply (c.1 ε).
+  - intros p q Hpq IH Hp Hq d c. simpl leI_trans. unfold leI_lower_both at 1.
+    unfold leI_rec. simpl leI_rect.
     unshelve eapply existT.
-    intros ω. (*change (mkRestrFrame _ _ _ _ _ _ _ (Hq:=?Hq) ?d) with (RestrFrame' p p (Hpq:=leI_refl p) (Hq:=Hq) ω d).
-eapply f.*)
-exact (rew [Painting'' p] CohFrame p q (Hpr := leI_refl _) (*Hrq:= Hpq*) (*Hq:=leI_lower_both Hq*) ε ω d in RestrPainting' p q ε (RestrFrame p p ω d) (c.1 ω)).
-(***)
-set (a:=c.2). cbv beta in a.
-simpl leI_rect.
-apply IH in a.
-change (?P p.+1 ?H ?d) with (Painting' p.+1 d).
-2:apply (leI_trans (leI_raise_both Hpq) Hq).
-unfold RestrFrame in a. unfold mkCohFrameTypes in a.
-unfold RestrFrame. unfold mkCohFrameTypes.
-(* We may only need that:
-          (rew [id] eqFrameSp' p in (d; c.1)).1 = d
-         (rew [id] eqFrameSp' p in (d; c.1)).2 = c.1
-*)
+    intros ω.
+    exact (rew [Painting'' p] CohFrame p q (Hpr := leI_refl _) ε ω d in RestrPainting' p q ε (RestrFrame p p ω d) (c.1 ω)).
+    (***)
+    set (a:=c.2). cbv beta in a.
+    simpl leI_rect.
+    apply IH in a.
+    change (?P p.+1 ?H ?d) with (Painting' p.+1 d).
+    2: apply (leI_trans (leI_raise_both Hpq) Hq).
+    unfold RestrFrame in a. unfold mkCohFrameTypes in a.
+    unfold RestrFrame. unfold mkCohFrameTypes.
+    (* We may only need that:
+              (rew [id] eqFrameSp' p in (d; c.1)).1 = d
+            (rew [id] eqFrameSp' p in (d; c.1)).2 = c.1
+    *)
 Admitted.
 
 Class RestrFrameBlock n p (prefix: Type@{m'})
