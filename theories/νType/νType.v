@@ -326,13 +326,16 @@ Definition eqFrameSp {p} {Hp: p.+1 <~ n.+2}: eqFrameSpType :=
     with 0 => fun _ => I | p.+1 => fun Hp => eqFrameSpDown end Hp
   end.
 
-(* Lemma eqFrameSp' {p} {Hp: p.+1 <~ n.+1}:
-  {d: Frame' p &T
-    forall ε, Painting'' p (RestrFrame' p p (Hp := Hp) (Hpq := leI_refl _)
-    (Hq := leI_lower_both Hp) ε d)} = Frame' p.+1 (Hp := Hp).
-Admitted.
+Let eqFrameSpType' {p} {Hp: p.+1 <~ n.+1}:= {d: Frame' p &T
+  forall ε, Painting'' p (RestrFrame' p p (Hp := Hp) (Hpq := leI_refl _)
+  (Hq := leI_lower_both Hp) ε d)} = Frame' p.+1 (Hp := Hp).
 
-Lemma eqRestrFrameSp {p q} {Hpq: p.+1 <~ q.+1} {Hq: q.+1 <~ n.+2} {ε}
+Definition eqFrameSp' {p} {Hp: p.+1 <~ n.+1}: eqFrameSpType' (Hp := Hp).
+Proof.
+  now easy.
+Defined.
+
+(* Lemma eqRestrFrameSp {p q} {Hpq: p.+1 <~ q.+1} {Hq: q.+1 <~ n.+2} {ε}
   {d: Frame p} {l}:
   RestrFrame p.+1 q.+1 ε (rew [id] eqFrameSp in (d; l)) =
   rew [id] eqFrameSp' in (RestrFrame p q.+1 ε d;
