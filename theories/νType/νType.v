@@ -380,13 +380,14 @@ Admitted. *)
 
 (* Using proof mode *)
 
-Definition mkRestrPainting p (E: Frame n.+2 (Hp := leI_refl _) -> HSet):
+Lemma mkRestrPainting p (E: Frame n.+2 (Hp := leI_refl _) -> HSet):
     forall q (Hpq: p <~ q) (Hq: q.+1 <~ n.+2) ε (d: Frame p),
   Painting p (Hp := leI_down (leI_trans (leI_raise_both Hpq) Hq)) (E := E) d ->
   Painting' p (RestrFrame p q (Hpq := Hpq) (Hq := leI_lower_both Hq) ε d).
+Proof.
   intros q Hpq Hq ε. revert Hq.
   pattern p, q, Hpq.
-  unshelve eapply (leI_invert _ _ _ p q Hpq); clear p q Hpq.
+  unshelve eapply (leI_invert Hpq); clear p q Hpq.
   - intros p Hq d c.
     apply (c.1 ε).
   - intros p q Hpq IH Hq d c. unfold leI_lower_both at 1.
@@ -397,12 +398,9 @@ Definition mkRestrPainting p (E: Frame n.+2 (Hp := leI_refl _) -> HSet):
     (***)
     set (a:=c.2). apply IH in a.
     change (?P p.+1 ?H ?d) with (Painting' p.+1 d).
-    rewrite eqFrameSp'.
-    (* We may only need that:
-              (rew [id] eqFrameSp' p in (d; c.1)).1 = d
-            (rew [id] eqFrameSp' p in (d; c.1)).2 = c.1
-    *)
-Admitted.
+    change d with (rew [id] eqFrameSp in (d; c.1)).1.
+    now change c.1 with (rew [id] eqFrameSp in (d; c.1)).2.
+Defined.
 
 Class RestrFrameBlock n p (prefix: Type@{m'})
   (Frame': forall p {Hp: p.+1 <= n}, prefix -> HSet) := {
