@@ -333,16 +333,6 @@ Proof.
   now easy.
 Defined.
 
-(* Lemma eqRestrFrameSp {p q} {Hp: p.+2 <~ n.+2} {Hpq: p.+1 <~ q.+1}
-  {Hq: q.+1 <~ n.+1} {ε}
-  {d: Frame p} {l: hforall ε, Painting' p (RestrFrame p p ε d)}:
-  RestrFrame p.+1 q.+1 ε (rew [id] eqFrameSp in (d; l)) =
-  rew [id] eqFrameSp' (Hp := leI_lower_both Hp) in
-    (RestrFrame p q.+1 ε d;
-    (fun ω =>
-      rew [Painting'' p] CohFrame p q (Hpr := leI_refl _) ε ω d in
-      RestrPainting' p q ε (RestrFrame p p ω d) (l ω))). *)
-
 Definition Painting p {Hp: p <~ n.+2}
   {E: Frame n.+2 -> HSet} := (fix aux p Hp :=
   match Hp in p <~ _ return Frame (Hp := Hp) p -> HSet with
@@ -395,9 +385,7 @@ Proof.
     unshelve eapply existT.
     intros ω.
     exact (rew [Painting'' p] CohFrame p q (Hpr := leI_refl _) ε ω d in RestrPainting' p q ε (RestrFrame p p ω d) (c.1 ω)).
-    (***)
-    set (a:=c.2). apply IH in a.
-    change (?P p.+1 ?H ?d) with (Painting' p.+1 d).
+    set (l := c.2). apply IH in l.
     change d with (rew [id] eqFrameSp in (d; c.1)).1.
     now change c.1 with (rew [id] eqFrameSp in (d; c.1)).2.
 Defined.
