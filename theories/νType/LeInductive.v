@@ -35,3 +35,15 @@ Lemma leI_trans {n p q}: p <~ n -> n <~ q -> p <~ q.
 Proof.
   intros H1 H2. induction H1. now easy. now constructor.
 Defined.
+
+Lemma leI_invert : forall P : forall p n : nat, p <~ n -> Type,
+       (forall p : nat, P p p (leI_refl p)) ->
+       (forall (p n : nat) (l : p.+1 <~ n.+1),
+        P p.+1 n.+1 l -> P p n.+1 (leI_down l)) ->
+       forall (p n : nat) (l : p <~ n), P p n l.
+Proof.
+intros P H H0 p n.
+induction l.
+- apply H.
+- destruct n. destruct (leI_O_contra l). apply H0, IHl.
+Defined.
