@@ -390,7 +390,7 @@ End CohFramesDef.
     depends on paintings at level n-1 and n-2; just as we have frame' and
      frame'', we have painting' and painting''. *)
 
-Set Printing Implicit.
+Axiom leI_irrelevance : forall {m n}, forall H H' : m <~ n, H = H'.
 
 Class νType n := {
   prefix: Type@{m'};
@@ -417,11 +417,11 @@ Class νType n := {
     (restrPainting' E') cohFrames p (Hp := Hp) r q Hpr Hrq Hr Hq;
   painting {p} {Hp: p <~ n.+2} {E'} E (d: frame p) :=
     Painting n frame'' painting'' restrFrames' E'
-    (restrPainting' E') (cohFrames (E' := E')) p d (Hp := Hp);
+    (restrPainting' E') (cohFrames (E' := E')) p d (Hp := Hp) (E := E);
   restrPainting p q {Hpq: p <~ q} {Hq: q.+1 <~ n.+2} ε {E' E} {d: frame p} :=
     RestrPainting n frame'' painting''
     restrFrames' E' (restrPainting' E') cohFrames p q Hpq Hq ε (E := E) d;
-  cohPainting p r q {Hpq: p.+1 <~ q.+1} {Hpr: p.+1 <~ r.+1}
+  (* cohPainting p r q {Hpq: p.+1 <~ q.+1} {Hpr: p.+1 <~ r.+1}
     {Hrq: r.+1 <~ q.+1} {Hq: q.+1 <~ n.+1} {Hr: r.+2 <~ n.+2} ε ω {E'} E
     {d: frame p} (c: painting E (E' := E')
     (Hp := leI_down (leI_trans Hpr (leI_down Hr))) d):
@@ -435,7 +435,7 @@ Class νType n := {
     restrPainting' E' p r ω (Hp := leI_trans Hpq Hq)
       (Hpq := Hpr) (Hq := leI_lower_both Hr)
       (restrPainting (Hpq := leI_down Hpq)
-      (Hq := Hq) p q.+1 ε c);
+      (Hq := Hq) p q.+1 ε c); *)
 }.
 
 (* We want ε and ω to be printed, but have them inferred;
