@@ -314,8 +314,8 @@ Definition coerceFrameSp {p} {Hp: p.+1 <~ n.+2}: coerceFrameSpType :=
     with 0 => fun _ => I | p.+1 => fun Hp => id end Hp
   end.
 
-Definition Painting p {Hp: p <~ n.+2}
-  {E: Frame n.+2 -> HSet} := (fix aux p Hp :=
+Definition Painting p {Hp: p <~ n.+2} {E: Frame n.+2 -> HSet} :=
+  (fix aux p Hp :=
   match Hp in p <~ _ return Frame (Hp := Hp) p -> HSet with
   | leI_refl _ => E
   | @leI_down _ p Hp => fun d =>
@@ -349,7 +349,7 @@ Admitted. *)
 
 (* Using proof mode *)
 
-Lemma mkRestrPainting p (E: Frame n.+2 (Hp := leI_refl _) -> HSet):
+Lemma RestrPainting p {E: Frame n.+2 (Hp := leI_refl _) -> HSet}:
     forall q (Hpq: p <~ q) (Hq: q.+1 <~ n.+2) ε (d: Frame p),
   Painting p (Hp := leI_down (leI_trans (leI_raise_both Hpq) Hq)) (E := E) d ->
   Painting' p (RestrFrame p q (Hpq := Hpq) (Hq := leI_lower_both Hq) ε d).
@@ -363,6 +363,7 @@ Proof.
       RestrPainting' p q ε (RestrFrame p p ω d) (c.1 ω)).
     set (l := c.2); now apply IH in l.
 Defined.
+End CohFramesDef.
 
 (** An ν-parametric type truncated at level [n] consists of:
 
@@ -389,59 +390,52 @@ Defined.
     depends on paintings at level n-1 and n-2; just as we have frame' and
      frame'', we have painting' and painting''. *)
 
+Set Printing Implicit.
+
 Class νType n := {
   prefix: Type@{m'};
-  frame'' p {Hp: p.+2 <= n}: prefix -> HSet;
-  painting'' {p} {Hp: p.+2 <= n} {D: prefix}: frame'' p D -> HSet;
-  restrFrame' p {Hp: p.+2 <= n} {D: prefix}:
-    (RestrFrameTypeBlockFix' n prefix frame'' (@painting'') D p).(RestrFrameType');
-  frame' p {Hp} D :=
-    (RestrFrameTypeBlockFix' n prefix frame'' (@painting'') D p).(Frames) (restrFrame' p);
-  painting' {p} {Hp: p.+1 <= n} {D: prefix}: frame' p D -> HSet;
-  cohFrameAux {p} r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
-    {ε ω: arity} {D: prefix}
-    (restrFrameBlock: RestrFrameBlock n p prefix frame')
-    (d: restrFrameBlock.(Frame p) D):
-    restrFrame' p q ε (restrFrameBlock.(RestrFrame p) r ω d) =
-    restrFrame' p r ω (restrFrameBlock.(RestrFrame p) q.+1 ε d);
-  restrPainting' p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity) {D: prefix}
-    {d: frame' p D}: painting' d -> painting'' (restrFrame' p q ε d);
-  layerAux {p} {Hp: p.+1 <= n} {D: prefix}
-    (restrFrameBlock: RestrFrameBlock n p prefix frame')
-    (d: restrFrameBlock.(Frame p) D) :=
-    hforall ε, painting' (restrFrameBlock.(RestrFrame p) p ε d);
-  restrLayerAux {p q} {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} ε {D: prefix}
-    (restrFrameBlock: RestrFrameBlock n p prefix frame')
-    {d: restrFrameBlock.(Frame p) D}:
-    layerAux restrFrameBlock d ->
-    layer' (restrFrameBlock.(RestrFrame p) q.+1 ε d) :=
-    fun l ω => rew [painting''] cohFrameAux p q restrFrameBlock d in
-      restrPainting' p q ε (l ω);
-  restrFrameBlock {p} := RestrFrameBlockFix (@layerAux') (@layerAux)
-    (@restrLayerAux) (p := p);
-  frame p {Hp : p <= n} (D: prefix) := restrFrameBlock.(Frame p) D;
-  restrFrame p q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n} ε {D: prefix} d :=
-    restrFrameBlock.(RestrFrame p) q ε (D := D) d;
-  cohFrame {p} r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
-    {ε ω: arity} {D: prefix} :=
-    cohFrameAux (ε := ε) (ω := ω) (D := D) r q restrFrameBlock;
-  layer {p} {Hp: p.+1 <= n} {D} (d: frame p D) := layerAux restrFrameBlock d;
-  restrLayer p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n} (ε: arity) {D: prefix}
-    {d: frame p D} := restrLayerAux (D := D) ε restrFrameBlock (d := d);
-  painting {p} {Hp: p <= n} {D} (E: frame n D -> HSet)
-    (d: frame p D): HSet :=
-    le_induction Hp (fun p Hp => frame p D -> HSet) E
-    (fun p Hp (Hind: frame p.+1 D -> HSet) (d: frame p D) =>
-      {l: layer d & Hind (d; l)}) d;
-  restrPainting p q {Hpq: p.+1 <= q.+1} {Hq: q.+1 <= n} ε {D}
-    {E: frame n D -> HSet} {d: frame p D}
-    (c: painting E d): painting' (restrFrame p q ε d);
-  cohPainting p r q {Hpr: p.+2 <= r.+2} {Hrq: r.+2 <= q.+2} {Hq: q.+2 <= n}
-    ε ω {D} (E: frame n D -> HSet) (d: frame p D)
-    (c: painting E d):
-    rew [painting''] cohFrame r q d in
-    restrPainting' p q ε (restrPainting p r ω c) =
-      (restrPainting' p r ω (restrPainting p q.+1 ε c));
+  frame'' p {Hp: p <~ n}: HSet;
+  painting'' p {Hp: p <~ n}: frame'' p -> HSet;
+  restrFrames': mkFullRestrFrameTypes n frame'' painting'';
+  frame' p {Hp: p <~ n.+1} :=
+    mkFrame n frame'' painting'' restrFrames' p (Hp := Hp);
+  restrFrame' p {Hp: p.+1 <~ n.+1} q {Hpq Hq} ε (d: frame' p) :=
+    mkRestrFrame n frame'' painting'' restrFrames' p
+    (Hp := Hp) q (Hpq := Hpq) (Hq := Hq) ε d;
+  painting' p {Hp: p <~ n.+1} {E'} :=
+    mkPainting n frame'' painting'' restrFrames' p (Hp := Hp) (E := E');
+  restrPainting' E' p q {Hp: p.+1 <~ n.+1} {Hpq: p <~ q} {Hq: q <~ n} ε
+    {d: frame' p}:
+    painting' (Hp := leI_down Hp) p d (E' := E') ->
+    painting'' p (restrFrame' p q ε (Hpq := Hpq) (Hq := Hq) d);
+  cohFrames {E'}: mkFullCohFrameTypes n frame'' painting'' restrFrames'
+    E' (restrPainting' E');
+  frame p {Hp: p <~ n.+2} {E'} := Frame n frame'' painting'' restrFrames' E'
+    (restrPainting' E') cohFrames p (Hp := Hp);
+  cohFrame {p} {Hp: p.+2 <~ n.+2} r q {Hpr Hrq Hr Hq} {E'} :=
+    mkCohFrameFromFull n frame'' painting'' restrFrames' E'
+    (restrPainting' E') cohFrames p (Hp := Hp) r q Hpr Hrq Hr Hq;
+  painting {p} {Hp: p <~ n.+2} {E'} E (d: frame p) :=
+    Painting n frame'' painting'' restrFrames' E'
+    (restrPainting' E') (cohFrames (E' := E')) p d (Hp := Hp);
+  restrPainting p q {Hpq: p <~ q} {Hq: q.+1 <~ n.+2} ε {E' E} {d: frame p} :=
+    RestrPainting n frame'' painting''
+    restrFrames' E' (restrPainting' E') cohFrames p q Hpq Hq ε (E := E) d;
+  cohPainting p r q {Hpq: p.+1 <~ q.+1} {Hpr: p.+1 <~ r.+1}
+    {Hrq: r.+1 <~ q.+1} {Hq: q.+1 <~ n.+1} {Hr: r.+2 <~ n.+2} ε ω {E'} E
+    {d: frame p} (c: painting E (E' := E')
+    (Hp := leI_down (leI_trans Hpr (leI_down Hr))) d):
+    rew [painting'' p] cohFrame r q d in
+    restrPainting' E' p q ε
+      (Hp := leI_trans Hpq Hq)
+      (Hpq := leI_lower_both Hpq)
+      (Hq := leI_lower_both Hq)
+      (restrPainting (Hpq := leI_lower_both Hpr)
+      (Hq := leI_down Hr) p r ω c) =
+    restrPainting' E' p r ω (Hp := leI_trans Hpq Hq)
+      (Hpq := Hpr) (Hq := leI_lower_both Hr)
+      (restrPainting (Hpq := leI_down Hpq)
+      (Hq := Hq) p q.+1 ε c);
 }.
 
 (* We want ε and ω to be printed, but have them inferred;
