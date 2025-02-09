@@ -79,8 +79,7 @@ Lemma leI_O_contra {n}: n.+1 <~ O -> False.
 Defined.
 
 Lemma leI_lower_both {n p}: p.+1 <~ n.+1 -> p <~ n.
-  intro H. change p with (pred (S p)).
-  induction H.
+  intro H. change p with (pred (S p)). induction H.
   now constructor. destruct p0. now apply leI_O. now constructor.
 Defined.
 
