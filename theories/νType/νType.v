@@ -392,8 +392,7 @@ End CohFramesDef.
 
 Axiom leI_irrelevance : forall {m n}, forall H H' : m <~ n, H = H'.
 
-Class νType n := {
-  prefix: Type@{m'};
+Class νTypeAux n := {
   frame'' p {Hp: p <~ n}: HSet;
   painting'' p {Hp: p <~ n}: frame'' p -> HSet;
   restrFrames': mkFullRestrFrameTypes n frame'' painting'';
@@ -402,16 +401,20 @@ Class νType n := {
   restrFrame' p {Hp: p.+1 <~ n.+1} q {Hpq Hq} ε (d: frame' p) :=
     mkRestrFrame n frame'' painting'' restrFrames' p
     (Hp := Hp) q (Hpq := Hpq) (Hq := Hq) ε d;
-  painting' p {Hp: p <~ n.+1} {E'} :=
+  painting' p {Hp: p <~ n.+1} E' :=
     mkPainting n frame'' painting'' restrFrames' p (Hp := Hp) (E := E');
   restrPainting' E' p q {Hp: p.+1 <~ n.+1} {Hpq: p <~ q} {Hq: q <~ n} ε
     {d: frame' p}:
-    painting' (Hp := leI_down Hp) p d (E' := E') ->
+    painting' (Hp := leI_down Hp) p E' d ->
     painting'' p (restrFrame' p q ε (Hpq := Hpq) (Hq := Hq) d);
   cohFrames {E'}: mkFullCohFrameTypes n frame'' painting'' restrFrames'
     E' (restrPainting' E');
-  frame p {Hp: p <~ n.+2} {E'} := Frame n frame'' painting'' restrFrames' E'
-    (restrPainting' E') cohFrames p (Hp := Hp);
+  restrFrames {E'} :=
+    mkFullRestrFrames n frame'' painting'' restrFrames' E' (restrPainting' E')
+    cohFrames;
+  frame p {Hp: p <~ n.+2} {E'} :=
+    Frame n frame'' painting'' restrFrames' E' (restrPainting' E')
+    cohFrames p (Hp := Hp);
   cohFrame {p} {Hp: p.+2 <~ n.+2} r q {Hpr Hrq Hr Hq} {E'} :=
     mkCohFrameFromFull n frame'' painting'' restrFrames' E'
     (restrPainting' E') cohFrames p (Hp := Hp) r q Hpr Hrq Hr Hq;
@@ -441,57 +444,79 @@ Class νType n := {
 (* We want ε and ω to be printed, but have them inferred;
    Coq doesn't support this. *)
 
-Arguments prefix {n} _.
-Arguments frame'' {n} _ p {Hp} D.
-Arguments painting'' {n} _ {p Hp D} d.
-Arguments frame' {n} _ p {Hp} D.
-Arguments restrFrame' {n} _ p q {Hpq Hq} ε {D} d.
-Arguments layer' {n} _ {p Hp D} d.
-Arguments painting' {n} _ {p Hp D} d.
-Arguments restrPainting' {n} _ p q {Hpq Hq} ε {D} [d] c.
-Arguments frame {n} _ p {Hp} D.
-Arguments restrFrame {n} _ p q {Hpq Hq} ε {D} d.
-Arguments cohFrame {n} _ {p} r q {Hpr Hrq Hq ε ω D}.
-Arguments layer {n} _ {p Hp D} d.
-Arguments restrLayer {n} _ p q {Hpq Hq} ε {D d} l.
-Arguments painting {n} _ {p Hp D} E d.
-Arguments restrPainting {n} _ p q {Hpq Hq} ε {D} {E} [d] c.
-Arguments cohPainting {n} _ p r q {Hpr Hrq Hq} ε ω {D} E [d] c.
+Arguments frame'' {n} _ p {Hp}.
+Arguments painting'' {n} _ p {Hp} d.
+Arguments restrFrames' {n} _.
+Arguments painting' {n} _ p {Hp} E'.
+Arguments restrPainting' {n} _ {E'} p q {Hp Hpq Hq} ε [d] c.
+Arguments frame {n} _ p {Hp E'}.
+Arguments cohFrame {n} _ {p Hp} r q {Hpr Hrq Hr Hq E' ε ω}.
+Arguments painting {n} _ {p Hp E'} E d.
+Arguments restrPainting {n} _ p q {Hpq Hq} ε {E' E} [d] c.
+(* Arguments cohPainting {n} _ p r q {Hpr Hrq Hq} ε ω E [d] c. *)
+
+Class νType n := {
+  prefix': Type@{m'};
+  data: prefix' -> νTypeAux n;
+}.
+
+Arguments prefix' {n} _.
 
 (***************************************************)
 (** The construction of [νType n+1] from [νType n] *)
 
 (** Extending the initial prefix *)
-Definition mkPrefix {n} {C: νType n}: Type@{m'} :=
-  { D : C.(prefix) &_T C.(frame) n D -> HSet }.
+Definition mkPrefix' {n} {C: νType n}: Type@{m'} :=
+  { D : C.(prefix') &T (C.(data) D).(frame') n.+1 (Hp := leI_refl _) -> HSet }.
 
 (** The coherence conditions that Frame needs to satisfy to build the next level
    of Frame. These will be used in the proof script of mkFrame. *)
 
-Definition mkFrame'' {n} {C: νType n} p {Hp: p.+2 <= n.+1} (D: mkPrefix) :=
-  C.(Frames) p D.1.
+Section νTypeData.
+Variable n: nat.
+Variable C: νType n.
+Variable D: mkPrefix'.
 
-Definition mkFrame' {n} {C: νType n} p {Hp: p.+1 <= n.+1} (D: mkPrefix) :=
-  C.(frame) p D.1.
+Definition mkFrame'' p {Hp: p <~ n.+1} :=
+  (C.(data) D.1).(frame') p (Hp := Hp).
 
-Definition mkLayer {n} {C: νType n} {p} {Hp: p.+1 <= n.+1}
-  {F: RestrFrameBlock n.+1 p mkPrefix mkFrame'} {D} (d: F.(Frame p) D): HSet :=
-  hforall ε, C.(painting) D.2 (F.(RestrFrame p) p ε d).
+Definition mkPainting'' p {Hp: p <~ n.+1} :=
+  (C.(data) D.1).(painting') p (Hp := Hp) D.2.
 
-Definition mkLayer' {n} {C: νType n} {p} {Hp: p.+2 <= n.+1} {D: mkPrefix}
-  (d: mkFrame' p D): HSet := C.(layer) d.
+Definition mkRestrFrames' :=
+  (C.(data) D.1).(restrFrames) (E' := D.2).
 
-Definition mkRestrFrameAux' {n} {C: νType n} p q {Hpq: p.+2 <= q.+2}
-  {Hq: q.+2 <= n.+1} (ε: arity) {D: mkPrefix} :=
-    C.(restrFrame) p q ε (D := D.1).
+Definition mkRestrPainting' E' p q {Hp: p.+1 <~ n.+2} {Hpq: p <~ q}
+  {Hq: q <~ n.+1} ε :=
+  (C.(data) D.1).(restrPainting) p q ε (Hpq := Hpq)
+  (Hq := leI_raise_both Hq) (E' := D.2) (E := E').
 
-Definition mkRestrLayer {n} {C: νType n} p q {Hpq: p.+2 <= q.+2}
-  {Hq: q.+2 <= n.+1} {ε}
-  {CF: CohFrameBlock n.+1 p mkPrefix mkFrame'' mkFrame' mkRestrFrameAux'}
-  {D} {d: CF.(RF).(Frame p) D}:
-  mkLayer d -> mkLayer' (CF.(RF).(RestrFrame p) q.+1 ε d) :=
-  fun l ω => rew [C.(painting')] CF.(CohFrame) p q d in
-    C.(restrPainting) p q ε (l ω).
+(* Definition mkCohFrames {E'}:
+  mkFullCohFrameTypes n.+1 mkFrame'' mkPainting'' mkRestrFrames' E'
+  (mkRestrPainting' E').
+Admitted. *)
+
+End νTypeData.
+
+#[local]
+Instance mkνType {n} {C: νType n}: νType n.+1.
+Proof.
+  unshelve esplit.
+  now apply mkPrefix'.
+  intro D.
+  unshelve esplit.
+  now eapply mkFrame''.
+  now eapply mkPainting''.
+  now eapply mkRestrFrames'.
+  intros.
+  unfold mkPainting''. unfold painting'. unfold RestrFrame.
+  pose proof (mkRestrPainting' n C D) as HH.
+  unfold mkRestrFrame, RestrFrame, mkRestrFramesFromFull, mkCohFrameTypes in HH |- *.
+  Show.
+  eapply HH.
+  now eapply mkRestrPainting'.
+  Show.
+Qed.
 
 Definition mkCohLayer {n} {C: νType n} {p r q} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {ε ω}
