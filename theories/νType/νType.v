@@ -144,8 +144,9 @@ Definition mkRestrFrameFromFull p {Hp: p.+1 <~ n.+1} :=
   (mkRestrFramesFromFull p.+1 (Hp := Hp)).2:
   forall q (Hpq: p <~ q) (Hq: q <~ n), arity -> mkFrame p -> FramePrev p.
 
-Definition mkRestrFrame := fun p {Hp: p.+1 <~ n.+1} q {Hpq Hq} =>
-  mkRestrFrameFromFull p (Hp := Hp) q Hpq Hq.
+Definition mkRestrFrame p {Hp: p.+1 <~ n.+1} q {Hpq: p <~ q}
+  {Hq: q <~ n} ε (d: mkFrame p): FramePrev p (Hp := leI_lower_both Hp) :=
+  mkRestrFrameFromFull p q Hpq Hq ε d.
 
 Definition mkPainting p {Hp: p <~ n.+1}
   {E: mkFrame n.+1 -> HSet} := (fix aux p Hp :=
@@ -169,8 +170,8 @@ Variable RestrFrames': mkFullRestrFrameTypes n Frame'' Painting''.
 Let Frame' p {Hp: p <~ n.+1} :=
   mkFrame n Frame'' Painting'' RestrFrames' p (Hp := Hp).
 Let RestrFrame' p {Hp: p.+1 <~ n.+1} q {Hpq Hq} ε (d: Frame' p): Frame'' p :=
-  mkRestrFrame n Frame'' Painting'' RestrFrames' p
-  (Hp := Hp) q (Hpq := Hpq) (Hq := Hq) ε d.
+  mkRestrFrame n Frame'' Painting'' RestrFrames' p (Hp := Hp) q (Hpq := Hpq)
+  (Hq := Hq) ε d.
 Variable E': Frame' n.+1 (Hp := leI_refl _) -> HSet.
 Let Painting' p {Hp: p <~ n.+1} :=
   mkPainting n Frame'' Painting'' RestrFrames' p (Hp := Hp) (E := E').
@@ -511,7 +512,7 @@ Proof.
   intros.
   unfold mkPainting''. unfold painting'. unfold RestrFrame.
   pose proof (mkRestrPainting' n C D) as HH.
-  unfold mkRestrFrame, RestrFrame, mkRestrFramesFromFull, mkCohFrameTypes in HH |- *.
+  unfold mkRestrFrame, RestrFrame, mkRestrFrameFromFull, mkCohFrameTypes in HH |- *.
   Show.
   eapply HH.
   now eapply mkRestrPainting'.
