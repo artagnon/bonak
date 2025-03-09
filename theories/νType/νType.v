@@ -336,7 +336,7 @@ Lemma eqRestrFrameDef {p} {Hp: p.+1 <~ n.+2} {q} {Hpq: p <~ q}
   RestrFrame p q (Hpq := Hpq) (Hq := Hq) ε d =
   RestrFrame2 p q (Hp := Hp) (Hpq := Hpq) (Hq := Hq) ε (rew eqFrameDef in d).
 Proof.
-  unfold RestrFrame, RestrFrame2, mkRestrFrame, mkRestrFrameFromFull.
+  induction Hp using leI_rectS.
 Admitted.
 
 Definition mkCohFrameFromFull p {Hp: p.+2 <~ n.+2} r q {Hpr : p.+1 <~ r.+1}

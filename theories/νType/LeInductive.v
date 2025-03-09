@@ -96,8 +96,9 @@ Section leI_invert_principle.
   Variable n: nat.
   Variable p: nat.
   Hypothesis P: forall p n, p <~ n -> Type.
-  Hypothesis Q: forall p, P p p (leI_refl p).
-  Hypothesis R: forall p n (Hp: p.+1 <~ n.+1), P p.+1 n.+1 Hp -> P p n.+1 (leI_down Hp).
+  Hypothesis Q: forall n, P n n (leI_refl n).
+  Hypothesis R: forall p n (Hp: p.+1 <~ n.+1),
+    P p.+1 n.+1 Hp -> P p n.+1 (leI_down Hp).
 Lemma leI_invert (Hp: p <~ n): P p n Hp.
 Proof.
   induction Hp.
@@ -109,14 +110,15 @@ End leI_invert_principle.
 Section leI_rectS_principle.
   Variable n: nat.
   Variable p: nat.
-  Hypothesis P: forall p, p.+1 <~ n.+1 -> Type.
-  Hypothesis Q: P n (leI_refl n.+1).
-  Hypothesis R: forall p (Hp : p.+2 <~ n.+1), P p.+1 Hp -> P p (leI_down Hp).
-  Lemma leI_rectS (Hp : p.+1 <~ n.+1): P p Hp.
+  Hypothesis P: forall p n, p.+1 <~ n.+1 -> Type.
+  Hypothesis Q: forall n, P n n (leI_refl n.+1).
+  Hypothesis R: forall p n (Hp : p.+2 <~ n.+1),
+    P p.+1 n Hp -> P p n (leI_down Hp).
+  Lemma leI_rectS (Hp : p.+1 <~ n.+1): P p n Hp.
   Proof.
     change (match p.+1 as p' return p' <~ n.+1 -> Type with
     | 0 => fun _ => True
-    | p.+1 => fun Hp => P p Hp
+    | p.+1 => fun Hp => P p n Hp
     end Hp). induction Hp. now easy. destruct p0. now easy. now apply R.
   Defined.
 End leI_rectS_principle.
