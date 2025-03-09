@@ -336,7 +336,12 @@ Lemma eqRestrFrameDef {p} {Hp: p.+1 <~ n.+2} {q} {Hpq: p <~ q}
   RestrFrame p q (Hpq := Hpq) (Hq := Hq) ε d =
   RestrFrame2 p q (Hp := Hp) (Hpq := Hpq) (Hq := Hq) ε (rew eqFrameDef in d).
 Proof.
-  induction Hp using leI_rectS.
+  revert Hpq. induction Hp using leI_rectD. intros Hpq.
+  unfold RestrFrame, RestrFrame2, mkRestrFrame, mkRestrFrameFromFull,
+  mkRestrFramesFromFull, mkFullRestrFrames. now f_equal. intros Hpq.
+  clear p. rename p0 into p. unfold RestrFrame, RestrFrame2, mkRestrFrame,
+  mkRestrFrameFromFull in *.
+  unfold mkRestrFramesFromFull, mkCohFrameTypes in IHHp.
 Admitted.
 
 Definition mkCohFrameFromFull p {Hp: p.+2 <~ n.+2} r q {Hpr : p.+1 <~ r.+1}
@@ -349,7 +354,8 @@ Definition mkCohFrameFromFull p {Hp: p.+2 <~ n.+2} r q {Hpr : p.+1 <~ r.+1}
     (RestrFrame p q.+1 (Hpq := leI_down (leI_trans Hpr Hrq)) (Hq := Hq) ε d).
 Proof.
   repeat rewrite eqRestrFrameDef.
-  now exact ((mkCohFramesFromFull p.+1).2 r q Hpr Hrq Hr Hq ε ω (rew eqFrameDef in d)).
+  now exact ((mkCohFramesFromFull p.+1).2 r q Hpr Hrq Hr Hq ε ω
+    (rew eqFrameDef in d)).
 Defined.
 
 Definition CohFrame {p} {Hp: p.+2 <~ n.+2} r q {Hpr Hrq Hr Hq} :=

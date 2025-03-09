@@ -116,12 +116,28 @@ Section leI_rectS_principle.
     P p.+1 n Hp -> P p n (leI_down Hp).
   Lemma leI_rectS (Hp : p.+1 <~ n.+1): P p n Hp.
   Proof.
-    change (match p.+1 as p' return p' <~ n.+1 -> Type with
-    | 0 => fun _ => True
-    | p.+1 => fun Hp => P p n Hp
-    end Hp). induction Hp. now easy. destruct p0. now easy. now apply R.
+    change (match p.+1 as p', n.+1 as n' return p' <~ n' -> Type with
+    | 0, _ => fun _ => True
+    | p.+1, 0 => fun _ => True
+    | p.+1, n.+1 => fun Hp => P p n Hp
+    end Hp). induction Hp. now apply Q. destruct p0. now easy. now apply R.
   Defined.
 End leI_rectS_principle.
+
+Section leI_rectD_principle.
+  Variable n: nat.
+  Variable p: nat.
+  Hypothesis P: forall p, p.+1 <~ n.+2 -> Type.
+  Hypothesis Q: P n.+1 (leI_refl n.+2).
+  Hypothesis R: forall p (Hp : p.+2 <~ n.+2), P p.+1 Hp -> P p (leI_down Hp).
+  Lemma leI_rectD (Hp : p.+1 <~ n.+2): P p Hp.
+  Proof.
+    change (match p.+1 as p' return p' <~ n.+2 -> Type with
+    | O => fun _ => True
+    | p.+1 => fun Hp => P p Hp
+    end Hp). induction Hp. now apply Q. destruct p0. now easy. now apply R.
+  Defined.
+End leI_rectD_principle.
 
 Lemma leI_raise_lower_cancel {n p} {Hp: p.+1 <~ n.+1}:
   leI_raise_both (leI_lower_both Hp) = Hp.
