@@ -148,13 +148,32 @@ Definition mkRestrFrame p {Hp: p.+1 <~ n.+1} q {Hpq: p <~ q}
   {Hq: q <~ n} ε (d: mkFrame p): FramePrev p (Hp := leI_lower_both Hp) :=
   mkRestrFrameFromFull p q Hpq Hq ε d.
 
+
+Let coerceFrameSpType {p} {Hp: p.+1 <~ n.+1}:= {d: mkFrame p &T
+  forall ε, PaintingPrev p (mkRestrFrame p p (Hp := Hp) (Hpq := leI_refl _)
+  (Hq := leI_lower_both Hp) ε d)} -> mkFrame p.+1 (Hp := Hp).
+
+Definition coerceFrameSp {p} {Hp: p.+1 <~ n.+1}: coerceFrameSpType :=
+  match Hp in S_p <~ _ return
+    match S_p return _ -> Type with 0 =>
+    fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+1) =>
+      coerceFrameSpType (Hp := Hp) end Hp with
+  | leI_refl _ => id
+  | @leI_down _ S_p Hp =>
+      match S_p return forall Hp',
+       match S_p return _ -> Type with 0 =>
+       fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+1) =>
+        coerceFrameSpType (Hp := Hp) end (leI_down Hp')
+    with 0 => fun _ => I | p.+1 => fun Hp => id end Hp
+  end.
+
 Definition mkPainting p {Hp: p <~ n.+1}
   {E: mkFrame n.+1 -> HSet} := (fix aux p Hp :=
   match Hp in p <~ _ return mkFrame p (Hp := Hp) -> HSet with
   | leI_refl _ => E
   | @leI_down _ p Hp => fun d =>
        {l: hforall ε, PaintingPrev p (mkRestrFrame p p ε d) &
-        (aux p.+1 Hp) (d; l)}
+        (aux p.+1 Hp) (coerceFrameSp (d; l))}
   end) p Hp.
 End RestrFramesDef.
 
@@ -337,24 +356,6 @@ Definition CohFrame {p} {Hp: p.+2 <~ n.+2} r q {Hpr Hrq Hr Hq} :=
   mkCohFrameFromFull p (Hp := Hp) r q (Hpr := Hpr) (Hrq := Hrq) (Hr := Hr)
     (Hq := Hq).
 
-Let coerceFrameSpType {p} {Hp: p.+1 <~ n.+2}:= {d: Frame p &T
-  forall ε, Painting' p (RestrFrame p p (Hp := Hp) (Hpq := leI_refl _)
-  (Hq := leI_lower_both Hp) ε d)} -> Frame p.+1 (Hp := Hp).
-
-Definition coerceFrameSp {p} {Hp: p.+1 <~ n.+2}: coerceFrameSpType :=
-  match Hp in S_p <~ _ return
-    match S_p return _ -> Type with 0 =>
-    fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+2) =>
-      coerceFrameSpType (Hp := Hp) end Hp with
-  | leI_refl _ => id
-  | @leI_down _ S_p Hp =>
-      match S_p return forall Hp',
-       match S_p return _ -> Type with 0 =>
-       fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+2) =>
-        coerceFrameSpType (Hp := Hp) end (leI_down Hp')
-    with 0 => fun _ => I | p.+1 => fun Hp => id end Hp
-  end.
-
 Definition Painting p {Hp: p <~ n.+2} {E: Frame n.+2 -> HSet} :=
   mkPainting n.+1 Frame' Painting' mkFullRestrFrames p (Hp := Hp) (E := E).
 
@@ -395,6 +396,7 @@ Proof.
     clear p q. rename p0 into p, n0 into q.
     now exact (rew [Painting'' p] CohFrame p q (Hpr := leI_refl _) ε ω d in
       RestrPainting' p q ε (RestrFrame p p ω d) (c.1 ω)).
+    clear p q. rename p0 into p, n0 into q.
     set (l := c.2). apply IHHpq in l. simpl.
 Admitted.
 End CohFramesDef.
@@ -524,10 +526,10 @@ Definition mkRestrPainting' E' p q {Hp: p.+1 <~ n.+2} {Hpq: p <~ q}
   (C.(data) D.1).(restrPainting) p q ε (Hpq := Hpq)
   (Hq := leI_raise_both Hq) (E' := D.2) (E := E').
 
-(* Definition mkCohFrames {E'}:
+Definition mkCohFrames {E'}:
   mkFullCohFrameTypes n.+1 mkFrame'' mkPainting'' mkRestrFrames' E'
   (mkRestrPainting' E').
-Admitted. *)
+Admitted.
 
 End νTypeData.
 
