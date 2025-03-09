@@ -299,12 +299,12 @@ Definition RestrFrame p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
   mkRestrFrame n.+1 Frame' Painting' mkFullRestrFrames p q (Hpq := Hpq)
   (Hq := Hq) ε d.
 
-Lemma eqRestrFramePrim {p} {Hp: p <~ n.+1}:
+Lemma eqRestrFramePrim {p} {Hp: p.+1 <~ n.+2}:
   mkRestrFramesFromFull n.+1 Frame' Painting' mkFullRestrFrames p =
-  ((mkCohFrameTypes p (Hp := leI_raise_both Hp)).(RestrFrames)
+  ((mkCohFrameTypes p (Hp := Hp)).(RestrFrames)
     (mkCohFramesFromFull p)).1.
 Proof.
-  induction Hp. now easy. simpl in IHHp. simpl.
+  induction Hp using leI_rectD. now easy. simpl in IHHp. simpl.
   now apply f_equal with (f := fun x => projT1 x).
 Defined.
 
@@ -323,8 +323,7 @@ Lemma eqFrameDef {p} {Hp: p <~ n.+2}:
 Proof.
   destruct Hp. now easy.
   unfold Frame2, FrameOf, Frame, mkFrame, mkRestrFrameTypes.
-  f_equal. rewrite <- leI_raise_lower_cancel.
-  now apply eqRestrFramePrim.
+  f_equal. now apply eqRestrFramePrim.
 Defined.
 
 Definition RestrFrame2 p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
@@ -337,11 +336,10 @@ Lemma eqRestrFrameDef {p} {Hp: p.+1 <~ n.+2} {q} {Hpq: p <~ q}
   RestrFrame2 p q (Hp := Hp) (Hpq := Hpq) (Hq := Hq) ε (rew eqFrameDef in d).
 Proof.
   revert Hpq. induction Hp using leI_rectD. intros Hpq.
-  unfold RestrFrame, RestrFrame2, mkRestrFrame, mkRestrFrameFromFull,
-  mkRestrFramesFromFull, mkFullRestrFrames. now f_equal. intros Hpq.
-  clear p. rename p0 into p. unfold RestrFrame, RestrFrame2, mkRestrFrame,
-  mkRestrFrameFromFull in *.
-  unfold mkRestrFramesFromFull, mkCohFrameTypes in IHHp.
+  now unfold RestrFrame, RestrFrame2, mkRestrFrame, mkRestrFrameFromFull,
+  mkRestrFramesFromFull, mkFullRestrFrames, mkCohFramesFromFull.
+  intros Hpq. clear p. rename p0 into p.
+  unfold RestrFrame, RestrFrame2, mkRestrFrame, mkRestrFrameFromFull in *.
 Admitted.
 
 Definition mkCohFrameFromFull p {Hp: p.+2 <~ n.+2} r q {Hpr : p.+1 <~ r.+1}
