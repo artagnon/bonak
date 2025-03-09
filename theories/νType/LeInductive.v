@@ -92,15 +92,19 @@ Proof.
   intros H1 H2. induction H1. now easy. now constructor.
 Defined.
 
-Lemma leI_invert {P : forall p n, p <~ n -> Type}
-  {Q: forall p, P p p (leI_refl p)}
-  {R: forall p n (Hp: p.+1 <~ n.+1), P p.+1 n.+1 Hp -> P p n.+1 (leI_down Hp)}
-  {p n} (Hp: p <~ n): P p n Hp.
+Section leI_invert_principle.
+  Variable n: nat.
+  Variable p: nat.
+  Hypothesis P: forall p n, p <~ n -> Type.
+  Hypothesis Q: forall p, P p p (leI_refl p).
+  Hypothesis R: forall p n (Hp: p.+1 <~ n.+1), P p.+1 n.+1 Hp -> P p n.+1 (leI_down Hp).
+Lemma leI_invert (Hp: p <~ n): P p n Hp.
 Proof.
   induction Hp.
   - apply Q.
   - destruct n. destruct (leI_O_contra Hp). apply R, IHHp.
 Defined.
+End leI_invert_principle.
 
 Section leI_rectS_principle.
   Variable n: nat.

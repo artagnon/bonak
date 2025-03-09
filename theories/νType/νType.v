@@ -389,13 +389,13 @@ Lemma RestrPainting p {E: Frame n.+2 (Hp := leI_refl _) -> HSet}:
   Painting' p (RestrFrame p q (Hpq := Hpq) (Hq := leI_lower_both Hq) ε d).
 Proof.
   intros q Hpq Hq ε. revert Hq.
-  pattern p, q, Hpq.
-  unshelve eapply (leI_invert Hpq); clear p q Hpq.
-  - intros p Hq d c; now exact (c.1 ε).
-  - intros p q Hpq IH Hq d c. unshelve eapply existT. intros ω.
+  induction Hpq using leI_invert.
+  - intros Hq d c; now exact (c.1 ε).
+  - intros Hq d c. unshelve eapply existT. intros ω.
+    clear p q. rename p0 into p, n0 into q.
     now exact (rew [Painting'' p] CohFrame p q (Hpr := leI_refl _) ε ω d in
       RestrPainting' p q ε (RestrFrame p p ω d) (c.1 ω)).
-    set (l := c.2). apply IH in l. simpl.
+    set (l := c.2). apply IHHpq in l. simpl.
 Admitted.
 End CohFramesDef.
 
