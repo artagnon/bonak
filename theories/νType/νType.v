@@ -272,27 +272,20 @@ Definition mkCohFramesFromFull: forall p {Hp: p.+1 <~ n.+2},
 
 (* This is Frame(n+2,p) *)
 Definition Frame p {Hp: p <~ n.+2} :=
-  FrameOf p (Hp := Hp)
-  (match Hp in p <~ _
-    return (mkRestrFrameTypes n.+1 Frame' Painting' p).(RestrFrameTypesDef) with
-   | leI_refl _ => ((mkCohFrameTypes n.+1 (Hp := leI_refl _)).(RestrFrames)
-     ((mkCohFramesFromFull n.+1 (Hp := leI_refl _))))
-   | @leI_down _ p Hp => ((mkCohFrameTypes p (Hp := Hp)).(RestrFrames)
-     ((mkCohFramesFromFull p (Hp := Hp)))).1
-  end).
+  mkFrame n.+1 Frame' Painting' mkFullRestrFrames p (Hp := Hp).
 
 (* This is RestrFrame(n+2,p) *)
 Definition RestrFrame p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
   ε (d: Frame p): Frame' p (Hp := leI_lower_both Hp) :=
-  ((mkCohFrameTypes p (Hp := Hp)).(RestrFrames)
-  (mkCohFramesFromFull p (Hp := Hp))).2 q Hpq Hq ε d.
+  mkRestrFrame n.+1 Frame' Painting' mkFullRestrFrames p q (Hpq := Hpq)
+  (Hq := Hq) ε d.
 
 Definition mkCohFrameFromFull p {Hp: p.+2 <~ n.+2} :=
-  (mkCohFramesFromFull p.+1 (Hp := Hp)).2:
+  (mkCohFramesFromFull p.+1).2:
   forall (r q : nat) (Hpr : p.+1 <~ r.+1) (Hrq : r.+1 <~ q.+1)
          (Hr: r.+1 <~ n.+1) (Hq : q.+1 <~ n.+1) (ε ω : arity) (d: Frame p),
-         RestrFrame' p q ε (RestrFrame p (Hp := leI_down Hp) r ω d) =
-         RestrFrame' p r ω (RestrFrame p q.+1 ε d).
+         RestrFrame' p q (Hpq := leI_lower_both (leI_trans Hpr Hrq)) (Hq := leI_lower_both Hq) ε (RestrFrame p r (Hp := leI_down Hp) (Hpq := leI_lower_both Hpr) (Hq := leI_down Hr) ω d) =
+         RestrFrame' p r (Hpq := leI_lower_both Hpr) (Hq := leI_lower_both Hr) ω (RestrFrame p q.+1 (Hp := leI_down Hp) (Hpq := leI_down (leI_trans Hpr Hrq)) (Hq := Hq) ε d).
 
 Definition CohFrame := fun {p} {Hp: p.+2 <~ n.+2} r q {Hpr Hrq Hr Hq} =>
   mkCohFrameFromFull p (Hp := Hp) r q Hpr Hrq Hr Hq.
