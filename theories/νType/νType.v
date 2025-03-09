@@ -280,19 +280,60 @@ Definition RestrFrame p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
   mkRestrFrame n.+1 Frame' Painting' mkFullRestrFrames p q (Hpq := Hpq)
   (Hq := Hq) ε d.
 
-Definition mkCohFrameFromFull p {Hp: p.+2 <~ n.+2} :=
-  (mkCohFramesFromFull p.+1).2:
-  forall (r q : nat) (Hpr : p.+1 <~ r.+1) (Hrq : r.+1 <~ q.+1)
-         (Hr: r.+1 <~ n.+1) (Hq : q.+1 <~ n.+1) (ε ω : arity) (d: Frame p),
-         RestrFrame' p q (Hpq := leI_lower_both (leI_trans Hpr Hrq)) (Hq := leI_lower_both Hq) ε (RestrFrame p r (Hp := leI_down Hp) (Hpq := leI_lower_both Hpr) (Hq := leI_down Hr) ω d) =
-         RestrFrame' p r (Hpq := leI_lower_both Hpr) (Hq := leI_lower_both Hr) ω (RestrFrame p q.+1 (Hp := leI_down Hp) (Hpq := leI_down (leI_trans Hpr Hrq)) (Hq := Hq) ε d).
+Lemma CommutesPrim {p} {Hp: p <~ n.+1}:
+  mkRestrFramesFromFull n.+1 Frame' Painting' mkFullRestrFrames p =
+  ((mkCohFrameTypes p (Hp := leI_raise_both Hp)).(RestrFrames)
+    (mkCohFramesFromFull p)).1.
+Proof.
+  induction Hp. now easy. simpl in IHHp. simpl.
+  now apply f_equal with (f := fun x => projT1 x).
+Defined.
 
-Definition CohFrame := fun {p} {Hp: p.+2 <~ n.+2} r q {Hpr Hrq Hr Hq} =>
-  mkCohFrameFromFull p (Hp := Hp) r q Hpr Hrq Hr Hq.
+Definition Frame2 p {Hp: p <~ n.+2} :=
+  FrameOf p
+    (match Hp in p <~ _
+      return (mkRestrFrameTypes n.+1 Frame' Painting' p).(RestrFrameTypesDef) with
+    | leI_refl _ => ((mkCohFrameTypes n.+1 (Hp := leI_refl _)).(RestrFrames)
+      ((mkCohFramesFromFull n.+1 (Hp := leI_refl _))))
+    | @leI_down _ p Hp => ((mkCohFrameTypes p (Hp := Hp)).(RestrFrames)
+      ((mkCohFramesFromFull p (Hp := Hp)))).1
+    end).
 
-Let coerceFrameSpType {p} {Hp: p.+1 <~ n.+2}:= {d: Frame p &T
-  forall ε, Painting' p (RestrFrame p p (Hp := Hp) (Hpq := leI_refl _)
-  (Hq := leI_lower_both Hp) ε d)} -> Frame p.+1 (Hp := Hp).
+Lemma eqFrameDef {p} {Hp: p <~ n.+2}:
+  Frame p (Hp := Hp) = Frame2 p (Hp := Hp).
+Proof.
+  destruct Hp. now easy.
+  unfold Frame2, FrameOf, Frame, mkFrame, mkRestrFrameTypes.
+  f_equal. rewrite <- leI_raise_lower_cancel.
+  now apply CommutesPrim.
+Defined.
+
+Definition RestrFrame2 p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
+  ε (d: Frame2 p) := ((mkCohFrameTypes p (Hp := Hp)).(RestrFrames)
+    (mkCohFramesFromFull p (Hp := Hp))).2 q Hpq Hq ε d.
+
+Lemma eqRestrFrameDef {p} {Hp: p.+1 <~ n.+2} {q} {Hpq: p <~ q}
+  {Hq: q <~ n.+1} {ε} {d: Frame p}:
+  RestrFrame p q (Hpq := Hpq) (Hq := Hq) ε d =
+  RestrFrame2 p q (Hp := Hp) (Hpq := Hpq) (Hq := Hq) ε (rew eqFrameDef in d).
+Proof.
+  unfold RestrFrame, RestrFrame2, mkRestrFrame, mkRestrFrameFromFull.
+Admitted.
+
+Definition mkCohFrameFromFull p {Hp: p.+2 <~ n.+2} r q {Hpr : p.+1 <~ r.+1}
+  {Hrq : r.+1 <~ q.+1} {Hr: r.+1 <~ n.+1} {Hq : q.+1 <~ n.+1}
+  (ε ω: arity) (d: Frame2 p) :=
+  (mkCohFramesFromFull p.+1).2 r q Hpr Hrq Hr Hq ε ω d:
+    RestrFrame' p q ε (RestrFrame2 p (Hp := leI_down Hp) r ω d) =
+    RestrFrame' p r ω (RestrFrame2 p q.+1 ε d).
+
+Definition CohFrame {p} {Hp: p.+2 <~ n.+2} r q {Hpr Hrq Hr Hq} :=
+  mkCohFrameFromFull p (Hp := Hp) r q (Hpr := Hpr) (Hrq := Hrq) (Hr := Hr)
+    (Hq := Hq).
+
+Let coerceFrameSpType {p} {Hp: p.+1 <~ n.+2}:= {d: Frame2 p &T
+  forall ε, Painting' p (RestrFrame2 p p (Hp := Hp) (Hpq := leI_refl _)
+  (Hq := leI_lower_both Hp) ε d)} -> Frame2 p.+1 (Hp := Hp).
 
 Definition coerceFrameSp {p} {Hp: p.+1 <~ n.+2}: coerceFrameSpType :=
   match Hp in S_p <~ _ return
@@ -309,12 +350,15 @@ Definition coerceFrameSp {p} {Hp: p.+1 <~ n.+2}: coerceFrameSpType :=
   end.
 
 Definition Painting p {Hp: p <~ n.+2} {E: Frame n.+2 -> HSet} :=
+  mkPainting n.+1 Frame' Painting' mkFullRestrFrames p (Hp := Hp) (E := E).
+
+Definition Painting2 p {Hp: p <~ n.+2} {E: Frame2 n.+2 -> HSet} :=
   (fix aux p Hp :=
-  match Hp in p <~ _ return Frame (Hp := Hp) p -> HSet with
+  match Hp in p <~ _ return Frame2 (Hp := Hp) p -> HSet with
   | leI_refl _ => E
   | @leI_down _ p Hp => fun d =>
        {l: hforall ε,
-        Painting' p (RestrFrame p p ε d) &
+        Painting' p (RestrFrame2 p p ε d) &
         (aux p.+1 Hp) (coerceFrameSp (d; l))}
   end) p Hp.
 
@@ -343,7 +387,7 @@ Admitted. *)
 
 (* Using proof mode *)
 
-Lemma RestrPainting p {E: Frame n.+2 (Hp := leI_refl _) -> HSet}:
+(* Lemma RestrPainting p {E: Frame n.+2 (Hp := leI_refl _) -> HSet}:
     forall q (Hpq: p <~ q) (Hq: q.+1 <~ n.+2) ε (d: Frame p),
   Painting p (Hp := leI_down (leI_trans (leI_raise_both Hpq) Hq)) (E := E) d ->
   Painting' p (RestrFrame p q (Hpq := Hpq) (Hq := leI_lower_both Hq) ε d).
@@ -353,8 +397,23 @@ Proof.
   unshelve eapply (leI_invert Hpq); clear p q Hpq.
   - intros p Hq d c; now exact (c.1 ε).
   - intros p q Hpq IH Hq d c. unshelve eapply existT. intros ω.
+    pose (H := rew [Painting'' p] CohFrame p q (Hpr := leI_refl _) ε ω d in
+      RestrPainting' p q ε (RestrFrame2 p p ω (rew eqFrameDef in d) c.1 ω)).
+    set (l := c.2); now apply IH in l.
+Defined. *)
+
+Lemma RestrPainting2 p {E: Frame2 n.+2 (Hp := leI_refl _) -> HSet}:
+    forall q (Hpq: p <~ q) (Hq: q.+1 <~ n.+2) ε (d: Frame2 p),
+  Painting2 p (Hp := leI_down (leI_trans (leI_raise_both Hpq) Hq)) (E := E) d ->
+  Painting' p (RestrFrame2 p q (Hpq := Hpq) (Hq := leI_lower_both Hq) ε d).
+Proof.
+  intros q Hpq Hq ε. revert Hq.
+  pattern p, q, Hpq.
+  unshelve eapply (leI_invert Hpq); clear p q Hpq.
+  - intros p Hq d c; now exact (c.1 ε).
+  - intros p q Hpq IH Hq d c. unshelve eapply existT. intros ω.
     now exact (rew [Painting'' p] CohFrame p q (Hpr := leI_refl _) ε ω d in
-      RestrPainting' p q ε (RestrFrame p p ω d) (c.1 ω)).
+      RestrPainting' p q ε (RestrFrame2 p p ω d) (c.1 ω)).
     set (l := c.2); now apply IH in l.
 Defined.
 End CohFramesDef.
@@ -411,7 +470,7 @@ Class νTypeAux n := {
     cohFrames p (Hp := Hp);
   cohFrame {p} {Hp: p.+2 <~ n.+2} r q {Hpr Hrq Hr Hq} {E'} :=
     mkCohFrameFromFull n frame'' painting'' restrFrames' E'
-    (restrPainting' E') cohFrames p (Hp := Hp) r q Hpr Hrq Hr Hq;
+    (restrPainting' E') cohFrames p (Hp := Hp) r q;
   painting {p} {Hp: p <~ n.+2} {E'} E (d: frame p) :=
     Painting n frame'' painting'' restrFrames' E'
     (restrPainting' E') (cohFrames (E' := E')) p d (Hp := Hp) (E := E);

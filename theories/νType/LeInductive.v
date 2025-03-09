@@ -94,10 +94,33 @@ Defined.
 
 Lemma leI_invert {P : forall p n, p <~ n -> Type}
   {Q: forall p, P p p (leI_refl p)}
-  {R: forall p n (l : p.+1 <~ n.+1), P p.+1 n.+1 l -> P p n.+1 (leI_down l)}
-  {p n} (l : p <~ n): P p n l.
+  {R: forall p n (Hp: p.+1 <~ n.+1), P p.+1 n.+1 Hp -> P p n.+1 (leI_down Hp)}
+  {p n} (Hp: p <~ n): P p n Hp.
 Proof.
-induction l.
-- apply Q.
-- destruct n. destruct (leI_O_contra l). apply R, IHl.
+  induction Hp.
+  - apply Q.
+  - destruct n. destruct (leI_O_contra Hp). apply R, IHHp.
+Defined.
+
+Section leI_rectS_principle.
+  Variable n: nat.
+  Variable p: nat.
+  Hypothesis P: forall p, p.+1 <~ n.+1 -> Type.
+  Hypothesis Q: P n (leI_refl n.+1).
+  Hypothesis R: forall p (Hp : p.+2 <~ n.+1), P p.+1 Hp -> P p (leI_down Hp).
+  Lemma leI_rectS (Hp : p.+1 <~ n.+1): P p Hp.
+  Proof.
+    change (match p.+1 as p' return p' <~ n.+1 -> Type with
+    | 0 => fun _ => True
+    | p.+1 => fun Hp => P p Hp
+    end Hp). induction Hp. now easy. destruct p0. now easy. now apply R.
+  Defined.
+End leI_rectS_principle.
+
+Lemma leI_raise_lower_cancel {n p} {Hp: p.+1 <~ n.+1}:
+  leI_raise_both (leI_lower_both Hp) = Hp.
+  induction Hp using leI_rectS. now easy.
+  change (leI_lower_both (leI_down ?x)) with (leI_down (leI_lower_both x)).
+  change (leI_raise_both (leI_down ?x)) with (leI_down (leI_raise_both x)).
+  now f_equal.
 Defined.
