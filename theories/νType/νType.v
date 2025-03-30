@@ -220,7 +220,6 @@ Variable RestrPainting': forall p q {Hp: p.+1 <~ n.+1} {Hpq: p <~ q}
    ...
    p     : { cohFrameTypes_{0..p-1} = {_:unit & cohFrameType(n+2,0) ... cohFrameType(n+2,p-1)} ; restrFrames(n+2,p)(cohFrames_{0..p-1}):restrFrameTypes_{0..p} }
    n+1   : { cohFrameTypes_{0..n} = {_:unit & cohFrameType(n+2,0) ... cohFrameType(n+2,n)} ; restrFrames(n+2,n+1)(cohFrames_{0..n}):restrFrameTypes_{0..n+1} }
-
 *)
 Definition CohFrameTypesFix :=
   fix aux p: forall (Hp: p.+1 <~ n.+2), CohFrameTypeBlock p :=
@@ -303,7 +302,7 @@ Definition RestrFrames2 p {Hp: p.+1 <~ n.+2} :=
 Lemma eqRestrFramesDef {p} {Hp: p.+1 <~ n.+2}:
   RestrFrames p (Hp := Hp) = RestrFrames2 p.
 Proof.
-  induction Hp using leI_rectD. now easy. simpl in IHHp. simpl.
+  induction Hp using leI_rectD. now easy. simpl in IHHp.
   clear p; rename p0 into p. unfold RestrFrames, RestrFrames2 in *.
   simpl. now rewrite IHHp.
 Defined.
@@ -322,9 +321,8 @@ Lemma eqFrameDef {p} {Hp: p <~ n.+2}:
   Frame p (Hp := Hp) = Frame2 p (Hp := Hp).
 Proof.
   destruct Hp. now easy.
-  unfold Frame2, FrameOf, Frame, mkFrame, mkRestrFrameTypes.
-  f_equal. pose proof eqRestrFramesDef (Hp := Hp).
-  now apply f_equal with (f := fun x => projT1 x).
+  now apply (f_equal (fun x => ((RestrFrameTypesFix n.+1 Frame' Painting' p
+    (leI_down Hp)).(FrameDef)) x.1) (eqRestrFramesDef (Hp := Hp))).
 Defined.
 
 (* This is RestrFrame(n+2,p) *)
@@ -333,7 +331,7 @@ Definition RestrFrame p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
   (RestrFrames p (Hp := Hp)).2 q Hpq Hq ε d.
 
 Definition RestrFrame2 p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
-  ε (d: Frame p) :=
+  ε (d: Frame p): Frame' p (Hp := leI_lower_both Hp) :=
   (RestrFrames2 p (Hp := Hp)).2 q Hpq Hq ε (rew eqFrameDef in d).
 
 Lemma eqRestrFrameDef {p} {Hp: p.+1 <~ n.+2} {q} {Hpq: p <~ q}
@@ -341,9 +339,11 @@ Lemma eqRestrFrameDef {p} {Hp: p.+1 <~ n.+2} {q} {Hpq: p <~ q}
   RestrFrame p q (Hpq := Hpq) (Hq := Hq) ε d =
   RestrFrame2 p q (Hp := Hp) (Hpq := Hpq) (Hq := Hq) ε d.
 Proof.
-  unfold RestrFrame, RestrFrame2 in *.
-  pose proof eqRestrFramesDef (Hp := Hp).
-Admitted.
+  unfold RestrFrame, RestrFrame2, eqFrameDef.
+  rewrite <- rew_map with (f := fun x => (RestrFrameTypesFix n.+1 Frame'
+    Painting' p (leI_down Hp)).(FrameDef) x.1).
+  now destruct eqRestrFramesDef.
+Defined.
 
 Definition mkCohFrameFromFull p {Hp: p.+2 <~ n.+2} r q {Hpr : p.+1 <~ r.+1}
   {Hrq : r.+1 <~ q.+1} {Hr: r.+1 <~ n.+1} {Hq : q.+1 <~ n.+1}
@@ -405,7 +405,6 @@ Proof.
       RestrPainting' p q ε (RestrFrame p p ω d) (c.1 ω)).
     clear p q. rename p0 into p, n0 into q.
     set (l := c.2). apply IHHpq in l. simpl.
-    Show.
 Admitted.
 End CohFramesDef.
 
