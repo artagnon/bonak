@@ -148,7 +148,6 @@ Definition mkRestrFrame p {Hp: p.+1 <~ n.+1} q {Hpq: p <~ q}
   {Hq: q <~ n} ε (d: mkFrame p): FramePrev p (Hp := leI_lower_both Hp) :=
   mkRestrFrameFromFull p q Hpq Hq ε d.
 
-
 Let coerceFrameSpType {p} {Hp: p.+1 <~ n.+1}:= {d: mkFrame p &T
   forall ε, PaintingPrev p (mkRestrFrame p p (Hp := Hp) (Hpq := leI_refl _)
   (Hq := leI_lower_both Hp) ε d)} -> mkFrame p.+1 (Hp := Hp).
@@ -203,8 +202,8 @@ Definition FrameOf p {Hp: p <~ n.+2} :=
   (mkRestrFrameTypes n.+1 Frame' Painting' p (Hp := Hp)).(FrameDef).
 
 Class CohFrameTypeBlock p {Hp: p.+1 <~ n.+2} := {
-  CohFrameTypes: Type;
-  RestrFrames: CohFrameTypes -> RestrFrameTypes p.+1 (Hp := Hp);
+  CohFrameTypesDef: Type;
+  RestrFramesDef: CohFrameTypesDef -> RestrFrameTypes p.+1 (Hp := Hp);
   (* up to RestrFrameType(n+2,p) *)
 }.
 
@@ -228,34 +227,34 @@ Definition CohFrameTypesFix :=
   match p return forall Hp, CohFrameTypeBlock p with
     | O => fun _ =>
     {|
-      CohFrameTypes := unit;
-      RestrFrames _ := (tt; fun _ _ _ _ _ => tt): RestrFrameTypes 1
+      CohFrameTypesDef := unit;
+      RestrFramesDef _ := (tt; fun _ _ _ _ _ => tt): RestrFrameTypes 1
     |}
     | S p => fun (Hp: p.+2 <~ n.+2) =>
     {|
-      CohFrameTypes := { Q: (aux p _).(CohFrameTypes) &T
+      CohFrameTypesDef := { Q: (aux p _).(CohFrameTypesDef) &T
         (* statement of cohFrameType(n+2,p) *)
         forall r q (Hpr: p.+1 <~ r.+1) (Hrq: r.+1 <~ q.+1) (Hr: r.+1 <~ n.+1)
           (Hq: q.+1 <~ n.+1) (ε ω: arity) d,
         RestrFrame' p q ε (Hpq := leI_lower_both (leI_trans Hpr Hrq))
           (Hq := leI_lower_both Hq)
-          (((aux p (leI_down Hp)).(RestrFrames (Hp := leI_down Hp)) Q).2 r
+          (((aux p (leI_down Hp)).(RestrFramesDef (Hp := leI_down Hp)) Q).2 r
               (leI_lower_both Hpr) (leI_down Hr) ω d) =
         RestrFrame' p r ω (Hpq := leI_lower_both Hpr)
-          (Hq := leI_lower_both Hr) (((aux p _).(RestrFrames) Q).2 q.+1
+          (Hq := leI_lower_both Hr) (((aux p _).(RestrFramesDef) Q).2 q.+1
               (leI_down (leI_trans Hpr Hrq)) Hq ε d) };
-      RestrFrames Q :=
+      RestrFramesDef Q :=
       (* RestrFrame(n+2,p+1) *)
       let restrFrame q := match q with
       | O => fun (Hpq: p.+1 <~ 0) _ _ _ =>
         False_rect _ (leI_O_contra Hpq)
       | S q => fun (Hpq: p.+1 <~ q.+1) (Hq: q.+1 <~ n.+1) ε
         (d: FrameOf p.+1 _) =>
-        (((aux p _).(RestrFrames) Q.1).2 q.+1 _ _ ε d.1 as rf in _;
+        (((aux p _).(RestrFramesDef) Q.1).2 q.+1 _ _ ε d.1 as rf in _;
         fun ω => rew [Painting'' p] Q.2 p q (leI_refl _) Hpq
           (leI_lower_both Hp) Hq ε ω d.1 in RestrPainting' p q ε _ (d.2 ω)
           in forall ω, Painting'' p (RestrFrame' _ _ _ rf))
-      end in ((aux p _).(RestrFrames) Q.1; restrFrame): RestrFrameTypes p.+2
+      end in ((aux p _).(RestrFramesDef) Q.1; restrFrame): RestrFrameTypes p.+2
     |}
   end.
 
@@ -265,27 +264,27 @@ Instance mkCohFrameTypes p {Hp: p.+1 <~ n.+2}:
 
 (* This is all CohFrameType(n+2,p) from p=0 to p=n *)
 Definition mkFullCohFrameTypes :=
-  (mkCohFrameTypes n.+1 (Hp := leI_refl _)).(CohFrameTypes).
+  (mkCohFrameTypes n.+1 (Hp := leI_refl _)).(CohFrameTypesDef).
 Variable CohFrames: mkFullCohFrameTypes.
 
 (* This is all RestrFrame(n+2,p) from p=0 to p=n.+1 *)
 Definition mkFullRestrFrames :=
-  (mkCohFrameTypes n.+1 (Hp := leI_refl _)).(RestrFrames) CohFrames.
+  (mkCohFrameTypes n.+1 (Hp := leI_refl _)).(RestrFramesDef) CohFrames.
 
 (* This is the prefix of all CohFrame(n+2,i) from i=0 to i=p-1 *)
 Definition mkCohFramesFromFull: forall p {Hp: p.+1 <~ n.+2},
-  (mkCohFrameTypes p (Hp := Hp)).(CohFrameTypes) :=
+  (mkCohFrameTypes p (Hp := Hp)).(CohFrameTypesDef) :=
   fix aux p (Hp: p.+1 <~ n.+2) :=
   match Hp in S_p <~ _ return
     match S_p return _ -> Type with 0 =>
     fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+2) =>
-    (mkCohFrameTypes p (Hp := Hp)).(CohFrameTypes) end Hp with
+    (mkCohFrameTypes p (Hp := Hp)).(CohFrameTypesDef) end Hp with
   | leI_refl _ => CohFrames
   | @leI_down _ S_p Hp =>
     match S_p return forall Hp',
        match S_p return _ -> Type with 0 =>
        fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+2) =>
-      (mkCohFrameTypes p (Hp := Hp)).(CohFrameTypes) end (leI_down Hp')
+      (mkCohFrameTypes p (Hp := Hp)).(CohFrameTypesDef) end (leI_down Hp')
     with 0 => fun _ => I | p.+1 => fun Hp => (aux p.+1 Hp).1 end Hp
   end.
 
@@ -293,28 +292,29 @@ Definition mkCohFramesFromFull: forall p {Hp: p.+1 <~ n.+2},
 Definition Frame p {Hp: p <~ n.+2} :=
   mkFrame n.+1 Frame' Painting' mkFullRestrFrames p (Hp := Hp).
 
-(* This is RestrFrame(n+2,p) *)
-Definition RestrFrame p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
-  ε (d: Frame p): Frame' p (Hp := leI_lower_both Hp) :=
-  mkRestrFrame n.+1 Frame' Painting' mkFullRestrFrames p q (Hpq := Hpq)
-  (Hq := Hq) ε d.
+Definition RestrFrames p {Hp: p.+1 <~ n.+2} :=
+  mkRestrFramesFromFull n.+1 Frame' Painting' mkFullRestrFrames p.+1
+    (Hp := Hp).
 
-Lemma eqRestrFramePrimProj1 {p} {Hp: p.+1 <~ n.+2}:
-  mkRestrFramesFromFull n.+1 Frame' Painting' mkFullRestrFrames p =
-  ((mkCohFrameTypes p (Hp := Hp)).(RestrFrames)
-    (mkCohFramesFromFull p)).1.
+Definition RestrFrames2 p {Hp: p.+1 <~ n.+2} :=
+  ((mkCohFrameTypes p (Hp := Hp)).(RestrFramesDef)
+    (mkCohFramesFromFull p (Hp := Hp))).
+
+Lemma eqRestrFramesDef {p} {Hp: p.+1 <~ n.+2}:
+  RestrFrames p (Hp := Hp) = RestrFrames2 p.
 Proof.
   induction Hp using leI_rectD. now easy. simpl in IHHp. simpl.
-  now apply f_equal with (f := fun x => projT1 x).
+  clear p; rename p0 into p. unfold RestrFrames, RestrFrames2 in *.
+  simpl. now rewrite IHHp.
 Defined.
 
 Definition Frame2 p {Hp: p <~ n.+2} :=
   FrameOf p
     (match Hp in p <~ _
       return (mkRestrFrameTypes n.+1 Frame' Painting' p).(RestrFrameTypesDef) with
-    | leI_refl _ => ((mkCohFrameTypes n.+1 (Hp := leI_refl _)).(RestrFrames)
+    | leI_refl _ => ((mkCohFrameTypes n.+1 (Hp := leI_refl _)).(RestrFramesDef)
       ((mkCohFramesFromFull n.+1 (Hp := leI_refl _))))
-    | @leI_down _ p Hp => ((mkCohFrameTypes p (Hp := Hp)).(RestrFrames)
+    | @leI_down _ p Hp => ((mkCohFrameTypes p (Hp := Hp)).(RestrFramesDef)
       ((mkCohFramesFromFull p (Hp := Hp)))).1
     end).
 
@@ -323,22 +323,26 @@ Lemma eqFrameDef {p} {Hp: p <~ n.+2}:
 Proof.
   destruct Hp. now easy.
   unfold Frame2, FrameOf, Frame, mkFrame, mkRestrFrameTypes.
-  f_equal. now apply eqRestrFramePrimProj1.
+  f_equal. pose proof eqRestrFramesDef (Hp := Hp).
+  now apply f_equal with (f := fun x => projT1 x).
 Defined.
 
+(* This is RestrFrame(n+2,p) *)
+Definition RestrFrame p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
+  ε (d: Frame p): Frame' p (Hp := leI_lower_both Hp) :=
+  (RestrFrames p (Hp := Hp)).2 q Hpq Hq ε d.
+
 Definition RestrFrame2 p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
-  ε (d: Frame2 p) := ((mkCohFrameTypes p (Hp := Hp)).(RestrFrames)
-    (mkCohFramesFromFull p (Hp := Hp))).2 q Hpq Hq ε d.
+  ε (d: Frame p) :=
+  (RestrFrames2 p (Hp := Hp)).2 q Hpq Hq ε (rew eqFrameDef in d).
 
 Lemma eqRestrFrameDef {p} {Hp: p.+1 <~ n.+2} {q} {Hpq: p <~ q}
   {Hq: q <~ n.+1} {ε} {d: Frame p}:
   RestrFrame p q (Hpq := Hpq) (Hq := Hq) ε d =
-  RestrFrame2 p q (Hp := Hp) (Hpq := Hpq) (Hq := Hq) ε (rew eqFrameDef in d).
+  RestrFrame2 p q (Hp := Hp) (Hpq := Hpq) (Hq := Hq) ε d.
 Proof.
-  revert Hpq. induction Hp using leI_rectD. now easy.
-  intros Hpq; clear p; rename p0 into p.
-  unfold RestrFrame, RestrFrame2, mkRestrFrame, mkRestrFrameFromFull in *.
-  (* rewrite (eqRestrFramePrimProj1 (p := p.+1) (Hp := Hp)). *)
+  unfold RestrFrame, RestrFrame2 in *.
+  pose proof eqRestrFramesDef (Hp := Hp).
 Admitted.
 
 Definition mkCohFrameFromFull p {Hp: p.+2 <~ n.+2} r q {Hpr : p.+1 <~ r.+1}
@@ -401,6 +405,7 @@ Proof.
       RestrPainting' p q ε (RestrFrame p p ω d) (c.1 ω)).
     clear p q. rename p0 into p, n0 into q.
     set (l := c.2). apply IHHpq in l. simpl.
+    Show.
 Admitted.
 End CohFramesDef.
 
