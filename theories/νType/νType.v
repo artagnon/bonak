@@ -148,31 +148,13 @@ Definition mkRestrFrame p {Hp: p.+1 <~ n.+1} q {Hpq: p <~ q}
   {Hq: q <~ n} ε (d: mkFrame p): FramePrev p (Hp := leI_lower_both Hp) :=
   mkRestrFrameFromFull p q Hpq Hq ε d.
 
-Let coerceFrameSpType {p} {Hp: p.+1 <~ n.+1}:= {d: mkFrame p &T
-  forall ε, PaintingPrev p (mkRestrFrame p p (Hp := Hp) (Hpq := leI_refl _)
-  (Hq := leI_lower_both Hp) ε d)} -> mkFrame p.+1 (Hp := Hp).
-
-Definition coerceFrameSp {p} {Hp: p.+1 <~ n.+1}: coerceFrameSpType :=
-  match Hp in S_p <~ _ return
-    match S_p return _ -> Type with 0 =>
-    fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+1) =>
-      coerceFrameSpType (Hp := Hp) end Hp with
-  | leI_refl _ => id
-  | @leI_down _ S_p Hp =>
-      match S_p return forall Hp',
-       match S_p return _ -> Type with 0 =>
-       fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+1) =>
-        coerceFrameSpType (Hp := Hp) end (leI_down Hp')
-    with 0 => fun _ => I | p.+1 => fun Hp => id end Hp
-  end.
-
 Definition mkPainting p {Hp: p <~ n.+1}
   {E: mkFrame n.+1 -> HSet} := (fix aux p Hp :=
   match Hp in p <~ _ return mkFrame p (Hp := Hp) -> HSet with
   | leI_refl _ => E
   | @leI_down _ p Hp => fun d =>
        {l: hforall ε, PaintingPrev p (mkRestrFrame p p ε d) &
-        (aux p.+1 Hp) (coerceFrameSp (d; l))}
+        (aux p.+1 Hp) (d; l)}
   end) p Hp.
 End RestrFramesDef.
 
@@ -389,6 +371,34 @@ Definition Painting p {Hp: p <~ n.+2} {E: Frame n.+2 -> HSet} :=
   end)).
 Admitted. *)
 
+Let coerceFrameSpType {p} {Hp: p.+1 <~ n.+2} := {d: Frame p &T
+  forall ε, Painting' p (RestrFrame p p (Hp := Hp)
+  (Hpq := leI_lower_both (leI_refl _)) (Hq := leI_lower_both Hp) ε d)} ->
+  Frame p.+1 (Hp := Hp).
+
+Definition coerceFrameSp {p} {Hp: p.+1 <~ n.+2}: coerceFrameSpType :=
+  match Hp in S_p <~ _ return
+    match S_p return _ -> Type with 0 =>
+    fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+2) =>
+      coerceFrameSpType (Hp := Hp) end Hp with
+  | leI_refl _ => id
+  | @leI_down _ S_p Hp =>
+      match S_p return forall Hp',
+       match S_p return _ -> Type with 0 =>
+       fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+2) =>
+        coerceFrameSpType (Hp := Hp) end (leI_down Hp')
+    with 0 => fun _ => I | p.+1 => fun Hp => id end Hp
+  end.
+
+Set Printing Implicit.
+
+Let eqRestrFrameSpType {p} {Hp: p.+1 <~ n.+2} {q} {Hpq: p.+2 <~ q.+2}
+  {Hq: q.+2 <~ n.+2} {ε} {d: Frame p}
+  {c: forall ε, Painting' p (RestrFrame p p ε d)}:
+  (RestrFrame p q.+1 ε d;
+    fun ω: arity => rew [fun x => Painting'' p x] CohFrame p q ε ω d in RestrPainting' p q ε (RestrFrame p p (Hp := leI_down (leI_trans Hpq Hq))
+    ω d) (c ω)) = RestrFrame p.+1 q.+1 ε (coerceFrameSp (d; c)).
+
 (* Using proof mode *)
 
 Lemma RestrPainting p {E: Frame n.+2 (Hp := leI_refl _) -> HSet}:
@@ -404,8 +414,9 @@ Proof.
     now exact (rew [Painting'' p] CohFrame p q (Hpr := leI_refl _) ε ω d in
       RestrPainting' p q ε (RestrFrame p p ω d) (c.1 ω)).
     clear p q. rename p0 into p, n0 into q.
-    set (l := c.2). apply IHHpq in l. simpl.
+    set (l := c.2). apply IHHpq in l. apply coerceFrameSp.
 Admitted.
+
 End CohFramesDef.
 
 (** An ν-parametric type truncated at level [n] consists of:
