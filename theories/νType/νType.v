@@ -370,9 +370,21 @@ Proof.
   now destruct eqRestrFramesDef.
 Defined.
 
-Definition mkCohFrameFromFull p {Hp: p.+2 <~ n.+2} r q {Hpr: p.+1 <~ r.+1}
+Definition CohFrame2 {p} {Hp: p.+2 <~ n.+2} r q {Hpr: p.+1 <~ r.+1}
   {Hrq: r.+1 <~ q.+1} {Hr: r.+1 <~ n.+1} {Hq: q.+1 <~ n.+1}
-  (ε ω: arity) (d: Frame p):
+  {ε ω: arity} (d: Frame2 p):
+  RestrFrame' p q (Hpq := leI_lower_both (leI_trans Hpr Hrq))
+    (Hq := leI_lower_both Hq) ε (RestrFrame2 p r (Hp := leI_down Hp)
+      (Hpq := leI_lower_both Hpr) (Hq := leI_down Hr) ω d) =
+  RestrFrame' p r (Hpq := leI_lower_both Hpr) (Hq := leI_lower_both Hr) ω
+    (RestrFrame2 p q.+1 (Hpq := leI_down (leI_trans Hpr Hrq)) (Hq := Hq) ε d).
+Proof.
+  now exact ((mkCohFramesFromFull p.+1).2 r q Hpr Hrq Hr Hq ε ω d).
+Defined.
+
+Definition CohFrame {p} {Hp: p.+2 <~ n.+2} r q {Hpr: p.+1 <~ r.+1}
+  {Hrq: r.+1 <~ q.+1} {Hr: r.+1 <~ n.+1} {Hq: q.+1 <~ n.+1}
+  {ε ω: arity} (d: Frame p):
   RestrFrame' p q (Hpq := leI_lower_both (leI_trans Hpr Hrq))
     (Hq := leI_lower_both Hq) ε (RestrFrame p r (Hp := leI_down Hp)
       (Hpq := leI_lower_both Hpr) (Hq := leI_down Hr) ω d) =
@@ -383,10 +395,6 @@ Proof.
   now exact ((mkCohFramesFromFull p.+1).2 r q Hpr Hrq Hr Hq ε ω
     (rew eqFrameDef in d)).
 Defined.
-
-Definition CohFrame {p} {Hp: p.+2 <~ n.+2} r q {Hpr Hrq Hr Hq} :=
-  mkCohFrameFromFull p (Hp := Hp) r q (Hpr := Hpr) (Hrq := Hrq) (Hr := Hr)
-    (Hq := Hq).
 
 Definition Painting p {Hp: p <~ n.+2} {E: Frame n.+2 -> HSet} :=
   mkPainting n.+1 Frame' Painting' mkFullRestrFrames p (Hp := Hp) (E := E).
@@ -430,10 +438,6 @@ Definition coercePaintingType {p} {Hp: p.+1 <~ n.+2}
   Painting2 p (Hp := leI_down Hp) (E := pi1_eq eqFrameDef E)
     (rew eqFrameDef in d).
 Proof.
-  unfold Painting, Painting2. induction Hp using leI_rectD.
-  - intros H; simpl in H; unshelve eapply existT. intros ε.
-    rewrite <- eqRestrFrameDef. admit. admit.
-  - intros H. admit.
 Admitted.
 
 Lemma RestrPainting p {Hp: p.+1 <~ n.+2} {E: Frame n.+2 -> HSet}:
@@ -441,7 +445,8 @@ Lemma RestrPainting p {Hp: p.+1 <~ n.+2} {E: Frame n.+2 -> HSet}:
   Painting p (Hp := leI_down Hp) (E := E) d ->
   Painting' p (RestrFrame p q (Hpq := Hpq) (Hq := Hq) ε d).
 Proof.
-  intros q Hpq Hq ε; revert Hp Hq.
+  intros q Hpq Hq ε d Q; apply coercePaintingType in Q; rewrite eqRestrFrameDef.
+  revert Hp Hq d Q.
   induction Hpq using leI_invert.
   - clear p q; rename n0 into p; intros Hp Hq.
     replace Hq with (leI_lower_both Hp) by apply leI_irrelevance.
@@ -452,10 +457,11 @@ Proof.
       by apply leI_irrelevance; clear Hp.
     intros d c.
     unshelve eapply existT. intros ω.
-    now exact (rew [Painting'' p] CohFrame p q (Hpr := leI_refl _) ε ω d in
-      RestrPainting' p q ε (RestrFrame p p ω d) (c.1 ω)).
+    now exact (rew [Painting'' p]
+      CohFrame2 p q (Hpr := leI_refl _) (rew eqFrameDef in d) in
+      RestrPainting' p q ε (RestrFrame2 p p ω (rew eqFrameDef in d)) (c.1 ω)).
     set (l := c.2).
-    apply (IHHpq (leI_raise_both (leI_trans Hpq Hq)) Hq _) in l.
+    (* now apply (IHHpq (leI_raise_both (leI_trans Hpq Hq)) Hq _) in l. *)
 Admitted.
 
 End CohFramesDef.
@@ -512,17 +518,17 @@ Class νTypeAux n := {
     ε (d: frame p): frame' p :=
     RestrFrame n frame'' painting'' restrFrames' E' restrPainting'
     cohFrames p q ε d (Hp := Hp) (Hpq := Hpq) (Hq := Hq);
-  cohFrameType {E'} {p} {Hp: p.+2 <~ n.+2} {r} {q} {Hpr Hrq Hr Hq} {ε ω d} :=
+  cohFrameType {E'} {p} {Hp: p.+2 <~ n.+2} {r q} {Hpr Hrq Hr Hq} {ε ω d} :=
     restrFrame' p q (Hpq := leI_lower_both (leI_trans Hpr Hrq))
       (Hq := leI_lower_both Hq) ε (restrFrame p r (Hp := leI_down Hp)
         (Hpq := leI_lower_both Hpr) (Hq := leI_down Hr) ω d) =
     restrFrame' p r (Hpq := leI_lower_both Hpr) (Hq := leI_lower_both Hr) ω
       (restrFrame p q.+1 (Hpq := leI_down (leI_trans Hpr Hrq)) (Hq := Hq) ε d);
-  cohFrame {E'} {p} {Hp: p.+2 <~ n.+2} r q {Hpr Hrq Hr Hq}
-    ε ω d: cohFrameType :=
-    mkCohFrameFromFull n frame'' painting'' restrFrames' E' restrPainting'
-    cohFrames p (Hp := Hp) (Hpr := Hpr) (Hrq := Hrq)
-    (Hr := Hr) (Hq := Hq) r q ε ω d;
+  cohFrame {E'} {p} {Hp: p.+2 <~ n.+2} r q {Hpr Hrq Hr Hq} {ε ω} d:
+    cohFrameType :=
+    CohFrame n frame'' painting'' restrFrames' E' restrPainting'
+    cohFrames (Hp := Hp) (Hpr := Hpr) (Hrq := Hrq)
+    (Hr := Hr) (Hq := Hq) (ε := ε) (ω := ω) r q d;
   painting {E'} {p} {Hp: p <~ n.+2} E (d: frame p): HSet :=
     Painting n frame'' painting'' restrFrames' E'
     restrPainting' cohFrames p d (Hp := Hp) (E := E);
@@ -613,7 +619,7 @@ Definition mkRestrPainting' {E'} p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q}
 
 Definition mkCohFrames {E'}:
  mkFullCohFrameTypes n.+1 mkFrame'' mkPainting'' mkRestrFrames' E'
- mkRestrPainting'.
+  mkRestrPainting'.
 Admitted.
 End νTypeData.
 
