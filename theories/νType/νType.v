@@ -469,8 +469,8 @@ Class νTypeAux n := {
     {d: frame' p}:
     painting' (Hp := leI_down Hp) p E' d ->
     painting'' p (restrFrame' p q ε (Hpq := Hpq) (Hq := Hq) d);
-  cohFrames {E'}: mkFullCohFrameTypes n frame'' painting'' restrFrames'
-    E' restrPainting';
+  cohFrames {E'}:
+    mkFullCohFrameTypes n frame'' painting'' restrFrames' E' restrPainting';
   restrFrames {E'} :=
     mkFullRestrFrames n frame'' painting'' restrFrames' E' restrPainting'
     cohFrames;
@@ -478,15 +478,15 @@ Class νTypeAux n := {
     Frame n frame'' painting'' restrFrames' E' restrPainting'
     cohFrames p (Hp := Hp);
   cohFrame {p} {Hp: p.+2 <~ n.+2} r q {Hpr Hrq Hr Hq} {E'} :=
-    mkCohFrameFromFull n frame'' painting'' restrFrames' E'
-    restrPainting' cohFrames p (Hp := Hp) (Hpr := Hpr) (Hrq := Hrq)
+    mkCohFrameFromFull n frame'' painting'' restrFrames' E' restrPainting'
+    cohFrames p (Hp := Hp) (Hpr := Hpr) (Hrq := Hrq)
     (Hr := Hr) (Hq := Hq) r q;
   painting {p} {Hp: p <~ n.+2} {E'} E (d: frame p) :=
     Painting n frame'' painting'' restrFrames' E'
-    restrPainting' (cohFrames (E' := E')) p d (Hp := Hp) (E := E);
+    restrPainting' cohFrames p d (Hp := Hp) (E := E);
   restrPainting p q {Hpq: p <~ q} {Hq: q.+1 <~ n.+2} ε {E' E} {d: frame p} :=
-    RestrPainting n frame'' painting''
-    restrFrames' E' restrPainting' cohFrames p q Hpq Hq ε (E := E) d;
+    RestrPainting n frame'' painting'' restrFrames' E' restrPainting'
+    cohFrames p q Hpq Hq ε (E := E) d;
   (* cohPainting p r q {Hpq: p.+1 <~ q.+1} {Hpr: p.+1 <~ r.+1}
     {Hrq: r.+1 <~ q.+1} {Hq: q.+1 <~ n.+1} {Hr: r.+2 <~ n.+2} ε ω {E'} E
     {d: frame p} (c: painting E (E' := E')
@@ -509,7 +509,6 @@ Class νTypeAux n := {
 
 Arguments frame'' {n} _ p {Hp}.
 Arguments painting'' {n} _ p {Hp} d.
-Arguments restrFrames' {n} _.
 Arguments painting' {n} _ p {Hp} E'.
 Arguments restrPainting' {n} _ {E'} p q {Hp Hpq Hq} ε [d] c.
 Arguments frame {n} _ p {Hp E'}.
@@ -553,11 +552,6 @@ Definition mkRestrPainting' {E'} p q {Hp: p.+1 <~ n.+2} {Hpq: p <~ q}
   {Hq: q <~ n.+1} ε :=
   (C.(data) D.1).(restrPainting) p q ε (Hpq := Hpq)
   (Hq := leI_raise_both Hq) (E' := D.2) (E := E').
-
-Definition mkCohFrames {E'}:
-  mkFullCohFrameTypes n.+1 mkFrame'' mkPainting'' mkRestrFrames' E'
-  mkRestrPainting'.
-Admitted.
 
 End νTypeData.
 
