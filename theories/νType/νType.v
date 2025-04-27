@@ -31,50 +31,59 @@ Section νType.
 Variable arity: HSet.
 
 (**********************************************)
-(** A ν-parametric set is a family of sets obtained by iterating
-    Reynolds' parametricity translation.
+(**
+A ν-parametric set is a family of sets obtained by iterating
+Reynolds' parametricity translation.
 
-    For ν=1: this is a collection of colors, of points depending on a
-    color, of lines connecting two points of the same color, of
-    triangles filling a frame made of three connected lines, of
-    tetrahedra filling a frame made of four glued triangles, etc.
-    Intuitively, this is:
-      X₀ : hSet                                                                colors
-      X₁ : X₀ → hSet                                                           points
-      X₂ : Πx₀:X₀. X₁x₀ × X₁x₀ → hSet                                          lines
-      X₃ : Πx₀:X₀. Πy₀y₁y₂:X₁x₀. X₂x₀(y₀,y₁) × X₂x₀(y₀,y₂) × X₂x₀(y₁y₂) → hSet triangles
-    ...
-    Formally, following the recursive recipe defined in the file,
-    this is equivalently defined as:
-      X₀ : unit → hSet                                                  colors
-      X₁ : Σ⋆:unit.X₀⋆ → hSet                                           points
-      X₂ : Σx₁:(Σx₀:(Σ⋆:unit.X₀⋆).X₁x₀).X₁(x₁.1) → hSet                 lines
-      X₃ : Σx₂':(Σx₂:(Σx₁':(Σx₁:(Σx₀:(Σ⋆:unit.X₀⋆).X₁x₀).X₁(x₁.1)).X₂(x₁')).
-                 Σx₁:X₁(x₂.1.1).X₂(x₂.1,x₁)).
-           X₂((x₂'.1.1.1.1,x₂'.1.1.2),x₂'.2.1) → hSet                   triangles
+For ν=1: this is a collection of colors, of points depending on a color,
+of lines connecting two points of the same color, of triangles filling a
+frame made of three connected lines, of tetrahedra filling a frame made
+of four glued triangles, etc.
+Intuitively, this is:
+  X₀ : hSet
+  (colors)
+  X₁ : X₀ → hSet
+  (points)
+  X₂ : Πx₀:X₀. X₁x₀ × X₁x₀ → hSet
+  (lines)
+  X₃ : Πx₀:X₀. Πy₀y₁y₂:X₁x₀. X₂x₀(y₀,y₁) × X₂x₀(y₀,y₂) × X₂x₀(y₁y₂) → hSet
+  (triangles)
+...
 
-      where each Xₙ has generically a type Xₙ : frameₙₙ(X₀,...,Xₙ₋₁) → hSet
+Formally, following the recursive recipe defined in the file, this is
+equivalently defined as:
+  X₀ : unit → hSet                                                (colors)
+  X₁ : Σ⋆:unit.X₀⋆ → hSet                                         (points)
+  X₂ : Σx₁:(Σx₀:(Σ⋆:unit.X₀⋆).X₁x₀).X₁(x₁.1) → hSet               (lines)
+  X₃ : Σx₂':(Σx₂:(Σx₁':(Σx₁:(Σx₀:(Σ⋆:unit.X₀⋆).X₁x₀).X₁(x₁.1)).X₂(x₁')).
+              Σx₁:X₁(x₂.1.1).X₂(x₂.1,x₁)).
+        X₂((x₂'.1.1.1.1,x₂'.1.1.2),x₂'.2.1) → hSet                (triangles)
 
-      Above, frameₙₙ has type pspₙ → hSet, where psp, standing for
-      "parametric set prefix", represents an initial sequence
-      X₀,...,Xₙ₋₁ of parametric sets.
+  where each Xₙ has generically a type Xₙ : frameₙₙ(X₀,...,Xₙ₋₁) → hSet
 
-      Also, arguments of each Xᵢ in a frame are computed from
-      previous arguments using "restrictions". These restrictions
-      themselves obey coherence rules.
+  Above, frameₙₙ has type pspₙ → hSet, where psp, standing for
+  "parametric set prefix", represents an initial sequence
+  X₀,...,Xₙ₋₁ of parametric sets.
 
-    For ν=2: this is a collection of points, of lines connecting two
-    points, of squares filling a frame made of four lines, of cubes
-    filling a frame made of six squares, etc.
-    Intuitively, this is:
-      X₀ : hSet                                                                points
-      X₁ : X₀×X₀ → hSet                                                        lines
-      X₂ : Πx₀₀x₀₁x₁₀x₁₁:X₀. X₁x₀₀x₁₀ × X₁x₁₀x₁₁ × X₁x₀₀x₀₁ × X₁x₁₀x₁₁ → hSet  squares
+  Also, arguments of each Xᵢ in a frame are computed from previous arguments
+  using "restrictions". These restrictions themselves obey coherence rules.
 
-    Formally, it is built on a variant of frame that takes 2 copies of each X instead of 1.
+For ν=2: this is a collection of points, of lines connecting two points,
+of squares filling a frame made of four lines, of cubes filling a frame
+made of six squares, etc.
+Intuitively, this is:
+  X₀ : hSet
+  (points)
+  X₁ : X₀×X₀ → hSet
+  (lines)
+  X₂ : Πx₀₀x₀₁x₁₀x₁₁:X₀. X₁x₀₀x₁₀ × X₁x₁₀x₁₁ × X₁x₀₀x₀₁ × X₁x₁₀x₁₁ → hSet
+  (squares)
 
-    The construction mutually builds the type of frames, frame
-    restrictions and coherence conditions on frame restrictions.
+Formally, it is built on a variant of frame that takes 2 copies of each X
+instead of 1.
+
+The construction mutually builds the type of frames, frame restrictions
+and coherence conditions on frame restrictions.
 *)
 
 Section RestrFramesDef.
@@ -90,15 +99,21 @@ Class RestrFrameTypeBlock := {
   FrameDef: RestrFrameTypesDef -> HSet;
 }.
 
-(* Build the list of pairs of the type RestrFrameTypesDef(n+1,p) of restrFrame(n+1,p) for p <= n
-   and of the definition of frame(n+1,p), for p <= n+1, in function of effective RestrFrames of these types.
-   That is, we build for p <= n.+1:
-   p = 0 : { restrFrameTypes = unit ; frame(n+1,0)(restrFrames_{0..0-1}) }
-   p = 1 : { restrFrameTypes = {_:unit & restrFrameType0 ; frame(n+1,1)(restrFrames_{0..0}) }
-   ...
-   p     : { restrFrameTypes = {RestrFrameType0 ... restrFrameType_{p-1}} ; frame_p(restrFrames_{0..p-1}) }
-   n+1   : { restrFrameTypes = {RestrFrameType0 ... restrFrameType_n} ; frame(n+1,n+1)(restrFrames_{0..n})
- *)
+(**
+Build the list of pairs of the type RestrFrameTypesDef(n+1,p) of
+restrFrame(n+1,p) for p <= n and of the definition of frame(n+1,p),
+for p <= n+1, in function of effective RestrFrames of these types.
+
+That is, we build for p <= n.+1:
+  p = 0 : { restrFrameTypes = unit ; frame(n+1,0)(restrFrames_{0..0-1}) }
+  p = 1 : { restrFrameTypes = {_:unit & restrFrameType0 ;
+    frame(n+1,1)(restrFrames_{0..0}) }
+  ...
+  p     : { restrFrameTypes = {RestrFrameType0 ... restrFrameType_{p-1}} ;
+    frame_p(restrFrames_{0..p-1}) }
+  n+1   : { restrFrameTypes = {RestrFrameType0 ... restrFrameType_n} ;
+    frame(n+1,n+1)(restrFrames_{0..n})
+*)
 #[local]
 Instance mkRestrFrameTypesAndFrames:
   forall p {Hp: p <~ n.+1}, RestrFrameTypeBlock :=
@@ -125,7 +140,7 @@ Instance mkRestrFrameTypesAndFrames:
   end.
 
 (* Additionally assume that we have restrFrames available up to level n so as
-   to build Frame and Painting at level n.+1 for any p <= n. *)
+ * to build Frame and Painting at level n.+1 for any p <= n. *)
 Definition mkFullRestrFrameTypes :=
   (mkRestrFrameTypesAndFrames n.+1 (Hp := leI_refl _)).(RestrFrameTypesDef).
 Variable RestrFrames: mkFullRestrFrameTypes.
@@ -157,11 +172,13 @@ Definition mkPainting p {Hp: p <~ n.+1}
   end) p Hp.
 End RestrFramesDef.
 
+(**
+We build CohFrameType and RestrFrame at level n.+2 for respectively
+p <= n and p <= n.+1, assuming:
+  - Frame'' and Painting'' for p <= n
+  - RestrFrames' for p <= n
+*)
 Section CohFramesDef.
-(* We build CohFrameType and RestrFrame at level n.+2
-   for respectively p <= n and p <= n.+1, assuming:
-   - Frame'' and Painting'' for p <= n
-   - RestrFrames' for p <= n *)
 Variable n: nat.
 Variable Frame'': forall p {Hp: p <~ n}, HSet.
 Variable Painting'': forall p {Hp: p <~ n}, Frame'' p (Hp := Hp) -> HSet.
@@ -175,7 +192,7 @@ Variable E': Frame' n.+1 (Hp := leI_refl _) -> HSet.
 Let Painting' p {Hp: p <~ n.+1} :=
   mkPainting n Frame'' Painting'' RestrFrames' p (Hp := Hp) (E := E').
 
-(* This is restrFrameType(n+2,0)..restrFrameType(n+2,p) for p <= n+1 *)
+(** This is restrFrameType(n+2,0)..restrFrameType(n+2,p) for p <= n+1 *)
 Definition RestrFrameTypes p {Hp: p <~ n.+2} :=
   (mkRestrFrameTypesAndFrames n.+1 Frame' Painting' p
     (Hp := Hp)).(RestrFrameTypesDef).
@@ -195,14 +212,23 @@ Variable RestrPainting': forall p q {Hp: p.+1 <~ n.+1} {Hpq: p <~ q}
   Painting' (Hp := leI_down Hp) p d ->
   Painting'' p (RestrFrame' p q ε (Hpq := Hpq) (Hq := Hq) d).
 
-(* Build the list of pairs of the type CohFrameType(n+2,p) of cohFrame(n+2,p) for p <= n
-   and of the definition of restrFrame(n+2,p), for p <= n+1, in function of effective CohFrames of these types.
-   That is, we build for p <= n+1, where n is the level of Frame'':
-   p = 0 : { cohFrameTypes_{0..0-1} = unit ; restrFrames(n+2,0)(cohFrames_{0..0-1}):restrFrameTypes_{0..0} }
-   p = 1 : { cohFrameTypes_{0..0} = {_:unit & cohFrameType(n+2,0)} ; restrFrames_1(cohFrames_{0..0}):restrFrameTypes_{0..1} }
-   ...
-   p     : { cohFrameTypes_{0..p-1} = {_:unit & cohFrameType(n+2,0) ... cohFrameType(n+2,p-1)} ; restrFrames(n+2,p)(cohFrames_{0..p-1}):restrFrameTypes_{0..p} }
-   n+1   : { cohFrameTypes_{0..n} = {_:unit & cohFrameType(n+2,0) ... cohFrameType(n+2,n)} ; restrFrames(n+2,n+1)(cohFrames_{0..n}):restrFrameTypes_{0..n+1} }
+(**
+Build the list of pairs of the type CohFrameType(n+2,p) of
+cohFrame(n+2,p) for p <= n and of the definition of restrFrame(n+2,p),
+for p <= n+1, in function of effective CohFrames of these types.
+
+That is, we build for p <= n+1, where n is the level of Frame'':
+  p = 0 : { cohFrameTypes_{0..0-1} = unit ;
+   restrFrames(n+2,0)(cohFrames_{0..0-1}):restrFrameTypes_{0..0} }
+  p = 1 : { cohFrameTypes_{0..0} = {_:unit & cohFrameType(n+2,0)} ;
+   restrFrames_1(cohFrames_{0..0}):restrFrameTypes_{0..1} }
+  ...
+  p     : { cohFrameTypes_{0..p-1} = {_:unit & cohFrameType(n+2,0) ...
+   cohFrameType(n+2,p-1)} ;
+     restrFrames(n+2,p)(cohFrames_{0..p-1}):restrFrameTypes_{0..p} }
+  n+1   : { cohFrameTypes_{0..n} = {_:unit & cohFrameType(n+2,0) ...
+   cohFrameType(n+2,n)} ;
+     restrFrames(n+2,n+1)(cohFrames_{0..n}):restrFrameTypes_{0..n+1} }
 *)
 #[local]
 Instance mkCohFrameTypesAndRestrFrames:
@@ -248,16 +274,16 @@ Instance mkCohFrameTypesAndRestrFrames:
     |}
   end.
 
-(* This is all CohFrameType(n+2,p) from p=0 to p=n *)
+(** This is all CohFrameType(n+2,p) from p=0 to p=n *)
 Definition mkFullCohFrameTypes :=
   (mkCohFrameTypesAndRestrFrames n.+1 (Hp := leI_refl _)).(CohFrameTypesDef).
 Variable CohFrames: mkFullCohFrameTypes.
 
-(* This is all RestrFrame(n+2,p) from p=0 to p=n.+1 *)
+(** This is all RestrFrame(n+2,p) from p=0 to p=n.+1 *)
 Definition mkFullRestrFrames :=
   (mkCohFrameTypesAndRestrFrames n.+1 (Hp := leI_refl _)).(RestrFramesDef) CohFrames.
 
-(* This is the prefix of all CohFrame(n+2,i) from i=0 to i=p-1 *)
+(** This is the prefix of all CohFrame(n+2,i) from i=0 to i=p-1 *)
 Definition mkCohFramesFromFull: forall p {Hp: p.+1 <~ n.+2},
   (mkCohFrameTypesAndRestrFrames p (Hp := Hp)).(CohFrameTypesDef) :=
   fix aux p (Hp: p.+1 <~ n.+2) :=
@@ -274,16 +300,19 @@ Definition mkCohFramesFromFull: forall p {Hp: p.+1 <~ n.+2},
     with 0 => fun _ => I | p.+1 => fun Hp => (aux p.+1 Hp).1 end Hp
   end.
 
-(* This is Frame(n+2,p) from full CohFrames, going down via RestrFrames *)
+(** This is Frame(n+2,p) from full CohFrames,
+    going down via RestrFrames *)
 Definition Frame2 p {Hp: p <~ n.+2} :=
   mkFrame n.+1 Frame' Painting' mkFullRestrFrames p (Hp := Hp).
 
-(* These are RestrFrames(n+2,p) from full CohFrames, going down via RestrFrames *)
+(** These are RestrFrames(n+2,p) from full CohFrames,
+    going down via RestrFrames *)
 Definition RestrFrames2 p {Hp: p.+1 <~ n.+2} :=
   mkRestrFramesFromFull n.+1 Frame' Painting' mkFullRestrFrames p.+1
     (Hp := Hp).
 
-(* These are RestrFrames(n+2,p) from full CohFrames, going down via CohFrames *)
+(** These are RestrFrames(n+2,p) from full CohFrames,
+    going down via CohFrames *)
 Definition RestrFrames p {Hp: p.+1 <~ n.+2} :=
   ((mkCohFrameTypesAndRestrFrames p (Hp := Hp)).(RestrFramesDef)
     (mkCohFramesFromFull p (Hp := Hp))).
@@ -296,7 +325,8 @@ Proof.
   simpl. now rewrite <- IHHp.
 Defined.
 
-(* This is Frame(n+2,p) from full CohFrames, going down via CohFrames *)
+(** This is Frame(n+2,p) from full CohFrames,
+    going down via CohFrames *)
 Definition Frame p {Hp: p <~ n.+2} :=
   FrameOfRestrFrames p
     (match Hp in p <~ _ return (mkRestrFrameTypesAndFrames n.+1 Frame' Painting'
@@ -314,7 +344,7 @@ Proof.
     (Hp := leI_down Hp)).(FrameDef)) x.1) (eqRestrFramesDef (Hp := Hp))).
 Defined.
 
-(* This is RestrFrame(n+2,p) *)
+(** This is RestrFrame(n+2,p) *)
 Definition RestrFrame p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
   ε (d: Frame p): Frame' p (Hp := leI_lower_both Hp) :=
   (RestrFrames p (Hp := Hp)).2 q Hpq Hq ε d.
