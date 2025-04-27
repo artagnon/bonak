@@ -86,6 +86,8 @@ The construction mutually builds the type of frames, frame restrictions
 and coherence conditions on frame restrictions.
 *)
 
+Axiom leI_irrelevance : forall {m n}, forall H H' : m <~ n, H = H'.
+
 Section RestrFramesDef.
 (** Assume what is needed to build restrFrameType and Frame(restrFrames)
     at level n.+1 for respectively p < n and p <=  n.
@@ -212,7 +214,7 @@ Class CohFrameTypeBlock p {Hp: p.+1 <~ n.+2} := {
   (* up to RestrFrameType(n+2,p) *)
 }.
 
-Variable RestrPainting': forall p q {Hp: p.+1 <~ n.+1} {Hpq: p <~ q}
+Variable RestrPainting': forall p {Hp: p.+1 <~ n.+1} q {Hpq: p <~ q}
   {Hq: q <~ n} ε (d: Frame' p),
   Painting' (Hp := leI_down Hp) p d ->
   Painting'' p (RestrFrame' p q ε (Hpq := Hpq) (Hq := Hq) d).
@@ -367,8 +369,8 @@ Proof.
   now destruct eqRestrFramesDef.
 Defined.
 
-Definition mkCohFrameFromFull p {Hp: p.+2 <~ n.+2} r q {Hpr : p.+1 <~ r.+1}
-  {Hrq : r.+1 <~ q.+1} {Hr: r.+1 <~ n.+1} {Hq : q.+1 <~ n.+1}
+Definition mkCohFrameFromFull p {Hp: p.+2 <~ n.+2} r q {Hpr: p.+1 <~ r.+1}
+  {Hrq: r.+1 <~ q.+1} {Hr: r.+1 <~ n.+1} {Hq: q.+1 <~ n.+1}
   (ε ω: arity) (d: Frame p):
   RestrFrame' p q (Hpq := leI_lower_both (leI_trans Hpr Hrq))
     (Hq := leI_lower_both Hq) ε (RestrFrame p r (Hp := leI_down Hp)
@@ -465,7 +467,7 @@ Class νTypeAux n := {
     (Hp := Hp) q (Hpq := Hpq) (Hq := Hq) ε d;
   painting' {E'} p {Hp: p <~ n.+1}: frame' p -> HSet :=
     Painting' n frame'' painting'' restrFrames' E' p (Hp := Hp);
-  restrPainting' {E'} p q {Hp: p.+1 <~ n.+1} {Hpq: p <~ q} {Hq: q <~ n} ε
+  restrPainting' {E'} p {Hp: p.+1 <~ n.+1} q {Hpq: p <~ q} {Hq: q <~ n} ε
     {d: frame' p}:
     painting' (Hp := leI_down Hp) p d ->
     painting'' p (restrFrame' p q ε (Hpq := Hpq) (Hq := Hq) d);
@@ -488,7 +490,8 @@ Class νTypeAux n := {
   painting {E'} {p} {Hp: p <~ n.+2} E (d: frame p): HSet :=
     Painting n frame'' painting'' restrFrames' E'
     restrPainting' cohFrames p d (Hp := Hp) (E := E);
-  restrPainting {E'} p q {Hpq: p <~ q} {Hq: q.+1 <~ n.+2} ε {E} {d: frame p}:
+  restrPainting {E'} p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q.+1 <~ n.+2}
+    ε {E} {d: frame p}:
     painting E d -> painting' p (restrFrame p q ε d) :=
     RestrPainting n frame'' painting'' restrFrames' E' restrPainting'
     cohFrames p q Hpq Hq ε (E := E) d;
@@ -515,11 +518,11 @@ Class νTypeAux n := {
 Arguments frame'' {n} _ p {Hp}.
 Arguments painting'' {n} _ p {Hp} d.
 Arguments painting' {n} _ {E'} p {Hp}.
-Arguments restrPainting' {n} _ {E'} p q {Hp Hpq Hq} ε [d] c.
+Arguments restrPainting' {n} _ {E'} p {Hp} q {Hpq Hq} ε [d] c.
 Arguments frame {n} _ {E'} p {Hp}.
 Arguments cohFrame {n} _ {E'} {p Hp} r q {Hpr Hrq Hr Hq ε ω}.
 Arguments painting {n} _ {E'} {p Hp} E d.
-Arguments restrPainting {n} _ {E'} p q {Hpq Hq} ε {E} [d] c.
+Arguments restrPainting {n} _ {E'} p {Hp} q {Hpq Hq} ε {E} [d] c.
 (* Arguments cohPainting {n} _ p r q {Hpr Hrq Hq} ε ω E [d] c. *)
 
 Class νType n := {
@@ -564,17 +567,19 @@ Definition mkRestrFrame' p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
   (C.(data) D.1).(restrFrame) (E' := D.2) p q ε d (Hp := Hp) (Hpq := Hpq)
     (Hq := Hq).
 
-Definition mkRestrPainting' {E'} p q {Hpq: p <~ q}
+Definition mkRestrPainting' {E'} p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q}
   {Hq: q.+1 <~ n.+2} ε: forall {d: mkFrame' p},
   mkPainting' p E' d -> mkPainting'' p (mkRestrFrame' p q ε
     (Hp := leI_trans (leI_raise_both Hpq) Hq)
     (Hpq := Hpq) (Hq := leI_lower_both Hq) d) :=
-  (C.(data) D.1).(restrPainting) p q ε (Hpq := Hpq)
+  (C.(data) D.1).(restrPainting) p q ε (Hp := Hp) (Hpq := Hpq)
   (Hq := Hq) (E' := D.2) (E := E').
 
+Definition mkCohFrames {E'}:
+ mkFullCohFrameTypes n.+1 mkFrame'' mkPainting'' mkRestrFrames' E'
+ mkRestrPainting'.
+Admitted.
 End νTypeData.
-
-Axiom leI_irrelevance : forall {m n}, forall H H' : m <~ n, H = H'.
 
 Set Printing Implicit.
 
@@ -585,9 +590,9 @@ Proof.
   now apply mkPrefix'.
   intro D.
   unshelve esplit.
-  now apply (mkFrame'' n C D).
-  now apply (mkPainting'' n C D).
-  now apply (mkRestrFrames' n C D).
+  now eapply mkFrame''.
+  now eapply mkPainting''.
+  now eapply mkRestrFrames'.
   intros E' p q Hp Hpq Hq.
   replace Hp with (leI_trans (leI_raise_both Hpq) (leI_raise_both Hq))
     by apply leI_irrelevance.
