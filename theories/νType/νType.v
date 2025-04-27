@@ -115,7 +115,8 @@ Instance mkRestrFrameTypesAndFrames:
       RestrFrameTypesDef :=
         { R: (mkRestrFrameTypesAndFrames p _).(RestrFrameTypesDef) &T
           forall q (Hpq: p <~ q) (Hq: q <~ n) (ε: arity),
-          (mkRestrFrameTypesAndFrames p _).(FrameDef) R -> FramePrev p (Hp := leI_lower_both Hp) };
+          (mkRestrFrameTypesAndFrames p _).(FrameDef) R ->
+            FramePrev p (Hp := leI_lower_both Hp) };
       FrameDef R :=
         { d: (mkRestrFrameTypesAndFrames p (leI_down Hp)).(FrameDef) R.1 &
           hforall ε, PaintingPrev p (R.2 p (leI_refl _)
@@ -143,7 +144,8 @@ Definition mkFrame := fun p {Hp: p <~ n.+1} =>
 
 Definition mkRestrFrame p {Hp: p.+1 <~ n.+1} :=
   (mkRestrFramesFromFull p.+1 (Hp := Hp)).2:
-  forall q {Hpq: p <~ q} {Hq: q <~ n}, arity -> mkFrame p -> FramePrev p (Hp := leI_lower_both Hp).
+  forall q {Hpq: p <~ q} {Hq: q <~ n},
+    arity -> mkFrame p -> FramePrev p (Hp := leI_lower_both Hp).
 
 Definition mkPainting p {Hp: p <~ n.+1}
   {E: mkFrame n.+1 -> HSet} := (fix aux p Hp :=
@@ -293,14 +295,10 @@ Defined.
 
 Definition Frame2 p {Hp: p <~ n.+2} :=
   FrameOfRestrFrames p
-    (match Hp in p <~ _
-      return (mkRestrFrameTypesAndFrames n.+1 Frame' Painting'
-        p).(RestrFrameTypesDef) with
-    | leI_refl _ => ((mkCohFrameTypesAndRestrFrames n.+1
-      (Hp := leI_refl _)).(RestrFramesDef)
-      ((mkCohFramesFromFull n.+1 (Hp := leI_refl _))))
-    | @leI_down _ p Hp => ((mkCohFrameTypesAndRestrFrames p
-      (Hp := Hp)).(RestrFramesDef) ((mkCohFramesFromFull p (Hp := Hp)))).1
+    (match Hp in p <~ _ return (mkRestrFrameTypesAndFrames n.+1 Frame' Painting'
+      p).(RestrFrameTypesDef) with
+    | leI_refl _ => RestrFrames2 n.+1 (Hp := leI_refl _)
+    | @leI_down _ p Hp => (RestrFrames2 p (Hp := Hp)).1
     end).
 
 Lemma eqFrameDef {p} {Hp: p <~ n.+2}:
