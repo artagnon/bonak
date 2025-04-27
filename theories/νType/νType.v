@@ -574,6 +574,8 @@ Definition mkRestrPainting' {E'} p q {Hpq: p <~ q}
 
 End νTypeData.
 
+Axiom leI_irrelevance : forall {m n}, forall H H' : m <~ n, H = H'.
+
 Set Printing Implicit.
 
 #[local]
@@ -583,12 +585,16 @@ Proof.
   now apply mkPrefix'.
   intro D.
   unshelve esplit.
-  now eapply mkFrame''.
-  now eapply mkPainting''.
-  now eapply mkRestrFrames'.
-  now eapply mkRestrPainting'.
+  now apply (mkFrame'' n C D).
+  now apply (mkPainting'' n C D).
+  now apply (mkRestrFrames' n C D).
+  intros E' p q Hp Hpq Hq.
+  replace Hp with (leI_trans (leI_raise_both Hpq) (leI_raise_both Hq))
+    by apply leI_irrelevance.
+  intros ε d X.
+  apply (mkRestrPainting' n C D p q ε).
   Show.
-Qed.
+Admitted.
 
 Definition mkCohLayer {n} {C: νType n} {p r q} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {ε ω}
