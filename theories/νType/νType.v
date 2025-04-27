@@ -175,7 +175,8 @@ Let Painting' p {Hp: p <~ n.+1} :=
 
 (* This is restrFrameType(n+2,0)..restrFrameType(n+2,p) for p <= n+1 *)
 Definition RestrFrameTypes p {Hp: p <~ n.+2} :=
-  (mkRestrFrameTypesAndFrames n.+1 Frame' Painting' p (Hp := Hp)).(RestrFrameTypesDef).
+  (mkRestrFrameTypesAndFrames n.+1 Frame' Painting' p
+    (Hp := Hp)).(RestrFrameTypesDef).
 
 Definition FrameOfRestrFrames p {Hp: p <~ n.+2} :=
   (mkRestrFrameTypesAndFrames n.+1 Frame' Painting' p (Hp := Hp)).(FrameDef).
@@ -293,11 +294,13 @@ Defined.
 Definition Frame2 p {Hp: p <~ n.+2} :=
   FrameOfRestrFrames p
     (match Hp in p <~ _
-      return (mkRestrFrameTypesAndFrames n.+1 Frame' Painting' p).(RestrFrameTypesDef) with
-    | leI_refl _ => ((mkCohFrameTypesAndRestrFrames n.+1 (Hp := leI_refl _)).(RestrFramesDef)
+      return (mkRestrFrameTypesAndFrames n.+1 Frame' Painting'
+        p).(RestrFrameTypesDef) with
+    | leI_refl _ => ((mkCohFrameTypesAndRestrFrames n.+1
+      (Hp := leI_refl _)).(RestrFramesDef)
       ((mkCohFramesFromFull n.+1 (Hp := leI_refl _))))
-    | @leI_down _ p Hp => ((mkCohFrameTypesAndRestrFrames p (Hp := Hp)).(RestrFramesDef)
-      ((mkCohFramesFromFull p (Hp := Hp)))).1
+    | @leI_down _ p Hp => ((mkCohFrameTypesAndRestrFrames p
+      (Hp := Hp)).(RestrFramesDef) ((mkCohFramesFromFull p (Hp := Hp)))).1
     end).
 
 Lemma eqFrameDef {p} {Hp: p <~ n.+2}:
