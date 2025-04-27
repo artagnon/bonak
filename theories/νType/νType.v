@@ -514,12 +514,12 @@ Class νTypeAux n := {
 
 Arguments frame'' {n} _ p {Hp}.
 Arguments painting'' {n} _ p {Hp} d.
-Arguments painting' {n} _ p {Hp} E'.
+Arguments painting' {n} _ {E'} p {Hp}.
 Arguments restrPainting' {n} _ {E'} p q {Hp Hpq Hq} ε [d] c.
-Arguments frame {n} _ p {Hp E'}.
-Arguments cohFrame {n} _ {p Hp} r q {Hpr Hrq Hr Hq E' ε ω}.
-Arguments painting {n} _ {p Hp E'} E d.
-Arguments restrPainting {n} _ p q {Hpq Hq} ε {E' E} [d] c.
+Arguments frame {n} _ {E'} p {Hp}.
+Arguments cohFrame {n} _ {E'} {p Hp} r q {Hpr Hrq Hr Hq ε ω}.
+Arguments painting {n} _ {E'} {p Hp} E d.
+Arguments restrPainting {n} _ {E'} p q {Hpq Hq} ε {E} [d] c.
 (* Arguments cohPainting {n} _ p r q {Hpr Hrq Hq} ε ω E [d] c. *)
 
 Class νType n := {
@@ -547,18 +547,34 @@ Variable D: mkPrefix'.
 Definition mkFrame'' p {Hp: p <~ n.+1} :=
   (C.(data) D.1).(frame') p (Hp := Hp).
 
+Definition mkFrame' p {Hp: p <~ n.+2} :=
+  (C.(data) D.1).(frame) p (Hp := Hp) (E' := D.2).
+
 Definition mkPainting'' p {Hp: p <~ n.+1} :=
-  (C.(data) D.1).(painting') p (Hp := Hp) D.2.
+  (C.(data) D.1).(painting') p (Hp := Hp) (E' := D.2).
+
+Definition mkPainting' p {Hp: p <~ n.+2} :=
+  (C.(data) D.1).(painting) (Hp := Hp) (E' := D.2).
 
 Definition mkRestrFrames' :=
   (C.(data) D.1).(restrFrames) (E' := D.2).
 
-Definition mkRestrPainting' {E'} p q {Hp: p.+1 <~ n.+2} {Hpq: p <~ q}
-  {Hq: q <~ n.+1} ε :=
+Definition mkRestrFrame' p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
+  ε (d: mkFrame' p) :=
+  (C.(data) D.1).(restrFrame) (E' := D.2) p q ε d (Hp := Hp) (Hpq := Hpq)
+    (Hq := Hq).
+
+Definition mkRestrPainting' {E'} p q {Hpq: p <~ q}
+  {Hq: q.+1 <~ n.+2} ε: forall {d: mkFrame' p},
+  mkPainting' p E' d -> mkPainting'' p (mkRestrFrame' p q ε
+    (Hp := leI_trans (leI_raise_both Hpq) Hq)
+    (Hpq := Hpq) (Hq := leI_lower_both Hq) d) :=
   (C.(data) D.1).(restrPainting) p q ε (Hpq := Hpq)
-  (Hq := leI_raise_both Hq) (E' := D.2) (E := E').
+  (Hq := Hq) (E' := D.2) (E := E').
 
 End νTypeData.
+
+Set Printing Implicit.
 
 #[local]
 Instance mkνType {n} {C: νType n}: νType n.+1.
