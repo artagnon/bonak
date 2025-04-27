@@ -87,9 +87,9 @@ and coherence conditions on frame restrictions.
 *)
 
 Section RestrFramesDef.
-(* Assume what is needed to build restrFrameType and Frame(restrFrames)
-   at level n.+1 for respectively p < n and p <=  n.
-   In particular, n is here the level where live FramePrev and PaintingPrev. *)
+(** Assume what is needed to build restrFrameType and Frame(restrFrames)
+    at level n.+1 for respectively p < n and p <=  n.
+    In particular, n is here the level where live FramePrev and PaintingPrev. *)
 Variable n: nat.
 Variable FramePrev: forall p {Hp: p <~ n}, HSet.
 Variable PaintingPrev: forall p {Hp: p <~ n}, FramePrev p (Hp := Hp) -> HSet.
@@ -142,8 +142,8 @@ Instance mkRestrFrameTypesAndFrames:
 Definition mkRestrFrameTypes p {Hp: p <~ n.+1} :=
   mkRestrFrameTypesAndFrames p (Hp := Hp).(RestrFrameTypesDef).
 
-(* Additionally assume that we have restrFrames available up to level n so as
- * to build Frame and Painting at level n.+1 for any p <= n. *)
+(** Additionally assume that we have restrFrames available up to level n
+    so as to build Frame and Painting at level n.+1 for any p <= n. *)
 Definition mkFullRestrFrameTypes :=
   mkRestrFrameTypes n.+1 (Hp := leI_refl _).
 Variable RestrFrames: mkFullRestrFrameTypes.
@@ -155,7 +155,8 @@ Definition mkRestrFramesFromFull: forall p {Hp: p <~ n.+1},
   | @leI_down _ p Hp => (aux p.+1 Hp).1
   end.
 
-Definition mkFrameOfRestrFrames p {Hp: p <~ n.+1}: mkRestrFrameTypes p (Hp := Hp) -> HSet :=
+Definition mkFrameOfRestrFrames p {Hp: p <~ n.+1}:
+  mkRestrFrameTypes p (Hp := Hp) -> HSet :=
   (mkRestrFrameTypesAndFrames p (Hp := Hp)).(FrameDef).
 
 (* Frame from full RestrFrames *)
@@ -178,12 +179,10 @@ Definition mkPainting p {Hp: p <~ n.+1}
   end) p Hp.
 End RestrFramesDef.
 
-(**
-We build CohFrameType and RestrFrame at level n.+2 for respectively
-p <= n and p <= n.+1, assuming:
-  - Frame'' and Painting'' for p <= n
-  - RestrFrames' for p <= n
-*)
+(** We build CohFrameType and RestrFrame at level n.+2 for respectively
+    p <= n and p <= n.+1, assuming:
+      - Frame'' and Painting'' for p <= n
+      - RestrFrames' for p <= n *)
 Section CohFramesDef.
 Variable n: nat.
 Variable Frame'': forall p {Hp: p <~ n}, HSet.
@@ -279,16 +278,16 @@ Instance mkCohFrameTypesAndRestrFrames:
     |}
   end.
 
-(** This is all CohFrameType(n+2,p) from p=0 to p=n *)
+(** All CohFrameType(n+2,p) from p=0 to p=n *)
 Definition mkFullCohFrameTypes :=
   (mkCohFrameTypesAndRestrFrames n.+1 (Hp := leI_refl _)).(CohFrameTypesDef).
 Variable CohFrames: mkFullCohFrameTypes.
 
-(** This is all RestrFrame(n+2,p) from p=0 to p=n.+1 *)
+(** All RestrFrame(n+2,p) from p=0 to p=n.+1 *)
 Definition mkFullRestrFrames :=
   (mkCohFrameTypesAndRestrFrames n.+1 (Hp := leI_refl _)).(RestrFramesDef) CohFrames.
 
-(** This is the prefix of all CohFrame(n+2,i) from i=0 to i=p-1 *)
+(** Prefix of all CohFrame(n+2,i) from i=0 to i=p-1 *)
 Definition mkCohFramesFromFull: forall p {Hp: p.+1 <~ n.+2},
   (mkCohFrameTypesAndRestrFrames p (Hp := Hp)).(CohFrameTypesDef) :=
   fix aux p (Hp: p.+1 <~ n.+2) :=
@@ -305,19 +304,16 @@ Definition mkCohFramesFromFull: forall p {Hp: p.+1 <~ n.+2},
     with 0 => fun _ => I | p.+1 => fun Hp => (aux p.+1 Hp).1 end Hp
   end.
 
-(** This is Frame(n+2,p) from full CohFrames,
-    going down via RestrFrames *)
+(** Frame(n+2,p) from full CohFrames, going down via RestrFrames *)
 Definition Frame2 p {Hp: p <~ n.+2} :=
   mkFrame n.+1 Frame' Painting' mkFullRestrFrames p (Hp := Hp).
 
-(** These are RestrFrames(n+2,p) from full CohFrames,
-    going down via RestrFrames *)
+(** RestrFrames(n+2,p) from full CohFrames, going down via RestrFrames *)
 Definition RestrFrames2 p {Hp: p.+1 <~ n.+2} :=
   mkRestrFramesFromFull n.+1 Frame' Painting' mkFullRestrFrames p.+1
     (Hp := Hp).
 
-(** These are RestrFrames(n+2,p) from full CohFrames,
-    going down via CohFrames *)
+(** RestrFrames(n+2,p) from full CohFrames, going down via CohFrames *)
 Definition RestrFrames p {Hp: p.+1 <~ n.+2} :=
   ((mkCohFrameTypesAndRestrFrames p (Hp := Hp)).(RestrFramesDef)
     (mkCohFramesFromFull p (Hp := Hp))).
@@ -330,8 +326,7 @@ Proof.
   simpl. now rewrite <- IHHp.
 Defined.
 
-(** This is Frame(n+2,p) from full CohFrames,
-    going down via CohFrames *)
+(** Frame(n+2,p) from full CohFrames, going down via CohFrames *)
 Definition Frame p {Hp: p <~ n.+2} :=
   FrameOfRestrFrames p
     (match Hp in p <~ _ return (mkRestrFrameTypesAndFrames n.+1 Frame' Painting'
@@ -349,7 +344,7 @@ Proof.
     (Hp := leI_down Hp)).(FrameDef)) x.1) (eqRestrFramesDef (Hp := Hp))).
 Defined.
 
-(** This is RestrFrame(n+2,p) *)
+(** RestrFrame(n+2,p) *)
 Definition RestrFrame p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
   ε (d: Frame p): Frame' p (Hp := leI_lower_both Hp) :=
   (RestrFrames p (Hp := Hp)).2 q Hpq Hq ε d.
@@ -535,7 +530,7 @@ Definition mkPrefix' {n} {C: νType n}: Type@{m'} :=
   { D : C.(prefix') &T (C.(data) D).(frame') n.+1 (Hp := leI_refl _) -> HSet }.
 
 (** The coherence conditions that Frame needs to satisfy to build the next level
-   of Frame. These will be used in the proof script of mkFrame. *)
+    of Frame. These will be used in the proof script of mkFrame. *)
 
 Section νTypeData.
 Variable n: nat.
