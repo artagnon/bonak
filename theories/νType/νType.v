@@ -149,7 +149,7 @@ Definition mkFullRestrFrameTypes :=
 Variable FullRestrFrames: mkFullRestrFrameTypes.
 
 Definition mkRestrFramesFromFull: forall p {Hp: p <~ n.+1},
-  (mkRestrFrameTypesAndFrames p (Hp := Hp)).(RestrFrameTypesDef) :=
+  mkRestrFrameTypes p :=
   fix aux p Hp := match Hp with
   | leI_refl _ => FullRestrFrames
   | @leI_down _ p Hp => (aux p.+1 Hp).1
@@ -285,7 +285,8 @@ Variable FullCohFrames: mkFullCohFrameTypes.
 
 (** All RestrFrame(n+2,p) from p=0 to p=n.+1 *)
 Definition mkFullRestrFrames :=
-  (mkCohFrameTypesAndRestrFrames n.+1 (Hp := leI_refl _)).(RestrFramesDef) FullCohFrames.
+  (mkCohFrameTypesAndRestrFrames n.+1 (Hp := leI_refl _)).(RestrFramesDef)
+    FullCohFrames.
 
 (** Prefix of all CohFrame(n+2,i) from i=0 to i=p-1 *)
 Definition mkCohFramesFromFull: forall p {Hp: p.+1 <~ n.+2},
@@ -344,14 +345,12 @@ Proof.
     (Hp := leI_down Hp)).(FrameDef)) x.1) (eqRestrFramesDef (Hp := Hp))).
 Defined.
 
-(** This is RestrFrame(n+2,p) from full CohFrames,
-    going down via CohFrames *)
+(** RestrFrame(n+2,p) from full CohFrames,  going down via CohFrames *)
 Definition RestrFrame p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
   ε (d: Frame p): Frame' p (Hp := leI_lower_both Hp) :=
   (RestrFrames p (Hp := Hp)).2 q Hpq Hq ε d.
 
-(** This is RestrFrame(n+2,p) from full CohFrames,
-    going down via RestrFrames *)
+(** RestrFrame(n+2,p) from full CohFrames, going down via RestrFrames *)
 Definition RestrFrame2 p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
   ε (d: Frame p): Frame' p (Hp := leI_lower_both Hp) :=
   (RestrFrames2 p (Hp := Hp)).2 q Hpq Hq ε (rew eqFrameDef in d).
