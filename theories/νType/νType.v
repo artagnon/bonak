@@ -458,33 +458,38 @@ Class νTypeAux n := {
   frame'' p {Hp: p <~ n}: HSet;
   painting'' p {Hp: p <~ n}: frame'' p -> HSet;
   restrFrames': mkFullRestrFrameTypes n frame'' painting'';
-  frame' p {Hp: p <~ n.+1} :=
+  frame' p {Hp: p <~ n.+1}: HSet :=
     Frame' n frame'' painting'' restrFrames' p (Hp := Hp);
-  restrFrame' p {Hp: p.+1 <~ n.+1} q {Hpq Hq} ε (d: frame' p) :=
+  restrFrame' p {Hp: p.+1 <~ n.+1} q {Hpq Hq} ε (d: frame' p): frame'' p :=
     RestrFrame' n frame'' painting'' restrFrames' p
     (Hp := Hp) q (Hpq := Hpq) (Hq := Hq) ε d;
-  painting' p {Hp: p <~ n.+1} E' :=
+  painting' {E'} p {Hp: p <~ n.+1}: frame' p -> HSet :=
     Painting' n frame'' painting'' restrFrames' E' p (Hp := Hp);
   restrPainting' {E'} p q {Hp: p.+1 <~ n.+1} {Hpq: p <~ q} {Hq: q <~ n} ε
     {d: frame' p}:
-    painting' (Hp := leI_down Hp) p E' d ->
+    painting' (Hp := leI_down Hp) p d ->
     painting'' p (restrFrame' p q ε (Hpq := Hpq) (Hq := Hq) d);
   cohFrames {E'}:
     mkFullCohFrameTypes n frame'' painting'' restrFrames' E' restrPainting';
-  restrFrames {E'} :=
+  restrFrames {E'}: mkFullRestrFrameTypes n.+1 frame' painting' :=
     mkFullRestrFrames n frame'' painting'' restrFrames' E' restrPainting'
     cohFrames;
-  frame p {Hp: p <~ n.+2} {E'} :=
+  frame {E'} p {Hp: p <~ n.+2}: HSet :=
     Frame n frame'' painting'' restrFrames' E' restrPainting'
     cohFrames p (Hp := Hp);
-  cohFrame {p} {Hp: p.+2 <~ n.+2} r q {Hpr Hrq Hr Hq} {E'} :=
+  restrFrame {E'} p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
+    ε (d: frame p): frame' p :=
+    RestrFrame n frame'' painting'' restrFrames' E' restrPainting'
+    cohFrames p q ε d (Hp := Hp) (Hpq := Hpq) (Hq := Hq);
+  cohFrame {E'} {p} {Hp: p.+2 <~ n.+2} r q {Hpr Hrq Hr Hq} :=
     mkCohFrameFromFull n frame'' painting'' restrFrames' E' restrPainting'
     cohFrames p (Hp := Hp) (Hpr := Hpr) (Hrq := Hrq)
     (Hr := Hr) (Hq := Hq) r q;
-  painting {p} {Hp: p <~ n.+2} {E'} E (d: frame p) :=
+  painting {E'} {p} {Hp: p <~ n.+2} E (d: frame p): HSet :=
     Painting n frame'' painting'' restrFrames' E'
     restrPainting' cohFrames p d (Hp := Hp) (E := E);
-  restrPainting p q {Hpq: p <~ q} {Hq: q.+1 <~ n.+2} ε {E' E} {d: frame p} :=
+  restrPainting {E'} p q {Hpq: p <~ q} {Hq: q.+1 <~ n.+2} ε {E} {d: frame p}:
+    painting E d -> painting' p (restrFrame p q ε d) :=
     RestrPainting n frame'' painting'' restrFrames' E' restrPainting'
     cohFrames p q Hpq Hq ε (E := E) d;
   (* cohPainting p r q {Hpq: p.+1 <~ q.+1} {Hpr: p.+1 <~ r.+1}
