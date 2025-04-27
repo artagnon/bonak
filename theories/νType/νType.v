@@ -139,10 +139,13 @@ Instance mkRestrFrameTypesAndFrames:
     |}
   end.
 
+Definition mkRestrFrameTypes p {Hp: p <~ n.+1} :=
+  mkRestrFrameTypesAndFrames p (Hp := Hp).(RestrFrameTypesDef).
+
 (* Additionally assume that we have restrFrames available up to level n so as
  * to build Frame and Painting at level n.+1 for any p <= n. *)
 Definition mkFullRestrFrameTypes :=
-  (mkRestrFrameTypesAndFrames n.+1 (Hp := leI_refl _)).(RestrFrameTypesDef).
+  mkRestrFrameTypes n.+1 (Hp := leI_refl _).
 Variable RestrFrames: mkFullRestrFrameTypes.
 
 Definition mkRestrFramesFromFull: forall p {Hp: p <~ n.+1},
@@ -152,11 +155,14 @@ Definition mkRestrFramesFromFull: forall p {Hp: p <~ n.+1},
   | @leI_down _ p Hp => (aux p.+1 Hp).1
   end.
 
-(* Frame via full RestrFrames *)
-Definition mkFrame := fun p {Hp: p <~ n.+1} =>
-  (mkRestrFrameTypesAndFrames p).(FrameDef)
-    (mkRestrFramesFromFull p (Hp := Hp)).
+Definition mkFrameOfRestrFrames p {Hp: p <~ n.+1}: mkRestrFrameTypes p (Hp := Hp) -> HSet :=
+  (mkRestrFrameTypesAndFrames p (Hp := Hp)).(FrameDef).
 
+(* Frame from full RestrFrames *)
+Definition mkFrame := fun p {Hp: p <~ n.+1} =>
+  mkFrameOfRestrFrames p (mkRestrFramesFromFull p (Hp := Hp)).
+
+(* RestrFrame from full RestrFrames *)
 Definition mkRestrFrame p {Hp: p.+1 <~ n.+1} :=
   (mkRestrFramesFromFull p.+1 (Hp := Hp)).2:
   forall q {Hpq: p <~ q} {Hq: q <~ n},
@@ -194,12 +200,11 @@ Let Painting' p {Hp: p <~ n.+1} :=
 
 (** This is restrFrameType(n+2,0)..restrFrameType(n+2,p) for p <= n+1 *)
 Definition RestrFrameTypes p {Hp: p <~ n.+2} :=
-  (mkRestrFrameTypesAndFrames n.+1 Frame' Painting' p
-    (Hp := Hp)).(RestrFrameTypesDef).
+  mkRestrFrameTypes n.+1 Frame' Painting' p (Hp := Hp).
 
 Definition FrameOfRestrFrames p {Hp: p <~ n.+2}:
   RestrFrameTypes p -> HSet :=
-  (mkRestrFrameTypesAndFrames n.+1 Frame' Painting' p (Hp := Hp)).(FrameDef).
+  mkFrameOfRestrFrames n.+1 Frame' Painting' p (Hp := Hp).
 
 Class CohFrameTypeBlock p {Hp: p.+1 <~ n.+2} := {
   CohFrameTypesDef: Type;
