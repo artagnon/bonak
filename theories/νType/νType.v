@@ -136,17 +136,14 @@ Definition mkRestrFramesFromFull: forall p {Hp: p <~ n.+1},
   | @leI_down _ p Hp => (aux p.+1 Hp).1
   end.
 
+(* Frame via full RestrFrames *)
 Definition mkFrame := fun p {Hp: p <~ n.+1} =>
   (mkRestrFrameTypesAndFrames p).(FrameDef)
     (mkRestrFramesFromFull p (Hp := Hp)).
 
-Definition mkRestrFrameFromFull p {Hp: p.+1 <~ n.+1} :=
+Definition mkRestrFrame p {Hp: p.+1 <~ n.+1} :=
   (mkRestrFramesFromFull p.+1 (Hp := Hp)).2:
-  forall q (Hpq: p <~ q) (Hq: q <~ n), arity -> mkFrame p -> FramePrev p.
-
-Definition mkRestrFrame p {Hp: p.+1 <~ n.+1} q {Hpq: p <~ q}
-  {Hq: q <~ n} ε (d: mkFrame p): FramePrev p (Hp := leI_lower_both Hp) :=
-  mkRestrFrameFromFull p q Hpq Hq ε d.
+  forall q {Hpq: p <~ q} {Hq: q <~ n}, arity -> mkFrame p -> FramePrev p (Hp := leI_lower_both Hp).
 
 Definition mkPainting p {Hp: p <~ n.+1}
   {E: mkFrame n.+1 -> HSet} := (fix aux p Hp :=
