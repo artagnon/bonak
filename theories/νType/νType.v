@@ -177,7 +177,7 @@ Let Painting' p {Hp: p <~ n.+1} :=
 Definition RestrFrameTypes p {Hp: p <~ n.+2} :=
   (mkRestrFrameTypesAndFrames n.+1 Frame' Painting' p (Hp := Hp)).(RestrFrameTypesDef).
 
-Definition FrameOf p {Hp: p <~ n.+2} :=
+Definition FrameOfRestrFrames p {Hp: p <~ n.+2} :=
   (mkRestrFrameTypesAndFrames n.+1 Frame' Painting' p (Hp := Hp)).(FrameDef).
 
 Class CohFrameTypeBlock p {Hp: p.+1 <~ n.+2} := {
@@ -213,7 +213,8 @@ Instance mkCohFrameTypesAndRestrFrames:
     |}
     | S p => fun (Hp: p.+2 <~ n.+2) =>
     {|
-      CohFrameTypesDef := { Q: (mkCohFrameTypesAndRestrFrames p _).(CohFrameTypesDef) &T
+      CohFrameTypesDef := { Q:
+        (mkCohFrameTypesAndRestrFrames p _).(CohFrameTypesDef) &T
         (* statement of cohFrameType(n+2,p) *)
         forall r q (Hpr: p.+1 <~ r.+1) (Hrq: r.+1 <~ q.+1) (Hr: r.+1 <~ n.+1)
           (Hq: q.+1 <~ n.+1) (ε ω: arity) d,
@@ -232,14 +233,14 @@ Instance mkCohFrameTypesAndRestrFrames:
       | O => fun (Hpq: p.+1 <~ 0) _ _ _ =>
         False_rect _ (leI_O_contra Hpq)
       | S q => fun (Hpq: p.+1 <~ q.+1) (Hq: q.+1 <~ n.+1) ε
-        (d: FrameOf p.+1 _) =>
-        (((mkCohFrameTypesAndRestrFrames p _).(RestrFramesDef) Q.1).2 q.+1 _ _ ε d.1
-          as rf in _;
+        (d: FrameOfRestrFrames p.+1 _) =>
+        (((mkCohFrameTypesAndRestrFrames p _).(RestrFramesDef) Q.1).2
+          q.+1 _ _ ε d.1 as rf in _;
         fun ω => rew [Painting'' p] Q.2 p q (leI_refl _) Hpq
           (leI_lower_both Hp) Hq ε ω d.1 in RestrPainting' p q ε _ (d.2 ω)
           in forall ω, Painting'' p (RestrFrame' _ _ _ rf))
-      end in ((mkCohFrameTypesAndRestrFrames p _).(RestrFramesDef) Q.1; restrFrame):
-        RestrFrameTypes p.+2
+      end in ((mkCohFrameTypesAndRestrFrames p _).(RestrFramesDef) Q.1;
+        restrFrame): RestrFrameTypes p.+2
     |}
   end.
 
@@ -290,7 +291,7 @@ Proof.
 Defined.
 
 Definition Frame2 p {Hp: p <~ n.+2} :=
-  FrameOf p
+  FrameOfRestrFrames p
     (match Hp in p <~ _
       return (mkRestrFrameTypesAndFrames n.+1 Frame' Painting' p).(RestrFrameTypesDef) with
     | leI_refl _ => ((mkCohFrameTypesAndRestrFrames n.+1 (Hp := leI_refl _)).(RestrFramesDef)
