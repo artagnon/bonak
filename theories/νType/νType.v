@@ -392,12 +392,8 @@ Definition CohFrame {p} {Hp: p.+2 <~ n.+2} r q {Hpr: p.+1 <~ r.+1}
     (RestrFrame p q.+1 (Hpq := leI_down (leI_trans Hpr Hrq)) (Hq := Hq) ε d).
 Proof.
   repeat rewrite eqRestrFrameDef.
-  now exact ((mkCohFramesFromFull p.+1).2 r q Hpr Hrq Hr Hq ε ω
-    (rew eqFrameDef in d)).
+  now exact (CohFrame2 r q (rew eqFrameDef in d)).
 Defined.
-
-Definition Painting p {Hp: p <~ n.+2} {E: Frame n.+2 -> HSet} :=
-  mkPainting n.+1 Frame' Painting' mkFullRestrFrames p (Hp := Hp) (E := E).
 
 Let coerceFrameSpType {p} {Hp: p.+1 <~ n.+2} := {d: Frame2 p &T
   forall ε, Painting' p (RestrFrame2 p p (Hp := Hp)
@@ -427,6 +423,9 @@ Definition Painting2 p {Hp: p <~ n.+2} {E: Frame2 n.+2 -> HSet} :=
       (aux p.+1 Hp) (coerceFrameSp (d; l))}
 end) p Hp.
 
+Definition Painting p {Hp: p <~ n.+2} {E: Frame n.+2 -> HSet} :=
+  mkPainting n.+1 Frame' Painting' mkFullRestrFrames p (Hp := Hp) (E := E).
+
 Lemma pi1_eq {A A': HSet} (p: A = A') (u: A -> HSet): A' -> HSet.
 Proof.
   now easy.
@@ -438,15 +437,21 @@ Definition coercePaintingType {p} {Hp: p.+1 <~ n.+2}
   Painting2 p (Hp := leI_down Hp) (E := pi1_eq eqFrameDef E)
     (rew eqFrameDef in d).
 Proof.
+  unfold Painting, Painting2; induction Hp using leI_rectD.
+  - intros c. simpl in c. unshelve eapply existT.
+    * intros ε. rewrite <- eqRestrFrameDef. admit.
+    * simpl. admit.
+  - intros c. unshelve eapply existT.
+    * intros ε. rewrite <- eqRestrFrameDef. admit.
+    * admit.
 Admitted.
 
-Lemma RestrPainting p {Hp: p.+1 <~ n.+2} {E: Frame n.+2 -> HSet}:
-    forall q (Hpq: p <~ q) (Hq: q <~ n.+1) ε (d: Frame p),
-  Painting p (Hp := leI_down Hp) (E := E) d ->
-  Painting' p (RestrFrame p q (Hpq := Hpq) (Hq := Hq) ε d).
+Lemma RestrPainting2 p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1} ε
+  (d: Frame2 p) {E: Frame2 n.+2 -> HSet}:
+  Painting2 p (Hp := leI_down Hp) (E := E) d ->
+  Painting' p (RestrFrame2 p q (Hpq := Hpq) (Hq := Hq) ε d).
 Proof.
-  intros q Hpq Hq ε d Q; apply coercePaintingType in Q; rewrite eqRestrFrameDef.
-  revert Hp Hq d Q.
+  revert Hp Hq d.
   induction Hpq using leI_invert.
   - clear p q; rename n0 into p; intros Hp Hq.
     replace Hq with (leI_lower_both Hp) by apply leI_irrelevance.
@@ -458,11 +463,21 @@ Proof.
     intros d c.
     unshelve eapply existT. intros ω.
     now exact (rew [Painting'' p]
-      CohFrame2 p q (Hpr := leI_refl _) (rew eqFrameDef in d) in
-      RestrPainting' p q ε (RestrFrame2 p p ω (rew eqFrameDef in d)) (c.1 ω)).
+      CohFrame2 p q (Hpr := leI_refl _) d in
+      RestrPainting' p q ε (RestrFrame2 p p ω d) (c.1 ω)).
     set (l := c.2).
-    (* now apply (IHHpq (leI_raise_both (leI_trans Hpq Hq)) Hq _) in l. *)
-Admitted.
+    now apply (IHHpq (leI_raise_both (leI_trans Hpq Hq)) Hq _) in l.
+Defined.
+
+Lemma RestrPainting p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1} ε
+  (d: Frame p) {E: Frame n.+2 -> HSet}:
+  Painting p (Hp := leI_down Hp) (E := E) d ->
+  Painting' p (RestrFrame p q (Hpq := Hpq) (Hq := Hq) ε d).
+Proof.
+  intros Q; apply coercePaintingType in Q; rewrite eqRestrFrameDef; revert Q.
+  now exact (RestrPainting2 p q ε (rew eqFrameDef in d)
+    (E := pi1_eq eqFrameDef E)).
+Defined.
 
 End CohFramesDef.
 
@@ -536,7 +551,7 @@ Class νTypeAux n := {
     ε {E} {d: frame p}:
     painting E d -> painting' p (restrFrame p q ε d) :=
     RestrPainting n frame'' painting'' restrFrames' E' restrPainting'
-    cohFrames p q Hpq Hq ε (Hp := Hp) (E := E) d;
+    cohFrames p q ε (Hp := Hp) (Hpq := Hpq) (Hq := Hq) (E := E) d;
   (* cohPainting p {Hp: p.+1 <~ n.+1} r q {Hpq: p.+1 <~ q.+1} {Hpr: p.+2 <~ r.+2}
     {Hrq: r <~ q} {Hr: r.+2 <~ n.+2} {Hq: q.+1 <~ n.+1} ε ω {E'} E
     {d: frame p} (c: painting E (E' := E')
@@ -622,8 +637,6 @@ Definition mkCohFrames {E'}:
   mkRestrPainting'.
 Admitted.
 End νTypeData.
-
-Set Printing Implicit.
 
 #[local]
 Instance mkνType {n} {C: νType n}: νType n.+1.
