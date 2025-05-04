@@ -510,7 +510,7 @@ Class νTypeAux n := {
     Painting' n frame'' painting'' restrFrames' E' p (Hp := Hp);
   restrPainting' {E'} p {Hp: p.+1 <~ n.+1} q {Hpq: p <~ q} {Hq: q <~ n} ε
     {d: frame' p}:
-    painting' (Hp := leI_down Hp) p d ->
+    painting' (Hp := leI_down Hp) (E' := E') p d ->
     painting'' p (restrFrame' p q ε (Hpq := Hpq) (Hq := Hq) d);
   cohFrames {E'}:
     mkFullCohFrameTypes n frame'' painting'' restrFrames' E' restrPainting';
@@ -530,12 +530,12 @@ Class νTypeAux n := {
     restrFrame' p (Hp := leI_lower_both Hp) q
       (Hpq := leI_lower_both Hpq)
       (Hq := leI_lower_both Hq) ε (restrFrame p (Hp := leI_down Hp) r
-        (Hpq := leI_lower_both Hpr) (Hq := leI_down Hr) ω d) =
+        (Hpq := leI_lower_both Hpr) (Hq := leI_down Hr) ω (E' := E') d) =
     restrFrame' p r (Hpq := leI_lower_both Hpr) (Hq := leI_lower_both Hr) ω
       (restrFrame p q.+1 (Hpq := leI_down Hpq) (Hq := Hq) ε d);
   cohFrame {E'} {p} {Hp: p.+2 <~ n.+2} r q {Hpq: p.+1 <~ q.+1}
     {Hpr Hrq Hr Hq} {ε ω} d:
-    cohFrameType :=
+    cohFrameType (Hpq := Hpq) (Hrq := Hrq) :=
     CohFrame n frame'' painting'' restrFrames' E' restrPainting'
     cohFrames (Hp := Hp) (Hpr := Hpr) (Hrq := Hrq)
     (Hr := Hr) (Hq := Hq) (ε := ε) (ω := ω) r q d;
@@ -551,19 +551,27 @@ Class νTypeAux n := {
     {Hrq: r <~ q} {Hr: r.+2 <~ n.+2} {Hq: q.+1 <~ n.+1} ε ω {E'} E
     {d: frame p} (c: painting E (E' := E')
       (Hp := leI_down (leI_down (leI_trans Hpr Hr))) d):
-    rew [painting'' p] cohFrame r (Hp := leI_trans Hpr Hr) q (Hpq := Hpq) (Hpr := leI_lower_both Hpr) (Hrq := leI_raise_both Hrq) (Hr := leI_lower_both Hr) (Hq := Hq) d in
+    rew [painting'' p] cohFrame r (Hp := leI_trans Hpr Hr) q (Hpq := Hpq) (Hpr := leI_lower_both Hpr) (Hrq := leI_raise_both Hrq) (Hr := leI_lower_both Hr) (Hq := Hq) (E' := E') d in
     restrPainting' p q ε
       (Hp := leI_lower_both (leI_trans Hpr Hr))
       (Hpq := leI_lower_both Hpq)
       (Hq := leI_lower_both Hq)
+      (E' := E')
       (restrPainting p r ω
       (Hp := leI_down (leI_trans Hpr Hr))
       (Hpq := leI_lower_both (leI_lower_both Hpr))
       (Hq := leI_down (leI_lower_both Hr))
+      (E' := E') (E := E)
       c) =
-    restrPainting' p r ω (Hp := (leI_trans Hpq Hq))
+    restrPainting' p r ω (Hp := leI_lower_both (leI_trans Hpr Hr))
       (Hpq := leI_lower_both (leI_lower_both Hpr)) (Hq := leI_lower_both (leI_lower_both Hr))
-      (restrPainting (Hq := Hq) p q.+1 ε c);
+      (E' := E')
+      (restrPainting p q.+1 ε
+      (Hp := leI_down (leI_trans Hpr Hr))
+      (Hpq := leI_down Hpq)
+      (Hq := Hq)
+      (E' := E') (E := E)
+      c);
 }.
 
 (* We want ε and ω to be printed, but have them inferred;
