@@ -4,15 +4,9 @@
 
 Import Logic.EqNotations.
 Require Import Logic.FunctionalExtensionality.
-From Bonak Require Import Notation.
-From Bonak Require Import RewLemmas.
 
-(* Note: this import overrides { & } notation and introduces hforall *)
 Set Warnings "-notation-overridden".
-From Bonak Require Import HSet.
-
-From Bonak Require Import LeYoneda.
-From Bonak Require Import LeInductive.
+From Bonak Require Import SigT Notation RewLemmas HSet LeInductive.
 
 Set Primitive Projections.
 Set Printing Projections.
@@ -556,21 +550,17 @@ Class νTypeAux n := {
       (Hp := leI_lower_both (leI_trans Hpr Hr))
       (Hpq := leI_lower_both Hpq)
       (Hq := leI_lower_both Hq)
-      (E' := E')
       (restrPainting p r ω
       (Hp := leI_down (leI_trans Hpr Hr))
       (Hpq := leI_lower_both (leI_lower_both Hpr))
       (Hq := leI_down (leI_lower_both Hr))
-      (E' := E') (E := E)
       c) =
     restrPainting' p r ω (Hp := leI_lower_both (leI_trans Hpr Hr))
       (Hpq := leI_lower_both (leI_lower_both Hpr)) (Hq := leI_lower_both (leI_lower_both Hr))
-      (E' := E')
       (restrPainting p q.+1 ε
       (Hp := leI_down (leI_trans Hpr Hr))
       (Hpq := leI_down Hpq)
       (Hq := Hq)
-      (E' := E') (E := E)
       c);
 }.
 
@@ -582,7 +572,7 @@ Arguments painting'' {n} _ p {Hp} d.
 Arguments painting' {n} _ {E'} p {Hp}.
 Arguments restrPainting' {n} _ {E'} p {Hp} q {Hpq Hq} ε [d] c.
 Arguments frame {n} _ {E'} p {Hp}.
-Arguments cohFrame {n} _ {E'} {p Hp} r q {Hpr Hrq Hr Hq ε ω}.
+Arguments cohFrame {n} _ {E'} {p Hp} r q {Hpq Hpr Hrq Hr Hq ε ω}.
 Arguments painting {n} _ {E'} {p Hp} E d.
 Arguments restrPainting {n} _ {E'} p {Hp} q {Hpq Hq} ε {E} [d] c.
 (* Arguments cohPainting {n} _ p r q {Hpr Hrq Hq} ε ω E [d] c. *)
@@ -638,6 +628,8 @@ Definition mkRestrPainting' {E'} p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q}
 Definition mkCohFrames {E'}:
  mkFullCohFrameTypes n.+1 mkFrame'' mkPainting'' mkRestrFrames' E'
   mkRestrPainting'.
+Proof.
+  unshelve eapply existT.
 Admitted.
 End νTypeData.
 
@@ -652,7 +644,8 @@ Proof.
   now eapply mkRestrFrames'.
   now eapply mkRestrPainting'.
   now eapply mkCohFrames.
-Qed.
+  admit.
+Admitted.
 
 Definition mkCohLayer {n} {C: νType n} {p r q} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {ε ω}

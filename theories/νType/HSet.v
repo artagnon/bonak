@@ -2,12 +2,13 @@
 
 Require Import Logic.FunctionalExtensionality.
 Require Import Logic.Eqdep_dec. (* UIP_refl_unit *)
-From Bonak Require Import Notation.
+
+Set Warnings "-notation-overridden".
+From Bonak Require Import SigT Notation.
 
 Set Primitive Projections.
+Set Printing Projections.
 Set Universe Polymorphism.
-
-Set Primitive Projections.
 
 Record HSet := {
   Dom:> Type;
@@ -41,11 +42,11 @@ Definition hbool@{m}: HSet@{m} := {|
 Lemma sigT_eq {A: Type} {B} {x y: {a: A & B a}}:
   (x.1; x.2) = (y.1; y.2) -> x = y.
 Proof.
-  now repeat rewrite <- sigT_eta.
+  intro H. exact H.
 Qed.
 
 Lemma sigT_decompose_eq {A: Type} {B} {x y: {a: A & B a}} {p: x = y}:
-  p = (sigT_eta x) • (= projT1_eq p; projT2_eq p) • (eq_sym (sigT_eta y)).
+  p = (= projT1_eq p; projT2_eq p).
 Proof.
   now destruct p, x.
 Qed.
