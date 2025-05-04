@@ -1,3 +1,5 @@
+From Coq Require Import Eqdep_dec.
+From Coq Require Import PeanoNat.
 From Bonak Require Import Notation.
 
 Set Warnings "-notation-overridden".
@@ -146,3 +148,28 @@ Lemma leI_raise_lower_cancel {n p} {Hp: p.+1 <~ n.+1}:
   change (leI_raise_both (leI_down ?x)) with (leI_down (leI_raise_both x)).
   now f_equal.
 Defined.
+
+Lemma le_succ_diag_l: forall n, n.+1 <~ n -> False.
+Admitted.
+
+Definition UIP_nat :=  Eqdep_dec.UIP_dec Nat.eq_dec.
+
+Lemma leI_irrelevance {m n}: forall {H H' : m <~ n}, H = H'.
+Proof.
+generalize (eq_refl (S n)).
+generalize n at -1.
+induction (S n) as [|n0 IHn0]; try discriminate.
+clear n; intros n [= <-] H H'.
+pose (def_n2 := eq_refl n0).
+transitivity (eq_rect _ (fun n => m <~ n) H' _ def_n2).
+  2: reflexivity.
+generalize def_n2; revert H H'.
+generalize n0 at 1 4 5 7; intros n1 H.
+destruct H as [|? H]; intros H'; destruct H' as [|? H'].
++ now intros def_n0; rewrite (UIP_nat _ _ def_n0 eq_refl).
++ intros def_n0; generalize H'; rewrite <- def_n0; intros le_mn0.
+  now destruct (le_succ_diag_l _ le_mn0).
++ intros def_n0; generalize H; rewrite def_n0; intros le_mn0.
+  now destruct (le_succ_diag_l _ le_mn0).
++ intros def_n0.
+Admitted.
