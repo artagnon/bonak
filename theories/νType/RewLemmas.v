@@ -5,7 +5,7 @@ Import Logic.EqNotations.
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT Notation.
 
-Lemma rew_rew {A} {x y: A} (H : x = y) P {a: P x} :
+Lemma rew_rew {A} {x y: A} (H: x = y) P {a: P x} :
 rew <- [P] H in rew [P] H in a = a.
   now destruct H.
 Qed.
@@ -69,43 +69,43 @@ Proof.
   now destruct H'.
 Qed.
 
-Lemma rew_swap : forall A (P: A -> Type) a b (H: a = b) (x: P a) (y: P b),
+Lemma rew_swap: forall A (P: A -> Type) a b (H: a = b) (x: P a) (y: P b),
   x = rew <- H in y <-> rew H in x = y.
 Proof.
   now destruct H.
 Qed.
 
-Lemma rew_swap_rl : forall A (P: A -> Type) a b (H: a = b) (x: P a) (y: P b),
+Lemma rew_swap_rl: forall A (P: A -> Type) a b (H: a = b) (x: P a) (y: P b),
   x = rew <- H in y -> rew H in x = y.
 Proof.
   now destruct H.
 Qed.
 
-Lemma rew_swap_lr : forall A (P: A -> Type) a b (H: a = b) (x: P b) (y: P a),
+Lemma rew_swap_lr: forall A (P: A -> Type) a b (H: a = b) (x: P b) (y: P a),
   x = rew H in y -> rew <- H in x = y.
 Proof.
   now destruct H.
 Qed.
 
-Lemma rew_app_rl A (P : A -> Type) (x y: A) (H H': x = y) (a: P x) :
+Lemma rew_app_rl A (P: A -> Type) (x y: A) (H H': x = y) (a: P x) :
   H = H' -> rew <- [P] H in rew [P] H' in a = a.
 Proof.
   intros * ->. now destruct H'.
 Qed.
 
-Lemma rew_app_rl_opp A (P : A -> Type) (x y: A) (H H': x = y) (a: P x) :
+Lemma rew_app_rl_opp A (P: A -> Type) (x y: A) (H H': x = y) (a: P x) :
   H = H' -> a = rew <- [P] H in rew [P] H' in a.
 Proof.
   intros * ->. now destruct H'.
 Qed.
 
-Lemma rew_app_lr A (P : A -> Type) (x y: A) (H H': y = x) (a: P x) :
+Lemma rew_app_lr A (P: A -> Type) (x y: A) (H H': y = x) (a: P x) :
   H = H' -> rew [P] H in rew <- [P] H' in a = a.
 Proof.
   intros * ->. now destruct H'.
 Qed.
 
-Lemma rew_app_lr_opp A (P: A -> Type) (x y : A) (H H': y = x) (a: P x) :
+Lemma rew_app_lr_opp A (P: A -> Type) (x y: A) (H H': y = x) (a: P x) :
   H = H' -> a = rew [P] H in rew <- [P] H' in a.
 Proof.
   intros * ->. now destruct H'.
@@ -115,19 +115,19 @@ Theorem rew_map' A B (P: B -> Type) (f: A -> B) x1 x2 (H: x1 = x2)
   (y: P (f x2)): rew <- [fun x => P (f x)] H in y = rew <- f_equal f H in y.
 Proof.
   now destruct H.
-Defined.
+Qed.
 
 Lemma rew_compose_rl A (P: A -> Type) x1 x2 x3 (H1: x1 = x2) (H2: x3 = x2)
   (y: P x1): rew <- H2 in rew H1 in y = rew (eq_trans H1 (eq_sym H2)) in y.
 Proof.
  now destruct H2.
-Defined.
+Qed.
 
 Lemma rew_compose_lr A (P: A -> Type) x1 x2 x3 (H1: x2 = x1) (H2: x2 = x3)
-  (y: P x1) : rew H2 in rew <- H1 in y = rew (eq_trans (eq_sym H1) H2) in y.
+  (y: P x1): rew H2 in rew <- H1 in y = rew (eq_trans (eq_sym H1) H2) in y.
 Proof.
   now destruct H2.
-Defined.
+Qed.
 
 Lemma eq_ind_r_refl {A} {x y: A} {H: x = y} :
   eq_ind_r (fun x => x = y) eq_refl H = H.
@@ -140,9 +140,10 @@ Lemma map_subst_app {A B} {x y} {𝛉: A} (H: x = y :> B) (P: A -> B -> Type)
   rew [P 𝛉] H in f 𝛉 = (rew [fun x => forall 𝛉, P 𝛉 x] H in f) 𝛉.
 Proof.
   now destruct H.
-Defined.
+Qed.
 
-Lemma rew_eq_refl : forall A B (x y: A) (f : A -> B) (H: x = y),
+Lemma rew_eq_refl: forall A B (x y: A) (f: A -> B) (H: x = y),
 rew <- [fun x => f x = f y] H in eq_refl (f y) = f_equal f H.
-now destruct H.
-Defined.
+Proof.
+  now destruct H.
+Qed.

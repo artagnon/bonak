@@ -42,7 +42,7 @@ Definition hbool@{m}: HSet@{m} := {|
 Lemma sigT_eq {A: Type} {B} {x y: {a: A & B a}}:
   (x.1; x.2) = (y.1; y.2) -> x = y.
 Proof.
-  intro H. exact H.
+  now intro H.
 Qed.
 
 Lemma sigT_decompose_eq {A: Type} {B} {x y: {a: A & B a}} {p: x = y}:
@@ -76,35 +76,36 @@ Notation "{ x & P }" := (hsigT (fun x => P)): type_scope.
 Notation "{ x : A & P }" := (hsigT (A := A) (fun x => P)): type_scope.
 
 Notation "{ x &T P }" := (sigT (fun x => P)) (x at level 99): type_scope.
-Notation "{ x : A &T P }" := (sigT (A := A) (fun x => P)) (x at level 99): type_scope.
+Notation "{ x : A &T P }" := (sigT (A := A) (fun x => P))
+  (x at level 99): type_scope.
 
 (** [forall] defined over an [HSet] codomain *)
 
 Lemma hpiT_decompose {A: Type} (B: A -> HSet)
   (f g: forall a: A, B a) (p: f = g):
-  functional_extensionality_dep_good _ _ (fun x => f_equal (fun H => H x) p) = p.
+  functional_extensionality_dep_good _ _
+    (fun x => f_equal (fun H => H x) p) = p.
 Proof.
-  destruct p; simpl; now apply functional_extensionality_dep_good_refl.
+  destruct p; now apply functional_extensionality_dep_good_refl.
 Qed.
 
-Definition hpiT_UIP {A: Type} (B: A -> HSet)
-  (f g: forall a: A, B a) (p q: f = g): p = q.
+Definition hpiT_UIP {A: Type} (B: A -> HSet) (f g: forall a: A, B a)
+  (p q: f = g): p = q.
 Proof.
-  rewrite <- hpiT_decompose with (p := p).
-  rewrite <- hpiT_decompose with (p := q).
+  rewrite <- hpiT_decompose with (p := p),
+          <- hpiT_decompose with (p := q).
   f_equal.
-  apply functional_extensionality_dep_good; intros a.
-  apply (B a).
+  apply functional_extensionality_dep_good; intros a. now apply (B a).
 Qed.
 
 Definition hpiT {A: Type} (B: A -> HSet): HSet.
 Proof.
-  exists (forall a: A, B a). intros x y h g. now apply hpiT_UIP.
+  exists (forall a: A, B a). intros x y h g; now apply hpiT_UIP.
 Defined.
 
 Definition pi_domain_eq {A A': HSet} (p: A = A') (u: A -> HSet): A' -> HSet :=
-  fun (HA: A') => u (rew <- [@id HSet] p in HA).
+  fun (a': A') => u (rew <- [@id HSet] p in a').
 
 Notation "'hforall' x .. y , P" := (hpiT (fun x => .. (hpiT (fun y => P)) ..))
   (at level 10, x binder, y binder, P at level 200,
-  format "'[  ' '[  ' 'hforall'  x  ..  y ']' ,  '/' P ']'") : type_scope.
+  format "'[  ' '[  ' 'hforall'  x  ..  y ']' ,  '/' P ']'"): type_scope.
