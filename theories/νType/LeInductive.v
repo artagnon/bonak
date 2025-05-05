@@ -114,9 +114,9 @@ Section leI_rectS_principle.
   Variable p: nat.
   Hypothesis P: forall p n, p.+1 <~ n.+1 -> Type.
   Hypothesis Q: forall n, P n n (leI_refl n.+1).
-  Hypothesis R: forall p n (Hp : p.+2 <~ n.+1),
+  Hypothesis R: forall p n (Hp: p.+2 <~ n.+1),
     P p.+1 n Hp -> P p n (leI_down Hp).
-  Lemma leI_rectS (Hp : p.+1 <~ n.+1): P p n Hp.
+  Lemma leI_rectS (Hp: p.+1 <~ n.+1): P p n Hp.
   Proof.
     change (match p.+1 as p', n.+1 as n' return p' <~ n' -> Type with
     | 0, _ => fun _ => True
@@ -131,8 +131,8 @@ Section leI_rectD_principle.
   Variable p: nat.
   Hypothesis P: forall p, p.+1 <~ n.+2 -> Type.
   Hypothesis Q: P n.+1 (leI_refl n.+2).
-  Hypothesis R: forall p (Hp : p.+2 <~ n.+2), P p.+1 Hp -> P p (leI_down Hp).
-  Lemma leI_rectD (Hp : p.+1 <~ n.+2): P p Hp.
+  Hypothesis R: forall p (Hp: p.+2 <~ n.+2), P p.+1 Hp -> P p (leI_down Hp).
+  Lemma leI_rectD (Hp: p.+1 <~ n.+2): P p Hp.
   Proof.
     change (match p.+1 as p' return p' <~ n.+2 -> Type with
     | O => fun _ => True
@@ -154,22 +154,22 @@ Admitted.
 
 Definition UIP_nat :=  Eqdep_dec.UIP_dec Nat.eq_dec.
 
-Lemma leI_irrelevance {m n}: forall {H H' : m <~ n}, H = H'.
+Lemma leI_irrelevance {m n}: forall {H H': m <~ n}, H = H'.
 Proof.
-generalize (eq_refl (S n)).
-generalize n at -1.
-induction (S n) as [|n0 IHn0]; try discriminate.
-clear n; intros n [= <-] H H'.
-pose (def_n2 := eq_refl n0).
-transitivity (eq_rect _ (fun n => m <~ n) H' _ def_n2).
-  2: reflexivity.
-generalize def_n2; revert H H'.
-generalize n0 at 1 4 5 7; intros n1 H.
-destruct H as [|? H]; intros H'; destruct H' as [|? H'].
-+ now intros def_n0; rewrite (UIP_nat _ _ def_n0 eq_refl).
-+ intros def_n0; generalize H'; rewrite <- def_n0; intros le_mn0.
-  now destruct (le_succ_diag_l _ le_mn0).
-+ intros def_n0; generalize H; rewrite def_n0; intros le_mn0.
-  now destruct (le_succ_diag_l _ le_mn0).
-+ intros def_n0.
+  generalize (eq_refl (S n)).
+  generalize n at -1.
+  induction (S n) as [|n0 IHn0]; try discriminate.
+  clear n; intros n [= <-] H H'.
+  pose (def_n2 := eq_refl n0).
+  transitivity (eq_rect _ (fun n => m <~ n) H' _ def_n2).
+    2: reflexivity.
+  generalize def_n2; revert H H'.
+  generalize n0 at 1 4 5 7; intros n1 H.
+  destruct H as [|? H]; intros H'; destruct H' as [|? H'].
+  + now intros def_n0; rewrite (UIP_nat _ _ def_n0 eq_refl).
+  + intros def_n0; generalize H'; rewrite <- def_n0; intros le_mn0.
+    now destruct (le_succ_diag_l _ le_mn0).
+  + intros def_n0; generalize H; rewrite def_n0; intros le_mn0.
+    now destruct (le_succ_diag_l _ le_mn0).
+  + intros def_n0.
 Admitted.
