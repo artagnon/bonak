@@ -565,7 +565,7 @@ Arguments restrPainting {n} _ {E'} p {Hp} q {Hpq Hq} ε {E} [d] c.
 Arguments cohPainting {n} _ {E'} {p Hp} r q {Hpq Hpr Hrq Hr Hq} {ε ω E} [d] c.
 
 Class νType n := {
-  prefix': Type@{m'};
+  prefix': Type;
   data: prefix' -> νTypeAux n;
 }.
 
@@ -575,8 +575,8 @@ Arguments prefix' {n} _.
 (** The construction of [νType n+1] from [νType n] *)
 
 (** Extending the initial prefix *)
-Definition mkPrefix' {n} {C: νType n}: Type@{m'} :=
-  { D : C.(prefix') &T (C.(data) D).(frame') n.+1 (Hp := leI_refl _) -> HSet }.
+Definition mkPrefix' {n} {C: νType n}: Type :=
+  { D: C.(prefix') &T (C.(data) D).(frame') n.+1 (Hp := leI_refl _) -> HSet }.
 
 (** The coherence conditions that Frame needs to satisfy to build the next level
     of Frame. These will be used in the proof script of mkFrame. *)
@@ -616,7 +616,6 @@ Definition mkCohFrames {E'}:
  mkFullCohFrameTypes n.+1 mkFrame'' mkPainting'' mkRestrFrames' E'
   mkRestrPainting'.
 Proof.
-  unshelve eapply existT.
 Admitted.
 
 Definition mkCohPainting' {E'} {p} {Hp: p.+1 <~ n.+1} r q {Hpq: p.+1 <~ q.+1}
