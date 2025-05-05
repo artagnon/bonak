@@ -530,17 +530,18 @@ Class νTypeAux n := {
     CohFrame n frame'' painting'' restrFrames' E' restrPainting'
     cohFrames (Hp := Hp) (Hpr := Hpr) (Hrq := Hrq)
     (Hr := Hr) (Hq := Hq) (ε := ε) (ω := ω) r q d;
-  painting {E'} {p} {Hp: p <~ n.+2} E (d: frame p): HSet :=
+  painting {E'} p {Hp: p <~ n.+2} {E} (d: frame p): HSet :=
     Painting n frame'' painting'' restrFrames' E'
     restrPainting' cohFrames p d (Hp := Hp) (E := E);
   restrPainting {E'} p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
     ε {E} {d: frame p}:
-    painting E d -> painting' p (restrFrame p q ε d) :=
+    painting p d -> painting' p (restrFrame p q ε d) :=
     RestrPainting n frame'' painting'' restrFrames' E' restrPainting'
     cohFrames p q ε (Hp := Hp) (Hpq := Hpq) (Hq := Hq) (E := E) d;
-  cohPainting p {Hp: p.+1 <~ n.+1} r q {Hpq: p.+1 <~ q.+1} {Hpr: p.+2 <~ r.+2}
-    {Hrq: r <~ q} {Hr: r.+2 <~ n.+2} {Hq: q.+1 <~ n.+1} ε ω {E'} E
-    {d: frame p} (c: painting E d (E' := E')
+  cohPainting {E'} {p} {Hp: p.+1 <~ n.+1} r q {Hpq: p.+1 <~ q.+1}
+    {Hpr: p.+2 <~ r.+2}
+    {Hrq: r <~ q} {Hr: r.+2 <~ n.+2} {Hq: q.+1 <~ n.+1} {ε ω E}
+    {d: frame p} (c: painting p d (E := E) (E' := E')
       (Hp := leI_down (leI_down (leI_trans Hpr Hr)))):
     rew [painting'' p] cohFrame r q d (Hpr := leI_lower_both Hpr)
       (Hrq := leI_raise_both Hrq) in
@@ -555,13 +556,13 @@ Class νTypeAux n := {
 
 Arguments frame'' {n} _ p {Hp}.
 Arguments painting'' {n} _ p {Hp} d.
-Arguments painting' {n} _ {E'} p {Hp}.
+Arguments painting' {n} _ {E'} p {Hp} d.
 Arguments restrPainting' {n} _ {E'} p {Hp} q {Hpq Hq} ε [d] c.
 Arguments frame {n} _ {E'} p {Hp}.
 Arguments cohFrame {n} _ {E'} {p Hp} r q {Hpq Hpr Hrq Hr Hq ε ω}.
-Arguments painting {n} _ {E'} {p Hp} E d.
+Arguments painting {n} _ {E'} p {Hp E} d.
 Arguments restrPainting {n} _ {E'} p {Hp} q {Hpq Hq} ε {E} [d] c.
-Arguments cohPainting {n} _ p {Hp} r q {Hpq Hpr Hrq Hr Hq} ε ω {E' E} [d] c.
+Arguments cohPainting {n} _ {E'} {p Hp} r q {Hpq Hpr Hrq Hr Hq} {ε ω E} [d] c.
 
 Class νType n := {
   prefix': Type@{m'};
@@ -594,8 +595,8 @@ Definition mkFrame' p {Hp: p <~ n.+2} :=
 Definition mkPainting'' p {Hp: p <~ n.+1} :=
   (C.(data) D.1).(painting') p (Hp := Hp) (E' := D.2).
 
-Definition mkPainting' p {Hp: p <~ n.+2} :=
-  (C.(data) D.1).(painting) (Hp := Hp) (E' := D.2).
+Definition mkPainting' p {Hp: p <~ n.+2} {E} :=
+  (C.(data) D.1).(painting) p (Hp := Hp) (E' := D.2) (E := E).
 
 Definition mkRestrFrames' :=
   (C.(data) D.1).(restrFrames) (E' := D.2).
@@ -607,7 +608,7 @@ Definition mkRestrFrame' p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
 
 Definition mkRestrPainting' {E'} p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q}
   {Hq: q <~ n.+1} ε: forall {d: mkFrame' p},
-  mkPainting' p E' d -> mkPainting'' p (mkRestrFrame' p q ε
+  mkPainting' p d -> mkPainting'' p (mkRestrFrame' p q ε
     (Hp := Hp) (Hpq := Hpq) (Hq := Hq) d) :=
   (C.(data) D.1).(restrPainting) p q ε (E' := D.2) (E := E').
 
@@ -617,6 +618,14 @@ Definition mkCohFrames {E'}:
 Proof.
   unshelve eapply existT.
 Admitted.
+
+Definition mkCohPainting' {E'} {p} {Hp: p.+1 <~ n.+1} r q {Hpq: p.+1 <~ q.+1}
+  {Hpr: p.+2 <~ r.+2} {Hrq: r <~ q} {Hr: r.+2 <~ n.+2} {Hq: q.+1 <~ n.+1}
+  {ε ω} :=
+  (C.(data) D.1).(cohPainting) r q (p := p) (Hp := Hp) (Hpq := Hpq)
+  (Hpr := Hpr) (Hrq := Hrq) (Hr := Hr) (Hq := Hq) (ε := ε) (ω := ω)
+  (E' := D.2) (E := E').
+
 End νTypeData.
 
 #[local]
@@ -630,7 +639,7 @@ Proof.
   now eapply mkRestrFrames'.
   now eapply mkRestrPainting'.
   now eapply mkCohFrames.
-  admit.
+  (* now eapply mkCohPainting'. *)
 Admitted.
 
 Definition mkCohLayer {n} {C: νType n} {p r q} {Hpr: p.+3 <= r.+3}
