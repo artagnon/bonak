@@ -1,0 +1,186 @@
+\documentclass[a4paper,english,cleveref,autoref,thm-restate]{article}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{t1enc}
+
+\usepackage{hyperref}
+%\usepackage{proof}
+\usepackage{fullpage}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+%\usepackage{txfonts}
+\usepackage{url}
+
+\usepackage{xcolor}
+%\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{yfonts}
+
+\newcommand{\Overrightarrow}[2]{\raisebox{#1}{$\ext@arrow 0359\Rightarrowfill@{\mbox{${#2}$}}{}$}}
+\newcommand{\Overleftarrow}[2]{\raisebox{#1}{$\ext@arrow 0359\Leftarrowfill@{\mbox{${#2}$}}{}$}}
+%\newcommand{\Overrightarrow}[1]{\raisebox{1.4ex}{$\ext@arrow 0359\Rightarrowfill@{\mbox{${#1}$}}{}$}}
+\makeatother
+
+\newcommand{\rocq}[1]{(\mbox{\texttt{#1}})}
+\newcommand{\highlight}[1]{\emph{#1}}
+
+\newcommand{\imp}{\rightarrow}
+\newcommand{\Type}{\mathsf{Type}}
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\Prop}{\mathsf{Prop}}
+\newcommand{\refl}[1]{\mathsf{refl}\,{#1}}
+\newcommand{\mkmlidtype}[3]{{#1} =^{\mathrm{id}}_{#2} {#3}}
+\newcommand{\mkmleqdep}[3]{{#1} =^{\mathrm{dep}}_{#2} {#3}}
+\newcommand{\hrefl}[1]{\mathsf{refl^{\mathrm{dep}}}\,{#1}}
+\newcommand{\mluniv}{\mathsf{U}}
+\newcommand{\Jdep}[2]{\mathsf{J}\;{#1}\;{#2}}
+\newcommand{\unittype}{\ensuremath{\mathsf{unit}}}
+\newcommand{\unitpoint}{\ensuremath{\ast}}
+
+\newcommand{\nth}[1]{{#1}^{\mbox{\scriptsize th}}}
+\newcommand{\defeq}{\triangleq}
+
+\begin{document}
+
+\begin{tiny}
+%\rotatebox{90}
+{$
+  \begin{array}{|l|}
+    \hline
+    \!\!\!\colorbox{yellow}{$
+      \!\!\!
+      \begin{array}{l}
+        frame^{n,p\leq n}:\Type\\
+        painting^{n,p\leq n}:\Type\\
+      \end{array}
+    $}\\
+    \!\!\!\colorbox{green}{$
+      \!\!\!
+      \begin{array}[t]{l}
+        \colorbox{lime}{$restrFrameTypes^{n+1,p\leq n+1}:\Type$} \rocq{mkRestrFrameTypes}\\
+        \quad restrFrameTypes^{n+1,0}\defeq \unittype\\
+        \quad restrFrameTypes^{n+1,p+1}\defeq \Sigma R:restrFrameTypes^{n+1,p}.(\Pi p\leq q\leq n.\Pi \epsilon. depFrame^{n+1,p}(R)\rightarrow frame^{n,p})\\
+        \colorbox{lime}{$depFrame^{n+1,p\leq n+1}(R:restrFrameTypes^{n+1,p\leq n+1}) : \Type$} \rocq{mkFrameOfRestrFrames}\\
+        \quad depFrame^{n+1,0}(R) \defeq \unittype\\
+        \quad depFrame^{n+1,p+1}(R) \defeq \Sigma d:depFrame^{n+1,p}(R.1).(\Pi \epsilon. painting^{n,p}(R.2(d))) \imp \Type)\\
+      \end{array}
+    $}\!\!\!\\
+    \hline
+    \!\!\!\colorbox{yellow}{$
+      \!\!\!
+      \begin{array}[t]{l}
+        fullRestrFrames^{n+1}:restrFrameTypes^{n+1,n+1}\\
+      \end{array}
+    $}\\
+    \!\!\!\colorbox{green}{$
+      \!\!\!
+      \begin{array}{l}
+        \colorbox{lime}{$restrFrames^{n+1,p\leq n+1}:restrFrameTypes^{n+1,p}$} \rocq{mkRestrFramesFromFull}\\
+        \quad restrFrames^{n+1,p}\defeq \downarrow_p fullRestrFrames^{n+1}\\
+        \colorbox{lime}{$frame^{n+1,p\leq n+1}:\Type$} \rocq{mkFrame}\\
+        \quad frame^{n+1,p}\defeq depFrame^{n+1,p}(restrFrames^{n+1,p})\\
+        \colorbox{lime}{$restrFrame^{n+1,p\leq q\leq n}_{\epsilon} : \Pi p\leq q\leq n.\Pi \epsilon. frame^{n+1,p}\rightarrow frame^{n,p}$} \rocq{mkRestrFrame}\\
+        \quad restrFrame^{n+1,p,q}_{\epsilon}\defeq restrFrames^{n+1,p\leq n}.2[q,\epsilon]\\
+        \colorbox{cyan}{$painting^{n+1,p\leq n+1}(E:frame^{n+1,n+1}\rightarrow \Type)(d:frame^{n+1,p\leq n+1}) :\Type$} \rocq{mkPainting}\\
+        \quad painting^{n+1,n+1}(E)(d)\defeq E(d)\\
+        \quad painting^{n+1,p}(E)(d)\defeq \Sigma l:(\Pi \epsilon. painting^{n,p}(restrFrame^{n+1,p,p}_{\epsilon}(d))).painting^{n+1,p+1}(E)(d,l)\\
+      \end{array}
+    $}\!\!\!\\
+    \hline
+    \!\!\!\colorbox{yellow}{$
+      \!\!\!
+      \begin{array}{l}
+        restrPainting^{n+1,p\leq q \leq n}_\epsilon(E:frame^{n+1,n+1}\rightarrow \Type)(d:frame^{n+1,p})(c:painting^{n+1,p}(E)(d)): painting^{n,p}(restrFrame^{n+1,p,q}_{\epsilon}(d))\\
+      \end{array}
+    $}\!\!\!\\
+    \!\!\!\colorbox{green}{$
+      \!\!\!
+      \begin{array}[t]{l}
+        \colorbox{lime}{$restrFrameTypes^{n+2,p\leq n+2}:\Type$} \rocq{mkRestrFramesFromFull}\\
+        \quad restrFrameTypes^{n+2,0}\defeq \unittype\\
+        \quad restrFrameTypes^{n+2,p+1}\defeq \Sigma R:restrFrameTypes^{n+2,p}.(\Pi p\leq q\leq n.\Pi \epsilon. depFrame^{n+2,p}(R)\rightarrow frame^{n+1,p})\\
+        \colorbox{lime}{$depFrame^{n+2,p\leq n+2}(R:restrFrameTypes^{n+2,p\leq n+2}) : \Type$} \rocq{mkFrameOfRestrFrames}\\
+        \quad depFrame^{n+2,0}(R) \defeq \unittype\\
+        \quad depFrame^{n+2,p+1}(R) \defeq \Sigma d:depFrame^{n+2,p}(R.1).(\Pi \epsilon. painting^{n+1,p}(R.2(d))) \imp \Type)\\
+      \end{array}
+    $}\!\!\!\\
+    \!\!\!\colorbox{green}{$
+      \!\!\!
+      \begin{array}{l}
+        \colorbox{olive}{$cohFrameTypes^{n+2,p\leq n+1}:\Type$}\\ 
+        \quad cohFrameTypes^{n+2,0}\defeq \unittype\\ 
+        \quad cohFrameTypes^{n+2,p+1}\defeq
+        \Sigma C:cohFrameTypes^{n+2,p}.\,
+        \Pi p \leq r \leq q \leq n.\, \Pi \epsilon \omega.\, \Pi d:depFrame^{n+2,p}(depRestrFrames^{n+2,p}(C)).\,\\
+\qquad  restrFrame^{n+1,p,q}_{\epsilon} (depRestrFrames^{n+2,p}(C).2[r,\omega](d)) =
+        restrFrame^{n+1,p,r}_{\omega} (depRestrFrames^{n+2,p}(C).2[q+1,\epsilon](d))\\ 
+        \colorbox{olive}{$depRestrFrames^{n+2,p\leq n+1}(C:cohFrameTypes^{n+2,p\leq n+1}):restrFrameTypes^{n+2,p}$}\\
+        \quad depRestrFrames^{n+2,0}(C)\defeq (\unitpoint,\lambda q\epsilon d.\,\unitpoint)\\
+        \quad depRestrFrames^{n+2,p+1}(C)\defeq (depRestrFrames^{n+2,p}(C.1),
+          \lambda q\epsilon (d,l).\,(depRestrFrames^{n+2,p}(C.1).2[q+1,\epsilon](d),\lambda \omega.\,\overrightarrow{C.2[p,q,\epsilon,\omega](d)}(restrPainting^{n+1,p}_{\epsilon}(l)))\\
+      \end{array}
+    $}\!\!\!\\
+    \hline
+    \!\!\!\colorbox{yellow}{$
+      \!\!\!
+      \begin{array}{l}
+        fullCohFrames^{n+2}:cohFrameTypes^{n+2,n+1}\\
+      \end{array}
+    $}\\
+    \!\!\!\colorbox{green}{$
+      \!\!\!
+      \begin{array}{l}
+        \colorbox{olive}{$cohFrames^{n+2,p\leq n}:cohFrameTypes^{n+2,p}$}\rocq{mkCohFramesFromFull}[\mbox{to inline?}]\\
+        \quad cohFrames^{n+2}\defeq \downarrow_p fullCohFrames^{n+2}\\
+        \colorbox{olive}{$fullRestrFrames^{n+2}:restrFrameTypes^{n+2,n+2}$}\rocq{mkFullRestrFrames}[\mbox{to inline?}]\\
+        \quad fullRestrFrames^{n+2}\defeq depRestrFrames^{n+2,n+1}(fullCohFrames^{n+2})\\
+        \colorbox{olive}{$restrFrames^{n+2,p\leq n+1}:restrFrameTypes^{n+2,p}$}\\
+        \quad restrFrames^{n+2,p\leq n+1}\defeq \downarrow_p fullRestrFrames^{n+2}\\
+        \colorbox{olive}{$restrFrames_{aux}^{n+2,p\leq n+1}:restrFrameTypes^{n+2,p}$}\\
+        \quad restrFrames_{aux}^{n+2,p\leq n+1}\defeq depRestrFrames^{n+2,p}(cohFrames^{n+2,p})\\
+        \colorbox{lime}{$frame^{n+2,p\leq n+2}:\Type$}\rocq{Frame}\\
+        \quad frame^{n+2,p\leq n+2}\defeq depFrame^{n+2,p}(restrFrames^{n+2,p})\\
+        \colorbox{lime}{$frame_{aux}^{n+2,p\leq n+2}:\Type$}\rocq{Frame2}\\
+        \quad frame^{n+2,p\leq n+2}\defeq depFrame^{n+2,p}(restrFrames_{aux}^{n+2,p})\\
+        \colorbox{lime}{$restrFrame^{n+2,p\leq q\leq n+1}_{\epsilon} : \Pi p\leq q\leq n+1.\Pi \epsilon. frame^{n+2,p}\rightarrow frame^{n+1,p}$} \rocq{mkRestrFrame}\\
+        \quad restrFrame^{n+2,p,q}_{\epsilon}\defeq restrFrames^{n+2,p\leq n+1}.2[q,\epsilon]\\
+        \colorbox{lime}{$restrFrame_{aux,\epsilon}^{n+2,p\leq q\leq n+1} : \Pi p\leq q\leq n+1.\Pi \epsilon. frame_{aux}^{n+2,p}\rightarrow frame^{n+1,p}$} \rocq{mkRestrFrame2}\\
+        \quad restrFrame_{aux,\epsilon}^{n+2,p,q}\defeq restrFrames_{aux}^{n+2,p\leq n+1}.2[q,\epsilon]\\
+        \colorbox{lime}{$cohFrame^{n+2,p\leq r\leq q\leq n+1}_{\epsilon,\omega} : \Pi d:Frame^{n+2,p}.\,
+          restrFrame^{n+1,p,q}_{\epsilon} (restrFrames^{n+2,p,r}_\omega(d)) =
+          restrFrame^{n+1,p,r}_{\omega} (restrFrames^{n+2,p,q+1}_\epsilon(d))$}\\
+        \quad cohFrame^{n+2,p,r,q}_{\epsilon,\omega}\defeq ??\\
+        \colorbox{lime}{$cohFrame_{aux,\epsilon,\omega}^{n+2,p\leq r\leq q\leq n+1} : \Pi d:Frame_{aux}^{n+2,p}.\,
+          restrFrame^{n+1,p,q}_{\epsilon} (restrFrames_{aux,\omega}^{n+2,p,r}(d)) =
+          restrFrame^{n+1,p,r}_{\omega} (restrFrames_{aux,\epsilon}^{n+2,p,q+1}(d))$}\\
+        \quad cohFrame_{aux,\epsilon,\omega}^{n+2,p,r,q}\defeq cohFrames^{n+2,p}.2[r,q,\epsilon,\omega]\\
+        \colorbox{cyan}{$painting^{n+2,p\leq n+2}(E':frame^{n+1,n+1}\rightarrow \Type)(E:frame^{n+2,n+2}\rightarrow \Type)(d:frame^{n+2,p\leq n+2}):\Type$}\\
+        \quad painting^{n+2,n+2}(E')(E)(d)\defeq E(d)\\
+        \quad painting^{n+2,p}(E')(E)(d)\defeq \Sigma l:(\Pi \epsilon. painting^{n+1,p}(E')(restrFrame^{n+2,p,p}_{\epsilon}(d))).painting^{n+2,p+1}(E')(E)(d,l) \\
+        \colorbox{cyan}{$painting_{aux}^{n+2,p\leq n+2}(E':frame^{n+1,n+1}\rightarrow \Type)(E:frame_{aux}^{n+2,n+2}\rightarrow \Type)(d:frame_{aux}^{n+2,p\leq n+2}):\Type$}\\
+        \quad painting_{aux}^{n+2,n+2}(E')(E)(d)\defeq E(d)\\
+        \quad painting_{aux}^{n+2,p}(E')(E)(d)\defeq \Sigma l:(\Pi \epsilon. painting^{n+1,p}(E')(restrFrame_{aux,\epsilon}^{n+2,p,p}(d))).painting_{aux}^{n+2,p+1}(E')(E)(d,l) \\
+        \colorbox{cyan}{$restrPainting^{n+2,p\leq q\leq n+1}_{\epsilon}(E')(E:frame^{n+2,n+2}\rightarrow \Type)(d:frame^{n+2,p})(c:painting^{n+2,p}(E')(E)(d)): painting^{n+1,p}(E')(restrFrame_{\epsilon}^{n+2,p}(d))$}\\
+        \quad restrPainting^{n+2,n+2}_{\epsilon}(E)(d)(l,c)\defeq l_{\epsilon}\\
+        \quad restrPainting^{n+2,p}_{\epsilon}(E)(d)(l,c)\defeq (\lambda \omega.\,\overrightarrow{cohFrame_{\epsilon,\omega}^{n+2,p,q}(d)}(restrPainting^{n+1,p}_{\epsilon}(l))),restrPainting^{n+2,p+1}_{\epsilon}(E)(d,l)(c))\\
+        \colorbox{cyan}{$restrPainting_{aux,\epsilon}^{n+2,p\leq q\leq n+1}(E')(E:frame_{aux}^{n+2,n+2}\rightarrow \Type)(d:frame_{aux}^{n+2,p})(c:painting_{aux}^{n+2,p}(E')(E)(d)): painting^{n+1,p}(E')(restrFrame_{aux,\epsilon}^{n+2,p}(d))$}\\
+        \quad restrPainting_{aux,\epsilon}^{n+2,n+2}(E)(d)(l,c)\defeq l_{\epsilon}\\
+        \quad restrPainting_{aux,\epsilon}^{n+2,p}(E)(d)(l,c)\defeq (\lambda \omega.\,\overrightarrow{cohFrame_{aux,\epsilon,\omega}^{n+2,p,q}(d)}(restrPainting^{n+1,p}_{\epsilon}(l))),restrPainting_{aux,\epsilon}^{n+2,p+1}(E)(d,l)(c))\\
+      \end{array}
+    $}\!\!\!\\
+    \!\!\!\colorbox{yellow}{$
+      \!\!\!
+      \begin{array}{l}
+        cohPainting^{n+2,p\leq n}:...\\
+      \end{array}
+    $}\\
+    \hline
+  \end{array}
+$
+}
+\end{tiny}
+
+Could we bypass $painting_{aux}$ and $cohFrame_{aux}$?
+
+\end{document}
