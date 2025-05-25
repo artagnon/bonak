@@ -148,12 +148,12 @@
         \colorbox{lime}{$restrFrame_{aux,\epsilon}^{n+2,p\leq q\leq n+1} : \Pi p\leq q\leq n+1.\Pi \epsilon. frame_{aux}^{n+2,p}\rightarrow frame^{n+1,p}$} \rocq{mkRestrFrame2}\\
         \quad restrFrame_{aux,\epsilon}^{n+2,p,q}\defeq restrFrames_{aux}^{n+2,p\leq n+1}.2[q,\epsilon]\\
         \colorbox{lime}{$cohFrame^{n+2,p\leq r\leq q\leq n+1}_{\epsilon,\omega} : \Pi d:Frame^{n+2,p}.\,
-          restrFrame^{n+1,p,q}_{\epsilon} (restrFrames^{n+2,p,r}_\omega(d)) =
-          restrFrame^{n+1,p,r}_{\omega} (restrFrames^{n+2,p,q+1}_\epsilon(d))$}\\
+          restrFrame^{n+1,p,q}_{\epsilon} (restrFrame^{n+2,p,r}_\omega(d)) =
+          restrFrame^{n+1,p,r}_{\omega} (restrFrame^{n+2,p,q+1}_\epsilon(d))$}\\
         \quad cohFrame^{n+2,p,r,q}_{\epsilon,\omega}\defeq ??\\
         \colorbox{lime}{$cohFrame_{aux,\epsilon,\omega}^{n+2,p\leq r\leq q\leq n+1} : \Pi d:Frame_{aux}^{n+2,p}.\,
-          restrFrame^{n+1,p,q}_{\epsilon} (restrFrames_{aux,\omega}^{n+2,p,r}(d)) =
-          restrFrame^{n+1,p,r}_{\omega} (restrFrames_{aux,\epsilon}^{n+2,p,q+1}(d))$}\\
+          restrFrame^{n+1,p,q}_{\epsilon} (restrFrame_{aux,\omega}^{n+2,p,r}(d)) =
+          restrFrame^{n+1,p,r}_{\omega} (restrFrame_{aux,\epsilon}^{n+2,p,q+1}(d))$}\\
         \quad cohFrame_{aux,\epsilon,\omega}^{n+2,p,r,q}\defeq cohFrames^{n+2,p}.2[r,q,\epsilon,\omega]\\
         \colorbox{cyan}{$painting^{n+2,p\leq n+2}(E':frame^{n+1,n+1}\rightarrow \Type)(E:frame^{n+2,n+2}\rightarrow \Type)(d:frame^{n+2,p\leq n+2}):\Type$}\\
         \quad painting^{n+2,n+2}(E')(E)(d)\defeq E(d)\\
@@ -162,11 +162,11 @@
         \quad painting_{aux}^{n+2,n+2}(E')(E)(d)\defeq E(d)\\
         \quad painting_{aux}^{n+2,p}(E')(E)(d)\defeq \Sigma l:(\Pi \epsilon. painting^{n+1,p}(E')(restrFrame_{aux,\epsilon}^{n+2,p,p}(d))).painting_{aux}^{n+2,p+1}(E')(E)(d,l) \\
         \colorbox{cyan}{$restrPainting^{n+2,p\leq q\leq n+1}_{\epsilon}(E')(E:frame^{n+2,n+2}\rightarrow \Type)(d:frame^{n+2,p})(c:painting^{n+2,p}(E')(E)(d)): painting^{n+1,p}(E')(restrFrame_{\epsilon}^{n+2,p}(d))$}\\
-        \quad restrPainting^{n+2,n+2}_{\epsilon}(E)(d)(l,c)\defeq l_{\epsilon}\\
-        \quad restrPainting^{n+2,p}_{\epsilon}(E)(d)(l,c)\defeq (\lambda \omega.\,\overrightarrow{cohFrame_{\epsilon,\omega}^{n+2,p,q}(d)}(restrPainting^{n+1,p}_{\epsilon}(l))),restrPainting^{n+2,p+1}_{\epsilon}(E)(d,l)(c))\\
+        \quad restrPainting^{n+2,n+2}_{\epsilon}(E')(E)(d)(l,c)\defeq l_{\epsilon}\\
+        \quad restrPainting^{n+2,p}_{\epsilon}(E')(E)(d)(l,c)\defeq (\lambda \omega.\,\overrightarrow{cohFrame_{\epsilon,\omega}^{n+2,p,q}(d)}(restrPainting^{n+1,p}_{\epsilon}(E')(l))),restrPainting^{n+2,p+1}_{\epsilon}(E')(E)(d,l)(c))\\
         \colorbox{cyan}{$restrPainting_{aux,\epsilon}^{n+2,p\leq q\leq n+1}(E')(E:frame_{aux}^{n+2,n+2}\rightarrow \Type)(d:frame_{aux}^{n+2,p})(c:painting_{aux}^{n+2,p}(E')(E)(d)): painting^{n+1,p}(E')(restrFrame_{aux,\epsilon}^{n+2,p}(d))$}\\
-        \quad restrPainting_{aux,\epsilon}^{n+2,n+2}(E)(d)(l,c)\defeq l_{\epsilon}\\
-        \quad restrPainting_{aux,\epsilon}^{n+2,p}(E)(d)(l,c)\defeq (\lambda \omega.\,\overrightarrow{cohFrame_{aux,\epsilon,\omega}^{n+2,p,q}(d)}(restrPainting^{n+1,p}_{\epsilon}(l))),restrPainting_{aux,\epsilon}^{n+2,p+1}(E)(d,l)(c))\\
+        \quad restrPainting_{aux,\epsilon}^{n+2,n+2}(E')(E)(d)(l,c)\defeq l_{\epsilon}\\
+        \quad restrPainting_{aux,\epsilon}^{n+2,p}(E')(E)(d)(l,c)\defeq (\lambda \omega.\,\overrightarrow{cohFrame_{aux,\epsilon,\omega}^{n+2,p,q}(d)}(restrPainting^{n+1,p}_{\epsilon}(E')(l))),restrPainting_{aux,\epsilon}^{n+2,p+1}(E')(E)(d,l)(c))\\
       \end{array}
     $}\!\!\!\\
     \!\!\!\colorbox{yellow}{$
