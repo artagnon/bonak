@@ -638,20 +638,25 @@ Definition mkRestrPainting {E'} p {Hp: p.+1 <~ n.+3} q {Hpq: p <~ q}
   RestrPainting n.+1 mkFrame'' mkPainting'' mkRestrFrames' E' mkRestrPainting'
     mkCohFrames p q ε (Hp := Hp) (Hpq := Hpq) (Hq := Hq) (E := E) d.
 
-Definition mkCohFrame {p} {Hp: p.+2 <~ n.+2} r q {Hpq: p.+1 <~ q.+1}
-  {Hpr Hrq Hr Hq} {ε ω} d :=
-  (C.(data) D.1).(cohFrame) (E' := D.2) r q d (Hp := Hp) (Hpq := Hpq)
-  (Hpr := Hpr) (Hrq := Hrq) (Hr := Hr) (Hq := Hq) (ε := ε) (ω := ω).
+Definition mkCohFrame {E'} {p} {Hp: p.+2 <~ n.+3} r q {Hpq: p.+1 <~ q.+1}
+  {Hpr Hrq Hr Hq} {ε ω} (d: mkFrame p) :=
+  CohFrame n.+1 mkFrame'' mkPainting'' mkRestrFrames' E' mkRestrPainting'
+  mkCohFrames (Hp := Hp) (Hpq := Hpq) (Hpr := Hpr) (Hrq := Hrq)
+  (Hr := Hr) (Hq := Hq) (ε := ε) (ω := ω) r q d.
 
-Definition mkCohPainting {p} {Hp: p.+1 <~ n.+2} r q {Hpq: p.+1 <~ q.+1}
-  {Hpr: p.+2 <~ r.+2} {Hrq: r <~ q} {Hr: r.+2 <~ n.+3} {Hq: q.+1 <~ n.+2}
-  {ε ω} {E d} c: rew [mkPainting'' p] mkCohFrame r q d
+Definition mkCohPainting {E'} {p} {Hp: p.+1 <~ n.+2} r q {Hpq: p.+1 <~ q.+1}
+  {Hpr: p.+2 <~ r.+2}
+  {Hrq: r <~ q} {Hr: r.+2 <~ n.+3} {Hq: q.+1 <~ n.+2} {ε ω E}
+  {d: mkFrame p} (c: mkPainting p d (E := E) (E' := E')
+  (Hp := leI_down (leI_down (leI_trans Hpr Hr)))): rew [mkPainting'' p] mkCohFrame r q d
   (Hpr := leI_lower_both Hpr)
   (Hrq := leI_raise_both Hrq) in
   mkRestrPainting' p q ε (mkRestrPainting p r ω c
   (Hq := leI_down (leI_lower_both Hr))) =
   mkRestrPainting' p r ω (mkRestrPainting p q.+1 ε c
   (Hpq := leI_down Hpq) (Hq := Hq)).
+Proof.
+Admitted.
 
 End νTypeData.
 
@@ -667,7 +672,7 @@ Proof.
   now eapply mkRestrPainting'.
   now eapply mkCohFrames.
   now eapply mkCohPainting.
-Admitted.
+Defined.
 
 Definition mkCohLayer {n} {C: νType n} {p r q} {Hpr: p.+3 <= r.+3}
   {Hrq: r.+3 <= q.+3} {Hq: q.+3 <= n.+1} {ε ω}
