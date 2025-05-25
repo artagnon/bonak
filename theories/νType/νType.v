@@ -248,12 +248,12 @@ Instance mkCohFrameTypesAndRestrFrames:
         forall r q (Hpq: p.+1 <~ q.+1) (Hpr: p.+1 <~ r.+1)
           (Hrq: r.+1 <~ q.+1) (Hr: r.+1 <~ n.+1)
           (Hq: q.+1 <~ n.+1) (ε ω: arity) d,
-        RestrFrame' p q ε (Hpq := leI_lower_both Hpq)
+        RestrFrame' p (Hp := leI_lower_both Hp) q ε (Hpq := leI_lower_both Hpq)
           (Hq := leI_lower_both Hq)
           (((mkCohFrameTypesAndRestrFrames p (leI_down Hp)).(RestrFramesDef
             (Hp := leI_down Hp)) Q).2 r (leI_lower_both Hpr)
             (leI_down Hr) ω d) =
-        RestrFrame' p r ω (Hpq := leI_lower_both Hpr)
+        RestrFrame' p (Hp := leI_lower_both Hp) r ω (Hpq := leI_lower_both Hpr)
           (Hq := leI_lower_both Hr)
             (((mkCohFrameTypesAndRestrFrames p _).(RestrFramesDef) Q).2 q.+1
               (leI_down Hpq) Hq ε d) };
@@ -586,11 +586,17 @@ Variable n: nat.
 Variable C: νType n.
 Variable D: mkPrefix'.
 
+Definition mkFrame''' p {Hp: p <~ n} :=
+  (C.(data) D.1).(frame'') p (Hp := Hp).
+
 Definition mkFrame'' p {Hp: p <~ n.+1} :=
   (C.(data) D.1).(frame') p (Hp := Hp).
 
 Definition mkFrame' p {Hp: p <~ n.+2} :=
   (C.(data) D.1).(frame) p (Hp := Hp) (E' := D.2).
+
+Definition mkPainting''' p {Hp: p <~ n} :=
+  (C.(data) D.1).(painting'') p (Hp := Hp).
 
 Definition mkPainting'' p {Hp: p <~ n.+1} :=
   (C.(data) D.1).(painting') p (Hp := Hp) (E' := D.2).
@@ -598,13 +604,27 @@ Definition mkPainting'' p {Hp: p <~ n.+1} :=
 Definition mkPainting' p {Hp: p <~ n.+2} {E} :=
   (C.(data) D.1).(painting) p (Hp := Hp) (E' := D.2) (E := E).
 
+Definition mkRestrFrames'' :=
+  (C.(data) D.1).(restrFrames').
+
 Definition mkRestrFrames' :=
   (C.(data) D.1).(restrFrames) (E' := D.2).
+
+Definition mkRestrFrame'' p {Hp: p.+1 <~ n.+1} q {Hpq: p <~ q} {Hq: q <~ n}
+  ε (d: mkFrame'' p) :=
+  (C.(data) D.1).(restrFrame') p q ε d (Hp := Hp) (Hpq := Hpq)
+    (Hq := Hq).
 
 Definition mkRestrFrame' p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
   ε (d: mkFrame' p) :=
   (C.(data) D.1).(restrFrame) (E' := D.2) p q ε d (Hp := Hp) (Hpq := Hpq)
     (Hq := Hq).
+
+Definition mkRestrPainting'' p {Hp: p.+1 <~ n.+1} q {Hpq: p <~ q}
+  {Hq: q <~ n} ε: forall {d: mkFrame'' p},
+  mkPainting'' p d -> mkPainting''' p (mkRestrFrame'' p q ε
+    (Hp := Hp) (Hpq := Hpq) (Hq := Hq) d) :=
+  (C.(data) D.1).(restrPainting') p q ε (E' := D.2).
 
 Definition mkRestrPainting' {E'} p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q}
   {Hq: q <~ n.+1} ε: forall {d: mkFrame' p},
@@ -612,10 +632,30 @@ Definition mkRestrPainting' {E'} p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q}
     (Hp := Hp) (Hpq := Hpq) (Hq := Hq) d) :=
   (C.(data) D.1).(restrPainting) p q ε (E' := D.2) (E := E').
 
+Lemma CohFramesAux {Hp: 1 <~ n.+2}:
+  ((mkCohFrameTypesAndRestrFrames n mkFrame''' mkPainting'''
+    mkRestrFrames'' D.2 mkRestrPainting'' O).(RestrFramesDef n
+      (Hp := Hp) mkFrame''' mkPainting''' mkRestrFrames'' D.2) tt).2 =
+  (mkRestrFramesFromFull n.+1 mkFrame'' mkPainting'' mkRestrFrames'
+    1 (Hp := Hp)).2.
+Proof.
+Admitted.
+
 Definition mkCohFrames {E'}:
  mkFullCohFrameTypes n.+1 mkFrame'' mkPainting'' mkRestrFrames' E'
   mkRestrPainting'.
 Proof.
+  assert (forall p (Hp : p.+1 <~ n.+2),
+  (mkCohFrameTypesAndRestrFrames n.+1 mkFrame'' mkPainting'' mkRestrFrames' E'
+   mkRestrPainting' p.+1).(CohFrameTypesDef (Hp := leI_raise_both Hp) _ _ _ _ _)).
+  * induction p. simpl.
+    - intros Hp. unshelve eapply existT. now exact tt. intros.
+      destruct d. unfold RestrFrame', mkRestrFrame, mkRestrFramesFromFull.
+      now repeat rewrite <- CohFramesAux.
+    - intros Hp. unshelve eapply existT. now exact (IHp (leI_down Hp)).
+      intros. destruct d as (d, l). simpl in d, l.
+      admit.
+  * now exact (X n.+1 (leI_refl _)).
 Admitted.
 
 Let mkFrame {E'} p {Hp: p <~ n.+3} :=
