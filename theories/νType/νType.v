@@ -632,13 +632,21 @@ Definition mkRestrPainting' {E'} p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q}
     (Hp := Hp) (Hpq := Hpq) (Hq := Hq) d) :=
   (C.(data) D.1).(restrPainting) p q ε (E' := D.2) (E := E').
 
-Lemma CohFramesAux {Hp: 1 <~ n.+2}:
-  ((mkCohFrameTypesAndRestrFrames n mkFrame''' mkPainting'''
-    mkRestrFrames'' D.2 mkRestrPainting'' O).(RestrFramesDef n
-      (Hp := Hp) mkFrame''' mkPainting''' mkRestrFrames'' D.2) tt).2 =
-  (mkRestrFramesFromFull n.+1 mkFrame'' mkPainting'' mkRestrFrames'
-    1 (Hp := Hp)).2.
+Definition mkCohFrames' :=
+  (C.(data) D.1).(cohFrames) (E' := D.2).
+
+Let eqFrameDef {p Hp} :=
+  eqFrameDef n mkFrame''' mkPainting''' mkRestrFrames'' D.2 mkRestrPainting''
+  mkCohFrames' (p := p) (Hp := Hp).
+
+Lemma CohFramesAux p (Hp: p.+1 <~ n.+2) d:
+  (mkCohFrameTypesAndRestrFrames n mkFrame''' mkPainting'''
+    mkRestrFrames'' D.2 mkRestrPainting'' p).(RestrFramesDef n
+      (Hp := Hp) mkFrame''' mkPainting''' mkRestrFrames'' D.2) d =
+  mkRestrFramesFromFull n.+1 mkFrame'' mkPainting'' mkRestrFrames' p.+1
+    (Hp := Hp).
 Proof.
+  induction Hp using leI_rectD.
 Admitted.
 
 Definition mkCohFrames {E'}:
@@ -650,8 +658,9 @@ Proof.
    mkRestrPainting' p.+1).(CohFrameTypesDef (Hp := leI_raise_both Hp) _ _ _ _ _)).
   * induction p. simpl.
     - intros Hp. unshelve eapply existT. now exact tt. intros.
-      destruct d. unfold RestrFrame', mkRestrFrame, mkRestrFramesFromFull.
-      now repeat rewrite <- CohFramesAux.
+      destruct d. unfold RestrFrame', mkRestrFrame.
+      now rewrite <- CohFramesAux with
+        (Hp := (leI_lower_both (leI_raise_both Hp))) (d := tt).
     - intros Hp. unshelve eapply existT. now exact (IHp (leI_down Hp)).
       intros. destruct d as (d, l). simpl in d, l.
       admit.
