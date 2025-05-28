@@ -43,6 +43,8 @@
 
 \begin{document}
 
+\section{Structure built by induction on the dimension}
+
 \begin{tiny}
 %\rotatebox{90}
 {$
@@ -169,6 +171,107 @@
       \!\!\!
       \begin{array}{l}
         cohPainting_{\epsilon,\omega}^{n+2,p\leq r\leq q\leq n}: \overrightarrow{cohFrame^{n+2,p,r,q}_{\epsilon\omega}(d)}(restrPainting^{n+1,p,q}_{\epsilon}(restrPainting^{n+2,p,r}_{\omega}(c))) = restrPainting^{n+1,p,r}_{\omega}(restrPainting^{n+2,p,q+1}_{\epsilon}(c))\\
+      \end{array}
+    $}\\
+    \hline
+  \end{array}
+$
+}
+\end{tiny}
+
+\section{Base case}
+
+We need to fill the axiomatic part of the structure.
+
+\begin{tiny}
+%\rotatebox{90}
+{$
+  \begin{array}{|l|}
+    \hline
+    \!\!\!\colorbox{yellow}{$
+      \!\!\!
+      \begin{array}{l}
+        frame^{0,p\leq 0}:\Type\\
+        painting^{0,p\leq 1}:\Type\\
+      \end{array}
+    $}\\
+    \hline
+    \!\!\!\colorbox{yellow}{$
+      \!\!\!
+      \begin{array}[t]{l}
+        fullRestrFrames^{2}:restrFrameTypes^{2,2}\\
+      \end{array}
+    $}\\
+    \hline
+    \!\!\!\colorbox{yellow}{$
+      \!\!\!
+      \begin{array}{l}
+        restrPainting^{2,p\leq q \leq 0}_\epsilon(E:frame^{2,2}\rightarrow \Type)(d:frame^{2,p})(c:painting^{2,p}(E)(d)): painting^{0,p}(restrFrame^{2,p,q}_{\epsilon}(d))\\
+      \end{array}
+    $}\!\!\!\\
+    \hline
+    \!\!\!\colorbox{yellow}{$
+      \!\!\!
+      \begin{array}{l}
+        fullCohFrames^{3}:cohFrameTypes^{3,2}\\
+      \end{array}
+    $}\\
+    \hline
+    \!\!\!\colorbox{yellow}{$
+      \!\!\!
+      \begin{array}{l}
+        cohPainting_{\epsilon,\omega}^{3,p\leq r\leq q\leq 0}: \overrightarrow{cohFrame^{3,p,r,q}_{\epsilon\omega}(d)}(restrPainting^{2,p,q}_{\epsilon}(restrPainting^{3,p,r}_{\omega}(c))) = restrPainting^{2,p,r}_{\omega}(restrPainting^{3,p,q+1}_{\epsilon}(c))\\
+      \end{array}
+    $}\\
+    \hline
+  \end{array}
+$
+}
+\end{tiny}
+
+\section{Successor case}
+
+We need to fill the axiomatic part of the structure at level $n+1$
+assuming it is defined at level $n$.
+
+\begin{tiny}
+%\rotatebox{90}
+{$
+  \begin{array}{|l|}
+    \hline
+    \!\!\!\colorbox{yellow}{$
+      \!\!\!
+      \begin{array}{l}
+        frame^{n+1,p\leq n+1}:\Type\\
+        painting^{n+1,p\leq n+2}:\Type\\
+      \end{array}
+    $}\\
+    \hline
+    \!\!\!\colorbox{yellow}{$
+      \!\!\!
+      \begin{array}[t]{l}
+        fullRestrFrames^{n+2}:restrFrameTypes^{n+2,n+2}\\
+      \end{array}
+    $}\\
+    \hline
+    \!\!\!\colorbox{yellow}{$
+      \!\!\!
+      \begin{array}{l}
+        restrPainting^{n+2,p\leq q \leq n}_\epsilon(E:frame^{n+2,n+2}\rightarrow \Type)(d:frame^{n+2,p})(c:painting^{n+2,p}(E)(d)): painting^{n+1,p}(restrFrame^{n+2,p,q}_{\epsilon}(d))\\
+      \end{array}
+    $}\!\!\!\\
+    \hline
+    \!\!\!\colorbox{yellow}{$
+      \!\!\!
+      \begin{array}{l}
+        fullCohFrames^{n+3}:cohFrameTypes^{n+3,n+2}\\
+      \end{array}
+    $}\\
+    \hline
+    \!\!\!\colorbox{yellow}{$
+      \!\!\!
+      \begin{array}{l}
+        cohPainting_{\epsilon,\omega}^{n+3,p\leq r\leq q\leq n}: \overrightarrow{cohFrame^{n+3,p,r,q}_{\epsilon\omega}(d)}(restrPainting^{n+2,p,q}_{\epsilon}(restrPainting^{n+3,p,r}_{\omega}(c))) = restrPainting^{n+2,p,r}_{\omega}(restrPainting^{n+3,p,q+1}_{\epsilon}(c))\\
       \end{array}
     $}\\
     \hline
