@@ -142,7 +142,7 @@ Definition mkFullRestrFrameTypes :=
   mkRestrFrameTypes n.+1 (Hp := leI_refl _).
 Variable FullRestrFrames: mkFullRestrFrameTypes.
 
-Definition mkRestrFramesFromFull: forall p {Hp: p <~ n.+1},
+Definition restrictRestrFramesFromFull: forall p {Hp: p <~ n.+1},
   mkRestrFrameTypes p :=
   fix aux p Hp := match Hp with
   | leI_refl _ => FullRestrFrames
@@ -155,11 +155,11 @@ Definition mkFrameOfRestrFrames p {Hp: p <~ n.+1}:
 
 (* Frame from full RestrFrames *)
 Definition mkFrame := fun p {Hp: p <~ n.+1} =>
-  mkFrameOfRestrFrames p (mkRestrFramesFromFull p (Hp := Hp)).
+  mkFrameOfRestrFrames p (restrictRestrFramesFromFull p (Hp := Hp)).
 
 (* RestrFrame from full RestrFrames *)
 Definition mkRestrFrame p {Hp: p.+1 <~ n.+1} :=
-  (mkRestrFramesFromFull p.+1 (Hp := Hp)).2:
+  (restrictRestrFramesFromFull p.+1 (Hp := Hp)).2:
   forall q {Hpq: p <~ q} {Hq: q <~ n},
     arity -> mkFrame p -> FramePrev p (Hp := leI_lower_both Hp).
 
@@ -274,43 +274,48 @@ Instance mkCohFrameTypesAndRestrFrames:
     |}
   end.
 
+Definition mkCohFrameTypes p {Hp} :=
+  (mkCohFrameTypesAndRestrFrames p (Hp := Hp)).(CohFrameTypesDef).
+
 (** All CohFrameType(n+2,p) from p=0 to p=n *)
 Definition mkFullCohFrameTypes :=
-  (mkCohFrameTypesAndRestrFrames n.+1 (Hp := leI_refl _)).(CohFrameTypesDef).
+  mkCohFrameTypes n.+1 (Hp := leI_refl _).
+
 Variable FullCohFrames: mkFullCohFrameTypes.
+
+Definition mkRestrFramesFrom p {Hp} :=
+  (mkCohFrameTypesAndRestrFrames p (Hp := Hp)).(RestrFramesDef).
 
 (** All RestrFrame(n+2,p) from p=0 to p=n.+1 *)
 Definition mkFullRestrFrames :=
-  (mkCohFrameTypesAndRestrFrames n.+1 (Hp := leI_refl _)).(RestrFramesDef)
-    FullCohFrames.
+  mkRestrFramesFrom n.+1 (Hp := leI_refl _) FullCohFrames.
 
 (** Prefix of all CohFrame(n+2,i) from i=0 to i=p-1 *)
-Definition mkCohFramesFromFull: forall p {Hp: p.+1 <~ n.+2},
-  (mkCohFrameTypesAndRestrFrames p (Hp := Hp)).(CohFrameTypesDef) :=
+Definition restrictCohFramesFromFull: forall p {Hp: p.+1 <~ n.+2},
+  mkCohFrameTypes p (Hp := Hp) :=
   fix aux p (Hp: p.+1 <~ n.+2) :=
   match Hp in S_p <~ _ return
     match S_p return _ -> Type with 0 =>
     fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+2) =>
-    (mkCohFrameTypesAndRestrFrames p (Hp := Hp)).(CohFrameTypesDef) end Hp with
+    mkCohFrameTypes p (Hp := Hp) end Hp with
   | leI_refl _ => FullCohFrames
   | @leI_down _ S_p Hp =>
     match S_p return forall Hp',
        match S_p return _ -> Type with 0 =>
        fun _ => True | p.+1 => fun (Hp: p.+1 <~ n.+2) =>
-      (mkCohFrameTypesAndRestrFrames p (Hp := Hp)).(CohFrameTypesDef) end (leI_down Hp')
+      mkCohFrameTypes p (Hp := Hp) end (leI_down Hp')
     with 0 => fun _ => I | p.+1 => fun Hp => (aux p.+1 Hp).1 end Hp
   end.
 
 
 (** RestrFrames(n+2,p) from full CohFrames, going down via RestrFrames *)
 Definition RestrFrames p {Hp: p.+1 <~ n.+2} :=
-  mkRestrFramesFromFull n.+1 Frame' Painting' mkFullRestrFrames p.+1
+  restrictRestrFramesFromFull n.+1 Frame' Painting' mkFullRestrFrames p.+1
     (Hp := Hp).
 
 (** RestrFrames(n+2,p) from full CohFrames, going down via CohFrames *)
 Definition RestrFrames2 p {Hp: p.+1 <~ n.+2} :=
-  ((mkCohFrameTypesAndRestrFrames p (Hp := Hp)).(RestrFramesDef)
-    (mkCohFramesFromFull p (Hp := Hp))).
+  mkRestrFramesFrom p (Hp := Hp) (restrictCohFramesFromFull p (Hp := Hp)).
 
 Lemma eqRestrFramesDef {p} {Hp: p.+1 <~ n.+2}:
   RestrFrames p (Hp := Hp) = RestrFrames2 p.
@@ -372,7 +377,7 @@ Definition CohFrame2 {p} {Hp: p.+2 <~ n.+2} r q {Hpq: p.+1 <~ q.+1}
   RestrFrame' p r (Hpq := leI_lower_both Hpr) (Hq := leI_lower_both Hr) ω
     (RestrFrame2 p q.+1 (Hpq := leI_down Hpq) (Hq := Hq) ε d).
 Proof.
-  now exact ((mkCohFramesFromFull p.+1).2 r q Hpq Hpr Hrq Hr Hq ε ω d).
+  now exact ((restrictCohFramesFromFull p.+1).2 r q Hpq Hpr Hrq Hr Hq ε ω d).
 Defined.
 
 Definition CohFrame {p} {Hp: p.+2 <~ n.+2} r q {Hpq: p.+1 <~ q.+1}
@@ -635,19 +640,20 @@ Definition mkRestrPainting' {E'} p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q}
 Definition mkCohFrames' :=
   (C.(data) D.1).(cohFrames) (E' := D.2).
 
-Lemma CohFramesAux p (Hp: p.+1 <~ n.+2) d:
-  (mkCohFrameTypesAndRestrFrames n mkFrame''' mkPainting'''
-    mkRestrFrames'' D.2 mkRestrPainting'' p).(RestrFramesDef n
-      (Hp := Hp) mkFrame''' mkPainting''' mkRestrFrames'' D.2) d =
-  mkRestrFramesFromFull n.+1 mkFrame'' mkPainting'' mkRestrFrames' p.+1
+Lemma CohFramesAux p (Hp: p.+1 <~ n.+2) RCF:
+  mkRestrFramesFrom n mkFrame''' mkPainting'''
+    mkRestrFrames'' D.2 mkRestrPainting'' p (Hp := Hp) RCF =
+  restrictRestrFramesFromFull n.+1 mkFrame'' mkPainting'' mkRestrFrames' p.+1
     (Hp := Hp).
 Proof.
-  unfold mkRestrFramesFromFull, mkRestrFrames', mkFrame''',
-  mkPainting''', mkRestrFrames'', mkRestrPainting', restrFrames,
-  mkFullRestrFrames.
   induction Hp using leI_rectD.
-  - f_equal. admit. admit.
-  - admit.
+  - unfold restrictRestrFramesFromFull, mkRestrFrames', mkFrame''', restrFrames.
+    unfold mkFullRestrFrames.
+    f_equal. admit.
+  - simpl. simpl in IHHp.
+    epose (RCF' := (RCF;_)).
+    now rewrite <- IHHp with (RCF := RCF').
+  Unshelve. simpl. intros.
 Admitted.
 
 Definition mkCohFrames {E'}:
@@ -655,16 +661,22 @@ Definition mkCohFrames {E'}:
   mkRestrPainting'.
 Proof.
   assert (forall p (Hp : p.+1 <~ n.+2),
-  (mkCohFrameTypesAndRestrFrames n.+1 mkFrame'' mkPainting'' mkRestrFrames' E'
-   mkRestrPainting' p.+1).(CohFrameTypesDef (Hp := leI_raise_both Hp) _ _ _ _ _)).
+  mkCohFrameTypes n.+1 mkFrame'' mkPainting'' mkRestrFrames' E'
+   mkRestrPainting' p.+1 (Hp := leI_raise_both Hp)).
   * induction p. simpl.
-    - intros Hp. unshelve eapply existT. now exact tt. intros.
-      destruct d. unfold RestrFrame', mkRestrFrame.
-      now rewrite <- CohFramesAux with
-        (Hp := (leI_lower_both (leI_raise_both Hp))) (d := tt).
-    - intros Hp. unshelve eapply existT. now exact (IHp (leI_down Hp)).
-      intros. destruct d as (d, l); simpl in d, l.
-      admit.
+    - intros Hp. unshelve eapply existT.
+      + now exact tt.
+      + intros. destruct d. unfold RestrFrame', mkRestrFrame.
+         change ((mkCohFrameTypesAndRestrFrames ?n ?a ?b ?c ?d ?e 0 (Hp:=?Hp)).(RestrFramesDef _ _ _ _ _) tt)
+           with (mkRestrFramesFrom n a b c d e 0 (Hp:=Hp) tt).
+         now rewrite <- CohFramesAux with
+            (Hp := (leI_lower_both (leI_raise_both Hp))) (RCF := tt).
+    - intros Hp. unshelve eapply existT.
+      + now exact (IHp (leI_down Hp)).
+      + intros.
+         change ((mkCohFrameTypesAndRestrFrames _ _ _ _ _ _ _).(RestrFramesDef _ _ _ _ _) ?CF)
+          with (mkRestrFramesFrom _ _ _ _ _ _ _ CF).
+         intros. admit.
   * now exact (X n.+1 (leI_refl _)).
 Admitted.
 
