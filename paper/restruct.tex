@@ -261,10 +261,14 @@ assuming it is defined at level $n$.
       \end{array}
     $}\!\!\!\\
     \hline
-    \!\!\!\colorbox{yellow}{$
+    \!\!\!\colorbox{green}{$
       \!\!\!
       \begin{array}{l}
-        fullCohFrames^{n+3}:cohFrameTypes^{n+3,n+2}\\
+        \colorbox{pink}{$fullCohFrames^{n+3}:cohFrameTypes^{n+3,n+2}$}\\
+        \quad fullCohFrames^{n+3}\defeq cohFramesTypes^{n+3,n+2} \\
+        \colorbox{pink}{$cohFrames^{n+3,p\leq n+1}:cohFrameTypes^{n+3,p}$}\\
+        \quad cohFrames^{n+3,0}\defeq \star\\
+        \quad cohFrames^{n+3,p+1}\defeq (cohFrames^{n+3,p},\lambda p \leq r \leq q \leq n.\, \lambda \epsilon \omega.\, \lambda(d,l).(cohFrames^{n+3,p}.2[r,q,\epsilon,\omega](d),...))
       \end{array}
     $}\\
     \hline
