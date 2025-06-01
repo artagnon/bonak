@@ -43,6 +43,10 @@ Lemma leR_O_contra {n}: leR n.+1 O -> SFalse.
   now auto.
 Qed.
 
+Lemma leY_O {n}: 0 <= n.
+  unfold "<=". intros p. destruct p. now auto. now auto.
+Qed.
+
 (** Contradiction of type n.+1 <= 0 *)
 Theorem leY_O_contra {n}: n.+1 <= O -> False.
   intros. cut SFalse. intro Hn; elim Hn. unfold leY in H.
