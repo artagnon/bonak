@@ -223,6 +223,12 @@ Fixpoint mkCohFrameTypesAndRestrFrames Prev :
     |}
   end.
 
+Definition mkCohFrameTypes Prev n restrFrames' extraPrev extraRestrs :=
+  (mkCohFrameTypesAndRestrFrames Prev n restrFrames' extraPrev extraRestrs).(CohFrameTypesDef).
+
+Definition mkRestrFramesFrom Prev n restrFrames' extraPrev extraRestrs :=
+  (mkCohFrameTypesAndRestrFrames Prev n restrFrames' extraPrev extraRestrs).(RestrFramesDef).
+
 Class νTypeAux n := {
   Prev : PrevLevel;
   restrFrames': mkRestrFrameTypes'  Prev;
