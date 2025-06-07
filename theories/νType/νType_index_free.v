@@ -170,7 +170,7 @@ Variable RestrPainting':
 Theorem coerce : forall Prev n restrFrames' extraPrev extraRestrs,
   mkLevel Prev n restrFrames' extraPrev extraRestrs = mkLevelRec Prev n restrFrames' extraPrev extraRestrs.
 Proof.
-induction Prev.
+destruct Prev.
 - reflexivity.
 - simpl. unfold mkLevel. intros. f_equal.
 Defined.
