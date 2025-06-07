@@ -178,25 +178,24 @@ Defined.
 Fixpoint mkCohFrameTypesAndRestrFrames Prev :
   forall n (restrFrames' : mkRestrFrameTypes' Prev n)
     extraPrev
-    (extraRestrs: RestrFramesExtension Prev n restrFrames' extraPrev),
-    CohFrameTypeBlock Prev n restrFrames' extraPrev extraRestrs
+    (extraRestrs': RestrFramesExtension Prev n restrFrames' extraPrev),
+    CohFrameTypeBlock Prev n restrFrames' extraPrev extraRestrs'
   :=
   match Prev return forall n (restrFrames' : mkRestrFrameTypes' Prev n)
     extraPrev
-    (extraRestrs: RestrFramesExtension Prev n restrFrames' extraPrev),
-    CohFrameTypeBlock Prev n restrFrames' extraPrev extraRestrs
+    (extraRestrs': RestrFramesExtension Prev n restrFrames' extraPrev),
+    CohFrameTypeBlock Prev n restrFrames' extraPrev extraRestrs'
   with
   | EmptyPrev =>
-    fun n restrFrames' extraPrev extraRestrs =>
+    fun n restrFrames' extraPrev extraRestrs' =>
     {|
       CohFrameTypesDef := unit;
-      RestrFramesDef _ := (tt; fun _ _ _ _ => tt): mkRestrFrameTypes EmptyPrev n restrFrames' extraPrev extraRestrs
+      RestrFramesDef _ := (tt; fun _ _ _ _ => tt): mkRestrFrameTypes EmptyPrev n restrFrames' extraPrev extraRestrs'
     |}
   | AddPrev FramePrev PaintingPrev Prev =>
-    fun n restrFrames' extraPrev extraRestrs =>
-    let restrFrames := (mkCohFrameTypesAndRestrFrames Prev n.+1 restrFrames'.1 (AddExtraPrev Prev n FramePrev PaintingPrev extraPrev) (AddExtraRestrFrame _ _ _ _ _ _ restrFrames'.2 extraRestrs)).(RestrFramesDef Prev n.+1 restrFrames'.1 (AddExtraPrev Prev n FramePrev PaintingPrev extraPrev) (AddExtraRestrFrame _ _ _ _ _ _ restrFrames'.2 extraRestrs))
-                           : forall Q, mkRestrFrameTypes Prev n.+1 restrFrames'.1 (AddExtraPrev Prev n FramePrev PaintingPrev extraPrev) (AddExtraRestrFrame _ _ _ _ _ _ restrFrames'.2 extraRestrs) in
-    let cohFrameTypes := (mkCohFrameTypesAndRestrFrames Prev n.+1 restrFrames'.1 (AddExtraPrev Prev n FramePrev PaintingPrev extraPrev) (AddExtraRestrFrame _ _ _ _ _ _ restrFrames'.2 extraRestrs)).(CohFrameTypesDef Prev n.+1 restrFrames'.1 (AddExtraPrev Prev n FramePrev PaintingPrev extraPrev) (AddExtraRestrFrame _ _ _ _ _ _ restrFrames'.2 extraRestrs)) in
+    fun n restrFrames' extraPrev extraRestrs' =>
+    let restrFrames := (mkCohFrameTypesAndRestrFrames Prev n.+1 restrFrames'.1 (AddExtraPrev Prev n FramePrev PaintingPrev extraPrev) (AddExtraRestrFrame _ _ _ _ _ _ restrFrames'.2 extraRestrs')).(RestrFramesDef) in
+    let cohFrameTypes := (mkCohFrameTypesAndRestrFrames Prev n.+1 restrFrames'.1 (AddExtraPrev Prev n FramePrev PaintingPrev extraPrev) (AddExtraRestrFrame _ _ _ _ _ _ restrFrames'.2 extraRestrs')).(CohFrameTypesDef) in
     {|
       CohFrameTypesDef := { Q:
         cohFrameTypes &T
@@ -217,7 +216,7 @@ Fixpoint mkCohFrameTypesAndRestrFrames Prev :
                    (mkRestrFrameTypesAndFrames' L n.+1).(@FrameDef) R -> _} ] coerce _ _ _ _ _ in
           (restrFrames Q.1 as rf in _;
            restrFrame in forall q Hq ω, (mkFrameOfRestrFrames Prev _ _ _ _ rf) -> _)
-          : mkRestrFrameTypes (AddPrev FramePrev PaintingPrev Prev) n restrFrames' extraPrev extraRestrs
+          : mkRestrFrameTypes (AddPrev FramePrev PaintingPrev Prev) n restrFrames' extraPrev extraRestrs'
     |}
   end.
 
