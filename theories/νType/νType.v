@@ -212,6 +212,8 @@ Class νType n := {
     {d: Frame.(frame p) D} {l: Layer d}:
     Frame.(restrFrame (p:=p.+1)) q.+1 ε (rew <- [id] eqFrameSp in (d; l)) =
       rew <- [id] eqFrameSp' in (Frame.(restrFrame) q.+1 ε d; RestrLayer ε l);
+  eqPainting0 {D E d}:
+   Painting.(painting) (p := n) (D := D) E d = E d :> Type;
   eqPaintingSp {p} {Hp: p.+1 <= n} {D E d}:
     Painting.(painting) (p := p) E d = {l: Layer d &
       Painting.(painting) (D := D) E (rew <- [id] eqFrameSp in (d; l))}
@@ -248,6 +250,7 @@ Arguments eqFrameSp {n} _ {p Hp D}.
 Arguments eqFrameSp' {n} _ {p Hp D}.
 Arguments eqRestrFrame0 {n} _ {q Hpq Hq ε D}.
 Arguments eqRestrFrameSp {n} _ {ε p q D Hpq Hq d l}.
+Arguments eqPainting0 {n} _ {D E d}.
 Arguments eqPaintingSp {n} _ {p Hp D E d}.
 Arguments eqPaintingSp' {n} _ {p Hp D d}.
 Arguments eqRestrPainting0 {n} _ {p Hp ε D E d l} Q.
@@ -392,6 +395,13 @@ Defined.
 Lemma mkPaintingType_base_computes {n} {C: νType n}
   {D E} {d: (mkFrame n.+1).(frame n.+1) D}:
   mkPaintingType n n.+1 E d = E d.
+Proof.
+  unfold mkPaintingType; now rewrite le_induction_base_computes.
+Qed.
+
+Lemma mkPaintingType_base_computes' {n} {C: νType n}
+  {D E} {d: (mkFrame n.+1).(frame n.+1) D}:
+  mkPaintingType n n.+1 E d = E d :> Type.
 Proof.
   unfold mkPaintingType; now rewrite le_induction_base_computes.
 Qed.
@@ -545,6 +555,7 @@ Instance mkνType0: νType 0.
   - intros; now le_contra Hp.
   - intros; now le_contra Hp.
   - intros; now le_contra Hq.
+  - intros; now simpl.
   - intros; now le_contra Hp.
   - intros; now le_contra Hq.
 Defined.
@@ -564,6 +575,7 @@ Instance mkνTypeSn {n} (C: νType n): νType n.+1 :=
     eqFrameSp' := ltac:(intros *; now apply C.(eqFrameSp));
     eqRestrFrame0 := ltac:(now intros *);
     eqRestrFrameSp := ltac:(now intros *);
+    eqPainting0 := ltac:(intros *; simpl; now apply mkPaintingType_base_computes');
     eqPaintingSp := ltac:(intros *; now apply mkPaintingType_step_computes);
     eqPaintingSp' := ltac:(intros *; now apply C.(eqPaintingSp));
     eqRestrPainting0 := ltac:(intros *; simpl;
@@ -590,6 +602,85 @@ Arguments next {n X} _.
 
 (** The final construction *)
 Definition νTypes := νTypeFrom 0 tt.
+
+Class νTypeFamily := {
+ family n : νType n;
+ eqPrefix {n} : (family n.+1) .(prefix) = sigT (fun D => (family n).(Frame).(frame n) D -> HSet@{m}) :> Type;
+ eqFrame {n} p {Hp : p.+1 <= n.+1} {D} :
+  (family n.+1) .(FramePrev) .(frame') p D = 
+   (family n) .(Frame) .(frame p) (rew [id] eqPrefix in D).1 :> Type;
+ eqFrame' {n} p {Hp : p.+2 <= n.+1} {D} :
+   (family n.+1) .(FramePrev) .(frame'') p D = 
+    (family n) .(FramePrev) .(frame') p (rew [id] eqPrefix in D).1 :> Type;
+ eqRestrFrame {n} p q {Hpq : p.+2 <= q.+2} {Hq : q.+2 <= n.+1} (ε : arity) {D}
+  {d : (family n.+1) .(FramePrev) .(frame') p D} :
+  rew [id] (eqFrame' p) in  (family n.+1) .(FramePrev) .(restrFrame') p q ε d =
+   (family n) .(Frame) .(restrFrame) q ε (rew [id] (eqFrame p) in d);
+ eqPainting {n} p {Hp : p.+1 <= n.+1} {D}
+  {d : (family n.+1) .(FramePrev) .(frame') p D} :
+  (family n.+1) .(PaintingPrev) .(painting') d =
+   (family n) .(Painting) .(painting) (rew [id] eqPrefix in D).2 (rew [id] (eqFrame p) in d) :> Type;
+ eqPainting' {n} p {Hp : p.+2 <= n.+1} {D}
+  {d : (family n.+1) .(FramePrev) .(frame'') p D} :
+  (family n.+1) .(PaintingPrev) .(painting'') d =
+   (family n) .(PaintingPrev) .(painting') (rew [id] (eqFrame' p) in d) :> Type;
+ eqRestrPainting {n} p q {Hpq : p.+2 <= q.+2} {Hq : q.+2 <= n.+1} (ε : arity) {D}
+  {d : (family n.+1) .(FramePrev) .(frame') p D}
+  {c : (family n.+1) .(PaintingPrev) .(painting') d} :
+  rew [(family n) .(PaintingPrev) .(painting')] eqRestrFrame p q ε in
+  rew [id] (eqPainting' p) in
+   (family n.+1) .(PaintingPrev) .(restrPainting') p q ε c = 
+   (family n) .(Painting) .(restrPainting) p q (ε := ε) (rew [id] eqPainting p in c);
+}.
+
+Definition find_layer n p {Hp : p <= n} {C : νType n} {D : C .(prefix)}
+ {E : C .(Frame).(frame n) D -> HSet@{m}}
+ {d : C .(Frame).(frame p) D}
+ (l : C .(Painting) .(painting) (p := p) E d) :
+ sigT (C .(Painting) .(painting) (p := n) E).
+Proof.
+  revert d l.
+  apply le_induction with (Hp := Hp); clear p Hp.
+  + intros d painting.
+    exact (d ; painting).
+  + intros p Hp rec d painting.
+    rewrite eqPaintingSp in painting.
+    exact (rec _ painting.2).
+Defined.
+
+Definition find_frame n p {Hp : p.+1 <= n} {C : νType n}
+ {D : C .(prefix)}
+ (d : C .(Frame).(frame n) D) :
+ C .(Frame).(frame p.+1) D.
+Proof. 
+  apply le_induction with (Hp := Hp); clear p Hp.
+  * exact d.
+  * intros p Hp d'.
+    rewrite eqFrameSp in d'.
+    exact d'.1.
+Defined.
+
+Definition helper n p {Hp : p.+1 <= n.+1} (ε : arity)
+ {Cs : νTypeFamily}
+ {D : (Cs .(family) n.+1) .(prefix)}
+ (d : (Cs .(family) n.+1) .(Frame).(frame p.+1) D) :
+ sigT (rew [id] (Cs .(eqPrefix)) in D).2.
+Proof.
+  rewrite eqFrameSp in d.
+  destruct d as [d l].
+  specialize (l ε) as painting.
+  rewrite eqPainting in painting.
+  pose (painting' := find_layer n p painting).
+  destruct painting' as [d' painting'].
+  rewrite eqPainting0 in painting'.
+  exact (d' ; painting').
+Defined.
+
+Definition Face n p {Hp : p.+1 <= n.+1} (ε : arity)
+ {Cs : νTypeFamily}
+ {D : (Cs .(family) n.+1) .(prefix)}
+ (d : (Cs .(family) n.+1) .(Frame).(frame n.+1) D) :
+ sigT (rew [id] (Cs .(eqPrefix)) in D).2 := helper n p ε (find_frame n.+1 p d).
 
 (** Degeneracies *)
 
