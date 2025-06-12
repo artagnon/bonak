@@ -633,6 +633,17 @@ Class νTypeFamily := {
    (family n) .(Painting) .(restrPainting) p q (ε := ε) (rew [id] eqPainting p in c);
 }.
 
+Instance νTypeAtFamily : νTypeFamily := {|
+  family := νTypeAt;
+  eqPrefix := ltac:(intros; exact eq_refl);
+  eqFrame := ltac:(intros; exact eq_refl);
+  eqFrame' := ltac:(intros; exact eq_refl);
+  eqRestrFrame := ltac:(intros; exact eq_refl);
+  eqPainting := ltac:(intros; exact eq_refl);
+  eqPainting' := ltac:(intros; exact eq_refl);
+  eqRestrPainting := ltac:(intros; exact eq_refl);
+|}.
+
 Definition find_layer n p {Hp : p <= n} {C : νType n} {D : C .(prefix)}
  {E : C .(Frame).(frame n) D -> HSet@{m}}
  {d : C .(Frame).(frame p) D}
