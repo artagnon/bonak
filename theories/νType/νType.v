@@ -660,27 +660,19 @@ Proof.
     exact d'.1.
 Defined.
 
-Definition helper n p {Hp : p.+1 <= n.+1} (ε : arity)
- {Cs : νTypeFamily}
- {D : (Cs .(family) n.+1) .(prefix)}
- (d : (Cs .(family) n.+1) .(Frame).(frame p.+1) D) :
- sigT (rew [id] (Cs .(eqPrefix)) in D).2.
-Proof.
-  rewrite eqFrameSp in d.
-  destruct d as [d l].
-  specialize (l ε) as painting.
-  rewrite eqPainting in painting.
-  pose (painting' := find_layer n p painting).
-  destruct painting' as [d' painting'].
-  rewrite eqPainting0 in painting'.
-  exact (d' ; painting').
-Defined.
-
 Definition Face n p {Hp : p.+1 <= n.+1} (ε : arity)
  {Cs : νTypeFamily}
  {D : (Cs .(family) n.+1) .(prefix)}
  (d : (Cs .(family) n.+1) .(Frame).(frame n.+1) D) :
- sigT (rew [id] (Cs .(eqPrefix)) in D).2 := helper n p ε (find_frame n.+1 p d).
+ (family n).(Frame).(frame n) (rew [id] (Cs .(eqPrefix)) in D).1.
+Proof.
+  pose (d' := (find_frame n.+1 p d)).
+  rewrite eqFrameSp in d'.
+  destruct d' as [d' l'].
+  specialize (l' ε) as painting.
+  rewrite eqPainting in painting.
+  exact (find_layer n p painting).1.
+Qed.
 
 (** Degeneracies *)
 
