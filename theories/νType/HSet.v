@@ -1,7 +1,7 @@
 (** This file defines HSet and provides unit, sigT and forall on HSet *)
 
-Require Import Logic.FunctionalExtensionality.
-Require Import Logic.Eqdep_dec. (* UIP_refl_unit *)
+From Stdlib Require Import Logic.FunctionalExtensionality.
+From Stdlib Require Import Logic.Eqdep_dec. (* UIP_refl_unit *)
 From Bonak Require Import Notation.
 
 Set Primitive Projections.

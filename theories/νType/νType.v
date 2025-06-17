@@ -3,7 +3,8 @@
     For ν=2, this builds semi-cubical sets *)
 
 Import Logic.EqNotations.
-Require Import Logic.FunctionalExtensionality.
+Require Import Setoid.
+From Stdlib Require Import Logic.FunctionalExtensionality.
 From Bonak Require Import Notation.
 From Bonak Require Import RewLemmas.
 
@@ -628,9 +629,8 @@ Class νTypeFamily := {
   {d : (family n.+1) .(FramePrev) .(frame') p D}
   {c : (family n.+1) .(PaintingPrev) .(painting') d} :
   rew [(family n) .(PaintingPrev) .(painting')] eqRestrFrame p q ε in
-  rew [id] (eqPainting' p) in
-   (family n.+1) .(PaintingPrev) .(restrPainting') p q ε c = 
-   (family n) .(Painting) .(restrPainting) p q (ε := ε) (rew [id] eqPainting p in c);
+  rew [id] (eqPainting' p) in (family n.+1) .(PaintingPrev) .(restrPainting') p q ε c = 
+  (family n) .(Painting) .(restrPainting) p q (ε := ε) (rew [id] eqPainting p in c);
 }.
 
 Instance νTypeAtFamily : νTypeFamily := {|
@@ -644,27 +644,27 @@ Instance νTypeAtFamily : νTypeFamily := {|
   eqRestrPainting := ltac:(intros; exact eq_refl);
 |}.
 
-Definition find_layer n p {Hp : p <= n} {C : νType n} {D : C .(prefix)}
+Definition find_painting n p q {Hpq : p <= q} {Hq : q <= n} {C : νType n} {D : C .(prefix)}
  {E : C .(Frame).(frame n) D -> HSet@{m}}
  {d : C .(Frame).(frame p) D}
  (l : C .(Painting) .(painting) (p := p) E d) :
- sigT (C .(Painting) .(painting) (p := n) E).
+ sigT (C .(Painting) .(painting) (p := q) E).
 Proof.
   revert d l.
-  apply le_induction with (Hp := Hp); clear p Hp.
+  apply le_induction with (Hp := Hpq); clear p Hpq.
   + intros d painting.
     exact (d ; painting).
-  + intros p Hp rec d painting.
-    rewrite eqPaintingSp in painting.
+  + intros p Hpq rec d painting.
+    rewrite (C .(eqPaintingSp)) in painting.
     exact (rec _ painting.2).
 Defined.
 
-Definition find_frame n p {Hp : p.+1 <= n} {C : νType n}
- {D : C .(prefix)}
- (d : C .(Frame).(frame n) D) :
- C .(Frame).(frame p.+1) D.
-Proof. 
-  apply le_induction with (Hp := Hp); clear p Hp.
+Definition find_frame n p q {Hpq : p <= q} {Hq : q <= n}
+{C : νType n} {D : C .(prefix)}
+(d : C .(Frame).(frame q) D) :
+ C .(Frame).(frame p) D.
+Proof.
+  apply le_induction with (Hp := Hpq); clear p Hpq.
   * exact d.
   * intros p Hp d'.
     rewrite eqFrameSp in d'.
@@ -677,14 +677,13 @@ Definition Face n p {Hp : p.+1 <= n.+1} (ε : arity)
  (d : (Cs .(family) n.+1) .(Frame).(frame n.+1) D) :
  (family n).(Frame).(frame n) (rew [id] (Cs .(eqPrefix)) in D).1.
 Proof.
-  pose (d' := (find_frame n.+1 p d)).
+  pose (d' := (find_frame n.+1 p.+1 n.+1 d)).
   rewrite eqFrameSp in d'.
   destruct d' as [d' l'].
   specialize (l' ε) as painting.
   rewrite eqPainting in painting.
-  exact (find_layer n p painting).1.
-Qed.
-
+  exact (find_painting n p n painting).1.
+Defined.
 (** Degeneracies *)
 
 Class mkRefl T := intro_mkrefl : T -> Type@{m'}.
@@ -841,7 +840,7 @@ Proof.
   apply rew_swap with
     (P := fun x => C.(PaintingPrev).(painting') x).
   rewrite rew_app_rl. now trivial.
-  now apply (C.(FramePrev).(frame') p D.1).(UIP).
+  now apply (C.B(FramePrev).(frame') p D.1).(UIP).
 Defined.
 
 Definition mkCohReflRestrLayer {n' p} q {ε} {C: νType n'.+1} {G: Dgn C}

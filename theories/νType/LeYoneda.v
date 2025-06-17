@@ -5,7 +5,8 @@
 From Bonak Require Import Notation.
 From Bonak Require Import LeInductive.
 
-From Coq Require Import StrictProp.
+
+From Stdlib Require Import Logic.StrictProp.
 
 Set Warnings "-notation-overridden".
 
