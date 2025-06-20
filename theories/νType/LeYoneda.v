@@ -44,11 +44,21 @@ Lemma leR_O_contra {n}: leR n.+1 O -> SFalse.
   now auto.
 Qed.
 
+Lemma leR_n_contra {n}: leR n.+1 n -> SFalse.
+  induction n; auto.
+Qed.
+
 (** Contradiction of type n.+1 <= 0 *)
 Theorem leY_O_contra {n}: n.+1 <= O -> False.
   intros. cut SFalse. intro Hn; elim Hn. unfold leY in H.
   specialize H with (p := 1); eapply leR_O_contra.
   apply H; clear H. now auto.
+Qed.
+
+Theorem leY_n_contra {n}: n.+1 <= n -> False.
+  intros. cut SFalse. intro Hn. elim Hn. unfold leY in H.
+  specialize H with (p := n.+1); eapply leR_n_contra.
+  apply H; clear H. exact leR_refl.
 Qed.
 
 (** Reflexivity in leY *)
@@ -75,6 +85,10 @@ Lemma leY_up {n m} (Hnm: n <= m): n <= m.+1.
 Qed.
 
 Notation "↑ h" := (leY_up h) (at level 40).
+
+Lemma leY_zero n: 0 <= n.
+  induction n. now exact (leY_refl 0). now apply leY_up.
+Defined.
 
 Lemma leR_down {n m} (Hnm: leR n.+1 m): leR n m.
   revert m Hnm. induction n. now auto. destruct m. intros H.
