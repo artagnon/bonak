@@ -296,6 +296,7 @@ Inductive CohFramesExtension {Prev}: forall n
     restrs'
     (E': mkFrameOfRestrFrames' Prev O restrs' -> HSet)
     (cohs: mkCohFrameTypes restrs' TopPrev (TopRestrFrames E'))
+    (E: mkFrameOfRestrFrames O restrs' TopPrev (TopRestrFrames E') (mkRestrFramesFrom restrs' TopPrev (TopRestrFrames E') cohs) -> HSet)
     : CohFramesExtension O restrs' TopPrev (TopRestrFrames E') cohs
 | AddCohFrame n FramePrev PaintingPrev
     (extraPrev: PrevExtension (Prev := AddPrev FramePrev PaintingPrev Prev) n)
@@ -336,11 +337,11 @@ Defined.
 Definition mkRestrFramesExtension {Prev n}
     {restrs' : mkRestrFrameTypes' Prev n}
     {extraPrev : PrevExtension n} {extraRestrs' cohs}
-    (E: mkFrameOfRestrFrames n restrs' extraPrev extraRestrs' (mkRestrFramesFrom restrs' extraPrev extraRestrs' cohs) -> HSet):
+    (extraCohs : CohFramesExtension n restrs' extraPrev extraRestrs' cohs):
     RestrFramesExtension (Prev := mkLevel n restrs' extraPrev extraRestrs') n
        (mkRestrFramesFrom restrs' extraPrev extraRestrs' cohs)
        mkExtension.
-induction extraRestrs'.
+induction extraCohs.
 - constructor. apply E.
 - unshelve econstructor.
 (*  set ((mkRestrFrameFrom Prev n.+1 restrs' (AddExtraPrev Prev n FramePrev PaintingPrev extraPrev) (AddExtraRestrFrame Prev n FramePrev PaintingPrev extraPrev restrs' restr' extraRestrs') cohs)).
@@ -354,13 +355,14 @@ induction extraRestrs'.
      apply IHextraRestrs'.*)
 Admitted.
 
-Definition mkPainting {Prev n restrs' extraPrev extraRestrs' cohs}
+Definition mkPainting {Prev n restrs' extraPrev extraRestrs' cohs extraCohs}
   (E: mkFrameOfRestrFrames n restrs' extraPrev extraRestrs' (mkRestrFramesFrom restrs' extraPrev extraRestrs' cohs) -> HSet) :=
   mkPainting' (Prev := mkLevel n restrs' extraPrev extraRestrs') n
     (mkRestrFramesFrom restrs' extraPrev extraRestrs' cohs)
-    mkExtension (mkRestrFramesExtension E):
+    mkExtension (mkRestrFramesExtension extraCohs):
   mkFrameOfRestrFrames (Prev := Prev) n restrs' extraPrev extraRestrs' _ ->
     HSet.
+
 
 Definition mkPrevPainting {Prev n restrs' extraPrev extraRestrs' cohs}:
   mkPrevFrameOfRestrFrames (Prev := Prev) n
