@@ -50,14 +50,14 @@ Example: if Prev = EmptyPrev
   RestrFrameTypesDef := []
   FrameDef [] := [unit] (presented as a Sigma-type, i.e. as "unit")
 *)
-Fixpoint mkRestrFrameTypesAndFrames' {Prev}: nat -> RestrFrameTypeBlock :=
+Fixpoint mkRestrFrameTypesAndFrames' {Prev} n: RestrFrameTypeBlock :=
   match Prev with
-  | EmptyPrev => fun n =>
+  | EmptyPrev =>
     {|
       RestrFrameTypesDef := unit;
       FrameDef _ := hunit
     |}
-  | AddPrev FramePrev PaintingPrev rest => fun n =>
+  | AddPrev FramePrev PaintingPrev rest =>
     {|
       RestrFrameTypesDef :=
         { R: (mkRestrFrameTypesAndFrames' n.+1).(RestrFrameTypesDef) &T
@@ -90,7 +90,7 @@ Inductive RestrFramesExtension {Prev}: forall n
 (* Example: if Prev := EmptyPrev, extraPrev := [], extraRestrs' := ([],E)
    mkPainting:= [E] *)
 
-Fixpoint mkPainting' {Prev} n (restrs': mkRestrFrameTypes' (Prev := Prev))
+Fixpoint mkPainting' {Prev n} (restrs': mkRestrFrameTypes' (Prev := Prev))
   extraPrev (extraRestrs' : RestrFramesExtension n restrs' extraPrev):
   mkFrameOfRestrFrames' restrs' -> HSet :=
   match extraRestrs' in RestrFramesExtension n restrs' extraPrev
@@ -100,7 +100,7 @@ Fixpoint mkPainting' {Prev} n (restrs': mkRestrFrameTypes' (Prev := Prev))
   | @AddExtraRestrFrame _ n FramePrev PaintingPrev extraPrev restrs'
     restr' extraRestrs' => fun d =>
       {l: hforall ε, PaintingPrev (restr' O leY_O ε d) &
-      mkPainting' (Prev := AddPrev FramePrev PaintingPrev Prev) n
+      mkPainting' (Prev := AddPrev FramePrev PaintingPrev Prev)
         (restrs'; restr') extraPrev extraRestrs' (d; l)}
   end.
 
@@ -122,17 +122,17 @@ Fixpoint mkLevelRec Prev n (restrs': mkRestrFrameTypes')
   extraPrev (extraRestrs': RestrFramesExtension n restrs' extraPrev):
   PrevLevel :=
   AddPrev (mkFrameOfRestrFrames' restrs')
-    (mkPainting' n restrs' extraPrev extraRestrs')
+    (mkPainting' restrs' extraPrev extraRestrs')
     (MatchPrev mkLevelRec n restrs' extraPrev extraRestrs').
 
 (* Example: if Prev := EmptyPrev, extraPrev := [], extraRestrs' := ([],E)
    mkLevel := [{frame:=unit;painting:=E}] *)
 
-Definition mkLevel {Prev} n (restrs': mkRestrFrameTypes' (Prev := Prev))
+Definition mkLevel {Prev n} (restrs': mkRestrFrameTypes' (Prev := Prev))
   extraPrev (extraRestrs': RestrFramesExtension n restrs' extraPrev):
   PrevLevel :=
   AddPrev (mkFrameOfRestrFrames' restrs')
-    (mkPainting' n restrs' extraPrev extraRestrs')
+    (mkPainting' restrs' extraPrev extraRestrs')
     (MatchPrev mkLevelRec n restrs' extraPrev extraRestrs').
 
 (* Example: if Prev := EmptyPrev, extraPrev := [], extraRestrs' := ([],E)
@@ -140,7 +140,7 @@ Definition mkLevel {Prev} n (restrs': mkRestrFrameTypes' (Prev := Prev))
 
 Definition mkRestrFrameTypes {Prev} n restrs' extraPrev extraRestrs' :=
   (mkRestrFrameTypesAndFrames'
-    (Prev := mkLevel (Prev := Prev) n restrs' extraPrev
+    (Prev := mkLevel (Prev := Prev) (n := n) restrs' extraPrev
       extraRestrs') n).(RestrFrameTypesDef).
 
 Definition mkPrevRestrFrameTypes {Prev} n restrs' extraPrev extraRestrs' :=
@@ -154,7 +154,7 @@ Definition mkPrevRestrFrameTypes {Prev} n restrs' extraPrev extraRestrs' :=
 
 Definition mkFrameOfRestrFrames {Prev} n restrs' extraPrev extraRestrs'
   : mkRestrFrameTypes (Prev := Prev) n restrs' extraPrev extraRestrs' -> HSet :=
-    mkFrameOfRestrFrames' (Prev := mkLevel n restrs' extraPrev extraRestrs').
+    mkFrameOfRestrFrames' (Prev := mkLevel restrs' extraPrev extraRestrs').
 
 Definition mkPrevFrameOfRestrFrames {Prev} n {restrs' extraPrev extraRestrs'}:
   mkPrevRestrFrameTypes (Prev := Prev) n restrs' extraPrev
@@ -168,7 +168,7 @@ Check fun E restr => eq_refl:
       (Prev := AddPrev hunit (fun d : hunit => E d) EmptyPrev) restr).(Dom) =
   {a : unit &T forall a0 : arity, E (restr.2 0 leY_O a0 a)}.
 Check fun E' restr E => eq_refl:
-  mkPainting' (Prev := AddPrev hunit (fun d => E' d) EmptyPrev) O
+  mkPainting' (Prev := AddPrev hunit (fun d => E' d) EmptyPrev)
   restr TopPrev (TopRestrFrames E)
   = fun (d : {a : unit &T forall a0 : arity, E' (restr.2 0 leY_O a0 a)}) => E d.
 Check eq_refl : mkRestrFrameTypes' (Prev := EmptyPrev) = unit.
@@ -198,11 +198,11 @@ Variable RestrPainting':
       (AddExtraPrev extraPrev)}
     q (Hq: q <= n) ε
     (d: mkFrameOfRestrFrames' restrFrames'.1),
-  mkPainting' n.+1 restrFrames'.1 (AddExtraPrev extraPrev) extraRestrs' d ->
+  mkPainting' restrFrames'.1 (AddExtraPrev extraPrev) extraRestrs' d ->
   PaintingPrev (restrFrames'.2 q Hq ε d).
 
 Theorem coerce {Prev n restrFrames' extraPrev extraRestrs}:
-  mkLevel n restrFrames' extraPrev extraRestrs =
+  mkLevel restrFrames' extraPrev extraRestrs =
   mkLevelRec Prev n restrFrames' extraPrev extraRestrs.
 Proof.
 destruct Prev.
@@ -329,7 +329,7 @@ Inductive CohFramesExtension {Prev}: forall n
 
 Fixpoint mkExtension {Prev n} {restrs' : mkRestrFrameTypes' (Prev := Prev)}
     {extraPrev} {extraRestrs' : RestrFramesExtension n restrs' extraPrev}:
-    PrevExtension (Prev := mkLevel n restrs' extraPrev extraRestrs') n.
+    PrevExtension (Prev := mkLevel restrs' extraPrev extraRestrs') n.
 induction extraRestrs'.
 - constructor.
 - econstructor. rewrite coerce. eapply (mkExtension (AddPrev FramePrev PaintingPrev Prev) n (restrs'; restr')).
@@ -343,7 +343,7 @@ Definition mkRestrFramesExtension {Prev n}
     {restrs' : mkRestrFrameTypes' (Prev := Prev)}
     {extraPrev : PrevExtension n} {extraRestrs' cohs}
     (extraCohs : CohFramesExtension n restrs' extraPrev extraRestrs' cohs):
-    RestrFramesExtension (Prev := mkLevel n restrs' extraPrev extraRestrs') n
+    RestrFramesExtension (Prev := mkLevel restrs' extraPrev extraRestrs') n
        (mkRestrFramesFrom restrs' extraPrev extraRestrs' cohs)
        mkExtension.
 induction extraCohs.
@@ -358,7 +358,7 @@ Admitted.
 
 Definition mkPainting {Prev n restrs' extraPrev extraRestrs' cohs extraCohs}
   (E: mkFrameOfRestrFrames n restrs' extraPrev extraRestrs' (mkRestrFramesFrom restrs' extraPrev extraRestrs' cohs) -> HSet) :=
-  mkPainting' (Prev := mkLevel n restrs' extraPrev extraRestrs') n
+  mkPainting' (Prev := mkLevel restrs' extraPrev extraRestrs')
     (mkRestrFramesFrom restrs' extraPrev extraRestrs' cohs)
     mkExtension (mkRestrFramesExtension extraCohs):
   mkFrameOfRestrFrames (Prev := Prev) n restrs' extraPrev extraRestrs' _ ->
@@ -374,7 +374,7 @@ Admitted.
 Definition RestrPainting {Prev n restrs' extraPrev extraRestrs' cohs}
   q (Hq: q <= n) ε d:
   mkPrevPainting d ->
-  mkPainting' (Prev := Prev) n restrs' extraPrev extraRestrs'
+  mkPainting' (Prev := Prev) restrs' extraPrev extraRestrs'
   (mkRestrFrameFrom (extraPrev := extraPrev)
     (extraRestrs' := extraRestrs') (cohs := cohs) q Hq ε d).
 Admitted.
