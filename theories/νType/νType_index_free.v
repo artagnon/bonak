@@ -138,8 +138,7 @@ Definition mkLevel {Prev} n (restrs': mkRestrFrameTypes' Prev n)
 (* Example: if Prev := EmptyPrev, extraPrev := [], extraRestrs' := ([],E)
    mkRestrFrameTypes := [unit -> unit] *)
 
-Definition mkRestrFrameTypes {Prev} n restrs' extraPrev
-  extraRestrs' :=
+Definition mkRestrFrameTypes {Prev} n restrs' extraPrev extraRestrs' :=
   (mkRestrFrameTypesAndFrames'
     (Prev := mkLevel (Prev := Prev) n restrs' extraPrev
       extraRestrs') n).(RestrFrameTypesDef).
@@ -210,7 +209,12 @@ destruct Prev.
 - simpl. unfold mkLevel. intros. f_equal.
 Defined.
 
-Fixpoint mkCohFrameTypesAndRestrFrames {Prev}:
+#[local]
+Instance mkCohFrameTypesAndRestrFrames:
+  forall {Prev} n (restrFrames' : mkRestrFrameTypes' Prev n) extraPrev
+  (extraRestrs': RestrFramesExtension n restrFrames' extraPrev),
+    CohFrameTypeBlock :=
+  fix mkCohFrameTypesAndRestrFrames {Prev}:
   forall n (restrFrames' : mkRestrFrameTypes' Prev n)
     extraPrev
     (extraRestrs': RestrFramesExtension n restrFrames' extraPrev),
