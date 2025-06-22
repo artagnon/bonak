@@ -290,7 +290,7 @@ Definition mkRestrFrameFrom {Prev n restrFrames' extraPrev extraRestrs' cohs}:
     mkPrevFrameOfRestrFrames n
       (mkPrevRestrFramesFrom restrFrames' extraPrev extraRestrs' cohs) ->
     mkFrameOfRestrFrames' (Prev := Prev) restrFrames' :=
-   ((mkCohFrameTypesAndRestrFrames n restrFrames' extraPrev extraRestrs').(RestrFramesDef) cohs).2.
+    (mkRestrFramesFrom restrFrames' extraPrev extraRestrs' cohs).2.
 
 Inductive CohFramesExtension {Prev}: forall n
   (restrs': mkRestrFrameTypes' (Prev := Prev))
@@ -349,15 +349,11 @@ Definition mkRestrFramesExtension {Prev n}
 induction extraCohs.
 - constructor. apply E.
 - unshelve econstructor.
-(*  set ((mkRestrFrameFrom Prev n.+1 restrs' (AddExtraPrev Prev n FramePrev PaintingPrev extraPrev) (AddExtraRestrFrame Prev n FramePrev PaintingPrev extraPrev restrs' restr' extraRestrs') cohs)).
-
- simpl. unfold mkLevel in IHextraRestrs'. unfold mkRestrFramesFrom in IHextraRestrs'.
-  simpl mkCohFrameTypesAndRestrFrames in IHextraRestrs'. unfold CohFrameTypesDef in IHextraRestrs'.
-  destruct Prev; unfold coerce; unfold eq_rect_r, eq_sym, eq_trans, f_equal, eq_rect; simpl.
-  + admit.
-  + unfold mkLevel. unfold MatchPrev in IHextraRestrs'. simpl mkLevelRec in IHextraRestrs'.
-     simpl mkPainting'. unfold MatchPrev. unfold mkRestrFramesFrom.
-     apply IHextraRestrs'.*)
+  + intros q Hq ε d. eapply (mkRestrFrameFrom (extraPrev:=extraPrev) (extraRestrs' := extraRestrs') (cohs := (cohs; _)) q Hq ε).
+     unfold mkPrevFrameOfRestrFrames, mkPrevRestrFramesFrom. unfold mkRestrFramesFrom. simpl.
+     destruct coerce. simpl.
+     apply d.
+  + unfold mkRestrFramesFrom in IHextraCohs. simpl in IHextraCohs.
 Admitted.
 
 Definition mkPainting {Prev n restrs' extraPrev extraRestrs' cohs extraCohs}
