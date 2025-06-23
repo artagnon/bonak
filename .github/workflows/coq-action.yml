@@ -15,14 +15,4 @@ jobs:
       - name: "Docker Coq action"
         uses: "coq-community/docker-coq-action@v1"
         with:
-          coq_version: "latest"
-          before_install: |
-            startGroup "Workaround permission issue"
-              sudo chown -R coq:coq .
-            endGroup
-            startGroup "Print opam config"
-              opam config list; opam repo list; opam list
-            endGroup
-      - name: Revert permissions
-        if: ${{ always() }}
-        run: sudo chown -R 1001:116 .
+          coq_version: "8.20.1"
