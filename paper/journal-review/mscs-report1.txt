@@ -1,0 +1,74 @@
+Reviewer(s)' Comments to Author:
+Referee: 1
+
+Comments to the Author
+The paper defines ν-sets, a generalisation of indexed (Reedy fibrant)
+augmented semi-simplicial (ν=1) and semi-cubical (ν=2) sets. The paper
+is supported by a formalisation, the ideas of which are explained, but
+the formalisation itself is not made available.
+
+The definition of ν-sets is new. The fact that augmented semisimplical
+types are the unary variant of semicubical types appears in the PhD
+thesis of Hugo Moeneclaey (remark 3.2.9). There is an explicit
+construction of indexed ν-sets which is very intricate, I only trust
+it because there is a Coq formalisation. It is not emphasised and
+maybe unknown to the authors that there are constructions which
+generalise ν-sets, e.g. Theorem 4.8 in the cited
+Annenkov-Capriotti-Kraus 2017 (ACK), which is also formalised in
+Lean. However it is still useful to give explicit constructions such
+as the one in the paper: first of all, the current paper's
+constructions are in extensional type theory as opposed to two-level
+type theory of ACK (but the two-level approach is more general: it can
+be instantiated by extensional type theory for both levels); unfolding
+the results of ACK won't give exactly the same construction, but only
+something isomorphic to it; concrete constructions provide intuition
+and possibly better computational behaviour; in an earlier version of
+the ACK paper (Altenkirch-Capriotti-Kraus: Extending Homotopy Type
+Theory with Strict Equality, CSL 2016), there is also an explicit
+indexed construction of semi-simplicial types which is not exactly a
+special case of the general construction.
+
+It would be nice to have a comparison between the explicit
+construction of semisimplicial types in (Altenkirch-Capriotti-Kraus:
+Extending Homotopy Type Theory with Strict Equality, CSL 2016) and the
+current paper. Their approach seems simpler, but probably it doesn't
+generalise to νs other than 1.
+
+The "coinductive type of infinite dependent tuples" is not described
+in detail. What are the exact rules for these types? Does Coq support
+such a type? If not, how is this assumed in the formalisation.
+
+I suggest adding a URL to the formalisation and a new section which
+explains the exact contents of the formalisation.
+
+The title says "parametricity-based", and the parametricity-based
+intuition is explained very well, however the construction of ν-sets
+itself does not seem to be based on parametricity, only very
+loosely. A real parametricity-based formalisation would rely on some
+deeply embedded syntax of type theory and would define ν-sets using an
+iteration of Bernardy et al's parametricity translation on this type
+theory. Is there a deeper connection with the parametricity
+translation that I overlooked?
+
+How do we know that the construction of ν-sets really provides indexed
+versions of semisimplicial, semicubical sets? This is not proven in
+the paper, however the first three levels are unfolded (page 22),
+which is convincing. A correctness theorem would show that presheaves
+over the ν-semi-shape category (which is a very simple definition,
+verifiable by looking at it) are equivalent to ν-sets. If there is no
+formal proof, the authors could still provide a convincing argument
+for correctness along the lines of "we computed the first 5 levels of
+1-sets and 2-sets and by inspection we observed that they really
+correspond to augmented semisimplicial and semicubical sets". I
+suggest doing one of these.
+
+Minor remark: on page 14, B*(f_L(a_L), f_R(a_R)) is not well-typed,
+because f_L and f_R are different dependent functions, so one of them
+has type B[a↦a_L], the other B[a↦a_R]. You should probably use
+nondependent function space for the informal explanation, or make the
+dependencies explicit.
+
+I suggest acceptance of the paper if the above concerns are
+addressed. I selected major revision because I would like to see the
+revised version, but I think that it won't be too much work to address
+these.

@@ -1,0 +1,37 @@
+In the discussion of previous constructions on p3, I think you should mention
+which of them are restricted to sets and which are not.  In particular, the
+2LTT construction produces semi-simplicial *types* (in the "inner" level,
+although they are "sets" relative to the outer equality which satisfies UIP),
+whereas the others (like yours) probably only produce semi-simplicial *sets*.
+
+At the bottom of p6, I don't think it's right to say there is a shift relative
+to semi-simplicial sets.  The shift is relative to *semi-cubical* sets and more
+general nu-sets, where an augmented n-simplex corresponds to an (n+1)-cube, but
+it is still an n-simplex whether augmented or not.
+
+On that note, thanks for incorporating my request about the numbering of
+simplices.  But I think you missed one change that it necessitates: in
+Definition 2, the objects should be the integers >= -1 rather than the natural
+numbers, and the ocurrences of numbers should be shifted.  (Alternatively, if
+you want the names of the objects of Delta_+ to use the "cubical" indexing,
+then in Definition 4 the n-simplex should be the representable on the object
+(n+1).)
+
+On p12, "nu" is displaymath'd when it shouldn't be.
+
+On p13, end of second paragraph, "described in A" should be "described in
+Appendix A".
+
+In the References, in the ABCFHL paper "Syntax and models of cartesian cubical
+type theory", the author "(Favonia), K. H." is not really formatted well.  I
+presume the bibliography program is interpreting something like "Kuan-Bang Hou
+(Favonia)" as if "Kuan-Bang Hou" were the first name and "(Favonia)" the last
+name, but obviously that's not right.
+
+In the reference (Hofmann 1995), "Phd" should be "Ph.D. thesis".
+
+The reference (Herbelin 2020) does not include any information about where to
+find it, which makes it not very useful.
+
+In the reference (Kapulkin-Lumsdaine 2023), in the title "Voevodsky" should be
+capitalized.

@@ -1,0 +1,314 @@
+Dear reviewers,
+
+Thanks for your useful comments. We list below the changes we made to address your remarks.
+
+Thanks a lot and best regards,
+
+Hugo Herbelin and Ramkumar Ramachandra
+
+----------------------------------------------------------------------
+> The paper defines ν-sets, a generalisation of indexed (Reedy fibrant)
+> augmented semi-simplicial (ν=1) and semi-cubical (ν=2) sets.
+
+There are definitions of ν-sets both in the presheaf (Section 2) and
+indexed (Section 5) forms. Also, to our knowledge, Reedy fibrant
+presheaves are only the image of indexed presheaves as ordinary
+presheaves. We added a note on that in the introduction.
+
+> The paper is supported by a formalisation, the ideas of which are explained,
+> but the formalisation itself is not made available.
+
+The formalization is available and there was a link to it in the paper in the
+"Contribution" section. Kindly see https://github.com/artagnon/bonak.
+
+> The definition of ν-sets is new. The fact that augmented semisimplical types
+> are the unary variant of semicubical types appears in the PhD thesis of Hugo
+> Moeneclaey (remark 3.2.9). There is an explicit construction of indexed
+> ν-sets which is very intricate, I only trust it because there is a Coq
+> formalisation. It is not emphasised and maybe unknown to the authors that
+> there are constructions which generalise ν-sets, e.g. Theorem 4.8 in the
+> cited Annenkov-Capriotti-Kraus 2017 (ACK), which is also formalised in Lean.
+
+Thanks, we mentioned the existence of such generic constructions
+involving direct categories in the section referring to Reedy fibrant
+presheaves. Let us know if you think that more should be said.
+
+> However it is still useful to give explicit constructions such as the one in
+> the paper: first of all, the current paper's constructions are in extensional
+> type theory as opposed to two-level type theory of ACK (but the two-level
+> approach is more general: it can be instantiated by extensional type theory
+> for both levels); unfolding the results of ACK won't give exactly the same
+> construction, but only something isomorphic to it; concrete constructions
+> provide intuition and possibly better computational behaviour; in an earlier
+> version of the ACK paper (Altenkirch-Capriotti-Kraus: Extending Homotopy Type
+> Theory with Strict Equality, CSL 2016), there is also an explicit indexed
+> construction of semi-simplicial types which is not exactly a special case of
+> the general construction.
+
+The construction in Altenkirch-Capriotti-Kraus was actually already mentioned
+in the submitted version but with the wrong reference (referring instead to
+Annenkov-Capriotti-Kraus). We fixed the reference. Thanks.
+
+> It would be nice to have a comparison between the explicit construction of
+> semisimplicial types in (Altenkirch-Capriotti-Kraus: Extending Homotopy Type
+> Theory with Strict Equality, CSL 2016) and the current paper. Their approach
+> seems simpler, but probably it doesn't generalise to νs other than 1.
+
+Thanks, we added a comparison at two places. One between Herbelin's 2013
+construction at the time of presenting the history of constructions of
+semi-simplicial sets in indexed form and one in the section contribution.
+
+> The "coinductive type of infinite dependent tuples" is not described in
+> detail. What are the exact rules for these types? Does Coq support such a
+> type? If not, how is this assumed in the formalisation.
+
+Coq supports a general scheme of coinductive types, which also includes this
+particular type. Thanks, we have now written down the rules for this type in
+the appendix, as it is quite non-standard. See also: response to similar
+comment from other reviewer.
+
+> I suggest adding a URL to the formalisation and a new section which explains
+> the exact contents of the formalisation.
+
+The formalization is actually pretty compact, and well-documented: we
+documented it using coqdoc, and there is a link to the coqdoc documentation on
+the GitHub page. For your reference, here's a link to the coqdoc of the main
+file: https://artagnon.github.io/bonak/Bonak.νType.νType.html.
+
+Otherwise, Sections 5.4 to 5.6 already explained at a high-level the
+specificity of the formalization. We believe that being more precise would not
+help more than the formalization itself.
+
+> The title says "parametricity-based", and the parametricity-based intuition
+> is explained very well, however the construction of ν-sets itself does not
+> seem to be based on parametricity, only very loosely. A real
+> parametricity-based formalisation would rely on some deeply embedded syntax
+> of type theory and would define ν-sets using an iteration of Bernardy et al's
+> parametricity translation on this type theory. Is there a deeper connection
+> with the parametricity translation that I overlooked?
+
+Our construction expresses directly (without having to stepwise embed the
+syntax of type theory) the n-th iteration of (a subset of) Bernardy et al's
+parametricity translation. In our opinion, this deserves to be called
+parametricity, but we also agree that this is a question of definition.
+
+> How do we know that the construction of ν-sets really provides indexed
+> versions of semisimplicial, semicubical sets? This is not proven in the
+> paper, however the first three levels are unfolded (page 22), which is
+> convincing. A correctness theorem would show that presheaves over the
+> ν-semi-shape category (which is a very simple definition, verifiable by
+> looking at it) are equivalent to ν-sets.
+
+We are aware of this, and it was already mentioned as the last point in the
+"Future work" section. To quote it:
+
+  Another direction for future work is to give a general definition of presheaf
+  in indexed form over a direct category, and to show the equivalence with the
+  standard definition of presheaf.
+
+We believe that a formal proof would require iterating countably many times the
+fibered/indexed correspondence.
+
+> If there is no formal proof, the authors could still provide a convincing
+> argument for correctness along the lines of "we computed the first 5 levels
+> of 1-sets and 2-sets and by inspection we observed that they really
+> correspond to augmented semisimplicial and semicubical sets". I suggest doing
+> one of these.
+
+Thanks, we have changed the last paragraph of "Future work" to include this.
+
+> Minor remark: on page 14, B*(f_L(a_L), f_R(a_R)) is not well-typed, because
+> f_L and f_R are different dependent functions, so one of them has type
+> B[a↦a_L], the other B[a↦a_R]. You should probably use nondependent function
+> space for the informal explanation, or make the dependencies explicit.
+
+We had left implicit that B depends on a and thus B* on a_L, a_R and a
+proof of A*(a_L,a_R). We made this explicit in the revision. Thanks for
+catching this.
+
+> Bottom of p2: “X2 can be seen as a family over X1 × X1 × X1 × X1” — I think
+> this is a bit misleading, the quadruple product should really be a pullback
+> over four copies of X0.
+
+We agree that this is hiding something and misleading. We added a point to
+mention the coherence conditions, hoping that it addresses the point
+sufficiently.
+
+> p3: I’m not clear on the difference between the constructions you describe.
+> Aren’t “a presheaf over increasing injective maps between finite ordinals” and
+> “a presheaf over face maps” and “increasing injective functions over finite
+> ordinals” all the same thing?
+
+We can split the question in two:
+
+1. It is confusing to use the terminology "increasing injective maps
+between finite ordinals" in one instance, and "increasing injective functions
+over finite ordinals" in another; so, we use only the first terminology in the
+revision.
+2. Even if equivalent as categories, relying on increasing injective maps or
+relying on face maps leads to distinct presentations of the augmented
+semi-simplicial category. This in turn leads to definitions of indexed
+presheaves that rely on different choices of matching object, each of them
+coming with its specific combinatorics. We believe that it is clear enough that
+different presentations lead to different formalisations, and, otherwise, an
+alternative could be to add between parentheses the sentence "each choice of
+presentation implies specific combinatorics in the formalisation".
+
+> p4: There’s an argument that what you call a “ν-set” can be called a “ν-ary
+> cubical set”. For instance, an augmented semi-simplicial set is equivalent to
+> a “unary” cubical set, where “unary cubes” can be thought of geometrically as
+> products of a half-open interval [0, 1). When ν = 3, a “ternary cube” can be
+> thought of as products of a closed interval with a distinguished midpoint, so
+> that for instance a ternary 2-cube looks like a window with a cross on it;
+> and so on. (The earliest reference I know of for the notion of ν-ary cubes is
+> the Nuyts–Devriese paper “Transpension: the right adjoint to the pi-type”,
+> Example 6.14.)
+
+This is an interesting point, but it should be noted that the term
+"v-ary cubical sets" would be misleading, as the term "unary cubical
+sets" is used to refer to a kind of cubical set with degeneracies and
+permutations, and not semi-cubical set. Since we only construct
+semi-cubical sets (i.e. without permutations), we decided to keep the
+term v-set, and justify its introduction.
+
+> In definitions 2, 8, and 14, “less than” should be “less than or equal to”.
+
+Yes, thanks for catching this. Fixed in the revision.
+
+> I believe very strongly that when talking about “augmented semi-simplicial
+> sets”, the numerical indexing should be the geometric simplicial one, which
+> starts with a monochromatic singleton as the (−1)-simplex, moves on to a
+> “point” as the 0-simplex (Example 5), a “line” as the 1-simplex (Example 6),
+> a “triangle” as the 2-simplex (Example 7), and so on. If you want the
+> numbering to start at 0, then you should use cubical language and speak of
+> unary 0-cubes, 1-cubes, 2-cubes and so on, corresponding to (−1)-simplices,
+> 0-simplices, and 1-simplices, respectively. But don’t call a line a
+> “2-simplex”, that is just confusing.
+
+This is a good point, thanks. We adopted the point of view.
+
+> In example 13, the references to “cylinders” should probably be “prisms”.
+
+Yes, thanks for this improvement.
+
+> In the table on p11, “types” should be “sets”.
+
+Yes, thanks for catching this.
+
+> The citations at the beginning of section 3 to Agda, Coq, and Lean are
+> difficult to find in the references list, since the citations do not include
+> the sort key used for the references. It also looks weird to see Agda and Coq
+> cited with dates of “2023”, eight years later than Lean’s “2015” even though
+> they are by far the older software. (And in the reference to Lean, “Lean”
+> should be capitalized.)
+
+We thought about this issue for a bit, and we have decided to remove the
+references, as Coq, Lean, and Agda are fairly standard, and the citations add
+no value.
+
+> As I’m sure you know, it’s not really correct to say that there are models of
+> type theory based on “topological spaces” with equality interpreted as paths.
+> These are actually “homotopy-theoretic” models based on simplicial sets,
+> cubical sets, or related structures.
+
+Thanks, fixed now.
+
+> The “coinductive type of infinite dependent tuples” mentioned at the bottom
+> of p12 is not nearly as standard a part of type theory as the other
+> type-formers mentioned in that paragraph. Please give the definition
+> explicitly and include a reference.
+
+Thanks, this is indeed quite non-standard, and we have fixed this now, adding
+the definition to the appendix. See also: response to similar comment from
+other reviewer.
+
+We also developed a Coq formalization, which you can find for
+reference at the end of this message.
+
+> Bottom of p13: “the reflection rules also implies” should be “rule”.
+
+Fixed now.
+
+> On p16, it would probably be a good idea to mention again in the description
+> of section 5.3 that even though it uses intensional type theory, it still
+> assumes “local UIP” by requiring the types to be h-sets.
+
+Fixed, thanks.
+
+> Elements of νSet<0 should not be called “0-truncated”. They could be called
+> (−1)-truncated, or perhaps (< 0)-truncated. But a “0-truncated” cubical set
+> means “(≤ 0)-truncated” one, which has 0-cubes.
+
+Fixed, thanks.
+
+> I would recommend moving section 5.2 about intuition to come before table 3,
+> at least.
+
+Actually, in the initial version of the paper, we had the intuition section come
+before the formal definition. However, a reviewer expressed strong interest in
+seeing the formal definition come before the intuition. Doing what you suggest
+would require quite a major rewrite of the text in the section, and as
+different reviewers have different preferences, we have decided not to
+implement this suggestion. We hope you won't mind.
+
+> I’m grateful that the figure on p23 is fairly readable when printed in black
+> and white. But the text in the first paragraph on that page is not very
+> readable in black and white as it refers to things by their colors.
+
+Fixed, although we have traded off a bit of beauty for it.
+
+----------------------------------------------------------------------
+(** The interpretation of dependent streams as a coinductive type in Coq *)
+
+Section DepStream.
+
+Context {A} (B: A -> Type) (f: forall a, B a -> A).
+
+CoInductive DepStream (a: A): Type :=
+  { this : B a ; next : DepStream (f a this) }.
+
+Check this: forall a, DepStream a -> B a.
+Check next: forall a (x: DepStream a), DepStream (f a x.(this a)).
+
+Context (D: A -> Type) (v: forall a, D a -> B a)
+        (s: forall a d, D (f a (v a d))).
+
+CoFixpoint make a (d: D a) : DepStream a :=
+  {| this := v a d; next := make (f a (v a d)) (s a d) |}.
+
+Check fun a d => eq_refl: (make a d).(this a) = v a d.
+Check fun a d => eq_refl: (make a d).(next a) =
+  make (f a (make a d).(this a)) (s a d).
+
+End DepStream.
+
+(** As a comparison, we can also give a second-order interpretation
+    when restricted to propositions *)
+
+Section DepStreamProp.
+
+Context {A: Prop} (B: A->Prop) (f: forall a, B a -> A).
+
+Definition DepStreamProp (a: A): Prop :=
+  exists D: A -> Prop, (D a /\ exists (v: forall a, D a -> B a),
+    (forall a d, D (f a (v a d)))).
+
+Definition this_prop a (x: DepStreamProp a): B a :=
+  let '(ex_intro _ D (conj d (ex_intro _ v s))) := x in v a d.
+
+Definition next_prop a (x: DepStreamProp a):
+  DepStreamProp (f a (this_prop a x)) :=
+  let '(ex_intro _ D (conj d (ex_intro _ v s))) := x in
+  ex_intro _ D (conj (s a d) (ex_intro _ v s)).
+
+Context (D: A -> Prop) (v: forall a, D a -> B a)
+  (s: forall a d, D (f a (v a d))).
+
+Definition make_prop a (d: D a): DepStreamProp a :=
+  ex_intro _ D (conj d (ex_intro _ v s)).
+
+Check fun a d => eq_refl: this_prop a (make_prop a d) = v a d.
+Check fun a d => eq_refl: next_prop a (make_prop a d) =
+  make_prop (f a (this_prop a (make_prop a d))) (s a d).
+
+End DepStreamProp.

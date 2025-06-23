@@ -1,0 +1,21 @@
+The paper presents a Coq formalisation of ν-sets which are a generalisation of
+augmented semi-simplicial (ν=1) and semi-cubical (ν=2) sets. I have reviewed
+the previous version of the paper, and this new version is certainly improved.
+In particular, the title was changed to clarify that we work in a setting with
+(local) UIP, there is a link to the formalisation, there is a description of
+dependent streams, and there are several small improvements. The description of
+the formalisation is well-structured and helpful with multiple iterations, each
+getting closer to the actual code.
+
+The Coq formalisation typechecks. The file νType.v has some examples at the
+end. It would be very nice to have more examples which actually compute to
+something human readable: I tried printing the 3-dimensional version of
+SemiSimplicial2, but the type of triangles is too complicated to be
+human-readable. I guess this should not be too hard as the coherence equations
+are all refl for finite unfoldings.
+
+The paper contributes a new indexed definition of semi-cubical sets and their
+generalisations. Previous formalisations were more specific or were not on the
+indexed, but on the fibred side of the indexed family/fibration correspondence.
+The paper is well written, well-motivated, cites the relevant related work, and
+is supported by a well-documented Coq formalisation. I suggest acceptance.

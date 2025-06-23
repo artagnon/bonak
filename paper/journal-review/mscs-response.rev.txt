@@ -1,0 +1,68 @@
+Thanks for your new comments. We list below the changes we made to address your remarks.
+
+Best regards,
+
+Hugo Herbelin and Ramkumar Ramachandra
+
+----------------------------------------------------------------------
+> In the discussion of previous constructions on p3, I think you should mention
+> which of them are restricted to sets and which are not.  In particular, the
+> 2LTT construction produces semi-simplicial *types* (in the "inner" level,
+> although they are "sets" relative to the outer equality which satisfies UIP),
+> whereas the others (like yours) probably only produce semi-simplicial *sets*.
+
+We don't feel comfortable about not considering Part and Luo's formalization as
+a formalization of semi-simplicial types. In order to avoid taking a position,
+we say that Part and Luo as well as Altenkirch et. al. are both "stated as
+providing semi-simplicial types (thanks to an extension of the type theory)",
+without commenting on whether they should be considered as such or not. Would
+this be ok?
+
+> At the bottom of p6, I don't think it's right to say there is a shift
+> relative to semi-simplicial sets.  The shift is relative to *semi-cubical*
+> sets and more general nu-sets, where an augmented n-simplex corresponds to an
+> (n+1)-cube, but it is still an n-simplex whether augmented or not.
+>
+> On that note, thanks for incorporating my request about the numbering of
+> simplices.  But I think you missed one change that it necessitates: in
+> Definition 2, the objects should be the integers >= -1 rather than the
+> natural numbers, and the ocurrences of numbers should be shifted.
+> (Alternatively, if you want the names of the objects of Delta_+ to use the
+> "cubical" indexing, then in Definition 4 the n-simplex should be the
+> representable on the object (n+1).)
+
+Ah, yes: thanks for catching this! We have fixed the text at the bottom of p6,
+and chosen to tweak Definition 4.
+
+> On p12, "nu" is displaymath'd when it shouldn't be.
+
+We had caught and fixed this earlier, but sent the wrong version by mistake. We
+have sent the correct version now.
+
+> On p13, end of second paragraph, "described in A" should be "described in
+> Appendix A".
+
+Fixed now, thanks.
+
+> In the References, in the ABCFHL paper "Syntax and models of cartesian
+> cubical type theory", the author "(Favonia), K. H." is not really formatted
+> well.  I presume the bibliography program is interpreting something like
+> "Kuan-Bang Hou (Favonia)" as if "Kuan-Bang Hou" were the first name and
+> "(Favonia)" the last name, but obviously that's not right.
+
+Fixed, thanks.
+
+> In the reference (Hofmann 1995), "Phd" should be "Ph.D. thesis".
+
+Fixed, thanks. It is displayed as "PhD thesis" now, from the @phdthesis bib
+entry.
+
+> The reference (Herbelin 2020) does not include any information about where to
+> find it, which makes it not very useful.
+
+Fixed, thanks.
+
+> In the reference (Kapulkin-Lumsdaine 2023), in the title "Voevodsky" should
+> be capitalized.
+
+Fixed now, thanks.
