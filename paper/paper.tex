@@ -175,7 +175,7 @@
 \newcommandx*{\eqnarg}[3]{\ifinmask[bonak]{#1}[#2]{\{#2:#3\}}{(#2:#3)}}
 
 % Double-spacing
-\linespread{2}
+% \linespread{2}
 
 \begin{document}
 \title{A parametricity-based formalization of semi-simplicial and semi-cubical sets}
@@ -188,45 +188,45 @@
     \email{r@artagnon.com}}
 \end{authgrp}
 \begin{abstract}
-  Semi-simplicial and semi-cubical sets are commonly defined as presheaves over respectively, the semi-simplex or semi-cube category. Homotopy Type Theory then popularized an alternative definition, where the set of $n$-simplices or $n$-cubes are instead regrouped into the families of the fibers over their faces, leading to a characterization we call \emph{indexed}. Moreover, it is known that semi-simplicial and semi-cubical sets are related to iterated Reynolds parametricity, respectively in its unary and binary variants. We exploit this correspondence to develop an original uniform indexed definition of both augmented semi-simplicial and semi-cubical sets, and fully formalize it in Coq.
+  Semi-simplicial and semi-cubical sets are commonly defined as presheaves over respectively, the semi-simplex or semi-cube category. Homotopy Type Theory then popularized an alternative definition, where the set of $n$-simplices or $n$-cubes are instead regrouped into the families of the fibres over their faces, leading to a characterization we call \emph{indexed}. Moreover, it is known that semi-simplicial and semi-cubical sets are related to iterated Reynolds parametricity, respectively in its unary and binary variants. We exploit this correspondence to develop an original uniform indexed definition of both augmented semi-simplicial and semi-cubical sets, and fully formalize it in Coq.
 \end{abstract}
 \footnotetext{Competing interests: The authors declare none}
 \maketitle
 \vspace{-2em} % Remove space after abstract
 
 \section{Introduction}
-\subsection*{Fibered vs indexed presentation of semi-simplicial and semi-cubical sets}
-A family of sets can commonly be represented in two ways: as a family properly speaking, indexed by the elements of a given set $S$, or as a set $T$ together with a map from $T$ to $S$, which specifies for each element of $T$ its dependency on $S$. In the former case, we call it an \emph{indexed} presentation. In the latter case, the set associated to a given element of $S$ is the fiber of this element, so we call it a \emph{fibered} presentation. The two presentations are equivalent and the equivalence can be phrased concisely in the language of homotopy type theory~\citep{hottbook} as the fibered/indexed equivalence\footnote{In an informal discussion, alternative nomenclatures were proposed: fibration/family equivalence and unbundled/bundled equivalence. The fibered/indexed nomenclature echoes the Grothendieck construction of fibered categories from indexed categories. The most elementary instance of the equivalence, with $\Type$ instead of $\U$, is sometimes called ``Grothendieck construction for dummies'', and its proof requires univalence~\citep{hottbook}.}.
+\subsection*{Fibred vs indexed presentation of semi-simplicial and semi-cubical sets}
+A family of sets can commonly be represented in two ways: as a family properly speaking, indexed by the elements of a given set $S$, or as a set $T$ together with a map from $T$ to $S$, which specifies for each element of $T$ its dependency on $S$. In the former case, we call it an \emph{indexed} presentation. In the latter case, the set associated to a given element of $S$ is the fibre of this element, so we call it a \emph{fibred} presentation. The two presentations are equivalent and the equivalence can be phrased concisely in the language of homotopy type theory~\citep{hottbook} as the fibred/indexed equivalence\footnote{In an informal discussion, alternative nomenclatures were proposed: fibration/family equivalence and unbundled/bundled equivalence. The fibred/indexed nomenclature echoes the Grothendieck construction of fibred categories from indexed categories. The most elementary instance of the equivalence, with $\Type$ instead of $\U$, is sometimes called ``Grothendieck construction for dummies'', and its proof requires univalence~\citep{hottbook}.}.
 \begin{equation*}
-  \mbox{(fibered)}\qquad(\Sigma T: \U. (T \rightarrow S)) ~\simeq~ (S \rightarrow \U)\qquad \mbox{(indexed)}
+  \mbox{(fibred)}\qquad(\Sigma T: \U. (T \rightarrow S)) ~\simeq~ (S \rightarrow \U)\qquad \mbox{(indexed)}
 \end{equation*}
 Here, $\U$ represents in homotopy type theory the subset of types within a given universe where equality of any two elements has at most one proof.
 
-A \emph{presheaf} on an category is a family of sets indexed by the object of the category with maps indexed by the morphisms. As such, it lives on the indexed side of the equivalence, contrasting with the fibered side, where we have \emph{discrete Grothendieck fibrations}~\citep{LoregianRiehl20}. However, there are situations where a presheaf can also be seen as living on the fibered side of the equivalence. This happens when the indexing category is \emph{direct}, or has a downwards-well-founded collection of non-identity morphisms. Let us consider, for instance, the case of a semi-cubical set~\citep{grandis03,buchholtz17} presented with $2n$ face maps from the set of $n$-cubes to the set of $(n-1)$-cubes. Formulated in type theory, the corresponding presheaf definition of a semi-cubical set prescribes a family of sets and face maps between them as follows.
+A \emph{presheaf} on an category is a family of sets indexed by the object of the category with maps indexed by the morphisms. As such, it lives on the indexed side of the equivalence, contrasting with the fibred side, where we have \emph{discrete Grothendieck fibrations}~\citep{LoregianRiehl20}. However, there are situations where a presheaf can also be seen as living on the fibred side of the equivalence. This happens when the indexing category is \emph{direct}, or has a downwards-well-founded collection of non-identity morphisms. Let us consider, for instance, the case of a semi-cubical set~\citep{grandis03,buchholtz17} presented with $2n$ face maps from the set of $n$-cubes to the set of $(n-1)$-cubes. Formulated in type theory, the corresponding presheaf definition of a semi-cubical set prescribes a family of sets and face maps between them as follows.
 
 \begin{equation*}
   \begin{tikzcd}
     X_0: \U & X_1: \U \arrow[l, "\partial^L" description, shift left=2] \arrow[l, "\partial^R" description, shift right=2] & X_2: \U \arrow[l, "\partial^{L\kstar}" description, shift left=6] \arrow[l, "\partial^{R\kstar}" description, shift left=2] \arrow[l, "\partial^{\kstar L}" description, shift right=2] \arrow[l, "\partial^{\kstar R}" description, shift right=6] & \ldots
   \end{tikzcd}
 \end{equation*}
-up to cubical faces identities. Here, $X_1$ can be seen as a family over $X_0 \times X_0$, and $X_2$ can be seen as a family over $X_1 \times X_1 \times X_1 \times X_1$, in the fibered presentation, together with coherence conditions between the $X_1$ seen as families over $X_0 \times X_0$. This suggests an alternative indexed presentation of the presheaf as a stratified sequence of families indexed by families of lower rank, taking into account those coherence conditions to prevent duplications. Formulated in type theory, it takes the form:
+up to cubical faces identities. Here, $X_1$ can be seen as a family over $X_0 \times X_0$, and $X_2$ can be seen as a family over $X_1 \times X_1 \times X_1 \times X_1$, in the fibred presentation, together with coherence conditions between the $X_1$ seen as families over $X_0 \times X_0$. This suggests an alternative indexed presentation of the presheaf as a stratified sequence of families indexed by families of lower rank, taking into account those coherence conditions to prevent duplications. Formulated in type theory, it takes the form:
 \begin{equation*}
-  \begin{array}{llr}
-    X_0 & :              & \U                                                                        \\
-    X_1 & :              & X_0 \times X_0 \rightarrow  \U                                            \\
-    X_2 & : \Pi a b c d. & X_1(a,b) \times X_1 (c,d) \times X_1(a,c) \times X_1 (b,d) \rightarrow \U \\
+  \begin{array}{lll}
+    X_0 & :               \U                                                                        \\
+    X_1 & :               X_0 \times X_0 \rightarrow  \U                                            \\
+    X_2 & : \Pi a b c d.\,  X_1(a,b) \times X_1 (c,d) \times X_1(a,c) \times X_1 (b,d) \rightarrow \U \\
     \ldots
   \end{array}
 \end{equation*}
 
-The idea for such an indexed presentation of presheaves over a direct category was mentioned at the Univalent Foundations year in the context of defining semi-simplicial types\footnote{\href{https://ncatlab.org/nlab/show/semi-simplicial+types+in+homotopy+type+theory}{ncatlab.org/nlab/show/semi-simplicial+types+in+homotopy+type+theory}}. A few constructions have been proposed since then. The first construction by \cite{voevodsky12} relies on the presentation of semi-simplicial sets as a presheaf over increasing injective maps between finite ordinals. The second, by \cite{herbelin15}\footnote{In hindsight, the title of the paper ``A dependently-typed construction of semi-simplicial types'' is somewhat confusing: it implicitly claimed to construct semi-simplicial types, but the construction was done in a type theory with Uniqueness of Identity Proofs. Consequentially, what was really obtained was an indexed presentation of semi-simplicial sets. The confusion was however, common at the time.} formalized in the Coq proof assistant, relies on the presentation of semi-simplicial sets as a presheaf over face maps. Another by \cite{part15} formalized in an emulation of logic-enriched homotopy type theory in the Plastic proof assistant, and yet another by \cite{altenkirch16} formalized in an emulation of a two-level type theory in the Agda proof assistant\footnote{\href{https://github.com/nicolaikraus/HoTT-Agda/blob/master/nicolai/SemiSimp/SStypes.agda}{github.com/nicolaikraus/HoTT-Agda/blob/master/nicolai/SemiSimp/SStypes.agda}}, rely, like in Voevodsky, on the presentation of the semi-simplicial category from increasing injective maps between finite ordinals. The latter constructions are particularly concise, taking advantage of a definition of increasing injective maps between finite ordinals as type-theoretic functions to inherit the associativity of composition directly from it holding in type theory. This contrasts with the combinatorial construction in \cite{herbelin15} where equations over face maps have to be proved by induction.
+The idea for such an indexed presentation of presheaves over a direct category was mentioned at the Univalent Foundations year in the context of defining semi-simplicial types\footnote{\href{https://ncatlab.org/nlab/show/semi-simplicial+types+in+homotopy+type+theory}{ncatlab.org/nlab/show/semi-simplicial+types+in+homotopy+type+theory}}. A few constructions have been proposed since then. The first construction by \cite{voevodsky12} relies on the presentation of semi-simplicial sets as a presheaf over increasing injective maps between finite ordinals. The second, by \cite{herbelin15}\footnote{In hindsight, the title of the paper ``A dependently-typed construction of semi-simplicial types'' is somewhat confusing: it implicitly claimed to construct semi-simplicial types, but the construction was done in a type theory with Uniqueness of Identity Proofs. Consequently, what was really obtained was an indexed presentation of semi-simplicial sets. The confusion was however, common at the time.} formalized in the Coq proof assistant, relies on the presentation of semi-simplicial sets as a presheaf over face maps. Another by \cite{part15} formalized in an emulation of logic-enriched homotopy type theory in the Plastic proof assistant, and yet another by \cite{altenkirch16} formalized in an emulation of a two-level type theory in the Agda proof assistant\footnote{\href{https://github.com/nicolaikraus/HoTT-Agda/blob/master/nicolai/SemiSimp/SStypes.agda}{github.com/nicolaikraus/HoTT-Agda/blob/master/nicolai/SemiSimp/SStypes.agda}}, rely, like in Voevodsky, on the presentation of the semi-simplicial category from increasing injective maps between finite ordinals. The latter constructions, besides being stated as providing semi-simplicial types (thanks to an extension of the type theory), are particularly concise, taking advantage of a definition of increasing injective maps between finite ordinals as type-theoretic functions to inherit the associativity of composition directly from it holding in type theory. This contrasts with the combinatorial construction in \cite{herbelin15} where equations over face maps have to be proved by induction.
 
 By taking the sum of each component of an indexed presentation over the indexing set of this component, one obtains back a presheaf in the ordinary sense that has a property of \emph{Reedy fibrancy}, that is whose morphisms are projections in the set-theoretic sense. Such Reedy fibrant presheaves over a direct category have been studied in e.g. \cite{shulman15}, \cite{kraus17} and \cite{annenkovCK17,AnnenkovCKS2023}, presenting generic constructions over such presheaves.
 
 The indexed definition of a presheaf over a direct category is technically more involved than the presheaf definition, as it requires hard-wiring in the structure the dependencies between elements of the sets of the presheaf, including the coherence conditions between these dependencies, such as taking the $i$-th face of the $j$-th face of a $n$-simplex being the same as taking the $(j-1)$-th face of the $i$-th face (when $j>i$). However, exhibiting a concrete instance of a presheaf in indexed form only requires providing the families, since the responsibility of defining maps and showing the coherence conditions is already accounted for in the definition of the structure.
 
 \subsection*{Reynolds parametricity and its unary and binary variants}
-In the context of functional programming, Reynolds parametricity~(\citeyear{reynolds83}) interprets types as relations characterizing the observational behavior of programs of this type. More generally, families over a product of sets, or \emph{correspondences}, can be used in place of relations. Parametricity can then be iterated, and relying on the fibered presentation of correspondences as spans, it has been noted that iterated Reynolds parametricity has the structure of a cubical set~\citep{altenkirch15,moulin16,johann17,moeneclaey21,moeneclaey22phd}. We obtain a \emph{unary} variant of Reynolds \emph{binary} parametricity by using predicates or families instead of relations or correspondences, and this is a form of realizability~\citep{bernardy12,lasson12,moulin16}. Cubical set models which differ only by the arity one~\citep{bernardy15} or two~\citep{bezem13} were introduced, and this led to a general notion of affine $\nu$-ary cubes in \cite{nuytsdevriese24}. In parallel, it has been noted that iterated unary parametricity has the structure of an augmented simplicial set\footnote{Private communication with Hugo Moeneclaey and Thorsten Altenkirch.}. This suggests that the definition of augmented semi-simplicial sets and semi-cubical sets can in turn be seen as particular instances of the restriction of Nuyts-Devriese's $\nu$-ary cubes to only faces, which we call $\nu$-sets, of presheaves over a $\nu$-semi-shape category made of words of some cardinal $\nu+1$, where $\nu=1$ gives augmented semi-simplicial sets and $\nu=2$ gives semi-cubical sets.
+In the context of functional programming, Reynolds parametricity~(\citeyear{reynolds83}) interprets types as relations characterizing the observational behaviour of programs of this type. More generally, families over a product of sets, or \emph{correspondences}, can be used in place of relations. Parametricity can then be iterated, and relying on the fibred presentation of correspondences as spans, it has been noted that iterated Reynolds parametricity has the structure of a cubical set~\citep{altenkirch15,moulin16,johann17,moeneclaey21,moeneclaey22phd}. We obtain a \emph{unary} variant of Reynolds \emph{binary} parametricity by using predicates or families instead of relations or correspondences, and this is a form of realizability~\citep{bernardy12,lasson12,moulin16}. Cubical set models which differ only by the arity one~\citep{bernardy15} or two~\citep{bezem13} were introduced, and this led to a general notion of affine $\nu$-ary cubes in \cite{nuytsdevriese24}. In parallel, it has been noted that iterated unary parametricity has the structure of an augmented simplicial set\footnote{Private communication with Hugo Moeneclaey and Thorsten Altenkirch.}. This suggests that the definition of augmented semi-simplicial sets and semi-cubical sets can in turn be seen as particular instances of the restriction of Nuyts-Devriese's $\nu$-ary cubes to only faces, which we call $\nu$-sets, of presheaves over a $\nu$-semi-shape category made of words of some cardinal $\nu+1$, where $\nu=1$ gives augmented semi-simplicial sets and $\nu=2$ gives semi-cubical sets.
 
 \subsection*{Contribution}
 The main contribution of the paper is to describe the details of a recipe that uniformly characterizes unary and binary iterated parametricity in indexed form, and to derive from it a new indexed presentation, called indexed \emph{$\nu$-sets}, of augmented semi-simplicial and semi-cubical sets.
@@ -241,9 +241,9 @@ Our mechanization can be found at \href{https://github.com/artagnon/bonak}{githu
 In this section, we generalize semi-simplicial and semi-cubical sets to $\nu$-sets, subsuming the earlier definitions. We start with some introductory material on semi-simplicial and semi-cubical sets.
 
 \subsection*{Augmented semi-simplicial sets}
-Augmented semi-simplicial sets are defined similarly to semi-simplicial sets, except that the connected components are additionally dependent on a ``color''. Conversely, semi-simplicial sets can be seen as augmented semi-simplicial sets over the singleton set of a fixed color. Let us associate dimension $-1$ to colors; then, points are dimension $0$, lines are dimension $1$, and so on. There is hence a shift by one when compared to semi-simplicial sets.
+Augmented semi-simplicial sets are defined similarly to semi-simplicial sets, except that the connected components are additionally dependent on a ``colour''. Conversely, semi-simplicial sets can be seen as augmented semi-simplicial sets over the singleton set of a fixed colour. Let us associate dimension $-1$ to colours; then, points are dimension $0$, lines are dimension $1$, and so on.
 
-While ordinary semi-simplicial sets are presheaves over the semi-simplex category, augmented semi-simplicial sets are presheaves over \DeltaPlus. There are different ways to define \DeltaPlus, up to equivalence, and we use a definition that can be extended to semi-cubical sets in a straightforward manner.
+While ordinary semi-simplicial sets are presheaves over the semi-simplex category, augmented semi-simplicial sets are presheaves over \DeltaPlus. There are different ways to define \DeltaPlus, up to equivalence, and we use a definition that can be extended to semi-cubical sets in a straightforward manner. In particular, we start numbering objects from $0$ instead of $-1$ so that there is a shift by one compared to the standard numbering of augmented semi-simplicial sets.
 
 \begin{notation}[Finite sequences]
   We denote finite sequences by $i_1 \ldots i_n$ for $i_j$ ranging over some domain. The empty sequence is written $\epsilon$.
@@ -271,21 +271,21 @@ While ordinary semi-simplicial sets are presheaves over the semi-simplex categor
   \end{equation*}
 \end{definition}
 
-To provide examples, we define the standard augmented $n$-semi-simplex.
+To provide examples, we define the standard augmented $n$-semi-simplex, taking into account the shift by one in the numbering.
 
 \begin{definition}[$\DeltaPlus^n$]
-  The standard augmented $n$-semi-simplex $\DeltaPlus^n$ is defined as the Yoneda embedding of $n \in \Obj(\DeltaPlus)$:
+  The standard augmented $(n-1)$-semi-simplex $\DeltaPlus^{n-1}$ is defined as the Yoneda embedding of $n \in \Obj(\DeltaPlus)$:
   \begin{align*}
-    \DeltaPlus^n    & : \Set_{\DeltaPlus}        \\
-    \DeltaPlus^n(p) & := \Hom(p, n)              \\
-    \DeltaPlus^n(f) & := \lambda g .\, g \circ f
+    \DeltaPlus^{n-1}    & : \Set_{\DeltaPlus}        \\
+    \DeltaPlus^{n-1}(p) & := \Hom(p, n)              \\
+    \DeltaPlus^{n-1}(f) & := \lambda g .\, g \circ f
   \end{align*}
 \end{definition}
 
-The standard augmented $(-1)$-semi-simplex is a singleton made of one color (in this case, black). Standard augmented $n$-semi-simplices for $n \geq 0$ have a geometric interpretation, and we illustrate them for dimensions $0$, $1$, and $2$.
+The standard augmented $(-1)$-semi-simplex is a singleton made of one colour (in this case, black). Standard augmented $n$-semi-simplices for $n \geq 0$ have a geometric interpretation, and we illustrate them for dimensions $0$, $1$, and $2$.
 
 \begin{example}[$\DeltaPlus^0$]
-  The standard augmented $0$-semi-simplex can be pictured as a point, colored black, corresponding to the unique morphism in $\Hom(0, 1)$. This point is the identity in $\Hom(1, 1)$; it is hence shown as a singleton $\kstar$.
+  The standard augmented $0$-semi-simplex can be pictured as a point, coloured black, corresponding to the unique morphism in $\Hom(0, 1)$. This point is the identity in $\Hom(1, 1)$; it is hence shown as a singleton $\kstar$.
   \begin{equation*}
     \begin{tikzcd}
       \kstar
@@ -313,7 +313,7 @@ The standard augmented $(-1)$-semi-simplex is a singleton made of one color (in 
   \end{equation*}
 \end{example}
 
-More generally, the standard augmented $(n + 1)$-semi-simplex can be obtained by taking a copy of the standard augmented $n$-semi-simplex serving as a base, and gluing on top of it another copy lifted by one dimension. In the second copy, the color becomes an extra point, the points become lines connecting the points of the base to the extra point, and so on. In particular, the components of the base are those of the standard augmented $n$-semi-simplex postfixed by $0$ while the components of the lifted copy are postfixed by $\kstar$. Note that the components may be oriented by letting each $n$-dimensional component point to the $(n-1)$-dimensional component obtained by replacing the leftmost $\kstar$ of the $n$-dimensional component with $0$.
+More generally, the standard augmented $(n + 1)$-semi-simplex can be obtained by taking a copy of the standard augmented $n$-semi-simplex serving as a base, and gluing on top of it another copy lifted by one dimension. In the second copy, the colour becomes an extra point, the points become lines connecting the points of the base to the extra point, and so on. In particular, the components of the base are those of the standard augmented $n$-semi-simplex postfixed by $0$ while the components of the lifted copy are postfixed by $\kstar$. Note that the components may be oriented by letting each $n$-dimensional component point to the $(n-1)$-dimensional component obtained by replacing the leftmost $\kstar$ of the $n$-dimensional component with $0$.
 
 \subsection*{Semi-cubical sets}
 Semi-cubical sets are defined like augmented semi-simplicial sets except that $\DeltaPlus$ is replaced by $\Cube$ in which we take sequences of $L$, $R$ and $\kstar$, instead of sequences of $0$ and $\kstar$.
@@ -422,7 +422,7 @@ Martin-Löf's Type theory~(\citeyear{martinlof75,martinlof84}) is a logical form
 
 Type theory is a flexible formalism supporting different models. Some models come from homotopy theory, and are based on simplicial sets or related structures~\citep{HofmannStreicher94,kapulkin21,BezemCoquandHuber13,cchm}: in these models, equality is interpreted as paths, and they support the univalence principle stating that equality of types mimics equivalence of types, leading to the development of Homotopy Type Theory~\citep{hottbook}.
 
-Types are organized in a hierarchy of universes written $\Type_m$ for $m$ a natural number. The main types in type theory are the type of dependent pairs, written $\Sigma a : A.\,B(a)$, the type of dependent functions, written $\Pi a : A.\,B(a)$, for $A$ a type and $B(a)$ a type dependent on the inhabitant $a$ of $A$, and the type of propositional equalities, written $t = u$. As a notation, the type of dependent pairs when $B$ is not dependent on $A$ is shortened into $A \times B$ and the type of dependent functions when $B$ is not dependent on $A$ is written $A \rightarrow B$. We assume our type theory to also include a distinguished singleton type, written $\unittype$, and with inhabitant $\unitpoint$, the type of boolean values, and the type of natural numbers. We write $\hd$ and $\tl$ the projections of dependent pairs, and $\refl$ for reflexivity. Logical propositions being types themselves, we use $\Pi$ to represent universal quantification and $\Sigma$ to represent existential quantification. We also assume that our type theory includes a coinductively-defined notion of dependent streams described in \ref{app:depstream}.
+Types are organized in a hierarchy of universes written $\Type_m$ for $m$ a natural number. The main types in type theory are the type of dependent pairs, written $\Sigma a : A.\,B(a)$, the type of dependent functions, written $\Pi a : A.\,B(a)$, for $A$ a type and $B(a)$ a type dependent on the inhabitant $a$ of $A$, and the type of propositional equalities, written $t = u$. As a notation, the type of dependent pairs when $B$ is not dependent on $A$ is shortened into $A \times B$ and the type of dependent functions when $B$ is not dependent on $A$ is written $A \rightarrow B$. We assume our type theory to also include a distinguished singleton type, written $\unittype$, and with inhabitant $\unitpoint$, the type of boolean values, and the type of natural numbers. We write $\hd$ and $\tl$ the projections of dependent pairs, and $\refl$ for reflexivity. Logical propositions being types themselves, we use $\Pi$ to represent universal quantification and $\Sigma$ to represent existential quantification. We also assume that our type theory includes a coinductively-defined notion of dependent streams described in Appendix \ref{app:depstream}.
 
 A type-theoretic notion of sets can be recovered in each universe as $\U[m]$, denoting the subtype of $\Type_m$ for which paths are degenerated, using Uniqueness of Identity Proofs (UIP). Technically, this is expressed as a structure equipping a domain $\Dom$ with the property $\UIP$:
 \begin{align*}
@@ -449,18 +449,21 @@ Note that the reflection rule implies UIP so that $\U$ and $\Type$ are equivalen
 \section{Relating to parametricity\label{sec:rel-param}}
 Recall from the introduction, the form taken by the indexed presentation of a semi-cubical set:
 \begin{equation*}
-  \begin{array}{llr}
-    X_0 & :              & \U                                                                        \\
-    X_1 & :              & X_0 \times X_0 \rightarrow \U                                             \\
-    X_2 & : \Pi a b c d. & X_1(a,b) \times X_1 (c,d) \times X_1(a,c) \times X_1 (b,d) \rightarrow \U \\
+  \begin{array}{lll}
+    X_0 & :               \U                                                                        \\
+    X_1 & :               X_0 \times X_0 \rightarrow \U                                             \\
+    X_2 & : \Pi a b c d.\, X_1(a,b) \times X_1 (c,d) \times X_1(a,c) \times X_1 (b,d) \rightarrow \U \\
     \ldots
   \end{array}
 \end{equation*}
 
 Here, the process of construction of the type of $X_1$ from that of $X_0$, and of the type of $X_2$ from that of $X_1$, is similar to iteratively applying a binary parametricity translation. The binary parametricity which we consider interprets a closed type $A$ by a family $A_\kstar$ over $A \times A$, and this can be seen as a graph whose vertices are in $A$. Each type constructor is associated with the construction of a graph. To start with, the type of types $\U$ is interpreted as the family of type of families ${\U}_\kstar$, which takes $A_L$ and $A_R$ in $\U$ and returns the type $A_L \times A_R \rightarrow \U$ of families over $A_L$ and $A_R$. Also, for $A$ interpreted by $A_\kstar$ and $B(a)$, for $a:A$, interpreted by $B_\kstar((a_L,a_R),a_\kstar)$ with $a_\kstar:A_\kstar(a_L,a_R)$, a dependent function type $\Pi a: A.\, B(a)$ is interpreted as the graph $(\Pi a: A.\, B(a))_\kstar$ that takes two functions $f_L$ and $f_R$ of type $\Pi a: A.\, B(a)$, and expresses that these functions map related arguments in $A$ to related arguments in $B$:
-\begin{align*}
-  (\Pi a: A.\, B(a))_\kstar(f_L,f_R) \; \defeq \; \Pi (a_L,a_R): (A \times A).\, \Pi a_\kstar: (A_\kstar(a_L,a_R)\, B_\kstar((a_L,a_R),a_\kstar)(f_L(a_L),f_R(a_R)))
-\end{align*}
+\begin{equation*}
+  \begin{array}{l}
+  (\Pi a: A.\, B(a))_\kstar(f_L,f_R) \; \defeq \\
+  \multicolumn{1}{r}{\qquad\Pi (a_L,a_R): (A \times A).\, \Pi a_\kstar: (A_\kstar(a_L,a_R)\, B_\kstar((a_L,a_R),a_\kstar)(f_L(a_L),f_R(a_R)))}
+  \end{array}
+\end{equation*}
 
 Similarly, a product type $A \times B$ is interpreted as the graph $(A \times B)_\kstar$ that relates two tuples $(a_L,b_L)$ and $(a_R,b_R)$ in $A \times B$ as follows:
 \begin{align*}
@@ -475,7 +478,7 @@ In particular, for $X: \U$, applying our parametricity translation is about asso
 \end{align*}
 which hints us at how the sequence $X_0$, $X_1$, $X_2$ can be seen as a sequence of inhabitants of the iteration of the composition of binary parametricity with the diagonal on types and type families, applied to an initial $X: \U$:
 \begin{equation*}
-  \begin{array}{llllr}
+  \begin{array}{lllll}
     X_0 & \defeq & X                & : & \U                                             \\
     X_1 & \defeq & X_\kstar         & : & {\U}_\kstar(X,X)                               \\
     X_2 & \defeq & X_{\kstar\kstar} & : & ({\U}_\kstar(X,X))_{\kstar}(X_\kstar,X_\kstar) \\
@@ -740,9 +743,9 @@ The operation $\restrf[n][p][\epsilon][q]$ restricts the $p$ first layers of a f
 
 Given $c_\omega$ of type
 \begin{align*}
-  c_\omega & : \painting[n-1][p](D.\hd)(\restrf[n-1][p][\omega][q](d))
+  c_\omega & : \painting[n-1][p](D.\hd)(\restrf[n][p][\omega][p](d))
 \end{align*}
-$\restrl[n][p][\epsilon](d)(c_L, c_R)$ produces a layer in which the $\omega$-component has the type
+$\restrl[n][p][\epsilon][q](d)(c_L, c_R)$ produces a layer in which the $\omega$-component has the type
 \begin{equation*}
   \painting[n-2][p](D.\hd.\hd)(\restrf[n-1][p][\epsilon][q](\restrf[n][p][\omega][p](d)))
 \end{equation*}
@@ -788,12 +791,12 @@ The proof of $\cohf$ itself requires making explicit several rewrites which were
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
 \begin{align*}
-  \cohf[m][\omega][\theta][r][p][n][p][][d = {\restrf[m][\epsilon][q+2][n][p][][d = \d]}]\;\bullet     \\
-  \ap \restrf[m][\omega][r][n][p][][]\;(\cohf[m][\epsilon][\theta][q+1][p][n][p][][d = \d])\;\bullet   \\
-  \cohf[m][\epsilon][\omega][q][r][n][p][][d = {\restrf[m][\theta][p][n][p][][d = \d]}] =              \\
-  \ap \restrf[m][\theta][p][n][p][][]\;(\cohf[m][\epsilon][\omega][q+1][r+1][n][p][][d = \d])\;\bullet \\
-  \cohf[m][\epsilon][\theta][q][p][n][p][][d = {\restrf[m][\omega][r+1][n][p][][d = \d]}]\;\bullet     \\
-  \ap \restrf[m][\epsilon][q][n][p][]\;(\cohf[m][\omega][\theta][r][p][n][p][][d = \d])
+  \cohf[m][\omega][\theta][r][p][n-1][p][][d = {\restrf[m][\epsilon][q+2][n][p][][d = \d]}]\;\bullet     \\
+  \ap \restrf[m][\omega][r][n-2][p][][]\;(\cohf[m][\epsilon][\theta][q+1][p][n][p][][d = \d])\;\bullet   \\
+  \cohf[m][\epsilon][\omega][q][r][n-1][p][][d = {\restrf[m][\theta][p][n][p][][d = \d]}] =              \\
+  \ap \restrf[m][\theta][p][n-2][p][][]\;(\cohf[m][\epsilon][\omega][q+1][r+1][n][p][][d = \d])\;\bullet \\
+  \cohf[m][\epsilon][\theta][q][p][n-1][p][][d = {\restrf[m][\omega][r+1][n][p][][d = \d]}]\;\bullet     \\
+  \ap \restrf[m][\epsilon][q][n-2][p][]\;(\cohf[m][\omega][\theta][r][p][n][p][][d = \d])
 \end{align*}
 where $\ap$ applies a function on two sides of an equality, and $\bullet$ is transitivity of equality. This property of equality proofs holds in \U, and since our construction is done in \U, the term is trivially discharged.
 
@@ -868,9 +871,9 @@ As a final remark, note that as a consequence of $\eta$-conversion for finite en
 \section{Future work}
 The construction could be extended with degeneracies as well as with permutations~\citep{grandis03}. Dependent $\nu$-sets could also be defined, opening the way to construct $\Pi$-types and $\Sigma$-types of $\nu$-sets. A $\nu$-set of $\nu$-sets representing a universe could also be defined as sketched in a talk at the HoTT-UF workshop for the bridge case~(\citeyear{herbelin-hott-uf}). More generally, we believe these lines of work would eventually provide alternative models to parametric type theories~\citep{nuyts17,cavallo19} where equality of types, now a family rather than the total space of a fibration, is not only definitionally isomorphic to bridges~\citep{bernardy15}, but definitionally the same as bridges.
 
-By equipping the universe construction with a structure of equivalences, as suggested along the lines of \cite{altenkirch15}, we also suspect the construction to be able to serve as a basis for syntactic models of various versions of cubical type theory~\citep{bezem13,cohen16,angiuli21}, saving the detour via the fibered approach inherent to usual presheaf models. In particular, we conjecture being able to justify univalence holding definitionally. Our approach would also firmly ground cubical type theory in iterated parametricity.
+By equipping the universe construction with a structure of equivalences, as suggested along the lines of \cite{altenkirch15}, we also suspect the construction to be able to serve as a basis for syntactic models of various versions of cubical type theory~\citep{bezem13,cohen16,angiuli21}, saving the detour via the fibred approach inherent to usual presheaf models. In particular, we conjecture being able to justify univalence holding definitionally. Our approach would also firmly ground cubical type theory in iterated parametricity.
 
-Although prior approaches to constructing the indexed presentation of a presheaf over a direct category rely on it being evident by inspection that the fibered and indexed presentations are equivalent, no formal proof has been given, and this is a direction for future work. In our construction, we can check by computation of the first levels that it indeed computes the expected sets.
+Although prior approaches to constructing the indexed presentation of a presheaf over a direct category rely on it being evident by inspection that the fibred and indexed presentations are equivalent, no formal proof has been given, and this is a direction for future work. In our construction, we can check by computation of the first levels that it indeed computes the expected sets.
 
 \newpage
 \bibliographystyle{msclike}

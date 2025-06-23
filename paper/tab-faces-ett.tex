@@ -9,7 +9,7 @@
   \eqnline{\restrl[m][\epsilon][q][n,p]}{\D~\d~\l}{\defeq}{\lambda \omega.(\restrc[m][\epsilon][q][n-1][p][][D=\hdD, E=\tlD, d={\restrf[m][\omega][p][n][p][][D=\D, d=\d]}, c={\l_\omega}])}
   \graymidrule
 
-  \eqnline{\restrc[m][\epsilon][q][n][p][p \leq q \leq n - 1]}{\makecell{\eqnarg{restrfiller}{D}{\Xto{m}{n}} \\ \eqnarg{restrfiller}{E}{\Xcomp{m}{n}[D=\D]} \\\eqnarg{restrfiller}{d}{\framep[m][n][p][][D=\D]} \\ \eqnarg{restrfiller}{c}{\painting[m][n][p][][D=\D, E=\E, d=\d]}}}{:}{\painting[m][n-1][p][][D=\hdD, E=\tlD, d={\restrf[m][\epsilon][q+1][n][p][][D=\D, d=\d]}]}
+  \eqnline{\restrc[m][\epsilon][q][n][p][p \leq q \leq n - 1]}{\makecell{\eqnarg{restrfiller}{D}{\Xto{m}{n}} \\ \eqnarg{restrfiller}{E}{\Xcomp{m}{n}[D=\D]} \\\eqnarg{restrfiller}{d}{\framep[m][n][p][][D=\D]} \\ \eqnarg{restrfiller}{c}{\painting[m][n][p][][D=\D, E=\E, d=\d]}}}{:}{\painting[m][n-1][p][][D=\hdD, E=\tlD, d={\restrf[m][\epsilon][q][n][p][][D=\D, d=\d]}]}
   \eqnline{\restrc[m][\epsilon][q][n][p][p=q]}{\D~\E~\d~(\pair{l}{\_})}{\defeq}{\l_\epsilon}
-  \eqnline{\restrc[m][\epsilon][q][n][p][p<q]}{\D~\E~\d~(\pair{l}{c})}{\defeq}{(\restrl[m][\epsilon][q][n][p][][D=\D, d=\d, l=\l],\restrc[m][\epsilon][q][n][p+1][][D=\D, E=\E, d=\pair{d}{l}, c=\c])}
+  \eqnline{\restrc[m][\epsilon][q][n][p][p<q]}{\D~\E~\d~(\pair{l}{c})}{\defeq}{(\restrl[m][\epsilon][q-1][n][p][][D=\D, d=\d, l=\l],\restrc[m][\epsilon][q][n][p+1][][D=\D, E=\E, d=\pair{d}{l}, c=\c])}
 \end{eqntable}
