@@ -1,6 +1,7 @@
 \documentclass{art.cls/art}
 
-\usepackage{amsmath, amssymb, mathrsfs, wasysym, tikz, tikz-cd, lmodern, mathpazo, anyfontsize, xargs, environ, multirow, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
+\usepackage{environ, multirow, tabularx, caption, booktabs, makecell, colortbl, minted, art.cls/joinargs}
+\setminted[]{fontfamily=lmtt}
 \usepackage[prefix=bonak]{art.cls/xkeymask}
 
 % Use the patterns library to draw the cubes figure
@@ -83,7 +84,7 @@
 \newcommand{\CSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\square}}}}
 
 % Universe, referred to as U
-\newcommandx{\U}[1][1=]{\ensuremath{\mathsf{\color{spanish-blue}{HSet}}_{#1}}}
+\renewcommandx{\U}[1][1=]{\ensuremath{\mathsf{\color{spanish-blue}{HSet}}_{#1}}}
 \newcommandx{\HGpd}[1][1=]{\ensuremath{\mathsf{\color{spanish-blue}{HGpd}}_{#1}}}
 \newcommand{\Type}{\ensuremath{\mathsf{\color{spanish-blue}{Type}}}}
 \newcommand{\SProp}{\ensuremath{\mathsf{\color{spanish-blue}{SProp}}}}
@@ -137,13 +138,13 @@
 \newcommand{\kstar}{{\star}}
 
 % Caption setup
-\DeclareCaptionFormat{plain}{#1#3}
+\DeclareCaptionFormat{plain}{#1: #3}
 \captionsetup{font=footnotesize,labelfont=bf}
 
 % The eqntable environment
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 \NewEnviron{eqntable}[1]{
-  \fontsize{7.2}{9}\selectfont
+  \small
   \begin{tabularx}{0.94\linewidth}{
     @{}
     >{$}l<{$}
@@ -238,7 +239,7 @@ In this section, we generalize semi-simplicial and semi-cubical sets to $\nu$-se
 \subsection*{Augmented semi-simplicial sets}
 Augmented semi-simplicial sets are defined similarly to semi-simplicial sets, except that the connected components are additionally dependent on a ``colour''. Conversely, semi-simplicial sets can be seen as augmented semi-simplicial sets over the singleton set of a fixed colour. Let us associate dimension $-1$ to colours; then, points are dimension $0$, lines are dimension $1$, and so on.
 
-While ordinary semi-simplicial sets are presheaves over the semi-simplex category, augmented semi-simplicial sets are presheaves over \DeltaPlus. There are different ways to define \DeltaPlus, up to equivalence, and we use a definition that can be extended to semi-cubical sets in a straightforward manner. In particular, we start numbering objects from $0$ instead of $-1$ so that there is a shift by one compared to the standard numbering of augmented semi-simplicial sets.
+Ordinary semi-simplicial sets are presheaves over the semi-simplex category. Augmented semi-simplicial sets are presheaves over \DeltaPlus. There are different ways to define \DeltaPlus, up to equivalence, and we use a definition that can be extended to semi-cubical sets in a straightforward manner. In particular, we start numbering objects from $0$ instead of $-1$ so that there is a shift by one compared to the standard numbering of augmented semi-simplicial sets.
 
 \begin{notation}[Finite sequences]
   We denote finite sequences by $i_1 \ldots i_n$ for $i_j$ ranging over some domain. The empty sequence is written $\epsilon$.
@@ -543,7 +544,9 @@ Sections~\ref{sec:wf},~\ref{sec:le}, and~\ref{sec:eqproperties} describe additio
 
 A $\nu$-set in indexed form is a sequence of families of $\U$, that is $\U[m]$ for some universe level $m$. We call such sequence a $\nu$-set at level $m$, whose type thus lives in $\U[m+1]$.
 
-Table~\ref{tab:coind} describes the type of a $\nu$-set at level $m$ as a dependent stream of type families representing the limit of $n$-truncated $\nu$-sets: using the notations of Section~\ref{sec:tt}, the recursive equation $\Xfrom{m}{n}{D} \,\defeq\, \Sigma R: \Xcomp{m}{n}[D=\D].\, \Xfrom{m}{n+1}[D=\pair{D}{R}]$ from the table formally corresponds to the stream $Stream_{\Sigma n.\, \Xto{m}{n},\, \lambda (n, \D).\, \Xcomp{m}{n}[D=\D],\,\lambda ((n, D),R).(n+1,(\pair{D}{R}))}(n, \D)$. Therefore, $\Xfrom{m}{n}$ denotes an infinite sequence $X_{n}, X_{n+1}, \ldots$ dependent on a $(<n)$-truncated $\nu$-set, $\Xto{m}{n}$, so that, when $n$ is $0$, it denotes a full $\nu$-set, written $\Xp{m}$. This is made possible because the $(<0)$-truncated $\nu$-set, $\Xto{m}{0}$, is degenerated: it is an empty family, and there is thus only one $(<0)$-truncated $\nu$-set, namely the canonical inhabitant $\kstar$ of $\unittype$.
+Table~\ref{tab:coind} describes the type of a $\nu$-set at level $m$ as a dependent stream of type families representing the limit of $n$-truncated $\nu$-sets.
+
+Using the notations of Section~\ref{sec:tt}, the recursive equation $\Xfrom{m}{n}{D} \,\defeq\, \Sigma R: \Xcomp{m}{n}[D=\D].\, \Xfrom{m}{n+1}[D=\pair{D}{R}]$ from the table formally corresponds to the stream $Stream_{\Sigma n.\, \Xto{m}{n},\, \lambda (n, \D).\, \Xcomp{m}{n}[D=\D],\,\lambda ((n, D),R).(n+1,(\pair{D}{R}))}(n, \D)$. Therefore, $\Xfrom{m}{n}$ denotes an infinite sequence $X_{n}, X_{n+1}, \ldots$ dependent on a $(<n)$-truncated $\nu$-set, $\Xto{m}{n}$, so that, when $n$ is $0$, it denotes a full $\nu$-set, written $\Xp{m}$. This is made possible because the $(<0)$-truncated $\nu$-set, $\Xto{m}{0}$, is degenerated: it is an empty family, and there is thus only one $(<0)$-truncated $\nu$-set, namely the canonical inhabitant $\kstar$ of $\unittype$.
 
 The definition of the type of a $n$-truncated $\nu$-set is in turn described in table~\ref{tab:core}. In the infinite sequence of type families representing a $\nu$-set, the $n$-th component is a type dependent over a $\fullframe$. It is recursively defined in table~\ref{tab:frames}, using the auxiliary definitions of $\framep$, $\layer$ and $\painting$. A $\fullframe$ describes a boundary of a standard form (simplex, cube), which we decompose into $\layer$, and a $\painting$ corresponds to a filled frame. Notice that the type $\layer$ relies on an operator of frame restriction $\restrf$ which is defined in table~\ref{tab:faces}, and this restriction operator is in turn defined using auxiliary definitions $\restrl$ and $\restrc$.
 
@@ -551,17 +554,20 @@ Notably, the definition of $\restrl$ relies on an equality expressing the commut
 
 Note that for a fixed constant $n$, relying on the evaluation rules of type theory, the coherence conditions degenerate to a reflexivity proof, so that the construction builds an effective sequence of types not mentioning coherences anymore.
 
+\vspace{1em}
 \def\lab{tab:coind}
 \input{tab-coind.tex}
 
 % For just the second table, keep the universe letter in fullframe
 \renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[#1][#2][][][#3]}
 
+\vspace{1em}
 \def\lab{tab:core}
 \input{tab-core.tex}
 
 % Drop the universe letter in fullframe for all remaining tables
 \renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[][#2][][][#3]}
+\vspace{1em}
 \def\lab{tab:frames}
 \input{tab-frames.tex}
 
@@ -574,6 +580,7 @@ Note that for a fixed constant $n$, relying on the evaluation rules of type theo
 % The third table mentions cohframe; keep ε, ω in this instance
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][#6,#7][#8][#9]}
 
+\vspace{1em}
 \def\lab{tab:faces}
 \input{tab-faces-ett.tex}
 
@@ -598,6 +605,7 @@ Note that for a fixed constant $n$, relying on the evaluation rules of type theo
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
 
+\vspace{1em}
 \def\lab{tab:coh}
 \input{tab-coh-ett.tex}
 
@@ -769,8 +777,10 @@ The need for transport along a proof of commutation of $\restrf$ in the definiti
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
 \def\lab{fulltab:faces}
+\vspace{1em}
 \renewcommand{\thetable}{4'}
 \input{tab-faces.tex}
+\vspace{1em}
 \def\lab{fulltab:coh}
 \renewcommand{\thetable}{5'}
 \input{tab-coh.tex}
@@ -872,6 +882,7 @@ Although prior approaches to constructing the indexed presentation of a presheaf
 \bibliographystyle{alpha}
 \bibliography{paper}
 
+\newpage
 \appendix
 \fancyhead[L]{\footnotesize\textcolor{gray80}{{\MakeUppercase{Appendix}}}}
 \section*{Appendix: Definition of dependent stream\label{app:depstream}}
