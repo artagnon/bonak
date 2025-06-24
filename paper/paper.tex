@@ -80,8 +80,9 @@
 % Simplicial and Cubical sets
 \newcommand{\DeltaHat}{\ensuremath{\hat{\boldsymbol{\Delta}}}}
 \newcommand{\DeltaPlus}{\ensuremath{\boldsymbol{\Delta}_+}}
+\newcommand{\SSSet}{\ensuremath{\Set_{\DeltaPlus}}}
 \newcommand{\Cube}{\ensuremath{\boldsymbol{{\square}}}}
-\newcommand{\CSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\square}}}}
+\newcommand{\CSet}{\ensuremath{\Set_{\Cube}}}
 
 % Universe, referred to as U
 \renewcommandx{\U}[1][1=]{\ensuremath{\mathsf{\color{spanish-blue}{HSet}}_{#1}}}
@@ -260,10 +261,10 @@ Ordinary semi-simplicial sets are presheaves over the semi-simplex category. Aug
   \end{align*}
 \end{definition}
 
-\begin{definition}[$\Set_{\DeltaPlus}$]
+\begin{definition}[$\SSSet$]
   We define the category of augmented semi-simplicial sets as the functor category:
   \begin{equation*}
-    \Set_{\DeltaPlus} := \Set^{\DeltaPlus^{\mathsf{op}}}
+    \SSSet := \Set^{\DeltaPlus^{\mathsf{op}}}
   \end{equation*}
 \end{definition}
 
@@ -272,7 +273,7 @@ To provide examples, we define the standard augmented $n$-semi-simplex, taking i
 \begin{definition}[$\DeltaPlus^n$]
   The standard augmented $(n-1)$-semi-simplex $\DeltaPlus^{n-1}$ is defined as the Yoneda embedding of $n \in \Obj(\DeltaPlus)$:
   \begin{align*}
-    \DeltaPlus^{n-1}    & : \Set_{\DeltaPlus}        \\
+    \DeltaPlus^{n-1}    & : \SSSet                   \\
     \DeltaPlus^{n-1}(p) & := \Hom(p, n)              \\
     \DeltaPlus^{n-1}(f) & := \lambda g .\, g \circ f
   \end{align*}
