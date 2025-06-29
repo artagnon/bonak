@@ -243,7 +243,6 @@ Instance mkCohFrameTypesAndRestrFrames:
       CohFrameTypesDef := { Q:
         cohFrameTypes &T
         (* statement of cohFrameType(n+2,p) *)
-        let restrFrame := (restrFrames Q).2 in
         forall r q (Hrq: r <= q) (Hq: q <= n) (ε ω: arity) d,
         restrFrames'.2 q Hq ε ((restrFrames Q).2 r (leY_trans Hrq (leY_up Hq)) ω d) =
         restrFrames'.2 r (leY_trans Hrq ( Hq)) ω ((restrFrames Q).2 q.+1 (⇑ Hq) ε d) };
