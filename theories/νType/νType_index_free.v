@@ -57,14 +57,14 @@ Fixpoint mkRestrFrameTypesAndFrames' {Prev} n: RestrFrameTypeBlock :=
       RestrFrameTypesDef := unit;
       FrameDef _ := hunit
     |}
-  | AddPrev FramePrev PaintingPrev rest =>
+  | AddPrev FramePrev PaintingPrev Prev =>
     {|
       RestrFrameTypesDef :=
         { R: (mkRestrFrameTypesAndFrames' n.+1).(RestrFrameTypesDef) &T
           forall q (Hq: q <= n) (ε: arity),
           (mkRestrFrameTypesAndFrames' n.+1).(FrameDef) R -> FramePrev };
       FrameDef R :=
-        { d: (mkRestrFrameTypesAndFrames' (Prev := rest) n.+1).(FrameDef) R.1 &
+        { d: (mkRestrFrameTypesAndFrames' (Prev := Prev) n.+1).(FrameDef) R.1 &
           hforall ε, PaintingPrev (R.2 O leY_O ε d) }
     |}
   end.
