@@ -899,7 +899,7 @@ Proof.
    apply rec.
 Qed.
 
-Definition helper {n} p q r {Hpr : p <= r} {Hrq : r <= q} {Hq : q <= n}
+Definition find_frame_find_painting {n} p q r {Hpr : p <= r} {Hrq : r <= q} {Hq : q <= n}
  {C : νType n} {D : C .(prefix)}
  {E : C .(Frame).(frame n) D -> HSet@{m}}
  {d : C .(Frame).(frame p) D}
@@ -935,7 +935,7 @@ Proof.
   exists (rew [id] C .(eqPaintingSp) in l). now rewrite rew_opp_l.
 Qed.
 
-Definition foo {n} p q {Hpq : p.+2 <= q.+2 } {Hq : q.+2 <= n.+2 } (ε : arity)
+Definition find_painting_restr {n} p q {Hpq : p.+2 <= q.+2 } {Hq : q.+2 <= n.+2 } (ε : arity)
 {Cs : νTypeFamily}
 {D : (Cs .(family) n.+1) .(prefix)}
 {E : (Cs .(family) n.+1) .(Frame).(frame n.+1) D -> HSet@{m}}
@@ -1001,13 +1001,13 @@ Proof.
    (rew [fun T : Type => T] (Cs .(family) n.+2)  .(eqFrameSp) in
    find_frame q.+2 n.+2 d).2 ε)).1)) as e.
   rewrite <-e; clear e.
-  rewrite (helper q.+1 n.+1).
+  rewrite (find_frame_find_painting q.+1 n.+1).
   rewrite find_painting_compute_base. simpl.
   rewrite <-(find_frame_compute_step q.+1 n.+2).
   rewrite (find_frame_restr_frame p.+1 q.+1).
   rewrite (find_frame_compose p.+1 n.+2 q.+1).
-  rewrite (helper p n.+1 q.+1).
-  rewrite (foo p q).
+  rewrite (find_frame_find_painting p n.+1 q.+1).
+  rewrite (find_painting_restr p q).
   set (find_frame p.+1 n.+2 d) as d2.
   rewrite <-(rew_opp_l id ((Cs .(family) n.+2) .(eqFrameSp)) d2).
   destruct (rew [id] (Cs .(family) n.+2) .(eqFrameSp) in d2) as [d3 l3].
@@ -1027,6 +1027,40 @@ Proof.
       (fun d => rew [id] Cs .(eqFrame) p in d)).
   now repeat rewrite <-(find_painting_rew p n).
 Qed.
+
+Definition very_specific_permutation 
+{Cs : νTypeFamily}
+{D : (νTypeAt 2) .(prefix)}
+(d : (νTypeAt 2) .(Frame).(frame 2) D) :
+(νTypeAt 2) .(Frame).(frame 2) D.
+Proof.
+  destruct d as [[d l] l'].
+  unshelve esplit. unshelve esplit.
+  + exact d.
+  + intro ε.
+    rewrite ((νTypeAt 2) .(eqPaintingSp')).
+    unshelve esplit.
+    * intro ω.
+      exact (mkRestrLayer 0 0 (ε := ε) (d := (rew <- [fun T : Type => T] eq_refl in tt)) l ω).
+    * exact (l' ε).
+  + intro ε.
+    remember (rew [id] (νTypeAt 2) .(eqPaintingSp') in l ε) as p'.
+    destruct p' as [l1 p].
+    simpl in l1,p|-*.
+    assert (l1 = mkRestrLayer 0 0 (ε := ε)  (d := rew <- [fun T : Type => T] eq_refl in tt)
+      (fun ε0 : arity =>
+       rew <- [fun T : Type => T] mkPaintingType_step_computes in
+      (fun ω : arity => mkRestrLayer 0 0 l ω; l' ε0))).
+    * apply functional_extensionality_dep; intro ω.
+      unfold mkRestrLayer. simpl.
+      rewrite mkRestrPainting_base_computes. 
+      rewrite rew_opp_r.
+      rewrite mkRestrPainting_base_computes. 
+      rewrite (sigT_eta (rew [id] mkPaintingType_step_computes in l ε)).
+      now rewrite <-Heqp'.
+    * clear Heqp'. rewrite H in p.
+      exact p.
+Defined.
 
 (** Degeneracies *)
 
