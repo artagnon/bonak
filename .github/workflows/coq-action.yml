@@ -3,8 +3,6 @@ name: coq-action
 on:
   push:
     branches: [master]
-permissions:
-  contents: read
 jobs:
   build:
     runs-on: "ubuntu-latest"
@@ -15,4 +13,5 @@ jobs:
       - name: "Docker Coq action"
         uses: "coq-community/docker-coq-action@v1"
         with:
+          opam_file: "bonak.opam"
           coq_version: "8.20.1"
