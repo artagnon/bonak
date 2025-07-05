@@ -233,6 +233,11 @@ Class νType n := {
     rew <- [id] eqPaintingSp' in
       (RestrLayer ε l; rew [PaintingPrev.(painting')] eqRestrFrameSp in
         Painting.(restrPainting) p.+1 q.+1 Q);
+  eqRestrPainting0' {p} {Hp : p.+2 <= n} {ε : arity} {D d}
+    {l : (Layer') d}
+    {Q : (PaintingPrev) .(painting') (D := D) (rew <- [id] eqFrameSp' in (d; l))} :
+    l ε = (PaintingPrev) .(restrPainting') p p ε
+      (rew <- [id] (eqPaintingSp') in (l ; Q));
 }.
 
 Arguments prefix {n} _.
@@ -557,6 +562,7 @@ Instance mkνType0: νType 0.
   - intros; now simpl.
   - intros; now le_contra Hp.
   - intros; now le_contra Hq.
+  - intros; now le_contra Hp.
 Defined.
 
 (** We are now ready to build an [νType n.+1] from an [νType n] *)
@@ -581,6 +587,7 @@ Instance mkνTypeSn {n} (C: νType n): νType n.+1 :=
       now rewrite mkRestrPainting_base_computes, rew_rew');
     eqRestrPaintingSp := ltac:(intros *; simpl;
       now rewrite mkRestrPainting_step_computes, rew_rew');
+    eqRestrPainting0' := ltac:(intros *; now apply (C .(eqRestrPainting0)));
 |}.
 
 (** An [νType] truncated up to dimension [n] *)
@@ -662,28 +669,29 @@ Instance νTypeAtFamily : νTypeFamily := {|
   eqPaintingDistr := ltac:(intros; exact eq_refl);
 |}.
 
-Lemma eqRestrPainting0' n p {Hp : p.+2 <= n.+1} {ε : arity}
- {Cs : νTypeFamily}
- {D : (Cs .(family) n.+1) .(prefix)}
- {d : (Cs .(family) n.+1) .(FramePrev).(frame') p D}
- {l : (Cs .(family) n.+1) .(Layer') d}
- {Q : (Cs .(family) n.+1) .(PaintingPrev) .(painting')
-       (rew <- [id] (Cs .(family) n.+1) .(eqFrameSp') in (d; l))} :
-  l ε =
-   (Cs .(family) n.+1) .(PaintingPrev) .(restrPainting') p p ε
-    (rew <- [id] (Cs .(family) n.+1) .(eqPaintingSp') in (l ; Q)).
+Definition find_frame {n} p q {Hpq : p <= q} {Hq : q <= n}
+{C : νType n} {D : C .(prefix)}
+(d : C .(Frame).(frame q) D) :
+ C .(Frame).(frame p) D.
 Proof.
-  rewrite <- (rew_opp_l id (Cs .(eqPainting') p)).
-  rewrite <- (rew_opp_l ((family n) .(PaintingPrev) .(painting')) 
-                  (Cs .(eqRestrFrame) p p ε)
-                  (rew [id] Cs .(eqPainting') p in
-                  (Cs .(family) n.+1) .(PaintingPrev) .(restrPainting') p p ε
-                  (rew <- [id] (Cs .(family) n.+1) .(eqPaintingSp') in (l; Q)))).
-  rewrite (Cs .(eqRestrPainting) p p ε (c := (rew <- [id] (Cs .(family) n.+1) .(eqPaintingSp') in (l; Q)))).
-  rewrite (Cs .(eqPaintingDistr) p).
-  rewrite <-(Cs .(family) n) .(eqRestrPainting0).
-  now repeat rewrite rew_opp_l.
-Qed.
+  apply le_induction with (Hp := Hpq); clear p Hpq.
+  * exact d.
+  * intros p Hp d'.
+    rewrite eqFrameSp in d'.
+    exact d'.1.
+Defined.
+
+Definition find_frame' {n} p q {Hpq : p.+1 <= q.+1} {Hq : q.+1 <= n}
+{C : νType n} {D : C .(prefix)}
+(d : C .(FramePrev).(frame') q D) :
+ C .(FramePrev).(frame') p D.
+Proof.
+  apply le_induction' with (Hp := Hpq); clear p Hpq.
+  * exact d.
+  * intros p Hp d'.
+    rewrite eqFrameSp' in d'.
+    exact d'.1.
+Defined.
 
 Definition find_painting {n} p q {Hpq : p <= q} {Hq : q <= n} {C : νType n} {D : C .(prefix)}
  {E : C .(Frame).(frame n) D -> HSet@{m}}
@@ -700,33 +708,33 @@ Proof.
     exact (rec _ painting.2).
 Defined.
 
-Definition find_frame {n} p q {Hpq : p <= q} {Hq : q <= n}
-{C : νType n} {D : C .(prefix)}
-(d : C .(Frame).(frame q) D) :
- C .(Frame).(frame p) D.
+Definition find_painting' {n} p q {Hpq : p.+1 <= q.+1} {Hq : q.+1 <= n} {C : νType n} 
+ {D : C .(prefix)}
+ {d : C .(FramePrev).(frame') p D}
+ (l : C .(PaintingPrev) .(painting') (p := p) d) :
+ sigT (C .(PaintingPrev) .(painting') (p := q) (D := D)).
 Proof.
-  apply le_induction with (Hp := Hpq); clear p Hpq.
-  * exact d.
-  * intros p Hp d'.
-    rewrite eqFrameSp in d'.
-    exact d'.1.
+  revert d l.
+  apply le_induction' with (Hp := Hpq); clear p Hpq.
+  + intros d painting.
+    exact (d ; painting).
+  + intros p Hpq rec d painting.
+    rewrite (C .(eqPaintingSp')) in painting.
+    exact (rec _ painting.2).
 Defined.
 
 Definition Face {n} p {Hp : p.+1 <= n.+1} (ε : arity)
  {Cs : νTypeFamily}
  {D : (Cs .(family) n.+1) .(prefix)}
  (d : (Cs .(family) n.+1) .(Frame).(frame n.+1) D) :
- sigT ((rew [id] (Cs .(eqPrefix)) in D).2).
-Proof.
-  pose (d' := (find_frame p.+1 n.+1 d)).
-  rewrite eqFrameSp in d'.
-  destruct d' as [d' l'].
-  specialize (l' ε) as painting.
-  rewrite eqPainting in painting.
-  pose (painting' := find_painting p n painting).
-  esplit.
-  exact (rew [id] (Cs .(family) n) .(eqPainting0) in painting'.2).
-Defined.
+ sigT ((rew [id] (Cs .(eqPrefix)) in D).2) :=
+match
+  rew [fun T : Type => T] (Cs .(family) n.+1) .(eqFrameSp) in find_frame p.+1 n.+1 d
+with
+| (d' ; l') =>
+    let p' := (find_painting p n (rew [fun T : Type => T] Cs .(eqPainting) p in l' ε)) in
+    (p'.1 ; rew [id] (Cs .(family) n) .(eqPainting0) in p'.2)
+end.
 
 Lemma find_frame_compute_base {n} p {Hpq : p <= n} 
  {C : νType n} {D : C .(prefix)}
@@ -788,26 +796,6 @@ Proof.
     rewrite (find_frame_compute_step p q.+1).
     rewrite (find_frame_compute_step p q).
     now rewrite (rec d).
-Qed.
-
-Lemma find_painting_step {n} p q {Hpq : p.+1 <= q.+1} {Hq : q.+1 <= n} 
- {C : νType n} {D : C .(prefix)}
- {E : C .(Frame).(frame n) D -> HSet@{m}}
- {d : C .(Frame).(frame p) D}
- (l : C .(Painting) .(painting) (p := p) E d) :
- (find_painting p q l).1 = 
-  (rew [id] C .(eqFrameSp) in (find_painting p q.+1 l).1).1.
-Proof.
-  revert d l.
-  apply le_induction' with (Hp := Hpq); clear p Hpq.
-  + intros d l.
-    rewrite find_painting_compute_step.
-    rewrite! find_painting_compute_base.
-    now rewrite rew_opp_r.
-  + intros p Hp rec d l.
-    rewrite (find_painting_compute_step p q).
-    rewrite (find_painting_compute_step p q.+1).
-    apply rec.
 Qed.
 
 Lemma find_frame_compose {n} p q r {Hpr : p <= r} {Hrq : r <= q} {Hq : q <= n}
@@ -979,7 +967,7 @@ Definition Face_coh n p q {Hpq : p.+2 <= q.+2 } {Hq : q.+2 <= n.+2 } (ε ω : ar
  (d : (Cs .(family) n.+2) .(Frame).(frame n.+2) D) :
  (Face q ε (Face p ω d).1) = (Face p ω (Face q.+1 ε d).1).
 Proof.
-  unfold Face at 1. unfold Face at 2.
+  unfold Face at 1 3.
   rewrite (sigT_eta 
    (rew [fun T : Type => T] (Cs .(family) n.+1) .(eqFrameSp) in 
    find_frame q.+1 n.+1 (Face p ω d).1)).
@@ -989,7 +977,7 @@ Proof.
   apply (f_equal (fun l : (sigT ((Cs .(family) n) .(Painting) .(painting)
     (rew [id] Cs .(eqPrefix) in (rew [id] Cs .(eqPrefix) in D).1).2))
     => (l.1 ; rew [id] (Cs .(family) n) .(eqPainting0) in l.2))).
-  repeat unfold Face.
+  unfold Face.
   rewrite (sigT_eta 
     (rew [fun T : Type => T] (Cs .(family) n.+2) .(eqFrameSp) in (find_frame p.+1 n.+2 d))).
   rewrite (sigT_eta
@@ -1029,7 +1017,6 @@ Proof.
 Qed.
 
 Definition very_specific_permutation 
-{Cs : νTypeFamily}
 {D : (νTypeAt 2) .(prefix)}
 (d : (νTypeAt 2) .(Frame).(frame 2) D) :
 (νTypeAt 2) .(Frame).(frame 2) D.
@@ -1041,13 +1028,13 @@ Proof.
     rewrite ((νTypeAt 2) .(eqPaintingSp')).
     unshelve esplit.
     * intro ω.
-      exact (mkRestrLayer 0 0 (ε := ε) (d := (rew <- [fun T : Type => T] eq_refl in tt)) l ω).
+      exact ((νTypeAt 2) .(PaintingPrev).(restrPainting') (Hq := ♢ 2) 0 0 ε (l ω)).
     * exact (l' ε).
   + intro ε.
     remember (rew [id] (νTypeAt 2) .(eqPaintingSp') in l ε) as p'.
     destruct p' as [l1 p].
     simpl in l1,p|-*.
-    assert (l1 = mkRestrLayer 0 0 (ε := ε)  (d := rew <- [fun T : Type => T] eq_refl in tt)
+    assert (l1 = mkRestrLayer 0 0 (ε := ε) (d := rew <- [fun T : Type => T] eq_refl in tt)
       (fun ε0 : arity =>
        rew <- [fun T : Type => T] mkPaintingType_step_computes in
       (fun ω : arity => mkRestrLayer 0 0 l ω; l' ε0))).
@@ -1062,6 +1049,75 @@ Proof.
       exact p.
 Defined.
 
+(**
+A more general permutation (maybe ?) :
+We can get permute_lower by induction, but does it respect H1 and H2 ?
+Nop, different function
+
+H3 can be obtained via UIP, but it would be better to get it by definition
+*)
+Definition more_general {n'} (C: νType n'.+2) p {Hp : p.+2 <= n'.+2} {D : C.(prefix)}
+  (permute_lower : C.(Frame).(frame p) D -> C.(Frame).(frame p) D)
+  (H1  : forall ω d', 
+    C .(Frame) .(restrFrame) (Hpq := ↑ ♢ p.+1) p.+1 ω d' = 
+    C .(Frame) .(restrFrame) p ω (permute_lower d'))
+  (H2  : forall ω d', 
+    C .(Frame) .(restrFrame) p ω d' = 
+    C .(Frame) .(restrFrame) (Hpq := ↑ ♢ p.+1) p.+1 ω (permute_lower d'))
+  (H3 : forall ε ω d',
+    C .(Frame) .(cohFrame) p p d'
+    • ([x ⇒ C .(FramePrev) .(restrFrame') p p ε x] H1 ω d'
+    • C .(Frame) .(cohFrame) p p (permute_lower d'))
+    = [x ⇒ C .(FramePrev) .(restrFrame') p p ω x] H2 ε d') :
+  C.(Frame).(frame p.+2) D -> C.(Frame).(frame p.+2) D.
+Proof.
+  intro d.
+  rewrite eqFrameSp in d.
+  destruct d as [d l'].
+  rewrite <-(rew_opp_l id (C .(eqFrameSp)) d) in l'.
+  destruct (rew [id] C .(eqFrameSp) in d) as [d' l]; clear d.
+  rewrite eqFrameSp; unshelve esplit. 
+  rewrite eqFrameSp; unshelve esplit.
+  + exact (permute_lower d').
+  + intro ε.
+    rewrite eqPaintingSp'.
+    unshelve esplit.
+    * intro ω.
+      rewrite <-H1.
+      rewrite <-(C .(Frame) .(cohFrame)).
+      exact (C .(PaintingPrev).(restrPainting') _ _ ε (l ω)).
+    * refine (
+        rew [C .(PaintingPrev) .(painting')] _ in 
+        rew [C .(PaintingPrev) .(painting')] (C .(eqRestrFrameSp)) in
+        l' ε).
+      apply (f_equal (fun d => rew <- [id] C .(eqFrameSp') in d)).
+      unshelve refine (eq_existT_curried _ _).
+      - exact (H1 _ d').
+      - apply functional_extensionality_dep. intro ω.
+        rewrite <-map_subst_app. exact eq_refl.
+  + intro ε.
+    remember (rew [id] (C .(eqPaintingSp')) in l ε) as p'.
+    destruct p' as [l1 p'].
+    rewrite eqRestrFrameSp.
+    refine (rew [C .(PaintingPrev) .(painting')] _ in p').
+    apply (f_equal (fun d => rew <- [id] C .(eqFrameSp') in d)).
+    unshelve refine (eq_existT_curried _ _).
+    * exact (H2 _ d').
+    * apply functional_extensionality_dep. intro ω.
+      rewrite <-map_subst_app.
+      rewrite <-eqRestrPainting0'.
+      rewrite <-(rew_opp_l id (C .(eqPaintingSp')) _).
+      rewrite <-Heqp'.
+      rewrite <-eqRestrPainting0'.
+      rewrite (rew_map 
+        (C .(PaintingPrev) .(painting'')) 
+        (C .(FramePrev) .(restrFrame') p p ω)).
+      rewrite (rew_map 
+        (C .(PaintingPrev) .(painting'')) 
+        (C .(FramePrev) .(restrFrame') p p ε)).
+      rewrite rew_compose. rewrite rew_compose.
+      now rewrite (H3 _ _ d').
+Qed.
 (** Degeneracies *)
 
 Class mkRefl T := intro_mkrefl : T -> Type@{m'}.
