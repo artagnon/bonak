@@ -17,8 +17,8 @@ Variable arity: HSet.
 Section RestrFramesDef.
 
 Inductive PrevLevel :=
-| EmptyPrev : PrevLevel
-| AddPrev (Frame: HSet) (Painting: Frame -> HSet) (rest: PrevLevel) : PrevLevel.
+| EmptyPrev: PrevLevel
+| AddPrev (Frame: HSet) (Painting: Frame -> HSet) (rest: PrevLevel): PrevLevel.
 
 Class RestrFrameTypeBlock := {
   RestrFrameTypesDef: Type;
@@ -165,7 +165,7 @@ Definition mkPrevFrameOfRestrFrames {Prev n restrs' extraPrev extraRestrs'}:
 (* Examples *)
 Check fun E restr => eq_refl:
   (mkFrameOfRestrFrames'
-      (Prev := AddPrev hunit (fun d : hunit => E d) EmptyPrev) restr).(Dom) =
+      (Prev := AddPrev hunit (fun d: hunit => E d) EmptyPrev) restr).(Dom) =
   {a : unit &T forall a0 : arity, E (restr.2 0 leY_O a0 a)}.
 Check fun E' restr E => eq_refl:
   mkPainting' (Prev := AddPrev hunit (fun d => E' d) EmptyPrev)
@@ -174,14 +174,14 @@ Check fun E' restr E => eq_refl:
 Check eq_refl : mkRestrFrameTypes' (Prev := EmptyPrev) = unit.
 Check eq_refl : mkRestrFrameTypes (Prev := EmptyPrev) (restrs' := tt)
   (extraPrev := TopPrev) (extraRestrs' := TopRestrFrames _) =
-                       {_ : unit &T forall q : nat, q <= 0 -> arity -> unit -> unit}.
+                       {_ : unit &T forall q: nat, q <= 0 -> arity -> unit -> unit}.
 Check fun E' restr E => eq_refl :
   mkRestrFrameTypes (Prev := AddPrev hunit (fun d => E' d) EmptyPrev)
     (restrs' := restr) (extraPrev := TopPrev) (extraRestrs' := TopRestrFrames E)
-  = {R : {_ : unit &T forall q : nat, q <= 1 -> arity -> unit -> unit} &T
+  = {R : {_ : unit &T forall q: nat, q <= 1 -> arity -> unit -> unit} &T
       forall q : nat, q <= 0 -> arity ->
-       {a : unit &T forall a0 : arity, {a1 : forall a1 : arity, E' (restr.2 0 leY_O a1 (R.2 0 leY_O a0 a)) &T E (R.2 0 leY_O a0 a; a1)}} ->
-       {a : unit &T forall a0 : arity, E' (restr.2 0 leY_O a0 a)}}.
+       {a : unit &T forall a0: arity, {a1 : forall a1: arity, E' (restr.2 0 leY_O a1 (R.2 0 leY_O a0 a)) &T E (R.2 0 leY_O a0 a; a1)}} ->
+       {a : unit &T forall a0: arity, E' (restr.2 0 leY_O a0 a)}}.
 
 Class CohFrameTypeBlock {Prev n restrs extraPrev extraRestrs} := {
   CohFrameTypesDef: Type;
@@ -321,8 +321,8 @@ Inductive CohFramesExtension {Prev}: forall {n}
     cohs:
     let restrFrames cohs :=
        mkRestrFramesFrom (n := n.+1) restrs' (AddExtraPrev extraPrev)
-        (AddExtraRestrFrame restr' extraRestrs')
-       cohs: mkRestrFrameTypes (restrs' := restrs')
+        (AddExtraRestrFrame restr' extraRestrs') cohs:
+        mkRestrFrameTypes (restrs' := restrs')
         (extraPrev := AddExtraPrev extraPrev)
         (extraRestrs' := AddExtraRestrFrame restr' extraRestrs') in
    let restrFrame cohs := (restrFrames cohs).2 in
@@ -395,9 +395,11 @@ Proof.
   - unshelve esplit.
     + intro ω. destruct Prev. now apply (l ω).
       rewrite <- coh with (Hrq := leY_O) (Hq := ⇓ Hq). admit.
-      (* now apply (RestrPainting' (n := n)
-        (restrFrames' := (restrs'; restr'))
-        (extraRestrs' := AddExtraRestrFrame restr' extraRestrs')). *)
+      (* now apply (RestrPainting' (PaintingPrev := PaintingPrev)
+      (restrFrames' :=
+        mkPrevRestrFramesFrom restrs'
+        (AddExtraPrev extraPrev)
+        (AddExtraRestrFrame restr' extraRestrs') cohs) q (Hq := ↓ Hq) ε d). *)
     + admit.
 Admitted.
 
