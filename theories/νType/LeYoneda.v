@@ -43,7 +43,7 @@ Lemma leR_O_contra {n}: leR n.+1 O -> SFalse.
   now auto.
 Qed.
 
-Lemma leY_O {n}: 0 <= n.
+Lemma leY_O {n}: O <= n.
   unfold "<=". intros p. destruct p. now auto. now auto.
 Qed.
 
