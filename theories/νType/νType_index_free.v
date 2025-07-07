@@ -259,7 +259,7 @@ Instance mkCohFrameTypesAndRestrFrames:
           in forall ω, PaintingPrev (restrFrames'.2  _ _ _ rf))
       in rew [ fun L => {
                R &T forall ω : nat, ω <= n -> arity ->
-              (mkRestrFrameTypesAndFrames' (Prev := L)).(@FrameDef) R ->
+               mkFrameOfRestrFrames' (Prev := L) R ->
               _} ] coerce _ _ _ in
           (restrFrames Q.1 as rf in _;
            restrFrame in forall q Hq ω, (mkFrameOfRestrFrames rf) -> _)
