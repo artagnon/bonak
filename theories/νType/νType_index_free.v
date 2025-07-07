@@ -393,13 +393,12 @@ Proof.
   intros * (l, _). destruct q. now apply (l ε). induction extraCohs.
   - exfalso. now apply leY_O_contra in Hq.
   - unshelve esplit.
-    + intro ω. destruct Prev. now apply (l ω).
-      rewrite <- coh with (Hrq := leY_O) (Hq := ⇓ Hq). admit.
-      (* now apply (RestrPainting' (PaintingPrev := PaintingPrev)
-      (restrFrames' :=
-        mkPrevRestrFramesFrom restrs'
-        (AddExtraPrev extraPrev)
-        (AddExtraRestrFrame restr' extraRestrs') cohs) q (Hq := ↓ Hq) ε d). *)
+    + intro ω.
+      rewrite <- coh with (Hrq := leY_O) (Hq := ⇓ Hq).
+      apply (RestrPainting' (PaintingPrev := PaintingPrev) (restrFrames' := (restrs';restr'))
+       (extraRestrs' := (@AddExtraRestrFrame Prev n FramePrev PaintingPrev extraPrev restrs'
+                       restr' extraRestrs'))).
+      apply l.
     + admit.
 Admitted.
 
