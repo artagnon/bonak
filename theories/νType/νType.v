@@ -1016,47 +1016,32 @@ Proof.
   now repeat rewrite <-(find_painting_rew p n).
 Qed.
 
-Definition very_specific_permutation 
-{D : (νTypeAt 2) .(prefix)}
-(d : (νTypeAt 2) .(Frame).(frame 2) D) :
-(νTypeAt 2) .(Frame).(frame 2) D.
+
+Definition destructFrame2 {n'} (C: νType n'.+2) {p} {Hp : p.+2 <= n'.+2} {D : C.(prefix)}
+ (d : C .(Frame) .(frame p.+2) D) : 
+ sigT (A := C .(Frame) .(frame p) D) (fun d' => 
+ sigT (A := C .(Layer) d') (fun l => 
+ sigT (A := C .(Layer) (rew <-[id] C .(eqFrameSp) in (d' ; l))) (fun l' =>
+ d = rew <-[id] C .(eqFrameSp) in (rew <-[id] C .(eqFrameSp) in (d' ; l) ; l')
+ ))).
 Proof.
-  destruct d as [[d l] l'].
-  unshelve esplit. unshelve esplit.
-  + exact d.
-  + intro ε.
-    rewrite ((νTypeAt 2) .(eqPaintingSp')).
-    unshelve esplit.
-    * intro ω.
-      exact ((νTypeAt 2) .(PaintingPrev).(restrPainting') (Hq := ♢ 2) 0 0 ε (l ω)).
-    * exact (l' ε).
-  + intro ε.
-    remember (rew [id] (νTypeAt 2) .(eqPaintingSp') in l ε) as p'.
-    destruct p' as [l1 p].
-    simpl in l1,p|-*.
-    assert (l1 = mkRestrLayer 0 0 (ε := ε) (d := rew <- [fun T : Type => T] eq_refl in tt)
-      (fun ε0 : arity =>
-       rew <- [fun T : Type => T] mkPaintingType_step_computes in
-      (fun ω : arity => mkRestrLayer 0 0 l ω; l' ε0))).
-    * apply functional_extensionality_dep; intro ω.
-      unfold mkRestrLayer. simpl.
-      rewrite mkRestrPainting_base_computes. 
-      rewrite rew_opp_r.
-      rewrite mkRestrPainting_base_computes. 
-      rewrite (sigT_eta (rew [id] mkPaintingType_step_computes in l ε)).
-      now rewrite <-Heqp'.
-    * clear Heqp'. rewrite H in p.
-      exact p.
-Defined.
+  remember (rew [id] C .(eqFrameSp) in d) as d'.
+  destruct d' as [d' l'].
+  remember (rew [id] C .(eqFrameSp) in d') as d''.
+  destruct d'' as [d'' l].
+  unshelve esplit. 2:unshelve esplit. 3:unshelve esplit.
+  + exact d''.
+  + exact l. 
+  + rewrite (rew_swap_lr _ id _ _ (C .(eqFrameSp) (D := D)) _ _ Heqd'').
+    exact l'.
+  + rewrite <-(rew_swap_lr _ id _ _ (C .(eqFrameSp) (D := D)) _ _ Heqd').
+    apply (f_equal (fun d => rew <- [id] C .(eqFrameSp) in d)).
+    apply eq_existT_uncurried.
+    esplit.
+    exact eq_refl.
+Qed.
 
-(**
-A more general permutation (maybe ?) :
-We can get permute_lower by induction, but does it respect H1 and H2 ?
-Nop, different function
-
-H3 can be obtained via UIP, but it would be better to get it by definition
-*)
-Definition more_general {n'} (C: νType n'.+2) p {Hp : p.+2 <= n'.+2} {D : C.(prefix)}
+Definition permute_here {n'} (C: νType n'.+2) p {Hp : p.+2 <= n'.+2} {D : C.(prefix)}
   (permute_lower : C.(Frame).(frame p) D -> C.(Frame).(frame p) D)
   (H1  : forall ω d', 
     C .(Frame) .(restrFrame) (Hpq := ↑ ♢ p.+1) p.+1 ω d' = 
@@ -1072,10 +1057,7 @@ Definition more_general {n'} (C: νType n'.+2) p {Hp : p.+2 <= n'.+2} {D : C.(pr
   C.(Frame).(frame p.+2) D -> C.(Frame).(frame p.+2) D.
 Proof.
   intro d.
-  rewrite eqFrameSp in d.
-  destruct d as [d l'].
-  rewrite <-(rew_opp_l id (C .(eqFrameSp)) d) in l'.
-  destruct (rew [id] C .(eqFrameSp) in d) as [d' l]; clear d.
+  destruct (destructFrame2 C d) as [d' [l [l' eq]]]. clear d eq.
   rewrite eqFrameSp; unshelve esplit. 
   rewrite eqFrameSp; unshelve esplit.
   + exact (permute_lower d').
@@ -1096,10 +1078,8 @@ Proof.
       - apply functional_extensionality_dep. intro ω.
         rewrite <-map_subst_app. exact eq_refl.
   + intro ε.
-    remember (rew [id] (C .(eqPaintingSp')) in l ε) as p'.
-    destruct p' as [l1 p'].
     rewrite eqRestrFrameSp.
-    refine (rew [C .(PaintingPrev) .(painting')] _ in p').
+    refine (rew [C .(PaintingPrev) .(painting')] _ in (rew [id] (C .(eqPaintingSp')) in l ε).2).
     apply (f_equal (fun d => rew <- [id] C .(eqFrameSp') in d)).
     unshelve refine (eq_existT_curried _ _).
     * exact (H2 _ d').
@@ -1107,7 +1087,8 @@ Proof.
       rewrite <-map_subst_app.
       rewrite <-eqRestrPainting0'.
       rewrite <-(rew_opp_l id (C .(eqPaintingSp')) _).
-      rewrite <-Heqp'.
+      rewrite (sigT_eta (rew [id] C .(eqPaintingSp') in l ε)).
+      rewrite rew_opp_r.
       rewrite <-eqRestrPainting0'.
       rewrite (rew_map 
         (C .(PaintingPrev) .(painting'')) 
@@ -1117,7 +1098,47 @@ Proof.
         (C .(FramePrev) .(restrFrame') p p ε)).
       rewrite rew_compose. rewrite rew_compose.
       now rewrite (H3 _ _ d').
-Qed.
+Defined.
+
+(** 
+idea : 
+we get two function for the frames :
+permuteFrameBelow n p q, p.+2 <= q.+2 <= n, 
+which permutes dimensions q.+1 q.+2 in frame n p (propagate the permutation in the painting)
+
+permuteFrame n p q, q.+2 <= p <= n
+which permutes dimensions q.+1 q.+2 in frame n p (propagate the permutation in the painting
+and permutes frame n q.+1 and frame n q.+2)
+*)
+
+Class PermuteFrameBlock {n'} (C: νType n') p := {
+  permuteFrame q {Hqp : q.+2 <= p} {Hp : p <= n'} {D} :
+    C.(Frame).(frame p) D -> C.(Frame).(frame p) D;
+  permuteFrameBelow q {Hpq : p.+2 <= q.+2} {Hq : q.+2 <= n'} {D} :
+    C.(Frame).(frame p) D -> C.(Frame).(frame p) D;  
+  
+  (**
+  I'm not sure of the properties permuteFrame should have
+  *)
+
+  permuteFrameBelowRestrQ q {Hpq : p.+2 <= q.+2} {Hq : q.+2 <= n'} {D} {ε}  
+    {d : C .(Frame).(frame p) D} :
+    C .(Frame) .(restrFrame) q ε d = 
+      C .(Frame) .(restrFrame) q.+1 ε (permuteFrameBelow q d);
+  permuteFrameBelowRestrSQ q {Hpq : p.+2 <= q.+2} {Hq : q.+2 <= n'} {D} {ε}  
+    {d : C .(Frame).(frame p) D} :
+    C .(Frame) .(restrFrame) q.+1 ε d = 
+      C .(Frame) .(restrFrame) q ε (permuteFrameBelow q d);
+  permuteFrameBelowRestrOther q r 
+      {Hpq : p.+2 <= q.+2} {Hq : q.+2 <= n'}
+      {Hpr : p.+2 <= r}    {Hq : r <= n'}
+      {Nrq : r <> q} {Nrsq : r <> q.+1}
+      {D} {ε}  
+      {d : C .(Frame).(frame p) D} :
+      C .(Frame) .(restrFrame) q.+1 ε d = 
+        C .(Frame) .(restrFrame) q ε (permuteFrameBelow q d);
+}.
+
 (** Degeneracies *)
 
 Class mkRefl T := intro_mkrefl : T -> Type@{m'}.
