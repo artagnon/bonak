@@ -270,7 +270,7 @@ Instance mkCohFrameTypesAndRestrFrames:
 (* Example: if Prev := EmptyPrev, extraPrev := [], extraRestrs' := ([],E)
    mkCohFrameTypes := [] *)
 
-Definition mkCohFrameTypes {Prev n} restrFrames' extraPrev extraRestrs' :=
+Definition mkCohFrameTypes {Prev n restrFrames' extraPrev extraRestrs'} :=
   (mkCohFrameTypesAndRestrFrames (Prev := Prev) (n := n) restrFrames' extraPrev
     extraRestrs').(CohFrameTypesDef).
 
@@ -302,23 +302,23 @@ Inductive CohFramesExtension {Prev}: forall {n}
   (restrs': mkRestrFrameTypes' (Prev := Prev))
   (extraPrev: PrevExtension)
   (extraRestrs': RestrFramesExtension restrs' extraPrev),
-  mkCohFrameTypes restrs' extraPrev extraRestrs' -> Type :=
+  mkCohFrameTypes -> Type :=
 | TopCoh
-    restrs'
-    (E': mkFrameOfRestrFrames' restrs' -> HSet)
-    (cohs: mkCohFrameTypes restrs' TopPrev (TopRestrFrames E'))
-    (E: mkFrameOfRestrFrames
-      (mkRestrFramesFrom restrs' TopPrev (TopRestrFrames E') cohs) -> HSet)
+    {restrs'}
+    {E': mkFrameOfRestrFrames' restrs' -> HSet}
+    {cohs: mkCohFrameTypes (extraRestrs' := TopRestrFrames E')}
+    {E: mkFrameOfRestrFrames
+      (mkRestrFramesFrom restrs' TopPrev (TopRestrFrames E') cohs) -> HSet}
     : CohFramesExtension (n := O) restrs' TopPrev (TopRestrFrames E') cohs
-| AddCohFrame n FramePrev PaintingPrev
-    (extraPrev: PrevExtension (Prev := AddPrev FramePrev PaintingPrev Prev))
-    (restrs': mkRestrFrameTypes')
-    (restr': forall q (Hq: q <= n) (ε: arity),
-          mkFrameOfRestrFrames' restrs' -> FramePrev.(Dom))
-    (extraRestrs': RestrFramesExtension
+| AddCohFrame {n FramePrev PaintingPrev}
+    {extraPrev: PrevExtension (Prev := AddPrev FramePrev PaintingPrev Prev)}
+    {restrs': mkRestrFrameTypes'}
+    {restr': forall q (Hq: q <= n) (ε: arity),
+          mkFrameOfRestrFrames' restrs' -> FramePrev.(Dom)}
+    {extraRestrs': RestrFramesExtension
       (Prev := AddPrev FramePrev PaintingPrev Prev)
-      (restrs'; restr') extraPrev)
-    cohs:
+      (restrs'; restr') extraPrev}
+    {cohs}:
     let restrFrames cohs :=
        mkRestrFramesFrom (n := n.+1) restrs' (AddExtraPrev extraPrev)
         (AddExtraRestrFrame restr' extraRestrs') cohs:
@@ -395,30 +395,32 @@ Proof.
   - unshelve esplit.
     + intro ω.
       rewrite <- coh with (Hrq := leY_O) (Hq := ⇓ Hq).
-      apply (RestrPainting' (PaintingPrev := PaintingPrev) (restrFrames' := (restrs';restr'))
-       (extraRestrs' := (@AddExtraRestrFrame Prev n FramePrev PaintingPrev extraPrev restrs'
-                       restr' extraRestrs'))).
+      apply (RestrPainting'
+       (restrFrames' := (restrs'; restr'))
+       (extraRestrs' := AddExtraRestrFrame restr' extraRestrs')).
       apply l.
     + admit.
 Admitted.
 
-Class νTypeAux n := {
-  Prev : PrevLevel;
-  restrFrames': mkRestrFrameTypes' Prev n;
-  Level := mkLevel Prev restrFrames' TopPrev Top;
-  restrFrame' p {Hp: p.+1 <~ n.+1} q {Hpq Hq} ε (d: frame' p): frame'' p :=
-    RestrFrameFromFull'  n frame'' painting'' restrFrames' p
-    (Hp := Hp) q (Hpq := Hpq) (Hq := Hq) ε d;
-  restrPainting' {E'} p {Hp: p.+1 <~ n.+1} q {Hpq: p <~ q} {Hq: q <~ n} ε
-    {d: frame' p}:
-    painting' (Hp := leI_down Hp) p d ->
-    painting'' p (restrFrame' p q ε (Hpq := Hpq) (Hq := Hq) d);
-  cohFrames {E'}:
-    mkFullCohFrameTypes n frame'' painting'' restrFrames' E' restrPainting';
-  restrFrames {E'}: mkFullRestrFrameTypes n.+1 frame' painting' :=
-    mkFullRestrFrames n frame'' painting'' restrFrames' E' restrPainting'
-    cohFrames;
-  frame {E'} p {Hp: p <~ n.+2}: HSet :=
+Class νTypeAux := {
+  prev: PrevLevel;
+  restrFrames' {n}: mkRestrFrameTypes' (n := n);
+  restrPainting' {n} {FramePrev: HSet}
+  {PaintingPrev: FramePrev -> HSet}
+  {restrFrame': forall q {Hq: q <= n} (ε: arity)
+    (d: mkFrameOfRestrFrames' restrFrames'), FramePrev}
+  {extraPrev: PrevExtension (Prev := AddPrev FramePrev PaintingPrev prev)}
+  {extraRestrs': RestrFramesExtension restrFrames' (AddExtraPrev extraPrev)}
+  q {Hq: q <= n} ε (d: mkFrameOfRestrFrames' restrFrames'):
+    mkPainting' restrFrames' (AddExtraPrev (n := n) extraPrev) extraRestrs' d ->
+    PaintingPrev (restrFrame' q ε d);
+  cohFrames {n}
+  {extraPrev: PrevExtension (Prev := prev)}
+  {extraRestrs': RestrFramesExtension restrFrames' extraPrev}:
+    mkCohFrameTypes (n := n) (extraPrev := extraPrev)
+    (extraRestrs' := extraRestrs');
+}.
+  (* frame {E'} p {Hp: p <~ n.+2}: HSet :=
     Frame n frame'' painting'' restrFrames' E' restrPainting'
     cohFrames p (Hp := Hp);
   restrFrame {E'} p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
@@ -440,8 +442,7 @@ Class νTypeAux n := {
   painting {E'} p {Hp: p <~ n.+2} {E} (d: frame p): HSet :=
     Painting n frame'' painting'' restrFrames' E'
     restrPainting' cohFrames p d (Hp := Hp) (E := E);
-  restrPainting {E'} p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
-    ε {E} {d: frame p}:
+  restrPainting {E'} p q {Hpq: p <= q} {Hq: q <= n.+1} ε {E} {d: frame p}:
     painting p d -> painting' p (restrFrame p q ε d) :=
     RestrPainting n frame'' painting'' restrFrames' E' restrPainting'
     cohFrames p q ε (Hp := Hp) (Hpq := Hpq) (Hq := Hq) (E := E) d;
@@ -456,4 +457,38 @@ Class νTypeAux n := {
       (Hq := leI_down (leI_lower_both Hr))) =
     restrPainting' p r ω (restrPainting p q.+1 ε c
       (Hpq := leI_down Hpq) (Hq := Hq));
+}. *)
+
+Class νType := {
+  prefix'': Type;
+  data: prefix'' -> νTypeAux;
 }.
+
+(***************************************************)
+(** The construction of [νType n+1] from [νType n] *)
+
+(** Extending the initial prefix *)
+Definition mkPrefix'' {C: νType}: Type :=
+  { D: C.(prefix'') &T
+    mkFrameOfRestrFrames' (n := O) (C.(data) D).(restrFrames') -> HSet }.
+
+Section νTypeData.
+Variable C: νType.
+Variable D: mkPrefix''.
+
+Definition mkPrev: PrevLevel :=
+  mkLevel (C.(data) D.1).(restrFrames') TopPrev (TopRestrFrames D.2).
+
+Definition mkRestrFrames' {n: nat}: mkRestrFrameTypes' :=
+  mkRestrFramesFrom (C.(data) D.1).(restrFrames') TopPrev (TopRestrFrames D.2)
+  (C.(data) D.1).(cohFrames).
+End νTypeData.
+
+#[local]
+Instance mkνType {C: νType}: νType.
+  unshelve esplit.
+  now exact mkPrefix''.
+  unshelve esplit.
+  now eapply mkPrev.
+  admit.
+Admitted.
