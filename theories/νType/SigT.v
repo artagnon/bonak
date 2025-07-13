@@ -11,9 +11,9 @@ Arguments existT {A} P _ _.
 
 Set Warnings "-notation-overridden".
 
-Notation "{ x & P }" := (sigT (fun x => P)): type_scope.
-Notation "{ x : A & P }" := (sigT (A := A) (fun x => P)): type_scope.
-Notation "( x 'as' z 'in' T ; y 'in' P )" := (existT (fun z: T => P) x y)
+Notation "{ x & P }" := (sigT (fun x => P%type)): type_scope.
+Notation "{ x : A & P }" := (sigT (A := A) (fun x => P%type)): type_scope.
+Notation "( x 'as' z 'in' T ; y 'in' P )" := (existT (fun z: T => P%type) x y)
   (at level 0, only parsing).
 Notation "( x ; y )" := (existT _ x y)
   (at level 0, format "'[' ( x ;  '/ ' y ) ']'").

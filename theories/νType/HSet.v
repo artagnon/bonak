@@ -72,11 +72,11 @@ Definition hsigT {A: HSet} (B: A -> HSet): HSet := {|
 
 Set Warnings "-notation-overridden".
 
-Notation "{ x & P }" := (hsigT (fun x => P)): type_scope.
-Notation "{ x : A & P }" := (hsigT (A := A) (fun x => P)): type_scope.
+Notation "{ x & P }" := (hsigT (fun x => P%type)): type_scope.
+Notation "{ x : A & P }" := (hsigT (A := A) (fun x => P%type)): type_scope.
 
-Notation "{ x &T P }" := (sigT (fun x => P)) (x at level 99): type_scope.
-Notation "{ x : A &T P }" := (sigT (A := A) (fun x => P))
+Notation "{ x &T P }" := (sigT (fun x => P%type)) (x at level 99): type_scope.
+Notation "{ x : A &T P }" := (sigT (A := A) (fun x => P%type))
   (x at level 99): type_scope.
 
 (** [forall] defined over an [HSet] codomain *)
@@ -106,6 +106,6 @@ Defined.
 Definition pi_domain_eq {A A': HSet} (p: A = A') (u: A -> HSet): A' -> HSet :=
   fun (a': A') => u (rew <- [@id HSet] p in a').
 
-Notation "'hforall' x .. y , P" := (hpiT (fun x => .. (hpiT (fun y => P)) ..))
+Notation "'hforall' x .. y , P" := (hpiT (fun x => .. (hpiT (fun y => P%type)) ..))
   (at level 10, x binder, y binder, P at level 200,
   format "'[  ' '[  ' 'hforall'  x  ..  y ']' ,  '/' P ']'"): type_scope.
