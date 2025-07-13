@@ -404,21 +404,17 @@ Admitted.
 
 Class νTypeAux := {
   prev: PrevLevel;
-  restrFrames' {n}: mkRestrFrameTypes' (n := n);
-  restrPainting' {n} {FramePrev: HSet}
+  restrFrames': mkRestrFrameTypes' (n := 0);
+  restrPainting' {n} E' {FramePrev: HSet}
   {PaintingPrev: FramePrev -> HSet}
   {restrFrame': forall q {Hq: q <= n} (ε: arity)
     (d: mkFrameOfRestrFrames' restrFrames'), FramePrev}
-  {extraPrev: PrevExtension (Prev := AddPrev FramePrev PaintingPrev prev)}
-  {extraRestrs': RestrFramesExtension restrFrames' (AddExtraPrev extraPrev)}
   q {Hq: q <= n} ε (d: mkFrameOfRestrFrames' restrFrames'):
-    mkPainting' restrFrames' (AddExtraPrev (n := n) extraPrev) extraRestrs' d ->
+    mkPainting' (Prev := prev) restrFrames' TopPrev (TopRestrFrames E') d ->
     PaintingPrev (restrFrame' q ε d);
-  cohFrames {n}
-  {extraPrev: PrevExtension (Prev := prev)}
-  {extraRestrs': RestrFramesExtension restrFrames' extraPrev}:
-    mkCohFrameTypes (n := n) (extraPrev := extraPrev)
-    (extraRestrs' := extraRestrs');
+  cohFrames E':
+    mkCohFrameTypes (Prev := prev) (restrFrames' := restrFrames') (n := 0) (extraPrev := TopPrev)
+    (extraRestrs' := TopRestrFrames E');
 }.
   (* frame {E'} p {Hp: p <~ n.+2}: HSet :=
     Frame n frame'' painting'' restrFrames' E' restrPainting'
@@ -479,9 +475,10 @@ Variable D: mkPrefix''.
 Definition mkPrev: PrevLevel :=
   mkLevel (C.(data) D.1).(restrFrames') TopPrev (TopRestrFrames D.2).
 
-Definition mkRestrFrames' {n: nat}: mkRestrFrameTypes' :=
+Definition mkRestrFrames': mkRestrFrameTypes' :=
   mkRestrFramesFrom (C.(data) D.1).(restrFrames') TopPrev (TopRestrFrames D.2)
-  (C.(data) D.1).(cohFrames).
+  ((C.(data) D.1).(cohFrames) D.2).
+
 End νTypeData.
 
 #[local]
@@ -490,5 +487,7 @@ Instance mkνType {C: νType}: νType.
   now exact mkPrefix''.
   unshelve esplit.
   now eapply mkPrev.
+  now apply mkRestrFrames'.
+  admit.
   admit.
 Admitted.
