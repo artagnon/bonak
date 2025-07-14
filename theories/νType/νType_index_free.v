@@ -368,7 +368,7 @@ Proof.
       unfold mkRestrFrames. simpl. destruct coerce. now apply d.
     + (* The extra restr extension *)
       destruct Prev; now exact IHextraCohs.
-Qed.
+Defined.
 
 Definition mkPainting {Prev n restrs' extraPrev extraRestrs' cohs extraCohs} :=
   mkPainting' (Prev := mkLevel restrs' extraPrev extraRestrs')
