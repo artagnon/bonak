@@ -391,30 +391,19 @@ Definition RestrPainting {Prev n restrs' extraPrev extraRestrs'
   extraPrev extraRestrs' (mkRestrFrame (extraPrev := extraPrev)
   (extraRestrs' := extraRestrs') (cohs := cohs) q ε d).
 Proof.
-  intros * (l, _). destruct q. now apply (l ε). induction extraCohs.
-  - exfalso. now apply leY_O_contra in Hq.
-  - unshelve esplit.
-    + intro ω.
-      rewrite <- coh with (Hrq := leY_O) (Hq := ⇓ Hq).
-      apply (RestrPainting'
-       (restrFrames' := (restrs'; restr'))
-       (extraRestrs' := AddExtraRestrFrame restr' extraRestrs')).
-      apply l.
-    + cbn.
-      specialize (IHextraCohs H
-unfold mkPrevFrame, mkPrevRestrFrames in IHextraCohs.
-epose (mkRestrFrame q.+1 ε (rew [ fun L => {
-               R &T _} ] coerce _ _ _ in (d; l))).
-
-apply IHextraCohs with (d := (d;l)).
-     apply X.
-      apply (RestrPainting' (PaintingPrev := PaintingPrev)
-      (restrFrames' :=
-        mkPrevRestrFrames restrs'
-        (AddExtraPrev extraPrev)
-        (AddExtraRestrFrame restr' extraRestrs') cohs) q (Hq := ↓ Hq) ε d). *)
-
-Admitted.
+  induction extraCohs.
+  - intros * (l, _). destruct q.
+    + now apply (l ε).
+    + exfalso. now apply leY_O_contra in Hq.
+  - intros * (l, c). destruct q.
+    + now apply (l ε).
+    + unshelve esplit.
+       * intro ω. rewrite <- coh with (Hrq := leY_O) (Hq := ⇓ Hq).
+         apply (RestrPainting' (restrFrames' := (restrs';restr'))
+          (extraRestrs' := (AddExtraRestrFrame restr' extraRestrs'))).
+         apply l.
+       * destruct Prev; apply (IHextraCohs q (⇓Hq) ε (d as x in _; l in _) c).
+Defined.
 
 Class νTypeAux := {
   prev: PrevLevel;
