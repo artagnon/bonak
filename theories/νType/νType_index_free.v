@@ -408,7 +408,7 @@ Definition mkPrevPainting {Prev n restrs' extraPrev extraRestrs'
     mkPrevFrame (Prev := Prev) (n := n)
       (mkPrevRestrFrames restrs' extraPrev extraRestrs' restrPaintings' cohs) -> HSet.
 
-Definition RestrPainting {Prev n restrs' extraPrev extraRestrs'
+Definition mkRestrPainting {Prev n restrs' extraPrev extraRestrs'
   restrPaintings' cohs extraCohs}: forall q {Hq: q <= n} ε d, mkPrevPainting
   (extraCohs := extraCohs) d -> mkPainting' (Prev := Prev) restrs'
   extraPrev extraRestrs' (mkRestrFrame (extraPrev := extraPrev)
@@ -426,6 +426,20 @@ Proof.
          apply l.
        * destruct Prev; apply (IHextraCohs q (⇓Hq) ε (d as x in _; l in _) c).
 Defined.
+
+Definition mkRestrPaintingTypes
+  {Prev n restrFrames' extraPrev extraRestrs' restrPaintings' cohs extraCohs} :=
+  RestrPaintingTypes'
+     (Prev := mkLevel (Prev := Prev) (n := n) restrFrames' extraPrev extraRestrs')
+     (restrFrames' := mkRestrFrames restrFrames' extraPrev extraRestrs' restrPaintings' cohs)
+     (extraRestrs' := mkRestrFramesExtension extraCohs).
+
+Fixpoint mkRestrPaintings {Prev}: forall {n} restrFrames' extraPrev
+  (extraRestrs': RestrFramesExtension (Prev := Prev) restrFrames' extraPrev)
+  restrPaintings' cohs
+  (extraCohs:CohFramesExtension (n := n) restrFrames' extraPrev extraRestrs' restrPaintings' cohs),
+  mkRestrPaintingTypes (extraRestrs' := extraRestrs') (extraCohs := extraCohs).
+Admitted.
 
 Class νTypeAux := {
   prev: PrevLevel;
@@ -499,6 +513,11 @@ Definition mkRestrFrames': mkRestrFrameTypes' :=
   ((C.(data) D.1).(restrPaintings') D.2)
   ((C.(data) D.1).(cohFrames) D.2).
 
+Definition mkRestrPaintings' E': RestrPaintingTypes' :=
+  mkRestrPaintings (C.(data) D.1).(restrFrames') TopPrev (TopRestrFrames D.2)
+  ((C.(data) D.1).(restrPaintings') D.2)
+  ((C.(data) D.1).(cohFrames) D.2) (TopCoh (E := E')).
+
 End νTypeData.
 
 #[local]
@@ -508,6 +527,6 @@ Instance mkνType {C: νType}: νType.
   unshelve esplit.
   now eapply mkPrev.
   now apply mkRestrFrames'.
-  admit.
+  now apply mkRestrPaintings'.
   admit.
 Admitted.
