@@ -75,9 +75,10 @@ Set Warnings "-notation-overridden".
 Notation "{ x & P }" := (hsigT (fun x => P%type)): type_scope.
 Notation "{ x : A & P }" := (hsigT (A := A) (fun x => P%type)): type_scope.
 
-Notation "{ x &T P }" := (sigT (fun x => P%type)) (x at level 99): type_scope.
+Notation "{ x &T P }" := (sigT (fun x => P%type))
+  (x at level 99, format "{ '[ ' x  &T  '/' P ']' }"): type_scope.
 Notation "{ x : A &T P }" := (sigT (A := A) (fun x => P%type))
-  (x at level 99): type_scope.
+  (x at level 99, format "{ '[ ' '[' x  :  A ']'  &T  '/' P ']' }"): type_scope.
 
 (** [forall] defined over an [HSet] codomain *)
 
