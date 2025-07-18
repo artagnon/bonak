@@ -209,16 +209,15 @@ Fixpoint RestrPaintingTypes' {p}:
       RestrPaintingType' (p := p) (frames'' := frames''.1) (paintings'' := paintings''.1) (extraRestrs' := extraRestrs') }
   end.
 
-Definition coerce {p} {frames'': Frames'' p.+1} {paintings'': Paintings'' p.+1 frames''} {n}
-  (restrFrames': mkRestrFrameTypes' (p := p.+1) (frames'' := frames'') (paintings'' := paintings'') (n := n))
-  extraPrev extraRestrs':
-    {R : mkRestrFrameTypes (extraPrev := AddExtraPrev (frames'' := frames''.1) extraPrev) (extraRestrs' := AddExtraRestrFrame restrFrames'.2 extraRestrs') &T
-    forall (q : nat) (Hq : q <= n),
-    arity -> mkFrame R -> (mkFrame' restrFrames') }
-    ->
-    mkRestrFrameTypes (p := p.+1) (extraPrev := extraPrev) (extraRestrs' := extraRestrs').
-destruct p; trivial.
-Defined.
+Definition rollPaintings {p}: forall {frames'': Frames'' p} {paintings'': Paintings'' p frames''} {n}
+  (restrFrames': mkRestrFrameTypes' (p := p) (frames'' := frames'') (paintings'' := paintings'') (n := n))
+  extraPrev extraRestrs',
+  mkPaintings' restrFrames' extraPrev extraRestrs' =
+  mkPaintingsRec' (n:=n) restrFrames' extraPrev extraRestrs' :=
+  match p with
+  | 0 => fun _ _ _ _ _ _ => eq_refl
+  | S p => fun _ _ _ _ _ _ => eq_refl
+  end.
 
 #[local]
 Instance mkCohFrameTypesAndRestrFrames:
@@ -276,8 +275,11 @@ Instance mkCohFrameTypesAndRestrFrames:
            fun ω => rew [paintings''.2] Q.2 O q leY_O Hq ε ω d.1 in
             restrPaintings'.2 q _ ε _ (d.2 ω)
            in forall ω, paintings''.2 (restrFrames'.2  _ _ _ rf))
-      in 
-          coerce _ _ _ (restrFrames Q.1 as rf in _;
+      in rew [ fun P => {
+               R &T forall ω : nat, ω <= n -> arity ->
+               mkFrame' (paintings'' := P) R ->
+               _} ] rollPaintings _ _ _ in
+          (restrFrames Q.1 as rf in _;
            restrFrame in forall q Hq ω, (mkFrame rf) -> _)
     |}
   end.
@@ -354,22 +356,6 @@ Inductive CohFramesExtension {p} {frames'': Frames'' p} {paintings'': Paintings'
       CohFramesExtension (n := n.+1) restrs' (AddExtraPrev extraPrev)
         (AddExtraRestrFrame restr' extraRestrs') restrPaintings' cohs.
 
-Lemma coerce2 {p frames'' paintings'' n} frame'' painting'' {restrs': mkRestrFrameTypes' (p := p) (frames'' := frames'') (paintings'' := paintings'')}
-  restr' {extraPrev} {extraRestrs'} :
-  @PrevExtension p.+2
-    (@mkFrames' p.+1 (frames''; frame'') (paintings''; painting'') n (restrs'; restr'))
-    (@mkPaintings' p.+1 (frames''; frame'') (paintings''; painting'') n 
-       (restrs'; restr') ( extraPrev) extraRestrs') n ->
-  @PrevExtension p.+2
-    (@mkFrames' p frames'' paintings'' n.+1 restrs'; mkFrame' (p := p.+1) (frames'' := (frames''; frame'')) (paintings'' := (paintings''; painting'')) (restrs'; restr'))
-    (@mkPaintings' p frames'' paintings'' n.+1 restrs'
-       (@AddExtraPrev p frames'' paintings'' n frame'' painting'' extraPrev)
-       (@AddExtraRestrFrame p frames'' paintings'' n frame'' painting'' extraPrev restrs' restr'
-          extraRestrs'); mkPainting' (p := p.+1) (frames'' := (frames''; frame'')) (paintings'' := (paintings''; painting'')) (n := n) (restrs'; restr') extraPrev
-     extraRestrs') n.
-destruct p; trivial.
-Defined.
-
 Fixpoint mkExtension {p frames'' paintings'' n} {restrs': mkRestrFrameTypes' (p := p) (frames'' := frames'') (paintings'' := paintings'')}
   {extraPrev} {extraRestrs': RestrFramesExtension (n := n) restrs' extraPrev}:
   PrevExtension
@@ -378,7 +364,7 @@ Fixpoint mkExtension {p frames'' paintings'' n} {restrs': mkRestrFrameTypes' (p 
 Proof.
   induction extraRestrs'.
   - now constructor.
-  - econstructor. apply coerce2.
+  - econstructor. rewrite rollPaintings.
     now eapply (mkExtension (p.+1) (frames''; frame'') (paintings''; painting'') n (restrs'; restr')).
 Defined.
 
