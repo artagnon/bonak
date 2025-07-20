@@ -145,19 +145,21 @@
 % The eqntable environment
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 \NewEnviron{eqntable}[1]{
+  \begin{table}[h]
   \small
-  \begin{tabularx}{0.94\linewidth}{
-    @{}
-    >{$}l<{$}
-    >{$}c<{$}
-    >{$}c<{$}
-    >{$}Y<{$}
-    @{}}
-    \toprule
-    \BODY
-    \bottomrule
-  \end{tabularx}
-  \captionof{table}{#1}
+    \begin{tabularx}{0.94\linewidth}{
+      @{}
+      >{$}l<{$}
+      >{$}c<{$}
+      >{$}c<{$}
+      >{$}Y<{$}
+      @{}}
+      \toprule
+      \BODY
+      \bottomrule
+    \end{tabularx}
+    \caption{#1}
+  \end{table}
 }
 
 % \midrule color
@@ -555,20 +557,17 @@ Notably, the definition of $\restrl$ relies on an equality expressing the commut
 
 Note that for a fixed constant $n$, relying on the evaluation rules of type theory, the coherence conditions degenerate to a reflexivity proof, so that the construction builds an effective sequence of types not mentioning coherences anymore.
 
-\vspace{1em}
 \def\lab{tab:coind}
 \input{tab-coind.tex}
 
 % For just the second table, keep the universe letter in fullframe
 \renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[#1][#2][][][#3]}
 
-\vspace{1em}
 \def\lab{tab:core}
 \input{tab-core.tex}
 
 % Drop the universe letter in fullframe for all remaining tables
 \renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[][#2][][][#3]}
-\vspace{1em}
 \def\lab{tab:frames}
 \input{tab-frames.tex}
 
@@ -581,7 +580,6 @@ Note that for a fixed constant $n$, relying on the evaluation rules of type theo
 % The third table mentions cohframe; keep ε, ω in this instance
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][#6,#7][#8][#9]}
 
-\vspace{1em}
 \def\lab{tab:faces}
 \input{tab-faces-ett.tex}
 
@@ -606,7 +604,6 @@ Note that for a fixed constant $n$, relying on the evaluation rules of type theo
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
 
-\vspace{1em}
 \def\lab{tab:coh}
 \input{tab-coh-ett.tex}
 
@@ -763,7 +760,6 @@ Hence, we need a coherence condition to commute the restrictions. Coherence cond
 In this section, we intend to get rid of the reflection rule and make explicit the equational reasoning step needed to rephrase the construction in intensional type theory. For readability purposes, we make only explicit in this section the key coherence conditions of the construction. Other cases of equality reasoning would have to be made explicit to fully obtain a construction in intensional type theory, but these steps are standard enough to be omitted at this stage. See section~\ref{sec:eqproperties} for the details.
 
 The need for transport along a proof of commutation of $\restrf$ in the definition of $\restrl$ is made explicit in table~\ref{fulltab:faces}, where the arrow over $\cohf$ indicates the direction of rewrite.
-\vspace{1em}
 
 % Insert fulltab:faces and fulltab:coh, after overriding macros to make
 % everything but the universe letter explicit.
@@ -778,10 +774,8 @@ The need for transport along a proof of commutation of $\restrf$ in the definiti
 \renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
 \def\lab{fulltab:faces}
-\vspace{1em}
 \renewcommand{\thetable}{4'}
 \input{tab-faces.tex}
-\vspace{1em}
 \def\lab{fulltab:coh}
 \renewcommand{\thetable}{5'}
 \input{tab-coh.tex}
@@ -789,7 +783,6 @@ The need for transport along a proof of commutation of $\restrf$ in the definiti
 \renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
 \renewcommandx{\cohl}{\coh{layer}[][][][][][][][]}
 \renewcommandx{\coht}{\cohtwo{frame}[][][][][][][][]}
-\vspace{1em}
 The proof of $\cohf$ itself requires making explicit several rewrites which were invisible in extensional type theory. The commutation of $\restrl$ lives in a type referring to $\cohf$, so we need a transport along the commutation of $\restrf$ in the statement of $\cohl$. The proof of $\cohl$ is the most involved proof of the construction, as it requires a higher-dimensional coherence condition, $\coht$, whose exact formulation is as follows.
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
