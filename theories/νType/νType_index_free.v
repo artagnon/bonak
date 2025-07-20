@@ -124,7 +124,7 @@ Fixpoint mkPaintingsRec' {p} : forall {frames'' paintings'' n}
   (restrFrames': mkRestrFrameTypes' (p := p) (frames'' := frames'') (paintings'' := paintings'') (n := n))
   extras'' (extraRestrs': RestrFramesExtension' (n := n) restrFrames' extras''),
   PaintingsGen p.+1 (mkFrames' restrFrames') :=
-  match p return forall (frames'': FramesGen p) paintings'' n (restrFrames': mkRestrFrameTypes' (p := p) (frames'' := frames'') (paintings'' := paintings'') (n := n)), _ with
+  match p with
   | 0 => fun frames'' paintings'' n restrFrames' extras'' extraRestrs' =>
       (tt as _ in _; mkPainting' (p := 0) restrFrames' extras'' extraRestrs' in (mkFrames' (p := 0) restrFrames').2 -> _) : PaintingsGen 1 _
   | S p => fun frames'' paintings'' n restrFrames' extras'' extraRestrs' =>
@@ -203,10 +203,7 @@ Fixpoint RestrPaintingTypes' {p}:
   {n} {restrFrames': mkRestrFrameTypes' (p := p) (frames'' := frames'') (paintings'' := paintings'')}
   {extras'': Extension'' (p := p) (frames'' := frames'') (paintings'' := paintings'')}
   {extraRestrs': RestrFramesExtension' (n := n) restrFrames' extras''}, Type :=
-  match p return forall {frames'': FramesGen p} {paintings'': PaintingsGen p frames''} {n} {restrFrames': mkRestrFrameTypes' (p := p) (frames'' := frames'') (paintings'' := paintings'') (n := n)}
-  {extras'': Extension'' (p := p) (frames'' := frames'') (paintings'' := paintings'')}
-  {extraRestrs': RestrFramesExtension' restrFrames'
-    ( extras'')}, Type with
+  match p with
   | 0 => fun _ _ _ _ _ _ => unit
   | S p =>
     fun frames'' paintings'' n restrFrames' extras'' extraRestrs' =>
@@ -234,19 +231,14 @@ Instance mkCohFrameTypesAndRestrFrames:
     (frames'' := frames'') (paintings'' := paintings'') (n := n)),
     CohFrameTypeBlock :=
   fix mkCohFrameTypesAndRestrFrames {p}:
-  forall frames'' paintings'' n
-    (restrFrames' : mkRestrFrameTypes'
-      (frames'' := frames'') (paintings'' := paintings''))
-    extras''
-    (extraRestrs': RestrFramesExtension' restrFrames' extras'')
-    (restrPaintings': RestrPaintingTypes' (p := p) (frames'' := frames'') (paintings'' := paintings'') (n := n)),
-    CohFrameTypeBlock :=
-  match p return forall {frames'': FramesGen p} {paintings'': PaintingsGen p frames''} n (restrFrames' : mkRestrFrameTypes' (p := p) (frames'' := frames'') (paintings'' := paintings''))
+  forall {frames'': FramesGen p} {paintings'': PaintingsGen p frames''}n
+    (restrFrames' : mkRestrFrameTypes' (p := p) (frames'' := frames'')
+      (paintings'' := paintings''))
     extras''
     (extraRestrs': RestrFramesExtension' (n := n) restrFrames' extras'')
     (restrPaintings': RestrPaintingTypes' (p := p) (frames'' := frames'') (paintings'' := paintings'') (n := n) (extras'' := extras'') (extraRestrs' := extraRestrs')),
-    CohFrameTypeBlock
-  with
+    CohFrameTypeBlock :=
+  match p with
   | 0 =>
     fun frames'' paintings'' n restrFrames' extras'' extraRestrs' _ =>
     {|
@@ -380,7 +372,8 @@ Proof.
   induction extraRestrs'.
   - now constructor.
   - econstructor. rewrite rollPaintings.
-    now eapply (mkExtension (p.+1) (frames''; frame'') (paintings''; painting'') n (restrFrames'; restrFrame')).
+    now apply (mkExtension p.+1 (frames''; frame'') (paintings''; painting'')
+      n (restrFrames'; restrFrame')).
 Defined.
 
 (* Example: if Prev := EmptyPrev, extras'' := [], extraRestrs' := ([],E) cohs=[]
@@ -391,10 +384,9 @@ Definition mkRestrFramesExtension' {p frames'' paintings'' n}
   {restrFrames': mkRestrFrameTypes' (p := p) (frames'' := frames'') (paintings'' := paintings'')}
   {extras'': Extension''} {extraRestrs' restrPaintings' cohs}
   (extraCohs: CohFramesExtension (n := n) restrFrames' extras'' extraRestrs' restrPaintings' cohs):
-  RestrFramesExtension'
-     (frames'' := mkFrames' (p := p) (frames'' := frames'')
-     (paintings'' := paintings'') (n := n) restrFrames')
-     (paintings'' := mkPaintings' restrFrames' extras'' extraRestrs')
+  RestrFramesExtension' (frames'' := mkFrames' (p := p) (frames'' := frames'')
+    (paintings'' := paintings'') (n := n) restrFrames')
+    (paintings'' := mkPaintings' restrFrames' extras'' extraRestrs')
     (mkRestrFrames restrFrames' extras'' extraRestrs' restrPaintings' cohs) mkExtension.
 Proof.
   induction extraCohs.
