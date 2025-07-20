@@ -115,10 +115,10 @@ Instance ConsDep `(deps: FormDeps p n.+1) (dep: FormDep deps): FormDeps p.+1 n :
 
 Inductive FormDepsExtension {p} : forall {n}, FormDeps p n -> Type :=
 | TopRestrFrames {deps}:
-  forall E': mkFrame' (n := O) deps -> HSet,
+  forall E': mkFrame' deps -> HSet,
   FormDepsExtension (n := O) deps
 | AddExtraRestrFrame {n} deps dep:
-  FormDepsExtension (p := p.+1) (ConsDep deps dep) ->
+  FormDepsExtension (ConsDep deps dep) ->
   FormDepsExtension (n := n.+1) deps.
 
 (* Example: if Prev := EmptyPrev, extras'' := [], extraRestrs' := ([],E)
@@ -130,7 +130,7 @@ Fixpoint mkPainting' `(deps: FormDeps p n) (extraDeps: FormDepsExtension deps):
   | TopRestrFrames E' => fun d => E' d
   | AddExtraRestrFrame deps dep extraDeps => fun d =>
       {l: hforall ε, dep.(_painting'') (dep.(_restrFrame') O leY_O ε d) &
-       mkPainting' (p := p.+1) (ConsDep deps dep) extraDeps (d; l)}
+       mkPainting' (ConsDep deps dep) extraDeps (d; l)}
   end.
 
 Definition Paintings' := Paintings''.
