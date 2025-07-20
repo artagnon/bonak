@@ -190,10 +190,10 @@ cohframe^{n,k\geq p} \\
 
 Looking at the dependencies in the reverse order, it is thus enough:
 \begin{enumerate}
-\item To assume frame$^{n-2,k}$ and painting$^{n-2,k}$ for all $k\leq
-  p$ in order to mutually define, for all $p\leq n$, the type of
+\item To assume frame$^{n-2,k}$ and painting$^{n-2,k}$ for all $k< p$
+  in order to mutually define, for all $p\leq n$, the type of
   restrframe$^{n-1,p}$ and frame$^{n-1,p}$ as a function from all
-  restrframe$^{n-1,k}$ for $k\leq p$. Using red for assumptions, this
+  restrframe$^{n-1,k}$ for $k< p$. Using red for assumptions, this
   can be pictured as:
 \begin{center}
 \begin{tikzcd}
@@ -202,8 +202,9 @@ frame^{n-1,p}(\textcolor{red}{restrframe^{n-1,k<p}}) \arrow[d] \\
 \textcolor{red}{frame^{n-2,k<p}} \\
 \end{tikzcd}
 \end{center}
-\item To further assume restrframe$^{n-1,k}$ for all $k\leq p$ to get
-  frame$^{n-2,p}$ for all $p<n$:
+
+\item To further assume restrframe$^{n-1,k}$ for all $k<p$ to get
+  frame$^{n-1,p}$ for all $p\leq n-1$:
 \begin{center}
 \begin{tikzcd}
 frame^{n-1,p} \arrow[d] \arrow[ddr]\\
@@ -213,13 +214,13 @@ frame^{n-1,p} \arrow[d] \arrow[ddr]\\
 \end{center}
 
 \item To rely on frame$^{n-2,k}$, painting$^{n-2,k}$ and
-  restrframe$^{n-1,k}$ now for all $k > p$, as well as an inhabitant
-  of $X_{n-2}$ of nuSet$^{=n-2}$ to define painting$^{n-1,p}$ for all
-  $p \leq n$:
+  restrframe$^{n-1,k}$, jointly with frame$^{n-1,k}$, and now for all
+  $k \geq p$, as well as an inhabitant $X_{n-2}$ of $\nu$Set$^{=n-2}$
+  to define painting$^{n-1,p}$ for all $p \leq n-1$:
 \begin{center}
 \begin{tikzcd}
 & & & painting^{n-1,p} \arrow[ddlll] \arrow[dddll] \arrow[d, dotted] \\
-& & & frame^{n-1,p} \arrow[d] \arrow[ddr]\\
+frame^{n-1,k\geq p} \arrow[d] \arrow[ddr] & & & frame^{n-1,p} \arrow[d] \arrow[ddr]\\
 \textcolor{red}{painting^{n-2,k\geq p}} \arrow[d, dotted] & & & \textcolor{red}{painting^{n-2,k<p}} \arrow[d, dotted] \\
 \textcolor{red}{frame^{n-2,k\geq p}} & \textcolor{red}{restrframe^{n-1,k\geq p},X_{n-2}} \arrow[l, dotted] & & \textcolor{red}{frame^{n-2,k<p}} & \textcolor{red}{restrframe^{n-1,k<p}} \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm]\\
 \end{tikzcd}
@@ -266,9 +267,9 @@ $\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\
 \end{tikzcd}
 \end{small}
 
-\item To rely on frame$^{n-2,k\geq p}$, painting$^{n-1,k\geq p}$ and
-  restrframe$^{n,k\geq p}$ to build frame$^{n,k\geq p}$ and
-  painting$^{n,k\geq p}$ for $p \leq n$:
+\item To rely on frame$^{n-2,k\geq p}$, painting$^{n-2,k\geq p}$ and
+  restrframe$^{n-1,k\geq p}$ to build frame$^{n-1,k\geq p}$ and
+  painting$^{n-1,k\geq p}$ for $p \leq n$:
 
 $\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
 \begin{small}
@@ -322,7 +323,7 @@ frame^{n-1,k\geq p} \arrow[d] \arrow[ddr] & restrframe^{n,k\geq p} \arrow[d] \ar
 \end{small}
 
 \item To rely on restrpainting$^{n-1,k}$ and cohframe$^{n,k}$ for $k >
-  p$ to also get restrpainting$^{n,p}$ for all $p \leq n$:
+  p$ to also get restrpainting$^{n,p}$ for all $p \leq n-1$:
 
 $\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
 \begin{small}
@@ -418,8 +419,60 @@ frame^{n-1,k\geq p} \arrow[d] \arrow[ddr] & restrframe^{n,k\geq p} \arrow[d] \ar
 \end{tikzcd}
 \end{scriptsize}
 
-\item To finally assume cohpainting$^{n,k}$ for $k \geq p$
-to get cohpainting$^{n+1,p}$ for $p \leq n-1$:
+\item To assume cohpainting$^{n+1,k}$ for $k \geq p$ to build
+  cohframe$^{n+1,k\geq p}$:
+
+$\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
+\begin{scriptsize}
+\begin{tikzcd}
+& & & frame^{n+1,p} \arrow[d] \arrow[ddr] \\
+& & & painting^{n,p} \arrow[ddlll] \arrow[dddr] \arrow[d, dotted]\\
+& & & frame^{n,p} \arrow[d] \arrow[ddr] & restrframe^{n+1,k<p} \arrow[d] \arrow[ddr] \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm] \\
+painting^{n-1,k\geq p} \arrow[d, dotted] \arrow[dddr] \arrow[dd, bend right=70] & & &
+  painting^{n-1,p} \arrow[ddlll] \arrow[dddll] \arrow[d, dotted] & restrpainting^{n,k<p} \arrow[d, dotted] \arrow[ddlll] \arrow[dddll] \arrow[l, dotted] \arrow[uul, dotted]\\
+frame^{n-1,k\geq p} \arrow[d] \arrow[ddr] & restrframe^{n,k\geq p} \arrow[d] \arrow[ddr] \arrow[l, dotted] & &
+ frame^{n-1,p} \arrow[d] \arrow[ddr] & restrframe^{n,k<p} \arrow[d] \arrow[ddr] \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm] &
+   cohframe^{n+1,p} \arrow[d] \arrow[uul, dotted, shift right=2mm] \arrow[l, dotted]\\
+\textcolor{red}{painting^{n-2,k\geq p}} \arrow[d, dotted] & \textcolor{red}{restrpainting^{n-1,k\geq p}} \arrow[d, dotted] & &
+   \textcolor{red}{painting^{n-2,k<p}} \arrow[d, dotted] &
+   \textcolor{red}{restrpainting^{n-1,k<p}} \arrow[l, dotted] \arrow[d, dotted] &
+   \textcolor{red}{cohpainting^{n,k<p}} \arrow[l, dotted] \arrow[d, dotted] \\
+\textcolor{red}{frame^{n-2,k\geq p}} & \textcolor{red}{restrframe^{n-1,k\geq p},X_{n-2}} \arrow[l, dotted] & \textcolor{red}{cohframe^{n,k\geq p},X_{n-1}} \arrow[l, dotted] &
+   \textcolor{red}{frame^{n-2,k<p}} &
+   \textcolor{red}{restrframe^{n-1,k<p}} \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm] &
+   \textcolor{red}{cohframe^{n,k<p}} \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm] \\
+\end{tikzcd}
+\end{scriptsize}
+
+\item To rely on restrpainting$^{n,k}$ and cohframe$^{n+1,k}$ for $k \geq
+  p$ to also get restrpainting$^{n+1,p}$ for all $p \leq n$:
+
+$\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
+\begin{scriptsize}
+\begin{tikzcd}
+& & & frame^{n+1,p} \arrow[d] \arrow[ddr] \\
+& & & painting^{n,p} \arrow[ddlll] \arrow[dddr] \arrow[d, dotted]\\
+& & & frame^{n,p} \arrow[d] \arrow[ddr] & restrframe^{n+1,k<p} \arrow[d] \arrow[ddr] \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm] \\
+painting^{n-1,k\geq p} \arrow[d, dotted] \arrow[dddr] \arrow[dd, bend right=70] & & &
+  painting^{n-1,p} \arrow[ddlll] \arrow[dddll] \arrow[d, dotted] & restrpainting^{n,k<p} \arrow[d, dotted] \arrow[ddlll] \arrow[dddll] \arrow[l, dotted] \arrow[uul, dotted]\\
+frame^{n-1,k\geq p} \arrow[d] \arrow[ddr] & restrframe^{n,k\geq p} \arrow[d] \arrow[ddr] \arrow[l, dotted] & &
+ frame^{n-1,p} \arrow[d] \arrow[ddr] & restrframe^{n,k<p} \arrow[d] \arrow[ddr] \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm] &
+   cohframe^{n+1,p} \arrow[d] \arrow[uul, dotted, shift right=2mm] \arrow[l, dotted]\\
+\textcolor{red}{painting^{n-2,k\geq p}} \arrow[d, dotted] &
+   \textcolor{red}{restrpainting^{n-1,k\geq p}} \arrow[l, dotted] \arrow[d, dotted] &
+   \textcolor{red}{cohpainting^{n,k\geq p}} \arrow[l, dotted] \arrow[d, dotted] &
+   \textcolor{red}{painting^{n-2,k<p}} \arrow[d, dotted] &
+   \textcolor{red}{restrpainting^{n-1,k<p}} \arrow[l, dotted] \arrow[d, dotted] &
+   \textcolor{red}{cohpainting^{n,k<p}} \arrow[l, dotted] \arrow[d, dotted] \\
+\textcolor{red}{frame^{n-2,k\geq p}} & \textcolor{red}{restrframe^{n-1,k\geq p},X_{n-2}} \arrow[l, dotted] & \textcolor{red}{cohframe^{n,k\geq p},X_{n-1}} \arrow[l, dotted] &
+   \textcolor{red}{frame^{n-2,k<p}} &
+   \textcolor{red}{restrframe^{n-1,k<p}} \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm] &
+   \textcolor{red}{cohframe^{n,k<p}} \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm] \\
+\end{tikzcd}
+\end{scriptsize}
+
+\item To finally rely on cohpainting$^{n,k}$ for $k \geq p$
+to also get cohpainting$^{n+1,p}$ for $p \leq n-1$:
 
 $\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
 \begin{scriptsize}
@@ -433,11 +486,15 @@ painting^{n-1,k\geq p} \arrow[d, dotted] \arrow[dddr] \arrow[dd, bend right=70] 
 frame^{n-1,k\geq p} \arrow[d] \arrow[ddr] & restrframe^{n,k\geq p} \arrow[d] \arrow[ddr] \arrow[l, dotted] & &
   frame^{n-1,p} \arrow[d] \arrow[ddr] & restrframe^{n,k<p} \arrow[d] \arrow[ddr] \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm] &
    cohframe^{n+1,p} \arrow[d] \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm]\\
-\textcolor{red}{painting^{n-2,k\geq p}} \arrow[d, dotted] & \textcolor{red}{restrpainting^{n-1,k\geq p}} \arrow[l, dotted] \arrow[d, dotted] & \textcolor{red}{cohpainting^{n,k\geq p}} \arrow[l, dotted] \arrow[d, dotted] &
+\textcolor{red}{painting^{n-2,k\geq p}} \arrow[d, dotted] &
+   \textcolor{red}{restrpainting^{n-1,k\geq p}} \arrow[l, dotted] \arrow[d, dotted] &
+   \textcolor{red}{cohpainting^{n,k\geq p}} \arrow[l, dotted] \arrow[d, dotted] &
    \textcolor{red}{painting^{n-2,k<p}} \arrow[d, dotted] &
    \textcolor{red}{restrpainting^{n-1,k<p}} \arrow[l, dotted] \arrow[d, dotted] &
    \textcolor{red}{cohpainting^{n,k<p}} \arrow[l, dotted] \arrow[d, dotted] \\
-\textcolor{red}{frame^{n-2,k\geq p}} & \textcolor{red}{restrframe^{n-1,k\geq p},X_{n-2}} \arrow[l, dotted] & \textcolor{red}{cohframe^{n,k\geq p},X_{n-1}} \arrow[l, dotted] &
+\textcolor{red}{frame^{n-2,k\geq p}} &
+   \textcolor{red}{restrframe^{n-1,k\geq p},X_{n-2}} \arrow[l, dotted] &
+   \textcolor{red}{cohframe^{n,k\geq p},X_{n-1}} \arrow[l, dotted] &
    \textcolor{red}{frame^{n-2,k<p}} &
    \textcolor{red}{restrframe^{n-1,k<p}} \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm] &
    \textcolor{red}{cohframe^{n,k<p}} \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm] \\
