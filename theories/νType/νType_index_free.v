@@ -109,9 +109,7 @@ Inductive RestrFramesExtension' {p frames'' paintings''}: forall {n}
 Fixpoint mkPainting' {p frames'' paintings'' n} (restrFrames': mkRestrFrameTypes' (p := p) (frames'' := frames'') (paintings'' := paintings''))
   extras'' (extraRestrs': RestrFramesExtension' restrFrames' extras''):
   mkFrame' restrFrames' -> HSet :=
-  match extraRestrs' in RestrFramesExtension' restrFrames' extras''
-     return mkFrame' restrFrames' -> HSet
-  with
+  match extraRestrs' with
   | TopRestrFrames E => fun d => E d
   | @AddExtraRestrFrame _ _ _ n frame'' painting'' extras'' restrFrames'
     restrFrame' extraRestrs' => fun d =>
@@ -231,7 +229,7 @@ Instance mkCohFrameTypesAndRestrFrames:
     (frames'' := frames'') (paintings'' := paintings'') (n := n)),
     CohFrameTypeBlock :=
   fix mkCohFrameTypesAndRestrFrames {p}:
-  forall {frames'': FramesGen p} {paintings'': PaintingsGen p frames''}n
+  forall frames'' paintings'' n
     (restrFrames' : mkRestrFrameTypes' (p := p) (frames'' := frames'')
       (paintings'' := paintings''))
     extras''
