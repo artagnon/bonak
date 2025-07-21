@@ -166,7 +166,7 @@ Fixpoint mkPainting' `(deps: FormDeps p n) (extraDeps: FormDepsExtension deps):
 
 Definition MatchPainting (loop: forall `(deps: FormDeps p n)
   (extraDeps: FormDepsExtension deps),
-  PaintingGen p.+1 (mkFrames' deps)) p n :=
+  PaintingGen p.+1 (mkFrames' deps)) {p n} :=
   match p return forall `(deps: FormDeps p n)
   (extraDeps: FormDepsExtension deps), PaintingGen p (mkFrames' deps).1 with
   | O => fun _ _ => tt
@@ -174,31 +174,23 @@ Definition MatchPainting (loop: forall `(deps: FormDeps p n)
     loop deps.(1) (deps.(2); extraDeps)%extradeps
   end.
 
-Fixpoint mkPaintingsRec' {p} {frames'': Frames'' p} {paintings'' n} (restrFrames': mkRestrFrameTypes' (p := p) (frames'' := frames'') (paintings'' := paintings'') (n := n))
-  extras'' (extraRestrs': RestrFramesExtension' (n := n) restrFrames' extras''):
-  Paintings' p.+1 (mkFrames' restrFrames') :=
-  (MatchPainting (@mkPaintingsRec') restrFrames' extras'' extraRestrs'; mkPainting' restrFrames' extras'' extraRestrs').
-
-Definition mkPaintings' {p} : forall {frames'': Frames'' p} {paintings'' n} (restrFrames': mkRestrFrameTypes' (p := p) (frames'' := frames'') (paintings'' := paintings'') (n := n))
-  extras'' (extraRestrs': RestrFramesExtension' (n := n) restrFrames' extras''),
-  Paintings' p.+1 (mkFrames' restrFrames') :=
-  fun frames'' paintings'' n restrFrames' extras'' extraRestrs' =>
-  (MatchPainting (@mkPaintingsRec') restrFrames' extras'' extraRestrs'; mkPainting' restrFrames' extras'' extraRestrs').
+Fixpoint mkPaintings' `(deps: FormDeps p n)
+  (extraDeps: FormDepsExtension deps):
+  PaintingGen p.+1 (mkFrames' deps) :=
+  (MatchPainting (@mkPaintings') deps extraDeps; mkPainting' deps extraDeps).
 
 (* Example: if Prev := EmptyPrev, extras'' := [], extraRestrs' := ([],E)
    mkRestrFrameTypes := [unit -> unit] *)
 
-Definition mkRestrFrameTypes {p frames'' paintings'' n restrFrames'
-  extras'' extraRestrs'} :=
-  (mkRestrFrameTypesAndFrames'
-    (frames'' := mkFrames' (p := p) (frames'' := frames'') (paintings'' := paintings'') (n := n) restrFrames')
-    (paintings'' := mkPaintings' restrFrames' extras'' extraRestrs') (n := n)).(RestrFrameTypesDef).
+Definition mkRestrFrameTypes `(deps: FormDeps p n) :=
+  (mkRestrFrameTypesAndFrames' (n := n) (frames'' := deps.(_frames''))
+    (paintings'' := deps.(_paintings''))).(RestrFrameTypesDef).
 
-Definition mkPrevRestrFrameTypes {p frames'' paintings'' n restrFrames'
-  extras'' extraRestrs'} :=
-  (mkRestrFrameTypesAndFrames'
-    (frames'' := (mkFrames' (p := p) (frames'' := frames'') (paintings'' := paintings'') (n := n) restrFrames').1)
-    (paintings'' := (mkPaintings' restrFrames' extras'' extraRestrs').1) (n := n.+1)).(RestrFrameTypesDef).
+Definition mkPrevRestrFrameTypes `(deps: FormDeps p n)
+  (extraDeps: FormDepsExtension deps) :=
+  (mkRestrFrameTypesAndFrames' (frames'' := (mkFrames' deps).1)
+  (paintings'' := (mkPaintings' deps extraDeps).1)
+    (n := n.+1)).(RestrFrameTypesDef).
 
 (* Example: if Prev := EmptyPrev, extras'' := [], extraRestrs' := ([],E)
    mkFrame [restr: unit -> unit] := [unit; \().∀ω.E(restr())]
