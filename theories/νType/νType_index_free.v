@@ -89,13 +89,12 @@ Class FormDeps {p n} := {
   _restrFrames': @mkRestrFrameTypes' p _frames'' _paintings'' n;
 }.
 
-Arguments FormDeps p n : clear implicits.
-
+Arguments FormDeps p n: clear implicits.
 Generalizable Variables p n.
 
 Definition mkFrames' `(deps : FormDeps p n): FrameGen p.+1 :=
-  (mkRestrFrameTypesAndFrames' (paintings'' := deps.(_paintings'')) (n := n)).(FrameDef)
-   deps.(_restrFrames').
+  (mkRestrFrameTypesAndFrames' (paintings'' :=
+    deps.(_paintings'')) (n := n)).(FrameDef) deps.(_restrFrames').
 
 Definition mkFrame' `(deps : FormDeps p n): HSet :=
   (mkFrames' deps).2.
@@ -103,16 +102,37 @@ Definition mkFrame' `(deps : FormDeps p n): HSet :=
 Class FormDep `(deps: FormDeps p n.+1) := {
   _frame'': HSet;
   _painting'': _frame'' -> HSet;
-  _restrFrame':
-     forall q (Hq: q <= n) (ε: arity), mkFrame' (n := n.+1) deps -> _frame''.(Dom);
+  _restrFrame': forall q (Hq: q <= n) (ε: arity),
+    mkFrame' (n := n.+1) deps -> _frame''.(Dom);
 }.
 
-Instance ConsDep `(deps: FormDeps p n.+1) (dep: FormDep deps): FormDeps p.+1 n := {|
-  _frames'' := (deps.(_frames''); dep.(_frame'')) : FrameGen p.+1;
+#[local]
+Instance ConsDep `(deps: FormDeps p n.+1)
+  (dep: FormDep deps): FormDeps p.+1 n :=
+{|
+  _frames'' := (deps.(_frames''); dep.(_frame'')): FrameGen p.+1;
   _paintings'' := (deps.(_paintings''); dep.(_painting''));
   _restrFrames' := (deps.(_restrFrames'); dep.(_restrFrame'));
-  |}.
+|}.
 
+#[local]
+Instance Proj1Deps `(deps: FormDeps p.+1 n): FormDeps p n.+1 := {|
+  _frames'' := deps.(_frames'').1;
+  _paintings'' := deps.(_paintings'').1;
+  _restrFrames' := deps.(_restrFrames').1;
+|}.
+
+#[local]
+Instance Proj2Deps `(deps: FormDeps p.+1 n): FormDep (Proj1Deps deps) := {|
+  _frame'' := deps.(_frames'').2;
+  _painting'' := deps.(_paintings'').2;
+  _restrFrame' := deps.(_restrFrames').2;
+|}.
+
+Notation "x .(1)" := (Proj1Deps x)
+  (at level 1, left associativity, format "x .(1)"): type_scope.
+Notation "x .(2)" := (Proj2Deps x)
+  (at level 1, left associativity, format "x .(2)"): type_scope.
 Inductive FormDepsExtension {p} : forall {n}, FormDeps p n -> Type :=
 | TopRestrFrames {deps}:
   forall E': mkFrame' deps -> HSet,
@@ -120,6 +140,17 @@ Inductive FormDepsExtension {p} : forall {n}, FormDeps p n -> Type :=
 | AddExtraRestrFrame {n} deps dep:
   FormDepsExtension (ConsDep deps dep) ->
   FormDepsExtension (n := n.+1) deps.
+
+Declare Scope deps_scope.
+Declare Scope extra_deps_scope.
+Delimit Scope deps_scope with deps.
+Delimit Scope extra_deps_scope with extradeps.
+Bind Scope deps_scope with FormDeps.
+Bind Scope extra_deps_scope with FormDepsExtension.
+Notation "( x ; y )" := (ConsDep x y)
+  (at level 0, format "( x ; y )"): deps_scope.
+Notation "( x ; y )" := (AddExtraRestrFrame _ x y)
+  (at level 0, format "( x ; y )"): extra_deps_scope.
 
 (* Example: if Prev := EmptyPrev, extras'' := [], extraRestrs' := ([],E)
    mkPainting:= [E] *)
@@ -130,21 +161,17 @@ Fixpoint mkPainting' `(deps: FormDeps p n) (extraDeps: FormDepsExtension deps):
   | TopRestrFrames E' => fun d => E' d
   | AddExtraRestrFrame deps dep extraDeps => fun d =>
       {l: hforall ε, dep.(_painting'') (dep.(_restrFrame') O leY_O ε d) &
-       mkPainting' (ConsDep deps dep) extraDeps (d; l)}
+       mkPainting' (deps; dep) extraDeps (d; l)}
   end.
 
-Definition Paintings' := Paintings''.
-
-Definition MatchPainting (loop: forall p frames'' paintings'' n restrs'
-  extraPrev (extraRestrs': RestrFramesExtension' (frames'' := frames'') (paintings'' := paintings'') restrs' extraPrev), PaintingGens p.+1 (mkFrames' restrs'))
-  {p} : forall {frames'': Frames'' p} {paintings'' n} (restrFrames': mkRestrFrameTypes' (p := p) (frames'' := frames'') (paintings'' := paintings'') (n := n))
-  extras'' (extraRestrs': RestrFramesExtension' (n := n) restrFrames' extras''), _ :=
-  match p return forall (frames'': Frames'' p) paintings'' n (restrFrames': mkRestrFrameTypes' (p := p) (frames'' := frames'') (paintings'' := paintings'') (n := n)) extras'' (extraRestrs': RestrFramesExtension' (n := n) restrFrames' extras''), Paintings' p (mkFrames' restrFrames').1 with
-  | 0 => fun frames'' paintings'' n restrFrames' extras'' extraRestrs' => tt
-  | S p => fun frames'' paintings'' n restrFrames' extras'' extraRestrs' =>
-      (loop p frames''.1 paintings''.1 n.+1 restrFrames'.1
-       (@AddExtraPrev p _ _ n frames''.2 paintings''.2 extras'')
-       (AddExtraRestrFrame (restrFrames' := restrFrames'.1) restrFrames'.2 extraRestrs'))
+Definition MatchPainting (loop: forall `(deps: FormDeps p n)
+  (extraDeps: FormDepsExtension deps),
+  PaintingGen p.+1 (mkFrames' deps)) p n :=
+  match p return forall `(deps: FormDeps p n)
+  (extraDeps: FormDepsExtension deps), PaintingGen p (mkFrames' deps).1 with
+  | O => fun _ _ => tt
+  | S p => fun deps extraDeps =>
+    loop deps.(1) (deps.(2); extraDeps)%extradeps
   end.
 
 Fixpoint mkPaintingsRec' {p} {frames'': Frames'' p} {paintings'' n} (restrFrames': mkRestrFrameTypes' (p := p) (frames'' := frames'') (paintings'' := paintings'') (n := n))
@@ -446,7 +473,7 @@ Proof. Opaque Frames'' Paintings''. Opaque mkRestrFrameTypes' mkFrames'. Opaque 
       (cohs := (cohs; coh)) q ε).
       destruct p; now apply d.
      unfold mkPrevFrame, mkPrevRestrFrames.
-     unfold mkRestrFrames. simpl. 
+     unfold mkRestrFrames. simpl.
 change (mkCohFrameTypesAndRestrFrames restrFrames' (AddExtraPrev extras'')
        (AddExtraRestrFrame restrFrame' extraRestrs') restrPaintings').(RestrFramesDef)
 with (mkRestrFrames restrFrames' (AddExtraPrev extras'')
@@ -456,7 +483,6 @@ set (mkRestrFrames restrFrames' (AddExtraPrev extras'')
 subst restrFrame restrFrames.
 set (a := fix mkRestrFrameTypesAndFrames' (p n : nat) {struct p} : _ := _) in *.
 Transparent mkFrames'. simpl. apply d.
->>>>>>> Stashed changes
     + (* The extra restr extension *)
       Time destruct p. now exact IHextraCohs.
 Defined.
