@@ -62,7 +62,7 @@ Example: if Prev = EmptyPrev
   FrameDef [] := [unit] (presented as a Sigma-type, i.e. as "unit")
 *)
 Fixpoint mkRestrFrameTypesAndFrames' {p n}: forall
-  {frames''} {paintings'': PaintingGen p frames''}, RestrFrameTypeBlock p :=
+  frames'' (paintings'': PaintingGen p frames''), RestrFrameTypeBlock p :=
   match p with
   | 0 => fun frames'' paintings'' =>
     {|
@@ -70,33 +70,34 @@ Fixpoint mkRestrFrameTypesAndFrames' {p n}: forall
       FrameDef _ := (tt; hunit) : FrameGen 1
     |}
   | p.+1 => fun frames'' paintings'' =>
-    let frames' := (mkRestrFrameTypesAndFrames' (n := n.+1) (frames'' := frames''.1) (paintings'' := paintings''.1)).(FrameDef) in
+    let frames' := (mkRestrFrameTypesAndFrames' (n := n.+1) frames''.1 paintings''.1).(FrameDef) in
     {|
       RestrFrameTypesDef :=
-        { R: (mkRestrFrameTypesAndFrames' (frames'' := frames''.1) (paintings'' := paintings''.1)).(RestrFrameTypesDef) &T
+        { R: (mkRestrFrameTypesAndFrames' frames''.1 paintings''.1).(RestrFrameTypesDef) &T
           forall q (Hq: q <= n) (ε: arity), (frames' R).2 -> frames''.2 };
       FrameDef R :=
         (frames' R.1; { d: (frames' R.1).2 & hforall ε, paintings''.2 (R.2 O leY_O ε d) }) : FrameGen p.+2
     |}
   end.
 
-Definition mkRestrFrameTypes' {p frames'' paintings'' n} :=
-  (mkRestrFrameTypesAndFrames' (p := p) (frames'' := frames'') (paintings'' := paintings'') (n := n)).(RestrFrameTypesDef).
+Definition mkRestrFrameTypes' p n frames'' paintings'' :=
+  (mkRestrFrameTypesAndFrames' frames'' paintings'' (p := p)
+    (n := n)).(RestrFrameTypesDef).
 
 Class FormDeps {p n} := {
   _frames'': FrameGen p;
   _paintings'': PaintingGen p _frames'';
-  _restrFrames': @mkRestrFrameTypes' p _frames'' _paintings'' n;
+  _restrFrames': mkRestrFrameTypes' p n _frames'' _paintings'';
 }.
 
 Arguments FormDeps p n: clear implicits.
 Generalizable Variables p n.
 
-Definition mkFrames' `(deps : FormDeps p n): FrameGen p.+1 :=
-  (mkRestrFrameTypesAndFrames' (paintings'' :=
-    deps.(_paintings'')) (n := n)).(FrameDef) deps.(_restrFrames').
+Definition mkFrames' `(deps: FormDeps p n): FrameGen p.+1 :=
+  (mkRestrFrameTypesAndFrames' deps.(_frames'')
+    deps.(_paintings'') (n := n)).(FrameDef) deps.(_restrFrames').
 
-Definition mkFrame' `(deps : FormDeps p n): HSet :=
+Definition mkFrame' `(deps: FormDeps p n): HSet :=
   (mkFrames' deps).2.
 
 Class FormDep `(deps: FormDeps p n.+1) := {
@@ -182,15 +183,15 @@ Fixpoint mkPaintings' `(deps: FormDeps p n)
 (* Example: if Prev := EmptyPrev, extras'' := [], extraRestrs' := ([],E)
    mkRestrFrameTypes := [unit -> unit] *)
 
-Definition mkRestrFrameTypes `(deps: FormDeps p n) :=
-  (mkRestrFrameTypesAndFrames' (n := n) (frames'' := deps.(_frames''))
-    (paintings'' := deps.(_paintings''))).(RestrFrameTypesDef).
+Definition mkRestrFrameTypes `(deps: FormDeps p n)
+  (extraDeps: FormDepsExtension deps) :=
+  (mkRestrFrameTypesAndFrames' (n := n) (mkFrames' deps)
+    (mkPaintings' deps extraDeps)).(RestrFrameTypesDef).
 
 Definition mkPrevRestrFrameTypes `(deps: FormDeps p n)
   (extraDeps: FormDepsExtension deps) :=
-  (mkRestrFrameTypesAndFrames' (frames'' := (mkFrames' deps).1)
-  (paintings'' := (mkPaintings' deps extraDeps).1)
-    (n := n.+1)).(RestrFrameTypesDef).
+  (mkRestrFrameTypesAndFrames' (n := n.+1) (mkFrames' deps).1
+    (mkPaintings' deps extraDeps).1).(RestrFrameTypesDef).
 
 (* Example: if Prev := EmptyPrev, extras'' := [], extraRestrs' := ([],E)
    mkFrame [restr: unit -> unit] := [unit; \().∀ω.E(restr())]
