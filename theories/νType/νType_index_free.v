@@ -360,11 +360,6 @@ Definition mkRestrFrames `(deps: FormDeps p n)
   (mkCohFrameTypesAndRestrFrames deps extraDeps
     restrPaintings').(RestrFramesDef).
 
-Definition mkPrevRestrFrames `(deps: FormDeps p n)
-  (extraDeps: FormDepsExtension deps)
-  (restrPaintings': RestrPaintingTypes' deps extraDeps) cohs :=
-  (mkRestrFrames deps extraDeps restrPaintings' cohs).1.
-
 (* Example: if Prev := EmptyPrev, extras'' := [], extraRestrs' := ([],E) cohs=[]
    then mkLevel := [{frame:=unit;painting:=E}] and
    mkRestrFrame := [\qω().()]
@@ -374,7 +369,7 @@ Definition mkRestrFrame `(deps: FormDeps p n)
   (extraDeps: FormDepsExtension deps)
   (restrPaintings': RestrPaintingTypes' deps extraDeps) cohs:
   forall q {Hq: q <= n} ε,
-    mkPrevFrame extraDeps (mkPrevRestrFrames deps extraDeps restrPaintings' cohs) ->
+    mkPrevFrame extraDeps (mkRestrFrames deps extraDeps restrPaintings' cohs) ->
     mkFrame' deps :=
     (mkRestrFrames deps extraDeps restrPaintings' cohs).2.
 
