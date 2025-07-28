@@ -437,33 +437,34 @@ Proof.
     + intros *. apply (mkRestrPainting _ _ _ extraDeps (restrPaintings';restrPainting') (cohs; coh) _ q (⇓ Hq) ε (d as x in _; l in _) c).
 Defined.
 
-Definition mkRestrPaintingTypes
-  {p frames'' paintings'' n restrFrames' extras'' extraRestrs'
-  restrPaintings' cohs extraCohs} :=
-  RestrPaintingTypes'
-     (frames'' := mkFrames' (p := p) (frames'' := frames'') (paintings'' := paintings'') (n := n) restrFrames')
-     (paintings'' := mkPaintings' restrFrames' extras'' extraRestrs')
-     (restrFrames' := mkRestrFrames restrFrames' extras'' extraRestrs' restrPaintings' cohs)
-     (extraRestrs' := mkRestrFramesExtension' extraCohs).
+Definition mkRestrPaintingTypes `{deps: FormDeps p n}
+  {extraDeps: FormDepsExtension deps}
+  {restrPaintings': RestrPaintingTypes' deps extraDeps}
+  (cohs: mkCohFrameTypes restrPaintings')
+  (extraCohs: CohFramesExtension deps extraDeps restrPaintings' cohs) :=
+  RestrPaintingTypes' (mkNextDeps extraDeps (mkRestrFrames restrPaintings' cohs)) (mkNextExtraDeps extraCohs).
 
-Fixpoint mkRestrPaintings {p} {frames''} {paintings''} {n} restrFrames'
-  extras''
-  (extraRestrs': RestrFramesExtension' (p := p) (frames'' := frames'')
-    (paintings'' := paintings'') restrFrames' extras'')
-  restrPaintings' cohs
-  (extraCohs: CohFramesExtension (n := n) restrFrames' extras'' extraRestrs'
-    restrPaintings' cohs):
-  mkRestrPaintingTypes (extraRestrs' := extraRestrs') (extraCohs := extraCohs).
-Admitted.
+Fixpoint mkRestrPaintings `{deps: FormDeps p n}
+  {extraDeps: FormDepsExtension deps}
+  {restrPaintings': RestrPaintingTypes' deps extraDeps}
+  (cohs: mkCohFrameTypes restrPaintings')
+  (extraCohs: CohFramesExtension deps extraDeps restrPaintings' cohs):
+  mkRestrPaintingTypes cohs extraCohs.
+destruct p.
+- red. simpl.
+  + esplit.
+  exact tt.
+  red; intros * c. simpl.
+  eapply (mkRestrPainting cohs extraCohs q ε), c.
+- esplit.
+  + apply (mkRestrPaintings p _ _ _ restrPaintings'.1 cohs.1 (AddCohFrame cohs.2 extraCohs)).
+  + red; intros * c. simpl. eapply (mkRestrPainting cohs extraCohs), c.
+Defined.
 
 Class νTypeAux p := {
-  frames'': FrameGen p;
-  paintings'': PaintingGen p frames'';
-  restrFrames': mkRestrFrameTypes' (n := 0);
-  restrPaintings' E': RestrPaintingTypes' (restrFrames' := restrFrames') (extras'' := TopPrev) (extraRestrs' := TopRestrFrames E');
-  cohFrames E':
-    mkCohFrameTypes (paintings'' := paintings'') (restrFrames' := restrFrames') (n := 0) (extras'' := TopPrev)
-    (extraRestrs' := TopRestrFrames E') (restrPaintings' := restrPaintings' E');
+  deps: FormDeps p 0;
+  restrPaintings' E': RestrPaintingTypes' deps (TopRestrFrames E');
+  cohFrames E': mkCohFrameTypes (restrPaintings' E');
 }.
   (* frame {E'} p {Hp: p <~ n.+2}: HSet :=
     Frame n frame'' painting'' restrFrames' E' restrPainting'
