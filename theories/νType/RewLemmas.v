@@ -83,7 +83,7 @@ Lemma rew_swap_lr : forall A (P: A -> Type) a b (H: a = b) (x: P b) (y: P a),
   x = rew H in y -> rew <- H in x = y.
 Proof.
   now destruct H.
-Qed.
+Defined.
 
 Lemma rew_app_rl A (P : A -> Type) (x y: A) (H H': x = y) (a: P x) :
   H = H' -> rew <- [P] H in rew [P] H' in a = a.

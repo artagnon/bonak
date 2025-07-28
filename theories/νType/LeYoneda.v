@@ -258,6 +258,13 @@ Definition le_induction'' {n p} (Hp: p.+2 <= n.+2)
   le_induction' (⇓ Hp) (fun p Hp => P p (⇑ Hp)) H_base
     (fun q Hq => H_step q (⇑ Hq)).
 
+Definition le_induction''' {n p} (Hp: p.+3 <= n.+3)
+  (P : forall p (Hp: p.+3 <= n.+3), Type)
+  (H_base: P n (♢ n.+3))
+  (H_step: forall p (H : p.+3.+1 <= n.+3), P p.+1 H -> P p (↓ H)): P p Hp :=
+  le_induction'' (⇓ Hp) (fun p Hp => P p (⇑ Hp)) H_base
+    (fun q Hq => H_step q (⇑ Hq)).
+
 Definition le_induction'_base_computes {n P H_base H_step}:
   le_induction' (♢ n.+1) P H_base H_step = H_base :=
   le_induction_base_computes.
@@ -266,6 +273,15 @@ Definition le_induction'_step_computes {n p P H_base H_step} {Hp: p.+2 <= n.+1}:
   le_induction' (↓ Hp) P H_base H_step =
     H_step p Hp (le_induction' Hp P H_base H_step) :=
       le_induction_step_computes.
+
+Definition le_induction''_base_computes {n P H_base H_step}:
+le_induction'' (♢ n.+2) P H_base H_step = H_base :=
+le_induction_base_computes.
+
+Definition le_induction''_step_computes {n p P H_base H_step} {Hp: p.+3 <= n.+2}:
+le_induction'' (↓ Hp) P H_base H_step =
+  H_step p Hp (le_induction'' Hp P H_base H_step) :=
+    le_induction_step_computes.
 
 (** Automatization of proofs of leY based on ↓, ⇓, ↕ and ♢ *)
 
