@@ -180,10 +180,10 @@ Fixpoint mkPaintings' `{deps: FormDeps p n}
   PaintingGen p.+1 (mkFrames' deps) :=
   (MatchPainting (@mkPaintings') deps extraDeps; mkPainting' extraDeps).
 
-Lemma unfoldPaintingProj `{deps: FormDeps p.+1 n}
+Lemma unfoldPaintingProj `{deps: FormDeps p n}
   (extraDeps: FormDepsExtension deps) restrFrame:
-  (mkPaintings' (deps.(2);extraDeps)).2 restrFrame =
-    mkPainting' (deps.(2);extraDeps) restrFrame.
+  (mkPaintings' extraDeps).2 restrFrame =
+    mkPainting' extraDeps restrFrame.
 Proof.
   destruct p; easy.
 Defined.
@@ -305,7 +305,7 @@ Instance mkCohFrameTypesAndRestrFrames:
           ((restrFrames Q.1).2 q.+1 (⇑ Hq) ε d.1 as rf in _;
            fun ω => rew [deps.(_paintings'').2] Q.2 O q leY_O Hq ε ω d.1 in
             restrPaintings'.2 q _ ε _
-              (rew unfoldPaintingProj extraDeps _ in d.2 ω)
+              (rew unfoldPaintingProj (deps.(2); extraDeps) _ in d.2 ω)
            in forall ω, deps.(_paintings'').2 (deps.(_restrFrames').2  _ _ _ rf))
       in (restrFrames Q.1 as rf in _;
           restrFrame in forall q Hq ω,
@@ -337,8 +337,8 @@ Definition mkRestrFrames `{deps: FormDeps p n}
    mkRestrFrame := [\qω().()]
       (presented as a dependent pair, i.e. ((),\qω().()) *)
 
-Definition mkRestrFrame `(deps: FormDeps p n)
-  (extraDeps: FormDepsExtension deps)
+Definition mkRestrFrame `{deps: FormDeps p n}
+  {extraDeps: FormDepsExtension deps}
   (restrPaintings': RestrPaintingTypes' deps extraDeps) cohs:
   forall q {Hq: q <= n} ε,
     mkPrevFrame extraDeps (mkRestrFrames restrPaintings' cohs) ->
@@ -395,9 +395,7 @@ Proof.
   destruct extraCohs.
   - now constructor.
   - unshelve econstructor.
-    + now apply mkNextDep, (mkRestrFrame (deps; dep) extraDeps
-      (restrPaintings'; restrPainting')
-      (cohs; coh)).
+    + now apply mkNextDep, (mkRestrFrame (extraDeps := extraDeps)(restrPaintings'; restrPainting') (cohs; coh)).
     + now apply (mkNextExtraDeps p.+1 n (deps; dep)%deps extraDeps
       (restrPaintings'; restrPainting') (cohs; coh) extraCohs).
 Defined.
@@ -416,31 +414,27 @@ Definition mkPrevPainting `{deps: FormDeps p n}
   {cohs: mkCohFrameTypes restrPaintings'}
   (extraCohs: CohFramesExtension deps extraDeps restrPaintings' cohs) :=
   mkPainting'
-    ((mkNextDeps extraDeps _).(2); mkNextExtraDeps extraCohs)%extradeps:
-    mkPrevFrame (p := p) extraDeps _ -> HSet.
+    ((mkNextDeps extraDeps (mkRestrFrames restrPaintings' cohs)).(2);
+      mkNextExtraDeps extraCohs)%extradeps:
+    mkPrevFrame (p := p) extraDeps (mkRestrFrames restrPaintings' cohs) -> HSet.
 
-Definition mkRestrPainting `{deps: FormDeps p n}
+Fixpoint mkRestrPainting `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' deps extraDeps}
   (cohs: mkCohFrameTypes restrPaintings')
   (extraCohs: CohFramesExtension deps extraDeps restrPaintings' cohs):
   forall q {Hq: q <= n} ε d, mkPrevPainting extraCohs d ->
-    mkPainting' (p := p) (frames'' := frames'') (paintings'' := paintings'') restrFrames'
-  extras'' extraRestrs' (mkRestrFrame (extras'' := extras'')
-  (extraRestrs' := extraRestrs') (restrPaintings' := restrPaintings')
-  (cohs := cohs) q ε d).
+    mkPainting' extraDeps (mkRestrFrame restrPaintings' cohs q ε d).
 Proof.
-  induction extraCohs.
-  - intros * (l, _). destruct q.
-    + now apply (l ε).
-    + exfalso. now apply leY_O_contra in Hq.
-  - intros * (l, c). destruct q.
-    + now apply (l ε).
-    + unshelve esplit.
-       * intro ω. rewrite <- coh with (Hrq := leY_O) (Hq := ⇓ Hq).
-         apply restrPainting'.
-         apply l.
-       * destruct p; apply (IHextraCohs q (⇓ Hq) ε (d as x in _; l in _) c).
+  destruct extraCohs, q.
+  - intros * (l, _). now apply (rew unfoldPaintingProj _ _ in l ε).
+  - intros. exfalso. now apply leY_O_contra in Hq.
+  - intros * (l, _). now apply (rew unfoldPaintingProj _ _ in l ε).
+  - intros * (l, c). unshelve esplit.
+    + intro ω. rewrite <- coh with (Hrq := leY_O) (Hq := ⇓ Hq).
+      apply restrPainting'. simpl in l.
+      now apply (rew unfoldPaintingProj _ _ in l ω).
+    + intros *. apply (mkRestrPainting q (⇓ Hq) ε (d as x in _; l in _) c).
 Defined.
 
 Definition mkRestrPaintingTypes
