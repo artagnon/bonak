@@ -434,7 +434,7 @@ Proof.
     + intro ω. rewrite <- coh with (Hrq := leY_O) (Hq := ⇓ Hq).
       apply restrPainting'. simpl in l.
       now apply (rew unfoldPaintingProj _ _ in l ω).
-    + intros *. apply (mkRestrPainting q (⇓ Hq) ε (d as x in _; l in _) c).
+    + intros *. apply (mkRestrPainting _ _ _ extraDeps (restrPaintings';restrPainting') (cohs; coh) _ q (⇓ Hq) ε (d as x in _; l in _) c).
 Defined.
 
 Definition mkRestrPaintingTypes
