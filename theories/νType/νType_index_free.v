@@ -185,7 +185,7 @@ Lemma unfoldPaintingProj `{deps: FormDeps p n}
   (mkPaintings' extraDeps).2 restrFrame =
     mkPainting' extraDeps restrFrame.
 Proof.
-  destruct p; easy.
+  destruct p; now easy.
 Defined.
 
 (* Example: if p := 0, extraDeps := ([],E')
@@ -402,15 +402,17 @@ Fixpoint mkRestrPainting `{deps: FormDeps p n}
   forall q {Hq: q <= n} ε d, mkPrevPainting extraCohs d ->
     mkPainting' extraDeps (mkRestrFrame restrPaintings' cohs q ε d).
 Proof.
-  destruct extraCohs, q.
-  - intros * (l, _). now apply (rew unfoldPaintingProj _ _ in l ε).
-  - intros. exfalso. now apply leY_O_contra in Hq.
-  - intros * (l, _). now apply (rew unfoldPaintingProj _ _ in l ε).
-  - intros * (l, c). unshelve esplit.
+  intros * (l, c). destruct extraCohs, q.
+  - now apply (rew unfoldPaintingProj _ _ in l ε).
+  - exfalso. now apply leY_O_contra in Hq.
+  - now apply (rew unfoldPaintingProj _ _ in l ε).
+  - unshelve esplit.
     + intro ω. rewrite <- coh with (Hrq := leY_O) (Hq := ⇓ Hq).
       apply restrPainting'. simpl in l.
       now apply (rew unfoldPaintingProj _ _ in l ω).
-    + intros *. apply (mkRestrPainting _ _ _ extraDeps (restrPaintings';restrPainting') (cohs; coh) _ q (⇓ Hq) ε (d as x in _; l in _) c).
+    + now apply (mkRestrPainting _ _ _ extraDeps
+      (restrPaintings';restrPainting') (cohs; coh) _ q (⇓ Hq) ε
+      (d as x in _; l in _) c).
 Defined.
 
 Definition mkRestrPaintingTypes `{deps: FormDeps p n}
@@ -426,15 +428,14 @@ Fixpoint mkRestrPaintings `{deps: FormDeps p n}
   (cohs: mkCohFrameTypes restrPaintings')
   (extraCohs: CohFramesExtension deps extraDeps restrPaintings' cohs):
   mkRestrPaintingTypes cohs extraCohs.
+Proof.
 destruct p.
-- red. simpl.
-  + esplit.
-  exact tt.
-  red; intros * c. simpl.
-  eapply (mkRestrPainting cohs extraCohs q ε), c.
-- esplit.
-  + apply (mkRestrPaintings p n.+1 _ _ _ cohs.1 (cohs.2; extraCohs)%extracohs).
-  + red; intros * c. simpl. eapply (mkRestrPainting cohs extraCohs), c.
+  - unshelve esplit. now exact tt.
+    red; intros * c.
+    now eapply (mkRestrPainting cohs extraCohs q ε), c.
+  - unshelve esplit. now apply (mkRestrPaintings p n.+1 _ _ _ cohs.1
+    (cohs.2; extraCohs)%extracohs).
+    red; intros * c. now eapply (mkRestrPainting cohs extraCohs), c.
 Defined.
 
 Definition CohPaintingType `{deps: FormDeps p n.+1}
@@ -477,15 +478,14 @@ Fixpoint mkCohFrames `{deps: FormDeps p n}
   mkCohFrameTypes (mkRestrPaintings cohs extraCohs).
 Proof.
 destruct p.
-- red. simpl.
-  esplit. exact tt.
-  intros. reflexivity.
-- unshelve esplit.
-  + apply (mkCohFrames p _ _ _ restrPaintings'.1 cohs.1 (cohs.2; extraCohs)%extracohs cohPaintings.1).
-  + intros. unshelve eapply eq_existT_curried.
-    * eapply ((mkCohFrames p _ _ _ restrPaintings'.1 cohs.1 (cohs.2; extraCohs)%extracohs cohPaintings.1).2 r.+1 q.+1 _ _ ε ω).
-     * (* prove a reorganization of the cohFrame using UIP *)
-       (* then: eapply (cohPaintings.2 r q _ _ ε ω). *)
+  - red; simpl. unshelve esplit. now exact tt. now intros.
+  - unshelve esplit.
+    + now apply (mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
+      (cohs.2; extraCohs)%extracohs cohPaintings.1).
+    + intros. unshelve eapply eq_existT_curried.
+      * eapply ((mkCohFrames p _ _ _ restrPaintings'.1 cohs.1 (cohs.2; extraCohs)%extracohs cohPaintings.1).2 r.+1 q.+1 _ _ ε ω).
+      * (* prove a reorganization of the cohFrame using UIP *)
+        (* then: eapply (cohPaintings.2 r q _ _ ε ω). *)
 Admitted.
 
 Definition mkExtraCohs `{deps: FormDeps p n}
