@@ -15,8 +15,6 @@ Remove Printing Let prod.
 Section νType.
 Variable arity: HSet.
 
-Section RestrFramesDef.
-
 Fixpoint FrameGen p: Type :=
   match p with
   | 0 => unit
@@ -259,10 +257,7 @@ Instance mkCohFrameTypesAndRestrFrames:
   forall `(deps: FormDeps p n)
     (extraDeps: FormDepsExtension deps)
     (restrPaintings': RestrPaintingTypes' deps extraDeps), CohFrameTypeBlock :=
-  match p return forall `(deps: FormDeps p n)
-    (extraDeps: FormDepsExtension deps)
-    (restrPaintings': RestrPaintingTypes' deps extraDeps), CohFrameTypeBlock
-  with
+  match p with
   | O =>
     fun n deps extraDeps restrPaintings' =>
     {|
@@ -354,10 +349,8 @@ Inductive CohFramesExtension {p}: forall `(deps: FormDeps p n)
    forall coh: forall r q (Hrq: r <= q) (Hq: q <= n) (ε ω: arity) d,
           dep.(_restrFrame') q Hq ε (restrFrame cohs r (leY_trans Hrq (leY_up Hq)) ω d)
           = dep.(_restrFrame') r (leY_trans Hrq ( Hq)) ω (restrFrame cohs q.+1 (⇑ Hq) ε d),
-  CohFramesExtension (p := p.+1) (deps; dep) extraDeps
-      (restrPaintings'; restrPainting')
-    (cohs as cs in _ ;
-     coh in forall r q Hrq Hq ε ω d, dep.(_restrFrame') q Hq ε (restrFrame cs r _ _ d) = _ (* makes it ~3x faster *)) ->
+  CohFramesExtension (deps; dep) extraDeps
+      (restrPaintings'; restrPainting') (cohs; coh) ->
       CohFramesExtension (n := n.+1) deps (dep; extraDeps) restrPaintings' cohs.
 
 Declare Scope extra_cohs_scope.
