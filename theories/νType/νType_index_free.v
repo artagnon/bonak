@@ -131,10 +131,16 @@ Instance Proj2Deps `(deps: FormDeps p.+1 n): FormDep (Proj1Deps deps) := {|
   _restrFrame' := deps.(_restrFrames').2;
 |}.
 
-Notation "x .(1)" := (Proj1Deps x)
+Declare Scope deps_scope.
+Delimit Scope deps_scope with deps.
+Bind Scope deps_scope with FormDeps.
+Notation "x .(1)" := (Proj1Deps x%_deps)
   (at level 1, left associativity, format "x .(1)"): type_scope.
-Notation "x .(2)" := (Proj2Deps x)
+Notation "x .(2)" := (Proj2Deps x%_deps)
   (at level 1, left associativity, format "x .(2)"): type_scope.
+Notation "( x ; y )" := (ConsDep x y)
+  (at level 0, format "( x ; y )"): deps_scope.
+
 Inductive FormDepsExtension {p} : forall {n}, FormDeps p n -> Type :=
 | TopRestrFrames {deps}:
   forall E': mkFrame' deps -> HSet,
@@ -143,14 +149,9 @@ Inductive FormDepsExtension {p} : forall {n}, FormDeps p n -> Type :=
   FormDepsExtension (ConsDep deps dep) ->
   FormDepsExtension (n := n.+1) deps.
 
-Declare Scope deps_scope.
 Declare Scope extra_deps_scope.
-Delimit Scope deps_scope with deps.
 Delimit Scope extra_deps_scope with extradeps.
-Bind Scope deps_scope with FormDeps.
 Bind Scope extra_deps_scope with FormDepsExtension.
-Notation "( x ; y )" := (ConsDep x y)
-  (at level 0, format "( x ; y )"): deps_scope.
 Notation "( x ; y )" := (AddExtraRestrFrame _ x y)
   (at level 0, format "( x ; y )"): extra_deps_scope.
 
