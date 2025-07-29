@@ -381,29 +381,23 @@ Bind Scope extra_cohs_scope with CohFramesExtension.
 Notation "( x ; y )" := (AddCohFrame x y)
   (at level 0, format "( x ; y )"): extra_cohs_scope.
 
-Definition mkNextDep `{deps: FormDeps p n.+1}
-  (dep: FormDep deps)
-  (extraDeps: FormDepsExtension (deps; dep))
-  (restrFrames: mkRestrFrameTypes deps (dep; extraDeps))
-  restrFrame:
-  FormDep (mkNextDeps (dep; extraDeps) restrFrames) :=
-{|
-  _frame'' := mkFrame' (deps; dep);
-  _painting'' := mkPainting' extraDeps;
-  _restrFrame' := restrFrame;
-|}.
+Definition mkFullNextDeps `{deps: FormDeps p n}
+  {extraDeps: FormDepsExtension deps}
+  (restrPaintings': RestrPaintingTypes' deps extraDeps)
+  (cohs: mkCohFrameTypes restrPaintings') :=
+  mkNextDeps extraDeps (mkRestrFrames restrPaintings' cohs).
 
 Fixpoint mkNextExtraDeps `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' deps extraDeps}
   {cohs: mkCohFrameTypes restrPaintings'}
   (extraCohs: CohFramesExtension deps extraDeps restrPaintings' cohs):
-  FormDepsExtension (mkNextDeps extraDeps (mkRestrFrames restrPaintings' cohs)).
+  FormDepsExtension (mkFullNextDeps restrPaintings' cohs).
 Proof.
   destruct extraCohs.
   - now constructor.
   - unshelve econstructor.
-    + now apply mkNextDep, (mkRestrFrame (extraDeps := extraDeps)(restrPaintings'; restrPainting') (cohs; coh)).
+    + now apply (mkFullNextDeps (extraDeps := extraDeps) (restrPaintings'; restrPainting') (cohs; coh)).(2).
     + now apply (mkNextExtraDeps p.+1 n (deps; dep)%deps extraDeps
       (restrPaintings'; restrPainting') (cohs; coh) extraCohs).
 Defined.
@@ -422,7 +416,7 @@ Definition mkPrevPainting `{deps: FormDeps p n}
   {cohs: mkCohFrameTypes restrPaintings'}
   (extraCohs: CohFramesExtension deps extraDeps restrPaintings' cohs) :=
   mkPainting'
-    ((mkNextDeps extraDeps (mkRestrFrames restrPaintings' cohs)).(2);
+    ((mkFullNextDeps restrPaintings' cohs).(2);
       mkNextExtraDeps extraCohs)%extradeps:
     mkPrevFrame (p := p) extraDeps (mkRestrFrames restrPaintings' cohs) -> HSet.
 
@@ -450,7 +444,7 @@ Definition mkRestrPaintingTypes `{deps: FormDeps p n}
   {restrPaintings': RestrPaintingTypes' deps extraDeps}
   (cohs: mkCohFrameTypes restrPaintings')
   (extraCohs: CohFramesExtension deps extraDeps restrPaintings' cohs) :=
-  RestrPaintingTypes' (mkNextDeps extraDeps (mkRestrFrames restrPaintings' cohs)) (mkNextExtraDeps extraCohs).
+  RestrPaintingTypes' (mkFullNextDeps restrPaintings' cohs) (mkNextExtraDeps extraCohs).
 
 Fixpoint mkRestrPaintings `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
