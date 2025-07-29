@@ -268,14 +268,13 @@ Instance mkCohFrameTypesAndRestrFrames:
     let cohFrameTypes := (mkCohFrameTypesAndRestrFrames deps.(1)
     (deps.(2); extraDeps)%extradeps restrPaintings'.1).(CohFrameTypesDef) in
     {|
-      CohFrameTypesDef := { Q:
-        cohFrameTypes &T
+      CohFrameTypesDef := { Q: cohFrameTypes &T
         (* statement of cohFrameType(n+2,p) *)
         forall r q (Hrq: r <= q) (Hq: q <= n) (ε ω: arity) d,
-        deps.(_restrFrames').2 q Hq ε ((restrFrames Q).2 r
-          (leY_trans Hrq (leY_up Hq)) ω d) =
-        deps.(_restrFrames').2 r (leY_trans Hrq Hq) ω ((restrFrames Q).2 q.+1
-          (⇑ Hq) ε d) };
+        deps.(_restrFrames').2 q Hq ε
+          ((restrFrames Q).2 r (Hrq ↕ (↑ Hq)) ω d) =
+        deps.(_restrFrames').2 r (Hrq ↕ Hq) ω
+          ((restrFrames Q).2 q.+1 (⇑ Hq) ε d) };
       RestrFramesDef Q :=
       (* RestrFrame(n+2,p+1) *)
       let restrFrame q (Hq: q <= n) ε
@@ -284,9 +283,9 @@ Instance mkCohFrameTypesAndRestrFrames:
            fun ω => rew [deps.(_paintings'').2] Q.2 O q leY_O Hq ε ω d.1 in
             restrPaintings'.2 q _ ε _
               (rew unfoldPaintingProj (deps.(2); extraDeps) _ in d.2 ω)
-           in forall ω, deps.(_paintings'').2 (deps.(_restrFrames').2  _ _ _ rf))
-      in (restrFrames Q.1 as rf in _;
-          restrFrame in forall q Hq ω,
+           in forall ω,
+            deps.(_paintings'').2 (deps.(_restrFrames').2  _ _ _ rf))
+      in (restrFrames Q.1 as rf in _; restrFrame in forall q Hq ω,
             (mkFrame (deps.(2); extraDeps)%extradeps rf) -> _)
            : mkRestrFrameTypes deps extraDeps
     |}
@@ -332,8 +331,8 @@ Definition mkCohFrameType `{deps: FormDeps p n.+1}
   (cohs: mkCohFrameTypes restrPaintings') :=
   let restrFrame := (mkRestrFrames restrPaintings' cohs).2 in
   forall r q (Hrq: r <= q) (Hq: q <= n) (ε ω: arity) d,
-      dep.(_restrFrame') q Hq ε (restrFrame r (leY_trans Hrq (leY_up Hq)) ω d)
-      = dep.(_restrFrame') r (leY_trans Hrq Hq) ω (restrFrame q.+1 (⇑ Hq) ε d).
+      dep.(_restrFrame') q Hq ε (restrFrame r (Hrq ↕ (↑ Hq)) ω d)
+      = dep.(_restrFrame') r (Hrq ↕ Hq) ω (restrFrame q.+1 (⇑ Hq) ε d).
 
 Inductive CohFramesExtension {p}: forall `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
@@ -371,9 +370,10 @@ Proof.
   destruct extraCohs.
   - now constructor.
   - unshelve econstructor.
-    + now apply (mkFullDeps (extraDeps := extraDeps) (restrPaintings'; restrPainting') (cohs; coh)).(2).
+    + now apply (mkFullDeps (extraDeps := extraDeps)
+        (restrPaintings'; restrPainting') (cohs; coh)).(2).
     + now apply (mkExtraDeps p.+1 n (deps; dep)%deps extraDeps
-      (restrPaintings'; restrPainting') (cohs; coh) extraCohs).
+        (restrPaintings'; restrPainting') (cohs; coh) extraCohs).
 Defined.
 
 Definition mkPainting `{deps: FormDeps p n}
@@ -411,8 +411,8 @@ Proof.
       apply restrPainting'. simpl in l.
       now apply (rew unfoldPaintingProj _ _ in l ω).
     + now apply (mkRestrPainting _ _ _ extraDeps
-      (restrPaintings';restrPainting') (cohs; coh) _ q (⇓ Hq) ε
-      (d as x in _; l in _) c).
+        (restrPaintings';restrPainting') (cohs; coh) _ q (⇓ Hq) ε
+        (d as x in _; l in _) c).
 Defined.
 
 Definition mkRestrPaintingTypes `{deps: FormDeps p n}
@@ -434,7 +434,7 @@ destruct p.
     red; intros * c.
     now eapply (mkRestrPainting cohs extraCohs q ε), c.
   - unshelve esplit. now apply (mkRestrPaintings p n.+1 _ _ _ cohs.1
-    (cohs.2; extraCohs)%extracohs).
+      (cohs.2; extraCohs)%extracohs).
     red; intros * c. now eapply (mkRestrPainting cohs extraCohs), c.
 Defined.
 
