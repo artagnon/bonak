@@ -56,7 +56,7 @@ That is, we build for p <= n.+1:
   n+1   : { restrFrameTypes = {RestrFrameType0 ... restrFrameType_n} ;
     frame(n+1,n+1)(restrFrames_{0..n})
 
-Example: if Prev = EmptyPrev
+Example: if p = 0
   RestrFrameTypesDef := []
   FrameDef [] := [unit] (presented as a Sigma-type, i.e. as "unit")
 *)
@@ -153,8 +153,8 @@ Bind Scope extra_deps_scope with FormDepsExtension.
 Notation "( x ; y )" := (AddExtraRestrFrame _ x y)
   (at level 0, format "( x ; y )"): extra_deps_scope.
 
-(* Example: if Prev := EmptyPrev, extras'' := [], extraRestrs' := ([],E)
-   mkPainting:= [E] *)
+(* Example: if p := 0, extraDeps := ([],E')
+   mkPainting:= [E'] *)
 
 Fixpoint mkPainting' `{deps: FormDeps p n} (extraDeps: FormDepsExtension deps):
   mkFrame' deps -> HSet :=
@@ -188,7 +188,7 @@ Proof.
   destruct p; easy.
 Defined.
 
-(* Example: if Prev := EmptyPrev, extras'' := [], extraRestrs' := ([],E)
+(* Example: if p := 0, extraDeps := ([],E')
    mkRestrFrameTypes := [unit -> unit] *)
 
 Definition mkRestrFrameTypes `(deps: FormDeps p n)
@@ -200,10 +200,6 @@ Definition mkPrevRestrFrameTypes `(deps: FormDeps p n)
   (extraDeps: FormDepsExtension deps) :=
   (mkRestrFrameTypesAndFrames' (n := n.+1) (mkFrames' deps).1
     (mkPaintings' extraDeps).1).(RestrFrameTypesDef).
-
-(* Example: if Prev := EmptyPrev, extras'' := [], extraRestrs' := ([],E)
-   mkFrame [restr: unit -> unit] := [unit; \().∀ω.E(restr())]
-      (presented as a Sigma-type, i.e. {d:unit & ∀ω.E(restr())} *)
 
 Definition mkNextDeps `{deps: FormDeps p n}
   (extraDeps: FormDepsExtension deps)
@@ -296,7 +292,7 @@ Instance mkCohFrameTypesAndRestrFrames:
     |}
   end.
 
-(* Example: if Prev := EmptyPrev, extras'' := [], extraRestrs' := ([],E)
+(* Example: if p := 0, extraDeps := ([],E')
    mkCohFrameTypes := [] *)
 
 Definition mkCohFrameTypes `{deps: FormDeps p n}
@@ -305,19 +301,11 @@ Definition mkCohFrameTypes `{deps: FormDeps p n}
   (mkCohFrameTypesAndRestrFrames deps extraDeps
     restrPaintings').(CohFrameTypesDef).
 
-(* Example: if Prev := EmptyPrev, extras'' := [], extraRestrs' := ([],E)
-   mkRestrFrames := [] *)
-
 Definition mkRestrFrames `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   (restrPaintings': RestrPaintingTypes' deps extraDeps) :=
   (mkCohFrameTypesAndRestrFrames deps extraDeps
     restrPaintings').(RestrFramesDef).
-
-(* Example: if Prev := EmptyPrev, extras'' := [], extraRestrs' := ([],E) cohs=[]
-   then mkLevel := [{frame:=unit;painting:=E}] and
-   mkRestrFrame := [\qω().()]
-      (presented as a dependent pair, i.e. ((),\qω().()) *)
 
 Definition mkRestrFrame `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
@@ -358,6 +346,10 @@ Delimit Scope extra_cohs_scope with extracohs.
 Bind Scope extra_cohs_scope with CohFramesExtension.
 Notation "( x ; y )" := (AddCohFrame x y)
   (at level 0, format "( x ; y )"): extra_cohs_scope.
+
+(* Example: if p := 0, extraDeps := ([],E'), restrPaintings' := , cohs := []
+   then mkFullNextDeps := {_frames'':=[unit];_paintings'':=[E']};_restrFrames':=[\qω().()]}
+   (where _restrFrames' is presented as a dependent pair, i.e. ((),\qω().()) *)
 
 Definition mkFullNextDeps `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
