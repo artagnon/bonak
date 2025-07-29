@@ -8,6 +8,7 @@ From Bonak Require Import SigT Notation RewLemmas HSet LeYoneda.
 Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.
+Set Typeclasses Depth 10.
 Remove Printing Let sigT.
 Remove Printing Let prod.
 
