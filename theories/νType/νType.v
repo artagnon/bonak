@@ -1082,209 +1082,6 @@ Class PermuteFrameBelowBlock {n'} (C: νType n'.+2) {permutePrefix: mkPermute C.
     PermutePrev .(permuteFrameBelow') p q (C .(Frame) .(restrFrame) r.+1 ε d);
 }.
 
-Class PermuteLayerBlock {n'} (C: νType n'.+2) {permutePrefix: mkPermute C.(prefix)} p
-  {PermutePrev : PermuteBlockPrev C}
-  (PermuteFrameBelow : PermuteFrameBelowBlock C p PermutePrev) := {
-  extendLayer {Hp : p.+2 <= n'.+2} {D} {R : mk' permutePrefix D}
-    (d  : C .(Frame) .(frame p) D)
-    (l  : C .(Layer) d)
-    (l' : C .(Layer) (rew <-[id] C .(eqFrameSp) in (d ; l))) :
-    C .(Layer) (PermuteFrameBelow .(permuteFrameBelow) p d);
-
-  restrictLayer {Hp : p.+2 <= n'.+2} {D} {R : mk' permutePrefix D}
-    (d  : C .(Frame) .(frame p) D)
-    (l  : C .(Layer) d)
-    (l' : C .(Layer) (rew <-[id] C .(eqFrameSp) in (d ; l))) :
-    C .(Layer) (rew <-[id] C .(eqFrameSp) in (PermuteFrameBelow .(permuteFrameBelow) p d ; 
-                extendLayer d l l'));
-
-  eqRestrExtendLayerSup r
-    {Hpr : p.+3 <= r.+2} {Hr : r.+2 <= n'.+2} 
-    {D} {R : mk' permutePrefix D} {ε}
-    (d  : C .(Frame) .(frame p) D)
-    (l  : C .(Layer) d)
-    (l' : C .(Layer) (rew <-[id] C .(eqFrameSp) in (d ; l))) :
-    rew [C .(Layer')] PermuteFrameBelow .(eqRestrPermuteFrameBelowSup) p r d in
-      C .(RestrLayer) p r ε (extendLayer d l l') = 
-    PermutePrev .(extendLayer') p
-      (C .(Frame) .(restrFrame) r.+1 ε d)
-      (C .(RestrLayer) p r ε l)
-      (rew [C .(Layer')] C .(eqRestrFrameSp) in C .(RestrLayer) p.+1 r ε l');
-
-  eqRestrRestrictLayerSup r
-    {Hpr : p.+3 <= r.+2} {Hr : r.+2 <= n'.+2} 
-    {D} {R : mk' permutePrefix D} {ε}
-    (d  : C .(Frame) .(frame p) D)
-    (l  : C .(Layer) d)
-    (l' : C .(Layer) (rew <-[id] C .(eqFrameSp) in (d ; l))) :
-    rew [C .(Layer')] [d ⇒ rew <- [id] C .(eqFrameSp') in d] 
-      (= PermuteFrameBelow .(eqRestrPermuteFrameBelowSup) p r d;
-      eqRestrExtendLayerSup r (ε := ε) d l l') in
-    rew [C .(Layer')] C .(eqRestrFrameSp) in
-      C .(RestrLayer) p.+1 r ε (restrictLayer d l l') = 
-    PermutePrev .(restrictLayer') p
-      (C .(Frame) .(restrFrame) r.+1 ε d)
-      (C .(RestrLayer) p r ε l)
-      (rew [C .(Layer')] C .(eqRestrFrameSp) in C .(RestrLayer) p.+1 r ε l');
-
-  eqRestrPermuteLayerQ 
-    {Hq : p.+2 <= n'.+2}
-    {D E} {R : mk' permutePrefix D} {ε : arity}
-    (d  : C .(Frame) .(frame p) D)
-    (l  : C .(Layer) d)
-    (l' : C .(Layer) (rew <-[id] C .(eqFrameSp) in (d ; l)))
-    (c  : C .(Painting) .(painting) E(rew <-[id] C .(eqFrameSp) in (rew <-[id] C .(eqFrameSp) in 
-      (PermuteFrameBelow .(permuteFrameBelow) p d;
-       extendLayer d l l');
-       restrictLayer d l l'))) 
-    (c' : C .(Painting) .(painting) E(rew <-[id] C .(eqFrameSp) in (rew <-[id] C .(eqFrameSp) in 
-       (d ; l) ; l'))) :
-    C .(Painting) .(restrPainting) p p.+1 (ε := ε)
-      (rew <-[id] C .(eqPaintingSp) in (
-        extendLayer d l l'; rew <-[id] C .(eqPaintingSp) in ( 
-        restrictLayer d l l'; c
-      ))) =
-    rew <- [C .(PaintingPrev) .(painting')] PermuteFrameBelow .(eqRestrPermuteFrameBelowQ) p d in
-      C .(Painting) .(restrPainting) p p
-      (rew <-[id] C .(eqPaintingSp) in (l ; (rew <-[id] C .(eqPaintingSp) in (l'; c'))));
-
-  eqRestrPermuteLayerSQ
-    {Hq : p.+2 <= n'.+2}
-    {D E} {R : mk' permutePrefix D} {ε : arity}
-    (d  : C .(Frame) .(frame p) D)
-    (l  : C .(Layer) d)
-    (l' : C .(Layer) (rew <-[id] C .(eqFrameSp) in (d ; l)))
-    (c  : C .(Painting) .(painting) E(rew <-[id] C .(eqFrameSp) in (rew <-[id] C .(eqFrameSp) in 
-      (PermuteFrameBelow .(permuteFrameBelow) p d;
-        extendLayer d l l');
-        restrictLayer d l l'))) 
-    (c' : C .(Painting) .(painting) E(rew <-[id] C .(eqFrameSp) in (rew <-[id] C .(eqFrameSp) in 
-        (d ; l) ; l'))) :
-    C .(Painting) .(restrPainting) p p (ε := ε)
-      (rew <-[id] C .(eqPaintingSp) in (
-        extendLayer d l l'; rew <-[id] C .(eqPaintingSp) in ( 
-        restrictLayer d l l'; c
-      ))) =
-    rew <- [C .(PaintingPrev) .(painting')] PermuteFrameBelow .(eqRestrPermuteFrameBelowSQ) p d in
-      C .(Painting) .(restrPainting) p p.+1
-      (rew <-[id] C .(eqPaintingSp) in (l ; (rew <-[id] C .(eqPaintingSp) in (l'; c'))));
-}.
-
-Class PermuteFrameAboveBlock {n'} (C: νType n'.+2) {permutePrefix: mkPermute C.(prefix)} p 
-  {PermutePrev : PermuteBlockPrev C}
-  {PermuteFrameBelow : PermuteFrameBelowBlock C p PermutePrev}
-  (PermuteLayer : PermuteLayerBlock C p PermuteFrameBelow) := {
-
-  permuteFrameAbove q {Hqp : q.+2 <= p.+2} {Hp : p.+2 <= n'.+2} {D} {R : mk' permutePrefix D} :
-    C.(Frame).(frame p.+2) D -> C.(Frame).(frame p.+2) D;
-
-  eqRestrPermuteFrameAboveSup q r 
-    {Hqp : q.+3 <= p.+3} {Hpr : p.+3 <= r.+3} {Hr : r.+3 <= n'.+2}
-    {D} {R : mk' permutePrefix D} {ε} 
-    {d :  C .(Frame).(frame p.+2) D} :
-    C .(Frame) .(restrFrame) r.+2 ε (permuteFrameAbove q d) =
-    PermutePrev .(permuteFrameAbove') p q (C .(Frame) .(restrFrame) r.+2 ε d);
-  
-  eqPermuteFrameAbove0 {Hp : p.+2 <= n'.+2} {D} {R : mk' permutePrefix D}
-    (d : C.(Frame).(frame p) D)
-    (l : C.(Layer) d)
-    (l' : C .(Layer) (rew <- [id] C .(eqFrameSp) in (d; l))) :
-    permuteFrameAbove p
-      (rew <- [id] C .(eqFrameSp) in
-      (rew <- [id] C .(eqFrameSp) in (d; l); l')) =
-    rew <- [id] C .(eqFrameSp) in
-    (rew <- [id] C .(eqFrameSp) in
-      ((PermuteFrameBelow) .(permuteFrameBelow) p d;
-        (PermuteLayer) .(extendLayer) d l l');
-      (PermuteLayer) .(restrictLayer) d l l');
-}.
-
-Class HasPermute {n'} (C: νType n'.+2) {permutePrefix: mkPermute C.(prefix)}
-  {PermutePrev : PermuteBlockPrev C}
-  {PermuteFrameBelow : PermuteFrameBelowBlock C n' PermutePrev}
-  {PermuteLayerBlock : PermuteLayerBlock C n' PermuteFrameBelow}
-  {PermuteFrameAbove : PermuteFrameAboveBlock C n' PermuteLayerBlock}
-  {D} {R : mk' permutePrefix D} (E : C .(Frame) .(frame n'.+2) D -> HSet) :=
-  hasPermute : forall {d: C.(Frame).(frame n'.+2) D}
-    p {Hp : p.+2 <= n'.+2} ,
-    E d -> E ((PermuteFrameAbove) .(permuteFrameAbove) p d).
-
-Class PermutePaintingAboveBlock {n'} (C: νType n'.+2) {permutePrefix: mkPermute C.(prefix)} p 
-  {PermutePrev : PermuteBlockPrev C}
-  {PermuteFrameBelow : forall {p}, PermuteFrameBelowBlock C p PermutePrev}
-  {PermuteLayerBlock : forall {p}, PermuteLayerBlock C p PermuteFrameBelow}
-  (PermuteFrameAbove : forall {p}, PermuteFrameAboveBlock C p PermuteLayerBlock) := {
-  permutePaintingAbove q {Hqp : q.+2 <= p.+2} {Hp : p.+2 <= n'.+2} {D E}
-  {R : mk' permutePrefix D} {L : HasPermute C E} {d : C.(Frame).(frame p.+2) D} :
-    C.(Painting).(painting) E d -> 
-    C.(Painting).(painting) E (PermuteFrameAbove .(permuteFrameAbove) q d);
-
-  eqRestrPermutePaintingAboveSup q r 
-    {Hqp : q.+3 <= p.+3} {Hpr : p.+3 <= r.+3} {Hr : r.+3 <= n'.+2}
-    {D E} {R : mk' permutePrefix D} {L : HasPermute C E} {ε} 
-    {d : C .(Frame).(frame p.+2) D}
-    {c : C.(Painting).(painting) E d}:
-    C .(Painting) .(restrPainting) p.+2 r.+2 (ε := ε) (permutePaintingAbove q c) =
-    rew <-[C .(PaintingPrev) .(painting')] PermuteFrameAbove .(eqRestrPermuteFrameAboveSup) q r in
-    PermutePrev .(permutePaintingAbove') p q
-     (C .(Painting) .(restrPainting) p.+2 r.+2 (ε := ε) c);
-}.
-
-Class PermutePaintingBelowBlock {n'} (C: νType n'.+2) {permutePrefix: mkPermute C.(prefix)} p
- {PermutePrev : PermuteBlockPrev C}
- {PermuteFrameBelow : forall {p}, PermuteFrameBelowBlock C p PermutePrev}
- {PermuteLayerBlock : forall {p}, PermuteLayerBlock C p PermuteFrameBelow}
- {PermuteFrameAbove : forall {p}, PermuteFrameAboveBlock C p PermuteLayerBlock}
- (PermutePaintingAbove : forall {p}, PermutePaintingAboveBlock C p (@PermuteFrameAbove)) := {
-  permutePaintingBelow q {Hpq : p.+2 <= q.+2} {Hq : q.+2 <= n'.+2} 
-    {D E} {R : mk' permutePrefix D} {L : HasPermute C E}
-    {d : C.(Frame).(frame p) D} :
-    C.(Painting).(painting) E d ->
-    C.(Painting).(painting) E (PermuteFrameBelow .(permuteFrameBelow) q d); 
-
-  eqRestrPermutePaintingBelowQ q 
-    {Hpq : p.+2 <= q.+2} {Hq : q.+2 <= n'.+2}
-    {D E} {R : mk' permutePrefix D} {L : HasPermute C E} {ε}
-    {d : C .(Frame).(frame p) D}
-    {c : C .(Painting) .(painting) E d} :
-    C .(Painting) .(restrPainting) p q.+1 (ε := ε) (permutePaintingBelow q c) = 
-      rew <-[C .(PaintingPrev) .(painting')] 
-      PermuteFrameBelow .(eqRestrPermuteFrameBelowQ) q d in
-      C .(Painting) .(restrPainting) p q (ε := ε) c;
-
-  eqRestrPermutePaintingBelowSQ q 
-    {Hpq : p.+2 <= q.+2} {Hq : q.+2 <= n'.+2}
-    {D E} {R : mk' permutePrefix D} {L : HasPermute C E} {ε}
-    {d : C .(Frame).(frame p) D}
-    {c : C .(Painting) .(painting) E d} :
-    C .(Painting) .(restrPainting) p q (ε := ε) (permutePaintingBelow q c) = 
-      rew <-[C .(PaintingPrev) .(painting')] 
-      PermuteFrameBelow .(eqRestrPermuteFrameBelowSQ) q d in
-      C .(Painting) .(restrPainting) p q.+1 (ε := ε) c;
-
-  eqRestrPermutePaintingBelowInf q r
-    {Hpr : p.+3 <= r.+3} {Hrq : r.+3 <= q.+3} {Hq : q.+3 <= n'.+2}
-    {D E} {R : mk' permutePrefix D} {L : HasPermute C E} {ε}
-    {d : C .(Frame).(frame p) D}
-    {c : C .(Painting) .(painting) E d} :
-    C .(Painting) .(restrPainting) p r (ε := ε) (permutePaintingBelow q.+1 c) =
-      rew <-[C .(PaintingPrev) .(painting')] 
-      PermuteFrameBelow .(eqRestrPermuteFrameBelowInf) q r d in
-      PermutePrev .(permutePaintingBelow') p q 
-      (C .(Painting) .(restrPainting) p r (ε := ε) c);
-
-  eqRestrPermutePaintingBelowSup q r
-    {Hpq : p.+3 <= q.+3} {Hqr : q.+3 <= r.+2} {Hq : r.+2 <= n'.+2}
-    {D E} {R : mk' permutePrefix D} {L : HasPermute C E} {ε}
-    {d : C .(Frame).(frame p) D}
-    {c : C .(Painting) .(painting) E d} :
-    C .(Painting) .(restrPainting) p r.+1 (ε := ε) (permutePaintingBelow q c) =
-      rew <-[C .(PaintingPrev) .(painting')] 
-      PermuteFrameBelow .(eqRestrPermuteFrameBelowSup) q r d in
-      PermutePrev .(permutePaintingBelow') p q 
-      (C .(Painting) .(restrPainting) p r.+1 (ε := ε) c);
-}.
-
 Definition extendLayerGeneral {n'} (C: νType n'.+2) p 
   {permutePrefix: mkPermute C.(prefix)}
   {PermuteFrameBelowPrev : PermuteBlockPrev C}
@@ -1431,6 +1228,192 @@ Proof.
   exact eq_refl.
 Qed.
 
+
+Class PermuteLayerBlock {n'} (C: νType n'.+2) {permutePrefix: mkPermute C.(prefix)} p
+  {PermutePrev : PermuteBlockPrev C}
+  (PermuteFrameBelow : PermuteFrameBelowBlock C p PermutePrev) := {
+  extendLayer {Hp : p.+2 <= n'.+2} {D} {R : mk' permutePrefix D}
+    (d  : C .(Frame) .(frame p) D)
+    (l  : C .(Layer) d)
+    (l' : C .(Layer) (rew <-[id] C .(eqFrameSp) in (d ; l))) :
+    C .(Layer) (PermuteFrameBelow .(permuteFrameBelow) p d) :=
+    extendLayerGeneral C p PermuteFrameBelow d l l';
+
+  restrictLayer {Hp : p.+2 <= n'.+2} {D} {R : mk' permutePrefix D}
+    (d  : C .(Frame) .(frame p) D)
+    (l  : C .(Layer) d)
+    (l' : C .(Layer) (rew <-[id] C .(eqFrameSp) in (d ; l))) :
+    C .(Layer) (rew <-[id] C .(eqFrameSp) in 
+      (PermuteFrameBelow .(permuteFrameBelow) p d ; extendLayer d l l')) :=
+    restrictLayerGeneral C p PermuteFrameBelow d l l';
+
+  eqRestrPermuteLayerQ 
+    {Hq : p.+2 <= n'.+2}
+    {D E} {R : mk' permutePrefix D} {ε : arity}
+    (d  : C .(Frame) .(frame p) D)
+    (l  : C .(Layer) d)
+    (l' : C .(Layer) (rew <-[id] C .(eqFrameSp) in (d ; l)))
+    (c  : C .(Painting) .(painting) E(rew <-[id] C .(eqFrameSp) in (rew <-[id] C .(eqFrameSp) in 
+      (PermuteFrameBelow .(permuteFrameBelow) p d; extendLayer d l l'); restrictLayer d l l'))) 
+    (c' : C .(Painting) .(painting) E(rew <-[id] C .(eqFrameSp) in (rew <-[id] C .(eqFrameSp) in 
+       (d ; l) ; l'))) :
+    C .(Painting) .(restrPainting) p p.+1 (ε := ε) (rew <-[id] C .(eqPaintingSp) in (
+      extendLayer d l l'; rew <-[id] C .(eqPaintingSp) in (restrictLayer d l l'; c))) =
+    rew <- [C .(PaintingPrev) .(painting')] PermuteFrameBelow .(eqRestrPermuteFrameBelowQ) p d in
+      C .(Painting) .(restrPainting) p p
+      (rew <-[id] C .(eqPaintingSp) in (l ; (rew <-[id] C .(eqPaintingSp) in (l'; c')))) := 
+    eqRestrPermuteLayerGeneralQ C p PermuteFrameBelow d l l' c c';
+
+  eqRestrPermuteLayerSQ
+    {Hq : p.+2 <= n'.+2}
+    {D E} {R : mk' permutePrefix D} {ε : arity}
+    (d  : C .(Frame) .(frame p) D)
+    (l  : C .(Layer) d)
+    (l' : C .(Layer) (rew <-[id] C .(eqFrameSp) in (d ; l)))
+    (c  : C .(Painting) .(painting) E(rew <-[id] C .(eqFrameSp) in (rew <-[id] C .(eqFrameSp) in 
+      (PermuteFrameBelow .(permuteFrameBelow) p d; extendLayer d l l'); restrictLayer d l l'))) 
+    (c' : C .(Painting) .(painting) E (rew <-[id] C .(eqFrameSp) in (rew <-[id] C .(eqFrameSp) in
+      (d ; l) ; l'))) :
+    C .(Painting) .(restrPainting) p p (ε := ε) (rew <-[id] C .(eqPaintingSp) in (
+      extendLayer d l l'; rew <-[id] C .(eqPaintingSp) in (restrictLayer d l l'; c))) =
+    rew <- [C .(PaintingPrev) .(painting')] PermuteFrameBelow .(eqRestrPermuteFrameBelowSQ) p d in
+      C .(Painting) .(restrPainting) p p.+1
+      (rew <-[id] C .(eqPaintingSp) in (l ; (rew <-[id] C .(eqPaintingSp) in (l'; c')))) :=
+    eqRestrPermuteLayerGeneralSQ C p PermuteFrameBelow d l l' c c';
+
+  eqRestrExtendLayerSup r
+    {Hpr : p.+3 <= r.+2} {Hr : r.+2 <= n'.+2} 
+    {D} {R : mk' permutePrefix D} {ε}
+    (d  : C .(Frame) .(frame p) D)
+    (l  : C .(Layer) d)
+    (l' : C .(Layer) (rew <-[id] C .(eqFrameSp) in (d ; l))) :
+    rew [C .(Layer')] PermuteFrameBelow .(eqRestrPermuteFrameBelowSup) p r d in
+      C .(RestrLayer) p r ε (extendLayer d l l') = 
+    PermutePrev .(extendLayer') p
+      (C .(Frame) .(restrFrame) r.+1 ε d)
+      (C .(RestrLayer) p r ε l)
+      (rew [C .(Layer')] C .(eqRestrFrameSp) in C .(RestrLayer) p.+1 r ε l');
+
+  eqRestrRestrictLayerSup r
+    {Hpr : p.+3 <= r.+2} {Hr : r.+2 <= n'.+2} 
+    {D} {R : mk' permutePrefix D} {ε}
+    (d  : C .(Frame) .(frame p) D)
+    (l  : C .(Layer) d)
+    (l' : C .(Layer) (rew <-[id] C .(eqFrameSp) in (d ; l))) :
+    rew [C .(Layer')] [d ⇒ rew <- [id] C .(eqFrameSp') in d] 
+      (= PermuteFrameBelow .(eqRestrPermuteFrameBelowSup) p r d;
+      eqRestrExtendLayerSup r (ε := ε) d l l') in
+    rew [C .(Layer')] C .(eqRestrFrameSp) in
+      C .(RestrLayer) p.+1 r ε (restrictLayer d l l') = 
+    PermutePrev .(restrictLayer') p
+      (C .(Frame) .(restrFrame) r.+1 ε d)
+      (C .(RestrLayer) p r ε l)
+      (rew [C .(Layer')] C .(eqRestrFrameSp) in C .(RestrLayer) p.+1 r ε l');
+
+}.
+
+Class PermuteFrameAboveBlock {n'} (C: νType n'.+2) {permutePrefix: mkPermute C.(prefix)} p 
+  {PermutePrev : PermuteBlockPrev C}
+  {PermuteFrameBelow : PermuteFrameBelowBlock C p PermutePrev}
+  (PermuteLayer : PermuteLayerBlock C p PermuteFrameBelow) := {
+
+  permuteFrameAbove q {Hqp : q.+2 <= p.+2} {Hp : p.+2 <= n'.+2} {D} {R : mk' permutePrefix D} :
+    C.(Frame).(frame p.+2) D -> C.(Frame).(frame p.+2) D;
+
+  eqRestrPermuteFrameAboveSup q r 
+    {Hqp : q.+3 <= p.+3} {Hpr : p.+3 <= r.+3} {Hr : r.+3 <= n'.+2}
+    {D} {R : mk' permutePrefix D} {ε} 
+    {d :  C .(Frame).(frame p.+2) D} :
+    C .(Frame) .(restrFrame) r.+2 ε (permuteFrameAbove q d) =
+    PermutePrev .(permuteFrameAbove') p q (C .(Frame) .(restrFrame) r.+2 ε d);
+}.
+
+Class HasPermute {n'} (C: νType n'.+2) {permutePrefix: mkPermute C.(prefix)}
+  {PermutePrev : PermuteBlockPrev C}
+  {PermuteFrameBelow : PermuteFrameBelowBlock C n' PermutePrev}
+  {PermuteLayerBlock : PermuteLayerBlock C n' PermuteFrameBelow}
+  {PermuteFrameAbove : PermuteFrameAboveBlock C n' PermuteLayerBlock}
+  {D} {R : mk' permutePrefix D} (E : C .(Frame) .(frame n'.+2) D -> HSet) :=
+  hasPermute : forall {d: C.(Frame).(frame n'.+2) D}
+    p {Hp : p.+2 <= n'.+2} ,
+    E d -> E ((PermuteFrameAbove) .(permuteFrameAbove) p d).
+
+Class PermutePaintingAboveBlock {n'} (C: νType n'.+2) {permutePrefix: mkPermute C.(prefix)} p 
+  {PermutePrev : PermuteBlockPrev C}
+  {PermuteFrameBelow : forall {p}, PermuteFrameBelowBlock C p PermutePrev}
+  {PermuteLayerBlock : forall {p}, PermuteLayerBlock C p PermuteFrameBelow}
+  (PermuteFrameAbove : forall {p}, PermuteFrameAboveBlock C p PermuteLayerBlock) := {
+  permutePaintingAbove q {Hqp : q.+2 <= p.+2} {Hp : p.+2 <= n'.+2} {D E}
+  {R : mk' permutePrefix D} {L : HasPermute C E} {d : C.(Frame).(frame p.+2) D} :
+    C.(Painting).(painting) E d -> 
+    C.(Painting).(painting) E (PermuteFrameAbove .(permuteFrameAbove) q d);
+
+  eqRestrPermutePaintingAboveSup q r 
+    {Hqp : q.+3 <= p.+3} {Hpr : p.+3 <= r.+3} {Hr : r.+3 <= n'.+2}
+    {D E} {R : mk' permutePrefix D} {L : HasPermute C E} {ε} 
+    {d : C .(Frame).(frame p.+2) D}
+    {c : C.(Painting).(painting) E d}:
+    C .(Painting) .(restrPainting) p.+2 r.+2 (ε := ε) (permutePaintingAbove q c) =
+    rew <-[C .(PaintingPrev) .(painting')] PermuteFrameAbove .(eqRestrPermuteFrameAboveSup) q r in
+    PermutePrev .(permutePaintingAbove') p q
+     (C .(Painting) .(restrPainting) p.+2 r.+2 (ε := ε) c);
+}.
+
+Class PermutePaintingBelowBlock {n'} (C: νType n'.+2) {permutePrefix: mkPermute C.(prefix)} p
+ {PermutePrev : PermuteBlockPrev C}
+ {PermuteFrameBelow : forall {p}, PermuteFrameBelowBlock C p PermutePrev}
+ {PermuteLayerBlock : forall {p}, PermuteLayerBlock C p PermuteFrameBelow}
+ {PermuteFrameAbove : forall {p}, PermuteFrameAboveBlock C p PermuteLayerBlock}
+ (PermutePaintingAbove : forall {p}, PermutePaintingAboveBlock C p (@PermuteFrameAbove)) := {
+  permutePaintingBelow q {Hpq : p.+2 <= q.+2} {Hq : q.+2 <= n'.+2} 
+    {D E} {R : mk' permutePrefix D} {L : HasPermute C E}
+    {d : C.(Frame).(frame p) D} :
+    C.(Painting).(painting) E d ->
+    C.(Painting).(painting) E (PermuteFrameBelow .(permuteFrameBelow) q d); 
+
+  eqRestrPermutePaintingBelowQ q 
+    {Hpq : p.+2 <= q.+2} {Hq : q.+2 <= n'.+2}
+    {D E} {R : mk' permutePrefix D} {L : HasPermute C E} {ε}
+    {d : C .(Frame).(frame p) D}
+    {c : C .(Painting) .(painting) E d} :
+    C .(Painting) .(restrPainting) p q.+1 (ε := ε) (permutePaintingBelow q c) = 
+      rew <-[C .(PaintingPrev) .(painting')] 
+      PermuteFrameBelow .(eqRestrPermuteFrameBelowQ) q d in
+      C .(Painting) .(restrPainting) p q (ε := ε) c;
+
+  eqRestrPermutePaintingBelowSQ q 
+    {Hpq : p.+2 <= q.+2} {Hq : q.+2 <= n'.+2}
+    {D E} {R : mk' permutePrefix D} {L : HasPermute C E} {ε}
+    {d : C .(Frame).(frame p) D}
+    {c : C .(Painting) .(painting) E d} :
+    C .(Painting) .(restrPainting) p q (ε := ε) (permutePaintingBelow q c) = 
+      rew <-[C .(PaintingPrev) .(painting')] 
+      PermuteFrameBelow .(eqRestrPermuteFrameBelowSQ) q d in
+      C .(Painting) .(restrPainting) p q.+1 (ε := ε) c;
+
+  eqRestrPermutePaintingBelowInf q r
+    {Hpr : p.+3 <= r.+3} {Hrq : r.+3 <= q.+3} {Hq : q.+3 <= n'.+2}
+    {D E} {R : mk' permutePrefix D} {L : HasPermute C E} {ε}
+    {d : C .(Frame).(frame p) D}
+    {c : C .(Painting) .(painting) E d} :
+    C .(Painting) .(restrPainting) p r (ε := ε) (permutePaintingBelow q.+1 c) =
+      rew <-[C .(PaintingPrev) .(painting')] 
+      PermuteFrameBelow .(eqRestrPermuteFrameBelowInf) q r d in
+      PermutePrev .(permutePaintingBelow') p q 
+      (C .(Painting) .(restrPainting) p r (ε := ε) c);
+
+  eqRestrPermutePaintingBelowSup q r
+    {Hpq : p.+3 <= q.+3} {Hqr : q.+3 <= r.+2} {Hq : r.+2 <= n'.+2}
+    {D E} {R : mk' permutePrefix D} {L : HasPermute C E} {ε}
+    {d : C .(Frame).(frame p) D}
+    {c : C .(Painting) .(painting) E d} :
+    C .(Painting) .(restrPainting) p r.+1 (ε := ε) (permutePaintingBelow q c) =
+      rew <-[C .(PaintingPrev) .(painting')] 
+      PermuteFrameBelow .(eqRestrPermuteFrameBelowSup) q r d in
+      PermutePrev .(permutePaintingBelow') p q 
+      (C .(Painting) .(restrPainting) p r.+1 (ε := ε) c);
+}.
+
 Definition eqRestrRestrictLayerGeneralQ {n'} (C: νType n'.+2) p 
   {permutePrefix: mkPermute C.(prefix)}
   {PermuteFrameBelowPrev : PermuteBlockPrev C}
@@ -1481,12 +1464,6 @@ Class Permute {n'} (C: νType n'.+2) := {
   PermutePaintingAbove {p} : PermutePaintingAboveBlock C p (@PermuteFrameAbove);
   PermutePaintingBelow {p} : PermutePaintingBelowBlock C p (@PermutePaintingAbove);
 
-  eqExtendLayer {p} {Hp : p.+2 <= n'.+2} {D} {R : mk' PermutePrefix D}
-    (d  : C .(Frame) .(frame p) D)
-    (l  : C .(Layer) d)
-    (l' : C .(Layer) (rew <-[id] C .(eqFrameSp) in (d ; l))) :
-    PermuteLayer .(extendLayer) d l l' = extendLayerGeneral C p PermuteFrameBelow d l l';
-
   eqPermuteFrameBelow0 {p} {Hp: p.+2 <= n'.+2} {D} {R : mk' PermutePrefix D} : 
     PermuteFrameBelow .(permuteFrameBelow) (Hpq := ⇑ ⇑ (leY_zero p)) p
       (rew <- [id] C .(eqFrame0) in tt) = rew <- [id] C .(eqFrame0) in tt;
@@ -1501,6 +1478,19 @@ Class Permute {n'} (C: νType n'.+2) := {
         PermuteFrameBelow .(eqRestrPermuteFrameBelowInf) q p d in
         PermutePrev .(permutePaintingBelow') p q (l ε));
 
+  eqPermuteFrameAbove0 p {Hp : p.+2 <= n'.+2} {D} {R : mk' PermutePrefix D}
+    (d : C.(Frame).(frame p) D)
+    (l : C.(Layer) d)
+    (l' : C .(Layer) (rew <- [id] C .(eqFrameSp) in (d; l))) :
+    PermuteFrameAbove .(permuteFrameAbove) p
+      (rew <- [id] C .(eqFrameSp) in
+      (rew <- [id] C .(eqFrameSp) in (d; l); l')) =
+    rew <- [id] C .(eqFrameSp) in
+    (rew <- [id] C .(eqFrameSp) in
+      ((PermuteFrameBelow) .(permuteFrameBelow) p d;
+        (PermuteLayer) .(extendLayer) d l l');
+      (PermuteLayer) .(restrictLayer) d l l');
+
   eqPermuteFrameAboveSp p q {Hqp : q.+3 <= p.+3} {Hp : p.+3 <= n'.+2} {D} {R : mk' PermutePrefix D}
     (d : C.(Frame).(frame p.+2) D)
     (l : C.(Layer) d) :
@@ -1510,6 +1500,19 @@ Class Permute {n'} (C: νType n'.+2) := {
         fun ε => rew <- [C .(PaintingPrev) .(painting')] 
                 (PermuteFrameAbove .(eqRestrPermuteFrameAboveSup) q p) 
                   in PermutePrev .(permutePaintingAbove') p q (l ε));
+
+  eqPermutePaintingAboveSp p q {Hqp : q.+3 <= p.+3} {Hp : p.+3 <= n'.+2} 
+    {D E} {R : mk' PermutePrefix D} {L : HasPermute C E}
+    (d : C .(Frame) .(frame p.+2) D)
+    (l : C .(Layer) d)
+    {c : C .(Painting) .(painting) E (rew <-[id] C .(eqFrameSp) in (d ; l))} :
+    PermutePaintingAbove .(permutePaintingAbove) q (rew <-[id] C .(eqPaintingSp) in (l ; c)) =
+    rew <-[id] C .(eqPaintingSp) in (
+      fun ε => rew <-[C .(PaintingPrev) .(painting')] PermuteFrameAbove .(eqRestrPermuteFrameAboveSup) q p in 
+        PermutePrev .(permutePaintingAbove') p q (l ε);
+      rew [C .(Painting) .(painting) E] eqPermuteFrameAboveSp p q d l in 
+        PermutePaintingAbove .(permutePaintingAbove) q c
+    );
 }.
 
 #[local]
@@ -1538,12 +1541,8 @@ Instance PermuteFrameBelow2 : forall p : nat, PermuteFrameBelowBlock (νTypeAt 2
 Instance PermuteLayer2 : forall p : nat, PermuteLayerBlock (νTypeAt 2) p (PermuteFrameBelow2 p).
 Proof.
   unshelve esplit.
-  - intros. exact (extendLayerGeneral (νTypeAt 2) p (PermuteFrameBelow2 p) d l l').
-  - intros. exact (restrictLayerGeneral (νTypeAt 2) p (PermuteFrameBelow2 p) d l l').
   - intros; invert_le Hr; le_contra Hpr.
   - intros; invert_le Hr; le_contra Hpr.
-  - intros. exact (eqRestrPermuteLayerGeneralQ (νTypeAt 2) p (PermuteFrameBelow2 p) d l l' c c').
-  - intros. exact (eqRestrPermuteLayerGeneralSQ (νTypeAt 2) p (PermuteFrameBelow2 p) d l l' c c').
 Defined.
 
 #[local]
@@ -1557,7 +1556,6 @@ Proof.
     + exact ((PermuteLayer2 p) .(extendLayer) d l l').
     + exact ((PermuteLayer2 p) .(restrictLayer) d l l').
   * intros; le_contra Hr.
-  * intros; exact eq_refl.
 Defined.
 
 #[local]
@@ -1577,20 +1575,18 @@ Instance PermutePaintingBelow2 : forall p : nat, PermutePaintingBelowBlock (νTy
 Proof.
   unshelve esplit.
   * intros q Hpq Hq D E R L d c.
-    exact (
-      match (rew [id] (νTypeAt 2) .(eqPaintingSp) in c) with
-      | (l ; c) => match (rew [id] (νTypeAt 2) .(eqPaintingSp) in c) with
-        | (l' ; c) => 
-          rew <-[id] (νTypeAt 2) .(eqPaintingSp) in (
-            (PermuteLayer2 p) .(extendLayer) d l l'; rew <-[id] (νTypeAt 2) .(eqPaintingSp) in (
-            (PermuteLayer2 p) .(restrictLayer) d l l';
-            (PermutePaintingAbove2 p) .(permutePaintingAbove) p c
-          ))
-        end
-      end
-    ).
+    rewrite (νTypeAt 2) .(eqPaintingSp) in c.
+    destruct c as [l c].
+    rewrite (νTypeAt 2) .(eqPaintingSp) in c.
+    destruct c as [l' c].
+    rewrite (νTypeAt 2) .(eqPaintingSp); unshelve esplit.
+    2:rewrite (νTypeAt 2) .(eqPaintingSp); unshelve esplit.
+    - exact ((PermuteLayer2 p) .(extendLayer) d l l').
+    - exact ((PermuteLayer2 p) .(restrictLayer) d l l').
+    - exact ((PermutePaintingAbove2 p) .(permutePaintingAbove) p c).
   * intros.
     invert_le Hq. invert_le Hpq.
+    cbv zeta.
     rewrite <-(rew_opp_l id ((νTypeAt 2) .(eqPaintingSp)) c).
     destruct (rew [id] (νTypeAt 2) .(eqPaintingSp) in c) as [l c'].
     rewrite <-(rew_opp_l id ((νTypeAt 2) .(eqPaintingSp)) c').
@@ -1599,6 +1595,7 @@ Proof.
     exact ((PermuteLayer2 0) .(eqRestrPermuteLayerQ) d l l' _ c'').
   * intros.
     invert_le Hq. invert_le Hpq.
+    cbv zeta.
     rewrite <-(rew_opp_l id ((νTypeAt 2) .(eqPaintingSp)) c).
     destruct (rew [id] (νTypeAt 2) .(eqPaintingSp) in c) as [l c'].
     rewrite <-(rew_opp_l id ((νTypeAt 2) .(eqPaintingSp)) c').
@@ -1609,15 +1606,13 @@ Proof.
   * intros; invert_le Hq; le_contra Hqr.
 Defined.
 
-Instance mkPermute0: Permute (νTypeAt 2).
-Proof.
-  unshelve esplit.
-  + exact PermutePaintingBelow2.
-  + intros; exact eq_refl.
-  + intros; exact eq_refl.
-  + intros; le_contra Hq.
-  + intros; le_contra Hp.
-Defined.
+Instance mkPermute0: Permute (νTypeAt 2) := {
+  eqPermuteFrameBelow0 := ltac:(intros; exact eq_refl);
+  eqPermuteFrameBelowSp := ltac:(intros; le_contra Hq);
+  eqPermuteFrameAbove0 := ltac:(intros; exact eq_refl);
+  eqPermuteFrameAboveSp := ltac:(intros; le_contra Hp);
+  eqPermutePaintingAboveSp := ltac:(intros; le_contra Hp);
+}.
 
 #[local] 
 Instance mkPermutePrefix {n'} {C: νType n'.+2} {P : Permute C}: 
@@ -1727,8 +1722,31 @@ Instance mkPermuteFrameBelowSp {n'} {C: νType n'.+2} (P : Permute C) p
       repeat rewrite rew_compose.
       apply (f_equal (fun eq => rew [C .(PaintingPrev) .(painting')] eq in _)).
       exact ((C .(FramePrev) .(frame') p D.1) .(UIP)).
-  * admit.
-Admitted.
+  * intros.
+    destruct d as [d l].
+    invert_le Hpq. invert_le Hqr. simpl.
+    rewrite (P .(eqPermuteFrameBelowSp) p q).
+    apply (f_equal (fun d => rew <- [id] C .(eqFrameSp) in d)).
+    unshelve refine (eq_existT_curried _ _).
+    + exact (Prev .(eqRestrPermuteFrameBelowSup) q.+1 r.+1 d).
+    + apply functional_extensionality_dep. intro ω.
+      rewrite <-map_subst_app.
+      unfold mkRestrLayer.
+      rewrite <-(map_subst_map 
+                  (Q := C .(PaintingPrev) .(painting'))
+                  (fun d => C .(Frame) .(restrFrame) r.+1 ε d)
+                  (fun d c => C .(Painting) .(restrPainting) p r.+1 c)).
+      rewrite <-(map_subst_map 
+                  (Q := C .(PaintingPrev) .(painting'))
+                  (fun d => P .(PermutePrev) .(permuteFrameBelow') p q d)
+                  (fun d c => P .(PermutePrev) .(permutePaintingBelow') p q c)).
+      rewrite ((P .(PermutePaintingBelow )) .(eqRestrPermutePaintingBelowSup) q r (L := R.2) (c := l ω)).
+      rewrite (rew_map (C .(PaintingPrev) .(painting')) (C .(Frame) .(restrFrame) p ω)).
+      unfold eq_rect_r.
+      repeat rewrite rew_compose.
+      apply (f_equal (fun eq => rew [C .(PaintingPrev) .(painting')] eq in _)).
+      exact ((C .(FramePrev) .(frame') p D.1) .(UIP)).
+Defined.
 
 #[local] 
 Instance mkPermuteFrameBelow {n'} {C: νType n'.+2} (P : Permute C) p :
@@ -1742,14 +1760,9 @@ Defined.
 Instance mkPermuteLayer {n'} {C: νType n'.+2} (P : Permute C) p :
   PermuteLayerBlock (mkνTypeSn C) p (mkPermuteFrameBelow P p).
   unshelve esplit.
-  * intros.
-    exact (extendLayerGeneral (mkνTypeSn C) p (mkPermuteFrameBelow P p) d l l').
-  * intros.
-    exact (restrictLayerGeneral (mkνTypeSn C) p (mkPermuteFrameBelow P p) d l l').
   * intros. invert_le Hpr.
     unfold mkPermuteFramePrev, extendLayer', eq_rect_r.
-    rewrite (P .(eqExtendLayer)).
-    unfold RestrLayer, extendLayerGeneral.
+    unfold extendLayer, RestrLayer, extendLayerGeneral.
     apply functional_extensionality_dep. intro ω.
     rewrite <-map_subst_app.
     admit.
@@ -1771,7 +1784,7 @@ Instance mkPermuteFrameAbove0 {n'} {C: νType n'.+2} (P : Permute C) :
     destruct d as [[d l] l'].
     invert_le Hqp.
     unfold mkPermuteFramePrev, permuteFrameAbove'.
-    rewrite (P .(PermuteFrameAbove) .(eqPermuteFrameAbove0)).
+    rewrite (P .(eqPermuteFrameAbove0)).
     apply (f_equal (fun d => rew <- [fun T : Type => T] C .(eqFrameSp) in d));
     unshelve refine (eq_existT_curried _ _).
     apply (f_equal (fun d => rew <- [fun T : Type => T] C .(eqFrameSp) in d));
@@ -1779,7 +1792,6 @@ Instance mkPermuteFrameAbove0 {n'} {C: νType n'.+2} (P : Permute C) :
     + exact ((mkPermuteFrameBelow0 P) .(eqRestrPermuteFrameBelowSup) 0 r.+1 d).
     + exact ((mkPermuteLayer P 0) .(eqRestrExtendLayerSup) r.+1 (ε := ε) d l l').
     + exact ((mkPermuteLayer P 0) .(eqRestrRestrictLayerSup) r.+1 (ε := ε) d l l').
-  * intros. exact eq_refl.
 Defined.
 
 Instance mkPermuteFrameAboveSp {n'} {C: νType n'.+2} (P : Permute C) p
@@ -1808,7 +1820,7 @@ Instance mkPermuteFrameAboveSp {n'} {C: νType n'.+2} (P : Permute C) p
     + destruct d as [[d l] l'].
       rewrite le_induction''_base_computes.
       unfold mkPermuteFramePrev, permuteFrameAbove'.
-      rewrite (P .(PermuteFrameAbove) .(eqPermuteFrameAbove0)).
+      rewrite (P .(eqPermuteFrameAbove0)).
       apply (f_equal (fun d => rew <- [fun T : Type => T] C .(eqFrameSp) in d));
       unshelve refine (eq_existT_curried _ _).
       apply (f_equal (fun d => rew <- [fun T : Type => T] C .(eqFrameSp) in d));
@@ -1847,7 +1859,6 @@ Instance mkPermuteFrameAboveSp {n'} {C: νType n'.+2} (P : Permute C) p
         repeat rewrite rew_compose.
         apply (f_equal (fun eq => rew [C .(PaintingPrev) .(painting')] eq in _)).
         exact ((C .(FramePrev) .(frame') p.+2 D.1) .(UIP)).
-  * intros. exact le_induction''_base_computes.
 Defined.
 
 Instance mkPermuteFrameAbove {n'} {C: νType n'.+2} (P : Permute C) p :
@@ -1878,9 +1889,24 @@ Proof.
         exact (P .(PermutePaintingAbove) .(permutePaintingAbove) (L := R.2) q (l ε)).
       - refine (rew [(mkνTypeSn C) .(Painting) .(painting) E] _ in rec (↑ Hqp) (d ; l) c).
         exact (le_induction''_step_computes (Hp := ⇑ Hqp)).
-  * intros. simpl.
+  * intros q r Hqp Hpr Hr D E R L ε d c.
+    cbv beta zeta.
+    unfold mkPermuteFramePrev, permutePaintingAbove'.
     rewrite le_induction''_step_computes.
-    admit.
+    revert Hqp E L d c.
+    apply le_induction''' with (Hp := Hpr); clear p Hpr.
+    + intros Hqp E L d c.
+      rewrite <-(rew_opp_l id ((mkνTypeSn C) .(eqPaintingSp)) c).
+      destruct (rew [id] (mkνTypeSn C) .(eqPaintingSp) in c) as [l c'].
+      rewrite rew_opp_r.
+      now repeat rewrite <-((mkνTypeSn C) .(eqRestrPainting0)).
+    + intros p Hpr rec Hqp E L d c.
+      rewrite <-(rew_opp_l id ((mkνTypeSn C) .(eqPaintingSp)) c).
+      destruct (rew [id] (mkνTypeSn C) .(eqPaintingSp) in c) as [l c'].
+      rewrite rew_opp_r.
+      clear rec.
+      repeat rewrite ((mkνTypeSn C) .(eqRestrPaintingSp) p.+2 r.+1).
+      admit.
 Admitted.
 
 Instance mkPermutePaintingBelow {n'} {C: νType n'.+2} (P : Permute C) p :
@@ -1898,9 +1924,12 @@ Proof.
       2: rewrite (mkνTypeSn C) .(eqPaintingSp); unshelve esplit.
       - exact ((mkPermuteLayer P q) .(extendLayer) d l l').
       - exact ((mkPermuteLayer P q) .(restrictLayer) d l l').
-      - exact (rew [(mkνTypeSn C) .(Painting) .(painting) E] 
-               ((mkPermuteFrameAbove P q) .(eqPermuteFrameAbove0) d l l') in 
+      - refine (rew [(mkνTypeSn C) .(Painting) .(painting) E] 
+               _ in 
                ((mkPermutePaintingAbove P q) .(permutePaintingAbove) q c)).
+        destruct q.
+        exact eq_refl.
+        exact le_induction''_base_computes.
     + intros p Hpq rec d c.
       invert_le Hpq.
       rewrite (mkνTypeSn C) .(eqPaintingSp) in c.
@@ -1914,25 +1943,17 @@ Proof.
   * intros q Hpq Hq D E R L ε.
     apply le_induction'' with (Hp := Hpq); clear p Hpq.
     + intros d c. rewrite le_induction''_base_computes.
-      destruct (rew [fun T : Type => T] (mkνTypeSn C).(eqPaintingSp) in c) as [l c'].
-      destruct (rew [fun T : Type => T] (mkνTypeSn C) .(eqPaintingSp) in c') as [l' c''].
-      simpl.
-    admit.
+      cbv zeta.
+      rewrite <-(rew_opp_l id ((mkνTypeSn C) .(eqPaintingSp)) c).
+      destruct (rew [id] (mkνTypeSn C) .(eqPaintingSp) in c) as [l c'].
+      rewrite <-(rew_opp_l id ((mkνTypeSn C) .(eqPaintingSp)) c').
+      destruct (rew [id] (mkνTypeSn C) .(eqPaintingSp) in c') as [l' c''].
+      repeat rewrite rew_opp_r.
+      exact ((mkPermuteLayer P q) .(eqRestrPermuteLayerQ) d l l' _ c'').
+    + admit.
   * admit.
   * admit.
-Admitted.
-
-Instance mkPermuteSp {n'} {C: νType n'.+2} (P : Permute C) : Permute (mkνTypeSn C).
-unshelve esplit.
-  - exact (mkPermutePaintingBelow P).
-  - admit.
-  - intros. exact eq_refl.
-  - intros. admit.
-  - intros. induction p.
-    * exact eq_refl.
-    * exact le_induction''_base_computes.
-  - intros.
-    exact le_induction''_step_computes.
+  * admit.
 Admitted.
 
 (** Degeneracies *)
