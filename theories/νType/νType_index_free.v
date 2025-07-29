@@ -484,27 +484,34 @@ destruct p.
   + apply (mkCohFrames p _ _ _ restrPaintings'.1 cohs.1 (cohs.2; extraCohs)%extracohs cohPaintings.1).
   + intros. unshelve eapply eq_existT_curried.
     * eapply ((mkCohFrames p _ _ _ restrPaintings'.1 cohs.1 (cohs.2; extraCohs)%extracohs cohPaintings.1).2 r.+1 q.+1 _ _ ε ω).
-    * apply (cohPaintings.2 r q _ _ ε ω).
+     * (* prove a reorganization of the cohFrame using UIP *)
+       (* then: eapply (cohPaintings.2 r q _ _ ε ω). *)
+Admitted.
+
+Definition mkExtraCohs `{deps: FormDeps p n}
+  {extraDeps: FormDepsExtension deps}
+  {restrPaintings': RestrPaintingTypes' extraDeps}
+  {cohs: mkCohFrameTypes restrPaintings'}
+  (extraCohs: CohFramesExtension deps extraDeps restrPaintings' cohs)
+  (cohPaintings: CohPaintingTypes extraCohs):
+  CohFramesExtension _ _ _ (mkCohFrames cohs extraCohs cohPaintings).
+Admitted.
+
+Definition mkCohPaintings `{deps: FormDeps p n}
+  {extraDeps: FormDepsExtension deps}
+  {restrPaintings': RestrPaintingTypes' extraDeps}
+  (cohs: mkCohFrameTypes restrPaintings')
+  (extraCohs: CohFramesExtension deps extraDeps restrPaintings' cohs)
+  (cohPaintings: CohPaintingTypes extraCohs):
+  CohPaintingTypes (p:=p.+1) (mkExtraCohs extraCohs cohPaintings).
 Admitted.
 
 Class νTypeAux p := {
   deps: FormDeps p 0;
   restrPaintings' E': RestrPaintingTypes' (TopRestrFrames E');
   cohFrames E': mkCohFrameTypes (restrPaintings' E');
+  cohPaintings E' E: CohPaintingTypes (cohs := cohFrames E') (TopCoh (E' := E') (E := E));
 }.
-(*
-  cohPainting {E'} {p} {Hp: p.+1 <~ n.+1} r q {Hpq: p.+1 <~ q.+1}
-    {Hpr: p.+2 <~ r.+2}
-    {Hrq: r <~ q} {Hr: r.+2 <~ n.+2} {Hq: q.+1 <~ n.+1} {ε ω E}
-    {d: frame p} (c: painting p d (E := E) (E' := E')
-      (Hp := leI_down (leI_down (leI_trans Hpr Hr)))):
-    rew [painting'' p] cohFrame r q d (Hpr := leI_lower_both Hpr)
-      (Hrq := leI_raise_both Hrq) in
-    restrPainting' p q ε (restrPainting p r ω c
-      (Hq := leI_down (leI_lower_both Hr))) =
-    restrPainting' p r ω (restrPainting p q.+1 ε c
-      (Hpq := leI_down Hpq) (Hq := Hq));
-}. *)
 
 Class νType p := {
   prefix'': Type;
@@ -527,12 +534,19 @@ Variable D: mkPrefix'' p.
 Definition mkDeps': FormDeps p.+1 0 :=
   mkFullDeps _ ((C.(data) D.1).(cohFrames) D.2).
 
-Definition mkRestrPaintings' E': RestrPaintingTypes' _ _ :=
+Definition mkRestrPaintings' E': RestrPaintingTypes' _ :=
   mkRestrPaintings
   ((C.(data) D.1).(cohFrames) D.2) (TopCoh (E' := D.2) (E := E')).
 
 Definition mkCohFrames' E' : mkCohFrameTypes (mkRestrPaintings' E') :=
-  mkCohFrames ((C.(data) D.1).(cohFrames) D.2) (TopCoh (E' := D.2) (E := E')).
+  mkCohFrames ((C.(data) D.1).(cohFrames) D.2)
+   (TopCoh (E' := D.2) (E := E')) ((C.(data) D.1).(cohPaintings) D.2 E').
+
+Definition mkCohPaintings' E E' : CohPaintingTypes (p := p.+1) (cohs := mkCohFrames' E) (TopCoh (E := E')).
+(* Needs computation to typecheck
+  mkCohPaintings ((C.(data) D.1).(cohFrames) D.2)
+   (TopCoh (E' := _) (E := _)) ((C.(data) D.1).(cohPaintings) D.2 _). *)
+Admitted.
 
 End νTypeData.
 
@@ -544,6 +558,7 @@ Instance mkνType p {C: νType p}: νType p.+1.
   now eapply mkDeps'.
   now apply mkRestrPaintings'.
   now apply mkCohFrames'.
+  now apply mkCohPaintings'.
 Defined.
 
 End νType.
