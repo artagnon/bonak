@@ -193,11 +193,6 @@ Defined.
 (* Example: if Prev := EmptyPrev, extras'' := [], extraRestrs' := ([],E)
    mkRestrFrameTypes := [unit -> unit] *)
 
-Definition mkRestrFrameTypesAux `(deps: FormDeps p n)
-  (extraDeps: FormDepsExtension deps) painting' :=
-  (mkRestrFrameTypesAndFrames' (n := n) (mkFrames' deps)
-    painting').(RestrFrameTypesDef).
-
 Definition mkRestrFrameTypes `(deps: FormDeps p n)
   (extraDeps: FormDepsExtension deps) :=
   (mkRestrFrameTypesAndFrames' (n := n) (mkFrames' deps)
@@ -211,16 +206,6 @@ Definition mkPrevRestrFrameTypes `(deps: FormDeps p n)
 (* Example: if Prev := EmptyPrev, extras'' := [], extraRestrs' := ([],E)
    mkFrame [restr: unit -> unit] := [unit; \().∀ω.E(restr())]
       (presented as a Sigma-type, i.e. {d:unit & ∀ω.E(restr())} *)
-
-Definition mkNextDepsAux `{deps: FormDeps p n}
-  (extraDeps: FormDepsExtension deps)
-  painting'
-  (restrFrames: mkRestrFrameTypesAux deps extraDeps painting') :=
-{|
-  _frames'' := mkFrames' deps;
-  _paintings'' := painting';
-  _restrFrames' := restrFrames;
-|}.
 
 Definition mkNextDeps `{deps: FormDeps p n}
   (extraDeps: FormDepsExtension deps)
@@ -468,32 +453,7 @@ Class νTypeAux p := {
   restrPaintings' E': RestrPaintingTypes' deps (TopRestrFrames E');
   cohFrames E': mkCohFrameTypes (restrPaintings' E');
 }.
-  (* frame {E'} p {Hp: p <~ n.+2}: HSet :=
-    Frame n frame'' painting'' restrFrames' E' restrPainting'
-    cohFrames p (Hp := Hp);
-  restrFrame {E'} p {Hp: p.+1 <~ n.+2} q {Hpq: p <~ q} {Hq: q <~ n.+1}
-    ε (d: frame p): frame' p :=
-    RestrFrameFromFull n frame'' painting'' restrFrames' E' restrPainting'
-    cohFrames p q ε d (Hp := Hp) (Hpq := Hpq) (Hq := Hq);
-  cohFrameType {E'} {p} {Hp: p.+2 <~ n.+2} {r q} {Hpq: p.+1 <~ q.+1}
-    {Hpr: p.+1 <~ r.+1} {Hrq: r.+1 <~ q.+1} {Hr: r.+1 <~ n.+1}
-    {Hq: q.+1 <~ n.+1} {ε ω d} :=
-    restrFrame' p q ε (restrFrame p r ω d
-      (Hp := leI_down Hp) (Hpq := leI_lower_both Hpr) (Hq := leI_down Hr)) =
-    restrFrame' p r ω (restrFrame p q.+1 ε d);
-  cohFrame {E'} {p} {Hp: p.+2 <~ n.+2} r q {Hpq: p.+1 <~ q.+1}
-    {Hpr Hrq Hr Hq} {ε ω} d:
-    cohFrameType (Hpq := Hpq) (Hrq := Hrq) :=
-    CohFrame n frame'' painting'' restrFrames' E' restrPainting'
-    cohFrames (Hp := Hp) (Hpr := Hpr) (Hrq := Hrq)
-    (Hr := Hr) (Hq := Hq) (ε := ε) (ω := ω) r q d;
-  painting {E'} p {Hp: p <~ n.+2} {E} (d: frame p): HSet :=
-    Painting n frame'' painting'' restrFrames' E'
-    restrPainting' cohFrames p d (Hp := Hp) (E := E);
-  restrPainting {E'} p q {Hpq: p <= q} {Hq: q <= n.+1} ε {E} {d: frame p}:
-    painting p d -> painting' p (restrFrame p q ε d) :=
-    RestrPainting n frame'' painting'' restrFrames' E' restrPainting'
-    cohFrames p q ε (Hp := Hp) (Hpq := Hpq) (Hq := Hq) (E := E) d;
+(*
   cohPainting {E'} {p} {Hp: p.+1 <~ n.+1} r q {Hpq: p.+1 <~ q.+1}
     {Hpr: p.+2 <~ r.+2}
     {Hrq: r <~ q} {Hr: r.+2 <~ n.+2} {Hq: q.+1 <~ n.+1} {ε ω E}
