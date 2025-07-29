@@ -375,6 +375,12 @@ Inductive CohFramesExtension {p}: forall `(deps: FormDeps p n)
      coh in forall r q Hrq Hq ε ω d, dep.(_restrFrame') q Hq ε (restrFrame cs r _ _ d) = _ (* makes it ~3x faster *)) ->
       CohFramesExtension (n := n.+1) deps (dep; extraDeps) restrPaintings' cohs.
 
+Declare Scope extra_cohs_scope.
+Delimit Scope extra_cohs_scope with extracohs.
+Bind Scope extra_cohs_scope with CohFramesExtension.
+Notation "( x ; y )" := (AddCohFrame x y)
+  (at level 0, format "( x ; y )"): extra_cohs_scope.
+
 Definition mkNextDep `{deps: FormDeps p n.+1}
   (dep: FormDep deps)
   (extraDeps: FormDepsExtension (deps; dep))
@@ -459,7 +465,7 @@ destruct p.
   red; intros * c. simpl.
   eapply (mkRestrPainting cohs extraCohs q ε), c.
 - esplit.
-  + apply (mkRestrPaintings p _ _ _ restrPaintings'.1 cohs.1 (AddCohFrame cohs.2 extraCohs)).
+  + apply (mkRestrPaintings p _ _ _ restrPaintings'.1 cohs.1 (cohs.2; extraCohs)%extracohs).
   + red; intros * c. simpl. eapply (mkRestrPainting cohs extraCohs), c.
 Defined.
 
