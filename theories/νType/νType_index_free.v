@@ -433,6 +433,22 @@ destruct p.
   + red; intros * c. simpl. eapply (mkRestrPainting cohs extraCohs), c.
 Defined.
 
+Fixpoint mkCohFrames `{deps: FormDeps p n}
+  {extraDeps: FormDepsExtension deps}
+  {restrPaintings': RestrPaintingTypes' deps extraDeps}
+  (cohs: mkCohFrameTypes restrPaintings')
+  (extraCohs: CohFramesExtension deps extraDeps restrPaintings' cohs) {struct p}:
+  mkCohFrameTypes (mkRestrPaintings cohs extraCohs).
+destruct p.
+- red. simpl.
+  esplit. exact tt.
+  intros. reflexivity.
+- unshelve esplit.
+  + apply (mkCohFrames p _ _ _ restrPaintings'.1 cohs.1 (cohs.2; extraCohs)%extracohs).
+  + intros. unshelve eapply eq_existT_curried.
+     * eapply ((mkCohFrames p _ _ _ restrPaintings'.1 cohs.1 (cohs.2; extraCohs)%extracohs).2 r.+1 q.+1 _ _ ε ω).
+Admitted.
+
 Class νTypeAux p := {
   deps: FormDeps p 0;
   restrPaintings' E': RestrPaintingTypes' deps (TopRestrFrames E');
@@ -477,6 +493,8 @@ Definition mkRestrPaintings' E': RestrPaintingTypes' _ _ :=
   mkRestrPaintings
   ((C.(data) D.1).(cohFrames) D.2) (TopCoh (E' := D.2) (E := E')).
 
+Definition mkCohFrames' E' : mkCohFrameTypes (mkRestrPaintings' E') :=
+  mkCohFrames ((C.(data) D.1).(cohFrames) D.2) (TopCoh (E' := D.2) (E := E')).
 
 End νTypeData.
 
@@ -487,5 +505,7 @@ Instance mkνType p {C: νType p}: νType p.+1.
   intro D. unshelve esplit.
   now eapply mkDeps.
   now apply mkRestrPaintings'.
-  admit.
-Admitted.
+  now apply mkCohFrames'.
+Defined.
+
+End νType.
