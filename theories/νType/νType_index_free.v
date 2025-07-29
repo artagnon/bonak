@@ -463,28 +463,20 @@ Class νType p := {
 (** Extending the initial prefix *)
 Definition mkPrefix'' p {C: νType p}: Type :=
   { D: C.(prefix'') &T
-    mkFrame' (n := O) (C.(data) D).(restrFrames') -> HSet }.
+    mkFrame' (n := O) (C.(data) D).(deps) -> HSet }.
 
 Section νTypeData.
 Variable p: nat.
 Variable C: νType p.
 Variable D: mkPrefix'' p.
 
-Definition mkFrameGen: FrameGen p.+1 :=
-  mkFrames' (C.(data) D.1).(restrFrames').
+Definition mkDeps: FormDeps p.+1 0 :=
+  mkFullNextDeps _ ((C.(data) D.1).(cohFrames) D.2).
 
-Definition mkPaintingGen: PaintingGen p.+1 mkFrameGen :=
-  mkPaintings' (C.(data) D.1).(restrFrames') TopPrev (TopRestrFrames D.2).
+Definition mkRestrPaintings' E': RestrPaintingTypes' _ _ :=
+  mkRestrPaintings
+  ((C.(data) D.1).(cohFrames) D.2) (TopCoh (E' := D.2) (E := E')).
 
-Definition mkRestrFrames': mkRestrFrameTypes' :=
-  mkRestrFrames (C.(data) D.1).(restrFrames') TopPrev (TopRestrFrames D.2)
-  ((C.(data) D.1).(restrPaintings') D.2)
-  ((C.(data) D.1).(cohFrames) D.2).
-
-Definition mkRestrPaintings' E': RestrPaintingTypes' :=
-  mkRestrPaintings (C.(data) D.1).(restrFrames') TopPrev (TopRestrFrames D.2)
-  ((C.(data) D.1).(restrPaintings') D.2)
-  ((C.(data) D.1).(cohFrames) D.2) (TopCoh (E := E')).
 
 End νTypeData.
 
@@ -492,10 +484,8 @@ End νTypeData.
 Instance mkνType p {C: νType p}: νType p.+1.
   unshelve esplit.
   now exact (mkPrefix'' p).
-  unshelve esplit.
-  now eapply mkFrameGen.
-  now eapply mkPaintingGen.
-  now apply mkRestrFrames'.
+  intro D. unshelve esplit.
+  now eapply mkDeps.
   now apply mkRestrPaintings'.
   admit.
 Admitted.
