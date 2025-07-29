@@ -467,32 +467,6 @@ Fixpoint CohPaintingTypes {p}:
          CohPaintingType cohs.2 extraCohs }
   end.
 
-Definition mkNextNextFrames `{deps: FormDeps p n}
-  (extraDeps: FormDepsExtension deps)
-  {restrPaintings': RestrPaintingTypes' extraDeps}
-  {cohs: mkCohFrameTypes restrPaintings'}
-  :=
-  mkFrames' (mkFullNextDeps restrPaintings' cohs).
-
-Definition mkNextNextPaintings `{deps: FormDeps p n}
-  (extraDeps: FormDepsExtension deps)
-  {restrPaintings': RestrPaintingTypes' extraDeps}
-  {cohs: mkCohFrameTypes restrPaintings'}
-  (extraCohs: CohFramesExtension deps extraDeps restrPaintings' cohs)
-  :=
-  mkPaintings' (mkNextExtraDeps extraCohs).
-
-(* Definition mkFullNextNextDeps `{deps: FormDeps p n}
-  (extraDeps: FormDepsExtension deps)
-  {restrPaintings': RestrPaintingTypes' extraDeps}
-  {cohs: mkCohFrameTypes restrPaintings'}
- :=
-{|
-  _frames'' := mkNextNextFrames deps;
-  _paintings'' := mkNextNextPaintings extraDeps;
-  _restrFrames' := mkNextRestrFrames;
-|}. *)
-
 Fixpoint mkCohFrames `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' extraDeps}
