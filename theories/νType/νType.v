@@ -506,7 +506,7 @@ Inductive CohPaintingsExtension {p}: forall `{deps: FormDeps p n}
 Declare Scope extra_cohps_scope.
 Delimit Scope extra_cohps_scope with extracohps.
 Bind Scope extra_cohps_scope with CohPaintingsExtension.
-Notation "( x ; y )" := (AddCohPainting x y)
+Notation "( x ; y )" := (AddCohPainting _ x y)
   (at level 0, format "( x ; y )"): extra_cohps_scope.
 
 Axiom F: False.
@@ -558,19 +558,17 @@ Proof.
         (cohPaintings; cohPainting) extraCohPaintings).
 Defined.
 
-Fixpoint mkCohPainting `{deps: FormDeps p n.+1}
-  {dep: FormDep deps}
-  {extraDeps: FormDepsExtension (deps; dep)}
-  {restrPaintings': RestrPaintingTypes' (dep; extraDeps)}
-  {restrPainting': RestrPaintingType' dep extraDeps}
+(* Fixpoint mkCohPainting `{deps: FormDeps p n}
+  {extraDeps: FormDepsExtension deps}
+  {restrPaintings': RestrPaintingTypes' extraDeps}
   {cohs: mkCohFrameTypes restrPaintings'}
-  {coh: mkCohFrameType cohs}
-  (extraCohs: CohFramesExtension (deps := (deps; dep))
-    (restrPaintings' := (restrPaintings'; restrPainting'))
-    (cohs; coh)): mkCohPaintingType extraCohs.
+  (extraCohs: CohFramesExtension cohs)
+  {cohPaintings: mkCohPaintingTypes extraCohs}
+  (extraCohPaintings: CohPaintingsExtension cohPaintings):
+  mkCohPaintingType (p := p.+1) (mkExtraCohs extraCohs extraCohPaintings).2.
 Proof.
   red; intros. admit.
-Admitted.
+Admitted. *)
 
 Fixpoint mkCohPaintings `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
@@ -584,9 +582,9 @@ Proof.
   destruct p.
   - unshelve esplit. now exact tt.
     red; intros *. admit.
-  - unshelve esplit. (* now apply (mkCohPaintings p n.+1 _ _ _ cohs.1
+  - unshelve esplit. now apply (mkCohPaintings p n.+1 _ _ _ cohs.1
       (cohs.2; extraCohs)%extracohs cohPaintings.1
-      (cohPaintings.2; extraCohPaintings)%extracohps). *) admit.
+      (cohPaintings.2; extraCohPaintings)%extracohps).
     red; intros *. (* now eapply (mkCohPainting extraCohs) *) admit.
 Admitted.
 
