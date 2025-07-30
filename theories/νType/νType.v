@@ -468,6 +468,41 @@ Fixpoint CohPaintingTypes {p}:
          CohPaintingType cohs.2 extraCohs }
   end.
 
+Inductive CohPaintingsExtension {p}: forall `{deps: FormDeps p n}
+  {extraDeps: FormDepsExtension deps}
+  {restrPaintings': RestrPaintingTypes' extraDeps}
+  {cohs: mkCohFrameTypes restrPaintings'}
+  {extraCohs: CohFramesExtension cohs},
+  CohPaintingTypes extraCohs -> Type :=
+| TopCohPainting
+    {deps}
+    {E': mkFrame' deps -> HSet}
+    {restrPaintings'}
+    {cohs: mkCohFrameTypes restrPaintings'}
+    (extraCohs: CohFramesExtension cohs)
+    {E: mkFrame _ (mkRestrFrames restrPaintings' cohs) -> HSet}
+    (cohPaintings: CohPaintingTypes TopCoh)
+    : CohPaintingsExtension (n := 0) (extraDeps := TopRestrFrames E')
+      (extraCohs := TopCoh (E := E)) cohPaintings
+| AddCohPainting {n deps dep extraDeps}
+    {restrPaintings': RestrPaintingTypes' (dep; extraDeps)}
+    {restrPainting': RestrPaintingType' dep extraDeps}
+    {cohs: mkCohFrameTypes restrPaintings'}
+    {coh: mkCohFrameType cohs}
+    {extraCohs: CohFramesExtension (extraDeps := extraDeps)
+      (restrPaintings' := (restrPaintings'; restrPainting')) (cohs; coh)}
+    (cohPaintings: CohPaintingTypes (extraDeps := (dep; extraDeps))
+      (restrPaintings' := restrPaintings') (coh; extraCohs))
+    (cohPainting: CohPaintingType (extraDeps := extraDeps)
+      (restrPaintings' := restrPaintings')
+      (restrPainting' := restrPainting') coh extraCohs):
+    CohPaintingsExtension (deps := (deps; dep))
+      (restrPaintings' := (restrPaintings'; restrPainting'))
+      (cohs := (cohs; coh))
+      (extraCohs := extraCohs) (cohPaintings; cohPainting) ->
+      CohPaintingsExtension (n := n.+1) (extraDeps := (dep; extraDeps))
+      (extraCohs := (coh; extraCohs)) cohPaintings.
+
 Fixpoint mkCohFrames `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' extraDeps}
@@ -483,18 +518,29 @@ destruct p.
     + now apply (mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
       (cohs.2; extraCohs)%extracohs cohPaintings.1).
     + intros. unshelve eapply eq_existT_curried.
-      * eapply ((mkCohFrames p _ _ _ restrPaintings'.1 cohs.1 (cohs.2; extraCohs)%extracohs cohPaintings.1).2 r.+1 q.+1 _ _ ε ω).
+      * eapply ((mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
+        (cohs.2; extraCohs)%extracohs cohPaintings.1).2 r.+1 q.+1 _ _ ε ω).
       * (* prove a reorganization of the cohFrame using UIP *)
         (* then: eapply (cohPaintings.2 r q _ _ ε ω). *)
 Admitted.
 
-Definition mkExtraCohs `{deps: FormDeps p n}
+Fixpoint mkExtraCohs `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' extraDeps}
   {cohs: mkCohFrameTypes restrPaintings'}
   (extraCohs: CohFramesExtension cohs)
-  (cohPaintings: CohPaintingTypes extraCohs):
+  (cohPaintings: CohPaintingTypes extraCohs)
+  (extraCohPaintings: CohPaintingsExtension cohPaintings):
   CohFramesExtension (mkCohFrames cohs extraCohs cohPaintings).
+Proof.
+  destruct extraCohPaintings.
+  - now constructor.
+  - unshelve econstructor.
+    + now apply (mkCohFrames (extraDeps := extraDeps)
+        (restrPaintings' := (restrPaintings'; restrPainting'))
+        (cohs; coh) extraCohs (cohPaintings; cohPainting)).2.
+    + now apply (mkExtraCohs p.+1 n (deps; dep)%deps extraDeps
+        (restrPaintings'; restrPainting') (cohs; coh) extraCohs).
 Admitted.
 
 Definition mkCohPaintings `{deps: FormDeps p n}
