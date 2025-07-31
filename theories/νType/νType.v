@@ -575,6 +575,9 @@ Inductive CohPaintingsExtension {p}: forall `{deps: FormDeps p n}
     (extraCohs: CohFramesExtension cohs)
     {E: mkFrame _ (mkRestrFrames restrPaintings' cohs) -> HSet}
     (cohPaintings: mkCohPaintingTypes (TopCohFrame E))
+    (NextE: mkFrame (TopRestrFrames E)
+       (mkRestrFrames (mkRestrPaintings cohs (TopCohFrame E))
+          (mkCohFrames cohs (TopCohFrame E) cohPaintings)) -> HSet)
     : CohPaintingsExtension (n := 0) (extraDeps := TopRestrFrames E')
       (extraCohs := TopCohFrame E) cohPaintings
 | AddCohPainting {n deps dep extraDeps}
@@ -612,7 +615,7 @@ Fixpoint mkExtraCohs `{deps: FormDeps p n}
   CohFramesExtension (mkCohFrames cohs extraCohs cohPaintings).
 Proof.
   destruct extraCohPaintings.
-  - now constructor.
+  - constructor. apply NextE.
   - unshelve econstructor.
     + now apply (mkRestrPaintings (extraDeps := extraDeps)
         (restrPaintings' := (restrPaintings'; restrPainting'))
@@ -696,12 +699,9 @@ Definition mkCohFrames' E': mkCohFrameTypes (mkRestrPaintings' E') :=
   mkCohFrames ((C.(data) D.1).(cohFrames) D.2)
    (TopCohFrame E') ((C.(data) D.1).(cohPaintings) D.2 E').
 
-Definition mkCohPaintings' E E': mkCohPaintingTypes (p := p.+1)
-  (cohs := mkCohFrames' E) (TopCohFrame (E := E')).
-(* Needs computation to typecheck
-  mkCohPaintings ((C.(data) D.1).(cohFrames) D.2)
-   (TopCoh (E' := _) (E := _)) ((C.(data) D.1).(cohPaintings) D.2 _). *)
-Admitted.
+Definition mkCohPaintings' E' E: mkCohPaintingTypes (cohs := mkCohFrames' E') (TopCohFrame _)  :=
+ mkCohPaintings
+   (TopCohFrame E') (TopCohPainting (TopCohFrame E') _ E).
 
 End νTypeData.
 
