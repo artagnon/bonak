@@ -407,7 +407,7 @@ Inductive CohFramesExtension {p}: forall `{deps: FormDeps p n}
     {E': mkFrame' deps -> HSet}
     {restrPaintings'}
     {cohs: mkCohFrameTypes _}
-    {E: mkFrame _ (mkRestrFrames restrPaintings' cohs) -> HSet}
+    (E: mkFrame _ (mkRestrFrames restrPaintings' cohs) -> HSet)
     : CohFramesExtension (n := 0) (extraDeps := TopRestrFrames E') cohs
 | AddCohFrame {n deps dep extraDeps}
     {restrPaintings': RestrPaintingTypes' (dep; extraDeps)}
@@ -574,9 +574,9 @@ Inductive CohPaintingsExtension {p}: forall `{deps: FormDeps p n}
     {cohs: mkCohFrameTypes restrPaintings'}
     (extraCohs: CohFramesExtension cohs)
     {E: mkFrame _ (mkRestrFrames restrPaintings' cohs) -> HSet}
-    (cohPaintings: mkCohPaintingTypes TopCohFrame)
+    (cohPaintings: mkCohPaintingTypes (TopCohFrame E))
     : CohPaintingsExtension (n := 0) (extraDeps := TopRestrFrames E')
-      (extraCohs := TopCohFrame (E := E)) cohPaintings
+      (extraCohs := TopCohFrame E) cohPaintings
 | AddCohPainting {n deps dep extraDeps}
     {restrPaintings': RestrPaintingTypes' (dep; extraDeps)}
     {restrPainting': RestrPaintingType' dep extraDeps}
@@ -664,8 +664,8 @@ Class νTypeAux p := {
   deps: FormDeps p 0;
   restrPaintings' E': RestrPaintingTypes' (TopRestrFrames E');
   cohFrames E': mkCohFrameTypes (restrPaintings' E');
-  cohPaintings E' E: mkCohPaintingTypes (cohs := cohFrames E')
-    (TopCohFrame (E' := E') (E := E));
+  cohPaintings E' E : mkCohPaintingTypes (cohs := cohFrames E')
+    (TopCohFrame E);
 }.
 
 Class νType p := {
@@ -690,12 +690,11 @@ Definition mkDeps': FormDeps p.+1 0 :=
   mkFullDeps _ ((C.(data) D.1).(cohFrames) D.2).
 
 Definition mkRestrPaintings' E': RestrPaintingTypes' _ :=
-  mkRestrPaintings
-  ((C.(data) D.1).(cohFrames) D.2) (TopCohFrame (E' := D.2) (E := E')).
+  mkRestrPaintings ((C.(data) D.1).(cohFrames) D.2) (TopCohFrame E').
 
 Definition mkCohFrames' E': mkCohFrameTypes (mkRestrPaintings' E') :=
   mkCohFrames ((C.(data) D.1).(cohFrames) D.2)
-   (TopCohFrame (E' := D.2) (E := E')) ((C.(data) D.1).(cohPaintings) D.2 E').
+   (TopCohFrame E') ((C.(data) D.1).(cohPaintings) D.2 E').
 
 Definition mkCohPaintings' E E': mkCohPaintingTypes (p := p.+1)
   (cohs := mkCohFrames' E) (TopCohFrame (E := E')).
