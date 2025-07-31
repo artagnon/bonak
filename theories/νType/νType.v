@@ -15,11 +15,15 @@ Remove Printing Let prod.
 Section νType.
 Variable arity: HSet.
 
+(** The type of lists [frame(p+n,0);...;frame(p+n,p-1)] for arbitrary n *)
+
 Fixpoint FrameGen p: Type :=
   match p with
   | 0 => unit
   | S p => { frames'': FrameGen p &T HSet }
   end.
+
+(** The type of lists [painting(p+n,0);...;painting(p+n,p-1)] for arbitrary n *)
 
 Fixpoint PaintingGen p: FrameGen p -> Type :=
   match p with
@@ -42,23 +46,27 @@ Inductive ExtensionGen {p frames''} {paintings'': PaintingGen p frames''}:
    ExtensionGen (frames'' := frames'') (paintings'' := paintings'') (n := n.+1).
 
 (**
-Build the list of pairs of the type RestrFrameTypesDef(n+1,p) of
-restrFrame(n+1,p) for p <= n and of the definition of frame(n+1,p),
-for p <= n+1, in function of effective RestrFrames of these types.
+For p and n be given, and assuming [frame(p-1+n,0);...;frame(p-1+n,p-1)] and
+[painting(p-1+n,0);...;painting(p-1+n,p-1)], we build the list of pairs:
+- of the types RestrFrameTypes(p+n,p) of the list
+  [restrFrame(p+n,0);...;restrFrame(p+n,p-1)]
+  (represented as an inhabitant of a sigma-type
+   {R:RestrFrameTypes(p+n,0) & ... & RestrFrameTypes(p+n,p-1)})
+- and of the list [frame(p+n,0);...;frame(p+n,p)] in function of effective
+  restrFrames of type RestrFrameTypes(p+n,p)
 
-That is, we build for p <= n.+1:
-  p = 0 : { restrFrameTypes = unit ; frame(n+1,0)(restrFrames_{0..0-1}) }
-  p = 1 : { restrFrameTypes = {_:unit & restrFrameType0 ;
-    frame(n+1,1)(restrFrames_{0..0}) }
+That is, we build:
+  p = 0 : { RestrFrameTypes := unit ;
+                  (which denotes the empty list of restrFrameTypes)
+                Frames(n,0..0)(restrFrames^n_{0..0-1}) := [unit]
+                  (representing lists by Sigma-types) }
+  p = 1 : { RestrFrameTypes = {_:unit & restrFrameType(1+n,0)} ;
+                  (thus denoting the singleton list [restrFrameType(1+n,0])
+                Frames(1+n,0..1)(restrFrames(1+n,0..0) :=
+                  [unit;{d:Frame(1+n,0)&Painting(1+n,0)(restrFrame(1+n,0)(d)}] }
   ...
-  p     : { restrFrameTypes = {RestrFrameType0 ... restrFrameType_{p-1}} ;
-    frame_p(restrFrames_{0..p-1}) }
-  n+1   : { restrFrameTypes = {RestrFrameType0 ... restrFrameType_n} ;
-    frame(n+1,n+1)(restrFrames_{0..n})
-
-Example: if p = 0
-  RestrFrameTypesDef := []
-  FrameDef [] := [unit] (presented as a Sigma-type, i.e. as "unit")
+  p     : { RestrFrameTypes = {RestrFrameType(p+n,0) ... RestrFrameType(p+n,p-1)} ;
+              Frame(p+n,p)(restrFrames(p+n,0..p-1) := [frame(p+n,0);...;frame(p+n,p)] }
 *)
 Fixpoint mkRestrFrameTypesAndFrames' {p n}: forall
   frames'' (paintings'': PaintingGen p frames''), RestrFrameTypeBlock p :=
@@ -188,18 +196,50 @@ Proof.
   destruct p; now easy.
 Defined.
 
-(* Example: if p := 0, extraDeps := ([],E')
-   mkRestrFrameTypes := [unit -> unit] *)
+(** Assuming [frame(p-1+n,0);...;frame(p-1+n,p-1)] and
+       [painting(p-1+n,0);...;painting(p-1+n,p-1)] and
+       [restrFrame(p+n,0);...;restrFrame(p+n,p-1)] (forming a "deps"),
+     and assuming [frame(p-1+n,p);...;frame(p-1+n,p-1+n] and
+       [painting(p-1+n,p);...;painting(p-1+n,p-1+n)] and
+       [restrFrame(p+n,p);...;restrFrame(p+n,p-1+n)] as well as
+       some E':frame(p+n,p+n) -> HSet (altogether forming an "extraDeps"),
+     we build the list of types (represented as a Sigma-type) of restrFrames
+     of the following form:
+       [restrFrame(p+1+n,0);...;restrFrame(p+1+n,p)]
+     (represented as an inhabitant of the Sigma-type)
+
+     Example: if p := 0, extraDeps := ([],E')
+     mkRestrFrameTypes := [unit -> unit] *)
 
 Definition mkRestrFrameTypes `(deps: FormDeps p n)
   (extraDeps: FormDepsExtension deps) :=
-  (mkRestrFrameTypesAndFrames' (n := n) (mkFrames' deps)
+  (mkRestrFrameTypesAndFrames' (p := p.+1) (n := n) (mkFrames' deps)
     (mkPaintings' extraDeps)).(RestrFrameTypesDef).
+
+(* Same, but restricted to p-1, that is, the types of:
+    [restrFrame(p+1+n,0);...;restrFrame(p+1+n,p-1)] *)
 
 Definition mkPrevRestrFrameTypes `(deps: FormDeps p n)
   (extraDeps: FormDepsExtension deps) :=
   (mkRestrFrameTypesAndFrames' (n := n.+1) (mkFrames' deps).1
     (mkPaintings' extraDeps).1).(RestrFrameTypesDef).
+
+(** We combining mkFrames', mkPaintings' and an assumed restrFrames.
+     That is, from:
+       [frame(p-1+n,0);...;frame(p-1+n,p-1)]
+       [painting(p-1+n,0);...;painting(p-1+n,p-1)]
+       [restrFrame(p+n,0);...;restrFrame(p+n,p-1)]
+     (forming a "deps"), and
+       [frame(p-1+n,p);...;frame(p-1+n,p-1+n]
+       [painting(p-1+n,p);...;painting(p-1+n,p-1+n)]
+       [restrFrame(p+n,p);...;restrFrame(p+n,p-1+n)]
+       E':frame(p+n,p+n) -> HSet
+     (forming an "extraDeps"), and
+       [restrFrame(p+1+n,0);...;restrFrame(p+1+n,p)],
+     we form:
+       [frame(p+n,0);...;frame(p+n,p)] (built by mkFrames')
+       [painting(p+n,0);...;painting(p+n,p)] (built by mkPaintings')
+       [restrFrame(p+n,0);...;restrFrame(p+n,p)] *)
 
 Definition mkDeps `{deps: FormDeps p n}
   (extraDeps: FormDepsExtension deps)
@@ -210,10 +250,19 @@ Definition mkDeps `{deps: FormDeps p n}
   _restrFrames' := restrFrames;
 |}.
 
+(** Thus being able to build frame(p+1+n,p+1) from
+     the same assumptions *)
+
 Definition mkFrame `{deps: FormDeps p n}
   (extraDeps: FormDepsExtension deps)
   (restrFrames: mkRestrFrameTypes deps extraDeps) :=
   mkFrame' (mkDeps extraDeps restrFrames).
+
+(** By restriction, we can thus build frame(p+1+n,p).
+    Note that mkPrevFrame could not be built by calling
+    mkFrame' on p and n+1 (rather than on p+1 and n, then
+    restricting) because it would require knowing deps for
+    p and n+1 instead of only p and n *)
 
 Definition mkPrevFrame `{deps: FormDeps p n}
   (extraDeps: FormDepsExtension deps)
@@ -243,6 +292,12 @@ Fixpoint RestrPaintingTypes' {p}:
     { R: RestrPaintingTypes' (n := n.+1) (deps.(2); extraDeps) &T
       RestrPaintingType' (p := p) deps.(2) extraDeps }
   end.
+
+(** Under previous assumptions, and, additionally:
+      [restrPainting(p+n,0);...;restrPainting(p+n,p-1)]
+    we mutually build the pair of:
+    - the list of types for [cohFrame(p+1+n,0);...;cohFrame(p+1+n,p-1)]
+    - definitions of [restrFrame(p+1+n,0);...;restrFrame(p+1+n,p)] *)
 
 #[local]
 Instance mkCohFrameTypesAndRestrFrames:
@@ -305,6 +360,15 @@ Definition mkRestrFrames `{deps: FormDeps p n}
   (restrPaintings': RestrPaintingTypes' extraDeps) :=
   (mkCohFrameTypesAndRestrFrames deps extraDeps
     restrPaintings').(RestrFramesDef).
+
+(* Tying the loop: we type mkRestrFrame((p+1)+n,p) knowing mkRestrFrames(p+(1+n),0..p-1)
+    Note that even if mkRestrFrames((p+1)+n,p) : mkRestrFrameTypes((p+1)+n,p),
+    we don't have mkRestrFrame((p+1)+n,p): mkRestrFrameType((p+1)+n,p), because
+    mkRestrFrameType((p+1)+n,p) assumes restrFrames((p+1)+n,0..p) which would be
+    circular.
+    Instead, we only require restrFrames(p+(1+n),0..p-1) then build the type of
+    restrFrame(p+1+n,p) as: Frame(p+(1+n),p) -> Frame(p+n,p)
+    At the end, with only the addition of restrPaintings' and cohs, the loop is gone *)
 
 Definition mkRestrFrame `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
@@ -393,6 +457,10 @@ Definition mkPrevPainting `{deps: FormDeps p n}
     ((mkFullDeps restrPaintings' cohs).(2);
       mkExtraDeps extraCohs)%extradeps:
     mkPrevFrame (p := p) extraDeps (mkRestrFrames restrPaintings' cohs) -> HSet.
+
+(* Note: we could type mkRestrPainting(p+1+n,p) of type
+   RestrPaintingType(p+1+n,p) up to using unfoldPaintingProj at other places.
+   It is more convenient to refer to mkPrevPainting to later state cohPainting *)
 
 Fixpoint mkRestrPainting `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
