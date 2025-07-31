@@ -536,6 +536,31 @@ Fixpoint mkCohPaintingTypes {p}:
          mkCohPaintingType extraCohs }
   end.
 
+Axiom F: False.
+
+Fixpoint mkCohFrames `{deps: FormDeps p n}
+  {extraDeps: FormDepsExtension deps}
+  {restrPaintings': RestrPaintingTypes' extraDeps}
+  (cohs: mkCohFrameTypes restrPaintings')
+  (extraCohs: CohFramesExtension cohs)
+  (cohPaintings: mkCohPaintingTypes extraCohs)
+  {struct p}:
+  mkCohFrameTypes (mkRestrPaintings cohs extraCohs).
+Proof.
+  destruct p.
+  - red; simpl. unshelve esplit. now exact tt. now intros.
+  - unshelve esplit.
+    + now apply (mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
+      (cohs.2; extraCohs)%extracohs cohPaintings.1).
+    + intros. unshelve eapply eq_existT_curried.
+      * now eapply ((mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
+        (cohs.2; extraCohs)%extracohs cohPaintings.1).2 r.+1 q.+1
+        (⇑ Hrq) _ ε ω).
+      * (* prove a reorganization of the cohFrame using UIP *)
+        (* then: eapply (cohPaintings.2 r q _ _ ε ω). *)
+        now elim F.
+Defined.
+
 Inductive CohPaintingsExtension {p}: forall `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' extraDeps}
@@ -576,31 +601,6 @@ Delimit Scope extra_cohps_scope with extracohps.
 Bind Scope extra_cohps_scope with CohPaintingsExtension.
 Notation "( x ; y )" := (AddCohPainting _ x y)
   (at level 0, format "( x ; y )"): extra_cohps_scope.
-
-Axiom F: False.
-
-Fixpoint mkCohFrames `{deps: FormDeps p n}
-  {extraDeps: FormDepsExtension deps}
-  {restrPaintings': RestrPaintingTypes' extraDeps}
-  (cohs: mkCohFrameTypes restrPaintings')
-  (extraCohs: CohFramesExtension cohs)
-  (cohPaintings: mkCohPaintingTypes extraCohs)
-  {struct p}:
-  mkCohFrameTypes (mkRestrPaintings cohs extraCohs).
-Proof.
-  destruct p.
-  - red; simpl. unshelve esplit. now exact tt. now intros.
-  - unshelve esplit.
-    + now apply (mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
-      (cohs.2; extraCohs)%extracohs cohPaintings.1).
-    + intros. unshelve eapply eq_existT_curried.
-      * now eapply ((mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
-        (cohs.2; extraCohs)%extracohs cohPaintings.1).2 r.+1 q.+1
-        (⇑ Hrq) _ ε ω).
-      * (* prove a reorganization of the cohFrame using UIP *)
-        (* then: eapply (cohPaintings.2 r q _ _ ε ω). *)
-        now elim F.
-Defined.
 
 Fixpoint mkExtraCohs `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
