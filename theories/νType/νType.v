@@ -626,17 +626,21 @@ Proof.
         (cohPaintings; cohPainting) extraCohPaintings).
 Defined.
 
-(* Fixpoint mkCohPainting `{deps: FormDeps p n}
+Fixpoint mkCohPainting `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' extraDeps}
   {cohs: mkCohFrameTypes restrPaintings'}
   (extraCohs: CohFramesExtension cohs)
   {cohPaintings: mkCohPaintingTypes extraCohs}
   (extraCohPaintings: CohPaintingsExtension cohPaintings):
-  mkCohPaintingType (p := p.+1) (mkExtraCohs extraCohs extraCohPaintings).2.
+  mkCohPaintingType
+     (dep := (mkFullDeps (deps := deps) (extraDeps := extraDeps) restrPaintings' cohs).(2))
+     (mkExtraCohs extraCohs extraCohPaintings).
 Proof.
-  red; intros. admit.
-Admitted. *)
+  red; intros. destruct extraCohPaintings.
+  - admit.
+  - admit.
+Admitted.
 
 Fixpoint mkCohPaintings `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
@@ -649,12 +653,12 @@ Fixpoint mkCohPaintings `{deps: FormDeps p n}
 Proof.
   destruct p.
   - unshelve esplit. now exact tt.
-    red; intros *. admit.
+    red; intros *. now apply (mkCohPainting extraCohs extraCohPaintings).
   - unshelve esplit. now apply (mkCohPaintings p n.+1 _ _ _ cohs.1
       (cohs.2; extraCohs)%extracohs cohPaintings.1
       (cohPaintings.2; extraCohPaintings)%extracohps).
-    red; intros *. (* now eapply (mkCohPainting extraCohs) *) admit.
-Admitted.
+    red; intros *. now apply (mkCohPainting extraCohs extraCohPaintings).
+Defined.
 
 Class νTypeAux p := {
   deps: FormDeps p 0;
