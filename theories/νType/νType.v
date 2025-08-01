@@ -1834,6 +1834,8 @@ Proof.
   apply functional_extensionality_dep. intro ω.
   repeat rewrite <-map_subst_app.
   unfold RestrLayer.
+  rewrite (test p r (ε := ε) _ (l ω)).
+  rewrite <-(rew_opp_l id ((mkνTypeSn C) .(eqPaintingSp')) (l ω)).
   admit.
 Admitted.
 
