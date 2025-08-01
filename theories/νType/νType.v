@@ -1082,6 +1082,7 @@ Class PermuteFrameBelowBlock {n'} (C: νType n'.+2) {permutePrefix: mkPermute C.
     PermutePrev .(permuteFrameBelow') p q (C .(Frame) .(restrFrame) r.+1 ε d);
 }.
 
+#[program]
 Definition extendLayerGeneral {n'} (C: νType n'.+2) p 
   {permutePrefix: mkPermute C.(prefix)}
   {PermuteFrameBelowPrev : PermuteBlockPrev C}
@@ -1091,26 +1092,23 @@ Definition extendLayerGeneral {n'} (C: νType n'.+2) p
   (d  : C .(Frame) .(frame p) D)
   (l  : C .(Layer) d)
   (l' : C .(Layer) (rew <-[id] C .(eqFrameSp) in (d ; l))) :
-  C .(Layer) (PermuteFrameBelow .(permuteFrameBelow) p d).
-Proof.
-  intro ε.
-  rewrite (C .(eqPaintingSp')).
-  unshelve esplit.
-  * intro ω.
-    rewrite (PermuteFrameBelow .(eqRestrPermuteFrameBelowSQ) p).
-    rewrite <-(C.(Frame) .(cohFrame)).
-    exact (C .(PaintingPrev).(restrPainting') _ _ ε (l ω)).
-  * refine (
-      (rew <-[fun dl => C .(PaintingPrev) .(painting') (rew <- [id] C .(eqFrameSp') in dl)] _ in 
-      rew [C .(PaintingPrev) .(painting')] (C .(eqRestrFrameSp)) in l' ε)).
-    unshelve refine (eq_existT_curried _ _).
-    - exact (PermuteFrameBelow .(eqRestrPermuteFrameBelowSQ) p).
-    - apply functional_extensionality_dep. intro ω.
-      rewrite <-map_subst_app.
-      rewrite rew_opp_r.
-      exact eq_refl.
-Defined.
+  C .(Layer) (PermuteFrameBelow .(permuteFrameBelow) p d) :=
+  fun ε => rew <-[id] C .(eqPaintingSp') in 
+    (fun ω => rew <-[fun d =>C .(PaintingPrev) .(painting'') (C .(FramePrev) .(restrFrame') p p ω d)] 
+                PermuteFrameBelow .(eqRestrPermuteFrameBelowSQ) p in
+              rew [C .(PaintingPrev) .(painting'')] C.(Frame) .(cohFrame) p p d in
+                (C .(PaintingPrev).(restrPainting') _ _ ε (l ω))
+    ; rew <-[fun dl => C .(PaintingPrev) .(painting') (rew <- [id] C .(eqFrameSp') in dl)] 
+        (= PermuteFrameBelow .(eqRestrPermuteFrameBelowSQ) p ; _) in 
+      rew [C .(PaintingPrev) .(painting')] (C .(eqRestrFrameSp)) in l' ε).
+Next Obligation.
+  apply functional_extensionality_dep. intro ω.
+  rewrite <-map_subst_app.
+  rewrite rew_opp_r.
+  exact eq_refl.
+Qed.
 
+#[program]
 Definition restrictLayerGeneral {n'} (C: νType n'.+2) p 
   {permutePrefix: mkPermute C.(prefix)}
   {PermuteFrameBelowPrev : PermuteBlockPrev C}
@@ -1120,33 +1118,31 @@ Definition restrictLayerGeneral {n'} (C: νType n'.+2) p
   (d  : C .(Frame) .(frame p) D)
   (l  : C .(Layer) d)
   (l' : C .(Layer) (rew <-[id] C .(eqFrameSp) in (d ; l))) :
-  C .(Layer) (rew <-[id] C .(eqFrameSp) in (PermuteFrameBelow .(permuteFrameBelow) p d ; 
-              extendLayerGeneral C p PermuteFrameBelow d l l')).
-Proof.
-  intro ε.
-  rewrite (C .(eqRestrFrameSp)).
-  refine 
-    (rew <-[fun dl => C .(PaintingPrev) .(painting') (rew <- [id] C .(eqFrameSp') in dl)] _ in 
-    (rew [id] (C .(eqPaintingSp')) in l ε).2).
-  unshelve refine (eq_existT_curried _ _).
-  * exact (PermuteFrameBelow .(eqRestrPermuteFrameBelowQ) p).
-  * apply functional_extensionality_dep. intro ω.
-    rewrite <-map_subst_app.
-    rewrite <-eqRestrPainting0'.
-    rewrite <-(rew_opp_l id (C .(eqPaintingSp')) _).
-    rewrite (sigT_eta (rew [id] C .(eqPaintingSp') in l ε)).
-    rewrite rew_opp_r.
-    rewrite <-eqRestrPainting0'.
-    rewrite (rew_map 
-      (C .(PaintingPrev) .(painting'')) 
-      (C .(FramePrev) .(restrFrame') p p ω)).
-    unfold eq_rect_r.
-    rewrite (rew_map 
-      (C .(PaintingPrev) .(painting'')) 
-      (C .(FramePrev) .(restrFrame') p p ε)).
-    repeat rewrite rew_compose. simpl.
-    now rewrite ((C .(FramePrev) .(frame'') p D) .(UIP) (g := eq_refl)).
-Defined.
+  C .(Layer) (rew <-[id] C .(eqFrameSp) in 
+    (PermuteFrameBelow .(permuteFrameBelow) p d ; 
+     extendLayerGeneral C p PermuteFrameBelow d l l')) :=
+  fun ε => rew <-[C .(PaintingPrev) .(painting')] C .(eqRestrFrameSp) in
+           rew <-[fun dl => C .(PaintingPrev) .(painting') (rew <- [id] C .(eqFrameSp') in dl)] 
+            (= PermuteFrameBelow .(eqRestrPermuteFrameBelowQ) p ; _) in 
+           (rew [id] (C .(eqPaintingSp')) in l ε).2.
+Next Obligation.
+  apply functional_extensionality_dep. intro ω.
+  rewrite <-map_subst_app.
+  rewrite <-eqRestrPainting0'.
+  rewrite <-(rew_opp_l id (C .(eqPaintingSp')) _).
+  rewrite (sigT_eta (rew [id] C .(eqPaintingSp') in l ε)).
+  rewrite rew_opp_r.
+  rewrite <-eqRestrPainting0'.
+  rewrite (rew_map 
+    (C .(PaintingPrev) .(painting'')) 
+    (C .(FramePrev) .(restrFrame') p p ω)).
+  unfold eq_rect_r.
+  rewrite (rew_map 
+    (C .(PaintingPrev) .(painting'')) 
+    (C .(FramePrev) .(restrFrame') p p ε)).
+  repeat rewrite rew_compose.
+  now rewrite ((C .(FramePrev) .(frame'') p D) .(UIP) (g := eq_refl)).
+Qed.
 
 Definition eqRestrPermuteLayerGeneralQ {n'} (C: νType n'.+2) p 
   {permutePrefix: mkPermute C.(prefix)}
@@ -1520,12 +1516,10 @@ Instance PermuteFrameBelow2 : forall p : nat, PermuteFrameBelowBlock (νTypeAt 2
 }.
 
 #[local]
-Instance PermuteLayer2 : forall p : nat, PermuteLayerBlock (νTypeAt 2) p (PermuteFrameBelow2 p).
-Proof.
-  unshelve esplit.
-  - intros; invert_le Hr; le_contra Hpr.
-  - intros; invert_le Hr; le_contra Hpr.
-Defined.
+Instance PermuteLayer2 : forall p : nat, PermuteLayerBlock (νTypeAt 2) p (PermuteFrameBelow2 p) := {
+  eqRestrExtendLayerSup := ltac:(intros; invert_le Hr; le_contra Hpr);
+  eqRestrRestrictLayerSup := ltac:(intros; invert_le Hr; le_contra Hpr)
+}.
 
 #[local]
 Instance PermuteFrameAbove2 : forall p : nat, PermuteFrameAboveBlock (νTypeAt 2) p (PermuteLayer2 p).
@@ -1607,7 +1601,7 @@ Instance mkPermutePrefix {n'} {C: νType n'.+2} {P : Permute C}:
   HasPermute C (PermuteFrameAbove := P .(PermuteFrameAbove)) D.2).
 
 #[local]
-Instance mkPermuteFramePrev {n'} {C: νType n'.+2} (P : Permute C) :
+Instance mkPermutePrev {n'} {C: νType n'.+2} (P : Permute C) :
   PermuteBlockPrev (mkνTypeSn C).
   unshelve esplit.
   * intros p q Hpq Hq D R d.
@@ -1626,7 +1620,7 @@ Defined.
 
 #[local]
 Instance mkPermuteFrameBelow0 {n'} {C: νType n'.+2} (P : Permute C) :
-  PermuteFrameBelowBlock (mkνTypeSn C) O (mkPermuteFramePrev P).
+  PermuteFrameBelowBlock (mkνTypeSn C) O (mkPermutePrev P).
   unshelve esplit.
   * intros; auto.
   * intros; auto.
@@ -1637,8 +1631,8 @@ Defined.
 
 #[local]
 Instance mkPermuteFrameBelowSp {n'} {C: νType n'.+2} (P : Permute C) p
- (Prev : PermuteFrameBelowBlock (mkνTypeSn C) p (mkPermuteFramePrev P)) :
-  PermuteFrameBelowBlock (mkνTypeSn C) p.+1 (mkPermuteFramePrev P).
+ (Prev : PermuteFrameBelowBlock (mkνTypeSn C) p (mkPermutePrev P)) :
+  PermuteFrameBelowBlock (mkνTypeSn C) p.+1 (mkPermutePrev P).
   unshelve esplit.
   * intros q Hpq Hq D R d.
     destruct d as [d l].
@@ -1661,7 +1655,7 @@ Instance mkPermuteFrameBelowSp {n'} {C: νType n'.+2} (P : Permute C) p
                   (Q := C .(PaintingPrev) .(painting'))
                   (fun d => C .(Frame) .(restrFrame) q.+1 ε d)
                   (fun d c => C .(Painting) .(restrPainting) p q.+1 c)).
-      rewrite (P .(PermutePaintingBelow ) .(eqRestrPermutePaintingBelowQ) q (L := R.2) (c := l ω)).
+      rewrite <-(P .(PermutePaintingBelow ) .(eqRestrPermutePaintingBelowQ) q (L := R.2) (c := l ω)).
       rewrite (rew_map (C .(PaintingPrev) .(painting')) (C .(Frame) .(restrFrame) p ω)).
       repeat rewrite rew_compose.
       apply (f_equal (fun eq => rew [C .(PaintingPrev) .(painting')] eq in _)).
@@ -1679,7 +1673,7 @@ Instance mkPermuteFrameBelowSp {n'} {C: νType n'.+2} (P : Permute C) p
                   (Q := C .(PaintingPrev) .(painting'))
                   (fun d => C .(Frame) .(restrFrame) q ε d)
                   (fun d c => C .(Painting) .(restrPainting) p q c)).
-      rewrite (P .(PermutePaintingBelow ) .(eqRestrPermutePaintingBelowSQ) q (L := R.2) (c := l ω)).
+      rewrite <-(P .(PermutePaintingBelow ) .(eqRestrPermutePaintingBelowSQ) q (L := R.2) (c := l ω)).
       rewrite (rew_map (C .(PaintingPrev) .(painting')) (C .(Frame) .(restrFrame) p ω)).
       repeat rewrite rew_compose.
       apply (f_equal (fun eq => rew [C .(PaintingPrev) .(painting')] eq in _)).
@@ -1702,7 +1696,7 @@ Instance mkPermuteFrameBelowSp {n'} {C: νType n'.+2} (P : Permute C) p
                   (Q := C .(PaintingPrev) .(painting'))
                   (fun d => P .(PermutePrev) .(permuteFrameBelow') p q d)
                   (fun d c => P .(PermutePrev) .(permutePaintingBelow') p q c)).
-      rewrite ((P .(PermutePaintingBelow )) .(eqRestrPermutePaintingBelowInf) q r (L := R.2) (c := l ω)).
+      rewrite <-((P .(PermutePaintingBelow )) .(eqRestrPermutePaintingBelowInf) q r (L := R.2) (c := l ω)).
       rewrite (rew_map (C .(PaintingPrev) .(painting')) (C .(Frame) .(restrFrame) p ω)).
       unfold eq_rect_r.
       repeat rewrite rew_compose.
@@ -1726,7 +1720,7 @@ Instance mkPermuteFrameBelowSp {n'} {C: νType n'.+2} (P : Permute C) p
                   (Q := C .(PaintingPrev) .(painting'))
                   (fun d => P .(PermutePrev) .(permuteFrameBelow') p q d)
                   (fun d c => P .(PermutePrev) .(permutePaintingBelow') p q c)).
-      rewrite ((P .(PermutePaintingBelow )) .(eqRestrPermutePaintingBelowSup) q r (L := R.2) (c := l ω)).
+      rewrite <-((P .(PermutePaintingBelow )) .(eqRestrPermutePaintingBelowSup) q r (L := R.2) (c := l ω)).
       rewrite (rew_map (C .(PaintingPrev) .(painting')) (C .(Frame) .(restrFrame) p ω)).
       unfold eq_rect_r.
       repeat rewrite rew_compose.
@@ -1736,47 +1730,120 @@ Defined.
 
 #[local] 
 Instance mkPermuteFrameBelow {n'} {C: νType n'.+2} (P : Permute C) p :
-  PermuteFrameBelowBlock (mkνTypeSn C) p (mkPermuteFramePrev P).
+  PermuteFrameBelowBlock (mkνTypeSn C) p (mkPermutePrev P).
   induction p.
   + exact (mkPermuteFrameBelow0 P).
   + exact (mkPermuteFrameBelowSp P _ IHp).
 Defined.
 
+Lemma mkEqRestrExtendLayerSup {n'} {C: νType n'.+2} (P : Permute C) p r
+  {Hpr : p.+3 <= r.+2} {Hr : r.+2 <= n'.+3} 
+  {D} {R : mk' mkPermutePrefix D} {ε}
+  (d  : (mkνTypeSn C) .(Frame) .(frame p) D)
+  (l  : (mkνTypeSn C) .(Layer) d)
+  (l' : (mkνTypeSn C) .(Layer) (rew <-[id] (mkνTypeSn C) .(eqFrameSp) in (d ; l))) :
+  rew [(mkνTypeSn C) .(Layer')] (mkPermuteFrameBelow P p) .(eqRestrPermuteFrameBelowSup) p r in
+    (mkνTypeSn C) .(RestrLayer) p r ε 
+    (extendLayerGeneral (mkνTypeSn C) p (mkPermuteFrameBelow P p) d l l') = 
+  (mkPermutePrev P) .(extendLayer') p
+    ((mkνTypeSn C) .(Frame) .(restrFrame) r.+1 ε d)
+    ((mkνTypeSn C) .(RestrLayer) p r ε l)
+    (rew [(mkνTypeSn C) .(Layer')] (mkνTypeSn C) .(eqRestrFrameSp) in 
+      (mkνTypeSn C) .(RestrLayer) p.+1 r ε l').
+Proof.
+  intros. invert_le Hpr.
+  unfold mkPermutePrev, extendLayer', eq_rect_r,
+          extendLayer, RestrLayer, extendLayerGeneral.
+  apply functional_extensionality_dep. intro ω.
+  rewrite <-map_subst_app. simpl.
+  rewrite (rew_map (C .(PaintingPrev) .(painting')) (C .(Frame) .(restrFrame) p ω)).
+  rewrite (C .(eqRestrPaintingSp) p r).
+  rewrite rew_compose.
+  rewrite <-(rew_permute_rl _ _ _ _ _ (fun _ => C .(eqPaintingSp'))).
+  apply (f_equal (fun d => rew <- [id] C .(eqPaintingSp') in d)).
+  unshelve refine (rew_existT_curried
+      (Q := fun dl => C .(PaintingPrev) .(painting') (rew <- [id] C .(eqFrameSp') in dl))).
+  + apply functional_extensionality_dep. intro ω'.
+    rewrite <-map_subst_app. unfold eq_rect_r.
+    rewrite (rew_map (C .(PaintingPrev) .(painting')) (C .(Frame) .(restrFrame) p ω')).
+    repeat rewrite <-(map_subst_map 
+      (Q := C .(PaintingPrev) .(painting''))
+      (fun d => C .(FramePrev) .(restrFrame') p r ε d)
+      (fun d c => C .(PaintingPrev) .(restrPainting') p r ε c)).
+    rewrite <-(map_subst_map 
+      (Q := C .(PaintingPrev) .(painting''))
+      (fun d => C .(FramePrev) .(restrFrame') p p ω d)
+      (fun d c => C .(PaintingPrev) .(restrPainting') p p ω c)).
+    repeat rewrite (rew_map (C .(PaintingPrev) .(painting'')) (C .(FramePrev) .(restrFrame') p p ω')).
+    rewrite <-(C .(Painting) .(cohPainting) p p r).
+    repeat rewrite rew_compose.
+    apply (f_equal (fun eq => rew [C .(PaintingPrev) .(painting'')] eq in _)).
+    exact ((C .(FramePrev) .(frame'') p D.1) .(UIP)).
+  + unfold eq_rect_r.
+    repeat rewrite (rew_map (C .(PaintingPrev) .(painting')) (fun dl => rew <- [id] C .(eqFrameSp') in dl)).
+    rewrite (rew_map (C .(Painting) .(painting) D.2) (fun dl => rew <- [id] C .(eqFrameSp) in dl)).
+    rewrite <-(map_subst_map 
+      (Q := C .(PaintingPrev) .(painting'))
+      (fun d => C .(Frame) .(restrFrame) r.+1 ε d)
+      (fun d c => C .(Painting) .(restrPainting) p.+1 r.+1 c)).
+    repeat rewrite (rew_compose (C .(PaintingPrev) .(painting'))).
+    apply (f_equal (fun eq => rew [C .(PaintingPrev) .(painting')] eq in _)).
+    exact ((C .(FramePrev) .(frame') p.+1 D.1) .(UIP)).
+Qed.
+
+Lemma test {n'} {C: νType n'.+2} p r
+ {Hpr : p.+3 <= r.+3} {Hr : r.+3 <= n'.+3} 
+ {D} {ε ω}
+ (d  : (mkνTypeSn C) .(Frame) .(frame p) D) 
+ (c  :  (mkνTypeSn C) .(PaintingPrev) .(painting') ((mkνTypeSn C) .(Frame) .(restrFrame) p ω d)) : 
+ (mkνTypeSn C) .(PaintingPrev) .(restrPainting') p r.+1 ε c =
+ rew <- [id] C .(eqPaintingSp') in
+  (fun ω' : arity => rew [C .(PaintingPrev) .(painting'')]
+    C .(Frame) .(cohFrame) p r (Hrq := ⇓ Hpr) ((mkνTypeSn C) .(Frame) .(restrFrame) p ω d) in
+    C .(PaintingPrev) .(restrPainting') p r ε
+      ((rew [id] C .(eqPaintingSp) in c).1 ω');
+  rew [C .(PaintingPrev) .(painting')] C .(eqRestrFrameSp) in
+    C .(Painting) .(restrPainting) p.+1 r.+1 (rew [id] C .(eqPaintingSp) in c).2).
+Proof.
+  rewrite <-(rew_opp_l id ((mkνTypeSn C) .(eqPaintingSp')) c).
+  rewrite (sigT_eta (rew [id] (mkνTypeSn C) .(eqPaintingSp') in c)).
+  simpl. rewrite (C .(eqRestrPaintingSp) p r).
+  now rewrite rew_opp_r.
+Qed.
+
+Lemma mkEqRestrRestrictLayerSup {n'} {C: νType n'.+2} (P : Permute C) p r
+  {Hpr : p.+3 <= r.+2} {Hr : r.+2 <= n'.+3} 
+  {D} {R : mk' mkPermutePrefix D} {ε}
+  (d  : (mkνTypeSn C) .(Frame) .(frame p) D)
+  (l  : (mkνTypeSn C) .(Layer) d)
+  (l' : (mkνTypeSn C) .(Layer) (rew <-[id] (mkνTypeSn C) .(eqFrameSp) in (d ; l))) :
+  rew [(mkνTypeSn C) .(Layer')] [d ⇒ rew <- [id] (mkνTypeSn C) .(eqFrameSp') in d] 
+      (= (mkPermuteFrameBelow P p) .(eqRestrPermuteFrameBelowSup) p r;
+      mkEqRestrExtendLayerSup P p r (ε := ε) d l l') in
+  rew [(mkνTypeSn C) .(Layer')] (mkνTypeSn C) .(eqRestrFrameSp) in
+    (mkνTypeSn C) .(RestrLayer) p.+1 r ε 
+    (restrictLayerGeneral (mkνTypeSn C) p (mkPermuteFrameBelow P p) d l l') = 
+  (mkPermutePrev P) .(restrictLayer') p
+    ((mkνTypeSn C) .(Frame) .(restrFrame) r.+1 ε d)
+    ((mkνTypeSn C) .(RestrLayer) p r ε l)
+    (rew [(mkνTypeSn C) .(Layer')] (mkνTypeSn C) .(eqRestrFrameSp) in 
+      (mkνTypeSn C) .(RestrLayer) p.+1 r ε l').
+Proof.
+  invert_le Hpr.
+  unfold mkPermutePrev, restrictLayer', restrictLayer, restrictLayerGeneral.
+  apply functional_extensionality_dep. intro ω.
+  repeat rewrite <-map_subst_app.
+  unfold RestrLayer.
+  admit.
+Admitted.
+
 #[local]
 Instance mkPermuteLayer {n'} {C: νType n'.+2} (P : Permute C) p :
   PermuteLayerBlock (mkνTypeSn C) p (mkPermuteFrameBelow P p).
   unshelve esplit.
-  * intros. invert_le Hpr.
-    unfold mkPermuteFramePrev, extendLayer', eq_rect_r,
-           extendLayer, RestrLayer, extendLayerGeneral.
-    apply functional_extensionality_dep. intro ω.
-    rewrite <-map_subst_app. simpl.
-    rewrite (rew_map (C .(PaintingPrev) .(painting')) (C .(Frame) .(restrFrame) p ω)).
-    rewrite (C .(eqRestrPaintingSp) p r).
-    rewrite rew_compose.
-    rewrite <-(rew_permute_rl _ _ _ _ _ (fun _ => C .(eqPaintingSp'))).
-    apply (f_equal (fun d => rew <- [id] C .(eqPaintingSp') in d)).
-    unshelve refine (rew_existT_curried
-        (Q := fun dl => C .(PaintingPrev) .(painting') (rew <- [id] C .(eqFrameSp') in dl))).
-    + apply functional_extensionality_dep. intro ω'.
-      rewrite <-map_subst_app. unfold eq_rect_r.
-      rewrite (rew_map (C .(PaintingPrev) .(painting')) (C .(Frame) .(restrFrame) p ω')).
-      repeat rewrite <-(map_subst_map 
-        (Q := C .(PaintingPrev) .(painting''))
-        (fun d => C .(FramePrev) .(restrFrame') p r ε d)
-        (fun d c => C .(PaintingPrev) .(restrPainting') p r ε c)).
-      rewrite <-(map_subst_map 
-        (Q := C .(PaintingPrev) .(painting''))
-        (fun d => C .(FramePrev) .(restrFrame') p p ω d)
-        (fun d c => C .(PaintingPrev) .(restrPainting') p p ω c)).
-      repeat rewrite (rew_map (C .(PaintingPrev) .(painting'')) (C .(FramePrev) .(restrFrame') p p ω')).
-      rewrite <-(C .(Painting) .(cohPainting) p p r).
-      repeat rewrite rew_compose.
-      apply (f_equal (fun eq => rew [C .(PaintingPrev) .(painting'')] eq in _)).
-      exact ((C .(FramePrev) .(frame'') p D.1) .(UIP)).
-    + admit.
-  * admit.
-Admitted.
+  * exact (mkEqRestrExtendLayerSup P p).
+  * exact (mkEqRestrRestrictLayerSup P p).
+Qed.
 
 #[local]
 Instance mkPermuteFrameAbove0 {n'} {C: νType n'.+2} (P : Permute C) :
@@ -1791,7 +1858,7 @@ Instance mkPermuteFrameAbove0 {n'} {C: νType n'.+2} (P : Permute C) :
   * intros.
     destruct d as [[d l] l'].
     invert_le Hqp.
-    unfold mkPermuteFramePrev, permuteFrameAbove'.
+    unfold mkPermutePrev, permuteFrameAbove'.
     rewrite (P .(eqPermuteFrameAbove0)).
     apply (f_equal (fun d => rew <- [fun T : Type => T] C .(eqFrameSp) in d));
     unshelve refine (eq_existT_curried _ _).
@@ -1827,7 +1894,7 @@ Instance mkPermuteFrameAboveSp {n'} {C: νType n'.+2} (P : Permute C) p
     apply le_induction''' with (Hp := Hqp); clear q Hqp.
     + destruct d as [[d l] l'].
       rewrite le_induction''_base_computes.
-      unfold mkPermuteFramePrev, permuteFrameAbove'.
+      unfold mkPermutePrev, permuteFrameAbove'.
       rewrite (P .(eqPermuteFrameAbove0)).
       apply (f_equal (fun d => rew <- [fun T : Type => T] C .(eqFrameSp) in d));
       unshelve refine (eq_existT_curried _ _).
@@ -1840,7 +1907,7 @@ Instance mkPermuteFrameAboveSp {n'} {C: νType n'.+2} (P : Permute C) p
       invert_le Hpr.
       destruct d as [d l].
       rewrite le_induction''_step_computes.
-      unfold mkPermuteFramePrev, permuteFrameAbove'.
+      unfold mkPermutePrev, permuteFrameAbove'.
       rewrite ((mkνTypeSn C) .(eqRestrFrameSp)).
       rewrite (P .(eqPermuteFrameAboveSp) _ _). 
       apply (f_equal (fun d => rew <- [fun T : Type => T] C .(eqFrameSp) in d));
@@ -1862,7 +1929,7 @@ Instance mkPermuteFrameAboveSp {n'} {C: νType n'.+2} (P : Permute C) p
                 C .(Painting) .(restrPainting) p.+2 r.+2
                 (P .(PermutePaintingAbove) .(permutePaintingAbove) q (L := R.2) (l ω))). exact eq_refl.
         rewrite H.
-        rewrite (P .(PermutePaintingAbove) .(eqRestrPermutePaintingAboveSup) q r (c := l ω)).
+        rewrite <-(P .(PermutePaintingAbove) .(eqRestrPermutePaintingAboveSup) q r (L := R.2) (c := l ω)).
         unfold eq_rect_r.
         repeat rewrite rew_compose.
         apply (f_equal (fun eq => rew [C .(PaintingPrev) .(painting')] eq in _)).
@@ -1899,7 +1966,7 @@ Proof.
         exact (le_induction''_step_computes (Hp := ⇑ Hqp)).
   * intros q r Hqp Hpr Hr D E R L ε d c.
     cbv beta zeta.
-    unfold mkPermuteFramePrev, permutePaintingAbove'.
+    unfold mkPermutePrev, permutePaintingAbove'.
     rewrite le_induction''_step_computes.
     revert Hqp E L d c.
     apply le_induction''' with (Hp := Hpr); clear p Hpr.
@@ -1907,7 +1974,8 @@ Proof.
       rewrite <-(rew_opp_l id ((mkνTypeSn C) .(eqPaintingSp)) c).
       destruct (rew [id] (mkνTypeSn C) .(eqPaintingSp) in c) as [l c'].
       rewrite rew_opp_r.
-      now repeat rewrite <-((mkνTypeSn C) .(eqRestrPainting0)).
+      repeat rewrite <-((mkνTypeSn C) .(eqRestrPainting0)).
+      now rewrite rew_opp_r.
     + intros p Hpr rec Hqp E L d c.
       invert_le Hpr. 
       rewrite <-(rew_opp_l id ((mkνTypeSn C) .(eqPaintingSp)) c).
@@ -1915,13 +1983,13 @@ Proof.
       rewrite rew_opp_r.
       repeat rewrite ((mkνTypeSn C) .(eqRestrPaintingSp) p.+2 r.+2).
       rewrite (P .(eqPermutePaintingAboveSp) _ q).
-      rewrite <-(rew_permute_rr _ _ _ _ _ 
+      rewrite <-(rew_permute_rl _ _ _ _ _ 
         (fun _ =>  (C .(eqPaintingSp)))
         ((mkPermuteFrameAbove P p) .(eqRestrPermuteFrameAboveSup) q r.+1)).
       apply (f_equal (fun c => rew <- [id] (mkνTypeSn C) .(eqPaintingSp') in c)).
-      unshelve refine (eq_sym (rew_existT_curried
+      unshelve refine (rew_existT_curried
         (Q := fun dl => C .(Painting) .(painting) D.2 (rew <- [id] C .(eqFrameSp) in dl))
-        (H := eq_sym ((mkPermuteFrameAbove P p) .(eqRestrPermuteFrameAboveSup) q r.+1)))).
+        (H := (mkPermuteFrameAbove P p) .(eqRestrPermuteFrameAboveSup) q r.+1)).
       - apply functional_extensionality_dep. intro ω.
         rewrite <-map_subst_app.
         rewrite <-(map_subst_map 
@@ -1938,7 +2006,7 @@ Proof.
               C .(Painting) .(restrPainting) p.+2 r.+2
                 (P .(PermutePaintingAbove) .(permutePaintingAbove) q (L := R.2) (l ω))). exact eq_refl.
         rewrite H.
-        rewrite (P .(PermutePaintingAbove) .(eqRestrPermutePaintingAboveSup) q r (c := l ω)).
+        rewrite <-(P .(PermutePaintingAbove) .(eqRestrPermutePaintingAboveSup) q r (L := R.2) (c := l ω)).
         unfold eq_rect_r.
         repeat rewrite rew_compose.
         apply (f_equal (fun eq => rew [C .(PaintingPrev) .(painting')] eq in _)).
@@ -1953,7 +2021,7 @@ Proof.
                   (fun d => P .(PermuteFrameAbove) .(permuteFrameAbove) q d)
                   (fun d c => P .(PermutePaintingAbove) .(permutePaintingAbove) q c)).
         rewrite (rew_map (C .(Painting) .(painting) D.2) (fun d =>rew <- [id] C .(eqFrameSp) in d)).
-        rewrite (rec (↑ Hqp) E L _ c'). clear rec.
+        rewrite <-(rec (↑ Hqp) E L _ c'). clear rec.
         repeat rewrite (rew_compose (C .(Painting) .(painting) D.2)).
         apply (f_equal (fun eq => rew [C .(Painting) .(painting) D.2] eq in _)).
         exact ((C .(Frame) .(frame p.+3) D.1) .(UIP)).
@@ -1998,7 +2066,7 @@ Proof.
       rewrite <-(rew_opp_l id ((mkνTypeSn C) .(eqPaintingSp)) c').
       destruct (rew [id] (mkνTypeSn C) .(eqPaintingSp) in c') as [l' c''].  
       repeat rewrite rew_opp_r.
-      rewrite <-((mkPermuteLayer P q) .(eqRestrPermuteLayerQ) d l l' _ c'').
+      exact ((mkPermuteLayer P q) .(eqRestrPermuteLayerQ) d l l' _ c'').
     + intros p Hpq rec d c. invert_le Hpq.
       rewrite <-(rew_opp_l id ((mkνTypeSn C) .(eqPaintingSp)) c).
       destruct (rew [id] (mkνTypeSn C) .(eqPaintingSp) in c) as [l c'].
@@ -2006,13 +2074,13 @@ Proof.
       repeat rewrite rew_opp_r.
       rewrite ((mkνTypeSn C) .(eqRestrPaintingSp) p q.+1).
       rewrite ((mkνTypeSn C) .(eqRestrPaintingSp) p q).
-      rewrite <-(rew_permute_rr _ _ _ _ _ 
+      rewrite <-(rew_permute_rl _ _ _ _ _ 
         (fun _ => (mkνTypeSn C) .(eqPaintingSp'))
         ((mkPermuteFrameBelow P p) .(eqRestrPermuteFrameBelowQ) q.+1)).
       apply (f_equal (fun c => rew <- [id] (mkνTypeSn C) .(eqPaintingSp') in c)).
-      unshelve refine (eq_sym (rew_existT_curried
+      unshelve refine (rew_existT_curried
         (Q := fun dl => C .(Painting) .(painting) D.2 (rew <- [id] C .(eqFrameSp) in dl))
-        (H := eq_sym ((mkPermuteFrameBelow P p) .(eqRestrPermuteFrameBelowQ) q.+1)))).
+        (H := (mkPermuteFrameBelow P p) .(eqRestrPermuteFrameBelowQ) q.+1)).
       - apply functional_extensionality_dep. intro ω.
         rewrite <-map_subst_app.
         rewrite <-(map_subst_map 
@@ -2020,11 +2088,11 @@ Proof.
                   (fun d => C .(Frame) .(restrFrame) q.+1 ε d)
                   (fun d c => (mkνTypeSn C) .(PaintingPrev) .(restrPainting') p q.+1 ε c)).
         rewrite (rew_map (C .(PaintingPrev) .(painting')) (C .(Frame) .(restrFrame) p ω)).
-        simpl; rewrite (P .(PermutePaintingBelow) .(eqRestrPermutePaintingBelowQ) q).
+        simpl; rewrite <-(P .(PermutePaintingBelow) .(eqRestrPermutePaintingBelowQ) q (L := R.2)).
         repeat rewrite (rew_compose ((mkνTypeSn C) .(PaintingPrev) .(painting''))). 
         apply (f_equal (fun eq => rew [(mkνTypeSn C) .(PaintingPrev) .(painting'')] eq in _)).
         exact (((mkνTypeSn C) .(FramePrev) .(frame'') p D) .(UIP)).
-      - rewrite (rec (d ; l) c').
+      - rewrite <-(rec (d ; l) c').
         rewrite (rew_map (C .(Painting) .(painting) D.2) (fun d =>rew <- [id] C .(eqFrameSp) in d)).
         repeat rewrite (rew_compose (C .(Painting) .(painting) D.2)).
         apply (f_equal (fun eq => rew [C .(Painting) .(painting) D.2] eq in _)).
@@ -2048,13 +2116,13 @@ Proof.
       repeat rewrite rew_opp_r.
       rewrite ((mkνTypeSn C) .(eqRestrPaintingSp) p q.+1).
       rewrite ((mkνTypeSn C) .(eqRestrPaintingSp) p q).
-      rewrite <-(rew_permute_rr _ _ _ _ _ 
+      rewrite <-(rew_permute_rl _ _ _ _ _ 
         (fun _ => (mkνTypeSn C) .(eqPaintingSp'))
         ((mkPermuteFrameBelow P p) .(eqRestrPermuteFrameBelowSQ) q.+1)).
       apply (f_equal (fun c => rew <- [id] (mkνTypeSn C) .(eqPaintingSp') in c)).
-      unshelve refine (eq_sym (rew_existT_curried
+      unshelve refine (rew_existT_curried
         (Q := fun dl => C .(Painting) .(painting) D.2 (rew <- [id] C .(eqFrameSp) in dl))
-        (H := eq_sym ((mkPermuteFrameBelow P p) .(eqRestrPermuteFrameBelowSQ) q.+1)))).
+        (H := (mkPermuteFrameBelow P p) .(eqRestrPermuteFrameBelowSQ) q.+1)).
       - apply functional_extensionality_dep. intro ω.
         rewrite <-map_subst_app.
         rewrite <-(map_subst_map 
@@ -2062,11 +2130,11 @@ Proof.
                   (fun d => C .(Frame) .(restrFrame) q ε d)
                   (fun d c => (mkνTypeSn C) .(PaintingPrev) .(restrPainting') p q ε c)).
         rewrite (rew_map (C .(PaintingPrev) .(painting')) (C .(Frame) .(restrFrame) p ω)).
-        simpl; rewrite (P .(PermutePaintingBelow) .(eqRestrPermutePaintingBelowSQ) q).
+        simpl; rewrite <-(P .(PermutePaintingBelow) .(eqRestrPermutePaintingBelowSQ) q (L := R.2)).
         repeat rewrite (rew_compose ((mkνTypeSn C) .(PaintingPrev) .(painting''))). 
         apply (f_equal (fun eq => rew [(mkνTypeSn C) .(PaintingPrev) .(painting'')] eq in _)).
         exact (((mkνTypeSn C) .(FramePrev) .(frame'') p D) .(UIP)).
-      - rewrite (rec (d ; l) c').
+      - rewrite <-(rec (d ; l) c').
         rewrite (rew_map (C .(Painting) .(painting) D.2) (fun d =>rew <- [id] C .(eqFrameSp) in d)).
         repeat rewrite (rew_compose (C .(Painting) .(painting) D.2)).
         apply (f_equal (fun eq => rew [C .(Painting) .(painting) D.2] eq in _)).
@@ -2078,23 +2146,24 @@ Proof.
     + intros d c.
       rewrite <-(rew_opp_l id ((mkνTypeSn C) .(eqPaintingSp)) c).
       destruct (rew [id] (mkνTypeSn C) .(eqPaintingSp) in c) as [l c'].
-      rewrite rew_opp_r.  
-      now repeat rewrite <-(mkνTypeSn C) .(eqRestrPainting0).
+      rewrite rew_opp_r.
+      repeat rewrite <-(mkνTypeSn C) .(eqRestrPainting0).
+      now rewrite rew_opp_r.
     + intros p Hpr rec d c.
       rewrite <-(rew_opp_l id ((mkνTypeSn C) .(eqPaintingSp)) c).
       destruct (rew [id] (mkνTypeSn C) .(eqPaintingSp) in c) as [l c'].
       rewrite rew_opp_r.  
       rewrite le_induction''_step_computes. invert_le Hpr. invert_le Hrq.
       repeat rewrite ((mkνTypeSn C) .(eqRestrPaintingSp) p r).
-      unfold mkPermuteFramePrev, permutePaintingBelow'.
+      unfold mkPermutePrev, permutePaintingBelow'.
       rewrite (P .(eqPermutePaintingBelowSp) p q).
-      rewrite <-(rew_permute_rr _ _ _ _ _ 
+      rewrite <-(rew_permute_rl _ _ _ _ _ 
         (fun _ => (mkνTypeSn C) .(eqPaintingSp'))
         ((mkPermuteFrameBelow P p) .(eqRestrPermuteFrameBelowInf) q.+1 r.+1)).
       apply (f_equal (fun c => rew <- [id] (mkνTypeSn C) .(eqPaintingSp') in c)).
-      unshelve refine (eq_sym (rew_existT_curried
+      unshelve refine (rew_existT_curried
         (Q := fun dl => C .(Painting) .(painting) D.2 (rew <- [id] C .(eqFrameSp) in dl))
-        (H := eq_sym ((mkPermuteFrameBelow P p) .(eqRestrPermuteFrameBelowInf) q.+1 r.+1)))).
+        (H := (mkPermuteFrameBelow P p) .(eqRestrPermuteFrameBelowInf) q.+1 r.+1)).
       - apply functional_extensionality_dep. intro ω.
         rewrite <-map_subst_app.
         rewrite <-(map_subst_map 
@@ -2106,12 +2175,14 @@ Proof.
                   (fun d => P .(PermutePrev) .(permuteFrameBelow') p q d)
                   (fun d c => P .(PermutePrev) .(permutePaintingBelow') p q c)).
         rewrite (rew_map (C .(PaintingPrev) .(painting')) (C .(Frame) .(restrFrame) p ω)).
-        simpl; rewrite (P .(PermutePaintingBelow) .(eqRestrPermutePaintingBelowInf) q r).
+        simpl; rewrite <-(P .(PermutePaintingBelow) .(eqRestrPermutePaintingBelowInf) q r (L := R.2)).
+        unfold eq_rect_r.
         repeat rewrite (rew_compose ((mkνTypeSn C) .(PaintingPrev) .(painting''))). 
         apply (f_equal (fun eq => rew [(mkνTypeSn C) .(PaintingPrev) .(painting'')] eq in _)).
         exact (((mkνTypeSn C) .(FramePrev) .(frame'') p D) .(UIP)).
-      - rewrite (rec (d ; l) c').
-        rewrite (rew_map (C .(Painting) .(painting) D.2) (fun d =>rew <- [id] C .(eqFrameSp) in d)).
+      - rewrite (rew_map (C .(Painting) .(painting) D.2) (fun d =>rew <- [id] C .(eqFrameSp) in d)).
+        unfold mkPermutePrev, permutePaintingBelow' in rec.
+        rewrite <-(rec (d ; l) c').
         repeat rewrite (rew_compose (C .(Painting) .(painting) D.2)).
         apply (f_equal (fun eq => rew [C .(Painting) .(painting) D.2] eq in _)).
         exact ((C .(Frame) .(frame p.+1) D.1) .(UIP)).
@@ -2127,29 +2198,122 @@ Proof.
       repeat rewrite rew_opp_r.  
       repeat rewrite ((mkνTypeSn C) .(eqRestrPaintingSp) q r.+1).
       repeat rewrite ((mkνTypeSn C) .(eqRestrPaintingSp) q.+1 r.+1).
-      unfold mkPermuteFramePrev, permutePaintingBelow'.
+      unfold mkPermutePrev, permutePaintingBelow'.
       rewrite (P .(eqPermutePaintingBelow0) q).
-      rewrite <-(rew_permute_rr _ _ _ _ _ 
+      rewrite <-(rew_permute_rl _ _ _ _ _ 
         (fun _ => (mkνTypeSn C) .(eqPaintingSp'))
         ((mkPermuteFrameBelow P q) .(eqRestrPermuteFrameBelowSup) q r.+1)).
       apply (f_equal (fun c => rew <- [id] (mkνTypeSn C) .(eqPaintingSp') in c)).
-      symmetry.
-      apply (rew_swap_lr _ _ _ _ 
-          ((mkPermuteFrameBelow P q) .(eqRestrPermuteFrameBelowSup) q r.+1) _ _).
-      unshelve refine (eq_sym (rew_existT_curried
-        (Q := fun dl => C .(Painting) .(painting) D.2 (rew <- [id] C .(eqFrameSp) in dl))
-        (H := eq_sym ((mkPermuteFrameBelow P q) .(eqRestrPermuteFrameBelowSup) q r.+1)))).
-      - apply (rew_swap_lr _ (C .(Layer)) _ _ 
-          ((mkPermuteFrameBelow P q) .(eqRestrPermuteFrameBelowSup) q r.+1) _ _).
-        exact (mkνTypeSn C) .(PaintingPrev) .(restrPainting').
+      unshelve refine (rew_existT_curried
+        (Q := fun dl => C .(Painting) .(painting) D.2 (rew <- [id] C .(eqFrameSp) in dl))).
+      - exact ((mkPermuteLayer P q) .(eqRestrExtendLayerSup) r.+1 d l l'). 
+      - rewrite <-(rew_permute_rl _ _ _ _ _ 
+          (fun _ => (mkνTypeSn C) .(eqPaintingSp'))
+          ((mkνTypeSn C) .(eqRestrFrameSp))).
+        rewrite <-(rew_permute_rl _ _ _ _ _ 
+          (fun _ => (mkνTypeSn C) .(eqPaintingSp'))
+          ((=(mkPermuteFrameBelow P q) .(eqRestrPermuteFrameBelowSup) q r.+1;
+           (mkPermuteLayer P q) .(eqRestrExtendLayerSup) r.+1 d l l'))).
+        apply (f_equal (fun c => rew <- [id] (mkνTypeSn C) .(eqPaintingSp') in c)).
+        rewrite (rew_map 
+          (fun d => {l : (mkνTypeSn C) .(Layer') d & 
+            (mkνTypeSn C) .(PaintingPrev) .(painting')
+            (rew <- [id] (mkνTypeSn C) .(eqFrameSp') in (d; l))})
+          (fun d => (rew <- [id] C .(eqFrameSp) in d))).
+        rewrite rew_compose.
+        unshelve refine (rew_existT_curried
+        (Q := fun dl => C .(Painting) .(painting) D.2 (rew <- [id] C .(eqFrameSp) in dl))).
+        {
+           rewrite <-rew_compose. 
+           exact ((mkPermuteLayer P q) .(eqRestrRestrictLayerSup) r.+1 d l l').
+        }
+        {
+          rewrite <-(map_subst_map 
+            (Q := (mkνTypeSn C) .(PaintingPrev) .(painting'))
+            (fun d => (mkνTypeSn C) .(Frame) .(restrFrame) r.+2 ε d)
+            (fun d c => (mkνTypeSn C) .(Painting) .(restrPainting) q.+2 r.+2 c)).
+          rewrite <-(map_subst_map 
+            (Q := (mkνTypeSn C) .(PaintingPrev) .(painting'))
+            (fun d => P .(PermuteFrameAbove) .(permuteFrameAbove) q d)
+            (fun d c => P .(PermutePaintingAbove) .(permutePaintingAbove) q c)).
+          pose (H := (mkPermutePaintingAbove P q) .(eqRestrPermutePaintingAboveSup) q r (ε := ε) (c := c'')).
+          unfold mkPermutePrev,  permutePaintingAbove' in H.
+          rewrite <-H.
+          rewrite (rew_map (C .(Painting) .(painting) D.2) (fun d => (rew <- [id] C .(eqFrameSp) in d))).
+          repeat rewrite (rew_compose (C .(Painting) .(painting) D.2)). 
+          apply (f_equal (fun eq => rew [C .(Painting) .(painting) D.2] eq in _)).
+          exact ((C .(Frame) .(frame q.+2) D.1) .(UIP)).
+        }
+    + intros p Hpq rec d c. invert_le Hpq.
+      rewrite le_induction''_step_computes.
+      rewrite <-(rew_opp_l id ((mkνTypeSn C) .(eqPaintingSp)) c).
+      destruct (rew [id] (mkνTypeSn C) .(eqPaintingSp) in c) as [l c'].
+      rewrite rew_opp_r.
+      repeat rewrite ((mkνTypeSn C) .(eqRestrPaintingSp) p r.+1).
+      unfold mkPermutePrev, permutePaintingBelow'.
+      rewrite (P .(eqPermutePaintingBelowSp) p q).
+      rewrite <-(rew_permute_rl _ _ _ _ _ 
+        (fun _ => (mkνTypeSn C) .(eqPaintingSp'))
+        ((mkPermuteFrameBelow P p) .(eqRestrPermuteFrameBelowSup) q.+1 r.+1)).
+      apply (f_equal (fun c => rew <- [id] (mkνTypeSn C) .(eqPaintingSp') in c)).
+      unshelve refine (rew_existT_curried
+        (Q := fun dl => C .(Painting) .(painting) D.2 (rew <- [id] C .(eqFrameSp) in dl))).
+      - apply functional_extensionality_dep. intro ω.
+        rewrite <-map_subst_app.
+        rewrite <-(map_subst_map 
+                  (Q := C .(PaintingPrev) .(painting'))
+                  (fun d => C .(Frame) .(restrFrame) r.+1 ε d)
+                  (fun d c => (mkνTypeSn C) .(PaintingPrev) .(restrPainting') p r.+1 ε c)).
+        rewrite <-(map_subst_map 
+                  (Q := C .(PaintingPrev) .(painting'))
+                  (fun d => P .(PermutePrev) .(permuteFrameBelow') p q d)
+                  (fun d c => P .(PermutePrev) .(permutePaintingBelow') p q c)).
+        rewrite <-(P .(PermutePaintingBelow) .(eqRestrPermutePaintingBelowSup) q r (L := R.2)).
+        rewrite (rew_map (C .(PaintingPrev) .(painting')) ((C .(Frame) .(restrFrame) p ω))).
+        unfold eq_rect_r.
+        repeat rewrite rew_compose.
+        apply (f_equal (fun eq => rew [C .(PaintingPrev) .(painting')] eq in _)).
+        exact ((C .(FramePrev) .(frame') p D.1) .(UIP)).
+      - rewrite <-(map_subst_map 
+          (Q := C .(Painting) .(painting) D.2)
+          (fun d => P .(PermuteFrameBelow) .(permuteFrameBelow) q.+1 d)
+          (fun d c => P .(PermutePaintingBelow) .(permutePaintingBelow) q.+1 c)). 
+        unfold mkPermutePrev, permutePaintingBelow' in rec.
+        rewrite <-(rec (d ; l) c'). clear rec. 
+        rewrite (rew_map (C .(Painting) .(painting) D.2) (fun d => (rew <- [id] C .(eqFrameSp) in d))).
+        repeat rewrite (rew_compose (C .(Painting) .(painting) D.2)). 
+        apply (f_equal (fun eq => rew [C .(Painting) .(painting) D.2] eq in _)).
+        exact ((C .(Frame) .(frame p.+1) D.1) .(UIP)).
+Defined.
 
+Instance mkPermuteSp {n'} {C: νType n'.+2} (P : Permute C) :
+  Permute (mkνTypeSn C).
+Proof.
+  unshelve esplit.
+  + intros. exact eq_refl.
+  + intros. destruct p.
+    exact eq_refl.
+    exact le_induction''_base_computes.
+  + intros. exact le_induction''_step_computes.
+  + intros. exact eq_refl.
+  + intros. simpl.
+    rewrite le_induction''_step_computes.
+    now rewrite rew_opp_r.
+  + intros. simpl.
+    rewrite le_induction''_base_computes.
+    rewrite rew_opp_r.
+    rewrite rew_opp_r.
+    destruct p; exact eq_refl.
+  + intros. simpl.
+    rewrite le_induction''_step_computes.
+    now rewrite rew_opp_r.
+Defined.
 
-      - 
-      
-      
-      
-    
-Admitted.
+Fixpoint νPermuteTypeAt n': Permute (νTypeAt n'.+2) :=
+  match n' with
+  | O => mkPermute0
+  | n'.+1 => mkPermuteSp (νPermuteTypeAt n')
+  end.
 
 (** Degeneracies *)
 
