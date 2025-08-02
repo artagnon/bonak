@@ -594,6 +594,9 @@ Proof.
         *)
       * (* prove a reorganization of the cohFrame using UIP *)
         (* then: apply (cohPaintings.2 r q _ _ ε ω). *)
+        destruct d as (d,l). simpl.
+        apply functional_extensionality_dep; intros 𝛉.
+        rewrite <- map_subst_app.
         now elim F.
 Defined.
 
