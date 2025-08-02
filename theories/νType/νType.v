@@ -555,23 +555,6 @@ Fixpoint mkCohPaintingTypes {p}:
 
 Axiom F: False.
 
-Fixpoint mkCohFrame `{deps: FormDeps p n.+1}
-  {dep: FormDep deps}
-  {extraDeps: FormDepsExtension (deps; dep)}
-  {restrPaintings': RestrPaintingTypes' (dep; extraDeps)}
-  (cohs: mkCohFrameTypes restrPaintings')
-  (extraCohs: CohFramesExtension cohs)
-  (cohPaintings: mkCohPaintingTypes extraCohs) {struct p}: mkCohFrameType cohs.
-Proof.
-  destruct p.
-  - destruct restrPaintings', cohs. red; intros. destruct d.
-    unfold mkRestrFrame, mkRestrFrames. simpl.
-    (* apply dep.(_frame'').(UIP). *) now elim F.
-  - destruct cohs as (cohs, coh). now elim F. (* apply coh,
-    (mkCohFrame p n.+1 deps.(1) deps.(2)
-    (dep; extraDeps)%extradeps restrPaintings'.1 cohs). *)
-Defined.
-
 Fixpoint mkCohFrames `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' extraDeps}
@@ -589,12 +572,9 @@ Proof.
       * now apply ((mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
         (cohs.2; extraCohs)%extracohs cohPaintings.1).2 r.+1 q.+1
         (⇑ Hrq) _ ε ω).
-        (* now apply (mkCohFrame (deps := deps.(1)) (dep := deps.(2))
-        (restrPaintings' := restrPaintings'.1) cohs.1 r.+1 q.+1 (⇑ Hrq) _ ε ω).
-        *)
       * (* prove a reorganization of the cohFrame using UIP *)
         (* then: apply (cohPaintings.2 r q _ _ ε ω). *)
-        destruct d as (d,l). simpl.
+        destruct d as (d, l). simpl.
         apply functional_extensionality_dep; intros 𝛉.
         rewrite <- map_subst_app.
         now elim F.
