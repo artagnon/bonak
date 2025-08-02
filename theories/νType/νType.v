@@ -111,7 +111,7 @@ Class FormDep `(deps: FormDeps p n.+1) := {
   _frame'': HSet;
   _painting'': _frame'' -> HSet;
   _restrFrame': forall q (Hq: q <= n) (ε: arity),
-    mkFrame' (n := n.+1) deps -> _frame''.(Dom);
+    mkFrame' (n := n.+1) deps -> _frame'';
 }.
 
 #[local]
@@ -470,17 +470,23 @@ Definition mkPrevPainting `{deps: FormDeps p n}
    RestrPaintingType(p+1+n,p) up to using unfoldPaintingProj at other places.
    It is more convenient to refer to mkPrevPainting to later state cohPainting *)
 
+Definition mkRestrPaintingType `{deps: FormDeps p n}
+  {extraDeps: FormDepsExtension deps}
+  {restrPaintings': RestrPaintingTypes' extraDeps}
+  (cohs: mkCohFrameTypes restrPaintings')
+  (extraCohs: CohFramesExtension cohs) :=
+  forall q (Hq: q <= n) ε
+    (d: mkPrevFrame extraDeps (mkRestrFrames restrPaintings' cohs)),
+    mkPrevPainting extraCohs d ->
+    mkPainting' extraDeps (mkRestrFrame restrPaintings' cohs q _ ε d).
+
 Fixpoint mkRestrPainting `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' extraDeps}
   (cohs: mkCohFrameTypes restrPaintings')
-  (extraCohs: CohFramesExtension cohs):
-  forall q {Hq: q <= n} ε
-    (d: mkPrevFrame extraDeps (mkRestrFrames restrPaintings' cohs)),
-    mkPrevPainting extraCohs d ->
-    mkPainting' extraDeps (mkRestrFrame restrPaintings' cohs q _ ε d).
+  (extraCohs: CohFramesExtension cohs): mkRestrPaintingType cohs extraCohs.
 Proof.
-  intros * (l, c). destruct extraCohs, q.
+  red; intros * (l, c). destruct extraCohs, q.
   - now exact (rew unfoldPaintingProj _ _ in l ε).
   - exfalso. now apply leY_O_contra in Hq.
   - now exact (rew unfoldPaintingProj _ _ in l ε).
@@ -489,7 +495,7 @@ Proof.
       apply restrPainting'. simpl in l.
       now exact (rew unfoldPaintingProj _ _ in l ω).
     + now exact (mkRestrPainting _ _ _ extraDeps
-        (restrPaintings';restrPainting') (cohs; coh) _ q (⇓ Hq) ε
+        (restrPaintings'; restrPainting') (cohs; coh) _ q (⇓ Hq) ε
         (d as x in _; l in _) c).
 Defined.
 
@@ -508,9 +514,8 @@ Fixpoint mkRestrPaintings `{deps: FormDeps p n}
   mkRestrPaintingTypes cohs extraCohs.
 Proof.
   destruct p.
-  - unshelve esplit. now exact tt.
-    red; intros * c.
-    now apply (mkRestrPainting cohs extraCohs q ε), c.
+  - unshelve esplit. now exact tt. red; intros * c.
+    now apply (mkRestrPainting cohs extraCohs q _ ε), c.
   - unshelve esplit. now apply (mkRestrPaintings p n.+1 _ _ _ cohs.1
       (cohs.2; extraCohs)%extracohs).
     red; intros * c. now apply (mkRestrPainting cohs extraCohs), c.
@@ -530,8 +535,8 @@ Definition mkCohPaintingType `{deps: FormDeps p n.+1}
     (d: mkPrevFrame (dep; extraDeps) (mkRestrFrames restrPaintings' cohs))
     (c: mkPrevPainting (coh; extraCohs) d),
   rew [dep.(_painting'')] coh r q Hrq Hq ε ω d in
-  restrPainting' q _ ε _ (mkRestrPainting cohs (coh; extraCohs) r ω d c) =
-  restrPainting' r _ ω _ (mkRestrPainting cohs (coh; extraCohs) q.+1 ε d c).
+  restrPainting' q _ ε _ (mkRestrPainting cohs (coh; extraCohs) r _ ω d c) =
+  restrPainting' r _ ω _ (mkRestrPainting cohs (coh; extraCohs) q.+1 _ ε d c).
 
 Fixpoint mkCohPaintingTypes {p}:
   forall `{deps: FormDeps p n}
@@ -548,17 +553,24 @@ Fixpoint mkCohPaintingTypes {p}:
          mkCohPaintingType extraCohs }
   end.
 
+Axiom F: False.
+
 Fixpoint mkCohFrame `{deps: FormDeps p n.+1}
   {dep: FormDep deps}
   {extraDeps: FormDepsExtension (deps; dep)}
   {restrPaintings': RestrPaintingTypes' (dep; extraDeps)}
   (cohs: mkCohFrameTypes restrPaintings')
-  (coh: mkCohFrameType cohs) {struct p}: mkCohFrameType cohs.
+  (extraCohs: CohFramesExtension cohs)
+  (cohPaintings: mkCohPaintingTypes extraCohs) {struct p}: mkCohFrameType cohs.
 Proof.
-  - red; simpl. admit.
-Admitted.
-
-Axiom F: False.
+  destruct p.
+  - destruct restrPaintings', cohs. red; intros. destruct d.
+    unfold mkRestrFrame, mkRestrFrames. simpl.
+    (* apply dep.(_frame'').(UIP). *) now elim F.
+  - destruct cohs as (cohs, coh). now elim F. (* apply coh,
+    (mkCohFrame p n.+1 deps.(1) deps.(2)
+    (dep; extraDeps)%extradeps restrPaintings'.1 cohs). *)
+Defined.
 
 Fixpoint mkCohFrames `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
@@ -566,8 +578,7 @@ Fixpoint mkCohFrames `{deps: FormDeps p n}
   (cohs: mkCohFrameTypes restrPaintings')
   (extraCohs: CohFramesExtension cohs)
   (cohPaintings: mkCohPaintingTypes extraCohs)
-  {struct p}:
-  mkCohFrameTypes (mkRestrPaintings cohs extraCohs).
+  {struct p}: mkCohFrameTypes (mkRestrPaintings cohs extraCohs).
 Proof.
   destruct p.
   - red; simpl. unshelve esplit. now exact tt. now intros.
@@ -578,6 +589,9 @@ Proof.
       * now apply ((mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
         (cohs.2; extraCohs)%extracohs cohPaintings.1).2 r.+1 q.+1
         (⇑ Hrq) _ ε ω).
+        (* now apply (mkCohFrame (deps := deps.(1)) (dep := deps.(2))
+        (restrPaintings' := restrPaintings'.1) cohs.1 r.+1 q.+1 (⇑ Hrq) _ ε ω).
+        *)
       * (* prove a reorganization of the cohFrame using UIP *)
         (* then: apply (cohPaintings.2 r q _ _ ε ω). *)
         now elim F.
