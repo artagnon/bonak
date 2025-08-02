@@ -2,9 +2,7 @@
     - Recursive definition
     - "Yoneda trick" *)
 
-From Bonak Require Import Notation.
-From Bonak Require Import LeInductive.
-
+From Bonak Require Import Notation LeInductive.
 From Coq Require Import StrictProp.
 
 Set Warnings "-notation-overridden".
@@ -455,29 +453,3 @@ Ltac solve_leY :=
       end in find p q O success
   | [ |- ?c ] => debug ltac:(idtac "Not a leY or leI:" c); fail
   end.
-
-Example ex1 n p q r
-  (Hpr : p.+2 <= r.+2)
-  (Hrq : r.+2 <= q.+2)
-  (Hq : q.+2 <= n)
-  (H: p.+1 <~ q.+2 -> p.+1 <~ q.+1 -> p.+2 <= r.+2 -> p.+2 <= n -> True): True.
-Proof.
-  apply H.
-  solve_leY.
-  solve_leY.
-  solve_leY.
-  solve_leY.
-Qed.
-
-(* Hint Extern 0 (leY _ _) => solve_leY : typeclass_instances. *)
-
-(* Example ex2 {n} p q r {Hpr : p.+2 <~ r.+2} {Hrq : r.+2 <~ q.+2} {Hq : q.+2 <= n}
-  {H: forall p q r, p.+1 <= r.+1 -> r <= q -> q <= n -> p <= n}: p <= n.
-Proof.
-  now apply (H p q r _ _ _).
-Qed.
-
-Example ex3 n p q {Hpq: p.+2 <= q.+2} {Hq: q.+2 <= n}
-  {H: p.+1 <= n.+1 -> True}: True.
-  now apply (H _).
-Qed. *)
