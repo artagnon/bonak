@@ -301,12 +301,10 @@ Fixpoint RestrPaintingTypes' {p}:
 
 #[local]
 Instance mkCohFrameTypesAndRestrFrames:
-  forall `(deps: FormDeps p n)
-  (extraDeps: FormDepsExtension deps)
+  forall `(deps: FormDeps p n) (extraDeps: FormDepsExtension deps)
   (restrPaintings': RestrPaintingTypes' extraDeps), CohFrameTypeBlock :=
   fix mkCohFrameTypesAndRestrFrames {p}:
-  forall `(deps: FormDeps p n)
-    (extraDeps: FormDepsExtension deps)
+  forall `(deps: FormDeps p n) (extraDeps: FormDepsExtension deps)
     (restrPaintings': RestrPaintingTypes' extraDeps), CohFrameTypeBlock :=
   match p with
   | 0 =>
@@ -573,10 +571,10 @@ Proof.
     + intros. unshelve eapply eq_existT_curried.
       * now apply ((mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
         (cohs.2; extraCohs)%extracohs cohPaintings.1).2 r.+1 q.+1
-        (⇑ Hrq) _ ε ω).
+        (⇑ Hrq) (⇑ Hq) ε ω).
       * (* prove a reorganization of the cohFrame using UIP *)
         (* then: apply (cohPaintings.2 r q _ _ ε ω). *)
-        destruct d as (d, l). simpl.
+        destruct d as (d, l).
         apply functional_extensionality_dep; intros 𝛉.
         rewrite <- map_subst_app.
         now elim F.
@@ -719,7 +717,7 @@ Variable D: mkPrefix'' p.
 Definition mkDeps': FormDeps p.+1 0 :=
   mkFullDeps _ ((C.(data) D.1).(cohFrames) D.2).
 
-Definition mkRestrPaintings' E': RestrPaintingTypes' _ :=
+Definition mkRestrPaintings' E': RestrPaintingTypes' (TopRestrFrames E') :=
   mkRestrPaintings ((C.(data) D.1).(cohFrames) D.2) (TopCohFrame E').
 
 Definition mkCohFrames' E': mkCohFrameTypes (mkRestrPaintings' E') :=
@@ -727,9 +725,9 @@ Definition mkCohFrames' E': mkCohFrameTypes (mkRestrPaintings' E') :=
    (TopCohFrame E') ((C.(data) D.1).(cohPaintings) D.2 E').
 
 Definition mkCohPaintings' E' E:
-  mkCohPaintingTypes (cohs := mkCohFrames' E') (TopCohFrame _) :=
- mkCohPaintings (TopCohFrame E') (TopCohPainting (NextE := E)
-  (extraCohs := TopCohFrame E')).
+  mkCohPaintingTypes (cohs := mkCohFrames' E') (TopCohFrame E) :=
+ mkCohPaintings (TopCohFrame E')
+  (TopCohPainting (NextE := E) (extraCohs := TopCohFrame E')).
 
 End νTypeData.
 
