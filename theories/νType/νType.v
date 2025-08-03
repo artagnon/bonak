@@ -65,8 +65,10 @@ That is, we build:
                 Frames(1+n,0..1)(restrFrames(1+n,0..0) :=
                   [unit;{d:Frame(1+n,0)&Painting(1+n,0)(restrFrame(1+n,0)(d)}] }
   ...
-  p     : { RestrFrameTypes = {RestrFrameType(p+n,0) ... RestrFrameType(p+n,p-1)} ;
-              Frame(p+n,p)(restrFrames(p+n,0..p-1) := [frame(p+n,0);...;frame(p+n,p)] }
+  p     : { RestrFrameTypes = {RestrFrameType(p+n,0) ...
+            RestrFrameType(p+n,p-1)} ;
+              Frame(p+n,p)(restrFrames(p+n,0..p-1) := [frame(p+n,0);...;
+                                                       frame(p+n,p)] }
 *)
 Fixpoint mkRestrFrameTypesAndFrames' {p n}: forall
   frames'' (paintings'': PaintingGen p frames''), RestrFrameTypeBlock p :=
@@ -161,8 +163,7 @@ Bind Scope extra_deps_scope with FormDepsExtension.
 Notation "( x ; y )" := (AddExtraRestrFrame _ x y)
   (at level 0, format "( x ; y )"): extra_deps_scope.
 
-(* Example: if p := 0, extraDeps := ([],E')
-   mkPainting:= [E'] *)
+(* Example: if p := 0, extraDeps := ([],E') mkPainting:= [E'] *)
 
 Fixpoint mkPainting' `{deps: FormDeps p n} (extraDeps: FormDepsExtension deps):
   mkFrame' deps -> HSet :=
@@ -250,18 +251,16 @@ Definition mkDeps `{deps: FormDeps p n}
   _restrFrames' := restrFrames;
 |}.
 
-(** Thus being able to build frame(p+1+n,p+1) from
-     the same assumptions *)
+(** Thus being able to build frame(p+1+n,p+1) from the same assumptions *)
 
 Definition mkFrame `{deps: FormDeps p n}
   (extraDeps: FormDepsExtension deps)
   (restrFrames: mkRestrFrameTypes deps extraDeps) :=
   mkFrame' (mkDeps extraDeps restrFrames).
 
-(** By restriction, we can thus build frame(p+1+n,p).
-    Note that mkPrevFrame could not be built by calling
-    mkFrame' on p and n+1 (rather than on p+1 and n, then
-    restricting) because it would require knowing deps for
+(** By restriction, we can thus build frame(p+1+n,p). Note that mkPrevFrame
+    could not be built by calling mkFrame' on p and n+1 (rather than on
+    p+1 and n, then restricting) because it would require knowing deps for
     p and n+1 instead of only p and n *)
 
 Definition mkPrevFrame `{deps: FormDeps p n}
@@ -359,7 +358,8 @@ Definition mkRestrFrames `{deps: FormDeps p n}
   (mkCohFrameTypesAndRestrFrames deps extraDeps
     restrPaintings').(RestrFramesDef).
 
-(* Tying the loop: we type mkRestrFrame((p+1)+n,p) knowing mkRestrFrames(p+(1+n),0..p-1)
+(* Tying the loop: we type mkRestrFrame((p+1)+n,p) knowing
+    mkRestrFrames(p+(1+n),0..p-1)
     Note that even if mkRestrFrames((p+1)+n,p) : mkRestrFrameTypes((p+1)+n,p),
     we don't have mkRestrFrame((p+1)+n,p): mkRestrFrameType((p+1)+n,p), because
     mkRestrFrameType((p+1)+n,p) assumes restrFrames((p+1)+n,0..p) which would be
@@ -384,7 +384,9 @@ Definition mkRestrFrame `{deps: FormDeps p n}
     (mkRestrFrames restrPaintings' cohs).2.
 
 (* Example: if p := 0, extraDeps := ([],E'), restrPaintings' := , cohs := []
-   then mkFullDeps := {_frames'':=[unit];_paintings'':=[E']};_restrFrames':=[\qω().()]}
+   then mkFullDeps := {_frames'':=[unit];
+                       _paintings'':=[E']};
+                       _restrFrames':=[\qω().()]}
    (where _restrFrames' is presented as a dependent pair, i.e. ((),\qω().()) *)
 
 Definition mkFullDeps `{deps: FormDeps p n}
@@ -464,9 +466,10 @@ Definition mkPrevPainting `{deps: FormDeps p n}
       mkExtraDeps extraCohs)%extradeps:
     mkPrevFrame (p := p) extraDeps (mkRestrFrames restrPaintings' cohs) -> HSet.
 
-(* Note: we could type mkRestrPainting(p+1+n,p) of type
+(* Note: We could type mkRestrPainting(p+1+n,p) of type
    RestrPaintingType(p+1+n,p) up to using unfoldPaintingProj at other places.
-   It is more convenient to refer to mkPrevPainting to later state cohPainting *)
+   It is more convenient to refer to mkPrevPainting to later state cohPainting.
+*)
 
 Definition mkRestrPaintingType `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
