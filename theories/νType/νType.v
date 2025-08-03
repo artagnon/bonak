@@ -561,7 +561,9 @@ Fixpoint mkCohFrames `{deps: FormDeps p n}
   (cohs: mkCohFrameTypes restrPaintings')
   (extraCohs: CohFramesExtension cohs)
   (cohPaintings: mkCohPaintingTypes extraCohs)
-  {struct p}: mkCohFrameTypes (mkRestrPaintings cohs extraCohs).
+  {struct p}: mkCohFrameTypes (deps := mkFullDeps restrPaintings' cohs)
+    (extraDeps := mkExtraDeps extraCohs)
+    (mkRestrPaintings cohs extraCohs).
 Proof.
   destruct p.
   - red; simpl. unshelve esplit. now exact tt. now intros.
@@ -630,7 +632,10 @@ Fixpoint mkExtraCohs `{deps: FormDeps p n}
   (extraCohs: CohFramesExtension cohs)
   {cohPaintings: mkCohPaintingTypes extraCohs}
   (extraCohPaintings: CohPaintingsExtension cohPaintings):
-  CohFramesExtension (mkCohFrames cohs extraCohs cohPaintings).
+  CohFramesExtension (deps := mkFullDeps restrPaintings' cohs)
+    (extraDeps := mkExtraDeps extraCohs)
+    (restrPaintings' := mkRestrPaintings cohs extraCohs)
+    (mkCohFrames cohs extraCohs cohPaintings).
 Proof.
   destruct extraCohPaintings.
   - constructor. apply NextE.
@@ -655,6 +660,8 @@ Fixpoint mkCohPainting `{deps: FormDeps p n}
   {cohPaintings: mkCohPaintingTypes extraCohs}
   (extraCohPaintings: CohPaintingsExtension cohPaintings):
   mkCohPaintingType (dep := (mkFullDeps restrPaintings' cohs).(2))
+    (restrPainting' := (mkRestrPaintings cohs extraCohs).2)
+    (coh := (mkCohFrames cohs extraCohs cohPaintings).2)
     (mkExtraCohs extraCohs extraCohPaintings).
 Proof.
   red; intros. destruct extraCohPaintings.
@@ -669,7 +676,11 @@ Fixpoint mkCohPaintings `{deps: FormDeps p n}
   (extraCohs: CohFramesExtension cohs)
   {cohPaintings: mkCohPaintingTypes extraCohs}
   (extraCohPaintings: CohPaintingsExtension cohPaintings) {struct p}:
-  mkCohPaintingTypes (mkExtraCohs extraCohs extraCohPaintings).
+  mkCohPaintingTypes (deps := mkFullDeps restrPaintings' cohs)
+    (extraDeps := mkExtraDeps extraCohs)
+    (restrPaintings' := mkRestrPaintings cohs extraCohs)
+    (cohs := mkCohFrames cohs extraCohs cohPaintings)
+    (mkExtraCohs extraCohs extraCohPaintings).
 Proof.
   destruct p.
   - unshelve esplit. now exact tt.
