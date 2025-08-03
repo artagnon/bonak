@@ -102,7 +102,7 @@ The well-foundedness of the construction can be justified by the observation tha
             \\
             \paintingtype^{n,[0,...,p]} & (\myframe^{n,[0,...,p]}:\myframetype^{n,[0,...,p]}) & :      & Type_{l+1}                                                               \\
             \paintingtype^{n,[]}        & \star                                               & \defeq & unit                                                                     \\
-            \paintingtype^{n,[0,...,p]} & (\myframe^{n,[0,...,p]})                            & \defeq & \paintingtype^{n,[0,...,p-1]} \times (\myframe^{n,p} \rightarrow Type_l) \\
+            \paintingtype^{n,[0,...,p]} & (\myframe^{n,[0,...,p]})                            & \defeq & \paintingtype^{n,[0,...,p-1]}(\myframe^{n,[0,...,p-1]}) \times (\myframe^{n,p} \rightarrow Type_l) \\
           \end{array}
         $$
 
@@ -114,7 +114,11 @@ The well-foundedness of the construction can be justified by the observation tha
               \left(\begin{array}{l}
                         \myframe^{n-1,[0,...,p-1]}:\myframetype^{n-1,[0,...,p-1]}                               \\
                         \painting^{n-1,[0,...,p-1]}:\paintingtype^{n-1,[0,...,p-1]}(\myframe^{n-1,[0,...,p-1]}) \\
-                        \restrframe^{n,[0,...,p-1]}:\restrframetype^{n,[0,...,p-1]}                             \\
+                        \restrframe^{n,[0,...,p-1]}:\restrframetype^{n,[0,...,p-1]}
+                                \left(\begin{array}{l}
+                                    \myframe^{n-1,[0,...,p-1]}  \\
+                                    \painting^{n-1,[0,...,p-1]} \\
+                                  \end{array}\right)                             \\
                       \end{array}\right) : \myframetype^{n-1,[0,...,p]}
             }                                                                                         \\
             \myframe^{n,[0]}                                           &
@@ -180,6 +184,152 @@ The well-foundedness of the construction can be justified by the observation tha
           \end{array}
         $$
 
+        Or, alternatively, as:
+        $$\!\!\!\!\!\!\!\!\!\!\!\!
+          \begin{array}{llcl}
+            \restrframetype^{n,[0,...,p-1]}                            &
+            \multicolumn{3}{l}{
+              \left(\begin{array}{l}
+                        \myframe^{n-1,[0,...,p-1]}:\myframetype^{n-1,[0,...,p-1]}                               \\
+                        \painting^{n-1,[0,...,p-1]}:\paintingtype^{n-1,[0,...,p-1]}(\myframe^{n-1,[0,...,p-1]}) \\
+                      \end{array}\right) : Type_{l}
+            }                                                                                         \\
+            \restrframetype^{n,[]}                                     &
+            \left(\begin{array}{l}
+                      \star \\
+                      \star \\
+                    \end{array}\right)                                     & \defeq &
+            unit                                                                                      \\
+            \restrframetype^{n,[0,...,p]}                              &
+            \left(\begin{array}{l}
+                      \myframe^{n-1,[0,...,p]}  \\
+                      \painting^{n-1,[0,...,p]} \\
+                    \end{array}\right) & \defeq &
+            \begin{array}{l}
+              \Sigma \restrframe^{n,[0,...,p-1]}                            \\
+              \quad:\restrframetype^{n,[0,...,p-1]}
+              \left(\begin{array}{l}
+                        \myframe^{n-1,[0,...,p-1]}  \\
+                        \painting^{n-1,[0,...,p-1]} \\
+                      \end{array}\right)
+              .\,                                                           \\
+              \Pi q\leq n.\,\Pi \omega.\,\myframe^{n,[0,...,p]}
+              \left(\begin{array}{l}
+                        \myframe^{n-1,[0,...,p-1]}  \\
+                        \painting^{n-1,[0,...,p-1]} \\
+                      \end{array}\right)(\restrframe^{n,[0,...,p-1]}) \\
+            \end{array} \\
+            \myframe^{n,[0,...,p]}                                     &
+            \multicolumn{3}{l}{
+              \left(\begin{array}{l}
+                        \myframe^{n-1,[0,...,p-1]}:\myframetype^{n-1,[0,...,p-1]}                               \\
+                        \painting^{n-1,[0,...,p-1]}:\paintingtype^{n-1,[0,...,p-1]}(\myframe^{n-1,[0,...,p-1]}) \\
+                      \end{array}\right) : \restrframetype^{n,[0,...,p-1]}
+                        \left(\begin{array}{l}
+                          \myframe^{n-1,[0,...,p-1]}  \\
+                          \painting^{n-1,[0,...,p-1]} \\
+                        \end{array}\right) \rightarrow \myframetype^{n-1,[0,...,p]}
+            }                                                                                         \\
+            \myframe^{n,[0]}                                           &
+            \left(\begin{array}{l}
+                      \star \\
+                      \star \\
+                    \end{array}\right)                                     & \defeq & \star \mapsto (\star,unit)      \\
+            \myframe^{n,[0,...,p+1]}                                   &
+            \left(\begin{array}{l}
+                      \myframe^{n-1,[0,...,p]}  \\
+                      \painting^{n-1,[0,...,p]} \\
+                    \end{array}\right) & \defeq &
+            \restrframe^{n,[0,...,p]} \mapsto
+            \left(\begin{array}{l}
+                      \myframe^{n,[0,...,p]}
+                      \left(\begin{array}{l}
+                          \myframe^{n-1,[0,...,p-1]}  \\
+                          \painting^{n-1,[0,...,p-1]} \\
+                        \end{array}\right)(\restrframe^{n,[0,...,p-1]}), \\
+                      \Sigma d:\myframe^{n,[0,...,p]}
+                      \left(\begin{array}{l}
+                          \myframe^{n-1,[0,...,p-1]}  \\
+                          \painting^{n-1,[0,...,p-1]} \\
+                        \end{array}\right)(\restrframe^{n,[0,...,p-1]}).\, \\
+                      \quad \Pi\omega.\,\painting^{n-1,p}(\restrframe^{n,p}(d))     \\
+                    \end{array}\right)                    \\
+          \end{array}
+        $$
+
+        Or, even, using an alternative notation, as:
+        $$\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+          \begin{array}{llcl}
+            \restrframetype^{n,<p}                            &
+            \multicolumn{3}{l}{
+              \left(\begin{array}{l}
+                        \myframe^{n-1,<p}:\myframetype^{n-1,<p}                               \\
+                        \painting^{n-1,<p}:\paintingtype^{n-1,<p}(\myframe^{n-1,<p}) \\
+                      \end{array}\right) : Type_{l}
+            }                                                                                         \\
+            \restrframetype^{n,<0}                                     &
+            \left(\begin{array}{l}
+                      \star \\
+                      \star \\
+                    \end{array}\right)                                     & \defeq &
+            unit                                                                                      \\
+            \restrframetype^{n,\leq p}                              &
+            \left(\begin{array}{l}
+                      \myframe^{n-1,\leq p}  \\
+                      \painting^{n-1,\leq p} \\
+                    \end{array}\right) & \defeq &
+            \begin{array}{l}
+              \Sigma \restrframe^{n,<p}                            \\
+              \quad:\restrframetype^{n,<p}
+              \left(\begin{array}{l}
+                        \myframe^{n-1,<p}  \\
+                        \painting^{n-1,<p} \\
+                      \end{array}\right)
+              .\,                                                           \\
+              \Pi q\leq n.\,\Pi \omega.\,\myframe^{n,\leq p}
+              \left(\begin{array}{l}
+                        \myframe^{n-1,<p}  \\
+                        \painting^{n-1,<p} \\
+                      \end{array}\right)(\restrframe^{n,<p}) \\
+            \end{array} \\
+            \myframe^{n,\leq p}                                     &
+            \multicolumn{3}{l}{
+              \left(\begin{array}{l}
+                        \myframe^{n-1,<p}:\myframetype^{n-1,<p}                               \\
+                        \painting^{n-1,<p}:\paintingtype^{n-1,<p}(\myframe^{n-1,<p}) \\
+                      \end{array}\right) : \restrframetype^{n,<p}
+                        \left(\begin{array}{l}
+                          \myframe^{n-1,<p}  \\
+                          \painting^{n-1,<p} \\
+                        \end{array}\right) \rightarrow \myframetype^{n-1,\leq p}
+            }                                                                                         \\
+            \myframe^{n,\leq 0}                                           &
+            \left(\begin{array}{l}
+                      \star \\
+                      \star \\
+                    \end{array}\right)                                     & \defeq & \star \mapsto (\star,unit)      \\
+            \myframe^{n,\leq p+1}                                   &
+            \left(\begin{array}{l}
+                      \myframe^{n-1,\leq p}  \\
+                      \painting^{n-1,\leq p} \\
+                    \end{array}\right) & \defeq &
+            \restrframe^{n,\leq p} \mapsto
+            \left(\begin{array}{l}
+                      \myframe^{n,\leq p}
+                      \left(\begin{array}{l}
+                          \myframe^{n-1,<p}  \\
+                          \painting^{n-1,<p} \\
+                        \end{array}\right)(\restrframe^{n,<p}), \\
+                      \Sigma d:\myframe^{n,\leq p}
+                      \left(\begin{array}{l}
+                          \myframe^{n-1,<p}  \\
+                          \painting^{n-1,<p} \\
+                        \end{array}\right)(\restrframe^{n,<p}).\, \\
+                      \quad \Pi\omega.\,\painting^{n-1,p}(\restrframe^{n,p}(d))     \\
+                    \end{array}\right)                    \\
+          \end{array}
+        $$
+
         TODO: discuss $p\leq q \leq n$ vs $0 \leq q \leq n-p$.
 
         TODO: remark that we abuse terminology for frame, since, informally, a
@@ -242,6 +392,137 @@ The well-foundedness of the construction can be justified by the observation tha
             \udensdash{\restrframe}^{n,[p,...,n-1]},X_n \arrow[ll, dotted, bend left=15] \arrow[l, dotted] \arrow[uul, dotted, hook']\\
           \end{tikzcd}
         \end{center}
+
+To define $\painting$ formally, we need to define $\myframe^{n,[p,...,n]}$, $\painting^{n,[p,...,n]}$ and $\restrframe^{n,[p,...,n]}$:
+
+        $$
+\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+          \begin{array}{llcl}
+            \myframetype^{n,[p,...,n]}  &                                                     & :      & Type_{l+1}                                                               \\
+            \myframetype^{n,[]}         &                                                     & \defeq & unit                                                                     \\
+            \myframetype^{n,[p,...,n]}  &                                                     & \defeq & Type_l \times \myframetype^{n,[p+1,...,n-1]}                               \\
+            \\
+            \paintingtype^{n,[p,...,n]} & (\myframe^{n,[p,...,n]}:\myframetype^{n,[p,...,n]}) & :      & Type_{l+1}                                                               \\
+            \paintingtype^{n,[]}        & \star                                               & \defeq & unit                                                                     \\
+            \paintingtype^{n,[p,...,n]}_{p<n} & (\myframe^{n,[p,...,n]})                            & \defeq & (\myframe^{n,p} \rightarrow Type_l) \times \paintingtype^{n,[p+1,...,n]}(\myframe^{n,[p+1,...,n]}) \\
+            \\
+            \restrframetype^{n,[p,...,n]} &
+            \multicolumn{3}{l}{
+              \left(\begin{array}{l}
+                        \myframe^{n-1,[0,...,p-1]}:\myframetype^{n-1,[0,...,p-1]}                               \\
+                        \painting^{n-1,[0,...,p-1]}:\paintingtype^{n-1,[0,...,p-1]}(\myframe^{n-1,[0,...,p-1]}) \\
+                        \myframe^{n-1,[p,...,n-1]}:\myframetype^{n-1,[p,...,n-1]}                                     \\
+                        \painting^{n-1,[p,...,n-1]}:\paintingtype^{n-1,[p,...,n-1]}(\myframe^{n-1,[p,...,n-1]})           \\
+                        \restrframe^{n,[0,...,p-1]}:\restrframetype^{n,[0,...,p-1]}
+                                \left(\begin{array}{l}
+                                    \myframe^{n-1,[0,...,p-1]}  \\
+                                    \painting^{n-1,[0,...,p-1]} \\
+                                  \end{array}\right) \\
+                      \end{array}\right) : Type_{l}
+            }    \\
+            \restrframetype^{n,[]}        &
+            \left(\begin{array}{l}
+                      \myframe^{n-1,[0,...,n-1]} \\
+                      \painting^{n-1,[0,...,n-1]} \\
+                      \star \\
+                      \star \\
+                      \restrpainting^{n,[0,...,n-1]} \\
+                    \end{array}\right)                                     & \defeq & unit \\
+            \restrframetype^{n,[p,...,n-1]} &
+                                \left(\begin{array}{l}
+                                    \myframe^{n-1,[0,...,p-1]}  \\
+                                    \painting^{n-1,[0,...,p-1]} \\
+                                    \myframe^{n-1,[p,...,n-1]}  \\
+                                    \painting^{n-1,[p,...,n-1]} \\
+                                    \restrframe^{n,[0,...,p-1]} \\
+                                  \end{array}\right)
+            & \defeq & 
+                                \begin{array}{l}
+                                  \myframe^{n,p}
+                                  \left(\begin{array}{l}
+                                    \myframe^{n-1,[0,...,p-1]}  \\
+                                    \painting^{n-1,[0,...,p-1]} \\
+                                    \restrframe^{n,[0,...,p-1]} \\
+                                  \end{array}\right)
+                                \rightarrow \myframe^{n-1,p}\\
+                                \times \\
+                                \restrframetype^{n,[p+1,...,n]}
+                                \left(\begin{array}{l}
+                                    \myframe^{n-1,[0,...,p]}  \\
+                                    \painting^{n-1,[0,...,p]} \\
+                                    \myframe^{n-1,[p+1,...,n-1]}  \\
+                                    \painting^{n-1,[p+1,...,n-1]} \\
+                                    \restrframe^{n,[0,...,p]} \\
+                                  \end{array}\right)
+                                \end{array}
+          \end{array}
+        $$
+
+
+        This allows to define $\painting^{n,p}$ formally:
+        $$
+          \begin{array}{llcl}
+            \painting^{n,p}                                     &
+            \multicolumn{3}{l}{
+              \left(\begin{array}{l}
+                        \myframe^{n-1,[0,...,p-1]}:\myframetype^{n-1,[0,...,p-1]}                               \\
+                        \painting^{n-1,[0,...,p-1]}:\paintingtype^{n-1,[0,...,p-1]}(\myframe^{n-1,[0,...,p-1]}) \\
+                        \myframe^{n-1,[p,...,n-1]}:\myframetype^{n-1,[p,...,n-1]}                                     \\
+                        \painting^{n-1,[p,...,n-1]}:\paintingtype^{n-1,[p,...,n-1]}(\myframe^{n-1,[p,...,n-1]})           \\
+                        \restrframe^{n,[0,...,p-1]}:\restrframetype^{n,[0,...,p-1]}
+                                \left(\begin{array}{l}
+                                    \myframe^{n-1,[0,...,p-1]}  \\
+                                    \painting^{n-1,[0,...,p-1]} \\
+                                  \end{array}\right) \\
+                        \restrframe^{n,[p,...,n-1]}:\restrframetype^{n,[p,...,n-1]}
+                                \left(\begin{array}{l}
+                                    \myframe^{n-1,[0,...,p-1]}  \\
+                                    \painting^{n-1,[0,...,p-1]} \\
+                                    \myframe^{n-1,[p,...,n-2]}  \\
+                                    \painting^{n-1,[p,...,n-2]} \\
+                                    \restrframe^{n,[0,...,p-1]} \\
+                                  \end{array}\right) \\
+                        E:\myframe^{n-1,n-1}\rightarrow Type_l\\
+                      \end{array}\right) : \myframe^{n-1,n-1}\rightarrow Type_l
+            }    \\
+            \painting^{n,n}                                           &
+            \left(\begin{array}{l}
+                      \myframe^{n-1,[0,...,n-1]} \\
+                      \painting^{n-1,[0,...,n-1]} \\
+                      \star \\
+                      \star \\
+                      \restrpainting^{n,[0,...,n-1]} \\
+                      \star \\
+                      E \\
+                    \end{array}\right)                                     & \defeq & E \\
+            \painting^{n,p}_{p<n}                                   &
+                                \left(\begin{array}{l}
+                                    \myframe^{n-1,[0,...,p-1]}  \\
+                                    \painting^{n-1,[0,...,p-1]} \\
+                                    \myframe^{n-1,[p,...,n-1]}  \\
+                                    \painting^{n-1,[p,...,n-1]} \\
+                                    \restrframe^{n,[0,...,p-1]} \\
+                                    \restrframe^{n,[p,...,n-1]} \\
+                                    E \\
+                                  \end{array}\right) & \defeq & d \mapsto
+            \left(\begin{array}{l}
+              \Sigma l:(\Pi q\leq n.\,\Pi \omega.\
+                      \painting^{n-1,[0,...,p]}(\restrframe^{n,p}(d))). \\
+                      \painting^{n,[p+1,...,n-1]}
+                      \left(\begin{array}{l}
+                                    \myframe^{n-1,[0,...,p]}  \\
+                                    \painting^{n-1,[0,...,p]} \\
+                                    \myframe^{n-1,[p+1,...,n-1]}  \\
+                                    \painting^{n-1,[p+1,...,n-1]} \\
+                                    \restrframe^{n,[0,...,p]} \\
+                                    \restrframe^{n,[p+1,...,n-1]} \\
+                                    E \\
+                        \end{array}\right)(d,l) \\
+                    \end{array}\right)                    \\
+          \end{array}
+          $$
+
+          From which we can deduce $\painting^{n,[0,...,p]}$ by recursion on $p$.
 
   \item Defining $\restrframe^{n,p}$ for $p\leq n-1$, in addition to the
         mutual type dependency in $\myframe^{n,p}$ and the dependency in
