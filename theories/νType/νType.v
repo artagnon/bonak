@@ -1791,26 +1791,6 @@ Proof.
     exact ((C .(FramePrev) .(frame') p.+1 D.1) .(UIP)).
 Qed.
 
-Lemma test {n'} {C: νType n'.+2} p r
- {Hpr : p.+3 <= r.+3} {Hr : r.+3 <= n'.+3} 
- {D} {ε ω}
- (d  : (mkνTypeSn C) .(Frame) .(frame p) D) 
- (c  :  (mkνTypeSn C) .(PaintingPrev) .(painting') ((mkνTypeSn C) .(Frame) .(restrFrame) p ω d)) : 
- (mkνTypeSn C) .(PaintingPrev) .(restrPainting') p r.+1 ε c =
- rew <- [id] C .(eqPaintingSp') in
-  (fun ω' : arity => rew [C .(PaintingPrev) .(painting'')]
-    C .(Frame) .(cohFrame) p r (Hrq := ⇓ Hpr) ((mkνTypeSn C) .(Frame) .(restrFrame) p ω d) in
-    C .(PaintingPrev) .(restrPainting') p r ε
-      ((rew [id] C .(eqPaintingSp) in c).1 ω');
-  rew [C .(PaintingPrev) .(painting')] C .(eqRestrFrameSp) in
-    C .(Painting) .(restrPainting) p.+1 r.+1 (rew [id] C .(eqPaintingSp) in c).2).
-Proof.
-  rewrite <-(rew_opp_l id ((mkνTypeSn C) .(eqPaintingSp')) c).
-  rewrite (sigT_eta (rew [id] (mkνTypeSn C) .(eqPaintingSp') in c)).
-  simpl. rewrite (C .(eqRestrPaintingSp) p r).
-  now rewrite rew_opp_r.
-Qed.
-
 Lemma mkEqRestrRestrictLayerSup {n'} {C: νType n'.+2} (P : Permute C) p r
   {Hpr : p.+3 <= r.+2} {Hr : r.+2 <= n'.+3} 
   {D} {R : mk' mkPermutePrefix D} {ε}
@@ -1830,14 +1810,52 @@ Lemma mkEqRestrRestrictLayerSup {n'} {C: νType n'.+2} (P : Permute C) p r
       (mkνTypeSn C) .(RestrLayer) p.+1 r ε l').
 Proof.
   invert_le Hpr.
-  unfold mkPermutePrev, restrictLayer', restrictLayer, restrictLayerGeneral.
+  unfold mkPermutePrev at 17, restrictLayer',
+         restrictLayer, restrictLayerGeneral.
   apply functional_extensionality_dep. intro ω.
+  set( H2 := restrictLayerGeneral_obligation_1 n' C p P .(PermutePrefix)
+    P .(PermutePrev) P .(PermuteFrameBelow)
+    (⇓ (♢ p.+3 ↕ (Hpr ↕ Hr))) D.1 R.1
+    ((mkνTypeSn C) .(Frame) .(restrFrame) r.+2 ε d)
+    ((mkνTypeSn C) .(RestrLayer) p r.+1 ε l)
+    (rew [(mkνTypeSn C) .(Layer')]
+      (mkνTypeSn C) .(eqRestrFrameSp) in
+      (mkνTypeSn C) .(RestrLayer) p.+1 r.+1 ε l') ω).
+  unfold RestrLayer in H2|-*.
   repeat rewrite <-map_subst_app.
-  unfold RestrLayer.
-  Fail (rewrite (test p r (ε := ε) _ (l ω))).
-  Fail (rewrite <-(rew_opp_l id ((mkνTypeSn C) .(eqPaintingSp')) (l ω))).
-  admit.
-Admitted.
+  set (H1 := restrictLayerGeneral_obligation_1 n'.+1 (mkνTypeSn C) p
+    mkPermutePrefix (mkPermutePrev P) (mkPermuteFrameBelow P
+    p) (↓ (Hpr ↕ Hr)) D
+    R d l l' ω).
+  clearbody H1 H2. revert H1 H2.
+  rewrite <-(rew_opp_l id ((mkνTypeSn C) .(eqPaintingSp')) (l ω)).
+  destruct (rew [id] (mkνTypeSn C) .(eqPaintingSp') in l ω) as [l'' c].
+  simpl.
+  rewrite (C .(eqRestrPaintingSp) p r).
+  rewrite <-(rew_permute_rl _ _ _ _ _ 
+    (fun _ =>  (C .(eqPaintingSp')))
+    ((mkFrame p) .(cohFrame) p r.+1 d)).
+  repeat rewrite rew_opp_r.
+  intros H1 H2.
+  rewrite <-(Test' 
+    (C := fun dl => C .(PaintingPrev) .(painting') 
+      (rew <- [id] C .(eqFrameSp') in dl))
+    ((mkFrame p) .(cohFrame) p r.+1 (Hrq := ↓ Hpr) d)).
+  simpl. unfold eq_rect_r.
+  rewrite (rew_map (C .(Painting) .(painting) D.2) 
+    (fun dl => (rew <- [id] C .(eqFrameSp) in dl))).
+  rewrite (rew_map (C .(PaintingPrev) .(painting'))
+    (C .(Frame) .(restrFrame) p.+1 ω)).
+  repeat rewrite (rew_map (C .(PaintingPrev) .(painting'))
+    (fun dl => (rew <-[id] C .(eqFrameSp') in dl))).
+  repeat rewrite <-(map_subst_map 
+    (Q := C .(PaintingPrev) .(painting'))
+    (fun d => C .(Frame) .(restrFrame) r.+1 ε d)
+    (fun d c => C .(Painting) .(restrPainting) p.+1 r.+1 c)).
+  repeat rewrite rew_compose.
+  apply (f_equal (fun eq => rew [C .(PaintingPrev) .(painting')] eq in _)).
+  exact ((C .(FramePrev) .(frame') p.+1 D.1) .(UIP)).
+Qed.
 
 #[local]
 Instance mkPermuteLayer {n'} {C: νType n'.+2} (P : Permute C) p :
