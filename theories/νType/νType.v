@@ -278,7 +278,7 @@ Class CohFrameTypeBlock `{deps: FormDeps p n}
 Definition RestrPaintingType' `{deps: FormDeps p n.+1} (dep: FormDep deps)
   (extraDeps: FormDepsExtension (deps; dep)) :=
   forall q (Hq: q <= n) ε (d: mkFrame' deps),
-  mkPainting' (dep; extraDeps) d ->
+  (mkPaintings' (dep; extraDeps)).2 d ->
   dep.(_painting'') (dep.(_restrFrame') q Hq ε d).
 
 Fixpoint RestrPaintingTypes' {p}:
@@ -310,8 +310,7 @@ Instance mkCohFrameTypesAndRestrFrames:
     fun n deps extraDeps restrPaintings' =>
     {|
       CohFrameTypesDef := unit;
-      RestrFramesDef _ := (tt; fun _ _ _ _ => tt):
-        mkRestrFrameTypes deps extraDeps
+      RestrFramesDef _ := (tt; fun _ _ _ _ => tt)
     |}
   | S p =>
     fun n deps extraDeps restrPaintings' =>
@@ -333,8 +332,7 @@ Instance mkCohFrameTypesAndRestrFrames:
         (d: mkFrame (deps.(2); extraDeps) (restrFrames Q.1)) :=
           ((restrFrames Q.1).2 q.+1 (⇑ Hq) ε d.1 as rf in _;
            fun ω => rew [deps.(_paintings'').2] Q.2 0 q leY_O Hq ε ω d.1 in
-            restrPaintings'.2 q _ ε _
-              (rew unfoldPaintingProj (deps.(2); extraDeps) _ in d.2 ω)
+            restrPaintings'.2 q _ ε _ (d.2 ω)
            in forall ω,
             deps.(_paintings'').2 (deps.(_restrFrames').2  _ _ _ rf))
       in (restrFrames Q.1 as rf in _; restrFrame in forall q Hq ω,
@@ -479,7 +477,7 @@ Definition mkRestrPaintingType `{deps: FormDeps p n}
   forall q (Hq: q <= n) ε
     (d: mkPrevFrame extraDeps (mkRestrFrames restrPaintings' cohs)),
     mkPrevPainting extraCohs d ->
-    mkPainting' extraDeps (mkRestrFrame restrPaintings' cohs q _ ε d).
+    (mkPaintings' extraDeps).2 (mkRestrFrame restrPaintings' cohs q _ ε d).
 
 Fixpoint mkRestrPainting `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
@@ -488,13 +486,13 @@ Fixpoint mkRestrPainting `{deps: FormDeps p n}
   (extraCohs: CohFramesExtension cohs): mkRestrPaintingType cohs extraCohs.
 Proof.
   red; intros * (l, c). destruct extraCohs, q.
-  - now exact (rew unfoldPaintingProj _ _ in l ε).
+  - now exact (l ε).
   - exfalso. now apply leY_O_contra in Hq.
-  - now exact (rew unfoldPaintingProj _ _ in l ε).
-  - unshelve esplit.
+  - now exact (l ε).
+  - rewrite unfoldPaintingProj. unshelve esplit.
     + intro ω. rewrite <- coh with (Hrq := leY_O) (Hq := ⇓ Hq).
       apply restrPainting'. simpl in l.
-      now exact (rew unfoldPaintingProj _ _ in l ω).
+      now exact (l ω).
     + now exact (mkRestrPainting _ _ _ extraDeps
         (restrPaintings'; restrPainting') (cohs; coh) _ q (⇓ Hq) ε
         (d as x in _; l in _) c).
