@@ -532,10 +532,10 @@ Definition mkCohPaintingType `{deps: FormDeps p n.+1}
     (cohs; coh)) :=
   forall r q (Hrq: r <= q) (Hq: q <= n) (ε ω: arity)
     (d: mkPrevFrame (dep; extraDeps) (mkRestrFrames restrPaintings' cohs))
-    (c: mkPrevPainting (coh; extraCohs) d),
+    c,
   rew [dep.(_painting'')] coh r q Hrq Hq ε ω d in
-  restrPainting' q _ ε _ (mkRestrPainting cohs (coh; extraCohs) r _ ω d c) =
-  restrPainting' r _ ω _ (mkRestrPainting cohs (coh; extraCohs) q.+1 _ ε d c).
+  restrPainting' q _ ε _ ((mkRestrPaintings cohs (coh; extraCohs)).2 r _ ω d c) =
+  restrPainting' r _ ω _ ((mkRestrPaintings cohs (coh; extraCohs)).2 q.+1 _ ε d c).
 
 Fixpoint mkCohPaintingTypes {p}:
   forall `{deps: FormDeps p n}
