@@ -473,6 +473,10 @@ Definition mkRestrPaintingType `{deps: FormDeps p n}
     mkPrevPainting extraCohs d ->
     (mkPaintings' extraDeps).2 (mkRestrFrame restrPaintings' cohs q _ ε d).
 
+(* Note: a priori, unfoldPaintingProj can be avoided because only
+   "mkRestrPaintingType 0" and "mkRestrPaintingType p.+1" are later used,
+   so unfoldPaintingProj would then reduce in each cases *)
+
 Fixpoint mkRestrPainting `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' extraDeps}
