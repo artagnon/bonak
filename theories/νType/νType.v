@@ -174,20 +174,14 @@ Fixpoint mkPainting' `{deps: FormDeps p n} (extraDeps: FormDepsExtension deps):
        mkPainting' extraDeps (d; l)}
   end.
 
-Definition MatchPainting (loop: forall `{deps: FormDeps p n}
+Fixpoint mkPaintings' {p n}: forall `{deps: FormDeps p n}
   (extraDeps: FormDepsExtension deps),
-  PaintingGen p.+1 (mkFrames' deps)) {p n} :=
-  match p return forall `(deps: FormDeps p n)
-  (extraDeps: FormDepsExtension deps), PaintingGen p (mkFrames' deps).1 with
-  | 0 => fun _ _ => tt
-  | S p => fun deps extraDeps =>
-    loop (deps.(2); extraDeps)%extradeps
-  end.
-
-Fixpoint mkPaintings' `{deps: FormDeps p n}
-  (extraDeps: FormDepsExtension deps):
   PaintingGen p.+1 (mkFrames' deps) :=
-  (MatchPainting (@mkPaintings') deps extraDeps; mkPainting' extraDeps).
+  match p with
+  | 0 => fun deps extraDeps => (tt; mkPainting' extraDeps)
+  | S p => fun deps extraDeps =>
+    (mkPaintings' (deps.(2); extraDeps)%extradeps; mkPainting' extraDeps)
+  end.
 
 Lemma unfoldPaintingProj `{deps: FormDeps p n}
   (extraDeps: FormDepsExtension deps) restrFrame:
