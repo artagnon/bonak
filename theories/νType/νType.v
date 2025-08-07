@@ -72,19 +72,19 @@ That is, we build:
 *)
 
 Definition mkRestrFrameTypesStep {p n}
-   {frames'': FrameGen p.+1}
-   (paintings'': PaintingGen p.+1 frames'')
-   (prev: RestrFrameTypeBlock p) :=
-   { R: prev.(RestrFrameTypesDef) &T
-          forall q (Hq: q <= n) (ε: arity), (prev.(FrameDef) R).2 -> frames''.2 }.
+  {frames'': FrameGen p.+1}
+  (paintings'': PaintingGen p.+1 frames'')
+  (prev: RestrFrameTypeBlock p) :=
+  { R: prev.(RestrFrameTypesDef) &T
+    forall q (Hq: q <= n) (ε: arity), (prev.(FrameDef) R).2 -> frames''.2 }.
 
 Definition mkLayer {p n}
-   {frames'': FrameGen p.+1}
-   {paintings'': PaintingGen p.+1 frames''}
-   {prev: RestrFrameTypeBlock p}
-   (restrFrames: mkRestrFrameTypesStep (n := n) paintings'' prev)
-   (d: (prev.(FrameDef) restrFrames.1).2) :=
-   hforall ε : arity, paintings''.2 (restrFrames.2 0 leY_O ε d).
+  {frames'': FrameGen p.+1}
+  {paintings'': PaintingGen p.+1 frames''}
+  {prev: RestrFrameTypeBlock p}
+  (restrFrames: mkRestrFrameTypesStep (n := n) paintings'' prev)
+  (d: (prev.(FrameDef) restrFrames.1).2) :=
+  hforall ε, paintings''.2 (restrFrames.2 0 leY_O ε d).
 
 Fixpoint mkRestrFrameTypesAndFrames' {p n}: forall
   frames'' (paintings'': PaintingGen p frames''), RestrFrameTypeBlock p :=
@@ -95,12 +95,13 @@ Fixpoint mkRestrFrameTypesAndFrames' {p n}: forall
       FrameDef _ := (tt; hunit) : FrameGen 1
     |}
   | p.+1 => fun frames'' paintings'' =>
-    let prev := mkRestrFrameTypesAndFrames' (n := n.+1) frames''.1 paintings''.1 in
+    let prev := mkRestrFrameTypesAndFrames' (n := n.+1) frames''.1
+      paintings''.1 in
     let frames' := prev.(FrameDef) in
     {|
       RestrFrameTypesDef := mkRestrFrameTypesStep (n := n) paintings'' prev;
       FrameDef R :=
-        (frames' R.1; { d: (frames' R.1).2 & mkLayer R d }) : FrameGen p.+2
+        (frames' R.1; { d: (frames' R.1).2 & mkLayer R d }): FrameGen p.+2
     |}
   end.
 
@@ -459,9 +460,8 @@ Definition mkPainting `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' extraDeps}
   {cohs: mkCohFrameTypes restrPaintings'}
-  (extraCohs: CohFramesExtension cohs) :=
-  mkPainting' (mkExtraDeps extraCohs):
-  mkFrame (p := p) extraDeps _ -> HSet.
+  (extraCohs: CohFramesExtension cohs): mkFrame (p := p) extraDeps _ -> HSet :=
+  mkPainting' (mkExtraDeps extraCohs).
 
 Definition mkPrevPainting `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
@@ -522,8 +522,7 @@ Fixpoint mkRestrPaintings `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' extraDeps}
   (cohs: mkCohFrameTypes restrPaintings')
-  (extraCohs: CohFramesExtension cohs):
-  mkRestrPaintingTypes cohs extraCohs.
+  (extraCohs: CohFramesExtension cohs): mkRestrPaintingTypes cohs extraCohs.
 Proof.
   destruct p.
   - unshelve esplit. now exact tt. red; intros * c.
@@ -545,10 +544,13 @@ Definition mkCohPaintingType `{deps: FormDeps p n.+1}
     (cohs; coh)) :=
   forall r q (Hrq: r <= q) (Hq: q <= n) (ε ω: arity)
     (d: mkPrevFrame (dep; extraDeps) (mkRestrFrames restrPaintings' cohs))
-    c,
+    (c: (mkPaintings' ((mkFullDeps restrPaintings' cohs).(2); mkExtraDeps
+      (coh; extraCohs))).2 d),
   rew [dep.(_painting'')] coh r q Hrq Hq ε ω d in
-  restrPainting' q _ ε _ ((mkRestrPaintings cohs (coh; extraCohs)).2 r _ ω d c) =
-  restrPainting' r _ ω _ ((mkRestrPaintings cohs (coh; extraCohs)).2 q.+1 _ ε d c).
+  restrPainting' q _ ε _ ((mkRestrPaintings cohs (coh; extraCohs)).2
+    r _ ω d c) =
+  restrPainting' r _ ω _ ((mkRestrPaintings cohs (coh; extraCohs)).2
+    q.+1 _ ε d c).
 
 Fixpoint mkCohPaintingTypes {p}:
   forall `{deps: FormDeps p n}
@@ -595,7 +597,7 @@ Proof.
           (f := fun x => restrPaintings'.2 r (Hrq ↕ Hq) ω x).
         rewrite rew_map with (P := fun x => deps.(_paintings'').2 x)
           (f := fun x => deps.(2).(_restrFrame') r (Hrq ↕ Hq) ω x).
-       rewrite rew_map with (P := fun x => deps.(_paintings'').2 x)
+        rewrite rew_map with (P := fun x => deps.(_paintings'').2 x)
           (f := fun x => deps.(2).(_restrFrame') q Hq ε x).
         rewrite <- cohPaintings.2.
         repeat rewrite rew_compose.
@@ -687,7 +689,7 @@ Fixpoint mkCohPainting `{deps: FormDeps p n}
     (mkExtraCohs extraCohs extraCohPaintings).
 Proof.
   red; intros. destruct extraCohPaintings.
-  - admit.
+  - destruct d as (d, l).
   - admit.
 Admitted.
 
