@@ -302,6 +302,30 @@ Fixpoint RestrPaintingTypes' {p}:
       RestrPaintingType' (p := p) deps.(2) extraDeps }
   end.
 
+Definition mkCohFrameTypesStep `{deps: FormDeps p.+1 n}
+  {extraDeps: FormDepsExtension deps}
+  {restrPaintings': RestrPaintingTypes' extraDeps}
+  (prev: CohFrameTypeBlock (extraDeps := (deps.(2); extraDeps))): Type :=
+  { Q: prev.(CohFrameTypesDef) &T
+     forall r q (Hrq: r <= q) (Hq: q <= n) (ε ω: arity) d,
+        deps.(_restrFrames').2 q Hq ε
+          ((prev.(RestrFramesDef) Q).2 r (Hrq ↕ (↑ Hq)) ω d) =
+        deps.(_restrFrames').2 r (Hrq ↕ Hq) ω
+          ((prev.(RestrFramesDef) Q).2 q.+1 (⇑ Hq) ε d) }.
+
+Definition mkRestrLayer `{deps: FormDeps p.+1 n}
+  {extraDeps: FormDepsExtension deps}
+  {restrPaintings': RestrPaintingTypes' extraDeps}
+  {prev: CohFrameTypeBlock (extraDeps := (deps.(2); extraDeps))}
+  (cohFrames: mkCohFrameTypesStep (n := n) (restrPaintings':=restrPaintings') prev)
+  q (Hq: q <= n) (ε: arity)
+  (d: mkPrevFrame _ (prev.(RestrFramesDef) cohFrames.1)):
+   mkLayer (paintings'' := mkPaintings'  (deps.(2); extraDeps)) (prev.(RestrFramesDef) cohFrames.1) d
+   -> mkLayer deps.(_restrFrames') ((prev.(RestrFramesDef) cohFrames.1).2 q.+1 (⇑ Hq) ε d)
+  :=
+  fun l ω => rew [deps.(_paintings'').2] cohFrames.2 0 q leY_O Hq ε ω d in
+            restrPaintings'.2 q _ ε _ (l ω).
+
 (** Under previous assumptions, and, additionally:
       [restrPainting(p+n,0);...;restrPainting(p+n,p-1)]
     we mutually build the pair of:
@@ -324,30 +348,21 @@ Instance mkCohFrameTypesAndRestrFrames:
     |}
   | S p =>
     fun n deps extraDeps restrPaintings' =>
-    let restrFrames := (mkCohFrameTypesAndRestrFrames deps.(1)
-    (deps.(2); extraDeps)%extradeps restrPaintings'.1).(RestrFramesDef) in
-    let cohFrameTypes := (mkCohFrameTypesAndRestrFrames deps.(1)
-    (deps.(2); extraDeps)%extradeps restrPaintings'.1).(CohFrameTypesDef) in
+    let prev := mkCohFrameTypesAndRestrFrames deps.(1)
+      (deps.(2); extraDeps)%extradeps restrPaintings'.1 in
+    let restrFrames := prev.(RestrFramesDef) in
+    let cohFrameTypes := prev.(CohFrameTypesDef) in
     {|
-      CohFrameTypesDef := { Q: cohFrameTypes &T
-        (* statement of cohFrameType(n+2,p) *)
-        forall r q (Hrq: r <= q) (Hq: q <= n) (ε ω: arity) d,
-        deps.(_restrFrames').2 q Hq ε
-          ((restrFrames Q).2 r (Hrq ↕ (↑ Hq)) ω d) =
-        deps.(_restrFrames').2 r (Hrq ↕ Hq) ω
-          ((restrFrames Q).2 q.+1 (⇑ Hq) ε d) };
+      CohFrameTypesDef :=
+        mkCohFrameTypesStep (restrPaintings':=restrPaintings') prev;
       RestrFramesDef Q :=
       (* RestrFrame(n+2,p+1) *)
       let restrFrame q (Hq: q <= n) ε
         (d: mkFrame (deps.(2); extraDeps) (restrFrames Q.1)) :=
-          ((restrFrames Q.1).2 q.+1 (⇑ Hq) ε d.1 as rf in _;
-           fun ω => rew [deps.(_paintings'').2] Q.2 0 q leY_O Hq ε ω d.1 in
-            restrPaintings'.2 q _ ε _ (d.2 ω)
-           in forall ω,
-            deps.(_paintings'').2 (deps.(_restrFrames').2  _ _ _ rf))
+          ((restrFrames Q.1).2 q.+1 (⇑ Hq) ε d.1;
+           mkRestrLayer (restrPaintings' := restrPaintings')  Q  q _ ε _ d.2)
       in (restrFrames Q.1 as rf in _; restrFrame in forall q Hq ω,
             (mkFrame (deps.(2); extraDeps)%extradeps rf) -> _)
-           : mkRestrFrameTypes deps extraDeps
     |}
   end.
 
@@ -589,12 +604,13 @@ Proof.
       * destruct d as (d, l).
         apply functional_extensionality_dep; intros 𝛉.
         rewrite <- map_subst_app.
-        rewrite rew_map with (P := fun x => deps.(_paintings'').2 x)
-          (f := fun x => deps.(_restrFrames').2 O leY_O 𝛉 x).
+        unfold mkRestrLayer. simpl. unfold mkRestrLayer. simpl.
         rewrite <- map_subst with
           (f := fun x => restrPaintings'.2 q Hq ε x).
         rewrite <- map_subst with
           (f := fun x => restrPaintings'.2 r (Hrq ↕ Hq) ω x).
+        rewrite rew_map with (P := fun x => deps.(_paintings'').2 x)
+          (f := fun x => deps.(_restrFrames').2 O leY_O 𝛉 x).
         rewrite rew_map with (P := fun x => deps.(_paintings'').2 x)
           (f := fun x => deps.(2).(_restrFrame') r (Hrq ↕ Hq) ω x).
         rewrite rew_map with (P := fun x => deps.(_paintings'').2 x)
