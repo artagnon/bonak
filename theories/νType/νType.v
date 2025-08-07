@@ -87,8 +87,9 @@ Definition mkLayer {p n}
   (d: (prev.(FrameDef) restrFrames.1).2) :=
   hforall ε, paintings''.2 (restrFrames.2 0 leY_O ε d).
 
-Fixpoint mkRestrFrameTypesAndFrames' {p n}: forall
-  frames'' (paintings'': PaintingGen p frames''), RestrFrameTypeBlock p :=
+Fixpoint mkRestrFrameTypesAndFrames' {p n}:
+  forall (frames'': FrameGen p) (paintings'': PaintingGen p frames''),
+  RestrFrameTypeBlock p :=
   match p with
   | 0 => fun frames'' paintings'' =>
     {|
@@ -588,18 +589,21 @@ Definition mkCohLayer `{deps: FormDeps p.+1 n}
   {cohs: mkCohFrameTypes restrPaintings'}
   {extraCohs: CohFramesExtension cohs}
   (cohPaintings: mkCohPaintingTypes extraCohs)
-  (prevCohFrames: mkCohFrameTypes
-    (extraDeps := ((mkFullDeps restrPaintings' cohs).(2); mkExtraDeps extraCohs))
-    (mkRestrPaintings cohs extraCohs).1)
-  r q (Hrq: r <= q) (Hq: q <= n) (ε ω: arity) d
-  (l: _):
-rew [mkLayer _] prevCohFrames.2 r.+1 q.+1 (⇑ Hrq) (⇑ Hq) ε ω d in
-   mkRestrLayer (restrPaintings' := restrPaintings') cohs q Hq ε _
-     (mkRestrLayer (restrPaintings' := (mkRestrPaintings _ extraCohs).1)
-       (prev :=  mkCohFrameTypesAndRestrFrames _ _ _) _ r  (Hrq ↕ ↑ Hq) ω _ l)
-  =
-   mkRestrLayer  (restrPaintings' := restrPaintings') cohs r  (Hrq ↕ Hq) ω _
-     (mkRestrLayer (restrPaintings' := (mkRestrPaintings _ extraCohs).1) _ q.+1 _ ε _ l).
+  {prevCohFrames: mkCohFrameTypes
+    (extraDeps := ((mkFullDeps restrPaintings' cohs).(2);
+      mkExtraDeps extraCohs))
+    (mkRestrPaintings cohs extraCohs).1}
+  r q (Hrq: r <= q) (Hq: q <= n) (ε ω: arity)
+  d
+  (l: mkLayer
+    (mkRestrFrames (mkRestrPaintings cohs extraCohs).1.1 prevCohFrames.1) d):
+  rew [mkLayer _] prevCohFrames.2 r.+1 q.+1 (⇑ Hrq) (⇑ Hq) ε ω d in
+    mkRestrLayer (restrPaintings' := restrPaintings') cohs q Hq ε _
+      (mkRestrLayer (restrPaintings' := (mkRestrPaintings _ extraCohs).1)
+        (prev := mkCohFrameTypesAndRestrFrames _) _ r  (Hrq ↕ ↑ Hq) ω d l) =
+    mkRestrLayer (restrPaintings' := restrPaintings') cohs r  (Hrq ↕ Hq) ω _
+      (mkRestrLayer (restrPaintings' := (mkRestrPaintings _ extraCohs).1) _
+        q.+1 _ ε d l).
 Proof.
   apply functional_extensionality_dep; intros 𝛉.
   rewrite <- map_subst_app.
@@ -626,10 +630,9 @@ Fixpoint mkCohFrames `{deps: FormDeps p n}
   {restrPaintings': RestrPaintingTypes' extraDeps}
   (cohs: mkCohFrameTypes restrPaintings')
   (extraCohs: CohFramesExtension cohs)
-  (cohPaintings: mkCohPaintingTypes extraCohs)
-  {struct p}: mkCohFrameTypes (deps := mkFullDeps restrPaintings' cohs)
-    (extraDeps := mkExtraDeps extraCohs)
-    (mkRestrPaintings cohs extraCohs).
+  (cohPaintings: mkCohPaintingTypes extraCohs) {struct p}:
+  mkCohFrameTypes (deps := mkFullDeps restrPaintings' cohs)
+    (extraDeps := mkExtraDeps extraCohs) (mkRestrPaintings cohs extraCohs).
 Proof.
   destruct p.
   - red; simpl. unshelve esplit. now exact tt. now intros.
@@ -641,7 +644,7 @@ Proof.
         (cohs.2; extraCohs)%extracohs cohPaintings.1).2 r.+1 q.+1
         (⇑ Hrq) (⇑ Hq) ε ω).
       * destruct d as (d, l).
-        apply (mkCohLayer cohPaintings _ r q Hrq Hq ε ω).
+        now exact (mkCohLayer cohPaintings r q Hrq Hq ε ω d l).
 Defined.
 
 Inductive CohPaintingsExtension {p}: forall `{deps: FormDeps p n}
