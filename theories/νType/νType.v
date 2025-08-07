@@ -516,9 +516,9 @@ Proof.
   - exfalso. now apply leY_O_contra in Hq.
   - now exact (l ε).
   - rewrite unfoldPaintingProj. unshelve esplit.
-    + intro ω. simpl. rewrite <- coh with (Hrq := leY_O) (Hq := ⇓ Hq).
-      apply restrPainting'. simpl in l.
-      now exact (l ω).
+    + apply (mkRestrLayer (deps := (deps; dep))
+          (restrPaintings' := (restrPaintings'; restrPainting'))
+          (cohs; coh) q (⇓ Hq) ε d l).
     + now exact (mkRestrPainting _ _ _ extraDeps
         (restrPaintings'; restrPainting') (cohs; coh) _ q (⇓ Hq) ε (d; l) c).
 Defined.
