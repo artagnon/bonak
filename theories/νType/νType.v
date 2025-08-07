@@ -28,8 +28,8 @@ Fixpoint FrameGen p: Type :=
 Fixpoint PaintingGen p: FrameGen p -> Type :=
   match p with
   | 0 => fun _ => unit
-  | S p => fun frames'' => { painting'': PaintingGen p frames''.1 &T
-                             frames''.2 -> HSet }
+  | S p => fun frames'' =>
+    { painting'': PaintingGen p frames''.1 &T frames''.2 -> HSet }
   end.
 
 Class RestrFrameTypeBlock p := {
@@ -39,11 +39,11 @@ Class RestrFrameTypeBlock p := {
 
 Inductive ExtensionGen {p frames''} {paintings'': PaintingGen p frames''}:
   forall {n: nat}, Type :=
-| TopPrev: ExtensionGen (n := 0)
-| AddExtraPrev {n: nat} {frame'': HSet} {painting'': frame'' -> HSet}:
-   ExtensionGen (p := p.+1) (frames'' := (frames''; frame''))
-     (paintings'' := (paintings''; painting'')) (n := n) ->
-   ExtensionGen (frames'' := frames'') (paintings'' := paintings'') (n := n.+1).
+  | TopPrev: ExtensionGen (n := 0)
+  | AddExtraPrev {n: nat} {frame'': HSet} {painting'': frame'' -> HSet}:
+    ExtensionGen (p := p.+1) (frames'' := (frames''; frame''))
+      (paintings'' := (paintings''; painting'')) (n := n) ->
+    ExtensionGen (n := n.+1).
 
 (**
 For p and n be given, and assuming [frame(p-1+n,0);...;frame(p-1+n,p-1)] and
@@ -95,8 +95,8 @@ Fixpoint mkRestrFrameTypesAndFrames' {p n}: forall
       FrameDef _ := (tt; hunit) : FrameGen 1
     |}
   | p.+1 => fun frames'' paintings'' =>
-    let prev := mkRestrFrameTypesAndFrames' (n := n.+1) frames''.1
-      paintings''.1 in
+    let prev :=
+      mkRestrFrameTypesAndFrames' (n := n.+1) frames''.1 paintings''.1 in
     let frames' := prev.(FrameDef) in
     {|
       RestrFrameTypesDef := mkRestrFrameTypesStep (n := n) paintings'' prev;
@@ -105,14 +105,14 @@ Fixpoint mkRestrFrameTypesAndFrames' {p n}: forall
     |}
   end.
 
-Definition mkRestrFrameTypes' p n frames'' paintings'' :=
+Definition mkRestrFrameTypes' {p n} frames'' paintings'' :=
   (mkRestrFrameTypesAndFrames' frames'' paintings'' (p := p)
     (n := n)).(RestrFrameTypesDef).
 
 Class FormDeps {p n} := {
   _frames'': FrameGen p;
   _paintings'': PaintingGen p _frames'';
-  _restrFrames': mkRestrFrameTypes' p n _frames'' _paintings'';
+  _restrFrames': mkRestrFrameTypes' (n := n) _frames'' _paintings'';
 }.
 
 Arguments FormDeps p n: clear implicits.
@@ -201,8 +201,7 @@ Fixpoint mkPaintings' {p n}: forall `{deps: FormDeps p n}
 
 Lemma unfoldPaintingProj `{deps: FormDeps p n}
   (extraDeps: FormDepsExtension deps) restrFrame:
-  (mkPaintings' extraDeps).2 restrFrame =
-    mkPainting' extraDeps restrFrame.
+  (mkPaintings' extraDeps).2 restrFrame = mkPainting' extraDeps restrFrame.
 Proof.
   destruct p; now easy.
 Defined.
@@ -281,8 +280,7 @@ Definition mkPrevFrame `{deps: FormDeps p n}
 Class CohFrameTypeBlock `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps} := {
   CohFrameTypesDef: Type;
-  RestrFramesDef: CohFrameTypesDef ->
-    mkRestrFrameTypes deps extraDeps
+  RestrFramesDef: CohFrameTypesDef -> mkRestrFrameTypes deps extraDeps
 }.
 
 Definition RestrPaintingType' `{deps: FormDeps p n.+1} (dep: FormDep deps)
@@ -317,12 +315,13 @@ Definition mkRestrLayer `{deps: FormDeps p.+1 n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' extraDeps}
   {prev: CohFrameTypeBlock (extraDeps := (deps.(2); extraDeps))}
-  (cohFrames: mkCohFrameTypesStep (n := n) (restrPaintings':=restrPaintings') prev)
+  (cohFrames: mkCohFrameTypesStep (restrPaintings' := restrPaintings') prev)
   q (Hq: q <= n) (ε: arity)
   (d: mkPrevFrame _ (prev.(RestrFramesDef) cohFrames.1)):
-   mkLayer (paintings'' := mkPaintings'  (deps.(2); extraDeps)) (prev.(RestrFramesDef) cohFrames.1) d
-   -> mkLayer deps.(_restrFrames') ((prev.(RestrFramesDef) cohFrames.1).2 q.+1 (⇑ Hq) ε d)
-  :=
+   mkLayer (paintings'' := mkPaintings' (deps.(2); extraDeps))
+    (prev.(RestrFramesDef) cohFrames.1) d
+   -> mkLayer deps.(_restrFrames')
+    ((prev.(RestrFramesDef) cohFrames.1).2 q.+1 (⇑ Hq) ε d) :=
   fun l ω => rew [deps.(_paintings'').2] cohFrames.2 0 q leY_O Hq ε ω d in
             restrPaintings'.2 q _ ε _ (l ω).
 
@@ -353,16 +352,14 @@ Instance mkCohFrameTypesAndRestrFrames:
     let restrFrames := prev.(RestrFramesDef) in
     let cohFrameTypes := prev.(CohFrameTypesDef) in
     {|
-      CohFrameTypesDef :=
-        mkCohFrameTypesStep (restrPaintings':=restrPaintings') prev;
+      CohFrameTypesDef := mkCohFrameTypesStep prev;
       RestrFramesDef Q :=
       (* RestrFrame(n+2,p+1) *)
       let restrFrame q (Hq: q <= n) ε
         (d: mkFrame (deps.(2); extraDeps) (restrFrames Q.1)) :=
           ((restrFrames Q.1).2 q.+1 (⇑ Hq) ε d.1;
-           mkRestrLayer (restrPaintings' := restrPaintings')  Q  q _ ε _ d.2)
-      in (restrFrames Q.1 as rf in _; restrFrame in forall q Hq ω,
-            (mkFrame (deps.(2); extraDeps)%extradeps rf) -> _)
+           mkRestrLayer (restrPaintings' := restrPaintings') Q q _ ε d.1 d.2)
+      in (restrFrames Q.1; restrFrame)
     |}
   end.
 
@@ -475,7 +472,8 @@ Definition mkPainting `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' extraDeps}
   {cohs: mkCohFrameTypes restrPaintings'}
-  (extraCohs: CohFramesExtension cohs): mkFrame (p := p) extraDeps _ -> HSet :=
+  (extraCohs: CohFramesExtension cohs):
+  mkFrame (p := p) extraDeps (mkRestrFrames restrPaintings' cohs) -> HSet :=
   mkPainting' (mkExtraDeps extraCohs).
 
 Definition mkPrevPainting `{deps: FormDeps p n}
@@ -522,8 +520,7 @@ Proof.
       apply restrPainting'. simpl in l.
       now exact (l ω).
     + now exact (mkRestrPainting _ _ _ extraDeps
-        (restrPaintings'; restrPainting') (cohs; coh) _ q (⇓ Hq) ε
-        (d as x in _; l in _) c).
+        (restrPaintings'; restrPainting') (cohs; coh) _ q (⇓ Hq) ε (d; l) c).
 Defined.
 
 Definition mkRestrPaintingTypes `{deps: FormDeps p n}
@@ -562,10 +559,10 @@ Definition mkCohPaintingType `{deps: FormDeps p n.+1}
     (c: (mkPaintings' ((mkFullDeps restrPaintings' cohs).(2); mkExtraDeps
       (coh; extraCohs))).2 d),
   rew [dep.(_painting'')] coh r q Hrq Hq ε ω d in
-  restrPainting' q _ ε _ ((mkRestrPaintings cohs (coh; extraCohs)).2
-    r _ ω d c) =
-  restrPainting' r _ ω _ ((mkRestrPaintings cohs (coh; extraCohs)).2
-    q.+1 _ ε d c).
+  restrPainting' q _ ε _
+    ((mkRestrPaintings cohs (coh; extraCohs)).2 r _ ω d c) =
+  restrPainting' r _ ω _
+    ((mkRestrPaintings cohs (coh; extraCohs)).2 q.+1 _ ε d c).
 
 Fixpoint mkCohPaintingTypes {p}:
   forall `{deps: FormDeps p n}
@@ -606,13 +603,13 @@ Proof.
         rewrite <- map_subst_app.
         unfold mkRestrLayer. simpl. unfold mkRestrLayer. simpl.
         rewrite <- map_subst with
-          (f := fun x => restrPaintings'.2 q Hq ε x).
+          (f := fun x => restrPaintings'.2 q _ ε x).
         rewrite <- map_subst with
-          (f := fun x => restrPaintings'.2 r (Hrq ↕ Hq) ω x).
+          (f := fun x => restrPaintings'.2 r _ ω x).
         rewrite rew_map with (P := fun x => deps.(_paintings'').2 x)
-          (f := fun x => deps.(_restrFrames').2 O leY_O 𝛉 x).
+          (f := fun x => deps.(_restrFrames').2 O _ 𝛉 x).
         rewrite rew_map with (P := fun x => deps.(_paintings'').2 x)
-          (f := fun x => deps.(2).(_restrFrame') r (Hrq ↕ Hq) ω x).
+          (f := fun x => deps.(2).(_restrFrame') r _ ω x).
         rewrite rew_map with (P := fun x => deps.(_paintings'').2 x)
           (f := fun x => deps.(2).(_restrFrame') q Hq ε x).
         rewrite <- cohPaintings.2.
