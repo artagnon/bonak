@@ -37,7 +37,8 @@ Class RestrFrameTypeBlock p := {
   FrameDef: RestrFrameTypesDef -> FrameGen p.+1;
 }.
 
-Inductive ExtensionGen {p frames''} {paintings'': PaintingGen p frames''}:
+Inductive ExtensionGen {p} {frames'': FrameGen p}
+  {paintings'': PaintingGen p frames''}:
   forall {n: nat}, Type :=
   | TopPrev: ExtensionGen (n := 0)
   | AddExtraPrev {n: nat} {frame'': HSet} {painting'': frame'' -> HSet}:
@@ -186,8 +187,7 @@ Fixpoint mkPainting' `{deps: FormDeps p n} (extraDeps: FormDepsExtension deps):
   match extraDeps with
   | @TopRestrFrames _ deps E' => fun (d: mkFrame' deps) => E' d
   | AddExtraRestrFrame deps dep extraDeps => fun (d: mkFrame' deps) =>
-      {l: mkLayer (deps; dep).(_restrFrames') d &
-       mkPainting' extraDeps (d; l)}
+      {l: mkLayer (deps; dep).(_restrFrames') d & mkPainting' extraDeps (d; l)}
   end.
 
 Fixpoint mkPaintings' {p n}: forall `{deps: FormDeps p n}
@@ -221,18 +221,10 @@ Defined.
      Example: if p := 0, extraDeps := ([],E')
      mkRestrFrameTypes := [unit -> unit] *)
 
-Definition mkRestrFrameTypes `(deps: FormDeps p n)
+Definition mkRestrFrameTypes `{deps: FormDeps p n}
   (extraDeps: FormDepsExtension deps) :=
   (mkRestrFrameTypesAndFrames' (p := p.+1) (n := n) (mkFrames' deps)
     (mkPaintings' extraDeps)).(RestrFrameTypesDef).
-
-(* Same, but restricted to p-1, that is, the types of:
-    [restrFrame(p+1+n,0);...;restrFrame(p+1+n,p-1)] *)
-
-Definition mkPrevRestrFrameTypes `(deps: FormDeps p n)
-  (extraDeps: FormDepsExtension deps) :=
-  (mkRestrFrameTypesAndFrames' (n := n.+1) (mkFrames' deps).1
-    (mkPaintings' extraDeps).1).(RestrFrameTypesDef).
 
 (** We combining mkFrames', mkPaintings' and an assumed restrFrames.
      That is, from:
@@ -252,8 +244,8 @@ Definition mkPrevRestrFrameTypes `(deps: FormDeps p n)
        [restrFrame(p+n,0);...;restrFrame(p+n,p)] *)
 
 Definition mkDeps `{deps: FormDeps p n}
-  (extraDeps: FormDepsExtension deps)
-  (restrFrames: mkRestrFrameTypes deps extraDeps) :=
+  {extraDeps: FormDepsExtension deps}
+  (restrFrames: mkRestrFrameTypes extraDeps) :=
 {|
   _frames'' := mkFrames' deps;
   _paintings'' := mkPaintings' extraDeps;
@@ -263,9 +255,9 @@ Definition mkDeps `{deps: FormDeps p n}
 (** Thus being able to build frame(p+1+n,p+1) from the same assumptions *)
 
 Definition mkFrame `{deps: FormDeps p n}
-  (extraDeps: FormDepsExtension deps)
-  (restrFrames: mkRestrFrameTypes deps extraDeps) :=
-  mkFrame' (mkDeps extraDeps restrFrames).
+  {extraDeps: FormDepsExtension deps}
+  (restrFrames: mkRestrFrameTypes extraDeps) :=
+  mkFrame' (mkDeps restrFrames).
 
 (** By restriction, we can thus build frame(p+1+n,p). Note that mkPrevFrame
     could not be built by calling mkFrame' on p and n+1 (rather than on
@@ -273,14 +265,14 @@ Definition mkFrame `{deps: FormDeps p n}
     p and n+1 instead of only p and n *)
 
 Definition mkPrevFrame `{deps: FormDeps p n}
-  (extraDeps: FormDepsExtension deps)
-  (restrFrames: mkRestrFrameTypes deps extraDeps) :=
-  mkFrame' (mkDeps extraDeps restrFrames).(1).
+  {extraDeps: FormDepsExtension deps}
+  (restrFrames: mkRestrFrameTypes extraDeps) :=
+  mkFrame' (mkDeps restrFrames).(1).
 
 Class CohFrameTypeBlock `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps} := {
   CohFrameTypesDef: Type;
-  RestrFramesDef: CohFrameTypesDef -> mkRestrFrameTypes deps extraDeps
+  RestrFramesDef: CohFrameTypesDef -> mkRestrFrameTypes extraDeps
 }.
 
 Definition RestrPaintingType' `{deps: FormDeps p n.+1} (dep: FormDep deps)
@@ -317,7 +309,8 @@ Definition mkRestrLayer `{deps: FormDeps p.+1 n}
   {prev: CohFrameTypeBlock (extraDeps := (deps.(2); extraDeps))}
   (cohFrames: mkCohFrameTypesStep (restrPaintings' := restrPaintings') prev)
   q (Hq: q <= n) (ε: arity)
-  (d: mkPrevFrame _ (prev.(RestrFramesDef) cohFrames.1)):
+  (d: mkPrevFrame (extraDeps := (deps.(2); extraDeps))
+    (prev.(RestrFramesDef) cohFrames.1)):
    mkLayer (paintings'' := mkPaintings' (deps.(2); extraDeps))
     (prev.(RestrFramesDef) cohFrames.1) d
    -> mkLayer deps.(_restrFrames')
@@ -333,7 +326,7 @@ Definition mkRestrLayer `{deps: FormDeps p.+1 n}
 
 #[local]
 Instance mkCohFrameTypesAndRestrFrames:
-  forall `(deps: FormDeps p n) (extraDeps: FormDepsExtension deps)
+  forall `{deps: FormDeps p n} {extraDeps: FormDepsExtension deps}
   (restrPaintings': RestrPaintingTypes' extraDeps), CohFrameTypeBlock :=
   fix mkCohFrameTypesAndRestrFrames {p}:
   forall `(deps: FormDeps p n) (extraDeps: FormDepsExtension deps)
@@ -356,7 +349,7 @@ Instance mkCohFrameTypesAndRestrFrames:
       RestrFramesDef Q :=
       (* RestrFrame(n+2,p+1) *)
       let restrFrame q (Hq: q <= n) ε
-        (d: mkFrame (deps.(2); extraDeps) (restrFrames Q.1)) :=
+        (d: mkFrame (extraDeps := (deps.(2); extraDeps)) (restrFrames Q.1)) :=
           ((restrFrames Q.1).2 q.+1 (⇑ Hq) ε d.1;
            mkRestrLayer (restrPaintings' := restrPaintings') Q q _ ε d.1 d.2)
       in (restrFrames Q.1; restrFrame)
@@ -369,14 +362,12 @@ Instance mkCohFrameTypesAndRestrFrames:
 Definition mkCohFrameTypes `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   (restrPaintings': RestrPaintingTypes' extraDeps) :=
-  (mkCohFrameTypesAndRestrFrames deps extraDeps
-    restrPaintings').(CohFrameTypesDef).
+  (mkCohFrameTypesAndRestrFrames restrPaintings').(CohFrameTypesDef).
 
 Definition mkRestrFrames `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   (restrPaintings': RestrPaintingTypes' extraDeps) :=
-  (mkCohFrameTypesAndRestrFrames deps extraDeps
-    restrPaintings').(RestrFramesDef).
+  (mkCohFrameTypesAndRestrFrames restrPaintings').(RestrFramesDef).
 
 (* Tying the loop: we type mkRestrFrame((p+1)+n,p) knowing
     mkRestrFrames(p+(1+n),0..p-1)
@@ -393,7 +384,7 @@ Definition mkRestrFrameType `{deps: FormDeps p n}
   (restrPaintings': RestrPaintingTypes' extraDeps)
   (cohs: mkCohFrameTypes restrPaintings') :=
   forall q (Hq: q <= n) (ε: arity),
-    mkPrevFrame extraDeps (mkRestrFrames restrPaintings' cohs) ->
+    mkPrevFrame (mkRestrFrames restrPaintings' cohs) ->
     mkFrame' deps.
 
 Definition mkRestrFrame `{deps: FormDeps p n}
@@ -413,7 +404,7 @@ Definition mkFullDeps `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   (restrPaintings': RestrPaintingTypes' extraDeps)
   (cohs: mkCohFrameTypes restrPaintings') :=
-  mkDeps extraDeps (mkRestrFrames restrPaintings' cohs).
+  mkDeps (mkRestrFrames restrPaintings' cohs).
 
 Definition mkCohFrameType `{deps: FormDeps p n.+1}
   {dep: FormDep deps}
@@ -434,7 +425,7 @@ Inductive CohFramesExtension {p}: forall `{deps: FormDeps p n}
     {E': mkFrame' deps -> HSet}
     {restrPaintings': RestrPaintingTypes' (TopRestrFrames E')}
     {cohs: mkCohFrameTypes restrPaintings'}
-    (E: mkFrame (TopRestrFrames E')
+    (E: mkFrame (extraDeps := TopRestrFrames E')
       (mkRestrFrames restrPaintings' cohs) -> HSet)
     : CohFramesExtension cohs
 | AddCohFrame {n deps dep extraDeps}
@@ -473,7 +464,7 @@ Definition mkPainting `{deps: FormDeps p n}
   {restrPaintings': RestrPaintingTypes' extraDeps}
   {cohs: mkCohFrameTypes restrPaintings'}
   (extraCohs: CohFramesExtension cohs):
-  mkFrame (p := p) extraDeps (mkRestrFrames restrPaintings' cohs) -> HSet :=
+  mkFrame (p := p) (mkRestrFrames restrPaintings' cohs) -> HSet :=
   mkPainting' (mkExtraDeps extraCohs).
 
 Definition mkPrevPainting `{deps: FormDeps p n}
@@ -484,7 +475,7 @@ Definition mkPrevPainting `{deps: FormDeps p n}
   mkPainting'
     ((mkFullDeps restrPaintings' cohs).(2);
       mkExtraDeps extraCohs)%extradeps:
-    mkPrevFrame (p := p) extraDeps (mkRestrFrames restrPaintings' cohs) -> HSet.
+    mkPrevFrame (p := p) (mkRestrFrames restrPaintings' cohs) -> HSet.
 
 (* Note: We could type mkRestrPainting(p+1+n,p) of type
    RestrPaintingType(p+1+n,p) up to using unfoldPaintingProj at other places.
@@ -497,7 +488,7 @@ Definition mkRestrPaintingType `{deps: FormDeps p n}
   (cohs: mkCohFrameTypes restrPaintings')
   (extraCohs: CohFramesExtension cohs) :=
   forall q (Hq: q <= n) ε
-    (d: mkPrevFrame extraDeps (mkRestrFrames restrPaintings' cohs)),
+    (d: mkPrevFrame (mkRestrFrames restrPaintings' cohs)),
     mkPrevPainting extraCohs d ->
     (mkPaintings' extraDeps).2 (mkRestrFrame restrPaintings' cohs q _ ε d).
 
@@ -555,7 +546,8 @@ Definition mkCohPaintingType `{deps: FormDeps p n.+1}
     (restrPaintings' := (restrPaintings'; restrPainting'))
     (cohs; coh)) :=
   forall r q (Hrq: r <= q) (Hq: q <= n) (ε ω: arity)
-    (d: mkPrevFrame (dep; extraDeps) (mkRestrFrames restrPaintings' cohs))
+    (d: mkPrevFrame (extraDeps := (dep; extraDeps))
+      (mkRestrFrames restrPaintings' cohs))
     (c: (mkPaintings' ((mkFullDeps restrPaintings' cohs).(2); mkExtraDeps
       (coh; extraCohs))).2 d),
   rew [dep.(_painting'')] coh r q Hrq Hq ε ω d in
@@ -631,10 +623,10 @@ Inductive CohPaintingsExtension {p}: forall `{deps: FormDeps p n}
     {restrPaintings'}
     {cohs: mkCohFrameTypes restrPaintings'}
     {extraCohs: CohFramesExtension cohs}
-    {E: mkFrame (TopRestrFrames E')
+    {E: mkFrame (extraDeps := TopRestrFrames E')
       (mkRestrFrames restrPaintings' cohs) -> HSet}
     {cohPaintings: mkCohPaintingTypes (TopCohFrame E)}
-    {NextE: mkFrame (TopRestrFrames E)
+    {NextE: mkFrame (extraDeps := TopRestrFrames E)
        (mkRestrFrames (mkRestrPaintings cohs (TopCohFrame E))
           (mkCohFrames cohs (TopCohFrame E) cohPaintings)) -> HSet}
     : CohPaintingsExtension cohPaintings
@@ -702,7 +694,7 @@ Fixpoint mkCohPainting `{deps: FormDeps p n}
     (mkExtraCohs extraCohs extraCohPaintings).
 Proof.
   red; intros. destruct extraCohPaintings.
-  - destruct d as (d, l).
+  - admit.
   - admit.
 Admitted.
 
