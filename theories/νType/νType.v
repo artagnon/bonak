@@ -546,8 +546,6 @@ Fixpoint mkCohPaintingTypes {p}:
          mkCohPaintingType extraCohs }
   end.
 
-Axiom F: False.
-
 Fixpoint mkCohFrames `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' extraDeps}
@@ -567,12 +565,24 @@ Proof.
       * now apply ((mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
         (cohs.2; extraCohs)%extracohs cohPaintings.1).2 r.+1 q.+1
         (⇑ Hrq) (⇑ Hq) ε ω).
-      * (* prove a reorganization of the cohFrame using UIP *)
-        (* then: apply (cohPaintings.2 r q _ _ ε ω). *)
-        destruct d as (d, l).
+      * destruct d as (d, l).
         apply functional_extensionality_dep; intros 𝛉.
         rewrite <- map_subst_app.
-        now elim F.
+        rewrite rew_map with (P := fun x => deps.(_paintings'').2 x)
+          (f := fun x => deps.(_restrFrames').2 O leY_O 𝛉 x).
+        rewrite <- map_subst with
+          (f := fun x => restrPaintings'.2 q Hq ε x).
+        rewrite <- map_subst with
+          (f := fun x => restrPaintings'.2 r (Hrq ↕ Hq) ω x).
+        rewrite rew_map with (P := fun x => deps.(_paintings'').2 x)
+          (f := fun x => deps.(2).(_restrFrame') r (Hrq ↕ Hq) ω x).
+       rewrite rew_map with (P := fun x => deps.(_paintings'').2 x)
+          (f := fun x => deps.(2).(_restrFrame') q Hq ε x).
+        rewrite <- cohPaintings.2.
+        repeat rewrite rew_compose.
+        apply rew_swap with (P := fun x => deps.(_paintings'').2 x).
+        rewrite rew_app_rl. now trivial.
+        now apply deps.(2).(_frame'').(UIP).
 Defined.
 
 Inductive CohPaintingsExtension {p}: forall `{deps: FormDeps p n}
