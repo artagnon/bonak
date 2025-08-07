@@ -70,6 +70,22 @@ That is, we build:
               Frame(p+n,p)(restrFrames(p+n,0..p-1) := [frame(p+n,0);...;
                                                        frame(p+n,p)] }
 *)
+
+Definition mkRestrFrameTypesStep {p n}
+   {frames'': FrameGen p.+1}
+   (paintings'': PaintingGen p.+1 frames'')
+   (prev: RestrFrameTypeBlock p) :=
+   { R: prev.(RestrFrameTypesDef) &T
+          forall q (Hq: q <= n) (ε: arity), (prev.(FrameDef) R).2 -> frames''.2 }.
+
+Definition mkLayer {p n}
+   {frames'': FrameGen p.+1}
+   {paintings'': PaintingGen p.+1 frames''}
+   {prev: RestrFrameTypeBlock p}
+   (restrFrames: mkRestrFrameTypesStep (n := n) paintings'' prev)
+   (d: (prev.(FrameDef) restrFrames.1).2) :=
+   hforall ε : arity, paintings''.2 (restrFrames.2 0 leY_O ε d).
+
 Fixpoint mkRestrFrameTypesAndFrames' {p n}: forall
   frames'' (paintings'': PaintingGen p frames''), RestrFrameTypeBlock p :=
   match p with
@@ -79,13 +95,12 @@ Fixpoint mkRestrFrameTypesAndFrames' {p n}: forall
       FrameDef _ := (tt; hunit) : FrameGen 1
     |}
   | p.+1 => fun frames'' paintings'' =>
-    let frames' := (mkRestrFrameTypesAndFrames' (n := n.+1) frames''.1 paintings''.1).(FrameDef) in
+    let prev := mkRestrFrameTypesAndFrames' (n := n.+1) frames''.1 paintings''.1 in
+    let frames' := prev.(FrameDef) in
     {|
-      RestrFrameTypesDef :=
-        { R: (mkRestrFrameTypesAndFrames' frames''.1 paintings''.1).(RestrFrameTypesDef) &T
-          forall q (Hq: q <= n) (ε: arity), (frames' R).2 -> frames''.2 };
+      RestrFrameTypesDef := mkRestrFrameTypesStep (n := n) paintings'' prev;
       FrameDef R :=
-        (frames' R.1; { d: (frames' R.1).2 & hforall ε, paintings''.2 (R.2 0 leY_O ε d) }) : FrameGen p.+2
+        (frames' R.1; { d: (frames' R.1).2 & mkLayer R d }) : FrameGen p.+2
     |}
   end.
 
@@ -170,7 +185,7 @@ Fixpoint mkPainting' `{deps: FormDeps p n} (extraDeps: FormDepsExtension deps):
   match extraDeps with
   | @TopRestrFrames _ deps E' => fun (d: mkFrame' deps) => E' d
   | AddExtraRestrFrame deps dep extraDeps => fun (d: mkFrame' deps) =>
-      {l: hforall ε, dep.(_painting'') (dep.(_restrFrame') 0 leY_O ε d) &
+      {l: mkLayer (deps; dep).(_restrFrames') d &
        mkPainting' extraDeps (d; l)}
   end.
 
@@ -488,7 +503,7 @@ Proof.
   - exfalso. now apply leY_O_contra in Hq.
   - now exact (l ε).
   - rewrite unfoldPaintingProj. unshelve esplit.
-    + intro ω. rewrite <- coh with (Hrq := leY_O) (Hq := ⇓ Hq).
+    + intro ω. simpl. rewrite <- coh with (Hrq := leY_O) (Hq := ⇓ Hq).
       apply restrPainting'. simpl in l.
       now exact (l ω).
     + now exact (mkRestrPainting _ _ _ extraDeps
