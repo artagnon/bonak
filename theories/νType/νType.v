@@ -130,7 +130,7 @@ Definition mkFrame' `(deps: FormDeps p n): HSet :=
 Class FormDep `(deps: FormDeps p n.+1) := {
   _frame'': HSet;
   _painting'': _frame'' -> HSet;
-  _restrFrame': forall q (Hq: q <= n) (ε: arity),
+  _restrFrame': forall q {Hq: q <= n} (ε: arity),
     mkFrame' (n := n.+1) deps -> _frame'';
 }.
 
@@ -288,7 +288,7 @@ Definition RestrPaintingType' `{deps: FormDeps p n.+1} (dep: FormDep deps)
   (extraDeps: FormDepsExtension (deps; dep)) :=
   forall q (Hq: q <= n) ε (d: mkFrame' deps),
   (mkPaintings' (dep; extraDeps)).2 d ->
-  dep.(_painting'') (dep.(_restrFrame') q Hq ε d).
+  dep.(_painting'') (dep.(_restrFrame') q ε d).
 
 Fixpoint RestrPaintingTypes' {p}:
   forall `{deps: FormDeps p n}
@@ -422,8 +422,8 @@ Definition mkCohFrameType `{deps: FormDeps p n.+1}
   (cohs: mkCohFrameTypes restrPaintings') :=
   let restrFrame := mkRestrFrame restrPaintings' cohs in
   forall r q (Hrq: r <= q) (Hq: q <= n) (ε ω: arity) d,
-    dep.(_restrFrame') q Hq ε (restrFrame r (Hrq ↕ (↑ Hq)) ω d)
-    = dep.(_restrFrame') r (Hrq ↕ Hq) ω (restrFrame q.+1 (⇑ Hq) ε d).
+    dep.(_restrFrame') q ε (restrFrame r (Hrq ↕ (↑ Hq)) ω d)
+    = dep.(_restrFrame') r (Hq := Hrq ↕ Hq) ω (restrFrame q.+1 (⇑ Hq) ε d).
 
 Inductive CohFramesExtension {p}: forall `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
@@ -620,9 +620,9 @@ Proof.
     -> rew_map with (P := fun x => deps.(_paintings'').2 x)
         (f := fun x => deps.(_restrFrames').2 O leY_O 𝛉 x),
     -> rew_map with (P := fun x => deps.(_paintings'').2 x)
-        (f := fun x => deps.(2).(_restrFrame') r (Hrq ↕ Hq) ω x),
+        (f := fun x => deps.(2).(_restrFrame') r (Hq := Hrq ↕ Hq) ω x),
     -> rew_map with (P := fun x => deps.(_paintings'').2 x)
-        (f := fun x => deps.(2).(_restrFrame') q Hq ε x).
+        (f := fun x => deps.(2).(_restrFrame') q ε x).
   rewrite <- cohPaintings.2.
   repeat rewrite rew_compose.
   apply rew_swap with (P := fun x => deps.(_paintings'').2 x).
