@@ -201,7 +201,7 @@ Fixpoint mkPaintings' {p n}: forall `{deps: FormDeps p n}
   end.
 
 Lemma unfoldPaintingProj `{deps: FormDeps p n}
-  (extraDeps: FormDepsExtension deps) d:
+  {extraDeps: FormDepsExtension deps} {d: mkFrame' deps}:
    mkPainting' extraDeps d = (mkPaintings' extraDeps).2 d.
 Proof.
   destruct p; now easy.
@@ -730,8 +730,7 @@ Definition unfoldRestrPaintings `{deps: FormDeps p n}
   (c: (mkPaintings'
     ((mkFullDeps restrPaintings' cohs).(2); mkExtraDeps extraCohs)).2 d):
   (mkRestrPaintings cohs extraCohs).2 q Hq ε d c =
-    mkRestrPainting cohs extraCohs q Hq ε d
-      (rew <- unfoldPaintingProj _ _ in c).
+    mkRestrPainting cohs extraCohs q Hq ε d (rew <- unfoldPaintingProj in c).
 Proof.
   now destruct p.
 Defined.
