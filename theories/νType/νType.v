@@ -1,6 +1,5 @@
-Require Import List.
+Require Import List Logic.FunctionalExtensionality.
 Import Logic.EqNotations ListNotations.
-Require Import Logic.FunctionalExtensionality.
 
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT Notation RewLemmas HSet LeYoneda.

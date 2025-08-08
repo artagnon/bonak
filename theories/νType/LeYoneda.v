@@ -3,7 +3,7 @@
     - "Yoneda trick" *)
 
 From Bonak Require Import Notation.
-From Coq Require Import StrictProp.
+Require Import StrictProp.
 
 Set Warnings "-notation-overridden".
 
