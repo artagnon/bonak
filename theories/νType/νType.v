@@ -601,7 +601,7 @@ Definition mkCohLayer `{deps: FormDeps p.+1 n}
     (extraDeps := ((mkFullDeps restrPaintings' cohs).(2);
       mkExtraDeps extraCohs))
     (mkRestrPaintings cohs extraCohs).1}
-  r q (Hrq: r <= q) (Hq: q <= n) (ε ω: arity)
+  r q {Hrq: r <= q} {Hq: q <= n} (ε ω: arity)
   d
   (l: mkLayer
     (mkRestrFrames (mkRestrPaintings cohs extraCohs).1.1 prevCohFrames.1) d):
@@ -652,7 +652,7 @@ Proof.
         (cohs.2; extraCohs)%extracohs cohPaintings.1).2 r.+1 q.+1
         (⇑ Hrq) (⇑ Hq) ε ω).
       * destruct d as (d, l).
-        now exact (mkCohLayer cohPaintings r q Hrq Hq ε ω d l).
+        now exact (mkCohLayer cohPaintings r q ε ω d l).
 Defined.
 
 Inductive CohPaintingsExtension {p}: forall `{deps: FormDeps p n}
