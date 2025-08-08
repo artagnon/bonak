@@ -613,18 +613,16 @@ Definition mkCohLayer `{deps: FormDeps p.+1 n}
         q.+1 _ ε d l).
 Proof.
   apply functional_extensionality_dep; intros 𝛉.
-  rewrite <- map_subst_app.
-  unfold mkRestrLayer. simpl. unfold mkRestrLayer. simpl.
-  rewrite <- map_subst with
-    (f := fun x => restrPaintings'.2 q Hq ε x).
-  rewrite <- map_subst with
-    (f := fun x => restrPaintings'.2 r (Hrq ↕ Hq) ω x).
-  rewrite rew_map with (P := fun x => deps.(_paintings'').2 x)
-    (f := fun x => deps.(_restrFrames').2 O leY_O 𝛉 x).
-  rewrite rew_map with (P := fun x => deps.(_paintings'').2 x)
-    (f := fun x => deps.(2).(_restrFrame') r (Hrq ↕ Hq) ω x).
-  rewrite rew_map with (P := fun x => deps.(_paintings'').2 x)
-    (f := fun x => deps.(2).(_restrFrame') q Hq ε x).
+  rewrite <- map_subst_app. unfold mkRestrLayer; simpl.
+  rewrite
+    <- map_subst with (f := fun x => restrPaintings'.2 q Hq ε x),
+    <- map_subst with (f := fun x => restrPaintings'.2 r (Hrq ↕ Hq) ω x),
+    -> rew_map with (P := fun x => deps.(_paintings'').2 x)
+        (f := fun x => deps.(_restrFrames').2 O leY_O 𝛉 x),
+    -> rew_map with (P := fun x => deps.(_paintings'').2 x)
+        (f := fun x => deps.(2).(_restrFrame') r (Hrq ↕ Hq) ω x),
+    -> rew_map with (P := fun x => deps.(_paintings'').2 x)
+        (f := fun x => deps.(2).(_restrFrame') q Hq ε x).
   rewrite <- cohPaintings.2.
   repeat rewrite rew_compose.
   apply rew_swap with (P := fun x => deps.(_paintings'').2 x).
