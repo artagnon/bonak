@@ -227,6 +227,14 @@ Definition mkRestrFrameTypes `{deps: FormDeps p n}
   (mkRestrFrameTypesAndFrames' (p := p.+1) (n := n) (mkFrames' deps)
     (mkPaintings' extraDeps)).(RestrFrameTypesDef).
 
+(* Same, but restricted to p-1, that is, the types of:
+    [restrFrame(p+1+n,0);...;restrFrame(p+1+n,p-1)] *)
+
+Definition mkPrevRestrFrameTypes `(deps: FormDeps p n)
+  (extraDeps: FormDepsExtension deps) :=
+  (mkRestrFrameTypesAndFrames' (n := n.+1) (mkFrames' deps).1
+    (mkPaintings' extraDeps).1).(RestrFrameTypesDef).
+
 (** We combining mkFrames', mkPaintings' and an assumed restrFrames.
      That is, from:
        [frame(p-1+n,0);...;frame(p-1+n,p-1)]
@@ -722,9 +730,11 @@ Definition unfoldRestrPaintings `{deps: FormDeps p n}
   {restrPaintings': RestrPaintingTypes' extraDeps}
   {cohs: mkCohFrameTypes restrPaintings'}
   (extraCohs: CohFramesExtension cohs)
-  (q : nat) (Hq : q <= n) (ε : arity) d c:
-    (mkRestrPaintings cohs extraCohs).2 q Hq ε d c =
-    mkRestrPainting cohs extraCohs q Hq ε d (rew <- unfoldPaintingProj _ _ in c).
+  q (Hq : q <= n) ε d c:
+  (mkRestrPaintings cohs extraCohs).2 q Hq ε d c =
+    mkRestrPainting cohs extraCohs q Hq ε d
+      (rew <- unfoldPaintingProj _ _ in c).
+Proof.
   now destruct p.
 Defined.
 
@@ -742,25 +752,17 @@ Fixpoint mkCohPainting `{deps: FormDeps p n}
 Proof.
   red; intros.
   repeat rewrite unfoldRestrPaintings.
-  destruct unfoldPaintingProj.
-  destruct c as (l, c).
-  destruct extraCohPaintings.
+  destruct unfoldPaintingProj, c as (l, c), extraCohPaintings.
   - destruct r, q.
-    + simpl.
-      rewrite rew_opp_l.
-      unfold mkRestrLayer. simpl.
+    + rewrite rew_opp_l. unfold mkRestrLayer; simpl.
       now rewrite unfoldRestrPaintings.
     + exfalso. now apply leY_O_contra in Hq.
     + exfalso. now apply leY_O_contra in Hrq.
     + exfalso. now apply leY_O_contra in Hq.
   - destruct r, q.
-    + simpl.
-      rewrite rew_opp_l.
-      unfold mkRestrLayer. simpl.
+    + rewrite rew_opp_l. unfold mkRestrLayer; simpl.
       now rewrite unfoldRestrPaintings.
-    + simpl.
-      rewrite rew_opp_l.
-      unfold mkRestrLayer. simpl.
+    + rewrite rew_opp_l. unfold mkRestrLayer; simpl.
       now rewrite unfoldRestrPaintings.
     + exfalso. now apply leY_O_contra in Hrq.
     + (* todo: rewrite cohFrame into a pair of equalities, then
