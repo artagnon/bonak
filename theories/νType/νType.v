@@ -36,15 +36,6 @@ Class RestrFrameTypeBlock p := {
   FrameDef: RestrFrameTypesDef -> FrameGen p.+1;
 }.
 
-Inductive ExtensionGen {p} {frames'': FrameGen p}
-  {paintings'': PaintingGen p frames''}:
-  forall {n: nat}, Type :=
-  | TopPrev: ExtensionGen (n := 0)
-  | AddExtraPrev {n: nat} {frame'': HSet} {painting'': frame'' -> HSet}:
-    ExtensionGen (p := p.+1) (frames'' := (frames''; frame''))
-      (paintings'' := (paintings''; painting'')) (n := n) ->
-    ExtensionGen (n := n.+1).
-
 (**
 For p and n be given, and assuming [frame(p-1+n,0);...;frame(p-1+n,p-1)] and
 [painting(p-1+n,0);...;painting(p-1+n,p-1)], we build the list of pairs:
