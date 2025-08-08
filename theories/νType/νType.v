@@ -516,10 +516,10 @@ Proof.
   - exfalso. now apply leY_O_contra in Hq.
   - now exact (l ε).
   - rewrite <- unfoldPaintingProj. unshelve esplit.
-    + apply (mkRestrLayer (deps := (deps; dep))
+    now exact (mkRestrLayer (deps := (deps; dep))
           (restrPaintings' := (restrPaintings'; restrPainting'))
           (cohs; coh) q (⇓ Hq) ε d l).
-    + now exact (mkRestrPainting _ _ _ extraDeps
+    now exact (mkRestrPainting _ _ _ extraDeps
         (restrPaintings'; restrPainting') (cohs; coh) _ q (⇓ Hq) ε (d; l) c).
 Defined.
 
@@ -642,16 +642,15 @@ Fixpoint mkCohFrames `{deps: FormDeps p n}
     (extraDeps := mkExtraDeps extraCohs) (mkRestrPaintings cohs extraCohs).
 Proof.
   destruct p.
-  - red; simpl. unshelve esplit. now exact tt. now intros.
+  - unshelve esplit. now exact tt. now intros.
   - unshelve esplit.
-    + now apply (mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
+    + now exact (mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
       (cohs.2; extraCohs)%extracohs cohPaintings.1).
-    + intros. unshelve eapply eq_existT_curried.
-      * now apply ((mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
+    + intros r q Hrq Hq ε ω (d, l). unshelve eapply eq_existT_curried.
+      now exact ((mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
         (cohs.2; extraCohs)%extracohs cohPaintings.1).2 r.+1 q.+1
-        (⇑ Hrq) (⇑ Hq) ε ω).
-      * destruct d as (d, l).
-        now exact (mkCohLayer cohPaintings r q ε ω d l).
+        (⇑ Hrq) (⇑ Hq) ε ω d).
+      now exact (mkCohLayer cohPaintings r q ε ω d l).
 Defined.
 
 Inductive CohPaintingsExtension {p}: forall `{deps: FormDeps p n}
@@ -749,22 +748,20 @@ Fixpoint mkCohPainting `{deps: FormDeps p n}
     (mkExtraCohs extraCohs extraCohPaintings).
 Proof.
   red; intros.
-  repeat rewrite unfoldRestrPaintings.
+  repeat rewrite unfoldRestrPaintings. rewrite rew_opp_l.
   destruct unfoldPaintingProj, c as (l, c), extraCohPaintings, r, q.
-  - rewrite rew_opp_l. unfold mkRestrLayer; simpl.
-    now rewrite unfoldRestrPaintings.
+  all: unfold mkRestrLayer; simpl.
+  - now rewrite unfoldRestrPaintings.
   - exfalso. now apply leY_O_contra in Hq.
   - exfalso. now apply leY_O_contra in Hrq.
   - exfalso. now apply leY_O_contra in Hq.
-  - rewrite rew_opp_l. unfold mkRestrLayer; simpl.
-    now rewrite unfoldRestrPaintings.
-  - rewrite rew_opp_l. unfold mkRestrLayer; simpl.
-    now rewrite unfoldRestrPaintings.
+  - now rewrite unfoldRestrPaintings.
+  - now rewrite unfoldRestrPaintings.
   - exfalso. now apply leY_O_contra in Hrq.
   - (* todo: rewrite cohFrame into a pair of equalities, then
       unshelve eapply rew_existT_curried, then
       apply cohLayer and the IH, i.e. mkCohPainting of extraCohPaintings *)
-      admit.
+    admit.
 Admitted.
 
 Fixpoint mkCohPaintings `{deps: FormDeps p n}
@@ -782,11 +779,11 @@ Fixpoint mkCohPaintings `{deps: FormDeps p n}
 Proof.
   destruct p.
   - unshelve esplit. now exact tt.
-    red; intros *. now apply (mkCohPainting extraCohs extraCohPaintings).
-  - unshelve esplit. now apply (mkCohPaintings p n.+1 _ _ _ cohs.1
+    now exact (mkCohPainting extraCohs extraCohPaintings).
+  - unshelve esplit. now exact (mkCohPaintings p n.+1 _ _ _ cohs.1
       (cohs.2; extraCohs)%extracohs cohPaintings.1
       (cohPaintings.2; extraCohPaintings)%extracohps).
-    red; intros *. now apply (mkCohPainting extraCohs extraCohPaintings).
+    now exact (mkCohPainting extraCohs extraCohPaintings).
 Defined.
 
 Class νTypeAux p := {
