@@ -746,16 +746,16 @@ Fixpoint mkCohPainting `{deps: FormDeps p n}
     (coh := (mkCohFrames cohs extraCohs cohPaintings).2)
     (mkExtraCohs extraCohs extraCohPaintings).
 Proof.
-  red; intros.
+  red; intros *.
   repeat rewrite unfoldRestrPaintings. rewrite rew_opp_l.
   destruct unfoldPaintingProj, c as (l, c), extraCohPaintings, r, q.
-  all: unfold mkRestrLayer; simpl.
-  - now rewrite unfoldRestrPaintings.
+  all: unfold mkRestrLayer; simpl; try rewrite unfoldRestrPaintings.
+  - now trivial.
   - exfalso. now apply leY_O_contra in Hq.
   - exfalso. now apply leY_O_contra in Hrq.
   - exfalso. now apply leY_O_contra in Hq.
-  - now rewrite unfoldRestrPaintings.
-  - now rewrite unfoldRestrPaintings.
+  - now trivial.
+  - now trivial.
   - exfalso. now apply leY_O_contra in Hrq.
   - (* todo: rewrite cohFrame into a pair of equalities, then
       unshelve eapply rew_existT_curried, then
