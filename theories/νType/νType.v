@@ -158,17 +158,17 @@ Notation "( x ; y )" := (ConsDep x y)
   (at level 0, format "( x ; y )"): deps_scope.
 
 Inductive FormDepsExtension {p} : forall {n}, FormDeps p n -> Type :=
-| TopRestrFrames {deps}:
+| TopDep {deps}:
   forall E': mkFrame' deps -> HSet,
   FormDepsExtension (n := 0) deps
-| AddExtraRestrFrame {n} deps dep:
+| AddDep {n} deps dep:
   FormDepsExtension (ConsDep deps dep) ->
   FormDepsExtension (n := n.+1) deps.
 
 Declare Scope extra_deps_scope.
 Delimit Scope extra_deps_scope with extradeps.
 Bind Scope extra_deps_scope with FormDepsExtension.
-Notation "( x ; y )" := (AddExtraRestrFrame _ x y)
+Notation "( x ; y )" := (AddDep _ x y)
   (at level 0, format "( x ; y )"): extra_deps_scope.
 
 (* Example: if p := 0, extraDeps := ([],E') mkPainting:= [E'] *)
@@ -176,8 +176,8 @@ Notation "( x ; y )" := (AddExtraRestrFrame _ x y)
 Fixpoint mkPainting' `{deps: FormDeps p n} (extraDeps: FormDepsExtension deps):
   mkFrame' deps -> HSet :=
   match extraDeps with
-  | @TopRestrFrames _ deps E' => fun (d: mkFrame' deps) => E' d
-  | AddExtraRestrFrame deps dep extraDeps => fun (d: mkFrame' deps) =>
+  | @TopDep _ deps E' => fun (d: mkFrame' deps) => E' d
+  | AddDep deps dep extraDeps => fun (d: mkFrame' deps) =>
       {l: mkLayer (deps; dep).(_restrFrames') d & mkPainting' extraDeps (d; l)}
   end.
 
@@ -242,8 +242,7 @@ Definition mkPrevRestrFrameTypes `(deps: FormDeps p n)
        [painting(p+n,0);...;painting(p+n,p)] (built by mkPaintings')
        [restrFrame(p+n,0);...;restrFrame(p+n,p)] *)
 
-Definition mkDeps `{deps: FormDeps p n}
-  {extraDeps: FormDepsExtension deps}
+Definition mkDeps `{deps: FormDeps p n} {extraDeps: FormDepsExtension deps}
   (restrFrames: mkRestrFrameTypes extraDeps) :=
 {|
   _frames'' := mkFrames' deps;
@@ -422,9 +421,9 @@ Inductive CohFramesExtension {p}: forall `{deps: FormDeps p n}
 | TopCohFrame
     {deps: FormDeps p 0}
     {E': mkFrame' deps -> HSet}
-    {restrPaintings': RestrPaintingTypes' (TopRestrFrames E')}
+    {restrPaintings': RestrPaintingTypes' (TopDep E')}
     {cohs: mkCohFrameTypes restrPaintings'}
-    (E: mkFrame (extraDeps := TopRestrFrames E')
+    (E: mkFrame (extraDeps := TopDep E')
       (mkRestrFrames restrPaintings' cohs) -> HSet)
     : CohFramesExtension cohs
 | AddCohFrame {n deps dep extraDeps}
@@ -470,11 +469,10 @@ Definition mkPrevPainting `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' extraDeps}
   {cohs: mkCohFrameTypes restrPaintings'}
-  (extraCohs: CohFramesExtension cohs) :=
+  (extraCohs: CohFramesExtension cohs):
+  mkPrevFrame (p := p) (mkRestrFrames restrPaintings' cohs) -> HSet :=
   mkPainting'
-    ((mkFullDeps restrPaintings' cohs).(2);
-      mkExtraDeps extraCohs)%extradeps:
-    mkPrevFrame (p := p) (mkRestrFrames restrPaintings' cohs) -> HSet.
+    ((mkFullDeps restrPaintings' cohs).(2); mkExtraDeps extraCohs)%extradeps.
 
 (* Note: We could type mkRestrPainting(p+1+n,p) of type
    RestrPaintingType(p+1+n,p) up to using unfoldPaintingProj at other places.
@@ -486,8 +484,7 @@ Definition mkRestrPaintingType `{deps: FormDeps p n}
   {restrPaintings': RestrPaintingTypes' extraDeps}
   (cohs: mkCohFrameTypes restrPaintings')
   (extraCohs: CohFramesExtension cohs) :=
-  forall q (Hq: q <= n) ε
-    (d: mkPrevFrame (mkRestrFrames restrPaintings' cohs)),
+  forall q (Hq: q <= n) ε (d: mkPrevFrame (mkRestrFrames restrPaintings' cohs)),
     mkPrevPainting extraCohs d ->
     (mkPaintings' extraDeps).2 (mkRestrFrame restrPaintings' cohs q _ ε d).
 
@@ -630,7 +627,7 @@ Proof.
   - unshelve esplit. now exact tt. now intros.
   - unshelve esplit.
     + now exact (mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
-      (cohs.2; extraCohs)%extracohs cohPaintings.1).
+        (cohs.2; extraCohs)%extracohs cohPaintings.1).
     + intros r q Hrq Hq ε ω (d, l). unshelve eapply eq_existT_curried.
       now exact ((mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
         (cohs.2; extraCohs)%extracohs cohPaintings.1).2 r.+1 q.+1
@@ -650,10 +647,10 @@ Inductive CohPaintingsExtension {p}: forall `{deps: FormDeps p n}
     {restrPaintings'}
     {cohs: mkCohFrameTypes restrPaintings'}
     {extraCohs: CohFramesExtension cohs}
-    {E: mkFrame (extraDeps := TopRestrFrames E')
+    {E: mkFrame (extraDeps := TopDep E')
       (mkRestrFrames restrPaintings' cohs) -> HSet}
     {cohPaintings: mkCohPaintingTypes (TopCohFrame E)}
-    {NextE: mkFrame (extraDeps := TopRestrFrames E)
+    {NextE: mkFrame (extraDeps := TopDep E)
        (mkRestrFrames (mkRestrPaintings cohs (TopCohFrame E))
           (mkCohFrames cohs (TopCohFrame E) cohPaintings)) -> HSet}
     : CohPaintingsExtension cohPaintings
@@ -717,7 +714,7 @@ Lemma unfoldRestrPaintings `{deps: FormDeps p n}
   (c: (mkPaintings'
     ((mkFullDeps restrPaintings' cohs).(2); mkExtraDeps extraCohs)).2 d):
   (mkRestrPaintings cohs extraCohs).2 q Hq ε d c =
-    mkRestrPainting cohs extraCohs q Hq ε d (rew <- unfoldPaintingProj in c).
+  mkRestrPainting cohs extraCohs q Hq ε d (rew <- unfoldPaintingProj in c).
 Proof.
   now destruct p.
 Qed.
@@ -771,10 +768,9 @@ Defined.
 
 Class νTypeAux p := {
   deps: FormDeps p 0;
-  restrPaintings' E': RestrPaintingTypes' (TopRestrFrames E');
+  restrPaintings' E': RestrPaintingTypes' (TopDep E');
   cohFrames E': mkCohFrameTypes (restrPaintings' E');
-  cohPaintings E' E : mkCohPaintingTypes (cohs := cohFrames E')
-    (TopCohFrame E);
+  cohPaintings E' E : mkCohPaintingTypes (cohs := cohFrames E') (TopCohFrame E);
 }.
 
 Class νType p := {
@@ -797,17 +793,16 @@ Variable D: mkPrefix'' p.
 Definition mkDeps': FormDeps p.+1 0 :=
   mkFullDeps _ ((C.(data) D.1).(cohFrames) D.2).
 
-Definition mkRestrPaintings' E': RestrPaintingTypes' (TopRestrFrames E') :=
+Definition mkRestrPaintings' E': RestrPaintingTypes' (TopDep E') :=
   mkRestrPaintings ((C.(data) D.1).(cohFrames) D.2) (TopCohFrame E').
 
 Definition mkCohFrames' E': mkCohFrameTypes (mkRestrPaintings' E') :=
-  mkCohFrames ((C.(data) D.1).(cohFrames) D.2)
-   (TopCohFrame E') ((C.(data) D.1).(cohPaintings) D.2 E').
+  mkCohFrames ((C.(data) D.1).(cohFrames) D.2) _
+    ((C.(data) D.1).(cohPaintings) D.2 E').
 
 Definition mkCohPaintings' E' E:
   mkCohPaintingTypes (cohs := mkCohFrames' E') (TopCohFrame E) :=
- mkCohPaintings (TopCohFrame E')
-  (TopCohPainting (NextE := E) (extraCohs := TopCohFrame E')).
+ mkCohPaintings _ (TopCohPainting (NextE := E) (extraCohs := TopCohFrame E')).
 
 End νTypeData.
 
