@@ -204,7 +204,7 @@ Lemma unfoldPaintingProj `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps} {d: mkFrame' deps}:
    mkPainting' extraDeps d = (mkPaintings' extraDeps).2 d.
 Proof.
-  destruct p; now easy.
+  now destruct p.
 Defined.
 
 (** Assuming [frame(p-1+n,0);...;frame(p-1+n,p-1)] and
@@ -516,10 +516,10 @@ Proof.
   - exfalso. now apply leY_O_contra in Hq.
   - now exact (l ε).
   - rewrite <- unfoldPaintingProj. unshelve esplit.
-    now exact (mkRestrLayer (deps := (deps; dep))
-          (restrPaintings' := (restrPaintings'; restrPainting'))
-          (cohs; coh) q (⇓ Hq) ε d l).
-    now exact (mkRestrPainting _ _ _ extraDeps
+    + now exact (mkRestrLayer (deps := (deps; dep))
+        (restrPaintings' := (restrPaintings'; restrPainting'))
+        (cohs; coh) q (⇓ Hq) ε d l).
+    + now exact (mkRestrPainting _ _ _ extraDeps
         (restrPaintings'; restrPainting') (cohs; coh) _ q (⇓ Hq) ε (d; l) c).
 Defined.
 
@@ -626,8 +626,7 @@ Proof.
   rewrite <- cohPaintings.2.
   repeat rewrite rew_compose.
   apply rew_swap with (P := fun x => deps.(_paintings'').2 x).
-  rewrite rew_app_rl. now trivial.
-  now apply deps.(2).(_frame'').(UIP).
+  rewrite rew_app_rl. now trivial. now apply deps.(2).(_frame'').(UIP).
 Qed.
 
 Fixpoint mkCohFrames `{deps: FormDeps p n}
