@@ -19,12 +19,12 @@ Record HSet := {
 
 Lemma unit_UIP (x y: unit) (h g: x = y): h = g.
 Proof.
-  destruct g, x. now apply UIP_refl_unit.
+  destruct g, x; now apply UIP_refl_unit.
 Qed.
 
 Lemma bool_UIP (x y: bool) (h g: x = y): h = g.
 Proof.
-  destruct g, x. all: now apply UIP_refl_bool.
+  destruct g, x; now apply UIP_refl_bool.
 Qed.
 
 Definition hunit@{m}: HSet@{m} := {|
@@ -42,7 +42,7 @@ Definition hbool@{m}: HSet@{m} := {|
 Lemma sigT_eq {A: Type} {B} {x y: {a: A & B a}}:
   (x.1; x.2) = (y.1; y.2) -> x = y.
 Proof.
-  now intro H.
+  now easy.
 Qed.
 
 Lemma sigT_decompose_eq {A: Type} {B} {x y: {a: A & B a}} {p: x = y}:
@@ -96,17 +96,18 @@ Proof.
   rewrite <- hpiT_decompose with (p := p),
           <- hpiT_decompose with (p := q).
   f_equal.
-  apply functional_extensionality_dep_good; intros a. now apply (B a).
+  apply functional_extensionality_dep_good; intro a. now apply (B a).
 Qed.
 
 Definition hpiT {A: Type} (B: A -> HSet): HSet.
 Proof.
-  exists (forall a: A, B a). intros x y h g; now apply hpiT_UIP.
+  exists (forall a: A, B a). now apply hpiT_UIP.
 Defined.
 
 Definition pi_domain_eq {A A': HSet} (p: A = A') (u: A -> HSet): A' -> HSet :=
   fun (a': A') => u (rew <- [@id HSet] p in a').
 
-Notation "'hforall' x .. y , P" := (hpiT (fun x => .. (hpiT (fun y => P%type)) ..))
+Notation "'hforall' x .. y , P" :=
+  (hpiT (fun x => .. (hpiT (fun y => P%type)) ..))
   (at level 10, x binder, y binder, P at level 200,
   format "'[  ' '[  ' 'hforall'  x  ..  y ']' ,  '/' P ']'"): type_scope.
