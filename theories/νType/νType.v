@@ -749,13 +749,9 @@ Proof.
   red; intros *.
   repeat rewrite unfoldRestrPaintings. rewrite rew_opp_l.
   destruct unfoldPaintingProj, c as (l, c), extraCohPaintings, r, q.
-  all: unfold mkRestrLayer; simpl; try rewrite unfoldRestrPaintings.
-  - now trivial.
-  - exfalso. now apply leY_O_contra in Hq.
+  all: unfold mkRestrLayer; simpl; try now rewrite unfoldRestrPaintings.
   - exfalso. now apply leY_O_contra in Hrq.
   - exfalso. now apply leY_O_contra in Hq.
-  - now trivial.
-  - now trivial.
   - exfalso. now apply leY_O_contra in Hrq.
   - (* todo: rewrite cohFrame into a pair of equalities, then
       unshelve eapply rew_existT_curried, then
