@@ -201,8 +201,8 @@ Fixpoint mkPaintings' {p n}: forall `{deps: FormDeps p n}
   end.
 
 Lemma unfoldPaintingProj `{deps: FormDeps p n}
-  (extraDeps: FormDepsExtension deps) restrFrame:
-  (mkPaintings' extraDeps).2 restrFrame = mkPainting' extraDeps restrFrame.
+  (extraDeps: FormDepsExtension deps) d:
+   mkPainting' extraDeps d = (mkPaintings' extraDeps).2 d.
 Proof.
   destruct p; now easy.
 Defined.
@@ -507,7 +507,7 @@ Proof.
   - now exact (l ε).
   - exfalso. now apply leY_O_contra in Hq.
   - now exact (l ε).
-  - rewrite unfoldPaintingProj. unshelve esplit.
+  - rewrite <- unfoldPaintingProj. unshelve esplit.
     + apply (mkRestrLayer (deps := (deps; dep))
           (restrPaintings' := (restrPaintings'; restrPainting'))
           (cohs; coh) q (⇓ Hq) ε d l).
