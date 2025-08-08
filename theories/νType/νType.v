@@ -726,8 +726,11 @@ Definition unfoldRestrPaintings `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' extraDeps}
   {cohs: mkCohFrameTypes restrPaintings'}
-  (extraCohs: CohFramesExtension cohs)
-  q (Hq : q <= n) ε d c:
+  {extraCohs: CohFramesExtension cohs}
+  q {Hq : q <= n} ε
+  (d: mkFrame' (mkFullDeps restrPaintings' cohs).(1))
+  (c: (mkPaintings'
+    ((mkFullDeps restrPaintings' cohs).(2); mkExtraDeps extraCohs)).2 d):
   (mkRestrPaintings cohs extraCohs).2 q Hq ε d c =
     mkRestrPainting cohs extraCohs q Hq ε d
       (rew <- unfoldPaintingProj _ _ in c).
