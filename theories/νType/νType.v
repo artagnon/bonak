@@ -765,7 +765,7 @@ Proof.
     + exfalso. now apply leY_O_contra in Hrq.
     + (* todo: rewrite cohFrame into a pair of equalities, then
       unshelve eapply rew_existT_curried, then
-      apply cohPainting and the IH, i.e. mkCohPainting of extraCohPaintings *)
+      apply cohLayer and the IH, i.e. mkCohPainting of extraCohPaintings *)
       admit.
 Admitted.
 
