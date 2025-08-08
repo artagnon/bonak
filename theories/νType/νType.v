@@ -533,7 +533,7 @@ Proof.
     now apply (mkRestrPainting cohs extraCohs q _ ε), c.
   - unshelve esplit. now apply (mkRestrPaintings p n.+1 _ _ _ cohs.1
       (cohs.2; extraCohs)%extracohs).
-    red; intros * c. now apply (mkRestrPainting cohs extraCohs), c.
+    now apply (mkRestrPainting cohs extraCohs).
 Defined.
 
 Definition mkCohPaintingType `{deps: FormDeps p n.+1}
