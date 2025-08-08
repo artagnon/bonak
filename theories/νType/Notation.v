@@ -20,5 +20,3 @@ Notation "'rew' <- [ P ] H 'in' H'" := (eq_rect_r P H' H)
     format "'[' 'rew'  <-  [ P ]  '/    ' H  in  '/' H' ']'").
 
 Infix "•" := eq_trans (at level 65, left associativity).
-Notation "[ x ⇒ f ] e" := (f_equal (fun x => f) e)
-(at level 60, left associativity).
