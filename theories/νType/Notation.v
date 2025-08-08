@@ -4,9 +4,6 @@ Notation "x .+1" := (S x) (at level 1, left associativity, format "x .+1").
 Notation "x .+2" := (S (S x)) (at level 1, left associativity, format "x .+2").
 Notation "x .+3" := (S (S (S x)))
   (at level 1, left associativity, format "x .+3").
-Notation "x .-1" := (pred x) (at level 1, left associativity, format "x .-1").
-Notation "x .-2" := (pred (pred x))
-  (at level 1, left associativity, format "x .-2").
 
 (** This is in Program.Basics for some strange reason *)
 Arguments id {A} x.
