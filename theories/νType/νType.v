@@ -719,7 +719,7 @@ Proof.
         (cohPaintings; cohPainting) extraCohPaintings).
 Defined.
 
-Definition unfoldRestrPaintings `{deps: FormDeps p n}
+Lemma unfoldRestrPaintings `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' extraDeps}
   {cohs: mkCohFrameTypes restrPaintings'}
@@ -732,7 +732,7 @@ Definition unfoldRestrPaintings `{deps: FormDeps p n}
     mkRestrPainting cohs extraCohs q Hq ε d (rew <- unfoldPaintingProj in c).
 Proof.
   now destruct p.
-Defined.
+Qed.
 
 Fixpoint mkCohPainting `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
