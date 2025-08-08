@@ -262,8 +262,7 @@ Definition mkFrame `{deps: FormDeps p n}
     p+1 and n, then restricting) because it would require knowing deps for
     p and n+1 instead of only p and n *)
 
-Definition mkPrevFrame `{deps: FormDeps p n}
-  {extraDeps: FormDepsExtension deps}
+Definition mkPrevFrame `{deps: FormDeps p n} {extraDeps: FormDepsExtension deps}
   (restrFrames: mkRestrFrameTypes extraDeps) :=
   mkFrame' (mkDeps restrFrames).(1).
 
@@ -279,8 +278,7 @@ Definition RestrPaintingType' `{deps: FormDeps p n.+1} (dep: FormDep deps)
   (mkPaintings' (dep; extraDeps)).2 d ->
   dep.(_painting'') (dep.(_restrFrame') q ε d).
 
-Fixpoint RestrPaintingTypes' {p}:
-  forall `{deps: FormDeps p n}
+Fixpoint RestrPaintingTypes' {p}: forall `{deps: FormDeps p n}
   (extraDeps: FormDepsExtension deps), Type :=
   match p with
   | 0 => fun _ _ _ => unit
@@ -549,8 +547,7 @@ Definition mkCohPaintingType `{deps: FormDeps p n.+1}
   restrPainting' r _ ω _
     ((mkRestrPaintings cohs (coh; extraCohs)).2 q.+1 _ ε d c).
 
-Fixpoint mkCohPaintingTypes {p}:
-  forall `{deps: FormDeps p n}
+Fixpoint mkCohPaintingTypes {p}: forall `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' extraDeps}
   {cohs: mkCohFrameTypes restrPaintings'}
