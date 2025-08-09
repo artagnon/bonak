@@ -625,11 +625,11 @@ Proof.
   - unshelve esplit.
     + now exact (mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
         (cohs.2; extraCohs)%extracohs cohPaintings.1).
-    + intros r q Hrq Hq ε ω (d, l). unshelve eapply eq_existT_curried.
+    + intros r q Hrq Hq ε ω d. unshelve eapply eq_existT_curried.
       now exact ((mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
         (cohs.2; extraCohs)%extracohs cohPaintings.1).2 r.+1 q.+1
-        (⇑ Hrq) (⇑ Hq) ε ω d).
-      now exact (mkCohLayer cohPaintings r q ε ω d l).
+        (⇑ Hrq) (⇑ Hq) ε ω d.1).
+      now exact (mkCohLayer cohPaintings r q ε ω d.1 d.2).
 Defined.
 
 Inductive CohPaintingsExtension {p}: forall `{deps: FormDeps p n}
