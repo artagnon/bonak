@@ -717,10 +717,9 @@ Proof.
 Defined.
 
 Lemma rew_permute_ll_hset: forall (A : Type) (P Q : A -> HSet) (x y : A)
-         (H : forall z : A, P z = Q z) (H' : x = y)
-         (a : P x),
-       rew [Dom] H y in rew [P] H' in a =
-       rew [Q] H' in rew [Dom] H x in a.
+  (H : forall z : A, P z = Q z) (H' : x = y) (a : P x),
+  rew [Dom] H y in rew [P] H' in a = rew [Q] H' in rew [Dom] H x in a.
+Proof.
 now destruct H'.
 Defined.
 
@@ -743,13 +742,10 @@ Proof.
   - exfalso; now apply leY_O_contra in Hrq.
   - exfalso; now apply leY_O_contra in Hq.
   - exfalso; now apply leY_O_contra in Hrq.
-  - rewrite <- rew_permute_ll_hset with (Q := fun d => ((mkPaintings' (dep;extraDeps)).2 d).(Dom))
-      (P := fun d => (mkPainting' (dep;extraDeps) d).(Dom))
-      (H := @unfoldPaintingProj p n.+1 deps (dep;extraDeps)).
-    apply -> rew_swap.
-    unfold reverse_coercion. (* ?? *)
+  - rewrite <- rew_permute_ll_hset with (P := mkPainting' (dep; extraDeps)).
+    apply rew_swap.
     do 2 rewrite rew_opp_l.
-    unshelve eapply (rew_existT_curried (Q:= fun x => mkPainting' extraDeps x)).
+    unshelve eapply (rew_existT_curried (Q := mkPainting' extraDeps)).
     (* todo:
       apply cohLayer and the IH, i.e. mkCohPainting of extraCohPaintings *)
     admit.
