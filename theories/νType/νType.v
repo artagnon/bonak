@@ -814,7 +814,15 @@ Definition mkCohPaintings' E' E:
 End νTypeData.
 
 #[local]
-Instance mkνType p {C: νType p}: νType p.+1.
+Instance mkνType0: νType 0.
+  unshelve esplit.
+  - now exact hunit.
+  - unshelve esplit; try now trivial.
+    + unshelve esplit; now trivial.
+Defined.
+
+#[local]
+Instance mkνType {p} (C: νType p): νType p.+1.
   unshelve esplit.
   now exact (mkPrefix'' p).
   intro D. unshelve esplit.
@@ -823,5 +831,12 @@ Instance mkνType p {C: νType p}: νType p.+1.
   now apply mkCohFrames'.
   now apply mkCohPaintings'.
 Defined.
+
+(** An [νType] truncated up to dimension [n] *)
+Fixpoint νTypeAt n: νType n :=
+  match n with
+  | O => mkνType0
+  | n.+1 => mkνType (νTypeAt n)
+  end.
 
 End νType.
