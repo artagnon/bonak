@@ -11,8 +11,10 @@ Arguments existT {A} P _ _.
 
 Set Warnings "-notation-overridden".
 
-Notation "{ x & P }" := (sigT (fun x => P%type)): type_scope.
-Notation "{ x : A & P }" := (sigT (A := A) (fun x => P%type)): type_scope.
+Notation "{ x &T P }" := (sigT (fun x => P%type))
+  (x at level 99, format "{ '[ ' x  &T  '/' P ']' }"): type_scope.
+Notation "{ x : A &T P }" := (sigT (A := A) (fun x => P%type))
+  (x at level 99, format "{ '[ ' '[' x  :  A ']'  &T  '/' P ']' }"): type_scope.
 Notation "( x 'as' z 'in' T ; y 'in' P )" := (existT (fun z: T => P%type) x y)
   (at level 0, only parsing).
 Notation "( x ; y )" := (existT _ x y)
@@ -23,14 +25,14 @@ Notation "x .2" := (projT2 x) (at level 1, left associativity, format "x .2").
 Import EqNotations.
 
 Definition eq_existT_uncurried {A: Type} {P: A -> Type} {u1 v1: A}
-  {u2: P u1} {v2: P v1} (pq: { p: u1 = v1 & rew p in u2 = v2 }):
+  {u2: P u1} {v2: P v1} (pq: { p: u1 = v1 &T rew p in u2 = v2 }):
   (u1; u2) = (v1; v2).
 Proof.
   now destruct pq as [p q], q, p.
 Defined.
 
-Definition eq_sigT_uncurried {A: Type} {P: A -> Type} (u v: { a: A & P a })
-  (pq: { p: u.1 = v.1 & rew p in u.2 = v.2 }): u = v.
+Definition eq_sigT_uncurried {A: Type} {P: A -> Type} (u v: { a: A &T P a })
+  (pq: { p: u.1 = v.1 &T rew p in u.2 = v.2 }): u = v.
 Proof.
   destruct u, v; now apply eq_existT_uncurried.
 Defined.
@@ -41,10 +43,10 @@ Proof.
   apply eq_sigT_uncurried; now exists p.
 Defined.
 
-Definition projT1_eq {A} {P: A -> Type} {u v: { a: A & P a }} (p: u = v):
+Definition projT1_eq {A} {P: A -> Type} {u v: { a: A &T P a }} (p: u = v):
   u.1 = v.1 := f_equal (fun x => x.1) p.
 
-Definition projT2_eq {A} {P: A -> Type} {u v: { a: A & P a }} (p: u = v):
+Definition projT2_eq {A} {P: A -> Type} {u v: { a: A &T P a }} (p: u = v):
   rew projT1_eq p in u.2 = v.2 := rew dependent p in eq_refl.
 
 Notation "(= u ; v )" := (eq_existT_curried u v)

@@ -32,7 +32,7 @@ Lemma rew_existT_curried {A x} {P: A -> Type} {Q: {a &T P a} -> Type}
    {u: P x} {v: Q (x; u)}
    {u': P y} {v': Q (y; u')}
    {Hu: rew H in u = u'} {Hv: rew (=H; Hu) in v = v'}:
-   rew [fun x => {a: P x & Q (x; a)}] H in (u; v) = (u'; v').
+   rew [fun x => {a: P x &T Q (x; a)}] H in (u; v) = (u'; v').
 Proof.
    now destruct Hu, Hv, H.
 Qed.

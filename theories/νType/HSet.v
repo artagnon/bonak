@@ -3,8 +3,10 @@
 Require Import Logic.FunctionalExtensionality.
 Require Import Logic.Eqdep_dec. (* UIP_refl_unit *)
 
+Import EqNotations.
+
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT Notation.
+From Bonak Require Import SigT.
 
 Set Primitive Projections.
 Set Printing Projections.
@@ -39,34 +41,35 @@ Definition hbool@{m}: HSet@{m} := {|
 
 (** [sigT] seen as a type constructor on [HSet] *)
 
-Lemma sigT_eq {A: Type} {B} {x y: {a: A & B a}}:
+Lemma sigT_eq {A: Type} {B} {x y: {a: A &T B a}}:
   (x.1; x.2) = (y.1; y.2) -> x = y.
 Proof.
   now easy.
 Qed.
 
-Lemma sigT_decompose_eq {A: Type} {B} {x y: {a: A & B a}} {p: x = y}:
+Lemma sigT_decompose_eq {A: Type} {B} {x y: {a: A &T B a}} {p: x = y}:
   p = (= projT1_eq p; projT2_eq p).
 Proof.
   now destruct p, x.
 Qed.
 
-Lemma sigT_decompose {A: Type} {B} {x y: {a: A & B a}} {p q: x = y}
+Lemma sigT_decompose {A: Type} {B: A -> Type} {u v: {a: A &T B a}} {p q: u = v}
   {alpha: projT1_eq p = projT1_eq q}
-  {beta: rew [fun r => rew [fun b: A => B b] r in x.2 = y.2] alpha in
+  {beta: rew [fun r => rew [fun b: A => B b] r in u.2 = v.2] alpha in
    projT2_eq p = projT2_eq q}: p = q.
 Proof.
   rewrite (sigT_decompose_eq (p := q)), (sigT_decompose_eq (p := p)).
-  destruct x, y; simpl. now destruct beta, alpha.
+  destruct u, v; simpl. now destruct beta, alpha.
 Qed.
 
-Lemma sigT_UIP {A: HSet} {B: A -> HSet} (x y: {a: A & B a}) (p q: x = y): p = q.
+Lemma sigT_UIP {A: HSet} {B: A -> HSet} (x y: {a: A &T B a}) (p q: x = y):
+  p = q.
 Proof.
   unshelve eapply sigT_decompose. now apply A. now apply (B y.1).
 Qed.
 
 Definition hsigT {A: HSet} (B: A -> HSet): HSet := {|
-  Dom := {a: A & B a};
+  Dom := {a: A &T B a};
   UIP := sigT_UIP;
 |}.
 
@@ -74,11 +77,6 @@ Set Warnings "-notation-overridden".
 
 Notation "{ x & P }" := (hsigT (fun x => P%type)): type_scope.
 Notation "{ x : A & P }" := (hsigT (A := A) (fun x => P%type)): type_scope.
-
-Notation "{ x &T P }" := (sigT (fun x => P%type))
-  (x at level 99, format "{ '[ ' x  &T  '/' P ']' }"): type_scope.
-Notation "{ x : A &T P }" := (sigT (A := A) (fun x => P%type))
-  (x at level 99, format "{ '[ ' '[' x  :  A ']'  &T  '/' P ']' }"): type_scope.
 
 (** [forall] defined over an [HSet] codomain *)
 
