@@ -502,8 +502,9 @@ Proof.
     + now exact (mkRestrLayer (deps := (deps; dep))
         (restrPaintings' := (restrPaintings'; restrPainting'))
         (cohs; coh) q (⇓ Hq) ε d l).
-    + now exact (mkRestrPainting _ _ _ extraDeps
-        (restrPaintings'; restrPainting') (cohs; coh) _ q (⇓ Hq) ε (d; l) c).
+    + now exact (mkRestrPainting p.+1 n (deps; dep)%deps extraDeps
+        (restrPaintings'; restrPainting') (cohs; coh) extraCohs
+        q (⇓ Hq) ε (d; l) c).
 Defined.
 
 Definition mkRestrPaintingTypes `{deps: FormDeps p n}
@@ -714,7 +715,7 @@ Lemma unfoldRestrPaintings `{deps: FormDeps p n}
   mkRestrPainting cohs extraCohs q Hq ε d (rew <- unfoldPaintingProj in c).
 Proof.
   now destruct p.
-Defined.
+Qed.
 
 Fixpoint mkCohPainting `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
@@ -739,11 +740,11 @@ Proof.
     apply rew_swap.
     do 2 rewrite rew_opp_l.
     unshelve eapply (rew_existT_curried (Q := mkPainting' extraDeps)).
-    now apply (mkCohLayer (deps := (deps; dep))
+    now exact (mkCohLayer (deps := (deps; dep))
       (restrPaintings' := (restrPaintings'; restrPainting'))
       (cohs := (cohs; coh)) (cohPaintings; cohPainting) r q (Hrq := ⇓ Hrq)
       ε ω d l).
-    now rewrite (mkCohPainting p.+1 n (deps; dep)%deps extraDeps
+    now exact (mkCohPainting p.+1 n (deps; dep)%deps extraDeps
       (restrPaintings'; restrPainting') (cohs; coh) extraCohs
       (cohPaintings; cohPainting) extraCohPaintings r q (⇓ Hrq) (⇓ Hq)
       ε ω (d; l) c).
