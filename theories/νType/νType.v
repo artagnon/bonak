@@ -720,7 +720,7 @@ Lemma rew_permute_ll_hset: forall (A : Type) (P Q : A -> HSet) (x y : A)
   (H : forall z : A, P z = Q z) (H' : x = y) (a : P x),
   rew [Dom] H y in rew [P] H' in a = rew [Q] H' in rew [Dom] H x in a.
 Proof.
-now destruct H'.
+  now destruct H'.
 Defined.
 
 Fixpoint mkCohPainting `{deps: FormDeps p n}
@@ -746,10 +746,14 @@ Proof.
     apply rew_swap.
     do 2 rewrite rew_opp_l.
     unshelve eapply (rew_existT_curried (Q := mkPainting' extraDeps)).
-    (* todo:
-      apply cohLayer and the IH, i.e. mkCohPainting of extraCohPaintings *)
-    admit.
-Admitted.
+    now apply (mkCohLayer (deps := (deps; dep))
+    (restrPaintings' := (restrPaintings'; restrPainting')) (cohs := (cohs; coh))
+    (cohPaintings; cohPainting) r q (Hrq := ⇓ Hrq) ε ω d l).
+    now rewrite (mkCohPainting p.+1 n (deps; dep)%deps extraDeps
+      (restrPaintings'; restrPainting') (cohs; coh) extraCohs
+      (cohPaintings; cohPainting) extraCohPaintings r q (⇓ Hrq) (⇓ Hq)
+      ε ω (d; l) c).
+Defined.
 
 Fixpoint mkCohPaintings `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
