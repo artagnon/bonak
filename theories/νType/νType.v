@@ -604,8 +604,8 @@ Proof.
     -> rew_map with (P := fun x => deps.(_paintings'').2 x)
         (f := fun x => deps.(2).(_restrFrame') r (Hq := Hrq ↕ Hq) ω x),
     -> rew_map with (P := fun x => deps.(_paintings'').2 x)
-        (f := fun x => deps.(2).(_restrFrame') q ε x).
-  rewrite <- cohPaintings.2.
+        (f := fun x => deps.(2).(_restrFrame') q ε x),
+    <- cohPaintings.2.
   repeat rewrite rew_compose.
   apply rew_swap with (P := fun x => deps.(_paintings'').2 x).
   rewrite rew_app_rl. now trivial. now apply deps.(2).(_frame'').(UIP).
@@ -716,13 +716,6 @@ Proof.
   now destruct p.
 Defined.
 
-Lemma rew_permute_ll_hset: forall (A : Type) (P Q : A -> HSet) (x y : A)
-  (H : forall z : A, P z = Q z) (H' : x = y) (a : P x),
-  rew [Dom] H y in rew [P] H' in a = rew [Q] H' in rew [Dom] H x in a.
-Proof.
-  now destruct H'.
-Defined.
-
 Fixpoint mkCohPainting `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
   {restrPaintings': RestrPaintingTypes' extraDeps}
@@ -747,13 +740,14 @@ Proof.
     do 2 rewrite rew_opp_l.
     unshelve eapply (rew_existT_curried (Q := mkPainting' extraDeps)).
     now apply (mkCohLayer (deps := (deps; dep))
-    (restrPaintings' := (restrPaintings'; restrPainting')) (cohs := (cohs; coh))
-    (cohPaintings; cohPainting) r q (Hrq := ⇓ Hrq) ε ω d l).
+      (restrPaintings' := (restrPaintings'; restrPainting'))
+      (cohs := (cohs; coh)) (cohPaintings; cohPainting) r q (Hrq := ⇓ Hrq)
+      ε ω d l).
     now rewrite (mkCohPainting p.+1 n (deps; dep)%deps extraDeps
       (restrPaintings'; restrPainting') (cohs; coh) extraCohs
       (cohPaintings; cohPainting) extraCohPaintings r q (⇓ Hrq) (⇓ Hq)
       ε ω (d; l) c).
-Defined.
+Qed.
 
 Fixpoint mkCohPaintings `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}

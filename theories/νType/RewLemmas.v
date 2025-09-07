@@ -3,7 +3,7 @@
 Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT Notation.
+From Bonak Require Import HSet SigT Notation.
 
 Lemma rew_rew {A} {x y: A} (H: x = y) P {a: P x} :
 rew <- [P] H in rew [P] H in a = a.
@@ -27,7 +27,7 @@ Proof.
   now destruct H.
 Qed.
 
-Lemma rew_existT_curried {A x} {P: A -> Type} {Q: {a & P a} -> Type}
+Lemma rew_existT_curried {A x} {P: A -> Type} {Q: {a &T P a} -> Type}
    {y} {H: x = y}
    {u: P x} {v: Q (x; u)}
    {u': P y} {v': Q (y; u')}
@@ -60,6 +60,13 @@ Theorem rew_permute_ll A (P Q: A -> Type) (x y: A) (H: forall z, P z = Q z)
 Proof.
   now destruct H'.
 Qed.
+
+Lemma rew_permute_ll_hset: forall (A : Type) (P Q : A -> HSet) (x y : A)
+  (H : forall z : A, P z = Q z) (H' : x = y) (a : P x),
+  rew [Dom] H y in rew [P] H' in a = rew [Q] H' in rew [Dom] H x in a.
+Proof.
+  now destruct H'.
+Defined.
 
 Theorem rew_permute_rr A (P Q: A -> Type) (x y: A) (H: forall z, Q z = P z)
   (H': y = x) (a: P x) :
