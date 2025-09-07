@@ -4,8 +4,6 @@ Bonak is a research project that aims to formalize simplicial and cubical sets i
 
 The name _bonak_ comes from an imaginary monster in Daisy Johnson's novel [Everything Under](https://thebookerprizes.com/the-booker-library/books/everything-under), which was shortlisted for the Booker Prize in 2018. It happens to be an exciting read, and Ram had read the book at around the time this project started.
 
-A pre-print of our paper can be found at [arXiv:2401.00512](https://arxiv.org/abs/2401.00512).
-
 Some features of this project:
 
 1. We do not make use of [HoTT](https://github.com/HoTT/HoTT), or any fancy libraries for that matter. Bonak is written is vanilla Coq, making use of the core standard library. In particular, we make heavy use of [SProp](https://coq.inria.fr/refman/addendum/sprop.html) for definitional proof irrelevance.
@@ -26,4 +24,6 @@ Our approach is generic over the arity of the parametricity translation: we use 
 
 ## Current status
 
-`master` is a complete version of the formalization of semi-simplicial and semi-cubical sets. We are currently in the process of adding degeneracies, to yield simplicial and cubical sets.
+The first paper describing our initial work can be found at [arXiv:2401.00512](https://arxiv.org/abs/2401.00512) (pre-print) or [10.1017/S096012952500009X](https://doi.org/10.1017/S096012952500009X) (published version), and the corresponding code can be found under the tag [hr25](https://github.com/artagnon/bonak/tree/962647e33cfe653eaac989bae16817b42dab3280).
+
+`master` and other branches contain work-in-progress for future publications.
