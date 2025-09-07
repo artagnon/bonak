@@ -1,4 +1,4 @@
-Require Import List Logic.FunctionalExtensionality.
+From Stdlib Require Import List Logic.FunctionalExtensionality.
 Import Logic.EqNotations ListNotations.
 
 Set Warnings "-notation-overridden".

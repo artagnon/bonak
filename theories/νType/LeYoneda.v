@@ -3,7 +3,7 @@
     - "Yoneda trick" *)
 
 From Bonak Require Import Notation.
-Require Import StrictProp.
+From Stdlib Require Import Logic.StrictProp.
 
 Set Warnings "-notation-overridden".
 
