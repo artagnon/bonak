@@ -580,20 +580,21 @@ Definition mkCohLayer `{deps: FormDeps p.+1 n}
   {extraCohs: CohFramesExtension cohs}
   (cohPaintings: mkCohPaintingTypes extraCohs)
   {prevCohFrames: mkCohFrameTypes
-    (extraDeps := ((mkFullDeps restrPaintings' cohs).(2);
-      mkExtraDeps extraCohs))
+    (extraDeps :=
+      ((mkFullDeps restrPaintings' cohs).(2); mkExtraDeps extraCohs))
     (mkRestrPaintings cohs extraCohs).1}
   r q {Hrq: r <= q} {Hq: q <= n} (ε ω: arity)
-  d
+  (d: mkPrevFrame
+    (mkRestrFrames (mkRestrPaintings cohs extraCohs).1.1 prevCohFrames.1))
   (l: mkLayer
     (mkRestrFrames (mkRestrPaintings cohs extraCohs).1.1 prevCohFrames.1) d):
   rew [mkLayer _] prevCohFrames.2 r.+1 q.+1 (⇑ Hrq) (⇑ Hq) ε ω d in
     mkRestrLayer (restrPaintings' := restrPaintings') cohs q Hq ε _
-      (mkRestrLayer (restrPaintings' := (mkRestrPaintings _ extraCohs).1)
-        (prev := mkCohFrameTypesAndRestrFrames _) _ r  (Hrq ↕ ↑ Hq) ω d l) =
-    mkRestrLayer (restrPaintings' := restrPaintings') cohs r  (Hrq ↕ Hq) ω _
-      (mkRestrLayer (restrPaintings' := (mkRestrPaintings _ extraCohs).1) _
-        q.+1 _ ε d l).
+      (mkRestrLayer (restrPaintings' := (mkRestrPaintings cohs extraCohs).1) _
+        r (Hrq ↕ ↑ Hq) ω d l) =
+    mkRestrLayer (restrPaintings' := restrPaintings') cohs r (Hrq ↕ Hq) ω _
+      (mkRestrLayer (restrPaintings' := (mkRestrPaintings cohs extraCohs).1) _
+        q.+1 (⇑ Hq) ε d l).
 Proof.
   apply functional_extensionality_dep; intros 𝛉.
   rewrite <- map_subst_app. unfold mkRestrLayer; simpl.
@@ -624,12 +625,12 @@ Proof.
   destruct p.
   - unshelve esplit. now exact tt. now intros.
   - unshelve esplit.
-    + now exact (mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
-        (cohs.2; extraCohs)%extracohs cohPaintings.1).
+    + now exact (mkCohFrames p n.+1 deps.(1) (deps.(2); extraDeps)%extradeps
+        restrPaintings'.1 cohs.1 (cohs.2; extraCohs)%extracohs cohPaintings.1).
     + intros r q Hrq Hq ε ω d. unshelve eapply eq_existT_curried.
-      now exact ((mkCohFrames p _ _ _ restrPaintings'.1 cohs.1
-        (cohs.2; extraCohs)%extracohs cohPaintings.1).2 r.+1 q.+1
-        (⇑ Hrq) (⇑ Hq) ε ω d.1).
+      now exact ((mkCohFrames p n.+1 deps.(1) (deps.(2); extraDeps)%extradeps
+        restrPaintings'.1 cohs.1 (cohs.2; extraCohs)%extracohs
+        cohPaintings.1).2 r.+1 q.+1 (⇑ Hrq) (⇑ Hq) ε ω d.1).
       now exact (mkCohLayer cohPaintings r q ε ω d.1 d.2).
 Defined.
 
