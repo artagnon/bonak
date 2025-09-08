@@ -839,4 +839,27 @@ Fixpoint νTypeAt n: νType n :=
   | n.+1 => mkνType (νTypeAt n)
   end.
 
+CoInductive νTypeFrom n (X: mkPrefix'' n): Type := cons {
+  this: (mkDeps' n (νTypeAt n) X).(2).(_frame'') -> HSet;
+  next: νTypeFrom n (X.1; this);
+}.
+
+(** The final construction *)
+Definition νTypes := νTypeFrom 0 (tt; fun _ => hunit).
+
 End νType.
+
+Definition AugmentedSemiSimplicial := νTypes hunit.
+Definition SemiCubical := νTypes hbool.
+
+(** Some examples *)
+
+Notation "{ x : A && P }" := (sigT (A := A) (fun x => P)): type_scope.
+
+Example SemiSimplicial2 := Eval lazy -[projT2] in
+ (νTypeAt hunit 2).(prefix'' _).
+Print SemiSimplicial2.
+
+Example SemiCubical2 := Eval lazy -[projT2] in
+ (νTypeAt hbool 2).(prefix'' _).
+Print SemiCubical2.
