@@ -854,12 +854,10 @@ Definition SemiCubical := νTypes hbool.
 
 (** Some examples *)
 
-Notation "{ x : A && P }" := (sigT (A := A) (fun x => P)): type_scope.
-
-Example SemiSimplicial2 := Eval lazy -[projT2] in
+Example SemiSimplicial2 := Eval lazy in
  (νTypeAt hunit 2).(prefix'' _).
 Print SemiSimplicial2.
 
-Example SemiCubical2 := Eval lazy -[projT2] in
+Example SemiCubical2 := Eval lazy in
  (νTypeAt hbool 2).(prefix'' _).
 Print SemiCubical2.
