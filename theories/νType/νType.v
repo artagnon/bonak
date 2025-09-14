@@ -699,15 +699,18 @@ Instance mkνType0: νType 0.
 Defined.
 
 #[local]
-Instance mkνType {p} (C: νType p): νType p.+1.
-  unshelve esplit.
-  now exact (mkPrefix'' p).
-  intro D. unshelve esplit.
-  now eapply mkDeps'.
-  now apply mkRestrPaintings'.
-  now apply mkCohFrames'.
-  now apply mkCohPaintings'.
-Defined.
+Instance mkνType {p} (C: νType p): νType p.+1 :=
+{|
+  prefix'' := mkPrefix'' p;
+  data :=
+  fun D : mkPrefix'' p =>
+  {|
+    _deps := mkDeps' p C D;
+    _restrPaintings' := mkRestrPaintings' p C D;
+    _cohFrames := mkCohFrames' p C D;
+    _cohPaintings := mkCohPaintings' p C D
+  |}
+|}.
 
 (** An [νType] truncated up to dimension [n] *)
 Fixpoint νTypeAt n: νType n :=
