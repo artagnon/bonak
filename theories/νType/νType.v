@@ -673,20 +673,24 @@ Variable p: nat.
 Variable C: νType p.
 Variable D: mkPrefix'' p.
 
+Definition mkDepsCohs'': DepsCohs p 0 :=
+  mkDepsCohs0 ((C.(data) D.1).(_cohFrames) D.2).
+
 Definition mkDeps': FormDeps p.+1 0 :=
-  mkFullDeps (depsCohs := mkDepsCohs0 ((C.(data) D.1).(_cohFrames) D.2)).
+  mkFullDeps (depsCohs := mkDepsCohs'').
 
 Definition mkRestrPaintings' E': RestrPaintingTypes' (TopDep E') :=
-  mkRestrPaintings (depsCohs := mkDepsCohs0 ((C.(data) D.1).(_cohFrames) D.2))
-    (TopCohFrame E').
+  mkRestrPaintings (depsCohs := mkDepsCohs'') (TopCohFrame E').
 
 Definition mkCohFrames' E': mkCohFrameTypes (mkRestrPaintings' E') :=
-  mkCohFrames (depsCohs := mkDepsCohs0 ((C.(data) D.1).(_cohFrames) D.2))
+  mkCohFrames (depsCohs := mkDepsCohs'')
     ((C.(data) D.1).(_cohPaintings) D.2 E').
 
+Definition mkDepsCohs' E': DepsCohs p.+1 0 :=
+  mkDepsCohs0 (mkCohFrames' E').
+
 Definition mkCohPaintings' E' E:
-  mkCohPaintingTypes (depsCohs := mkDepsCohs0 (mkCohFrames' E'))
-    (TopCohFrame E) :=
+  mkCohPaintingTypes (depsCohs := mkDepsCohs' E') (TopCohFrame E) :=
  mkCohPaintings (TopCohPainting (NextE := E)).
 
 End νTypeData.
