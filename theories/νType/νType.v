@@ -130,14 +130,16 @@ Instance ConsDep `(deps: FormDeps p n.+1)
 |}.
 
 #[local]
-Instance Proj1Deps `(deps: FormDeps p.+1 n): FormDeps p n.+1 := {|
+Instance Proj1Deps `(deps: FormDeps p.+1 n): FormDeps p n.+1 :=
+{|
   _frames'' := deps.(_frames'').1;
   _paintings'' := deps.(_paintings'').1;
   _restrFrames' := deps.(_restrFrames').1;
 |}.
 
 #[local]
-Instance Proj2Deps `(deps: FormDeps p.+1 n): FormDep (Proj1Deps deps) := {|
+Instance Proj2Deps `(deps: FormDeps p.+1 n): FormDep (Proj1Deps deps) :=
+{|
   _frame'' := deps.(_frames'').2;
   _painting'' := deps.(_paintings'').2;
   _restrFrame' := deps.(_restrFrames').2;
@@ -178,8 +180,7 @@ Fixpoint mkPainting' `{deps: FormDeps p n} (extraDeps: FormDepsExtension deps):
   end.
 
 Fixpoint mkPaintings' {p n}: forall `{deps: FormDeps p n}
-  (extraDeps: FormDepsExtension deps),
-  PaintingGen p.+1 (mkFrames' deps) :=
+  (extraDeps: FormDepsExtension deps), PaintingGen p.+1 (mkFrames' deps) :=
   match p with
   | 0 => fun deps extraDeps => (tt; mkPainting' extraDeps)
   | S p => fun deps extraDeps =>
@@ -248,8 +249,7 @@ Definition mkDeps `{deps: FormDeps p n} {extraDeps: FormDepsExtension deps}
 
 (** Thus being able to build frame(p+1+n,p+1) from the same assumptions *)
 
-Definition mkFrame `{deps: FormDeps p n}
-  {extraDeps: FormDepsExtension deps}
+Definition mkFrame `{deps: FormDeps p n} {extraDeps: FormDepsExtension deps}
   (restrFrames: mkRestrFrameTypes extraDeps) :=
   mkFrame' (mkDeps restrFrames).
 
@@ -368,7 +368,8 @@ Instance mkDepsCohs0 `{deps: FormDeps p 0} {E': mkFrame' deps -> HSet}
   {| cohs := cohs |}.
 
 #[local]
-Instance SlideDepsCohs `(depsCohs: DepsCohs p.+1 n): DepsCohs p n.+1 := {|
+Instance SlideDepsCohs `(depsCohs: DepsCohs p.+1 n): DepsCohs p n.+1 :=
+{|
   deps := depsCohs.(deps).(1);
   extraDeps := (depsCohs.(deps).(2); depsCohs.(extraDeps));
   restrPaintings' := depsCohs.(restrPaintings').1;
@@ -567,7 +568,8 @@ Defined.
 #[local]
 Instance mkDepsCohs `{depsCohs: DepsCohs p n}
   {extraCohs: CohFramesExtension depsCohs}
-  (cohPaintings: mkCohPaintingTypes extraCohs): DepsCohs p.+1 n := {|
+  (cohPaintings: mkCohPaintingTypes extraCohs): DepsCohs p.+1 n :=
+{|
   deps := mkFullDeps;
   extraDeps := mkExtraDeps extraCohs;
   restrPaintings' := mkRestrPaintings extraCohs;
