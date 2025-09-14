@@ -77,9 +77,8 @@ Definition mkLayer {p n}
   (d: (prev.(FrameDef) restrFrames.1).2) :=
   hforall ε, paintings''.2 (restrFrames.2 0 leY_O ε d).
 
-Fixpoint mkRestrFrameTypesAndFrames' {p n}:
-  forall (frames'': FrameGen p) (paintings'': PaintingGen p frames''),
-  RestrFrameTypeBlock p :=
+Fixpoint mkRestrFrameTypesAndFrames' {p n}: forall (frames'': FrameGen p)
+  (paintings'': PaintingGen p frames''), RestrFrameTypeBlock p :=
   match p with
   | 0 => fun frames'' paintings'' =>
     {|
@@ -110,8 +109,7 @@ Definition mkFrames' `(deps: FormDeps p n): FrameGen p.+1 :=
   (mkRestrFrameTypesAndFrames' deps.(_frames'')
     deps.(_paintings'') (n := n)).(FrameDef) deps.(_restrFrames').
 
-Definition mkFrame' `(deps: FormDeps p n): HSet :=
-  (mkFrames' deps).2.
+Definition mkFrame' `(deps: FormDeps p n): HSet := (mkFrames' deps).2.
 
 Class FormDep `(deps: FormDeps p n.+1) := {
   _frame'': HSet;
@@ -157,11 +155,9 @@ Notation "( x ; y )" := (ConsDep x y)
 
 Inductive FormDepsExtension {p} : forall {n}, FormDeps p n -> Type :=
 | TopDep {deps}:
-  forall E': mkFrame' deps -> HSet,
-  FormDepsExtension (n := 0) deps
+  forall E': mkFrame' deps -> HSet, FormDepsExtension (n := 0) deps
 | AddDep {n} deps dep:
-  FormDepsExtension (ConsDep deps dep) ->
-  FormDepsExtension (n := n.+1) deps.
+  FormDepsExtension (ConsDep deps dep) -> FormDepsExtension (n := n.+1) deps.
 
 Declare Scope extra_deps_scope.
 Delimit Scope extra_deps_scope with extradeps.
@@ -289,11 +285,11 @@ Definition mkCohFrameTypesStep `{deps: FormDeps p.+1 n}
   {restrPaintings': RestrPaintingTypes' extraDeps}
   (prev: CohFrameTypeBlock (extraDeps := (deps.(2); extraDeps))): Type :=
   { Q: prev.(CohFrameTypesDef) &T
-     forall r q (Hrq: r <= q) (Hq: q <= n) (ε ω: arity) d,
-        deps.(_restrFrames').2 q Hq ε
-          ((prev.(RestrFramesDef) Q).2 r (Hrq ↕ (↑ Hq)) ω d) =
-        deps.(_restrFrames').2 r (Hrq ↕ Hq) ω
-          ((prev.(RestrFramesDef) Q).2 q.+1 (⇑ Hq) ε d) }.
+    forall r q (Hrq: r <= q) (Hq: q <= n) (ε ω: arity) d,
+    deps.(_restrFrames').2 q Hq ε
+      ((prev.(RestrFramesDef) Q).2 r (Hrq ↕ (↑ Hq)) ω d) =
+    deps.(_restrFrames').2 r (Hrq ↕ Hq) ω
+      ((prev.(RestrFramesDef) Q).2 q.+1 (⇑ Hq) ε d) }.
 
 Definition mkRestrLayer `{deps: FormDeps p.+1 n}
   {extraDeps: FormDepsExtension deps}
@@ -392,7 +388,7 @@ Definition mkRestrFrames `{depsCohs: DepsCohs p n} :=
 
 Definition mkRestrFrameType `{depsCohs: DepsCohs p n} :=
   forall q (Hq: q <= n) (ε: arity),
-    mkPrevFrame (mkRestrFrames) -> mkFrame' depsCohs.(deps).
+  mkPrevFrame (mkRestrFrames) -> mkFrame' depsCohs.(deps).
 
 Definition mkRestrFrame `{depsCohs: DepsCohs p n}: mkRestrFrameType :=
   mkRestrFrames.2.
@@ -407,9 +403,9 @@ Definition mkFullDeps `{depsCohs: DepsCohs p n} := mkDeps mkRestrFrames.
 
 Definition mkCohFrameType `{depsCohs: DepsCohs p.+1 n} :=
   forall r q (Hrq: r <= q) (Hq: q <= n) (ε ω: arity) d,
-    depsCohs.(deps).(2).(_restrFrame') q ε (mkRestrFrame r (Hrq ↕ (↑ Hq)) ω d)
-    = depsCohs.(deps).(2).(_restrFrame') r (Hq := Hrq ↕ Hq) ω
-      (mkRestrFrame q.+1 (⇑ Hq) ε d).
+  depsCohs.(deps).(2).(_restrFrame') q ε (mkRestrFrame r (Hrq ↕ (↑ Hq)) ω d)
+  = depsCohs.(deps).(2).(_restrFrame') r (Hq := Hrq ↕ Hq) ω
+    (mkRestrFrame q.+1 (⇑ Hq) ε d).
 
 Inductive CohFramesExtension {p}: forall `(depsCohs: DepsCohs p n), Type :=
 | TopCohFrame `{depsCohs0: DepsCohs p 0}
@@ -453,8 +449,8 @@ Definition mkPrevPainting `{depsCohs: DepsCohs p n}
 Definition mkRestrPaintingType `{depsCohs: DepsCohs p n}
   (extraCohs: CohFramesExtension depsCohs) :=
   forall q (Hq: q <= n) ε (d: mkPrevFrame mkRestrFrames),
-    mkPrevPainting extraCohs d ->
-    (mkPaintings' depsCohs.(extraDeps)).2 (mkRestrFrame q _ ε d).
+  mkPrevPainting extraCohs d ->
+  (mkPaintings' depsCohs.(extraDeps)).2 (mkRestrFrame q _ ε d).
 
 (* Note: a priori, unfoldPaintingProj can be avoided because only
    "mkRestrPaintingType 0" and "mkRestrPaintingType p.+1" are later used,
@@ -499,8 +495,7 @@ Definition mkCohPaintingType `{depsCohs: DepsCohs p.+1 n}
     ((mkRestrPaintings (depsCohs; extraCohs)).2 q.+1 _ ε d c).
 
 Fixpoint mkCohPaintingTypes {p}: forall `{depsCohs: DepsCohs p n}
-  (extraCohs: CohFramesExtension depsCohs),
-  Type :=
+  (extraCohs: CohFramesExtension depsCohs), Type :=
   match p with
   | 0 => fun _ _ _ => unit
   | S p =>
@@ -742,6 +737,5 @@ Definition SemiCubical := νTypes hbool.
 
 (** Some examples *)
 
-Example SemiSimplicial4 := Eval compute in
- (νTypeAt hunit 4).(prefix'' _).
+Example SemiSimplicial4 := Eval compute in (νTypeAt hunit 4).(prefix'' _).
 Print SemiSimplicial4.
