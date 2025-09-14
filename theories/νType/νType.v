@@ -611,7 +611,7 @@ Proof.
   repeat rewrite rew_compose.
   apply rew_swap with (P := fun x => deps.(_paintings'').2 x).
   rewrite rew_app_rl. now trivial. now apply deps.(2).(_frame'').(UIP).
-Qed.
+Defined.
 
 Fixpoint mkCohFrames `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
@@ -716,7 +716,7 @@ Lemma unfoldRestrPaintings `{deps: FormDeps p n}
   mkRestrPainting cohs extraCohs q Hq ε d (rew <- unfoldPaintingProj in c).
 Proof.
   now destruct p.
-Qed.
+Defined.
 
 Fixpoint mkCohPainting `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
@@ -749,7 +749,7 @@ Proof.
       (restrPaintings'; restrPainting') (cohs; coh) extraCohs
       (cohPaintings; cohPainting) extraCohPaintings r q (⇓ Hrq) (⇓ Hq)
       ε ω (d; l) c).
-Qed.
+Defined.
 
 Fixpoint mkCohPaintings `{deps: FormDeps p n}
   {extraDeps: FormDepsExtension deps}
@@ -839,25 +839,22 @@ Fixpoint νTypeAt n: νType n :=
   | n.+1 => mkνType (νTypeAt n)
   end.
 
-CoInductive νTypeFrom n (X: mkPrefix'' n): Type := cons {
-  this: (mkDeps' n (νTypeAt n) X).(2).(_frame'') -> HSet;
-  next: νTypeFrom n (X.1; this);
+CoInductive νTypeFrom n (X: (νTypeAt n).(prefix'')): Type := cons {
+  this: mkFrame' ((νTypeAt n).(data) X).(deps) -> HSet;
+  next: νTypeFrom n.+1 (X; this);
 }.
 
 (** The final construction *)
-Definition νTypes := νTypeFrom 0 (tt; fun _ => hunit).
+Definition νTypes := νTypeFrom 0 tt.
 
 End νType.
 
 Definition AugmentedSemiSimplicial := νTypes hunit.
+Definition SemiSimplicial := νTypeFrom hunit 1 (tt; fun _ => hunit).
 Definition SemiCubical := νTypes hbool.
 
 (** Some examples *)
 
-Example SemiSimplicial2 := Eval lazy in
- (νTypeAt hunit 2).(prefix'' _).
-Print SemiSimplicial2.
-
-Example SemiCubical2 := Eval lazy in
- (νTypeAt hbool 2).(prefix'' _).
-Print SemiCubical2.
+Example SemiSimplicial4 := Eval compute in
+ (νTypeAt hunit 4).(prefix'' _).
+Print SemiSimplicial4.
