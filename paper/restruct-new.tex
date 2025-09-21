@@ -26,6 +26,24 @@
 
 \begin{document}
 
+\title{On the specific recursive structure of iterated parametricity}
+
+\maketitle
+
+\begin{abstract}
+  In a previous paper, we gave equations describing the construction
+  of semi-simplicial and semi-cubical sets via iterated parametricity.
+  The construction was formalised in the Rocq (ex-Coq) proof assistant
+  building $n$-truncated sets using an induction on a large structure
+  embedding equational reasoning.
+
+  The current paper describes a new and lighter presentation of the
+  construction where equational reasoning is replaced by
+  definition. Being lighter, it can now be described in full details,
+  closely following the corresponding new machine-checked
+  formalisation.
+\end{abstract}
+
 \section{The recursive structure of iterated parametricity}
 Iterated parametricity (in indexed form) produces a family of type
 families of the following form:
@@ -41,7 +59,7 @@ families of the following form:
 Such family can be recursively described by the equations given on Table ?.
 
 The well-foundedness of the construction can be justified by the observation that:
-\begin{enumerate}
+\begin{itemize}
   \item Defining $\myframe^{n,p}$ for $p \leq n$ requires the definition
         of $\painting^{n-1,p-1}$, thus also $\myframe^{n-1,p-1}$ by typing
         dependency, as well as $\restrframe^{n,p-1}$, where
@@ -623,10 +641,10 @@ To define $\painting$ formally, we need to define $\myframe^{n,[p,...,n]}$, $\pa
             cohframe^{n,k\geq p} \\
           \end{tikzcd}
         \end{center}
-\end{enumerate}
+\end{itemize}
 
 Looking at the dependencies in the reverse order, it is thus enough:
-\begin{enumerate}
+\begin{itemize}
   \item To assume $\myframe^{n-2,k}$ and $\painting^{n-2,k}$ for all $k< p$
         in order to mutually define, for all $p\leq n$, the type of
         $\restrframe^{n-1,p}$ and $\myframe^{n-1,p}$ as a function from all
@@ -924,7 +942,7 @@ Looking at the dependencies in the reverse order, it is thus enough:
             \textcolor{red}{cohframe^{n,k<p}} \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm] \\
           \end{tikzcd}
         \end{tiny}
-\end{enumerate}
+\end{itemize}
 
 Thus, shortly, assuming $\myframe^{n-2,p}$, $\painting^{n-2,p}$,
 $\restrframe^{n-1,p}$, $\restrpainting^{n-1,p}$, $\cohframe^{n,p}$ and
