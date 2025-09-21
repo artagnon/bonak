@@ -298,11 +298,10 @@ Definition mkRestrLayer `{deps: FormDeps p.+1 n}
   (cohFrames: mkCohFrameTypesStep (restrPaintings' := restrPaintings') prev)
   q (Hq: q <= n) (ε: arity)
   (d: mkPrevFrame (prev.(RestrFramesDef) cohFrames.1)):
-   mkLayer (prev.(RestrFramesDef) cohFrames.1) d
-   -> mkLayer deps.(_restrFrames')
+  mkLayer (prev.(RestrFramesDef) cohFrames.1) d -> mkLayer deps.(_restrFrames')
     ((prev.(RestrFramesDef) cohFrames.1).2 q.+1 (⇑ Hq) ε d) :=
   fun l ω => rew [deps.(_paintings'').2] cohFrames.2 0 q leY_O Hq ε ω d in
-            restrPaintings'.2 q _ ε _ (l ω).
+             restrPaintings'.2 q Hq ε _ (l ω).
 
 (** Under previous assumptions, and, additionally:
       [restrPainting(p+n,0);...;restrPainting(p+n,p-1)]
@@ -447,7 +446,7 @@ Definition mkRestrPaintingType `{depsCohs: DepsCohs p n}
   (extraCohs: CohFramesExtension depsCohs) :=
   forall q (Hq: q <= n) ε (d: mkPrevFrame mkRestrFrames),
   mkPrevPainting extraCohs d ->
-  (mkPaintings' depsCohs.(extraDeps)).2 (mkRestrFrame q _ ε d).
+  (mkPaintings' depsCohs.(extraDeps)).2 (mkRestrFrame q Hq ε d).
 
 (* Note: a priori, unfoldPaintingProj can be avoided because only
    "mkRestrPaintingType 0" and "mkRestrPaintingType p.+1" are later used,
@@ -486,9 +485,9 @@ Definition mkCohPaintingType `{depsCohs: DepsCohs p.+1 n}
     (d: mkPrevFrame mkRestrFrames)
     (c: (mkPaintings' (mkFullDeps.(2); mkExtraDeps (depsCohs; extraCohs))).2 d),
   rew [depsCohs.(deps).(2).(_painting'')] depsCohs.(cohs).2 r q Hrq Hq ε ω d in
-  depsCohs.(restrPaintings').2 q _ ε _
+  depsCohs.(restrPaintings').2 q Hq ε _
     ((mkRestrPaintings (depsCohs; extraCohs)).2 r _ ω d c) =
-  depsCohs.(restrPaintings').2 r _ ω _
+  depsCohs.(restrPaintings').2 r (Hrq ↕ Hq) ω _
     ((mkRestrPaintings (depsCohs; extraCohs)).2 q.+1 _ ε d c).
 
 Fixpoint mkCohPaintingTypes {p}: forall `{depsCohs: DepsCohs p n}
