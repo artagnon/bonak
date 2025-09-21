@@ -15,8 +15,8 @@ Proof.
    now destruct Hu, Hv, H.
 Qed.
 
-Lemma rew_permute_ll_hset: forall (A : Type) (P Q : A -> HSet) (x y : A)
-  (H : forall z : A, P z = Q z) (H' : x = y) (a : P x),
+Lemma rew_permute_ll_hset: forall (A: Type) (P Q: A -> HSet) (x y: A)
+  (H: forall z: A, P z = Q z) (H': x = y) (a: P x),
   rew [Dom] H y in rew [P] H' in a = rew [Q] H' in rew [Dom] H x in a.
 Proof.
   now destruct H'.

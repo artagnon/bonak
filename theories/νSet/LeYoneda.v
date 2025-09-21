@@ -8,24 +8,24 @@ From Stdlib Require Import Logic.StrictProp.
 Set Warnings "-notation-overridden".
 
 (** False and True in SProp *)
-Inductive SFalse : SProp :=.
-Inductive STrue : SProp := sI.
+Inductive SFalse: SProp :=.
+Inductive STrue: SProp := sI.
 
 (** A recursive definition of le *)
-Fixpoint leR (n m : nat) : SProp :=
+Fixpoint leR (n m: nat): SProp :=
   match n, m with
   | O, _ => STrue
   | S n, O => SFalse
   | S n, S m => leR n m
   end.
 
-Lemma leR_refl {n} : leR n n.
+Lemma leR_refl {n}: leR n n.
 Proof.
   now induction n.
 Qed.
 
 (** A Yoneda-style encoding of the recursive definition of le *)
-Class leY n m := le_intro : forall p, leR p n -> leR p m.
+Class leY n m := le_intro: forall p, leR p n -> leR p m.
 Infix "<=" := leY: nat_scope.
 
 (* Equality in SProp is =S *)

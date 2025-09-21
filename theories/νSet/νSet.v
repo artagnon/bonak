@@ -83,7 +83,7 @@ Fixpoint mkRestrFrameTypesAndFrames' {p n}: forall (frames'': mkFrameTypes p)
   | 0 => fun frames'' paintings'' =>
     {|
       RestrFrameTypesDef := unit;
-      FrameDef _ := (tt; hunit) : mkFrameTypes 1
+      FrameDef _ := (tt; hunit): mkFrameTypes 1
     |}
   | p.+1 => fun frames'' paintings'' =>
     let prev :=
@@ -153,7 +153,7 @@ Notation "x .(2)" := (proj2Deps x%_depsrestr)
 Notation "( x ; y )" := (consDep x%_depsrestr y)
   (at level 0, format "( x ; y )"): depsrestr_scope.
 
-Inductive DepsRestrExtension {p} : forall {n}, DepsRestr p n -> Type :=
+Inductive DepsRestrExtension {p}: forall {n}, DepsRestr p n -> Type :=
 | TopDep {deps}:
   forall E': mkFrame' deps -> HSet, DepsRestrExtension (n := 0) deps
 | AddDep {n deps} dep:
@@ -385,7 +385,7 @@ Definition mkRestrFrames `{depsCohs: DepsCohs p n} :=
 
 (* Tying the loop: we type mkRestrFrame((p+1)+n,p) knowing
     mkRestrFrames(p+(1+n),0..p-1)
-    Note that even if mkRestrFrames((p+1)+n,p) : mkRestrFrameTypes((p+1)+n,p),
+    Note that even if mkRestrFrames((p+1)+n,p): mkRestrFrameTypes((p+1)+n,p),
     we don't have mkRestrFrame((p+1)+n,p): mkRestrFrameType((p+1)+n,p), because
     mkRestrFrameType((p+1)+n,p) assumes restrFrames((p+1)+n,0..p) which would be
     circular.
@@ -606,7 +606,7 @@ Proof.
 Defined.
 
 Lemma unfoldRestrPaintings `{depsCohs: DepsCohs p n}
-  {extraCohs: DepsCohsExtension depsCohs} q {Hq : q <= n} ε
+  {extraCohs: DepsCohsExtension depsCohs} q {Hq: q <= n} ε
   (d: mkFrame' mkFullDepsRestr.(1))
   (c: (mkPaintings' (mkFullDepsRestr.(2); mkExtraDeps extraCohs)).2 d):
   (mkRestrPaintings extraCohs).2 q Hq ε d c =
@@ -658,7 +658,7 @@ Class νSetAux p := {
   deps: DepsRestr p 0;
   restrPaintings' E': RestrPaintingTypes' (TopDep E');
   cohFrames E': mkCohFrameTypes (restrPaintings' E');
-  cohPaintings E' E : mkCohPaintingTypes
+  cohPaintings E' E: mkCohPaintingTypes
     (depsCohs := mkDepsCohs0 (cohFrames E')) (TopCohFrame E);
 }.
 
@@ -712,7 +712,7 @@ Defined.
 Instance mkνSet {p} (C: νSet p): νSet p.+1 :=
 {|
   prefix'' := mkPrefix'' p;
-  data := fun D : mkPrefix'' p =>
+  data := fun D: mkPrefix'' p =>
   {|
     deps := mkDepsRestr' p C D;
     restrPaintings' := mkRestrPaintings' p C D;
