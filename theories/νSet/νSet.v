@@ -143,35 +143,36 @@ Instance proj2Deps `(deps: DepsRestr p.+1 n): DepRestr (proj1Deps deps) :=
   _restrFrame' := deps.(_restrFrames').2;
 |}.
 
-Declare Scope deps_scope.
-Delimit Scope deps_scope with deps.
-Bind Scope deps_scope with DepsRestr.
-Notation "x .(1)" := (proj1Deps x%_deps)
-  (at level 1, left associativity, format "x .(1)"): type_scope.
-Notation "x .(2)" := (proj2Deps x%_deps)
+Declare Scope depsrestr_scope.
+Delimit Scope depsrestr_scope with depsrestr.
+Bind Scope depsrestr_scope with DepsRestr.
+Notation "x .(1)" := (proj1Deps x%_depsrestr)
+  (at level 1, left associativity, format "x .(1)"): depsrestr_scope.
+Notation "x .(2)" := (proj2Deps x%_depsrestr)
   (at level 1, left associativity, format "x .(2)"): type_scope.
-Notation "( x ; y )" := (consDep x y)
-  (at level 0, format "( x ; y )"): deps_scope.
+Notation "( x ; y )" := (consDep x%_depsrestr y)
+  (at level 0, format "( x ; y )"): depsrestr_scope.
 
 Inductive DepsRestrExtension {p} : forall {n}, DepsRestr p n -> Type :=
 | TopDep {deps}:
   forall E': mkFrame' deps -> HSet, DepsRestrExtension (n := 0) deps
-| AddDep {n} deps dep:
+| AddDep {n deps} dep:
   DepsRestrExtension (consDep deps dep) -> DepsRestrExtension (n := n.+1) deps.
 
 Declare Scope extra_deps_scope.
 Delimit Scope extra_deps_scope with extradeps.
 Bind Scope extra_deps_scope with DepsRestrExtension.
-Notation "( x ; y )" := (AddDep _ x y)
+Notation "( x ; y )" := (AddDep x y)
   (at level 0, format "( x ; y )"): extra_deps_scope.
 
 (* Example: if p := 0, extraDeps := ([],E') mkPainting:= [E'] *)
 
-Fixpoint mkPainting' `{deps: DepsRestr p n} (extraDeps: DepsRestrExtension deps):
+Fixpoint mkPainting' `{deps: DepsRestr p n}
+  (extraDeps: DepsRestrExtension deps):
   mkFrame' deps -> HSet :=
   match extraDeps with
   | @TopDep _ deps E' => fun (d: mkFrame' deps) => E' d
-  | AddDep deps dep extraDeps => fun (d: mkFrame' deps) =>
+  | @AddDep _ _ deps dep extraDeps => fun (d: mkFrame' deps) =>
       {l: mkLayer (deps; dep).(_restrFrames') d & mkPainting' extraDeps (d; l)}
   end.
 
@@ -326,7 +327,7 @@ Instance mkCohFrameTypesAndRestrFrames:
     |}
   | S p =>
     fun n deps extraDeps restrPaintings' =>
-    let prev := mkCohFrameTypesAndRestrFrames deps.(1)
+    let prev := mkCohFrameTypesAndRestrFrames deps.(1)%depsrestr
       (deps.(2); extraDeps)%extradeps restrPaintings'.1 in
     let restrFrames := prev.(RestrFramesDef) in
     let cohFrameTypes := prev.(CohFrameTypesDef) in
@@ -371,6 +372,12 @@ Instance slideDepsCohs `(depsCohs: DepsCohs p.+1 n): DepsCohs p n.+1 :=
   _cohs := depsCohs.(_cohs).1;
 |}.
 
+Declare Scope depscohs_scope.
+Delimit Scope depscohs_scope with depscohs.
+Bind Scope depscohs_scope with DepsCohs.
+Notation "x .(1)" := (slideDepsCohs x%depscohs)
+  (at level 1, left associativity, format "x .(1)"): depscohs_scope.
+
 Definition mkRestrFrames `{depsCohs: DepsCohs p n} :=
   (mkCohFrameTypesAndRestrFrames depsCohs.(_restrPaintings')).(RestrFramesDef)
     depsCohs.(_cohs).
@@ -393,12 +400,13 @@ Definition mkRestrFrame `{depsCohs: DepsCohs p n}: mkRestrFrameType :=
   mkRestrFrames.2.
 
 (* Example: if p := 0, extraDeps := ([],E'), restrPaintings' := , cohs := []
-   then mkFullDeps := {_frames'':=[unit];
+   then mkFullDepsRestr := {_frames'':=[unit];
                        _paintings'':=[E']};
                        _restrFrames':=[\qω().()]}
    (where _restrFrames' is presented as a dependent pair, i.e. ((),\qω().()) *)
 
-Definition mkFullDeps `{depsCohs: DepsCohs p n} := mkDepsRestr mkRestrFrames.
+Definition mkFullDepsRestr `{depsCohs: DepsCohs p n} :=
+  mkDepsRestr mkRestrFrames.
 
 Definition mkCohFrameType `{depsCohs: DepsCohs p.+1 n} :=
   forall r q (Hrq: r <= q) (Hq: q <= n) (ε ω: arity) d,
@@ -410,7 +418,7 @@ Inductive DepsCohsExtension {p}: forall `(depsCohs: DepsCohs p n), Type :=
 | TopCohFrame `{depsCohs: DepsCohs p 0} (E: mkFrame mkRestrFrames -> HSet):
   DepsCohsExtension depsCohs
 | AddCohFrame {n} (depsCohs: DepsCohs p.+1 n):
-  DepsCohsExtension depsCohs -> DepsCohsExtension (slideDepsCohs depsCohs).
+  DepsCohsExtension depsCohs -> DepsCohsExtension depsCohs.(1).
 
 Declare Scope extra_cohs_scope.
 Delimit Scope extra_cohs_scope with extracohs.
@@ -419,12 +427,12 @@ Notation "( x ; y )" := (AddCohFrame x y)
   (at level 0, format "( x ; y )"): extra_cohs_scope.
 
 Fixpoint mkExtraDeps `{depsCohs: DepsCohs p n}
-  (extraCohs: DepsCohsExtension depsCohs): DepsRestrExtension mkFullDeps.
+  (extraCohs: DepsCohsExtension depsCohs): DepsRestrExtension mkFullDepsRestr.
 Proof.
   destruct extraCohs.
   - now constructor.
   - unshelve econstructor.
-    + now exact mkFullDeps.(2).
+    + now exact mkFullDepsRestr.(2).
     + now exact (mkExtraDeps p.+1 n depsCohs extraCohs).
 Defined.
 
@@ -436,7 +444,7 @@ Definition mkPainting `{depsCohs: DepsCohs p n}
 Definition mkPrevPainting `{depsCohs: DepsCohs p n}
   (extraCohs: DepsCohsExtension depsCohs):
   mkPrevFrame mkRestrFrames -> HSet :=
-  mkPainting' (mkFullDeps.(2); mkExtraDeps extraCohs)%extradeps.
+  mkPainting' (mkFullDepsRestr.(2); mkExtraDeps extraCohs)%extradeps.
 
 (* Note: We could type mkRestrPainting(p+1+n,p) of type
    RestrPaintingType(p+1+n,p) up to using unfoldPaintingProj at other places.
@@ -475,7 +483,7 @@ Proof.
   - unshelve esplit. now exact tt.
     now exact (mkRestrPainting extraCohs).
   - unshelve esplit.
-    now exact (mkRestrPaintings p n.+1 (slideDepsCohs depsCohs)
+    now exact (mkRestrPaintings p n.+1 depsCohs.(1)%depscohs
       (depsCohs; extraCohs)%extracohs).
     now exact (mkRestrPainting extraCohs).
 Defined.
@@ -484,7 +492,8 @@ Definition mkCohPaintingType `{depsCohs: DepsCohs p.+1 n}
   (extraCohs: DepsCohsExtension depsCohs) :=
   forall r q (Hrq: r <= q) (Hq: q <= n) (ε ω: arity)
     (d: mkPrevFrame mkRestrFrames)
-    (c: (mkPaintings' (mkFullDeps.(2); mkExtraDeps (depsCohs; extraCohs))).2 d),
+    (c: (mkPaintings' (mkFullDepsRestr.(2);
+      mkExtraDeps (depsCohs; extraCohs))).2 d),
   rew [depsCohs.(_deps).(2).(_painting'')] depsCohs.(_cohs).2 r q Hrq Hq ε ω d in
   depsCohs.(_restrPaintings').2 q Hq ε _
     ((mkRestrPaintings (depsCohs; extraCohs)).2 r _ ω d c) =
@@ -505,7 +514,7 @@ Definition mkCohLayer `{depsCohs: DepsCohs p.+1 n}
   {extraCohs: DepsCohsExtension depsCohs}
   (cohPaintings: mkCohPaintingTypes extraCohs)
   {prevCohFrames: mkCohFrameTypes
-    (extraDeps := (mkFullDeps.(2); mkExtraDeps extraCohs))
+    (extraDeps := (mkFullDepsRestr.(2); mkExtraDeps extraCohs))
     (mkRestrPaintings extraCohs).1}
   r q {Hrq: r <= q} {Hq: q <= n} (ε ω: arity)
   (d: mkPrevFrame (mkRestrFrames (depsCohs := {| _cohs := prevCohFrames.1 |})))
@@ -544,10 +553,10 @@ Proof.
   destruct p.
   - unshelve esplit. now exact tt. now intros.
   - unshelve esplit.
-    + now exact (mkCohFrames p n.+1 (slideDepsCohs depsCohs)
+    + now exact (mkCohFrames p n.+1 depsCohs.(1)%depscohs
       (depsCohs; extraCohs)%extracohs cohPaintings.1).
     + intros r q Hrq Hq ε ω d. unshelve eapply eq_existT_curried.
-      now exact ((mkCohFrames p n.+1 (slideDepsCohs depsCohs)
+      now exact ((mkCohFrames p n.+1 depsCohs.(1)%depscohs
         (depsCohs; extraCohs)%extracohs
         cohPaintings.1).2 r.+1 q.+1 (⇑ Hrq) (⇑ Hq) ε ω d.1).
       now exact (mkCohLayer cohPaintings r q ε ω d.1 d.2).
@@ -558,7 +567,7 @@ Instance mkDepsCohs `{depsCohs: DepsCohs p n}
   {extraCohs: DepsCohsExtension depsCohs}
   (cohPaintings: mkCohPaintingTypes extraCohs): DepsCohs p.+1 n :=
 {|
-  _deps := mkFullDeps;
+  _deps := mkFullDepsRestr;
   _extraDeps := mkExtraDeps extraCohs;
   _restrPaintings' := mkRestrPaintings extraCohs;
   _cohs := mkCohFrames cohPaintings;
@@ -597,8 +606,8 @@ Defined.
 
 Lemma unfoldRestrPaintings `{depsCohs: DepsCohs p n}
   {extraCohs: DepsCohsExtension depsCohs} q {Hq : q <= n} ε
-  (d: mkFrame' mkFullDeps.(1))
-  (c: (mkPaintings' (mkFullDeps.(2); mkExtraDeps extraCohs)).2 d):
+  (d: mkFrame' mkFullDepsRestr.(1))
+  (c: (mkPaintings' (mkFullDepsRestr.(2); mkExtraDeps extraCohs)).2 d):
   (mkRestrPaintings extraCohs).2 q Hq ε d c =
   mkRestrPainting extraCohs q Hq ε d (rew <- unfoldPaintingProj in c).
 Proof.
@@ -639,7 +648,7 @@ Proof.
   - unshelve esplit. now exact tt.
     now exact (mkCohPainting extraCohPaintings).
   - unshelve esplit. now exact (mkCohPaintings p n.+1
-      (slideDepsCohs depsCohs) (depsCohs; extraCohs)%extracohs
+      depsCohs.(1)%depscohs (depsCohs; extraCohs)%extracohs
       cohPaintings.1 (cohPaintings; extraCohPaintings)%extracohps).
     now exact (mkCohPainting extraCohPaintings).
 Defined.
@@ -673,7 +682,7 @@ Definition mkDepsCohs'': DepsCohs p 0 :=
   mkDepsCohs0 ((C.(data) D.1).(cohFrames) D.2).
 
 Definition mkDepsRestr': DepsRestr p.+1 0 :=
-  mkFullDeps (depsCohs := mkDepsCohs'').
+  mkFullDepsRestr (depsCohs := mkDepsCohs'').
 
 Definition mkRestrPaintings' E': RestrPaintingTypes' (TopDep E') :=
   mkRestrPaintings (depsCohs := mkDepsCohs'') (TopCohFrame E').
