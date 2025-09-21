@@ -102,9 +102,6 @@ Proof.
   exists (forall a: A, B a). now apply hpiT_UIP.
 Defined.
 
-Definition pi_domain_eq {A A': HSet} (p: A = A') (u: A -> HSet): A' -> HSet :=
-  fun (a': A') => u (rew <- [@id HSet] p in a').
-
 Notation "'hforall' x .. y , P" :=
   (hpiT (fun x => .. (hpiT (fun y => P%type)) ..))
   (at level 10, x binder, y binder, P at level 200,
