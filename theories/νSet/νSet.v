@@ -16,24 +16,24 @@ Variable arity: HSet.
 
 (** The type of lists [frame(p+n,0);...;frame(p+n,p-1)] for arbitrary n *)
 
-Fixpoint FrameGen p: Type :=
+Fixpoint mkFrameTypes p: Type :=
   match p with
   | 0 => unit
-  | S p => { frames'': FrameGen p &T HSet }
+  | S p => { frames'': mkFrameTypes p &T HSet }
   end.
 
 (** The type of lists [painting(p+n,0);...;painting(p+n,p-1)] for arbitrary n *)
 
-Fixpoint PaintingGen p: FrameGen p -> Type :=
+Fixpoint mkPaintingTypes p: mkFrameTypes p -> Type :=
   match p with
   | 0 => fun _ => unit
   | S p => fun frames'' =>
-    { painting'': PaintingGen p frames''.1 &T frames''.2 -> HSet }
+    { painting'': mkPaintingTypes p frames''.1 &T frames''.2 -> HSet }
   end.
 
 Class RestrFrameTypeBlock p := {
   RestrFrameTypesDef: Type;
-  FrameDef: RestrFrameTypesDef -> FrameGen p.+1;
+  FrameDef: RestrFrameTypesDef -> mkFrameTypes p.+1;
 }.
 
 (**
@@ -63,27 +63,27 @@ That is, we build:
 *)
 
 Definition mkRestrFrameTypesStep {p n}
-  {frames'': FrameGen p.+1}
-  (paintings'': PaintingGen p.+1 frames'')
+  {frames'': mkFrameTypes p.+1}
+  (paintings'': mkPaintingTypes p.+1 frames'')
   (prev: RestrFrameTypeBlock p) :=
   { R: prev.(RestrFrameTypesDef) &T
     forall q (Hq: q <= n) (ε: arity), (prev.(FrameDef) R).2 -> frames''.2 }.
 
 Definition mkLayer {p n}
-  {frames'': FrameGen p.+1}
-  {paintings'': PaintingGen p.+1 frames''}
+  {frames'': mkFrameTypes p.+1}
+  {paintings'': mkPaintingTypes p.+1 frames''}
   {prev: RestrFrameTypeBlock p}
   (restrFrames: mkRestrFrameTypesStep (n := n) paintings'' prev)
   (d: (prev.(FrameDef) restrFrames.1).2) :=
   hforall ε, paintings''.2 (restrFrames.2 0 leY_O ε d).
 
-Fixpoint mkRestrFrameTypesAndFrames' {p n}: forall (frames'': FrameGen p)
-  (paintings'': PaintingGen p frames''), RestrFrameTypeBlock p :=
+Fixpoint mkRestrFrameTypesAndFrames' {p n}: forall (frames'': mkFrameTypes p)
+  (paintings'': mkPaintingTypes p frames''), RestrFrameTypeBlock p :=
   match p with
   | 0 => fun frames'' paintings'' =>
     {|
       RestrFrameTypesDef := unit;
-      FrameDef _ := (tt; hunit) : FrameGen 1
+      FrameDef _ := (tt; hunit) : mkFrameTypes 1
     |}
   | p.+1 => fun frames'' paintings'' =>
     let prev :=
@@ -92,20 +92,20 @@ Fixpoint mkRestrFrameTypesAndFrames' {p n}: forall (frames'': FrameGen p)
     {|
       RestrFrameTypesDef := mkRestrFrameTypesStep (n := n) paintings'' prev;
       FrameDef R :=
-        (frames' R.1; { d: (frames' R.1).2 & mkLayer R d }): FrameGen p.+2
+        (frames' R.1; { d: (frames' R.1).2 & mkLayer R d }): mkFrameTypes p.+2
     |}
   end.
 
 Class DepsRestr p n := {
-  _frames'': FrameGen p;
-  _paintings'': PaintingGen p _frames'';
+  _frames'': mkFrameTypes p;
+  _paintings'': mkPaintingTypes p _frames'';
   _restrFrames': (mkRestrFrameTypesAndFrames' _frames'' _paintings''
     (n := n)).(RestrFrameTypesDef);
 }.
 
 Generalizable Variables p n.
 
-Definition mkFrames' `(deps: DepsRestr p n): FrameGen p.+1 :=
+Definition mkFrames' `(deps: DepsRestr p n): mkFrameTypes p.+1 :=
   (mkRestrFrameTypesAndFrames' deps.(_frames'')
     deps.(_paintings'')).(FrameDef) deps.(_restrFrames').
 
@@ -122,7 +122,7 @@ Class DepRestr `(deps: DepsRestr p n.+1) := {
 Instance consDep `(deps: DepsRestr p n.+1)
   (dep: DepRestr deps): DepsRestr p.+1 n :=
 {|
-  _frames'' := (deps.(_frames''); dep.(_frame'')): FrameGen p.+1;
+  _frames'' := (deps.(_frames''); dep.(_frame'')): mkFrameTypes p.+1;
   _paintings'' := (deps.(_paintings''); dep.(_painting''));
   _restrFrames' := (deps.(_restrFrames'); dep.(_restrFrame'));
 |}.
@@ -177,7 +177,7 @@ Fixpoint mkPainting' `{deps: DepsRestr p n}
   end.
 
 Fixpoint mkPaintings' {p n}: forall `{deps: DepsRestr p n}
-  (extraDeps: DepsRestrExtension deps), PaintingGen p.+1 (mkFrames' deps) :=
+  (extraDeps: DepsRestrExtension deps), mkPaintingTypes p.+1 (mkFrames' deps) :=
   match p with
   | 0 => fun deps extraDeps => (tt; mkPainting' extraDeps)
   | S p => fun deps extraDeps =>
