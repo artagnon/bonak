@@ -1,8 +1,8 @@
-From Stdlib Require Import List Logic.FunctionalExtensionality.
-Import Logic.EqNotations ListNotations.
+From Stdlib Require Import Logic.FunctionalExtensionality.
+Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT Notation RewLemmas HSet LeYoneda.
+From Bonak Require Import SigT RewLemmas HSet LeYoneda Notation.
 
 Set Primitive Projections.
 Set Printing Projections.

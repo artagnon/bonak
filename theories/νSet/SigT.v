@@ -22,7 +22,7 @@ Notation "( x ; y )" := (existT _ x y)
 Notation "x .1" := (projT1 x) (at level 1, left associativity, format "x .1").
 Notation "x .2" := (projT2 x) (at level 1, left associativity, format "x .2").
 
-Import EqNotations.
+Import Logic.EqNotations.
 
 Definition eq_existT_uncurried {A: Type} {P: A -> Type} {u1 v1: A}
   {u2: P u1} {v2: P v1} (pq: { p: u1 = v1 &T rew p in u2 = v2 }):

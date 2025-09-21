@@ -3,7 +3,7 @@
 From Stdlib Require Import Logic.FunctionalExtensionality.
 From Stdlib Require Import Logic.Eqdep_dec. (* UIP_refl_unit *)
 
-Import EqNotations.
+Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT.
