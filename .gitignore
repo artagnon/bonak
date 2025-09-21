@@ -7,8 +7,11 @@
 *.bcf
 *.xml
 *.pdf
+*.out
+*.log
 *.fdb_latexmk
 *.fls
+paper/*.pygtex
 .coqdeps.d
 .Makefile.d
 Makefile.coq*
@@ -19,3 +22,4 @@ _build
 .lia.cache
 _minted*/
 .vscode
+*~
