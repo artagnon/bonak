@@ -9,7 +9,7 @@ Some features of this project:
 1. We do not make use of [HoTT](https://github.com/HoTT/HoTT), or any fancy libraries for that matter. Bonak is written is vanilla Rocq, making use of the core standard library. In particular, we make use of [SProp](https://rocq-prover.org/doc/master/refman/addendum/sprop.html) for definitional proof irrelevance.
 2. Bonak has led to many bugs being filed and fixed in core Rocq. It pushes the boundaries of proof assistant technology, and can serve as a benchmark against which to improve core Rocq features. Rocq 9.0 is required to build the current version.
 3. As the main contribution of Bonak is the Rocq code, we have placed high emphasis on code cleanliness and readability.
-4. Bonak is tiny! In ~900 lines of Rocq code, we have managed to prove something remarkable.
+4. Bonak is tiny! In ~800 lines of Rocq code, we have managed to prove something remarkable.
 
 ## Axioms
 
