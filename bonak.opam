@@ -10,7 +10,7 @@ bug-reports: "https://github.com/artagnon/bonak/issues"
 dev-repo: "git+https://github.com/artagnon/bonak"
 depends: [
   "coq"  { >= "9.0.0" }
-  "dune" { >= "3.20.0" }
+  "dune" { >= "3.17.2" }
 ]
 build: [
   ["dune" "build"]
