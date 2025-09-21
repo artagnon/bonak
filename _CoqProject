@@ -1,10 +1,7 @@
 -R _build/default/theories Bonak
-theories/νType/HSet.v
-theories/νType/LeInductive.v
-theories/νType/LeYoneda.v
-theories/νType/Notation.v
-theories/νType/RewLemmas.v
-theories/νType/SigT.v
-theories/νType/νType.v
-theories/νType/νType_index_free.v
-theories/νType/νType_no_full.v
+theories/νSet/HSet.v
+theories/νSet/LeYoneda.v
+theories/νSet/Notation.v
+theories/νSet/RewLemmas.v
+theories/νSet/SigT.v
+theories/νSet/νSet.v
