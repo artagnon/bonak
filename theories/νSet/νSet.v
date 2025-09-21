@@ -256,7 +256,8 @@ Definition mkFrame `{deps: DepsRestr p n} {extraDeps: DepsRestrExtension deps}
     p+1 and n, then restricting) because it would require knowing deps for
     p and n+1 instead of only p and n *)
 
-Definition mkPrevFrame `{deps: DepsRestr p n} {extraDeps: DepsRestrExtension deps}
+Definition mkPrevFrame `{deps: DepsRestr p n}
+  {extraDeps: DepsRestrExtension deps}
   (restrFrames: mkRestrFrameTypes extraDeps) :=
   mkFrame' (mkDepsRestr restrFrames).(1).
 
