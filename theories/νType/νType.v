@@ -11,7 +11,7 @@ Set Typeclasses Depth 10.
 Remove Printing Let sigT.
 Remove Printing Let prod.
 
-Section νType.
+Section νSet.
 Variable arity: HSet.
 
 (** The type of lists [frame(p+n,0);...;frame(p+n,p-1)] for arbitrary n *)
@@ -643,7 +643,7 @@ Proof.
     now exact (mkCohPainting extraCohPaintings).
 Defined.
 
-Class νTypeAux p := {
+Class νSetAux p := {
   _deps: FormDeps p 0;
   _restrPaintings' E': RestrPaintingTypes' (TopDep E');
   _cohFrames E': mkCohFrameTypes (_restrPaintings' E');
@@ -651,21 +651,21 @@ Class νTypeAux p := {
     (depsCohs := mkDepsCohs0 (_cohFrames E')) (TopCohFrame E);
 }.
 
-Class νType p := {
+Class νSet p := {
   prefix'': Type;
-  data: prefix'' -> νTypeAux p;
+  data: prefix'' -> νSetAux p;
 }.
 
 (***************************************************)
-(** The construction of [νType n+1] from [νType n] *)
+(** The construction of [νSet n+1] from [νSet n] *)
 
 (** Extending the initial prefix *)
-Definition mkPrefix'' p {C: νType p}: Type :=
+Definition mkPrefix'' p {C: νSet p}: Type :=
   { D: C.(prefix'') &T mkFrame' (C.(data) D).(_deps) -> HSet }.
 
-Section νTypeData.
+Section νSetData.
 Variable p: nat.
-Variable C: νType p.
+Variable C: νSet p.
 Variable D: mkPrefix'' p.
 
 Definition mkDepsCohs'': DepsCohs p 0 :=
@@ -688,21 +688,20 @@ Definition mkCohPaintings' E' E:
   mkCohPaintingTypes (depsCohs := mkDepsCohs' E') (TopCohFrame E) :=
  mkCohPaintings (TopCohPainting (NextE := E)).
 
-End νTypeData.
+End νSetData.
 
 #[local]
-Instance mkνType0: νType 0.
+Instance mkνSet0: νSet 0.
   unshelve esplit.
   - now exact hunit.
   - unshelve esplit; try now trivial. unshelve esplit; now trivial.
 Defined.
 
 #[local]
-Instance mkνType {p} (C: νType p): νType p.+1 :=
+Instance mkνSet {p} (C: νSet p): νSet p.+1 :=
 {|
   prefix'' := mkPrefix'' p;
-  data :=
-  fun D : mkPrefix'' p =>
+  data := fun D : mkPrefix'' p =>
   {|
     _deps := mkDeps' p C D;
     _restrPaintings' := mkRestrPaintings' p C D;
@@ -711,28 +710,28 @@ Instance mkνType {p} (C: νType p): νType p.+1 :=
   |}
 |}.
 
-(** An [νType] truncated up to dimension [n] *)
-Fixpoint νTypeAt n: νType n :=
+(** An [νSet] truncated up to dimension [n] *)
+Fixpoint νSetAt n: νSet n :=
   match n with
-  | O => mkνType0
-  | n.+1 => mkνType (νTypeAt n)
+  | O => mkνSet0
+  | n.+1 => mkνSet (νSetAt n)
   end.
 
-CoInductive νTypeFrom n (X: (νTypeAt n).(prefix'')): Type := cons {
-  this: mkFrame' ((νTypeAt n).(data) X).(_deps) -> HSet;
-  next: νTypeFrom n.+1 (X; this);
+CoInductive νSetFrom n (X: (νSetAt n).(prefix'')): Type := cons {
+  this: mkFrame' ((νSetAt n).(data) X).(_deps) -> HSet;
+  next: νSetFrom n.+1 (X; this);
 }.
 
 (** The final construction *)
-Definition νTypes := νTypeFrom 0 tt.
+Definition νSets := νSetFrom 0 tt.
 
-End νType.
+End νSet.
 
-Definition AugmentedSemiSimplicial := νTypes hunit.
-Definition SemiSimplicial := νTypeFrom hunit 1 (tt; fun _ => hunit).
-Definition SemiCubical := νTypes hbool.
+Definition AugmentedSemiSimplicial := νSets hunit.
+Definition SemiSimplicial := νSetFrom hunit 1 (tt; fun _ => hunit).
+Definition SemiCubical := νSets hbool.
 
 (** Some examples *)
 
-Example SemiSimplicial4 := Eval compute in (νTypeAt hunit 4).(prefix'' _).
+Example SemiSimplicial4 := Eval compute in (νSetAt hunit 4).(prefix'' _).
 Print SemiSimplicial4.
