@@ -63,8 +63,7 @@ That is, we build:
 *)
 
 Definition mkRestrFrameTypesStep {p n}
-  {frames'': mkFrameTypes p.+1}
-  (paintings'': mkPaintingTypes p.+1 frames'')
+  (frames'': mkFrameTypes p.+1)
   (prev: RestrFrameTypeBlock p) :=
   { R: prev.(RestrFrameTypesDef) &T
     forall q (Hq: q <= n) (ε: arity), (prev.(FrameDef) R).2 -> frames''.2 }.
@@ -73,7 +72,7 @@ Definition mkLayer {p n}
   {frames'': mkFrameTypes p.+1}
   {paintings'': mkPaintingTypes p.+1 frames''}
   {prev: RestrFrameTypeBlock p}
-  (restrFrames: mkRestrFrameTypesStep (n := n) paintings'' prev)
+  (restrFrames: mkRestrFrameTypesStep (n := n) frames'' prev)
   (d: (prev.(FrameDef) restrFrames.1).2) :=
   hforall ε, paintings''.2 (restrFrames.2 0 leY_O ε d).
 
@@ -90,9 +89,10 @@ Fixpoint mkRestrFrameTypesAndFrames' {p n}: forall (frames'': mkFrameTypes p)
       mkRestrFrameTypesAndFrames' (n := n.+1) frames''.1 paintings''.1 in
     let frames' := prev.(FrameDef) in
     {|
-      RestrFrameTypesDef := mkRestrFrameTypesStep (n := n) paintings'' prev;
+      RestrFrameTypesDef := mkRestrFrameTypesStep (n := n) frames'' prev;
       FrameDef R :=
-        (frames' R.1; { d: (frames' R.1).2 & mkLayer R d }): mkFrameTypes p.+2
+        (frames' R.1; { d: (frames' R.1).2 &
+          mkLayer (paintings'' := paintings'') R d }): mkFrameTypes p.+2
     |}
   end.
 
