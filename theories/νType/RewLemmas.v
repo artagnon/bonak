@@ -83,7 +83,13 @@ Lemma rew_swap_lr : forall A (P: A -> Type) a b (H: a = b) (x: P b) (y: P a),
   x = rew H in y -> rew <- H in x = y.
 Proof.
   now destruct H.
-Qed.
+Defined.
+
+Lemma rew_swap_lr' : forall A (P: A -> Type) a b (H: a = b) (x: P b) (y: P a),
+  rew H in y = x -> y = rew <- H in x.
+Proof.
+  now destruct H.
+Defined.
 
 Lemma rew_app_rl A (P : A -> Type) (x y: A) (H H': x = y) (a: P x) :
   H = H' -> rew <- [P] H in rew [P] H' in a = a.
@@ -143,4 +149,19 @@ Defined.
 Lemma rew_eq_refl : forall A B (x y: A) (f : A -> B) (H: x = y),
 rew <- [fun x => f x = f y] H in eq_refl (f y) = f_equal f H.
 now destruct H.
+Defined.
+
+Lemma map_subst_projT1 {A : Type} {B : A -> Type} {C : sigT B -> Type}
+ {a a' : A} (H : a = a') (bc : sigT (fun b => (C (a ; b)))) :
+ rew [B] H in bc.1 = (rew [fun a => sigT (fun b => (C (a ; b)))] H in bc).1.
+Proof.
+  exact (map_subst (fun _ bc => bc.1) H bc).
+Defined.
+
+Lemma map_subst_projT2 {A : Type} {B : A -> Type} {C : sigT B -> Type}
+{a a' : A} (H : a = a') (bc : sigT (fun b => (C (a ; b)))) :
+ rew [C] (=H ; map_subst_projT1 H bc) in bc.2 =
+ (rew [fun a => sigT (fun b => (C (a ; b)))] H in bc).2.
+Proof.
+  now destruct H.
 Defined.

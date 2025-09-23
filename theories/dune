@@ -1,4 +1,5 @@
 (coq.theory
- (name Bonak))
+ (name Bonak)
+ (theories Stdlib))
 
 (include_subdirs qualified)
