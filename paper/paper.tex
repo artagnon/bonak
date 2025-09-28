@@ -341,319 +341,269 @@ families of the following form:
 Such family can be recursively described by the equations given on Table ?.
 
 The well-foundedness of the construction can be justified by the observation that:
-\begin{itemize}
-  \item Defining $\framep[n][p]$ for $p \leq n$ requires the definition
-        of $\painting[n-1][p-1]$, thus also $\framep[n-1][p-1]$ by typing
-        dependency, as well as $\restrf[n][p-1]$, where
-        $\restrf[n][p-1]$ in turn depends in $\framep[n][p-1]$ for its
-        typing.
 
-        Moreover, $\framep[n][p]$ depends on $\framep[n][p-1]$, so these
-        dependencies are between the blocks of $\framep[n][k]$ for all
-        $k\leq p$, as well as $\framep[n-1][k]$, $\painting[n-1][k]$ and
-        $\restrf[n][k]$ for all $k\leq p-1$, which we respectively
-        abbreviate as $\framep[n][0,...,p]$,
-        $\framep[n-1][0,...,p-1]$, $\painting[n-1][0,...,p-1]$ and
-        $\restrf[n][0,...,p-1]$.
+Defining $\framep[n][p]$ for $p \leq n$ requires the definition of $\painting[n-1][p-1]$, thus also $\framep[n-1][p-1]$ by typing dependency, as well as $\restrf[n][p-1]$, where $\restrf[n][p-1]$ in turn depends in $\framep[n][p-1]$ for its typing.
 
-        Also, $\restrf[n][p-1]$ depends on $n$.
+Moreover, $\framep[n][p]$ depends on $\framep[n][p-1]$, so these dependencies are between the blocks of $\framep[n][k]$ for all $k\leq p$, as well as $\framep[n-1][k]$, $\painting[n-1][k]$ and $\restrf[n][k]$ for all $k\leq p-1$, which we respectively abbreviate as $\framep[n][0,...,p]$, $\framep[n-1][0,...,p-1]$, $\painting[n-1][0,...,p-1]$ and $\restrf[n][0,...,p-1]$.
 
-        Schematically, using dotted arrows for dependencies in
-        the type and plain arrows for dependencies in the definition, this
-        gives the following dependencies for $p\leq n$ fixed:
-        \begin{center}
-          \fontsize{7.2}{9}\selectfont
-          \begin{tikzcd}
-            \framep[n][0,...,p] \arrow[d] \arrow[ddr]\\
-            \painting[n-1][0,...,p-1] \arrow[d, dotted] \\
-            \framep[n-1][0,...,p-1] &
-            \restrf[n][0,...,p-1] \arrow[l, dotted] \arrow[uul, dotted, "\mbox{$[0,...,p-1]$}"', near start, shift right=2mm, hook']\\
-          \end{tikzcd}
-        \end{center}
+Also, $\restrf[n][p-1]$ depends on $n$.
 
-        In particular, the mutual dependency on one side of
-        $\framep[n][0,...,p-1]$ within the type of
-        $\restrf[n][0,...,p-1]$ and on the other side of
-        $\restrf[n][0,...,p-1]$ within the definition of
-        $\framep[n][0,...,p]$ requires to mutually define the type of
-        $\restrf[n][0,...,p-1]$ together with $\framep[n][p]$ (or
-        $\framep[n][0,...,p]$) as a function from
-        $\restrf[n][0,...,p-1]$.
+Schematically, using dotted arrows for dependencies in the type and plain arrows for dependencies in the definition, this gives the following dependencies for $p\leq n$ fixed:
+\begin{center}
+  \fontsize{7.2}{9}\selectfont
+  \begin{tikzcd}
+    \framep[n][0,...,p] \arrow[d] \arrow[ddr]\\
+    \painting[n-1][0,...,p-1] \arrow[d, dotted] \\
+    \framep[n-1][0,...,p-1] &
+    \restrf[n][0,...,p-1] \arrow[l, dotted] \arrow[uul, dotted, "\mbox{$[0,...,p-1]$}"', near start, shift right=2mm, hook']\\
+  \end{tikzcd}
+\end{center}
 
-        To talk about sequences of $\framep$, $\painting$ or $\restrf$,
-        we need to specify their types. The type of $\restrf$ will be
-        defined mutually with $\framep$ of the same level, but the type of
-        $\framep$, $\painting$ can be defined in advance, the second one
-        being however dependent on the first one. In general, components of
-        such sequences will have a type dependent on the previous components
-        of the sequence, as it is the case for $\restrf$. So, the type of
-        a sequence of length $p$ will be expressed as a $n$-iterated
-        $\Sigma$-type. In the case of $\framep$ and $\painting$, there will
-        be however no dependency, so an ordinary product can be used. If
-        $\framep[n][0,...,p]$ is such a sequence of length $p+1$, we write
-        $\framep[n][0,...,p-1]$ for its immediate subsequence of length $p$
-        and $\framep[n][p]$ for its last component. We can now define the
-        types of sequences of $\framep$ and $\painting$ as follows:
+In particular, the mutual dependency on one side of $\framep[n][0,...,p-1]$ within the type of $\restrf[n][0,...,p-1]$ and on the other side of $\restrf[n][0,...,p-1]$ within the definition of $\framep[n][0,...,p]$ requires to mutually define the type of $\restrf[n][0,...,p-1]$ together with $\framep[n][p]$ (or $\framep[n][0,...,p]$) as a function from $\restrf[n][0,...,p-1]$.
 
-        $$
-          \fontsize{7.2}{9}\selectfont
-          \begin{array}{llcl}
-            \frametype[n][0,...,p]    &                                              & :      & Type_{l+1}                                                                                   \\
-            \frametype[n][]           &                                              & \defeq & unit                                                                                         \\
-            \frametype[n][0,...,p]    &                                              & \defeq & \frametype[n][0,...,p-1] \times Type_l                                                       \\
-            \\
-            \paintingtype[n][0,...,p] & (\framep[n][0,...,p]:\frametype[n][0,...,p]) & :      & Type_{l+1}                                                                                   \\
-            \paintingtype[n][]        & \star                                        & \defeq & unit                                                                                         \\
-            \paintingtype[n][0,...,p] & (\framep[n][0,...,p])                        & \defeq & \paintingtype[n][0,...,p-1](\framep[n][0,...,p-1]) \times (\framep[n][p] \rightarrow Type_l) \\
-          \end{array}
-        $$
+To talk about sequences of $\framep$, $\painting$ or $\restrf$, we need to specify their types. The type of $\restrf$ will be defined mutually with $\framep$ of the same level, but the type of $\framep$, $\painting$ can be defined in advance, the second one being however dependent on the first one. In general, components of such sequences will have a type dependent on the previous components of the sequence, as it is the case for $\restrf$. So, the type of a sequence of length $p$ will be expressed as a $n$-iterated $\Sigma$-type. In the case of $\framep$ and $\painting$, there will be however no dependency, so an ordinary product can be used. If $\framep[n][0,...,p]$ is such a sequence of length $p+1$, we write $\framep[n][0,...,p-1]$ for its immediate subsequence of length $p$ and $\framep[n][p]$ for its last component. We can now define the types of sequences of $\framep$ and $\painting$ as follows:
 
-        Formally, this can be described as:
-        $$
-          \fontsize{7.2}{9}\selectfont
-          \begin{array}{llcl}
-            \framep[n][0,...,p]        &
-            \multicolumn{3}{l}{
+\begin{equation*}
+  \fontsize{7.2}{9}\selectfont
+  \begin{array}{llcl}
+    \frametype[n][0,...,p]    &                                              & :      & Type_{l+1}                                                                                   \\
+    \frametype[n][]           &                                              & \defeq & unit                                                                                         \\
+    \frametype[n][0,...,p]    &                                              & \defeq & \frametype[n][0,...,p-1] \times Type_l                                                       \\
+    \\
+    \paintingtype[n][0,...,p] & (\framep[n][0,...,p]:\frametype[n][0,...,p]) & :      & Type_{l+1}                                                                                   \\
+    \paintingtype[n][]        & \star                                        & \defeq & unit                                                                                         \\
+    \paintingtype[n][0,...,p] & (\framep[n][0,...,p])                        & \defeq & \paintingtype[n][0,...,p-1](\framep[n][0,...,p-1]) \times (\framep[n][p] \rightarrow Type_l) \\
+  \end{array}
+\end{equation*}
+
+Formally, this can be described as:
+\begin{equation*}
+  \fontsize{7.2}{9}\selectfont
+  \begin{array}{llcl}
+    \framep[n][0,...,p]        &
+    \multicolumn{3}{l}{
+      \left(\begin{array}{l}
+                \framep[n-1][0,...,p-1]:\frametype[n-1][0,...,p-1]                               \\
+                \painting[n-1][0,...,p-1]:\paintingtype[n-1][0,...,p-1](\framep[n-1][0,...,p-1]) \\
+                \restrf[n][0,...,p-1]:\restrftype[n][0,...,p-1]
+                \left(\begin{array}{l}
+                    \framep[n-1][0,...,p-1]   \\
+                    \painting[n-1][0,...,p-1] \\
+                  \end{array}\right)                                                  \\
+              \end{array}\right) : \frametype[n-1][0,...,p]
+    }                                                                         \\
+    \framep[n][0]              &
+    \left(\begin{array}{l}
+              \star \\
+              \star \\
+              \star \\
+            \end{array}\right)     & \defeq & (\star,unit)                      \\
+    \framep[n][0,...,p+1]      &
+    \left(\begin{array}{l}
+              \framep[n-1][0,...,p]   \\
+              \painting[n-1][0,...,p] \\
+              \restrf[n][0,...,p]     \\
+            \end{array}\right) & \defeq &
+    \left(\begin{array}{l}
+              \framep[n][0,...,p]
               \left(\begin{array}{l}
-                        \framep[n-1][0,...,p-1]:\frametype[n-1][0,...,p-1]                               \\
-                        \painting[n-1][0,...,p-1]:\paintingtype[n-1][0,...,p-1](\framep[n-1][0,...,p-1]) \\
-                        \restrf[n][0,...,p-1]:\restrftype[n][0,...,p-1]
-                        \left(\begin{array}{l}
-                            \framep[n-1][0,...,p-1]   \\
-                            \painting[n-1][0,...,p-1] \\
-                          \end{array}\right)                                                  \\
-                      \end{array}\right) : \frametype[n-1][0,...,p]
-            }                                                                         \\
-            \framep[n][0]              &
-            \left(\begin{array}{l}
-                      \star \\
-                      \star \\
-                      \star \\
-                    \end{array}\right)     & \defeq & (\star,unit)                      \\
-            \framep[n][0,...,p+1]      &
-            \left(\begin{array}{l}
-                      \framep[n-1][0,...,p]   \\
-                      \painting[n-1][0,...,p] \\
-                      \restrf[n][0,...,p]     \\
-                    \end{array}\right) & \defeq &
-            \left(\begin{array}{l}
-                      \framep[n][0,...,p]
-                      \left(\begin{array}{l}
-                          \framep[n-1][0,...,p-1]   \\
-                          \painting[n-1][0,...,p-1] \\
-                          \restrf[n][0,...,p-1]     \\
-                        \end{array}\right)     ,                       \\
-                      \Sigma d:\framep[n][0,...,p]
-                      \left(\begin{array}{l}
-                          \framep[n-1][0,...,p-1]   \\
-                          \painting[n-1][0,...,p-1] \\
-                          \restrf[n][0,...,p-1]     \\
-                        \end{array}\right).\,                       \\
-                      \quad \Pi\omega.\,\painting[n-1][p](\restrf[n][p](d)) \\
-                    \end{array}\right) \\
-            \restrftype[n][0,...,p-1]  &
-            \multicolumn{3}{l}{
+                  \framep[n-1][0,...,p-1]   \\
+                  \painting[n-1][0,...,p-1] \\
+                  \restrf[n][0,...,p-1]     \\
+                \end{array}\right)     ,                       \\
+              \Sigma d:\framep[n][0,...,p]
               \left(\begin{array}{l}
-                        \framep[n-1][0,...,p-1]:\frametype[n-1][0,...,p-1]                               \\
-                        \painting[n-1][0,...,p-1]:\paintingtype[n-1][0,...,p-1](\framep[n-1][0,...,p-1]) \\
-                      \end{array}\right) : Type_{l}
-            }                                                                         \\
-            \restrftype[n][]           &
-            \left(\begin{array}{l}
-                      \star \\
-                      \star \\
-                    \end{array}\right)     & \defeq &
-            unit                                                                      \\
-            \restrftype[n][0,...,p]    &
-            \left(\begin{array}{l}
-                      \framep[n-1][0,...,p]   \\
-                      \painting[n-1][0,...,p] \\
-                    \end{array}\right) & \defeq &
-            \begin{array}{l}
-              \Sigma \restrf[n][0,...,p-1]    \\
-              \quad:\restrftype[n][0,...,p-1]
+                  \framep[n-1][0,...,p-1]   \\
+                  \painting[n-1][0,...,p-1] \\
+                  \restrf[n][0,...,p-1]     \\
+                \end{array}\right).\,                       \\
+              \quad \Pi\omega.\,\painting[n-1][p](\restrf[n][p](d)) \\
+            \end{array}\right) \\
+    \restrftype[n][0,...,p-1]  &
+    \multicolumn{3}{l}{
+      \left(\begin{array}{l}
+                \framep[n-1][0,...,p-1]:\frametype[n-1][0,...,p-1]                               \\
+                \painting[n-1][0,...,p-1]:\paintingtype[n-1][0,...,p-1](\framep[n-1][0,...,p-1]) \\
+              \end{array}\right) : Type_{l}
+    }                                                                         \\
+    \restrftype[n][]           &
+    \left(\begin{array}{l}
+              \star \\
+              \star \\
+            \end{array}\right)     & \defeq &
+    unit                                                                      \\
+    \restrftype[n][0,...,p]    &
+    \left(\begin{array}{l}
+              \framep[n-1][0,...,p]   \\
+              \painting[n-1][0,...,p] \\
+            \end{array}\right) & \defeq &
+    \begin{array}{l}
+      \Sigma \restrf[n][0,...,p-1]    \\
+      \quad:\restrftype[n][0,...,p-1]
+      \left(\begin{array}{l}
+                \framep[n-1][0,...,p-1]   \\
+                \painting[n-1][0,...,p-1] \\
+              \end{array}\right)
+      .\,                             \\
+      \Pi q\leq n.\,\Pi \omega.\,\framep[n][0,...,p]
+      \left(\begin{array}{l}
+                \framep[n-1][0,...,p-1]   \\
+                \painting[n-1][0,...,p-1] \\
+                \restrf[n][0,...,p-1]     \\
+              \end{array}\right) \\
+    \end{array}                             \\
+  \end{array}
+\end{equation*}
+
+Defining $\painting[n][p]$, in addition to the type dependency in $\framep[n][p]$, requires the definition of $\painting[n-1][p-1]$, thus also $\framep[n-1][p-1]$ by typing dependency, as well as $\restrf[n][p-1]$. Since $\painting[n][p]$ also depends on $\painting[n][p+1]$ when $p<n$, these dependencies are actually between $\painting[n][p,...,n]$, $\painting[n-1][p,...,n-1]$, $\framep[n][p,...,n]$, $\framep[n-1][p,...,n-1]$ and $\restrf[n][p,...,n]$. Also, for the case $p=n$, this also requires the assumption of an inhabitant $X_{n}$ of $\nu$Set$^{=n}$. Finally, $\framep[n][p,...,n]$, $\framep[n-1][p,...,n-1]$ and $\restrf[n][p,...,n-1]$ respectively depend on the earlier values $\framep[n][0,...,p-1]$, $\framep[n-1][0,...,p-1]$ and $\restrf[n][0,...,p-1]$.  Below, we use dashed underline and dashed arrows for dependencies in subconstructions, here in the construction of $\framep$ at level $n-1$ and $\restrftype$ at level $n$:
+\begin{center}
+  \fontsize{7.2}{9}\selectfont
+  \begin{tikzcd}
+    & & \painting[n][p,...,n] \arrow[dd, bend right=70] \arrow[dddr] \arrow[d, dotted]\\
+    \udensdash{\framep}^{n,[0,...,p-1]} \arrow[d, dashed] \arrow[ddr, dashed] & &
+    \udensdash{\framep}^{n,[p,...,n]} \arrow[ll, dotted] \arrow[d, dashed] \arrow[ddr, dashed, shift right=2mm] \\
+    \painting[n-1][0,...,p-1] \arrow[d, dotted] & &
+    \painting[n-1][p,...,n-1] \arrow[ll, dotted] \arrow[d, dotted] \\
+    \framep[n-1][0,...,p-1] &
+    \udensdash{\restrf}^{n,[0,...,p-1]} \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm, hook'] &
+    \framep[n-1][p,...,n-1] \arrow[ll, dotted, bend left=15] &
+    \udensdash{\restrf}^{n,[p,...,n-1]},X_n \arrow[ll, dotted, bend left=15] \arrow[l, dotted] \arrow[uul, dotted, hook']\\
+  \end{tikzcd}
+\end{center}
+
+To define $\painting$ formally, we need to define $\framep[n][p,...,n]$, $\painting[n][p,...,n]$ and $\restrf[n][p,...,n]$:
+
+\begin{equation*}
+  \fontsize{7.2}{9}\selectfont
+  \begin{array}{llcl}
+    \frametype[n][p,...,n]         &                                              & :      & Type_{l+1}                                                                                   \\
+    \frametype[n][]                &                                              & \defeq & unit                                                                                         \\
+    \frametype[n][p,...,n]         &                                              & \defeq & Type_l \times \frametype[n][p+1,...,n-1]                                                     \\
+    \\
+    \paintingtype[n][p,...,n]      & (\framep[n][p,...,n]:\frametype[n][p,...,n]) & :      & Type_{l+1}                                                                                   \\
+    \paintingtype[n][]             & \star                                        & \defeq & unit                                                                                         \\
+    \paintingtype[n][p,...,n](p<n) & (\framep[n][p,...,n])                        & \defeq & (\framep[n][p] \rightarrow Type_l) \times \paintingtype[n][p+1,...,n](\framep[n][p+1,...,n]) \\
+    \\
+    \restrftype[n][p,...,n]        &
+    \multicolumn{3}{l}{
+      \left(\begin{array}{l}
+                \framep[n-1][0,...,p-1]:\frametype[n-1][0,...,p-1]                               \\
+                \painting[n-1][0,...,p-1]:\paintingtype[n-1][0,...,p-1](\framep[n-1][0,...,p-1]) \\
+                \framep[n-1][p,...,n-1]:\frametype[n-1][p,...,n-1]                               \\
+                \painting[n-1][p,...,n-1]:\paintingtype[n-1][p,...,n-1](\framep[n-1][p,...,n-1]) \\
+                \restrf[n][0,...,p-1]:\restrftype[n][0,...,p-1]
+                \left(\begin{array}{l}
+                    \framep[n-1][0,...,p-1]   \\
+                    \painting[n-1][0,...,p-1] \\
+                  \end{array}\right)                                                  \\
+              \end{array}\right) : Type_{l}
+    }                                                                                                                                                                                     \\
+    \restrftype[n][]               &
+    \left(\begin{array}{l}
+              \framep[n-1][0,...,n-1]   \\
+              \painting[n-1][0,...,n-1] \\
+              \star                     \\
+              \star                     \\
+              \restrp[n][0,...,n-1]     \\
+            \end{array}\right)   & \defeq                                       & unit                                                                                                      \\
+    \restrftype[n][p,...,n-1]      &
+    \left(\begin{array}{l}
+              \framep[n-1][0,...,p-1]   \\
+              \painting[n-1][0,...,p-1] \\
+              \framep[n-1][p,...,n-1]   \\
+              \painting[n-1][p,...,n-1] \\
+              \restrf[n][0,...,p-1]     \\
+            \end{array}\right)
+                                   & \defeq                                       &
+    \begin{array}{l}
+      \framep[n][p]
+      \left(\begin{array}{l}
+                \framep[n-1][0,...,p-1]   \\
+                \painting[n-1][0,...,p-1] \\
+                \restrf[n][0,...,p-1]     \\
+              \end{array}\right)
+      \rightarrow \framep[n-1][p] \\
+      \times                      \\
+      \restrftype[n][p+1,...,n]
+      \left(\begin{array}{l}
+                \framep[n-1][0,...,p]       \\
+                \painting[n-1][0,...,p]     \\
+                \framep[n-1][p+1,...,n-1]   \\
+                \painting[n-1][p+1,...,n-1] \\
+                \restrf[n][0,...,p]         \\
+              \end{array}\right)
+    \end{array}
+  \end{array}
+\end{equation*}
+
+
+This allows to define $\painting[n][p]$ formally:
+\begin{equation*}
+  \fontsize{7.2}{9}\selectfont
+  \begin{array}{llcl}
+    \painting[n][p]              &
+    \multicolumn{3}{l}{
+      \left(\begin{array}{l}
+                \framep[n-1][0,...,p-1]:\frametype[n-1][0,...,p-1]                               \\
+                \painting[n-1][0,...,p-1]:\paintingtype[n-1][0,...,p-1](\framep[n-1][0,...,p-1]) \\
+                \framep[n-1][p,...,n-1]:\frametype[n-1][p,...,n-1]                               \\
+                \painting[n-1][p,...,n-1]:\paintingtype[n-1][p,...,n-1](\framep[n-1][p,...,n-1]) \\
+                \restrf[n][0,...,p-1]:\restrftype[n][0,...,p-1]
+                \left(\begin{array}{l}
+                    \framep[n-1][0,...,p-1]   \\
+                    \painting[n-1][0,...,p-1] \\
+                  \end{array}\right)                                                  \\
+                \restrf[n][p,...,n-1]:\restrftype[n][p,...,n-1]
+                \left(\begin{array}{l}
+                    \framep[n-1][0,...,p-1]   \\
+                    \painting[n-1][0,...,p-1] \\
+                    \framep[n-1][p,...,n-2]   \\
+                    \painting[n-1][p,...,n-2] \\
+                    \restrf[n][0,...,p-1]     \\
+                  \end{array}\right)                                                  \\
+                E:\framep[n-1][n-1]\rightarrow Type_l                                            \\
+              \end{array}\right) : \framep[n-1][n-1]\rightarrow Type_l
+    }                                                            \\
+    \painting[n][n]              &
+    \left(\begin{array}{l}
+              \framep[n-1][0,...,n-1]   \\
+              \painting[n-1][0,...,n-1] \\
+              \star                     \\
+              \star                     \\
+              \restrp[n][0,...,n-1]     \\
+              \star                     \\
+              E                         \\
+            \end{array}\right) & \defeq & E                        \\
+    \painting[n][p](p<n)         &
+    \left(\begin{array}{l}
+              \framep[n-1][0,...,p-1]   \\
+              \painting[n-1][0,...,p-1] \\
+              \framep[n-1][p,...,n-1]   \\
+              \painting[n-1][p,...,n-1] \\
+              \restrf[n][0,...,p-1]     \\
+              \restrf[n][p,...,n-1]     \\
+              E                         \\
+            \end{array}\right) & \defeq & d \mapsto
+    \left(\begin{array}{l}
+              \Sigma l:(\Pi q\leq n.\,\Pi \omega.\
+              \painting[n-1][0,...,p](\restrf[n][p](d))). \\
+              \painting[n][p+1,...,n-1]
               \left(\begin{array}{l}
-                        \framep[n-1][0,...,p-1]   \\
-                        \painting[n-1][0,...,p-1] \\
-                      \end{array}\right)
-              .\,                             \\
-              \Pi q\leq n.\,\Pi \omega.\,\framep[n][0,...,p]
-              \left(\begin{array}{l}
-                        \framep[n-1][0,...,p-1]   \\
-                        \painting[n-1][0,...,p-1] \\
-                        \restrf[n][0,...,p-1]     \\
-                      \end{array}\right) \\
-            \end{array}                             \\
-          \end{array}
-        $$
-  \item Defining $\painting[n][p]$, in addition to the type dependency
-        in $\framep[n][p]$, requires the definition of
-        $\painting[n-1][p-1]$, thus also $\framep[n-1][p-1]$ by typing
-        dependency, as well as $\restrf[n][p-1]$. Since
-        $\painting[n][p]$ also depends on $\painting[n][p+1]$ when $p<n$,
-        these dependencies are actually between $\painting[n][p,...,n]$,
-        $\painting[n-1][p,...,n-1]$, $\framep[n][p,...,n]$,
-        $\framep[n-1][p,...,n-1]$ and $\restrf[n][p,...,n]$. Also,
-        for the case $p=n$, this also requires the assumption of an
-        inhabitant $X_{n}$ of $\nu$Set$^{=n}$. Finally,
-        $\framep[n][p,...,n]$, $\framep[n-1][p,...,n-1]$ and
-        $\restrf[n][p,...,n-1]$ respectively depend on the earlier
-        values $\framep[n][0,...,p-1]$, $\framep[n-1][0,...,p-1]$ and
-        $\restrf[n][0,...,p-1]$.  Below, we use dashed underline and
-        dashed arrows for dependencies in subconstructions, here in the
-        construction of $\framep$ at level $n-1$ and $\restrftype$ at
-        level $n$:
-        \begin{center}
-          \fontsize{7.2}{9}\selectfont
-          \begin{tikzcd}
-            & & \painting[n][p,...,n] \arrow[dd, bend right=70] \arrow[dddr] \arrow[d, dotted]\\
-            \udensdash{\framep}^{n,[0,...,p-1]} \arrow[d, dashed] \arrow[ddr, dashed] & &
-            \udensdash{\framep}^{n,[p,...,n]} \arrow[ll, dotted] \arrow[d, dashed] \arrow[ddr, dashed, shift right=2mm] \\
-            \painting[n-1][0,...,p-1] \arrow[d, dotted] & &
-            \painting[n-1][p,...,n-1] \arrow[ll, dotted] \arrow[d, dotted] \\
-            \framep[n-1][0,...,p-1] &
-            \udensdash{\restrf}^{n,[0,...,p-1]} \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm, hook'] &
-            \framep[n-1][p,...,n-1] \arrow[ll, dotted, bend left=15] &
-            \udensdash{\restrf}^{n,[p,...,n-1]},X_n \arrow[ll, dotted, bend left=15] \arrow[l, dotted] \arrow[uul, dotted, hook']\\
-          \end{tikzcd}
-        \end{center}
+                  \framep[n-1][0,...,p]       \\
+                  \painting[n-1][0,...,p]     \\
+                  \framep[n-1][p+1,...,n-1]   \\
+                  \painting[n-1][p+1,...,n-1] \\
+                  \restrf[n][0,...,p]         \\
+                  \restrf[n][p+1,...,n-1]     \\
+                  E                           \\
+                \end{array}\right)(d,l)           \\
+            \end{array}\right) \\
+  \end{array}
+\end{equation*}
 
-        To define $\painting$ formally, we need to define $\framep[n][p,...,n]$, $\painting[n][p,...,n]$ and $\restrf[n][p,...,n]$:
-
-        $$
-          \fontsize{7.2}{9}\selectfont
-          \begin{array}{llcl}
-            \frametype[n][p,...,n]         &                                              & :      & Type_{l+1}                                                                                   \\
-            \frametype[n][]                &                                              & \defeq & unit                                                                                         \\
-            \frametype[n][p,...,n]         &                                              & \defeq & Type_l \times \frametype[n][p+1,...,n-1]                                                     \\
-            \\
-            \paintingtype[n][p,...,n]      & (\framep[n][p,...,n]:\frametype[n][p,...,n]) & :      & Type_{l+1}                                                                                   \\
-            \paintingtype[n][]             & \star                                        & \defeq & unit                                                                                         \\
-            \paintingtype[n][p,...,n](p<n) & (\framep[n][p,...,n])                        & \defeq & (\framep[n][p] \rightarrow Type_l) \times \paintingtype[n][p+1,...,n](\framep[n][p+1,...,n]) \\
-            \\
-            \restrftype[n][p,...,n]        &
-            \multicolumn{3}{l}{
-              \left(\begin{array}{l}
-                        \framep[n-1][0,...,p-1]:\frametype[n-1][0,...,p-1]                               \\
-                        \painting[n-1][0,...,p-1]:\paintingtype[n-1][0,...,p-1](\framep[n-1][0,...,p-1]) \\
-                        \framep[n-1][p,...,n-1]:\frametype[n-1][p,...,n-1]                               \\
-                        \painting[n-1][p,...,n-1]:\paintingtype[n-1][p,...,n-1](\framep[n-1][p,...,n-1]) \\
-                        \restrf[n][0,...,p-1]:\restrftype[n][0,...,p-1]
-                        \left(\begin{array}{l}
-                            \framep[n-1][0,...,p-1]   \\
-                            \painting[n-1][0,...,p-1] \\
-                          \end{array}\right)                                                  \\
-                      \end{array}\right) : Type_{l}
-            }                                                                                                                                                                                     \\
-            \restrftype[n][]               &
-            \left(\begin{array}{l}
-                      \framep[n-1][0,...,n-1]   \\
-                      \painting[n-1][0,...,n-1] \\
-                      \star                     \\
-                      \star                     \\
-                      \restrp[n][0,...,n-1]     \\
-                    \end{array}\right)   & \defeq                                       & unit                                                                                                      \\
-            \restrftype[n][p,...,n-1]      &
-            \left(\begin{array}{l}
-                      \framep[n-1][0,...,p-1]   \\
-                      \painting[n-1][0,...,p-1] \\
-                      \framep[n-1][p,...,n-1]   \\
-                      \painting[n-1][p,...,n-1] \\
-                      \restrf[n][0,...,p-1]     \\
-                    \end{array}\right)
-                                           & \defeq                                       &
-            \begin{array}{l}
-              \framep[n][p]
-              \left(\begin{array}{l}
-                        \framep[n-1][0,...,p-1]   \\
-                        \painting[n-1][0,...,p-1] \\
-                        \restrf[n][0,...,p-1]     \\
-                      \end{array}\right)
-              \rightarrow \framep[n-1][p] \\
-              \times                      \\
-              \restrftype[n][p+1,...,n]
-              \left(\begin{array}{l}
-                        \framep[n-1][0,...,p]       \\
-                        \painting[n-1][0,...,p]     \\
-                        \framep[n-1][p+1,...,n-1]   \\
-                        \painting[n-1][p+1,...,n-1] \\
-                        \restrf[n][0,...,p]         \\
-                      \end{array}\right)
-            \end{array}
-          \end{array}
-        $$
+From which we can deduce $\painting[n][0,...,p]$ by recursion on $p$.
 
 
-        This allows to define $\painting[n][p]$ formally:
-        $$
-          \fontsize{7.2}{9}\selectfont
-          \begin{array}{llcl}
-            \painting[n][p]              &
-            \multicolumn{3}{l}{
-              \left(\begin{array}{l}
-                        \framep[n-1][0,...,p-1]:\frametype[n-1][0,...,p-1]                               \\
-                        \painting[n-1][0,...,p-1]:\paintingtype[n-1][0,...,p-1](\framep[n-1][0,...,p-1]) \\
-                        \framep[n-1][p,...,n-1]:\frametype[n-1][p,...,n-1]                               \\
-                        \painting[n-1][p,...,n-1]:\paintingtype[n-1][p,...,n-1](\framep[n-1][p,...,n-1]) \\
-                        \restrf[n][0,...,p-1]:\restrftype[n][0,...,p-1]
-                        \left(\begin{array}{l}
-                            \framep[n-1][0,...,p-1]   \\
-                            \painting[n-1][0,...,p-1] \\
-                          \end{array}\right)                                                  \\
-                        \restrf[n][p,...,n-1]:\restrftype[n][p,...,n-1]
-                        \left(\begin{array}{l}
-                            \framep[n-1][0,...,p-1]   \\
-                            \painting[n-1][0,...,p-1] \\
-                            \framep[n-1][p,...,n-2]   \\
-                            \painting[n-1][p,...,n-2] \\
-                            \restrf[n][0,...,p-1]     \\
-                          \end{array}\right)                                                  \\
-                        E:\framep[n-1][n-1]\rightarrow Type_l                                            \\
-                      \end{array}\right) : \framep[n-1][n-1]\rightarrow Type_l
-            }                                                            \\
-            \painting[n][n]              &
-            \left(\begin{array}{l}
-                      \framep[n-1][0,...,n-1]   \\
-                      \painting[n-1][0,...,n-1] \\
-                      \star                     \\
-                      \star                     \\
-                      \restrp[n][0,...,n-1]     \\
-                      \star                     \\
-                      E                         \\
-                    \end{array}\right) & \defeq & E                        \\
-            \painting[n][p](p<n)         &
-            \left(\begin{array}{l}
-                      \framep[n-1][0,...,p-1]   \\
-                      \painting[n-1][0,...,p-1] \\
-                      \framep[n-1][p,...,n-1]   \\
-                      \painting[n-1][p,...,n-1] \\
-                      \restrf[n][0,...,p-1]     \\
-                      \restrf[n][p,...,n-1]     \\
-                      E                         \\
-                    \end{array}\right) & \defeq & d \mapsto
-            \left(\begin{array}{l}
-                      \Sigma l:(\Pi q\leq n.\,\Pi \omega.\
-                      \painting[n-1][0,...,p](\restrf[n][p](d))). \\
-                      \painting[n][p+1,...,n-1]
-                      \left(\begin{array}{l}
-                          \framep[n-1][0,...,p]       \\
-                          \painting[n-1][0,...,p]     \\
-                          \framep[n-1][p+1,...,n-1]   \\
-                          \painting[n-1][p+1,...,n-1] \\
-                          \restrf[n][0,...,p]         \\
-                          \restrf[n][p+1,...,n-1]     \\
-                          E                           \\
-                        \end{array}\right)(d,l)           \\
-                    \end{array}\right) \\
-          \end{array}
-        $$
-
-        From which we can deduce $\painting[n][0,...,p]$ by recursion on $p$.
-
-\end{itemize}
-
-
-\newpage
 \bibliographystyle{msclike}
 \bibliography{paper}
 
