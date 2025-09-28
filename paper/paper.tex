@@ -72,12 +72,6 @@
   \setkeys*[bonak]{coh#1}{#9}
 }
 
-\newcommandx{\cohtwo}[9][2,3,4,5,6,7,8,9]{
-  \ensuremath{\mathsf{\color{chestnut}{coh2}}_{
-    \joinargs[\mathsf{\color{indian-yellow}{#1}}][#2][#3][#4][#5][#6][#7]}^{\joinargs[#8]}}
-  \setkeys*[bonak]{coh#1}{#9}
-}
-
 % Simplicial and Cubical sets
 \newcommand{\DeltaHat}{\ensuremath{\hat{\boldsymbol{\Delta}}}}
 \newcommand{\DeltaPlus}{\ensuremath{\boldsymbol{\Delta}_+}}
@@ -293,8 +287,6 @@ Note that for a fixed constant $n$, relying on the evaluation rules of type theo
 \def\lab{tab:core}
 \input{tab-core.tex}
 
-% Drop the universe letter in fullframe for all remaining tables
-\renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[][#2][][][#3]}
 \def\lab{tab:frames}
 \input{tab-frames.tex}
 
@@ -314,7 +306,6 @@ Note that for a fixed constant $n$, relying on the evaluation rules of type theo
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohp}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
 
 \def\lab{tab:coh}
 \input{tab-coh-ett.tex}
@@ -460,14 +451,14 @@ Defining $\painting[n][p]$, in addition to the type dependency in $\framep[n][p]
   \fontsize{7.2}{9}\selectfont
   \begin{tikzcd}
     & & \painting[n][p,...,n] \arrow[dd, bend right=70] \arrow[dddr] \arrow[d, dotted]\\
-    \udensdash{\framep}^{n,[0,...,p-1]} \arrow[d, dashed] \arrow[ddr, dashed] & &
-    \udensdash{\framep}^{n,[p,...,n]} \arrow[ll, dotted] \arrow[d, dashed] \arrow[ddr, dashed, shift right=2mm] \\
+    \udensdash{\framep[n][0,...,p-1]} \arrow[d, dashed] \arrow[ddr, dashed] & &
+    \udensdash{\framep[n][p,...,n]} \arrow[ll, dotted] \arrow[d, dashed] \arrow[ddr, dashed, shift right=2mm] \\
     \painting[n-1][0,...,p-1] \arrow[d, dotted] & &
     \painting[n-1][p,...,n-1] \arrow[ll, dotted] \arrow[d, dotted] \\
     \framep[n-1][0,...,p-1] &
-    \udensdash{\restrf}^{n,[0,...,p-1]} \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm, hook'] &
+    \udensdash{\restrf[n][0,...,p-1]} \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm, hook'] &
     \framep[n-1][p,...,n-1] \arrow[ll, dotted, bend left=15] &
-    \udensdash{\restrf}^{n,[p,...,n-1]},X_n \arrow[ll, dotted, bend left=15] \arrow[l, dotted] \arrow[uul, dotted, hook']\\
+    \udensdash{\restrf[n][p,...,n-1]},X_n \arrow[ll, dotted, bend left=15] \arrow[l, dotted] \arrow[uul, dotted, hook']\\
   \end{tikzcd}
 \end{center}
 
@@ -515,7 +506,7 @@ To define $\painting$ formally, we need to define $\framep[n][p,...,n]$, $\paint
               \restrf[n][0,...,p-1]     \\
             \end{array}\right)
                                    & \defeq                                       &
-    \begin{array}{l}
+    \begin{array}{c}
       \framep[n][p]
       \left(\begin{array}{l}
                 \framep[n-1][0,...,p-1]   \\
