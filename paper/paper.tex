@@ -139,7 +139,7 @@
 \newcommandx{\restrp}[4][1,2,3,4]{\restr{painting}[][#3][#4][#1][#2][][]}
 \newcommandx{\cohf}{\coh{frame}[][][][][][][][]}
 \newcommandx{\cohl}{\coh{layer}[][][][][][][][]}
-\newcommandx{\cohc}{\coh{painting}[][][][][][][][]}
+\newcommandx{\cohp}{\coh{painting}[][][][][][][][]}
 \newcommandx{\coht}{\cohtwo{frame}[][][][][][][][]}
 \newcommandx{\fullframe}[1][1]{\prim{fullframe}[][#1][][][]}
 
@@ -272,7 +272,7 @@ The indexed definition of a presheaf over a direct category is technically more 
 % Keep only ε, ω; n, p; proposition on n and p
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][][][#9]}
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][][][][][#9]}
-\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][][][][][#9]}
+\renewcommandx{\cohp}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][][][][][#9]}
 
 A $\nu$-set in indexed form is a sequence of families of $\U$, that is $\U[m]$ for some universe level $m$. We call such sequence a $\nu$-set at level $m$, whose type thus lives in $\U[m+1]$.
 
@@ -280,7 +280,7 @@ Table~\ref{tab:coind} describes the type of a $\nu$-set at level $m$ as a depend
 
 The definition of the type of a $n$-truncated $\nu$-set is in turn described in table~\ref{tab:core}. In the infinite sequence of type families representing a $\nu$-set, the $n$-th component is a type dependent over a $\fullframe$. It is recursively defined in table~\ref{tab:frames}, using the auxiliary definitions of $\framep$, $\layer$ and $\painting$. A $\fullframe$ describes a boundary of a standard form (simplex, cube), which we decompose into $\layer$, and a $\painting$ corresponds to a filled frame. Notice that the type $\layer$ relies on an operator of frame restriction $\restrf$ which is defined in table~\ref{tab:faces}, and this restriction operator is in turn defined using auxiliary definitions $\restrl$ and $\restrp$.
 
-Notably, the definition of $\restrl$ relies on an equality expressing the commutation of the composition of two $\restrf$. The proof of this commutation is worth being made explicit, which we do in table~\ref{tab:coh} using proof-term notations. The proof requires an induction on the dimension and on the structure of $\framep$, $\layer$, and $\painting$. This is what $\cohf$ does using auxiliary proofs $\cohl$ and $\cohc$. Even though it looks independent of the definitions from the other tables, $\cohf$ has to be proved mutually with the definitions of $\framep$, $\layer$, $\painting$, and their corresponding restrictions. More precisely, for a fixed $n$, the block of $\framep$, $\restrf$, and $\cohf$ has to be defined in one go by induction on $p$. Also, each of $\painting$, $\restrp$, and $\cohc$ is built by induction from $p$ to $n$. The $\painting$ block at $n$ relies on the $\framep$ block at $n$, but the converse dependency is only on lower $n$, so this is well-founded. Note that $\layer$, $\restrl$ and $\cohl$ are just abbreviations. The exact way this mutual recursion is eventually formalized is explained in section~\ref{sec:wf}.
+Notably, the definition of $\restrl$ relies on an equality expressing the commutation of the composition of two $\restrf$. The proof of this commutation is worth being made explicit, which we do in table~\ref{tab:coh} using proof-term notations. The proof requires an induction on the dimension and on the structure of $\framep$, $\layer$, and $\painting$. This is what $\cohf$ does using auxiliary proofs $\cohl$ and $\cohp$. Even though it looks independent of the definitions from the other tables, $\cohf$ has to be proved mutually with the definitions of $\framep$, $\layer$, $\painting$, and their corresponding restrictions. More precisely, for a fixed $n$, the block of $\framep$, $\restrf$, and $\cohf$ has to be defined in one go by induction on $p$. Also, each of $\painting$, $\restrp$, and $\cohp$ is built by induction from $p$ to $n$. The $\painting$ block at $n$ relies on the $\framep$ block at $n$, but the converse dependency is only on lower $n$, so this is well-founded. Note that $\layer$, $\restrl$ and $\cohl$ are just abbreviations. The exact way this mutual recursion is eventually formalized is explained in section~\ref{sec:wf}.
 
 Note that for a fixed constant $n$, relying on the evaluation rules of type theory, the coherence conditions degenerate to a reflexivity proof, so that the construction builds an effective sequence of types not mentioning coherences anymore. \\
 
@@ -313,7 +313,7 @@ Note that for a fixed constant $n$, relying on the evaluation rules of type theo
 % Coherence conditions for frame, layer, and painting
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohp}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 \renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
 
 \def\lab{tab:coh}
