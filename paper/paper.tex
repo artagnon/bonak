@@ -298,12 +298,6 @@ Note that for a fixed constant $n$, relying on the evaluation rules of type theo
 \def\lab{tab:frames}
 \input{tab-frames.tex}
 
-% Truncated sets, otherwise referred to as X
-% Drop the universe letter for the third and fourth tables
-\renewcommandx{\Xto}[3][3]{\X[][<#2][#3]}
-\renewcommandx{\Xcomp}[3][3]{\X[][=#2][#3]}
-\renewcommandx{\Xfrom}[3][3]{\X[][\geq#2][#3]}
-
 % The third table mentions cohframe; keep ε, ω in this instance
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][#6,#7][#8][#9]}
 
@@ -315,15 +309,6 @@ Note that for a fixed constant $n$, relying on the evaluation rules of type theo
 \renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
 \renewcommandx{\restrl}[7][1,2,3,4,5,6,7]{\restr{layer}[][#2][#3][#4][#5][#6][#7]}
 \renewcommandx{\restrp}[7][1,2,3,4,5,6,7]{\restr{painting}[][#2][#3][#4][#5][#6][#7]}
-
-% Frame, layer, and painting
-% Drop all arguments for coh table; they're not present in coind table.
-\renewcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[][][][][#5]}
-\renewcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[][][][][#5]}
-\renewcommandx{\painting}[5][1,2,3,4,5]{\prim{painting}[][][][][#5]}
-
-% Hack to remove , in \cohf
-\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][][][#9]}
 
 % Coherence conditions for frame, layer, and painting
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}

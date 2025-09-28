@@ -1,19 +1,19 @@
 \providecommand{\lab}{tab:frames}
 \begin{eqntable}{$\mathsf{frame}$, $\mathsf{layer}$, and $\mathsf{painting}$\label{\lab}}
   \eqnline{\fullframe[m][n]}{\eqnarg{fullframe}{D}{\Xto{m}{n}}}{:}{\U[m]}
-  \eqnline{\fullframe[m][n]}{D}{\defeq}{\framep[m][n][n][][D=\D]}
+  \eqnline{\fullframe[m][n]}{D}{\defeq}{\framep[m][0][n][][D=\D]}
   \graymidrule
 
-  \eqnline{\framep[m][n][p][p \leq n]}{\eqnarg{frame}{D}{\Xto{m}{n}}}{:}{\U[m]}
+  \eqnline{\framep[m][n][p][p \leq n]}{\eqnarg{frame}{D}{\Xto{m}{n+p}}}{:}{\U[m]}
   \eqnline{\framep[m][n][0]}{D}{\defeq}{\unittype}
-  \eqnline{\framep[m][n][p'+1]}{D}{\defeq}{\Sigma d:\framep[m][n][p'][][D=\D].\,\layer[m][n][p'][][D=\D, d=\d]}
+  \eqnline{\framep[m][n][p+1]}{D}{\defeq}{\Sigma d:\framep[m][n+1][p][][D=\D].\,\layer[m][n][p][][D=\D, d=\d]}
   \graymidrule
 
-  \eqnline{\layer[m][n][p][p < n]}{\makecell{\eqnarg{layer}{D}{\Xto{m}{n}} \\ \eqnarg{layer}{d}{\framep[m][n][p][][D=\D]}}}{:}{\U[m]}
-  \eqnline{\layer[m][n][p]}{D~d}{\defeq}{\Pi \omega.\painting[m][n-1][p][][D=\hdD, E=\tlD, d={\restrf[m][\omega][p][n][p][][D=\D, d=\d]}]}
+  \eqnline{\layer[m][n][p][]}{\makecell{\eqnarg{layer}{D}{\Xto{m}{n+1+p}} \\ \eqnarg{layer}{d}{\framep[m][n+1][p][][D=\D]}}}{:}{\U[m]}
+  \eqnline{\layer[m][n][p]}{D~d}{\defeq}{\Pi \omega.\painting[m][n][p][][D=\hdD, E=\tlD, d={\restrf[m][\omega][p][n][p][][D=\D, d=\d]}]}
   \graymidrule
 
-  \eqnline{\painting[m][n][p][p \leq n]}{\makecell{\eqnarg{filler}{D}{\Xto{m}{n}} \\ \eqnarg{filler}{E}{\Xcomp{m}{n}[D=\D]} \\ \eqnarg{filler}{d}{\framep[m][n][p][][D=\D]}}}{:}{\U[m]}
-  \eqnline{\painting[m][n][p][p = n]}{\D~\E~\d}{\defeq}{\E(\d)}
-  \eqnline{\painting[m][n][p][p < n]}{\D~\E~\d}{\defeq}{\Sigma l:\layer[m][n][p][][D=\D, d=\d].\,\painting[m][n][p+1][][D=\D, E=\E, d=\pair{\d}{\l}]}
+  \eqnline{\painting[m][n][p]}{\makecell{\eqnarg{filler}{D}{\Xto{m}{n+p}} \\ \eqnarg{filler}{E}{\Xcomp{m}{n+p}[D=\D]} \\ \eqnarg{filler}{d}{\framep[m][n][p][][D=\D]}}}{:}{\U[m]}
+  \eqnline{\painting[m][0][p]}{\D~\E~\d}{\defeq}{\E(\d)}
+  \eqnline{\painting[m][n+1][p]}{\D~\E~\d}{\defeq}{\Sigma l:\layer[m][n][p][][D=\D, d=\d].\,\painting[m][n][p+1][][D=\D, E=\E, d=\pair{\d}{\l}]}
 \end{eqntable}
