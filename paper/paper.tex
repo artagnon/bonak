@@ -234,6 +234,113 @@ By taking the sum of each component of an indexed presentation over the indexing
 
 The indexed definition of a presheaf over a direct category is technically more involved than the presheaf definition, as it requires hard-wiring in the structure the dependencies between elements of the sets of the presheaf, including the coherence conditions between these dependencies, such as taking the $i$-th face of the $j$-th face of a $n$-simplex being the same as taking the $(j-1)$-th face of the $i$-th face (when $j>i$). However, exhibiting a concrete instance of a presheaf in indexed form only requires providing the families, since the responsibility of defining maps and showing the coherence conditions is already accounted for in the definition of the structure.
 
+\section{Reminder of our construction}
+% Abbreviated tables in this section
+%
+% The rule for implicit arguments for each table:
+% show 1 explicit in first two parts
+% show E + 1 explicit in the third part
+\appendmask[bonak]{layer}[D]
+\appendmask[bonak]{painting}[D]
+\appendmask[bonak]{restrframe}[D]
+\appendmask[bonak]{restrlayer}[D, d]
+\appendmask[bonak]{restrpainting}[D, d]
+\appendmask[bonak]{cohframe}[D]
+\appendmask[bonak]{cohlayer}[D, d]
+\appendmask[bonak]{cohpainting}[D, d]
+
+% Truncated sets, otherwise referred to as X
+% Keep all arguments
+\newcommandx{\Xp}[1]{\X[#1][][]}
+\newcommandx{\Xto}[3][3=]{\X[#1][<#2][#3]}
+\newcommandx{\Xcomp}[3][3=]{\X[#1][=#2][#3]}
+\newcommandx{\Xfrom}[3][3=]{\X[#1][\geq#2][#3]}
+
+% Frame, layer, and painting
+% Drop the universe letter
+\renewcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[][#2][#3][#4][#5]}
+\renewcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[][#2][#3][#4][#5]}
+\renewcommandx{\painting}[5][1,2,3,4,5]{\prim{painting}[][#2][#3][#4][#5]}
+
+% Restriction for frame, layer, and painting
+% Drop the universe letter
+\renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
+\renewcommandx{\restrl}[7][1,2,3,4,5,6,7]{\restr{layer}[][#2][#3][#4][#5][#6][#7]}
+\renewcommandx{\restrp}[7][1,2,3,4,5,6,7]{\restr{painting}[][#2][#3][#4][#5][#6][#7]}
+
+% Coherence conditions for frame, layer, and painting
+% Keep only ε, ω; n, p; proposition on n and p
+\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][][][#9]}
+\renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][][][][][#9]}
+\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][][][][][#9]}
+
+A $\nu$-set in indexed form is a sequence of families of $\U$, that is $\U[m]$ for some universe level $m$. We call such sequence a $\nu$-set at level $m$, whose type thus lives in $\U[m+1]$.
+
+Table~\ref{tab:coind} describes the type of a $\nu$-set at level $m$ as a dependent stream of type families representing the limit of $n$-truncated $\nu$-sets: using the notations of Section~\ref{sec:tt}, the recursive equation $\Xfrom{m}{n}{D} \,\defeq\, \Sigma R: \Xcomp{m}{n}[D=\D].\, \Xfrom{m}{n+1}[D=\pair{D}{R}]$ from the table formally corresponds to the stream $Stream_{\Sigma n.\, \Xto{m}{n},\, \lambda (n, \D).\, \Xcomp{m}{n}[D=\D],\,\lambda ((n, D),R).(n+1,(\pair{D}{R}))}(n, \D)$. Therefore, $\Xfrom{m}{n}$ denotes an infinite sequence $X_{n}, X_{n+1}, \ldots$ dependent on a $(<n)$-truncated $\nu$-set, $\Xto{m}{n}$, so that, when $n$ is $0$, it denotes a full $\nu$-set, written $\Xp{m}$. This is made possible because the $(<0)$-truncated $\nu$-set, $\Xto{m}{0}$, is degenerated: it is an empty family, and there is thus only one $(<0)$-truncated $\nu$-set, namely the canonical inhabitant $\kstar$ of $\unittype$.
+
+The definition of the type of a $n$-truncated $\nu$-set is in turn described in table~\ref{tab:core}. In the infinite sequence of type families representing a $\nu$-set, the $n$-th component is a type dependent over a $\fullframe$. It is recursively defined in table~\ref{tab:frames}, using the auxiliary definitions of $\framep$, $\layer$ and $\painting$. A $\fullframe$ describes a boundary of a standard form (simplex, cube), which we decompose into $\layer$, and a $\painting$ corresponds to a filled frame. Notice that the type $\layer$ relies on an operator of frame restriction $\restrf$ which is defined in table~\ref{tab:faces}, and this restriction operator is in turn defined using auxiliary definitions $\restrl$ and $\restrp$.
+
+Notably, the definition of $\restrl$ relies on an equality expressing the commutation of the composition of two $\restrf$. The proof of this commutation is worth being made explicit, which we do in table~\ref{tab:coh} using proof-term notations. The proof requires an induction on the dimension and on the structure of $\framep$, $\layer$, and $\painting$. This is what $\cohf$ does using auxiliary proofs $\cohl$ and $\cohc$. Even though it looks independent of the definitions from the other tables, $\cohf$ has to be proved mutually with the definitions of $\framep$, $\layer$, $\painting$, and their corresponding restrictions. More precisely, for a fixed $n$, the block of $\framep$, $\restrf$, and $\cohf$ has to be defined in one go by induction on $p$. Also, each of $\painting$, $\restrp$, and $\cohc$ is built by induction from $p$ to $n$. The $\painting$ block at $n$ relies on the $\framep$ block at $n$, but the converse dependency is only on lower $n$, so this is well-founded. Note that $\layer$, $\restrl$ and $\cohl$ are just abbreviations. The exact way this mutual recursion is eventually formalized is explained in section~\ref{sec:wf}.
+
+Note that for a fixed constant $n$, relying on the evaluation rules of type theory, the coherence conditions degenerate to a reflexivity proof, so that the construction builds an effective sequence of types not mentioning coherences anymore. \\
+
+\def\lab{tab:coind}
+\input{tab-coind.tex}
+
+% For just the second table, keep the universe letter in fullframe
+\renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[#1][#2][][][#3]}
+
+\def\lab{tab:core}
+\input{tab-core.tex}
+
+% Drop the universe letter in fullframe for all remaining tables
+\renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[][#2][][][#3]}
+\def\lab{tab:frames}
+\input{tab-frames.tex}
+
+% Truncated sets, otherwise referred to as X
+% Drop the universe letter for the third and fourth tables
+\renewcommandx{\Xto}[3][3]{\X[][<#2][#3]}
+\renewcommandx{\Xcomp}[3][3]{\X[][=#2][#3]}
+\renewcommandx{\Xfrom}[3][3]{\X[][\geq#2][#3]}
+
+% The third table mentions cohframe; keep ε, ω in this instance
+\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][#6,#7][#8][#9]}
+
+\def\lab{tab:faces}
+\input{tab-faces-ett.tex}
+
+% Restriction for frame, layer, and painting
+% Drop just the universe letter for the coh table
+\renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
+\renewcommandx{\restrl}[7][1,2,3,4,5,6,7]{\restr{layer}[][#2][#3][#4][#5][#6][#7]}
+\renewcommandx{\restrp}[7][1,2,3,4,5,6,7]{\restr{painting}[][#2][#3][#4][#5][#6][#7]}
+
+% Frame, layer, and painting
+% Drop all arguments for coh table; they're not present in coind table.
+\renewcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[][][][][#5]}
+\renewcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[][][][][#5]}
+\renewcommandx{\painting}[5][1,2,3,4,5]{\prim{painting}[][][][][#5]}
+
+% Hack to remove , in \cohf
+\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][][][#9]}
+
+% Coherence conditions for frame, layer, and painting
+\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
+
+\def\lab{tab:coh}
+\input{tab-coh-ett.tex}
+
+\renewcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
+\renewcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
+\renewcommandx{\painting}[2][1,2]{\prim{painting}[][#1][#2][][]}
+\renewcommandx{\restrf}[4][1,2,3,4]{\restr{frame}[][#3][#4][#1][#2][][]}
+\renewcommandx{\restrl}[4][1,2,3,4]{\restr{layer}[][#3][#4][#1][#2][][]}
+\renewcommandx{\restrp}[4][1,2,3,4]{\restr{painting}[][#3][#4][#1][#2][][]}
+
 \section{The recursive structure of iterated parametricity}
 Iterated parametricity (in indexed form) produces a family of type
 families of the following form:
@@ -560,106 +667,6 @@ The well-foundedness of the construction can be justified by the observation tha
 
 \end{itemize}
 
-
-\section{Our construction}
-% Abbreviated tables in this section
-%
-% The rule for implicit arguments for each table:
-% show 1 explicit in first two parts
-% show E + 1 explicit in the third part
-\appendmask[bonak]{layer}[D]
-\appendmask[bonak]{painting}[D]
-\appendmask[bonak]{restrframe}[D]
-\appendmask[bonak]{restrlayer}[D, d]
-\appendmask[bonak]{restrpainting}[D, d]
-\appendmask[bonak]{cohframe}[D]
-\appendmask[bonak]{cohlayer}[D, d]
-\appendmask[bonak]{cohpainting}[D, d]
-
-% Truncated sets, otherwise referred to as X
-% Keep all arguments
-\newcommandx{\Xp}[1]{\X[#1][][]}
-\newcommandx{\Xto}[3][3=]{\X[#1][<#2][#3]}
-\newcommandx{\Xcomp}[3][3=]{\X[#1][=#2][#3]}
-\newcommandx{\Xfrom}[3][3=]{\X[#1][\geq#2][#3]}
-
-% Frame, layer, and painting
-% Drop the universe letter
-\renewcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[][#2][#3][#4][#5]}
-\renewcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[][#2][#3][#4][#5]}
-\renewcommandx{\painting}[5][1,2,3,4,5]{\prim{painting}[][#2][#3][#4][#5]}
-
-% Restriction for frame, layer, and painting
-% Drop the universe letter
-\renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
-\renewcommandx{\restrl}[7][1,2,3,4,5,6,7]{\restr{layer}[][#2][#3][#4][#5][#6][#7]}
-\renewcommandx{\restrp}[7][1,2,3,4,5,6,7]{\restr{painting}[][#2][#3][#4][#5][#6][#7]}
-
-% Coherence conditions for frame, layer, and painting
-% Keep only ε, ω; n, p; proposition on n and p
-\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][][][#9]}
-\renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][][][][][#9]}
-\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][][][][][#9]}
-
-A $\nu$-set in indexed form is a sequence of families of $\U$, that is $\U[m]$ for some universe level $m$. We call such sequence a $\nu$-set at level $m$, whose type thus lives in $\U[m+1]$.
-
-Table~\ref{tab:coind} describes the type of a $\nu$-set at level $m$ as a dependent stream of type families representing the limit of $n$-truncated $\nu$-sets: using the notations of Section~\ref{sec:tt}, the recursive equation $\Xfrom{m}{n}{D} \,\defeq\, \Sigma R: \Xcomp{m}{n}[D=\D].\, \Xfrom{m}{n+1}[D=\pair{D}{R}]$ from the table formally corresponds to the stream $Stream_{\Sigma n.\, \Xto{m}{n},\, \lambda (n, \D).\, \Xcomp{m}{n}[D=\D],\,\lambda ((n, D),R).(n+1,(\pair{D}{R}))}(n, \D)$. Therefore, $\Xfrom{m}{n}$ denotes an infinite sequence $X_{n}, X_{n+1}, \ldots$ dependent on a $(<n)$-truncated $\nu$-set, $\Xto{m}{n}$, so that, when $n$ is $0$, it denotes a full $\nu$-set, written $\Xp{m}$. This is made possible because the $(<0)$-truncated $\nu$-set, $\Xto{m}{0}$, is degenerated: it is an empty family, and there is thus only one $(<0)$-truncated $\nu$-set, namely the canonical inhabitant $\kstar$ of $\unittype$.
-
-The definition of the type of a $n$-truncated $\nu$-set is in turn described in table~\ref{tab:core}. In the infinite sequence of type families representing a $\nu$-set, the $n$-th component is a type dependent over a $\fullframe$. It is recursively defined in table~\ref{tab:frames}, using the auxiliary definitions of $\framep$, $\layer$ and $\painting$. A $\fullframe$ describes a boundary of a standard form (simplex, cube), which we decompose into $\layer$, and a $\painting$ corresponds to a filled frame. Notice that the type $\layer$ relies on an operator of frame restriction $\restrf$ which is defined in table~\ref{tab:faces}, and this restriction operator is in turn defined using auxiliary definitions $\restrl$ and $\restrp$.
-
-Notably, the definition of $\restrl$ relies on an equality expressing the commutation of the composition of two $\restrf$. The proof of this commutation is worth being made explicit, which we do in table~\ref{tab:coh} using proof-term notations. The proof requires an induction on the dimension and on the structure of $\framep$, $\layer$, and $\painting$. This is what $\cohf$ does using auxiliary proofs $\cohl$ and $\cohc$. Even though it looks independent of the definitions from the other tables, $\cohf$ has to be proved mutually with the definitions of $\framep$, $\layer$, $\painting$, and their corresponding restrictions. More precisely, for a fixed $n$, the block of $\framep$, $\restrf$, and $\cohf$ has to be defined in one go by induction on $p$. Also, each of $\painting$, $\restrp$, and $\cohc$ is built by induction from $p$ to $n$. The $\painting$ block at $n$ relies on the $\framep$ block at $n$, but the converse dependency is only on lower $n$, so this is well-founded. Note that $\layer$, $\restrl$ and $\cohl$ are just abbreviations. The exact way this mutual recursion is eventually formalized is explained in section~\ref{sec:wf}.
-
-Note that for a fixed constant $n$, relying on the evaluation rules of type theory, the coherence conditions degenerate to a reflexivity proof, so that the construction builds an effective sequence of types not mentioning coherences anymore. \\
-
-\def\lab{tab:coind}
-\input{tab-coind.tex}
-
-% For just the second table, keep the universe letter in fullframe
-\renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[#1][#2][][][#3]}
-
-\def\lab{tab:core}
-\input{tab-core.tex}
-
-% Drop the universe letter in fullframe for all remaining tables
-\renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[][#2][][][#3]}
-\def\lab{tab:frames}
-\input{tab-frames.tex}
-
-% Truncated sets, otherwise referred to as X
-% Drop the universe letter for the third and fourth tables
-\renewcommandx{\Xto}[3][3]{\X[][<#2][#3]}
-\renewcommandx{\Xcomp}[3][3]{\X[][=#2][#3]}
-\renewcommandx{\Xfrom}[3][3]{\X[][\geq#2][#3]}
-
-% The third table mentions cohframe; keep ε, ω in this instance
-\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][#6,#7][#8][#9]}
-
-\def\lab{tab:faces}
-\input{tab-faces-ett.tex}
-
-% Restriction for frame, layer, and painting
-% Drop just the universe letter for the coh table
-\renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
-\renewcommandx{\restrl}[7][1,2,3,4,5,6,7]{\restr{layer}[][#2][#3][#4][#5][#6][#7]}
-\renewcommandx{\restrp}[7][1,2,3,4,5,6,7]{\restr{painting}[][#2][#3][#4][#5][#6][#7]}
-
-% Frame, layer, and painting
-% Drop all arguments for coh table; they're not present in coind table.
-\renewcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[][][][][#5]}
-\renewcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[][][][][#5]}
-\renewcommandx{\painting}[5][1,2,3,4,5]{\prim{painting}[][][][][#5]}
-
-% Hack to remove , in \cohf
-\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][][][#9]}
-
-% Coherence conditions for frame, layer, and painting
-\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohc}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\coht}[9][1,2,3,4,5,6,7,8,9]{\cohtwo{frame}[][#2][#3][#4][#5][#6][#7,#8][#9]}
-
-\def\lab{tab:coh}
-\input{tab-coh-ett.tex}
 
 \newpage
 \bibliographystyle{msclike}
