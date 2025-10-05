@@ -191,7 +191,7 @@
   \affiliation{Unaffiliated \email{r@artagnon.com}}
 \end{authgrp}
 \begin{abstract}
-  In a previous paper, we gave equations describing the construction of semi-simplicial and semi-cubical sets via iterated parametricity. The construction was formalised in the Rocq (formerly known as Coq) proof assistant building $n$-truncated sets using an induction on a large structure embedding equational reasoning.
+  In a previous paper, we gave equations describing the construction of semi-simplicial and semi-cubical sets via iterated parametricity. The construction was formalised in the Rocq (formerly, Coq) proof assistant building $n$-truncated sets using an induction on a large structure embedding equational reasoning.
 
   The current paper describes a new and lighter presentation of the construction where equational reasoning is replaced by definition. Being lighter, it can now be described in full details, closely following the corresponding new machine-checked formalisation.
 \end{abstract}
@@ -302,21 +302,45 @@ Note that for a fixed constant $n$, relying on the evaluation rules of type theo
 \renewcommandx{\painting}[2][1,2]{\prim{painting}[][#1][#2][][]}
 \renewcommandx{\restrf}[4][1,2,3,4]{\restr{frame}[][#3][#4][#1][#2][][]}
 \renewcommandx{\restrl}[4][1,2,3,4]{\restr{layer}[][#3][#4][#1][#2][][]}
-\renewcommandx{\restrp}[4][1,2,3,4]{\restr{painting}[][#3][#4][#1][#2][][]}
+\renewcommandx{\restrp}[4][1,2,3,4]{\restr{painting}[][#3][#4][#1][#4][][]}
+\renewcommandx{\cohf}[6][1,2,3,4,5,6]{\coh{frame}[][#3][#4][#5][#6][#1,#2][][]}
+\renewcommandx{\cohl}[6][1,2,3,4,5,6]{\coh{layer}[][#3][#4][#5][#6][#1,#2][][]}
+\renewcommandx{\cohp}[6][1,2,3,4,5,6]{\coh{painting}[][#3][#4][#5][#6][#1,#2][][]}
 
-\section{The recursive structure of iterated parametricity}
-Iterated parametricity (in indexed form) produces a family of type
-families of the following form:
-\begin{equation*}
-  \begin{array}{llr}
-    X_0 & :              & \U                                                                        \\
-    X_1 & :              & X_0 \times X_0 \rightarrow  \U                                            \\
-    X_2 & : \Pi a b c d. & X_1(a,b) \times X_1 (c,d) \times X_1(a,c) \times X_1 (b,d) \rightarrow \U \\
-    \ldots
-  \end{array}
-\end{equation*}
+In \citep{hr25}, the well-foundedness was justified by induction on $n$ and subinductions, one on $p$ to mutually build $\framep[n][p]$, $\restrf[n][p]$ and $\cohf[n][p]$, and three others to build each of $\painting[n][p]$, $\restrp[n][p]$ and $\cohp[n][p]$ by induction on $n-p$.
 
-Such family can be recursively described by the equations given on Table ?.
+Since $\restrf[n][p]$ is referring to $\framep[n][p]$ and $\framep[n-1][p]$, and $\cohf[n][p]$ is referring to $\restrf[n][p]$ and $\restrf[n-1][p]$, thus also to $\framep[n][p]$, $\framep[n-1][p]$ and $\framep[n-2][p]$, we built all of these 6 components at the same time. But equations were also needed to state the properties of $\framep[n][p]$, $\framep[n-1][p]$ and $\restrf[n][p]$ so that we were building by induction on $n+p$ (that is on $n$, using the convention of \citep{hr25}) the following block of information:
+
+\begin{align*}
+  \framep[n][p]      & : \U                                                                                                                 \\
+  \framep[n-1][p]    & :  \U                                                                                                                \\
+  \framep[n-2][p]    & : \U                                                                                                                 \\
+  \restrf[n][p]      & : \Pi q.\, \Pi \omega.\, \framep[n][p] \rightarrow \framep[n-1][p]                                                   \\
+  \restrf[n-1][p]    & : \Pi q.\, \Pi \omega.\, \framep[n-1][p] \rightarrow \framep[n-2][p]                                                 \\                                                                 \\
+  \cohf[n][p]        & : \Pi qr\epsilon\omega.\, \restrf[n-1][p][\epsilon][q] \circ \restrf[n][p][\omega][r] =                              \\
+                     & \;\;\;\;\restrf[n-1][p][\omega][r] \circ \restrf[n][p][\epsilon][q+1]                                                \\
+  \mathsf{hypF0}     & : \framep[n][0]         = \unitpoint
+  \\
+  \mathsf{hypFS0}    & : \framep[n][p+1]       = \Sigma d: \framep[n+1][p]. \Pi \omega.\, \painting[n][p] (\restrf[n+1][p](d))              \\
+  \mathsf{hypPrevF}  & : \framep[n-1][0]                                                                                       = \unitpoint \\
+  \mathsf{hypPrevFS} & : \framep[n-1][p+1] = \Sigma d: \framep[n][p]. \Pi \omega.\, \painting[n-1][p] (\restrf[n][p](d))                    \\
+  \mathsf{hypRF0}    & : \restrf[n][0]        = \ldots \texttt{depending on hypF0}                                                          \\
+  \mathsf{hypRFS}    & : \restrf[n][p+1]      = \ldots \texttt{depending on hypFS and hypPrevFS}                                            \\
+  \ldots             & \;\;\;\;\texttt{fields for painting, restrf, cohp}
+\end{align*}
+
+In the current paper and associated formalisation, we replace the equational properties by definitions, building instead by induction a block of the form:
+
+\begin{align*}
+  \framep[n-2][p] & : \U                                                                                    \\
+  \restrf[n-1][p] & : \Pi q \leq n+p.\, \framep[n-1][p] \rightarrow \framep[n-2][p]                         \\
+  \cohf[n][p]     & : \Pi qr\epsilon\omega.\, \restrf[n-1][p][\epsilon][q] \circ \restrf[n][p][\omega][r] = \\
+                  & \;\;\;\;\restrf[n-1][p][\omega][r] \circ \restrf[n][p][\epsilon][q+1]                   \\
+  \ldots          & \;\;\;\;\texttt{fields for painting, restrf, cohp}
+\end{align*}
+where $\framep[n][p]$, $\framep[n-1][p]$ and $\restrf[n][p]$ are now appropriate definitions.
+
+Turning $\framep[n][p]$, $\framep[n-1][p]$ and $\restrf[n][p]$ into definitions is however tricky: the definition of $\framep[n-1][p]$, which is by induction on $p$ (for all $n$), depends on $\restrf[n-1][p]$ whose type depends on $\framep[n][p-1]$. This means that $\framep[n-1][p]$ and the type of $\restrf[n-1][p]$ have to be mutually defined.
 
 The well-foundedness of the construction can be justified by the observation that:
 
