@@ -199,20 +199,14 @@
 \vspace{-2em} % Remove space after abstract
 
 \section{Introduction}
-A family of sets can commonly be represented in two ways: as a family properly speaking, indexed by the elements of a given set $S$, or as a set $T$ together with a map from $T$ to $S$, which specifies for each element of $T$ its dependency on $S$. In the former case, we call it an \emph{indexed} presentation. In the latter case, the set associated to a given element of $S$ is the fibre of this element, so we call it a \emph{fibred} presentation. The two presentations are equivalent and the equivalence can be phrased concisely in the language of homotopy type theory~\citep{hottbook} as the fibred/indexed equivalence\footnote{In an informal discussion, alternative nomenclatures were proposed: fibration/family equivalence and unbundled/bundled equivalence. The fibred/indexed nomenclature echoes the Grothendieck construction of fibred categories from indexed categories. The most elementary instance of the equivalence, with $\Type$ instead of $\U$, is sometimes called ``Grothendieck construction for dummies'', and its proof requires univalence~\citep{hottbook}.}.
-\begin{equation*}
-  \mbox{(fibred)}\qquad(\Sigma T: \U. (T \rightarrow S)) ~\simeq~ (S \rightarrow \U)\qquad \mbox{(indexed)}
-\end{equation*}
-Here, $\U$ represents in homotopy type theory the subset of types within a given universe where equality of any two elements has at most one proof.
-
-A \emph{presheaf} on an category is a family of sets indexed by the object of the category with maps indexed by the morphisms. As such, it lives on the indexed side of the equivalence, contrasting with the fibred side, where we have \emph{discrete Grothendieck fibrations}~\citep{LoregianRiehl20}. However, there are situations where a presheaf can also be seen as living on the fibred side of the equivalence. This happens when the indexing category is \emph{direct}, or has a downwards-well-founded collection of non-identity morphisms. Let us consider, for instance, the case of a semi-cubical set~\citep{grandis03,buchholtz17} presented with $2n$ face maps from the set of $n$-cubes to the set of $(n-1)$-cubes. Formulated in type theory, the corresponding presheaf definition of a semi-cubical set prescribes a family of sets and face maps between them as follows.
+In the previous paper~\citep{hr25}, we described the construction of augmented semi-simplicial and semi-cubical sets in \emph{indexed form} as a special case of iterated parametricity, meaning that instead of the following illustration of the cubical case (upto faces identities),
 
 \begin{equation*}
   \begin{tikzcd}
     X_0: \U & X_1: \U \arrow[l, "\partial^L" description, shift left=2] \arrow[l, "\partial^R" description, shift right=2] & X_2: \U \arrow[l, "\partial^{L\kstar}" description, shift left=6] \arrow[l, "\partial^{R\kstar}" description, shift left=2] \arrow[l, "\partial^{\kstar L}" description, shift right=2] \arrow[l, "\partial^{\kstar R}" description, shift right=6] & \ldots
   \end{tikzcd}
 \end{equation*}
-up to cubical faces identities. Here, $X_1$ can be seen as a family over $X_0 \times X_0$, and $X_2$ can be seen as a family over $X_1 \times X_1 \times X_1 \times X_1$, in the fibred presentation, together with coherence conditions between the $X_1$ seen as families over $X_0 \times X_0$. This suggests an alternative indexed presentation of the presheaf as a stratified sequence of families indexed by families of lower rank, taking into account those coherence conditions to prevent duplications. Formulated in type theory, it takes the form:
+we consider a family of families as shown below:
 \begin{equation*}
   \begin{array}{lll}
     X_0 & :               \U                                                                          \\
@@ -222,13 +216,6 @@ up to cubical faces identities. Here, $X_1$ can be seen as a family over $X_0 \t
   \end{array}
 \end{equation*}
 
-The idea for such an indexed presentation of presheaves over a direct category was mentioned at the Univalent Foundations year in the context of defining semi-simplicial types\footnote{\href{https://ncatlab.org/nlab/show/semi-simplicial+types+in+homotopy+type+theory}{ncatlab.org/nlab/show/semi-simplicial+types+in+homotopy+type+theory}}. A few constructions have been proposed since then. The first construction by \cite{voevodsky12} relies on the presentation of semi-simplicial sets as a presheaf over increasing injective maps between finite ordinals. The second, by \cite{herbelin15}\footnote{In hindsight, the title of the paper ``A dependently-typed construction of semi-simplicial types'' is somewhat confusing: it implicitly claimed to construct semi-simplicial types, but the construction was done in a type theory with Uniqueness of Identity Proofs. Consequently, what was really obtained was an indexed presentation of semi-simplicial sets. The confusion was however, common at the time.} formalized in the Coq proof assistant, relies on the presentation of semi-simplicial sets as a presheaf over face maps. Another by \cite{part15} formalized in an emulation of logic-enriched homotopy type theory in the Plastic proof assistant, and yet another by \cite{altenkirch16} formalized in an emulation of a two-level type theory in the Agda proof assistant\footnote{\href{https://github.com/nicolaikraus/HoTT-Agda/blob/master/nicolai/SemiSimp/SStypes.agda}{github.com/nicolaikraus/HoTT-Agda/blob/master/nicolai/SemiSimp/SStypes.agda}}, rely, like in Voevodsky, on the presentation of the semi-simplicial category from increasing injective maps between finite ordinals. The latter constructions, besides being stated as providing semi-simplicial types (thanks to an extension of the type theory), are particularly concise, taking advantage of a definition of increasing injective maps between finite ordinals as type-theoretic functions to inherit the associativity of composition directly from it holding in type theory. This contrasts with the combinatorial construction in \cite{herbelin15} where equations over face maps have to be proved by induction.
-
-By taking the sum of each component of an indexed presentation over the indexing set of this component, one obtains back a presheaf in the ordinary sense that has a property of \emph{Reedy fibrancy}, that is whose morphisms are projections in the set-theoretic sense. Such Reedy fibrant presheaves over a direct category have been studied in e.g. \cite{shulman15}, \cite{kraus17} and \cite{annenkovCK17,AnnenkovCKS2023}, presenting generic constructions over such presheaves.
-
-The indexed definition of a presheaf over a direct category is technically more involved than the presheaf definition, as it requires hard-wiring in the structure the dependencies between elements of the sets of the presheaf, including the coherence conditions between these dependencies, such as taking the $i$-th face of the $j$-th face of a $n$-simplex being the same as taking the $(j-1)$-th face of the $i$-th face (when $j>i$). However, exhibiting a concrete instance of a presheaf in indexed form only requires providing the families, since the responsibility of defining maps and showing the coherence conditions is already accounted for in the definition of the structure.
-
-\section{Reminder of our construction}
 % Abbreviated tables in this section
 %
 % The rule for implicit arguments for each table:
@@ -435,11 +422,11 @@ Formally, this can be described as:
                 \framep[n+1][0,...,p-1]   \\
                 \painting[n+1][0,...,p-1] \\
               \end{array}\right)                         .  \\
-      \Pi q\leq n.\,\Pi \omega.\,\framep[n][p]
+      \Pi q\leq n.\,\Pi \omega.\,\framep[n+1][p]
       \left(\begin{array}{l}
-                \framep[n][0,...,p-1]     \\
-                \painting[n-1][0,...,p-1] \\
-                \restrf[n][0,...,p-1]     \\
+                \framep[n+1][0,...,p-1]   \\
+                \painting[n+1][0,...,p-1] \\
+                \restrf[n+1][0,...,p-1]   \\
               \end{array}\right) \rightarrow  \framep[n][p] \\
     \end{array}      \\
   \end{array}
