@@ -123,11 +123,11 @@
 % These are renewed in tables, but let's define them now for in-document
 % typesetting
 \newcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
-\newcommandx{\frametype}[2][1,2]{\prim{frametype}[][#1][#2][][]}
+\newcommandx{\frametype}[2][1,2]{\prim{frametype}[][][#2][][]}
 \newcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
 \newcommandx{\painting}[2][1,2]{\prim{painting}[][#1][#2][][]}
-\newcommandx{\paintingtype}[2][1,2]{\prim{paintingtype}[][#1][#2][][]}
-\newcommandx{\restrftype}[2][1,2]{\prim{restrftype}[][#1][#2][][]}
+\newcommandx{\paintingtype}[2][1,2]{\prim{paintingtype}[][][#2][][]}
+\newcommandx{\restrftype}[2][1,2]{\prim{restrftype}[][][#2][][]}
 \newcommandx{\restrf}[4][1,2,3,4]{\restr{frame}[][#3][#4][#1][#2][][]}
 \newcommandx{\restrl}[4][1,2,3,4]{\restr{layer}[][#3][#4][#1][#2][][]}
 \newcommandx{\restrp}[4][1,2,3,4]{\restr{painting}[][#3][#4][#1][#2][][]}
@@ -357,13 +357,13 @@ To talk about sequences of $\framep$, $\painting$ or $\restrf$, we need to speci
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \frametype[n][0,...,p]    &                                              & :      & Type_{l+1}                                                                                   \\
-    \frametype[n][]           &                                              & \defeq & unit                                                                                         \\
-    \frametype[n][0,...,p]    &                                              & \defeq & \frametype[n][0,...,p-1] \times Type_l                                                       \\
+    \frametype[n][0,...,p]    &                                              & :      & Type_{l+1}                                                                                       \\
+    \frametype[n][]           &                                              & \defeq & \unittype                                                                                        \\
+    \frametype[n][0,...,p]    &                                              & \defeq & \frametype[n+1][0,...,p-1] \times Type_l                                                         \\
     \\
-    \paintingtype[n][0,...,p] & (\framep[n][0,...,p]:\frametype[n][0,...,p]) & :      & Type_{l+1}                                                                                   \\
-    \paintingtype[n][]        & \star                                        & \defeq & unit                                                                                         \\
-    \paintingtype[n][0,...,p] & (\framep[n][0,...,p])                        & \defeq & \paintingtype[n][0,...,p-1](\framep[n][0,...,p-1]) \times (\framep[n][p] \rightarrow Type_l) \\
+    \paintingtype[n][0,...,p] & (\framep[n][0,...,p]:\frametype[n][0,...,p]) & :      & Type_{l+1}                                                                                       \\
+    \paintingtype[n][]        & \unitpoint                                   & \defeq & \unittype                                                                                        \\
+    \paintingtype[n][0,...,p] & (\framep[n][0,...,p])                        & \defeq & \paintingtype[n+1][0,...,p-1](\framep[n+1][0,...,p-1]) \times (\framep[n][p] \rightarrow Type_l) \\
   \end{array}
 \end{equation*}
 
@@ -371,78 +371,77 @@ Formally, this can be described as:
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \framep[n][0,...,p]        &
+    \framep[n][0,...,p]           &
     \multicolumn{3}{l}{
       \left(\begin{array}{l}
-                \framep[n-1][0,...,p-1]:\frametype[n-1][0,...,p-1]                               \\
-                \painting[n-1][0,...,p-1]:\paintingtype[n-1][0,...,p-1](\framep[n-1][0,...,p-1]) \\
+                \framep[n][0,...,p-1]:\frametype[n][0,...,p-1]                             \\
+                \painting[n][0,...,p-1]:\paintingtype[n][0,...,p-1](\framep[n][0,...,p-1]) \\
                 \restrf[n][0,...,p-1]:\restrftype[n][0,...,p-1]
                 \left(\begin{array}{l}
-                    \framep[n-1][0,...,p-1]   \\
-                    \painting[n-1][0,...,p-1] \\
-                  \end{array}\right)                                                  \\
-              \end{array}\right) : \frametype[n-1][0,...,p]
-    }                                                                         \\
-    \framep[n][0]              &
+                    \framep[n][0,...,p-1]   \\
+                    \painting[n][0,...,p-1] \\
+                  \end{array}\right)                                              \\
+              \end{array}\right) : \frametype[n][0,...,p]
+    }                                                                       \\
+    \framep[n][0]                 &
     \left(\begin{array}{l}
-              \star \\
-              \star \\
-              \star \\
-            \end{array}\right)     & \defeq & (\star,unit)                      \\
-    \framep[n][0,...,p+1]      &
+              \unitpoint \\
+              \unitpoint \\
+              \unitpoint \\
+            \end{array}\right)        & \defeq & (\unitpoint,unit)            \\
+    \framep[n][0,...,p+1]         &
     \left(\begin{array}{l}
-              \framep[n-1][0,...,p]   \\
-              \painting[n-1][0,...,p] \\
-              \restrf[n][0,...,p]     \\
-            \end{array}\right) & \defeq &
+              \framep[n][0,...,p]   \\
+              \painting[n][0,...,p] \\
+              \restrf[n][0,...,p]   \\
+            \end{array}\right)      & \defeq &
     \left(\begin{array}{l}
-              \framep[n][0,...,p]
+              \framep[n+1][0,...,p]
               \left(\begin{array}{l}
-                  \framep[n-1][0,...,p-1]   \\
-                  \painting[n-1][0,...,p-1] \\
-                  \restrf[n][0,...,p-1]     \\
-                \end{array}\right)     ,                       \\
-              \Sigma d:\framep[n][0,...,p]
+                  \framep[n+1][0,...,p-1]   \\
+                  \painting[n+1][0,...,p-1] \\
+                  \restrf[n+1][0,...,p-1]   \\
+                \end{array}\right)     ,                     \\
+              \Sigma d:\framep[n+1][0,...,p]
               \left(\begin{array}{l}
-                  \framep[n-1][0,...,p-1]   \\
-                  \painting[n-1][0,...,p-1] \\
-                  \restrf[n][0,...,p-1]     \\
-                \end{array}\right).\,                       \\
-              \quad \Pi\omega.\,\painting[n-1][p](\restrf[n][p](d)) \\
+                  \framep[n+1][0,...,p-1]   \\
+                  \painting[n+1][0,...,p-1] \\
+                  \restrf[n+1][0,...,p-1]   \\
+                \end{array}\right).\,                     \\
+              \quad \Pi\omega.\,\painting[n][p](\restrf[n][p](d)) \\
             \end{array}\right) \\
-    \restrftype[n][0,...,p-1]  &
+    \restrftype[n][0,...,p-1]     &
     \multicolumn{3}{l}{
       \left(\begin{array}{l}
-                \framep[n-1][0,...,p-1]:\frametype[n-1][0,...,p-1]                               \\
-                \painting[n-1][0,...,p-1]:\paintingtype[n-1][0,...,p-1](\framep[n-1][0,...,p-1]) \\
+                \framep[n][0,...,p-1]:\frametype[n][0,...,p-1]                             \\
+                \painting[n][0,...,p-1]:\paintingtype[n][0,...,p-1](\framep[n][0,...,p-1]) \\
               \end{array}\right) : Type_{l}
-    }                                                                         \\
-    \restrftype[n][]           &
+    }                                                                       \\
+    \restrftype[n][0,...,0-1]     &
     \left(\begin{array}{l}
-              \star \\
-              \star \\
-            \end{array}\right)     & \defeq &
-    unit                                                                      \\
-    \restrftype[n][0,...,p]    &
+              \unitpoint \\
+              \unitpoint \\
+            \end{array}\right)        & \defeq &
+    \unittype                                                               \\
+    \restrftype[n][0,...,(p+1)-1] &
     \left(\begin{array}{l}
-              \framep[n-1][0,...,p]   \\
-              \painting[n-1][0,...,p] \\
-            \end{array}\right) & \defeq &
+              \framep[n][0,...,p]   \\
+              \painting[n][0,...,p] \\
+            \end{array}\right)      & \defeq &
     \begin{array}{l}
-      \Sigma \restrf[n][0,...,p-1]    \\
-      \quad:\restrftype[n][0,...,p-1]
+      \Sigma \restrf[n+1][0,...,p-1]
+      :\restrftype[n+1][0,...,p-1]
       \left(\begin{array}{l}
-                \framep[n-1][0,...,p-1]   \\
-                \painting[n-1][0,...,p-1] \\
-              \end{array}\right)
-      .\,                             \\
-      \Pi q\leq n.\,\Pi \omega.\,\framep[n][0,...,p]
+                \framep[n+1][0,...,p-1]   \\
+                \painting[n+1][0,...,p-1] \\
+              \end{array}\right)                         .  \\
+      \Pi q\leq n.\,\Pi \omega.\,\framep[n][p]
       \left(\begin{array}{l}
-                \framep[n-1][0,...,p-1]   \\
+                \framep[n][0,...,p-1]     \\
                 \painting[n-1][0,...,p-1] \\
                 \restrf[n][0,...,p-1]     \\
-              \end{array}\right) \\
-    \end{array}                             \\
+              \end{array}\right) \rightarrow  \framep[n][p] \\
+    \end{array}      \\
   \end{array}
 \end{equation*}
 
@@ -467,13 +466,13 @@ To define $\painting$ formally, we need to define $\framep[n][p,...,n]$, $\paint
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \frametype[n][p,...,n]         &                                              & :      & Type_{l+1}                                                                                   \\
-    \frametype[n][]                &                                              & \defeq & unit                                                                                         \\
-    \frametype[n][p,...,n]         &                                              & \defeq & Type_l \times \frametype[n][p+1,...,n-1]                                                     \\
+    \frametype[n][p,...,n]         &                                              & :         & Type_{l+1}                                                                                   \\
+    \frametype[n][]                &                                              & \defeq    & \unittype                                                                                    \\
+    \frametype[n][p,...,n]         &                                              & \defeq    & Type_l \times \frametype[n][p+1,...,n-1]                                                     \\
     \\
-    \paintingtype[n][p,...,n]      & (\framep[n][p,...,n]:\frametype[n][p,...,n]) & :      & Type_{l+1}                                                                                   \\
-    \paintingtype[n][]             & \star                                        & \defeq & unit                                                                                         \\
-    \paintingtype[n][p,...,n](p<n) & (\framep[n][p,...,n])                        & \defeq & (\framep[n][p] \rightarrow Type_l) \times \paintingtype[n][p+1,...,n](\framep[n][p+1,...,n]) \\
+    \paintingtype[n][p,...,n]      & (\framep[n][p,...,n]:\frametype[n][p,...,n]) & :         & Type_{l+1}                                                                                   \\
+    \paintingtype[n][]             & \unitpoint                                   & \defeq    & \unittype                                                                                    \\
+    \paintingtype[n][p,...,n](p<n) & (\framep[n][p,...,n])                        & \defeq    & (\framep[n][p] \rightarrow Type_l) \times \paintingtype[n][p+1,...,n](\framep[n][p+1,...,n]) \\
     \\
     \restrftype[n][p,...,n]        &
     \multicolumn{3}{l}{
@@ -488,15 +487,15 @@ To define $\painting$ formally, we need to define $\framep[n][p,...,n]$, $\paint
                     \painting[n-1][0,...,p-1] \\
                   \end{array}\right)                                                  \\
               \end{array}\right) : Type_{l}
-    }                                                                                                                                                                                     \\
+    }                                                                                                                                                                                        \\
     \restrftype[n][]               &
     \left(\begin{array}{l}
               \framep[n-1][0,...,n-1]   \\
               \painting[n-1][0,...,n-1] \\
-              \star                     \\
-              \star                     \\
+              \unitpoint                \\
+              \unitpoint                \\
               \restrp[n][0,...,n-1]     \\
-            \end{array}\right)   & \defeq                                       & unit                                                                                                      \\
+            \end{array}\right)   & \defeq                                       & \unittype                                                                                                    \\
     \restrftype[n][p,...,n-1]      &
     \left(\begin{array}{l}
               \framep[n-1][0,...,p-1]   \\
@@ -559,10 +558,10 @@ This allows to define $\painting[n][p]$ formally:
     \left(\begin{array}{l}
               \framep[n-1][0,...,n-1]   \\
               \painting[n-1][0,...,n-1] \\
-              \star                     \\
-              \star                     \\
+              \unitpoint                \\
+              \unitpoint                \\
               \restrp[n][0,...,n-1]     \\
-              \star                     \\
+              \unitpoint                \\
               E                         \\
             \end{array}\right) & \defeq & E                        \\
     \painting[n][p](p<n)         &
