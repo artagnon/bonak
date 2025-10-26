@@ -402,7 +402,7 @@ Formally, this can be described as:
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \framep[n][0,...,p]                                  &
+    \framep[n][0,...,p]                                                           &
     \multicolumn{3}{l}{
       \left(\begin{array}{l}
                 \framep[n][0,...,p-1]:\frametype[n][0,...,p-1]                             \\
@@ -413,19 +413,19 @@ Formally, this can be described as:
                     \painting[n][0,...,p-1] \\
                   \end{array}\right)                                              \\
               \end{array}\right) : \frametype[n][0,...,p]
-    }                                                                                                                                    \\
-    \framep[n][0]                                        &
+    }                                                                                                                                                                                                   \\
+    \framep[n][0]                                                                 &
     \left(\begin{array}{l}
               \unitpoint \\
               \unitpoint \\
               \unitpoint \\
-            \end{array}\right)                               & \defeq                                       & (\unitpoint,unit)            \\
-    \framep[n][0,...,p+1]                                &
+            \end{array}\right)                                                        & \defeq                                       & (\unitpoint,unit)                                                  \\
+    \framep[n][0,...,p+1]                                                         &
     \left(\begin{array}{l}
               \framep[n][0,...,p]   \\
               \painting[n][0,...,p] \\
               \restrf[n][0,...,p]   \\
-            \end{array}\right)                             & \defeq                                       &
+            \end{array}\right)                                                      & \defeq                                       &
     \left(\begin{array}{l}
               \framep[n+1][0,...,p]
               \left(\begin{array}{l}
@@ -445,25 +445,23 @@ Formally, this can be described as:
                   \painting[n+1][0,...,p-1] \\
                   \restrf[n+1][0,...,p-1]   \\
                 \end{array}\right)(d) \\
-            \end{array}\right)                                                                                     \\
-    \restrftype[n][0,...,p-1]                            &
-    \multicolumn{3}{l}{
-      \left(\begin{array}{l}
+            \end{array}\right)                                                                                                                                                    \\
+    \restrftype[n][0,...,p-1]                                                     &
+    \left(\begin{array}{l}
               \framep[n][0,...,p-1]:\frametype[n][0,...,p-1]                             \\
               \painting[n][0,...,p-1]:\paintingtype[n][0,...,p-1](\framep[n][0,...,p-1]) \\
-            \end{array}\right) : \U
-    }                                                                                                                                    \\
-    \restrftype[n][0,...,0-1]                            &
+            \end{array}\right) & :                                            & \U                                                                                                                    \\
+    \restrftype[n][0,...,0-1]                                                     &
     \left(\begin{array}{l}
               \unitpoint \\
               \unitpoint \\
-            \end{array}\right)                               & \defeq                                       &
-    \unittype                                                                                                                            \\
-    \restrftype[n][0,...,(p+1)-1]                        &
+            \end{array}\right)                                                        & \defeq                                       &
+    \unittype                                                                                                                                                                                           \\
+    \restrftype[n][0,...,(p+1)-1]                                                 &
     \left(\begin{array}{l}
               \framep[n][0,...,p]   \\
               \painting[n][0,...,p] \\
-            \end{array}\right)                             & \defeq                                       &
+            \end{array}\right)                                                      & \defeq                                       &
     \begin{array}{l}
       \Sigma \restrf[n+1][0,...,p-1]
       :\restrftype[n+1][0,...,p-1]
@@ -477,14 +475,21 @@ Formally, this can be described as:
                 \painting[n+1][0,...,p-1] \\
                 \restrf[n+1][0,...,p-1]   \\
               \end{array}\right) \rightarrow  \framep[n][p] \\
-    \end{array}                                                                   \\
-    \layertype[n][p]                                     & (\framep[n][0,...,p]:\frametype[n][0,...,p]) & : \framep[n][p] \rightarrow \U \\
-    \layer[n][p]                                         &
+    \end{array}                                                                                                                                  \\
+    \layertype[n][p]                                                              & (\framep[n][0,...,p]:\frametype[n][0,...,p]) & :                                     & \Type                        \\
+    \layertype[n][p]                                                              & (\framep[n][0,...,p])                        & \defeq                                & \framep[n][p] \rightarrow \U \\
+    \layer[n][p]                                                                  &
     \left(\begin{array}{l}
               \framep[n][0,...,p]:\frametype[n][0,...,p]        \\
               \painting[n][0,...,p]:\paintingtype[n][0,...,p]   \\
               \restrf[n+1][0,...,p-1]:\restrftype[n][0,...,p-1] \\
-            \end{array}\right) & \defeq                                       &
+            \end{array}\right)                          & :                                            & \layertype[n][p](\framep[n][0,...,p])                                                            \\
+    \layer[n][p]                                                                  &
+    \left(\begin{array}{l}
+              \framep[n][0,...,p]     \\
+              \painting[n][0,...,p]   \\
+              \restrf[n+1][0,...,p-1] \\
+            \end{array}\right)                                                    & \defeq                                       &
     d \mapsto \Pi\omega.\,\painting[n][p](\restrf[n][p](d))
   \end{array}
 \end{equation*}
@@ -522,58 +527,7 @@ Defining $\painting[n][p]$, in addition to the type dependency in $\framep[n][p]
   \end{tikzcd}
 \end{center}
 
-To define $\painting$ formally, we need to define $\framep[n][p,...,n]$, $\painting[n][p,...,n]$ and $\restrf[n][p,...,n]$:
-
-\begin{equation*}
-  \fontsize{7.2}{9}\selectfont
-  \begin{array}{llcl}
-    \frametype[n][p,...,n]         &                                              & :         & \U                                                                                       \\
-    \frametype[n][]                &                                              & \defeq    & \unittype                                                                                \\
-    \frametype[n][p,...,n]         &                                              & \defeq    & \U \times \frametype[n][p+1,...,n-1]                                                     \\
-    \\
-    \paintingtype[n][p,...,n]      & (\framep[n][p,...,n]:\frametype[n][p,...,n]) & :         & \U                                                                                       \\
-    \paintingtype[n][]             & \unitpoint                                   & \defeq    & \unittype                                                                                \\
-    \paintingtype[n][p,...,n](p<n) & (\framep[n][p,...,n])                        & \defeq    & (\framep[n][p] \rightarrow \U) \times \paintingtype[n][p+1,...,n](\framep[n][p+1,...,n]) \\
-    \\
-    \restrftype[n][p,...,n]        &
-    \multicolumn{3}{l}{
-      \left(\begin{array}{l}
-              \deps[n-1][0,...,p-1]:\depstype[n-1][0,...,p-1]                                  \\
-              \framep[n-1][p,...,n-1]:\frametype[n-1][p,...,n-1]                               \\
-              \painting[n-1][p,...,n-1]:\paintingtype[n-1][p,...,n-1](\framep[n-1][p,...,n-1]) \\
-            \end{array}\right) : \U
-    }                                                                                                                                                                                    \\
-    \restrftype[n][]               &
-    \left(\begin{array}{l}
-              \deps[n-1][0,...,n-1] \\
-              \unitpoint            \\
-              \unitpoint            \\
-            \end{array}\right)       & \defeq                                       & \unittype                                                                                            \\
-    \restrftype[n][p,...,n-1]      &
-    \left(\begin{array}{l}
-              \deps[n-1][0,...,p-1]     \\
-              \framep[n-1][p,...,n-1]   \\
-              \painting[n-1][p,...,n-1] \\
-            \end{array}\right)
-                                   & \defeq                                       &
-    \begin{array}{c}
-      \framep[n][p]
-      \left(\begin{array}{l}
-                \deps[n-1][0,...,p-1] \\
-              \end{array}\right)
-      \rightarrow \framep[n-1][p] \\
-      \times                      \\
-      \restrftype[n][p+1,...,n]
-      \left(\begin{array}{l}
-                \deps[n-1][0,...,p]         \\
-                \framep[n-1][p+1,...,n-1]   \\
-                \painting[n-1][p+1,...,n-1] \\
-              \end{array}\right)
-    \end{array}
-  \end{array}
-\end{equation*}
-
-This allows to define $\painting[n][p]$ formally:
+We can now define $\painting[n][p]$ formally:
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
@@ -614,18 +568,17 @@ At this stage, we are able to define $\framep$, $\painting$ and $\restrftype$ fr
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \restrptype[n][0,...,p] & (\deps[n][0,...,n]:\depstype[n][0,...,n]) & :      & \U                                        \\
-    \restrptype[n][]        & \unitpoint                                & \defeq & \unittype                                 \\
-    \restrptype[n][0,...,p] & (\deps[n][0,...,n])                       & \defeq & \restrptype[n+1][0,...,p-1] \times \left(
+    \restrptype[n][0,...,p]                    & (\deps[n][0,...,n]:\depstype[n][0,...,n]) & :      & \U                                        \\
+    \restrptype[n][]                           & \unitpoint                                & \defeq & \unittype                                 \\
+    \restrptype[n][0,...,p](\deps[n][0,...,n]) & (\deps[n][0,...,n])                       & \defeq & \restrptype[n+1][0,...,p-1] \times \left(
     \begin{array}{l}
-        \deps[n+1][0,...,p-1].                            \\ \Pi q\leq n.\Pi \epsilon.\Pi d:\framep(\deps).\\
-        \painting[n][p](\deps[n][0,...,n])(d) \rightarrow \\ \deps.\painting[n][p](\deps.\restrf[n][p][q][\epsilon](d))\end{array}
-    \right)                                                                                                                  \\
+        \Pi q\leq n.\Pi \epsilon.\Pi d:\framep(\deps[n][0,...,p]). \\
+        \painting[n][p](\deps[n][0,...,n])(d) \rightarrow          \\ \deps.\painting[n][p](\deps.\restrf[n][p][q][\epsilon](d))\end{array}
+    \right)                                                                                                                                     \\
   \end{array}
 \end{equation*}
 
-
-Mutual definition of $\restrf$ and $\cohftype$
+At this stage we can mutually define $\restrf$ and $\cohftype$, using abbreviations in passing for $\layer$ and $\layertype$:
 
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
@@ -642,16 +595,16 @@ Mutual definition of $\restrf$ and $\cohftype$
               \end{array}\right) :
       \restrftype[n][0,...,p]
       \left(\begin{array}{l}
-                \deps.\frame[n][0,...,p]    \\
+                \deps.\framep[n][0,...,p]   \\
                 \deps.\painting[n][0,...,p] \\
               \end{array}\right)
-    }                                                                                                                      \\
+    }                                                                                                                               \\
     \restrf[n][0]                              &
     \left(\begin{array}{l}
               \unitpoint \\
               \unitpoint \\
               \unitpoint \\
-            \end{array}\right)                     & \defeq & (\unitpoint,\lambda q. \lambda\epsilon. \lambda \_.\unitpoint) \\
+            \end{array}\right)                     & \defeq & (\unitpoint,\lambda q. \lambda\epsilon. \lambda \_.\unitpoint)          \\
     \restrf[n][0,...,p+1]                      &
     \left(\begin{array}{l}
               \deps[n][0,...,n]   \\
@@ -659,38 +612,37 @@ Mutual definition of $\restrf$ and $\cohftype$
               \cohf[n][0,...,p]   \\
             \end{array}\right)                     & \defeq &
     \left(\begin{array}{l}
-              \restrf[n+1][0,...,p]
+              \restrf[n+1][0,...,p][q][\epsilon]
               \left(\begin{array}{l}
                   \deps[n+1][0,...,n]     \\
                   \restrp[n+1][0,...,p-1] \\
                   \cohf[n+1][0,...,p-1]   \\
-                \end{array}\right),              \\
-              \lambda q.\lambda \epsilon.\lambda (d,l]). \\
-              \left(\restrf[n][0,...,p]
+                \end{array}\right),             \\
+              \lambda q.\lambda \epsilon.\lambda (d,l). \\
+              \left(\restrf[n][0,...,p][q][\epsilon]
               \left(\begin{array}{l}
                     \deps[n+1][0,...,n]     \\
                     \restrp[n+1][0,...,p-1] \\
                     \cohf[n+1][0,...,p-1]   \\
-                  \end{array}\right)(d), \restrl[n][p]
+                  \end{array}\right)(d), \restrl[n][p][q][\epsilon]
               \left(\begin{array}{l}
                     \deps[n][0,...,n] \\
-                    \layer[n+1][p]    \\
                     \cohf[n][0,...,p] \\
-                  \end{array}\right)(d)(l)\right)      \\
-            \end{array} \right)                                                            \\
+                  \end{array}\right)(d)(l)\right)     \\
+            \end{array} \right)                                                                     \\
     \cohftype[n][0,...,p-1]                    &
     \multicolumn{3}{l}{
       \left(\begin{array}{l}
               \deps[n][0,...,n]:\depstype[n][0,...,n]                              \\
               \restrp[n][0,...,p-1]:\restrptype[n][0,...,p-1](\deps[n][0,...,p-1]) \\
             \end{array}\right) : \U
-    }                                                                                                                      \\
+    }                                                                                                                               \\
     \cohftype[n][0,...,0-1]                    &
     \left(\begin{array}{l}
               \unitpoint \\
               \unitpoint \\
             \end{array}\right)                     & \defeq &
-    \unittype                                                                                                              \\
+    \unittype                                                                                                                       \\
     \cohftype[n][0,...,(p+1)-1]                &
     \left(\begin{array}{l}
               \deps[n][0,...,n]   \\
@@ -714,13 +666,18 @@ Mutual definition of $\restrf$ and $\cohftype$
                 \deps[n+1][0,...,n]     \\
                 \restrp[n+1][0,...,p-1] \\
               \end{array}\right)(d))                          \\
-    \end{array}                                                      \\
+    \end{array}                                                               \\
     \restrltype[n][p]                          &
     \left(\begin{array}{l}
               \deps[n][0,...,n]:\depstype[n][0,...,n] \\
               \cohf[n][0,...,p]:\cohftype[n][0,...,p] \\
+            \end{array}\right) & :      & \U                                                                                   \\
+    \restrltype[n][p]                          &
+    \left(\begin{array}{l}
+              \deps[n][0,...,n] \\
+              \cohf[n][0,...,p] \\
             \end{array}\right)
-                                               & :      & \Pi q \leq n. \Pi \epsilon. \Pi d: \framep[n][p].\left(
+                                               & \defeq & \Pi q \leq n. \Pi \epsilon. \Pi d: \framep[n][p].\left(
     \begin{array}{l}
         \layer[n][p]\left(
         \begin{array}{l}
@@ -729,8 +686,8 @@ Mutual definition of $\restrf$ and $\cohftype$
             \restrf[n][p](\deps[n][0,...,p])   \\
           \end{array}\right)(d) \rightarrow \\
         \layer[n][p](\deps[n][0,...,n])(\restrf[n][p](d))
-      \end{array}\right)                                                          \\
-    \restrl[n][p][q][\epsilon]                 &
+      \end{array}\right)                                                                   \\
+    \restrl[n][p]                              &
     \left(\begin{array}{l}
               \deps[n][0,...,n]:\depstype[n][0,...,n] \\
               \cohf[n][0,...,p]:\cohftype[n][0,...,p] \\
@@ -739,13 +696,13 @@ Mutual definition of $\restrf$ and $\cohftype$
                                 \deps[n][0,...,n] \\
                                 \cohf[n][0,...,p] \\
                               \end{array}
-    \right)                                                                                                                \\
-    \restrl[n][p][q][\epsilon]                 &
+    \right)                                                                                                                         \\
+    \restrl[n][p]                              &
     \left(\begin{array}{l}
               \deps[n][0,...,n] \\
               \cohf[n][0,...,p] \\
             \end{array}\right)                     & \defeq &
-    \lambda\omega.\,\overrightarrow{\cohf[n][p][q][q][\epsilon][\omega]}{\restrp[n][p](l \omega)}                          \\
+    \lambda q\leq n. \lambda \epsilon.\lambda\omega.\,\overrightarrow{\cohf[n][p][q][q][\epsilon][\omega]}{\restrp[n][p](l \omega)} \\
   \end{array}
 \end{equation*}
 
