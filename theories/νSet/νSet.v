@@ -279,7 +279,7 @@ Fixpoint RestrPaintingTypes' {p}: forall `{deps: DepsRestr p n}
   | 0 => fun _ _ _ => unit
   | S p =>
     fun n deps extraDeps =>
-    { R: RestrPaintingTypes' (deps.(2); extraDeps) &T
+    { _: RestrPaintingTypes' (deps.(2); extraDeps) &T
       RestrPaintingType' deps.(2) extraDeps }
   end.
 
