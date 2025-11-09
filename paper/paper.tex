@@ -420,7 +420,7 @@ Formally, this can be described as:
                   \painting[n][0,...,p-1] \\
                 \end{array}\right)                                              \\
             \end{array}\right) & :      & \frametype[n][0,...,p]                             \\
-    \framep[n][0]                                                                          &
+    \framep[n][0,]                                                                          &
     \left(\begin{array}{l}
               \unitpoint \\
               \unitpoint \\
@@ -521,11 +521,11 @@ At this stage, it is convenient to use an abbreviation to combine sequences $\fr
 
 \begin{align*}
   \depstype[n][0,..,p-1] \defeq
-  \left(\begin{array}{l}
-            \framep[n][0,...,p-1] :\frametype[n][0,...,p-1] \\
-            \painting[n][0,...,p-1] :\paintingtype[n][0,...,p-1]
+  \left(\begin{array}{lll}
+            \framep[n][0,...,p-1] &:&\frametype[n][0,...,p-1] \\
+            \painting[n][0,...,p-1] &:&\paintingtype[n][0,...,p-1]
             (\framep[n][0,...,p-1])                         \\
-            \restrf[n][0,...,p-1]  :\restrftype[n][0,...,p-1]
+            \restrf[n][0,...,p-1]  &:&\restrftype[n][0,...,p-1]
             \left(\begin{array}{l}
                 \framep[n][0,...,p-1]   \\
                 \painting[n][0,...,p-1] \\
@@ -554,9 +554,9 @@ Defining $\painting[n][p]$, in addition to the type dependency in $\framep[n][p]
 Let us introduce another abbreviation to combine a full $\deps[n][0,n]$ with a family $E:\framep[n-1][n-1]\rightarrow \U$:
 \begin{align*}
   \fulldepstype[n] \defeq
-  \left(\begin{array}{l}
-            \deps[n][0,...,n-1] :\depstype[n][0,...,n-1] \\
-            E:\frametype[n-1][n-1]\rightarrow \U         \\
+  \left(\begin{array}{lll}
+            \deps[n][0,...,n-1] &:&\depstype[n][0,...,n-1] \\
+            E&:&\frame[n-1][n-1](\deps[n][0,...,n-1]) \rightarrow \U         \\
           \end{array}\right)
 \end{align*}
 TODO: say the convention on projection in the Introduction
@@ -574,7 +574,7 @@ We can now formally define $\painting[n][p]$ by recursion on $n-p$:
     \painting[n][p](p<n) &
     (\fulldeps[n-1])     & \defeq & d \mapsto
     \left(\begin{array}{l}
-              \Sigma l:\layer(\deps[n-1][0,...,p-1]). \\
+              \Sigma l:\layer(\fulldeps.\deps[n-1][0,...,p-1]). \\
               \painting[n][p+1,...,n-1]
               (\fulldeps[n-1])(d,l)                   \\
             \end{array}\right) \\
@@ -589,10 +589,7 @@ From which we can deduce $\painting[n][0,...,p]$ by a second recursion, this tim
     \painting[n][0,...,p]   &
     (\fulldeps[n-1])        & :      & \paintingtype[n][0,...,p](\framep[n][0,...,p](\fulldeps.\deps[n-1][0,...,p])) \\
     \painting[n][0,...,0-1] &
-    \left(\begin{array}{l}
-              \unitpoint \\
-              E          \\
-            \end{array}\right)  & \defeq & \unittype                                                                   \\
+    E  & \defeq & \unittype                                                                   \\
     \painting[n][0,...,p]   &
     (\fulldeps[n-1])
                             & \defeq &
@@ -600,26 +597,26 @@ From which we can deduce $\painting[n][0,...,p]$ by a second recursion, this tim
   \end{array}
 \end{equation*}
 
-At this stage, we are able to define $\framep$, $\painting$ and $\restrftype$ from $\deps$ at the respective previous level. To go further, we need to define the sequence $\restrptype$ of types of painting restrictions:
+At this stage, we are able to define $\framep[n][0,...,n]$, $\painting[n][0,...,n]$ and $\restrftype[n][0,...,n-1]$ from $\framep[n-1][0,...,n-1]$, $\painting[n-1][0,...,n-1]$ and $\restrf[n-1][0,...,n-1]$, that is from $\deps[n-1][0,...,n-1]$. To go further, we need to define the sequence $\restrptype[n][0,...,p]$ of types of painting restrictions:
 
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
     \restrptype[n][0,...,p]             &
     (\fulldeps[n-1]:\fulldepstype[n-1]) & :          & \U                                                    \\
-    \restrptype[n][]                    & \unitpoint & \defeq                                    & \unittype \\
+    \restrptype[n][]                    & E & \defeq                                    & \unittype \\
     \restrptype[n][0,...,p]             &
     (\fulldeps[n-1])
                                         & \defeq     & \restrptype[n+1][0,...,p-1] \times \left(
     \begin{array}{l}
-        \Pi q\leq n.\Pi \epsilon.\Pi d:\framep(\deps[n][0,...,p]). \\
+        \Pi q\leq n.\Pi \epsilon.\Pi d:\framep[n][p](\fulldeps.\deps[n][0,...,p]). \\
         \painting[n][p]
         (\fulldeps[n-1])(d) \rightarrow                            \\ \fulldeps.\deps.\painting[n][p](\fulldeps.\deps.\restrf[n][p][q][\epsilon](d))\end{array}
     \right)                                                                                                  \\
   \end{array}
 \end{equation*}
 
-Thanks to $\restrptype$, we can mutually define $\restrf$ and $\cohftype$, using abbreviations in passing for $\layer$ and $\layertype$:
+Thanks to $\restrptype[n][0,...,n]$, we can mutually define $\restrf[n][p]$ and $\cohftype[n][p]$ from ``full dependencies'', that is from $\frame[n][0,...,n]$, $\painting[n][0,...,n]$, $\restrf[n][0,...,n]$ and some $E:\frame[n+1][n+1](\, using abbreviations in passing for $\layer$ and $\layertype$:
 
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
@@ -627,7 +624,7 @@ Thanks to $\restrptype$, we can mutually define $\restrf$ and $\cohftype$, using
     \restrf[n][0,...,p]                                                          &
     \multicolumn{3}{l}{
       \left(\begin{array}{l}
-                \fulldeps[n]:\depstype[n]   \\
+                \fulldeps[n]:\fulldepstype[n]   \\
                 \restrp[n][0,...,p-2]:\restrptype[n][0,...,p-1]
                 \left(\begin{array}{l}
                     \fulldeps[n] \\
@@ -640,8 +637,8 @@ Thanks to $\restrptype$, we can mutually define $\restrf$ and $\cohftype$, using
               \end{array}\right) :
       \restrftype[n][0,...,p]
       \left(\begin{array}{l}
-                \fulldeps.\deps.\framep[n][0,...,p]   \\
-                \fulldeps.\deps.\painting[n][0,...,p] \\
+                \framep[n][0,...,p](\fulldeps.\deps[n][0,...,p])   \\
+                \painting[n][0,...,p](\fulldeps[n]) \\
               \end{array}\right)
     }                                                                                                                                                        \\
     \restrf[n][0,...,0-1]                                                        &
@@ -672,6 +669,7 @@ Thanks to $\restrptype$, we can mutually define $\restrf$ and $\cohftype$, using
                   \end{array}\right)(d), \restrl[n][p][q][\epsilon]
               \left(\begin{array}{l}
                     \fulldeps[n]      \\
+                    \restrp[n+1][0,...,p-1] \\
                     \cohf[n][0,...,p] \\
                   \end{array}\right)(d)(l)\right)     \\
             \end{array} \right)                                                                                               \\
@@ -700,16 +698,29 @@ Thanks to $\restrptype$, we can mutually define $\restrf$ and $\cohftype$, using
                 \fulldeps[n+1]          \\
                 \restrp[n+1][0,...,p-1] \\
               \end{array}\right).                          \\
-      \Pi q\leq n.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega. \\
-      \deps.\restrf[n][p][q][\epsilon](\restrf[n+1][p][r][\omega]
+      \Pi q\leq n.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.\,\Pi d:\framep[n][p]
+      \left(\begin{array}{l}
+                \frame(\fulldeps.\deps[n][0,...,p])          \\
+                \painting[n+1][0,...,p-1](\fulldeps[n]) \\
+                \restrf[n][0,...,p]
+                \left(\begin{array}{l}
+                  \fulldeps[n+1]          \\
+                  \restrp[n+1][0,...,p-1] \\
+                  \cohf[n][0,...,p] \\
+                \end{array}\right)                         \\
+              \end{array}\right).                         \\
+      \\
+      \fulldeps.\deps.\restrf[n][p][q][\epsilon](\restrf[n+1][p][r][\omega]
       \left(\begin{array}{l}
                 \fulldeps[n+1]          \\
                 \restrp[n+1][0,...,p-1] \\
+                \cohf[n][0,...,p] \\
               \end{array}\right)(d)) =                         \\
-      \deps.\restrf[n][p][r][\omega](\restrf[n+1][p][q+1][\epsilon]
+      \fulldeps.\deps.\restrf[n][p][r][\omega](\restrf[n+1][p][q+1][\epsilon]
       \left(\begin{array}{l}
                 \fulldeps[n+1]          \\
                 \restrp[n+1][0,...,p-1] \\
+                \cohf[n][0,...,p] \\
               \end{array}\right)(d))                          \\
     \end{array}                                                                                        \\
     \restrltype[n][p]                                                            &
@@ -729,17 +740,17 @@ Thanks to $\restrptype$, we can mutually define $\restrf$ and $\cohftype$, using
         \layer[n][p]\left(
         \begin{array}{l}
             \framep[n][p](\fulldeps.\deps[n][0,...,p])   \\
-            \painting[n][p](\fulldeps.\deps[n][0,...,n]) \\
+            \painting[n][p](\fulldeps[n]) \\
             \restrf[n][p]
             \left(\begin{array}{l}
-                      \fulldeps.\deps[n][0,...,p] \\
+                      \fulldeps[n] \\
                       \restrp[n][0,...,p-1]       \\
                       \cohf[n][0,...,p]
                     \end{array}\right)            \\
           \end{array}\right)(d) \rightarrow \\
-        \fulldeps.\deps.\layer[n][p](\deps[n][0,...,n])(\restrf[n][p]
+        \layer[n][p](\fulldeps.\deps[n][0,...,n])(\restrf[n][p]
         \left(\begin{array}{l}
-                  \fulldeps.\deps[n][0,...,p] \\
+                  \fulldeps[n] \\
                   \restrp[n][0,...,p-1]       \\
                   \cohf[n][0,...,p]
                 \end{array}\right)(d))
@@ -756,6 +767,7 @@ Thanks to $\restrptype$, we can mutually define $\restrf$ and $\cohftype$, using
             \end{array}\right) & :      &
     \restrltype[n][p] \left(\begin{array}{l}
                                 \deps[n][0,...,n] \\
+                                \restrp[n][0,...,p-1] \\
                                 \cohf[n][0,...,p] \\
                               \end{array}
     \right)                                                                                                                                                  \\
@@ -765,7 +777,7 @@ Thanks to $\restrptype$, we can mutually define $\restrf$ and $\cohftype$, using
               \restrp[n][0,...,p-1] \\
               \cohf[n][0,...,p]     \\
             \end{array}\right)                                                     & \defeq &
-    \lambda q\leq n. \lambda \epsilon.\lambda\omega.\,\overrightarrow{\cohf[n][p][q][q][\epsilon][\omega]}{\restrp[n][p](l \omega)}                          \\
+    \lambda q\leq n. \lambda \epsilon.\,\lambda d.\lambda l.\overrightarrow{\cohf[n][p][q][q][\epsilon][\omega](d)}{\restrp[n][p][q][\epsilon](\restrf[n][p][q][\epsilon])(l \omega)}                          \\
   \end{array}
 \end{equation*}
 
@@ -774,9 +786,9 @@ At this new stage, it is convenient to use a new abbreviation to combine sequenc
 \begin{align*}
   \depscohstype[n][0,..,p-1] \defeq
   \left(\begin{array}{l}
-            \deps[n][0,...,n] :\depstype[n][0,...,n]        \\
-            \restrp[n][0,...p-1]: \restrptype[n][0,...,p-1] \\
-            \cohf[n][0,...,p-1]: \cohftype[n][0,...,p-1]    \\
+            \fulldeps[n][0,...,n] &:&\fulldepstype[n][0,...,n]        \\
+            \restrp[n][0,...p-1]&:& \restrptype[n][0,...,p-1] \\
+            \cohf[n][0,...,p-1]&:& \cohftype[n][0,...,p-1]    \\
           \end{array}\right)
 \end{align*}
 so that the type of $\restrf[n][0,...,p]$ can be rephrased as $\Pi \depscohs[n][0,...,p-1]:\depscohstype[n][0,..,p-1]. \restrftype[n][0,...,p]      \left(\begin{array}{l}
@@ -790,9 +802,18 @@ It is also convenient to abbreviate:
   \overline{\deps}(\depscohs:\depscohstype) & :      & \depstype \\
   \overline{\deps}(\depscohs)               & \defeq &
   \left(\begin{array}{l}
-            \framep[n][p](\depscohs.\deps[n][0,...,p])   \\
-            \painting[n][p](\depscohs.\deps[n][0,...,n]) \\
+            \framep[n][p](\depscohs.\fulldeps.\deps[n][0,...,p])   \\
+            \painting[n][p](\depscohs.\fulldeps[n][0,...,n]) \\
             \restrf[n][p](\depscohs[n][0,...,p])         \\
+          \end{array}\right)             \\
+\end{align*}
+
+\begin{align*}
+  \overline{\fulldeps}(\fulldepscohs:\fulldepscohstype) & :      & \fulldepstype \\
+  \overline{\fulldeps}(\fulldepscohs)               & \defeq &
+  \left(\begin{array}{l}
+            \overline{\deps}(\depscohs)\\
+            \depscohs.\fulldeps.E\\
           \end{array}\right)             \\
 \end{align*}
 
@@ -800,8 +821,8 @@ We need also the notion of full dependencies at the level of coherence condition
 \begin{align*}
   \fulldepscohstype[n] \defeq
   \left(\begin{array}{l}
-            \depscohs[n][0,...,n-1] :\depscohstype[n][0,...,n-1]                         \\
-            E:\framep[n-1][n-1](\overline{\deps}(\depscohs[n][0,...,n-1]))\rightarrow \U \\
+            \depscohs[n][0,...,n-1] &:&\depscohstype[n][0,...,n-1]                         \\
+            E&:&\framep[n-1][n-1](\overline{\deps}(\depscohs[n][0,...,n-1]))\rightarrow \U \\
           \end{array}\right)
 \end{align*}
 TODO: say the convention on projection in the Introduction
@@ -818,20 +839,11 @@ Armed with $\restrf$, $\cohftype$ and these abbreviations, it is now possible to
     \left(
     \begin{array}{l}
         \Pi q\leq n. \Pi \epsilon. \Pi d:\framep[n][p]
-        \left(\begin{array}{l}
-                  \overline{\deps}(\depscohs)    \\
-                  E':\framep[n][n]\rightarrow \U \\
-                \end{array}\right).    \\
+        (\overline{\deps}(\depscohs)).    \\
         \painting[n][p]
-        \left(\begin{array}{l}
-                  \overline{\deps}(\depscohs)    \\
-                  E':\framep[n][n]\rightarrow \U \\
-                \end{array}\right)(d) \rightarrow \\
-        \painting[n-1][p]
-        \left(\begin{array}{l}
-                  \depscohs[n][0,...,n].\deps       \\
-                  E:\framep[n-1][n-1]\rightarrow \U \\
-                \end{array}\right)(\restrf[n][p](\depscohs[n][0,...,n].deps)(d))\end{array}\right)                                       \\
+        (\overline{\fulldeps}(\fulldepscohs[n])(d) \rightarrow \\
+        \painting[n-1][p](\fulldepscohs.\depscohs.\fulldeps[n])
+          (\restrf[n][p](\fulldepscohs.\depscohs[n][0,...,n])(d))\end{array}\right)                                       \\
     \restrp[n][n]                           &
     (\fulldepscohs[n][0,...,n])             & \defeq & \lambda q\leq n.\lambda \epsilon. \lambda d. \lambda (l,c). l\epsilon \\
     \restrp[n][p](p<n)                      &
@@ -839,7 +851,7 @@ Armed with $\restrf$, $\cohftype$ and these abbreviations, it is now possible to
     \left(\begin{array}{l}
               \restrl[n][p][q][\epsilon](\fulldepscohs.\depscohs[n-1][0,...,p-1])(l),               \\
               \restrp[n][p][q][\epsilon]
-              (\fulldepscohs[n][0,...,n])(\restrf[n][p](\fulldepscohs.\depscohs[n][0,...,p])(d))(c) \\
+              (\fulldepscohs[n])(\restrf[n][p](\fulldepscohs.\depscohs[n][0,...,p])(d))(c) \\
             \end{array}\right)                              \\
   \end{array}
 \end{equation*}
@@ -857,21 +869,15 @@ sequence $\cohptype$ of types of painting coherence laws:
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \cohptype[n][0,...,p] & (\depscohs[n][0,...,n]:\depscohstype[n][0,...,n]) & :      & \U                                      \\
+    \cohptype[n][0,...,p] & (\fulldepscohs[n]:\fulldepscohstype[n]) & :      & \U                                      \\
     \cohptype[n][]        & \unitpoint                                        & \defeq & \unittype                               \\
-    \cohptype[n][0,...,p] & (\depscohs[n][0,...,n])                           & \defeq & \cohptype[n+1][0,...,p-1] \times \left(
+    \cohptype[n][0,...,p] & (\fulldepscohs[n])                           & \defeq & \cohptype[n+1][0,...,p-1] \times \left(
     \begin{array}{l}
-        \Pi q\leq n.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega. \\
-        \depscohs.\restrp[n][p][q][\epsilon](\restrp[n+1][p][r][\omega]
-        \left(\begin{array}{l}
-                  \depscohs[n+1][0,...,n] \\
-                  \cohp[n+1][0,...,p-1]   \\
-                \end{array}\right)(d)) =                         \\
-        \depscohs.\restrp[n][p][r][\omega](\restrp[n+1][p][q+1][\epsilon]
-        \left(\begin{array}{l}
-                  \depscohs[n+1][0,...,n] \\
-                  \cohp[n+1][0,...,p-1]   \\
-                \end{array}\right)(d))
+        \Pi q\leq n.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.\,\Pi d:...\,\Pi c \\
+        \fulldepscohs.\depscohs.\restrp[n][p][q][\epsilon](\restrf(d))(\restrp[n+1][p][r][\omega]
+        (\fulldepscohs[n+1])(d)(c)) =                         \\
+        \fulldepscohs.\depscohs.\restrp[n][p][r][\omega](\restrf(d))(\restrp[n+1][p][q+1][\epsilon]
+        (\fulldepscohs[n+1])(d)(c))
       \end{array}
     \right)                                                                                                                      \\
   \end{array}
