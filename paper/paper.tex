@@ -340,20 +340,20 @@ In \citep{hr25}, the well-foundedness was justified by induction on $n$ and subi
 Since $\restrf[n][p]$ is referring to $\framep[n][p]$ and $\framep[n-1][p]$, and $\cohf[n][p]$ is referring to $\restrf[n][p]$ and $\restrf[n-1][p]$, thus also to $\framep[n][p]$, $\framep[n-1][p]$ and $\framep[n-2][p]$, we built all of these 6 components at the same time. But equations were also needed to state the properties of $\framep[n][p]$, $\framep[n-1][p]$ and $\restrf[n][p]$ so that we were building by induction on $n+p$ (that is on $n$, using the convention of \citep{hr25}) the following block of information:
 
 \begin{align*}
-  \framep[n][p]      & : \U                                                                                                                 \\
-  \framep[n-1][p]    & :  \U                                                                                                                \\
-  \framep[n-2][p]    & : \U                                                                                                                 \\
-  \restrf[n][p]      & : \Pi q.\, \Pi \omega.\, \framep[n][p] \rightarrow \framep[n-1][p]                                                   \\
-  \restrf[n-1][p]    & : \Pi q.\, \Pi \omega.\, \framep[n-1][p] \rightarrow \framep[n-2][p]                                                 \\                                                                 \\
+  \framep[n][p]      & : \U & \mbox{for all $p\leq n$}                                                                                      \\
+  \framep[n-1][p]    & : \U & \mbox{for all $p\leq n-1$}                                                                                    \\
+  \framep[n-2][p]    & : \U & \mbox{for all $p\leq n-2$}                                                                                    \\
+  \restrf[n][p]      & : \Pi q.\, \Pi \omega.\, \framep[n][p] \rightarrow \framep[n-1][p] & \mbox{for all $p\leq n$}                        \\
+  \restrf[n-1][p]    & : \Pi q.\, \Pi \omega.\, \framep[n-1][p] \rightarrow \framep[n-2][p] & \mbox{for all $p\leq n-1$}                    \\
   \cohf[n][p]        & : \Pi qr\epsilon\omega.\, \restrf[n-1][p][\epsilon][q] \circ \restrf[n][p][\omega][r] =                              \\
-                     & \;\;\;\;\restrf[n-1][p][\omega][r] \circ \restrf[n][p][\epsilon][q+1]                                                \\
+                     & \;\;\;\;\restrf[n-1][p][\omega][r] \circ \restrf[n][p][\epsilon][q+1] & \mbox{for all $p\leq n$}                     \\
   \mathsf{hypF0}     & : \framep[n][0]         = \unitpoint
   \\
-  \mathsf{hypFS0}    & : \framep[n][p+1]       = \Sigma d: \framep[n+1][p]. \Pi \omega.\, \painting[n][p] (\restrf[n+1][p](d))              \\
-  \mathsf{hypPrevF}  & : \framep[n-1][0]                                                                                       = \unitpoint \\
-  \mathsf{hypPrevFS} & : \framep[n-1][p+1] = \Sigma d: \framep[n][p]. \Pi \omega.\, \painting[n-1][p] (\restrf[n][p](d))                    \\
+  \mathsf{hypFS}     & : \framep[n][p+1]       = \Sigma d: \framep[n+1][p]. \Pi \omega.\, \painting[n][p] (\restrf[n+1][p](d)) & \mbox{for all $p\leq n-1$} \\
+  \mathsf{hypPrevF0} & : \framep[n-1][0]                                                                                       = \unitpoint \\
+  \mathsf{hypPrevFS} & : \framep[n-1][p+1] = \Sigma d: \framep[n][p]. \Pi \omega.\, \painting[n-1][p] (\restrf[n][p](d)) & \mbox{for all $p\leq n-2$}    \\
   \mathsf{hypRF0}    & : \restrf[n][0]        = \ldots \texttt{depending on hypF0}                                                          \\
-  \mathsf{hypRFS}    & : \restrf[n][p+1]      = \ldots \texttt{depending on hypFS and hypPrevFS}                                            \\
+  \mathsf{hypRFS}    & : \restrf[n][p+1]      = \ldots \texttt{depending on hypFS and hypPrevFS} & \mbox{for all $p\leq n-1$}               \\
   \ldots             & \;\;\;\;\texttt{fields for painting, restrf, cohp}
 \end{align*}
 
