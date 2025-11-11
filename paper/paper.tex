@@ -454,55 +454,43 @@ beforehand:
 
 \subsection{Defining frames and specifying frame restrictions}
 
-Assuming $\framep[n][0,...,p-1]$ and $\painting[n][0,...,p-1]$,
-we can mutually define the types $\restrftype[n][0,...,p-1]$ of frame
-restrictions together with $\framep[n+1][0,...p]$ as a function
-from $\restrf[n][0,...,p-1]$, using auxiliary definitions for the
-types and definitions of layers:
+Assuming $\framep[n][0,...,p-1]$ and $\painting[n][0,...,p-1]$, we can
+mutually define the types $\restrftype[n][0,...,p-1]$ of frame
+restrictions together with $\framep[n+1][0,...p]$ as a function from
+$\restrf[n][0,...,p-1]$, introducing also abbreviations for the types
+and definitions of layers, as well as for the combination of sequences
+of $\framep[n][0,..,p-1]$, $\painting[n][0,...,p-1]$ and
+$\restrf[n][0,...,p-1]$ in one block, which we call
+$\depstype[n][0,...p-1]$:
+
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \framep[n+1][0,...,(p+1)-1]                                                                    &
-    \left(\begin{array}{l}
-              \framep[n][0,...,p-1]:\frametype[n][0,...,p-1]                             \\
-              \painting[n][0,...,p-1]:\paintingtype[n][0,...,p-1](\framep[n][0,...,p-1]) \\
-              \restrf[n][0,...,p-1]:\restrftype[n][0,...,p-1]
+    \depstype[n][0,..,p-1] & \defeq &
+    \left(\begin{array}{lll}
+              \framep[n][0,...,p-1]   & : & \frametype[n][0,...,p-1]    \\
+              \painting[n][0,...,p-1] & : & \paintingtype[n][0,...,p-1]
+              (\framep[n][0,...,p-1])                                   \\
+              \restrf[n][0,...,p-1]   & : & \restrftype[n][0,...,p-1]
               \left(\begin{array}{l}
                   \framep[n][0,...,p-1]   \\
                   \painting[n][0,...,p-1] \\
-                \end{array}\right)                                              \\
-            \end{array}\right) & :      & \frametype[n+1][0,...,p]                             \\
+                \end{array}\right)                             \\
+            \end{array}\right) \\
+    \framep[n+1][0,...,(p+1)-1]                                                                    &
+    (\deps[n][0,...,p-1]:\depstype[n][0,...,p-1]) & :      & \frametype[n+1][0,...,p]                             \\
     \framep[n+1][0,...,(0+1)-1]                                                                          &
-    \left(\begin{array}{l}
-              \unitpoint \\
-              \unitpoint \\
-              \unitpoint \\
-            \end{array}\right)                                                                 & \defeq & (\unitpoint,unit) \\
+    (\unitpoint)                                                                 & \defeq & (\unitpoint,unit) \\
     \framep[n+1][0,...,((p+1)+1)-1]                                                                  &
-    \left(\begin{array}{l}
-              \framep[n][0,...,p]   \\
-              \painting[n][0,...,p] \\
-              \restrf[n][0,...,p]   \\
-            \end{array}\right)                                                               & \defeq &
+    (\deps)                                                               & \defeq &
     \left(\begin{array}{l}
               \framep[n+1][0,...,p]
-              \left(\begin{array}{l}
-                  \framep[n][0,...,p-1]   \\
-                  \painting[n][0,...,p-1] \\
-                  \restrf[n][0,...,p-1]   \\
-                \end{array}\right), \\
+              (\deps[n][0,...,p-1]), \\
               \Sigma d:\framep[n+1][0,...,p]
-              \left(\begin{array}{l}
-                  \framep[n+1][0,...,p-1]   \\
-                  \painting[n+1][0,...,p-1] \\
-                  \restrf[n+1][0,...,p-1]   \\
-                \end{array}\right).\, \\
+              (\deps[n][0,...,p-1]) \\
               \quad \layer[n][p]
-              \left(\begin{array}{l}
-                  \framep[n][0,...,p]   \\
-                  \painting[n][0,...,p] \\
-                  \restrf[n][0,...,p]   \\
-                \end{array}\right)(d) \\
+              (\deps[n][0,...,p])
+              (d) \\
             \end{array}\right)                                                                      \\
     \restrftype[n][0,...,p-1]                                                              &
     \left(\begin{array}{l}
@@ -535,62 +523,26 @@ types and definitions of layers:
               \end{array}\right) \rightarrow  \framep[n][p] \\
     \end{array}                                                    \\
     \layertype[n][p]                                                                       &
-    \left(\begin{array}{l}
-              \framep[n][0,...,p]:\frametype[n][0,...,p]        \\
-              \painting[n][0,...,p]:\paintingtype[n][0,...,p]   \\
-              \restrf[n][0,...,p]:\restrftype[n][0,...,p] \\
-            \end{array}\right)
-                                                                                           & :      & \Type               \\
+    (\deps[n][0,...,p]:\depstype[n][0,...,p])
+    & :      & \Type               \\
     \layertype[n][p]                                                                       &
-    \left(\begin{array}{l}
-              \framep[n][0,...,p]     \\
-              \painting[n][0,...,p]   \\
-              \restrf[n][0,...,p] \\
-            \end{array}\right)
-                                                                                           & \defeq & \framep[n+1][p]
-    \left(\begin{array}{l}
-              \framep[n][0,...,p-1]     \\
-              \painting[n][0,...,p-1]   \\
-              \restrf[n][0,...,p-1] \\
-            \end{array}\right) \rightarrow \U                                                                               \\
+    (\deps[n][0,...,p])
+    & \defeq & \framep[n+1][p]
+    (\deps[n][0,...,p-1])
+    \rightarrow \U                                                                               \\
     \layer[n][p]                                                                           &
-    \left(\begin{array}{l}
-              \framep[n][0,...,p]:\frametype[n][0,...,p]        \\
-              \painting[n][0,...,p]:\paintingtype[n][0,...,p]   \\
-              \restrf[n][0,...,p]:\restrftype[n][0,...,p] \\
-            \end{array}\right)                                   & :      & \layertype[n][p]
-    \left(\begin{array}{l}
-              \framep[n][0,...,p]:\frametype[n][0,...,p]        \\
-              \painting[n][0,...,p]:\paintingtype[n][0,...,p]   \\
-              \restrf[n][0,...,p]:\restrftype[n][0,...,p] \\
-            \end{array}\right) \\
+    (\deps[n][0,...,p]:\depstype[n][0,...,p])
+    & :      & \layertype[n][p]
+    (\deps[n][0,...,p])
+    \\
     \layer[n][p]                                                                           &
-    \left(\begin{array}{l}
-              \framep[n][0,...,p]     \\
-              \painting[n][0,...,p]   \\
-              \restrf[n][0,...,p] \\
-            \end{array}\right)                                                             & \defeq &
-    d \mapsto \Pi\omega.\,\painting[n][p](\restrf[n][p](d))
+    (\deps[n][0,...,p])
+    & \defeq &
+    d \mapsto \Pi\omega.\,\painting[n][p](\restrf[n][p](d))\\
   \end{array}
 \end{equation*}
 
-At this stage, it is convenient to use an abbreviation to combine sequences $\framep[n][0,..,p-1]$, $\painting[n][0,...,p-1]$ and $\restrf[n][0,...,p-1]$ in one block, which we call $\depstype[n][0,...p-1]$:
-
-\begin{align*}
-  \depstype[n][0,..,p-1] \defeq
-  \left(\begin{array}{lll}
-            \framep[n][0,...,p-1]   & : & \frametype[n][0,...,p-1]    \\
-            \painting[n][0,...,p-1] & : & \paintingtype[n][0,...,p-1]
-            (\framep[n][0,...,p-1])                                   \\
-            \restrf[n][0,...,p-1]   & : & \restrftype[n][0,...,p-1]
-            \left(\begin{array}{l}
-                \framep[n][0,...,p-1]   \\
-                \painting[n][0,...,p-1] \\
-              \end{array}\right)                             \\
-          \end{array}\right)
-\end{align*}
-so that the type of $\framep[n+1][0,...,p]$ can be shortened into $\depstype[n][0,..,p-1] \rightarrow \frametype[n+1][0,...,p]$ and similarly for $\layertype[n][p]$ and $\layer[n][p]$.
-Later, we shall write $\deps.\framep$, $\deps.\painting$, $\deps.\restrf$ for the corresponding projections of a $\deps$. By abuse of notation, we also write $\unitpoint$ for the only inhabitant of $\depstype[n][0,..,0-1]$.
+Later, we shall write $\deps.\framep$, $\deps.\painting$, $\deps.\restrf$ for the projections of a $\deps$. Note that by abuse of notation, we also write $\unitpoint$ for the only inhabitant of $\depstype[n][0,..,0-1]$.
 
 \subsection{Defining paintings}
 
