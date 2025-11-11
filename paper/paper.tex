@@ -362,13 +362,17 @@ Since $\restrf[n][p]$ is referring to $\framep[n][p]$ and $\framep[n-1][p]$, and
 In the current paper and associated formalisation, we replace the equational properties by definitions, building instead by induction a block of the form:
 
 \begin{align*}
-  \framep[n][p] & : \U & \mbox{for all $p\leq n$}                                                                                      \\
-  \painting[n][p] & : \framep[n][p] \rightarrow \U & \mbox{for all $p\leq n$}                                                          \\
+  \framep[n][p] & : \U[m] & \mbox{for all $p\leq n$}                                                                                      \\
+  \painting[n][p] & : \framep[n][p] \rightarrow \U[m] & \mbox{for all $p\leq n$}                                                          \\
   \restrf[n][p] & : \Pi q \leq n+p.\, \framep[n+1][p] \rightarrow \framep[n][p] & \mbox{for all $p\leq n$}                         \\
-  \restrp[n][p] & : \Pi q \leq n+p.\, \Pi d:\framep[n+1][p]\, \painting[n+1][p](d) \rightarrow \painting[n][p](\restrf[n][p](d)) & \mbox{for all $p\leq n$} \\
+  E & : \fullframe[m][n+1] \imp \U[m] \\
+  \restrp[n][p] & : \Pi q \leq n+p.\, \Pi d:\framep[n+1][p].\,\\
+                  & \;\;\;\;\painting[n+1][p](d) \rightarrow \painting[n][p](\restrf[n][p](d)) & \mbox{for all $p\leq n$} \\
   \cohf[n][p]   & : \Pi qr\epsilon\omega.\, \restrf[n][p][\epsilon][q] \circ \restrf[n+1][p][\omega][r] = \\
                   & \;\;\;\;\restrf[n][p][\omega][r] \circ \restrf[n+1][p][\epsilon][q+1] & \mbox{for all $p\leq n$}                   \\
-  \cohp[n][p]     & \Pi qr\epsilon\omega.\,\Pi d:\framep[n+2][p].\, \restrp[n][p][q][\epsilon](\restrf[n+1][p][r][\omega](d)) \circ \restrp[n+1][p][r][\omega](d) = \\
+  E' & : \fullframe[m][n+2] \imp \U[m] \\
+  \cohp[n][p]     & \Pi qr\epsilon\omega.\,\Pi d:\framep[n+2][p].\,
+                  & \;\;\;\;\restrp[n][p][q][\epsilon](\restrf[n+1][p][r][\omega](d)) \circ \restrp[n+1][p][r][\omega](d) = \\
                   & \;\;\;\;\restrp[n][p][r][\omega](\restrf[n+1][p][q+1][\epsilon](d)) \circ \restrp[n+1][p][q+1][\epsilon](d) & \mbox{for all $p\leq n$}                 \\
 \end{align*}
 where $\framep[n+2][p]$, $\framep[n+1][p]$ and $\restrf[n+1][p]$, as
@@ -404,7 +408,7 @@ So far, this means that we are able to specify a dependent structure of the form
     \end{array}\right)
   \rightarrow \framep[n][p] & \mbox{for all $p\leq n$}                         \\
 \end{align*}
-which can appropriately be reformulated using sequences for appropriate definitions of $\frametype[n][0,...,p]$, $\paintingtype[n][0,...,p]$ and $\restrftype[n][0,...,p]$, since the dependencies of $\restrf[n][p]$ into $\restrf[n][0,...,p-1]$ makes it a very dependent function~\cite{Hickey96}:
+which can appropriately be reformulated using sequences for appropriate definitions of $\frametype[n][0,...,p]$, $\paintingtype[n][0,...,p]$ and $\restrftype[n][0,...,p]$, since the dependencies of $\restrf[n][p]$ into $\restrf[n][0,...,p-1]$ makes it a very dependent function~\citep{Hickey96}:
 \begin{align*}
   \framep[n][0,...,p] & : \frametype[n][0,...,p]                                                                                       \\
   \painting[n][0,...,p] & : \paintingtype[n][0,...,p](\framep[n][0,...,p])                                                         \\
