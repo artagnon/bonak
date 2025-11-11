@@ -466,7 +466,7 @@ $\depstype[n][0,...p-1]$:
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \depstype[n][0,..,p-1] & \defeq &
+    \depstype[n][0,..,p-1] & & \defeq &
     \left(\begin{array}{lll}
               \framep[n][0,...,p-1]   & : & \frametype[n][0,...,p-1]    \\
               \painting[n][0,...,p-1] & : & \paintingtype[n][0,...,p-1]
@@ -478,11 +478,12 @@ $\depstype[n][0,...p-1]$:
                 \end{array}\right)                             \\
             \end{array}\right) \\
     \framep[n+1][0,...,(p+1)-1]                                                                    &
-    (\deps[n][0,...,p-1]:\depstype[n][0,...,p-1]) & :      & \frametype[n+1][0,...,p]                             \\
+        \multicolumn{3}{l}{
+          (\deps[n][0,...,p-1]:\depstype[n][0,...,p-1]) :\frametype[n+1][0,...,p]}                             \\
     \framep[n+1][0,...,(0+1)-1]                                                                          &
     (\unitpoint)                                                                 & \defeq & (\unitpoint,unit) \\
     \framep[n+1][0,...,((p+1)+1)-1]                                                                  &
-    (\deps)                                                               & \defeq &
+    \deps[n][0,...,p]                                                               & \defeq &
     \left(\begin{array}{l}
               \framep[n+1][0,...,p]
               (\deps[n][0,...,p-1]), \\
@@ -493,10 +494,11 @@ $\depstype[n][0,...p-1]$:
               (d) \\
             \end{array}\right)                                                                      \\
     \restrftype[n][0,...,p-1]                                                              &
-    \left(\begin{array}{l}
+      \multicolumn{3}{l}{
+        \left(\begin{array}{l}
               \framep[n][0,...,p-1]:\frametype[n][0,...,p-1]                             \\
               \painting[n][0,...,p-1]:\paintingtype[n][0,...,p-1](\framep[n][0,...,p-1]) \\
-            \end{array}\right)          & :      & \U                                      \\
+            \end{array}\right) : \U}                                      \\
     \restrftype[n][0,...,0-1]                                                              &
     \left(\begin{array}{l}
               \unitpoint \\
@@ -523,20 +525,22 @@ $\depstype[n][0,...p-1]$:
               \end{array}\right) \rightarrow  \framep[n][p] \\
     \end{array}                                                    \\
     \layertype[n][p]                                                                       &
-    (\deps[n][0,...,p]:\depstype[n][0,...,p])
-    & :      & \Type               \\
+        \multicolumn{3}{l}{
+          (\deps[n][0,...,p]:\depstype[n][0,...,p])
+            : \U}               \\
     \layertype[n][p]                                                                       &
-    (\deps[n][0,...,p])
+    \deps[n][0,...,p]
     & \defeq & \framep[n+1][p]
     (\deps[n][0,...,p-1])
     \rightarrow \U                                                                               \\
     \layer[n][p]                                                                           &
-    (\deps[n][0,...,p]:\depstype[n][0,...,p])
-    & :      & \layertype[n][p]
-    (\deps[n][0,...,p])
+        \multicolumn{3}{l}{
+          (\deps[n][0,...,p]:\depstype[n][0,...,p])
+           : \layertype[n][p]
+    (\deps[n][0,...,p])}
     \\
     \layer[n][p]                                                                           &
-    (\deps[n][0,...,p])
+    \deps[n][0,...,p]
     & \defeq &
     d \mapsto \Pi\omega.\,\painting[n][p](\restrf[n][p](d))\\
   \end{array}
@@ -637,7 +641,7 @@ Thanks to $\restrptype[n][0,...,p-1]$, we can mutually define $\restrf[n+1][0,..
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \depscohstype[n][0,..,p-1] & \defeq &
+    \depscohstype[n][0,..,p-1] & & \defeq &
     \left(\begin{array}{lcl}
               \fulldeps[n][0,...,n] & : & \fulldepstype[n][0,...,n] \\
               \restrp[n][0,...p-1]  & : & \restrptype[n][0,...,p-1](\fulldeps[n]) \\
@@ -647,8 +651,10 @@ Thanks to $\restrptype[n][0,...,p-1]$, we can mutually define $\restrf[n+1][0,..
                     \restrp[n][0,...,p-1] \\
                   \end{array}\right) \\
             \end{array}\right) \\
-    \overline{\deps}(\depscohs[n][0,...,p-1]:\depscohstype[n][0,...,p-1]) & :      & \depstype[n+1][0,...,p] \\
-    \overline{\deps}(\depscohs)               & \defeq &
+    \overline{\deps} &
+        \multicolumn{3}{l}{
+          (\depscohs[n][0,...,p-1]:\depscohstype[n][0,...,p-1]) : \depstype[n+1][0,...,p]} \\
+    \overline{\deps} & \depscohs[n][0,...,p-1]               & \defeq &
     \left(\begin{array}{l}
               \framep[n+1][0,...,p](\depscohs.\fulldeps.\deps[n][0,...,p-1])   \\
               \painting[n+1][0,...,p](\depscohs.\fulldeps[n]) \\
@@ -664,7 +670,7 @@ Thanks to $\restrptype[n][0,...,p-1]$, we can mutually define $\restrf[n+1][0,..
               \end{array}\right)
     }                                                                                                                                                        \\
     \restrf[n+1][0,...,(0+1)-1]                                                        &
-    (E)
+    E
     & \defeq & (\unitpoint,\lambda q. \lambda\epsilon. \lambda \_.\unitpoint) \\
     \restrf[n+1][0,...,((p+1)+1)-1]                                                    &
     (\depscohs[n][0,..,p])                                                       & \defeq &
@@ -722,10 +728,11 @@ Thanks to $\restrptype[n][0,...,p-1]$, we can mutually define $\restrf[n+1][0,..
                     \end{array}\right)(d))                          \\
     \end{array}\right.                                                                                        \\
     \restrltype[n][p]                                                            &
+    \multicolumn{3}{l}{
       (\depscohs[n][0,...,p-1]:\depscohstype[n][0,..,p-1])
-      & :      & \U                                                                               \\
+      : \U}                                                                               \\
     \restrltype[n][p]                                                            &
-      (\depscohs[n][0,..,p-1])
+      \depscohs[n][0,..,p-1]
     & \defeq &
     \left\{\begin{array}{l}
     \Pi q \leq n. \Pi \epsilon. \Pi d: \framep[n+2][p](\overline{\deps}(\depscohs[n][0,..,p-1])).\, \\
@@ -734,10 +741,11 @@ Thanks to $\restrptype[n][0,...,p-1]$, we can mutually define $\restrf[n+1][0,..
         (\depscohs[n][0,..,p-1])(d))
     \end{array}\right.\\
     \restrl[n][p]                                                                &
-      (\depscohs[n][0,..,p]:\depscohstype[n][0,..,p]) & :      &
-    \restrltype[n][p] (\depscohs[n][0,..,p])                                                   \\
+    \multicolumn{3}{l}{
+      (\depscohs[n][0,..,p]:\depscohstype[n][0,..,p]) :
+    \restrltype[n][p] (\depscohs[n][0,..,p])}                                                   \\
     \restrl[n][p]                                                                &
-    (\depscohs[n][0,..,p])                                                     & \defeq &
+    \depscohs[n][0,..,p]                                                     & \defeq &
     \lambda q\leq n. \lambda \epsilon.\,\lambda d.\lambda l.\overrightarrow{\cohf[n][p][q][q][\epsilon][\omega](d)}{\restrp[n][p][q][\epsilon](\restrf[n][p][q][\epsilon](\depscohs[n][0,..,p-1])(d))(l \omega)}                          \\
   \end{array}
 \end{equation*}
@@ -843,7 +851,8 @@ This is enough to define $\cohf[n][p]$, using $\UIP$ to solve the dependency in 
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
     \cohf[n+1][0,...,p]                                                           &
-    \left(\begin{array}{l}
+    \multicolumn{3}{l}{
+      \left(\begin{array}{l}
               \fulldepscohs[n]:\fulldepscohstype[n]                                    \\
               \cohp[n][0,...,p-1]:\cohptype[n][0,...,p-1](\fulldepscohs[n]) \\
               \coht[n][0,...,p-1]:\cohttype[n][0,...,p-1]
@@ -851,7 +860,7 @@ This is enough to define $\cohf[n][p]$, using $\UIP$ to solve the dependency in 
                   \fulldepscohs[n]    \\
                   \cohp[n][0,...,p-1] \\
                 \end{array}\right)
-            \end{array}\right) & :      & \cohftype[n+1][0,...,p]                                                                                             \\
+            \end{array}\right) : \cohftype[n+1][0,...,p]}                                                                                             \\
     \cohf[n][0,...,(0+1)-1]                                                           &
     \left(\begin{array}{l}
               \unitpoint \\
@@ -885,10 +894,11 @@ This is enough to define $\cohf[n][p]$, using $\UIP$ to solve the dependency in 
                 \end{array}\right)(d)(l))                                    \\
             \end{array}\right)                                                                                    \\
     \cohttype[n][0,...,p-1]                                                     &
-    \left(\begin{array}{l}
+      \multicolumn{3}{l}{
+        \left(\begin{array}{l}
               \fulldepscohs[n]:\fulldepscohstype[n]                         \\
               \cohp[n][0,...,p-1]:\cohptype[n][0,...,p-1](\fulldepscohs[n]) \\
-            \end{array}\right)            & :      & \U                                                                                                        \\
+            \end{array}\right)      : \U}                                                                                                        \\
     \cohttype[n][0,...,0-1]                                                     &
     \left(\begin{array}{l}
               (E',E)     \\
@@ -930,16 +940,17 @@ This is enough to define $\cohf[n][p]$, using $\UIP$ to solve the dependency in 
                 \end{array}\right)                                         \\
             \end{array}\right)                                                               \\
     \cohl[n][p]                                                                 &
-    \left(\begin{array}{l}
+    \multicolumn{3}{l}{
+      \left(\begin{array}{l}
               \fulldepscohs[n]:\fulldepscohstype[n]   \\
               \cohp[n][0,...,p]:\cohptype[n][0,...,p]         \\
               \coht[n][0,...,p]:\cohttype[n][0,...,p] \\
-            \end{array}\right)                                  & :      &
-    \begin{array}{l}
-      \Pi q\leq n.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.                                                                             \\
-      \Pi d.\Pi l. \overrightarrow{\cohf[n][p][r+1][q+1][\epsilon][\omega]}{(\restrl[n][p][q][\epsilon](\restrl[n][p][r][\omega](l)))} = \\
-      \restrl[n][p][r][\omega](\restrl[n][p][q+1][\epsilon](l))
-    \end{array}                                         \\
+            \end{array}\right)                                 :
+      \begin{array}{l}
+        \Pi q\leq n.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.                                                                             \\
+        \Pi d.\Pi l. \overrightarrow{\cohf[n][p][r+1][q+1][\epsilon][\omega]}{(\restrl[n][p][q][\epsilon](\restrl[n][p][r][\omega](l)))} = \\
+        \restrl[n][p][r][\omega](\restrl[n][p][q+1][\epsilon](l))
+      \end{array}}                                         \\
     \cohl[n][p][q][\epsilon][r][\omega]                                         &
     \left(\begin{array}{l}
               \fulldepscohs[n]  \\
