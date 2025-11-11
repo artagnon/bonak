@@ -335,6 +335,8 @@ Note that for a fixed constant $n$, relying on the evaluation rules of type theo
 \renewcommandx{\cohl}[6][1,2,3,4,5,6]{\coh{layer}[][#3][#4][#5][#6][#1,#2][][]}
 \renewcommandx{\cohp}[6][1,2,3,4,5,6]{\coh{painting}[][#3][#4][#5][#6][#1,#2][][]}
 
+\section{Outline of the recursive structure of iterated parametricity construction}
+
 In \citep{hr25}, the well-foundedness was justified by induction on $n$ and subinductions, one on $p$ to mutually build $\framep[n][p]$, $\restrf[n][p]$ and $\cohf[n][p]$, and three others to build each of $\painting[n][p]$, $\restrp[n][p]$ and $\cohp[n][p]$ by induction on $n-p$.
 
 Since $\restrf[n][p]$ is referring to $\framep[n][p]$ and $\framep[n-1][p]$, and $\cohf[n][p]$ is referring to $\restrf[n][p]$ and $\restrf[n-1][p]$, thus also to $\framep[n][p]$, $\framep[n-1][p]$ and $\framep[n-2][p]$, we built all of these 6 components at the same time. But equations were also needed to state the properties of $\framep[n][p]$, $\framep[n-1][p]$ and $\restrf[n][p]$ so that we were building by induction on $n+p$ (that is on $n$, using the convention of \citep{hr25}) the following block of information:
@@ -391,7 +393,13 @@ Schematically, using dotted arrows for dependencies in the type and plain arrows
 
 In particular, the mutual dependency on one side of $\framep[n][0,...,p-1]$ within the type of $\restrf[n][0,...,p-1]$ and on the other side of $\restrf[n][0,...,p-1]$ within the definition of $\framep[n][0,...,p]$ requires to mutually define the type of $\restrf[n][0,...,p-1]$ together with $\framep[n][p]$ (or $\framep[n][0,...,p]$) as a function from $\restrf[n][0,...,p-1]$.
 
-To talk about sequences of $\framep$, $\painting$ or $\restrf$, we need to specify their types. The type of $\restrf$ will be defined mutually with $\framep$ of the same level, but the type of $\framep$, $\painting$ can be defined in advance, the second one being however dependent on the first one. In general, components of such sequences will have a type dependent on the previous components of the sequence, as it is the case for $\restrf$. So, the type of a sequence of length $p$ will be expressed as a $n$-iterated $\Sigma$-type. In the case of $\framep$ and $\painting$, there will be however no dependency, so an ordinary product can be used. If $\framep[n][0,...,p]$ is such a sequence of length $p+1$, we write $\framep[n][0,...,p-1]$ for its immediate subsequence of length $p$ and $\framep[n][p]$ for its last component. We can now define the types of sequences of $\framep$ and $\painting$ as follows:
+To talk about sequences of $\framep$, $\painting$ or $\restrf$, we need to specify their types. The type of $\restrf$ will be defined mutually with $\framep$ of the same level, but the type of $\framep$, $\painting$ can be defined in advance, the second one being however dependent on the first one. In general, components of such sequences will have a type dependent on the previous components of the sequence, as it is the case for $\restrf$. So, the type of a sequence of length $p$ will be expressed as a $n$-iterated $\Sigma$-type. In the case of $\framep$ and $\painting$, there will be however no dependency, so an ordinary product can be used. If $\framep[n][0,...,p]$ is such a sequence of length $p+1$, we write $\framep[n][0,...,p-1]$ for its immediate subsequence of length $p$ and $\framep[n][p]$ for its last component.
+
+\section{The construction}
+
+\subsection{Specifying frames and paintings}
+
+We can now define the types of sequences of $\framep$ and $\painting$ as follows:
 
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
@@ -406,11 +414,14 @@ To talk about sequences of $\framep$, $\painting$ or $\restrf$, we need to speci
   \end{array}
 \end{equation*}
 
-Formally, this can be described as: (NOTE: in frame, p should be understood as (p+1)-1)
+\subsection{Defining frames and specifying frame restrictions}
+
+Frames are defined mutually with the types of frame restrictions,
+using auxiliary definitions for the types and definitions of layers:
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \framep[n+1][0,...,p]                                                                    &
+    \framep[n+1][0,...,(p+1)-1]                                                                    &
     \left(\begin{array}{l}
               \framep[n][0,...,p-1]:\frametype[n][0,...,p-1]                             \\
               \painting[n][0,...,p-1]:\paintingtype[n][0,...,p-1](\framep[n][0,...,p-1]) \\
@@ -540,6 +551,8 @@ At this stage, it is convenient to use an abbreviation to combine sequences $\fr
 so that the type of $\framep[n+1][0,...,p]$ can be shortened into $\depstype[n][0,..,p-1] \rightarrow \frametype[n+1][0,...,p]$ and similarly for $\layertype[n][p]$ and $\layer[n][p]$.
 Later, we shall write $\deps.\framep$, $\deps.\painting$, $\deps.\restrf$ for the corresponding projections of a $\deps$. By abuse of notation, we also write $\unitpoint$ for the only inhabitant of $\depstype[n][0,..,0-1]$.
 
+\subsection{Defining paintings}
+
 Defining $\painting[n+1][p]$, in addition to the type dependency in $\framep[n+1][p]$, requires the definition of $\painting[n][p-1]$, thus also $\framep[n][p-1]$ by typing dependency, as well as $\restrf[n][p-1]$. Since $\painting[n+1][p]$ also depends on $\painting[n+1][p+1]$ when $p<n+1$, these dependencies are actually between $\painting[n+1][p,...,n+1]$, $\painting[n][p,...,n]$, $\framep[n+1][p,...,n+1]$, $\framep[n][p,...,n]$ and $\restrf[n][p,...,n]$. Also, for the case $p=n$, this requires the assumption of an inhabitant $X_{n}$ of $\nu$Set$^{=n}$. Finally, $\framep[n+1][p,...,n+1]$, $\framep[n+1][p,...,n]$ and $\restrf[n][p,...,n]$ respectively depend on the earlier values $\framep[n+1][0,...,p-1]$, $\framep[n][0,...,p-1]$ and $\restrf[n][0,...,p-1]$.  Below, we use dashed underline and dashed arrows for dependencies in subconstructions, here in the construction of $\framep$ at level $n$ and $\restrftype$ at level $n$:
 \begin{center}
   \fontsize{7.2}{9}\selectfont
@@ -602,6 +615,8 @@ From which we can deduce $\painting[n+1][0,...,p]$ by a second recursion, this t
   \end{array}
 \end{equation*}
 
+\subsection{Specifying painting restrictions}
+
 At this stage, we are able to define $\framep[n+1][0,...,n]$, $\painting[n+1][0,...,n]$ and $\restrftype[n][0,...,n-1]$ from $\framep[n][0,...,n-1]$, $\painting[n][0,...,n-1]$ and $\restrf[n][0,...,n-1]$, that is from $\deps[n][0,...,n-1]$. To go further, we need to define the sequence $\restrptype[n][0,...,p]$ of types of painting restrictions:
 
 \begin{equation*}
@@ -620,6 +635,8 @@ At this stage, we are able to define $\framep[n+1][0,...,n]$, $\painting[n+1][0,
     \right)                                                                                              \\
   \end{array}
 \end{equation*}
+
+\subsection{Defining frame restrictions and specifying frame coherence laws}
 
 Thanks to $\restrptype[n][0,...,p-1]$, we can mutually define $\restrf[n+1][0,...,p]$ and $\cohftype[n][0,...,p-1]$ from ``full dependencies'', that is from $\framep[n][0,...,n]$, $\painting[n][0,...,n]$, $\restrf[n][0,...,n]$ and some $E:\framep[n+1][n](\deps[n][0,...,n-1]) \rightarrow \U$, using abbreviations in passing for $\restrl$ and $\restrltype$:
 
@@ -843,6 +860,8 @@ We can then extend $\overline{\deps}$ to build $\fulldeps$ from $\fulldepscohs$:
 
 Also, when $n$ is 0, we write $(E',E)$ to denote an element $(E', E)$ of $\fulldepscohstype[0]$.
 
+\subsection{Defining painting restrictions}
+
 Armed with $\restrf$, $\cohftype$ and these abbreviations, it is now possible to define $\restrp[n][p]$ by recursion on $n-p$:
 
 \begin{equation*}
@@ -885,7 +904,7 @@ From which we can deduce $\restrp[n][0,...,p]$ again by a second recursion, this
   \end{array}
 \end{equation*}
 
-\section{...}
+\subsection{Specifying painting coherence laws}
 
 At this stage, we are then able to define $\restrf[n+1][0,...,p]$, $\restrp[n+1][0,...,p]$ and $\cohftype[n][0,...,p]$
 from $\depscohs[n][0,...,p-1]$ at the previous level. To go further, we need to define the
@@ -907,6 +926,8 @@ sequence $\cohptype[n][0,...,p-1]$ of types of painting coherence laws:
     \right)                                                                                                            \\
   \end{array}
 \end{equation*}
+
+\subsection{Defining frame coherence laws and specifying frame 2-dimensional coherence laws}
 
 This is enough to define $\cohf[n][p]$, using $\UIP$ to solve the dependency in $\coht[n][p]$.
 
@@ -1069,6 +1090,8 @@ We can then extend $\overline{\depscohs}$ to build $\fulldepscohs$ from $\fullde
           \end{array}\right)             \\
 \end{align*}
 
+\subsection{Defining painting coherence laws}
+
 The last key construction we need is $\cohp[n+1][p]$, which is by recursion on $n-p$:
 
 \begin{equation*}
@@ -1114,6 +1137,7 @@ From which we can deduce $\cohp[n+1][0,...,p]$ again by a second recursion, this
   \end{array}
 \end{equation*}
 
+\subsection{Completing the construction by induction}
 
 Armed with all the constructions and assuming enough $E:\framep[n][n-1]
 \rightarrow \U$ given, we can now define $\framep[n][p]$,
