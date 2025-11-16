@@ -380,8 +380,8 @@ $\restrf[n+1][p]$, $\painting[n+2][p]$, $\painting[n+1][p]$ and
 $\restrp[n+1][p]$. This means that we build instead by induction a block of the form:
 
 \begin{align*}
-  \framep[n][p]   & : \U[m]                                                                                                     & \mbox{for all $p\leq n$} \\
-  \painting[n][p] & : \framep[n][p] \rightarrow \U[m]                                                                           & \mbox{for all $p\leq n$} \\
+  \framep[n][p]   & : \U                                                                                                        & \mbox{for all $p\leq n$} \\
+  \painting[n][p] & : \framep[n][p] \rightarrow \U                                                                              & \mbox{for all $p\leq n$} \\
   \restrf[n][p]   & : \Pi q \leq n+p.\, \Pi \epsilon.\, \framep[n+1][p] \rightarrow \framep[n][p]                               & \mbox{for all $p\leq n$} \\
   \restrp[n][p]   & : \Pi q \leq n+p.\, \Pi \epsilon.\, \Pi d:\framep[n+1][p].\,                                                                           \\
                   & \;\;\;\;\painting[n+1][p](d) \rightarrow \painting[n][p](\restrf[n][p](d))                                  & \mbox{for all $p\leq n$} \\
