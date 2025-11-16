@@ -892,8 +892,7 @@ Thanks to $\cohptype[n][0,...,p-1]$, we can mutually define $\cohf[n+1][0,...,p]
               \lambda q.\lambda r.\lambda \epsilon.\lambda \omega.\lambda (d,l). \\
               (\cohf[n][0,...,p][q][r][\epsilon][\omega]
               (\fulldepscoht[n])(d), \cohl[n][p][q][r][\epsilon][\omega]
-              (
-              \fulldepscoht[n])(d)(l))                                           \\
+              (\fulldepscoht[n])(d)(l))                                          \\
             \end{array}\right)                                                                                                                                                               \\
     \cohttype[n][0,...,p-1]                                          &
     \left(\begin{array}{l}
@@ -1063,7 +1062,7 @@ following:
   \item $\framep[n+1][0,...,n]$ comes from $\deps[n]$ which holds by assumptions (using $\framep[n][0,...,n-1]$, $\painting[n][0,...,n-1]$ and $\restrf[n][0,...,n-1]$)
   \item $\painting[n+1][0,...,n]$ comes from $\fulldeps[n]$ which holds by assumptions (also using $E$)
   \item $\restrf[n+1][0,...,n]$ comes from $\depscohs[n][0,...,n-1]$ which holds by assumptions (additionally using the assumptions of $\restrp[n][0,...,n-1]$ and $\cohf[n][0,...,n-1]$)
-  \item $\restrp[n+1][0,...,n]$ assuming $E':\framep[n+2][n+1](\overline{\deps}(\depscohs[n][0,...,n-1])) \rightarrow \U$ comes from $\fulldepscohs[n][0,...,n-1]$ which holds by assumptions (additionally using $E'$)
+  \item $\restrp[n+1][0,...,n]$ assuming $E':\framep[n+2][n+1](\overline{\deps}(\depscohs[n][0,...,n-1])) \rightarrow \U$ comes from $\fulldepscohs[n]$ which holds by assumptions (additionally using $E'$)
   \item $\cohf[n+1][0,...,n]$ assuming $E'$ comes from $\depscoht[n][0,...,n-1]$ which holds by assumptions (additionally using the assumption of $\cohp[n][0,...,n-1]$ and proving $\coht[n][0,...,n-1]$ by uniqueness of identity proofs)
   \item $\cohp[n+1][0,...,n]$ assuming $E'$ and $E'': \framep[n+3][n+2](\overline{\deps}(\overline{\depscohs}(\depscoht[n][0,...,n-1]))) \rightarrow \U$ comes from $\fulldepscoht[n][0,...,n-1]$ which holds by assumptions (additionally using $E''$)
 \end{itemize}
