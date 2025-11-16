@@ -1076,70 +1076,43 @@ structure on which we can reason by induction, for $D:\Xto{m}{n}$
 given:
 
 \begin{align*}
-  \depscohs[n][p]\begin{cases}
-                   \deps[n][p]\begin{cases}
-                 \framep[n][0,...,n-1]   & : \frametype[n][0,...,n-1]                           \\
-                 \painting[n][0,...,n-1] & : \paintingtype[n][0,...,n-1](\framep[n][0,...,n-1]) \\
-                 \restrf[n][0,...,n-1]   & : \restrftype[n][0,...,n-1]
-                 \left(\begin{array}{l}
+  \rotatebox[origin=c]{90}{\depscohs[n][0,...,n-1]}\begin{cases}
+                                                     \rotatebox[origin=c]{90}{\deps[n][0,...,n-1]}\begin{cases}
+                                                   \framep[n][0,...,n-1]   : \frametype[n][0,...,n-1]                           \\
+                                                   \painting[n][0,...,n-1] : \paintingtype[n][0,...,n-1](\framep[n][0,...,n-1]) \\
+                                                   \restrf[n][0,...,n-1]   : \restrftype[n][0,...,n-1]
+                                                   \left(\begin{array}{l}
                 \framep[n][0,...,n-1]   \\
                 \painting[n][0,...,n-1] \\
               \end{array}\right)
-               \end{cases} \\
-                   \restrp[n][0,...,n-1](E:\framep[n+1][n]
-                   \left(\begin{array}{l}
-              \framep[n][0,...,n-1]   \\
-              \painting[n][0,...,n-1] \\
-              \restrf[n][0,...,n-1]   \\
-            \end{array}\right)\rightarrow \U) & : \restrptype[n][0,...,n-1]
-                   \left(\begin{array}{l}
-              \framep[n][0,...,n-1]   \\
-              \painting[n][0,...,n-1] \\
-              \restrf[n][0,...,n-1]   \\
-              E                       \\
-            \end{array}\right)                                                             \\
-                   \cohf[n][0,...,n-1](E:\framep[n+1][n]
-                   \left(\begin{array}{l}
-              \framep[n][0,...,n-1]   \\
-              \painting[n][0,...,n-1] \\
-              \restrf[n][0,...,n-1]   \\
-            \end{array}\right)\rightarrow \U) & : \cohftype[n][0,...,n-1]
-                   \left(\begin{array}{l}
-              \framep[n][0,...,n-1]   \\
-              \painting[n][0,...,n-1] \\
-              \restrf[n][0,...,n-1]   \\
-              E                       \\
-              \restrp[n][0,...,n-1]   \\
+                                                 \end{cases} \\
+                                                     E:\framep[n+1][n]
+                                                     (\deps[n][0,...,n-1])\rightarrow \U                                                                                       \\
+                                                     \restrp[n][0,...,n-1](E) : \restrptype[n][0,...,n-1]
+                                                     \left(\begin{array}{l}
+              \deps[n][0,...,n-1] \\
+              E                   \\
+            \end{array}\right)                                                                                                 \\
+                                                     \cohf[n][0,...,n-1](E)   : \cohftype[n][0,...,n-1]
+                                                     \left(\begin{array}{l}
+              \deps[n][0,...,n-1]                 \\
+              E:\framep[n+1][n]
+              (\deps[n][0,...,n-1])\rightarrow \U \\
+              \restrp[n][0,...,n-1]               \\
             \end{array}\right)
-                 \end{cases} \\
+                                                   \end{cases} \\
+  E': \framep[n+2][n+1](\overline{\deps}
+  (\depscohs[n][0,...,n-1])\rightarrow \U                                                                                                                                        \\
   \cohp[n][0,...,n-1]
   \left(\begin{array}{l}
-            E:\framep[n+1][n]
-            \left(\begin{array}{l}
-                \framep[n][0,...,n-1]   \\
-                \painting[n][0,...,n-1] \\
-                \restrf[n][0,...,n-1]   \\
-              \end{array}\right)\rightarrow \U \\
-            E':\framep[n+2][n+1](\overline{\deps}
-            \left(\begin{array}{l}
-                \framep[n][0,...,n-1]   \\
-                \painting[n][0,...,n-1] \\
-                \restrf[n][0,...,n-1]   \\
-                E                       \\
-                \restrp[n][0,...,n-1]   \\
-                \cohf[n][0,...,n-1]     \\
-              \end{array}\right))\rightarrow \U
+            E  \\
+            E' \\
           \end{array}\right)
   : \cohptype[n][0,...,n-1]
   \left(\begin{array}{l}
-            \framep[n][0,...,n-1]   \\
-            \painting[n][0,...,n-1] \\
-            \restrf[n][0,...,n-1]   \\
-            E                       \\
-            \restrp[n][0,...,n-1]   \\
-            \cohf[n][0,...,n-1]     \\
+            \depscohs[n][0,...,n-1] \\
             E'                      \\
-          \end{array}\right)                                                                           \\
+          \end{array}\right)                                                                                                                                                  \\
 \end{align*}
 
 Indeed, to build this structure at level $n+1$, from level $n$, it is
