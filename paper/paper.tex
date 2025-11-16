@@ -162,7 +162,7 @@
 \newcommandx{\deps}[2][1,2]{\depsp{}[][][][#1][#2][][]}
 \newcommandx{\fulldeps}[1][1]{\depsp{full}[][][][#1][][][]}
 \newcommandx{\depscohs}[2][1,2]{\depsp{cohs}[][][][#1][#2][][]}
-\newcommandx{\fulldepscohs}[1][1]{\depsp{fullcohs}[][#1][][][]}
+\newcommandx{\fulldepscohs}[1][1]{\depsp{fullcohs}[][][][#1][][][]}
 \newcommandx{\depscoht}[2][1,2]{\depsp{coht}[][][][#1][#2][][]}
 \newcommandx{\fulldepscoht}[1][1]{\depsp{fullcoht}[][][][#1][][][]}
 \newcommandx{\depstype}[2][1,2]{\depstypep{}[][][][#1][#2][][]}
@@ -858,71 +858,59 @@ sequence $\cohptype[n][0,...,p-1]$ of types of painting coherence laws:
 
 \subsection{Defining frame coherence laws and specifying frame 2-dimensional coherence laws}
 
-This is enough to define $\cohf[n][p]$, using $\UIP$ to solve the dependency in $\coht[n][p]$.
+Thanks to $\cohptype[n][0,...,p-1]$, we can mutually define $\cohf[n+1][0,...,p]$ and $\cohttype[n][0,...,p-1]$ from $\fulldepscohs[n][0,...,p-1]$, abbreviating this and the dependency in a $\coht[n][0,...,p-1]$ as $\depscohttype[n][0,...,p-1]$, and using also abbreviations in passing for $\cohl$ and $\cohltype$. It is also convenient to build $\depscohs[n+1][0,...,p]$ from $\depscoht[n][0,...,p-1]$, so that we can now build $\framep[n+3][p]$. Thus, we also include this abbreviation in the definition:
 
-\begin{equation*}
+\begin{align*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \cohf[n+1][0,...,p]                 &
-    \multicolumn{3}{l}{
+    \depscohttype[n][0,..,p-1]                                       &                                                   & \defeq                                                                            &
+    \left(\begin{array}{lll}
+              \fulldepscohs[n]    & : & \fulldepscohstype[n]                      \\
+              \cohp[n][0,...p-1]  & : & \cohptype[n][0,...,p-1](\fulldepscohs[n]) \\
+              \coht[n][0,...,p-1] & : & \cohttype[n][0,...,p-1]
+              \left(\begin{array}{l}
+                  \fulldepscohs[n]    \\
+                  \cohp[n][0,...,p-1] \\
+                \end{array}\right)                                           \\
+            \end{array}\right)                                                                                                                                                \\
+    \overline{\depscohs}                                             & (\depscoht[n][0,...,p]:\depscohttype[n][0,...,p]) & :                                                                                 & \depscohstype[n+1][0,...,p] \\
+    \overline{\depscohs}                                             & \depscoht[n][0,...,p]                             & \defeq                                                                            &
     \left(\begin{array}{l}
-                \fulldepscohs[n]:\fulldepscohstype[n]                         \\
-                \cohp[n][0,...,p-1]:\cohptype[n][0,...,p-1](\fulldepscohs[n]) \\
-                \coht[n][0,...,p-1]:\cohttype[n][0,...,p-1]
-                \left(\begin{array}{l}
-                    \fulldepscohs[n]    \\
-                    \cohp[n][0,...,p-1] \\
-                  \end{array}\right)
-              \end{array}\right) : \cohftype[n+1][0,...,p]}                                                                \\
-    \cohf[n][0,...,(0+1)-1]             &
-    \left(\begin{array}{l}
-              \unitpoint \\
-              \unitpoint \\
-              \unitpoint \\
-            \end{array}\right)              & \defeq & (\unitpoint,\lambda q.\lambda r. \lambda\epsilon. \lambda\omega.\lambda \_.\refl) \\
-    \cohf[n][0,...,((p+1)+1)-1]         &
-    \left(\begin{array}{l}
-              \fulldepscohs[n]  \\
-              \cohp[n][0,...,p] \\
-              \coht[n][0,...,p] \\
-            \end{array}\right)              & \defeq &
+              \overline{\deps}(\depscoht.\fulldepscohs.\depscohs[n][0,...,p-1]) \\
+              \restrp[n+1][p](\depscoht.\fulldepscohs[n][0,...,n])              \\
+              \cohf[n+1][p](\depscoht[n][0,...,p-1])                            \\
+            \end{array}\right)                                                                                                                                                                \\
+    \cohf[n+1][0,...,p]                                              &
+    (\fulldepscoht[n]:\fulldepscohttype[n])                          & :                                                 & \cohftype[n+1][0,...,p]                                                                                         \\
+    \cohf[n][0,...,(0+1)-1]                                          &
+    (\unitpoint)                                                     & \defeq                                            & (\unitpoint,\lambda q.\lambda r. \lambda\epsilon. \lambda\omega.\lambda \_.\refl)                               \\
+    \cohf[n][0,...,((p+1)+1)-1]                                      &
+    (\fulldepscoht[n])                                               & \defeq                                            &
     \left(\begin{array}{l}
               \cohf[n+1][0,...,p]
-              \left(\begin{array}{l}
-                  \fulldepscohs[n]      \\
-                  \cohp[n+1][0,...,p-1] \\
-                  \coht[n+1][0,...,p-1] \\
-                \end{array}\right),                                        \\
+              (\fulldepscoht[n]),                                                \\
               \lambda q.\lambda r.\lambda \epsilon.\lambda \omega.\lambda (d,l). \\
               (\cohf[n][0,...,p][q][r][\epsilon][\omega]
-              \left(\begin{array}{l}
-                  \fulldepscohs[n]      \\
-                  \cohp[n+1][0,...,p-1] \\
-                  \coht[n+1][0,...,p-1] \\
-                \end{array}\right)(d), \cohl[n][p][q][r][\epsilon][\omega]
-              \left(\begin{array}{l}
-                  \fulldepscohs[n]  \\
-                  \cohp[n][0,...,p] \\
-                  \coht[n][0,...,p] \\
-                \end{array}\right)(d)(l))                                    \\
-            \end{array}\right)                                            \\
-    \cohttype[n][0,...,p-1]             &
-    \multicolumn{3}{l}{
+              (\fulldepscoht[n])(d), \cohl[n][p][q][r][\epsilon][\omega]
+              (
+              \fulldepscoht[n])(d)(l))                                           \\
+            \end{array}\right)                                                                                                                                                               \\
+    \cohttype[n][0,...,p-1]                                          &
     \left(\begin{array}{l}
               \fulldepscohs[n]:\fulldepscohstype[n]                         \\
               \cohp[n][0,...,p-1]:\cohptype[n][0,...,p-1](\fulldepscohs[n]) \\
-            \end{array}\right)      : \U}                                                                \\
-    \cohttype[n][0,...,0-1]             &
+            \end{array}\right) & :                                                 & \U                                                                                                                                                      \\
+    \cohttype[n][0,...,0-1]                                          &
     \left(\begin{array}{l}
               (E',E)     \\
               \unitpoint \\
-            \end{array}\right)              & \defeq &
-    \unittype                                                                                                                          \\
-    \cohttype[n][0,...,(p+1)-1]         &
+            \end{array}\right)                                           & \defeq                                            &
+    \unittype                                                                                                                                                                                                                              \\
+    \cohttype[n][0,...,(p+1)-1]                                      &
     \left(\begin{array}{l}
               \fulldepscohs[n]  \\
               \cohp[n][0,...,p] \\
-            \end{array}\right)              & \defeq &
+            \end{array}\right)                                           & \defeq                                            &
     \left(\begin{array}{l}
               \Sigma \coht[n][0,...,p-1]
               :\cohttype[n][0,...,p-1]
@@ -932,73 +920,25 @@ This is enough to define $\cohf[n][p]$, using $\UIP$ to solve the dependency in 
                 \end{array}\right).                                           \\
               \Pi q\leq n.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.\,\Pi \theta.\, \\
               \fulldepscohs.\depscohs.\cohf[n][p][r][p][\omega][\theta] \circ \cohf[n+1][p][q+1][p][\epsilon][\theta]
-              \left(\begin{array}{l}
-                  \fulldepscohs[n]    \\
-                  \cohp[n][0,...,p-1] \\
-                  \coht[n][0,...,p-1]
-                \end{array}\right)
+              (\fulldepscoht[n])
               \circ \fulldepscohs.\depscohs.\cohf[n][p][q][r][\epsilon][\omega] =   \\
               \cohf[n+1][p][q+1][r+1][\epsilon][\omega]
-              \left(\begin{array}{l}
-                  \fulldepscohs[n+1]  \\
-                  \cohp[n][0,...,p-1] \\
-                  \coht[n][0,...,p-1]
-                \end{array}\right)
+              (\fulldepscoht[n+1])
               \circ \fulldepscohs.\depscohs.\cohf[n][p][q][p][\epsilon][\theta]
               \circ \cohf[n+1][p][r][p][\omega][\theta]
-              \left(\begin{array}{l}
-                  \fulldepscohs[n]    \\
-                  \cohp[n][0,...,p-1] \\
-                  \coht[n][0,...,p-1]
-                \end{array}\right)                                             \\
-            \end{array}\right)                       \\
-    \cohl[n][p]                         &
-    \multicolumn{3}{l}{
-      \left(\begin{array}{l}
-              \fulldepscohs[n]:\fulldepscohstype[n]   \\
-              \cohp[n][0,...,p]:\cohptype[n][0,...,p] \\
-              \coht[n][0,...,p]:\cohttype[n][0,...,p] \\
-            \end{array}\right)                                 :
+              (\fulldepscoht[n])                                                    \\
+            \end{array}\right)                                                                                                                           \\
+    \cohl[n][p]                                                      &
+    (\fulldepscoht[n]:\fulldepscohttype[n])                          & :                                                 &
     \begin{array}{l}
-        \Pi q\leq n.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.                                                                             \\
-        \Pi d.\Pi l. \overrightarrow{\cohf[n][p][r+1][q+1][\epsilon][\omega]}{(\restrl[n][p][q][\epsilon](\restrl[n][p][r][\omega](l)))} = \\
-        \restrl[n][p][r][\omega](\restrl[n][p][q+1][\epsilon](l))
-      \end{array}} \\
-    \cohl[n][p][q][\epsilon][r][\omega] &
-    \left(\begin{array}{l}
-              \fulldepscohs[n]  \\
-              \cohp[n][0,...,p] \\
-              \cohf[n][0,...,p] \\
-            \end{array}\right)              & \defeq &
-    \lambda d. \lambda l. \lambda \theta. (\cohp[n][p][q][\epsilon][r][\omega](l))  ...                                                \\
+      \Pi q\leq n.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.                                                                             \\
+      \Pi d.\Pi l. \overrightarrow{\cohf[n][p][r+1][q+1][\epsilon][\omega]}{(\restrl[n][p][q][\epsilon](\restrl[n][p][r][\omega](l)))} = \\
+      \restrl[n][p][r][\omega](\restrl[n][p][q+1][\epsilon](l))
+    \end{array}                                                                                                     \\
+    \cohl[n][p][q][\epsilon][r][\omega]                              &
+    (\fulldepscoht[n])                                               & \defeq                                            &
+    \lambda d. \lambda l. \lambda \theta. (\cohp[n][p][q][\epsilon][r][\omega](l))  ...                                                                                                                                                    \\
   \end{array}
-\end{equation*}
-
-This is time for a new abbreviation:
-
-\begin{align*}
-  \depscohttype[n][0,..,p-1] \defeq
-  \left(\begin{array}{lll}
-            \fulldepscohs[n]    & : & \fulldepscohstype[n]                      \\
-            \cohp[n][0,...p-1]  & : & \cohptype[n][0,...,p-1](\fulldepscohs[n]) \\
-            \coht[n][0,...,p-1] & : & \cohttype[n][0,...,p-1]
-            \left(\begin{array}{l}
-                \fulldepscohs[n]    \\
-                \cohp[n][0,...,p-1] \\
-              \end{array}\right)                                           \\
-          \end{array}\right)
-\end{align*}
-
-It is also convenient to build $\depscohs[n+1][0,...,p]$ from $\depscoht[n][0,...,p]$ at the previous level:
-
-\begin{align*}
-  \overline{\depscohs}(\depscoht[n][0,...,p]:\depscohttype[n][0,...,p]) & :      & \depscohstype[n+1][0,...,p] \\
-  \overline{\depscohs}(\depscoht[n][0,...,p])                           & \defeq &
-  \left(\begin{array}{l}
-            \overline{\deps}(\depscoht.\fulldepscohs.\depscohs[n][0,...,p-1]) \\
-            \restrp[n+1][p](\depscoht.\fulldepscohs[n][0,...,n])              \\
-            \cohf[n+1][p](\depscoht[n][0,...,p-1])                            \\
-          \end{array}\right)                                      \\
 \end{align*}
 
 We need also the notion of full dependencies at the level of the coherence conditions of dimension 2, that combines a full $\depscoht[n][0,...,n]$ with a set $E:\framep[n+3][n+2](\overline{\depscohs}(\depscoht[n][0,...,n-1])) \rightarrow \U$:
@@ -1102,7 +1042,7 @@ given:
             \end{array}\right)
                                                    \end{cases} \\
   E': \framep[n+2][n+1](\overline{\deps}
-  (\depscohs[n][0,...,n-1])\rightarrow \U                                                                                                                                        \\
+  (\depscohs[n][0,...,n-1])\rightarrow \U                                                                                                                                                  \\
   \cohp[n][0,...,n-1]
   \left(\begin{array}{l}
             E  \\
@@ -1112,7 +1052,7 @@ given:
   \left(\begin{array}{l}
             \depscohs[n][0,...,n-1] \\
             E'                      \\
-          \end{array}\right)                                                                                                                                                  \\
+          \end{array}\right)                                                                                                                                                            \\
 \end{align*}
 
 Indeed, to build this structure at level $n+1$, from level $n$, it is
