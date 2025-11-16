@@ -1,6 +1,6 @@
 \documentclass{msc}
 
-\usepackage{amsmath, amssymb, mathrsfs, wasysym, tikz, tikz-cd, lmodern, mathpazo, anyfontsize, xargs, environ, multirow, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
+\usepackage{amsmath, amssymb, mathrsfs, mathtools, wasysym, tikz, tikz-cd, lmodern, mathpazo, anyfontsize, xargs, environ, multirow, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[prefix=bonak]{art.cls/xkeymask}
@@ -59,6 +59,16 @@
   \ensuremath{\mathsf{\color{russian-green}{restr}}_{
     \joinargs[\mathsf{\color{indian-yellow}{#1}}][#2][#3][#4]}^{\joinargs[#5][#6][#7]}}
   \setkeys*[bonak]{restr#1}{#8}
+}
+
+\newcommandx{\depsp}[8][2,3,4,5,6,7,8]{
+  \ensuremath{\mathsf{\color{russian-green}{deps}}_{
+    \joinargs[\mathsf{\color{indian-yellow}{#1}}][#2][#3][#4]}^{\joinargs[#5][#6][#7]}}
+}
+
+\newcommandx{\depstypep}[8][2,3,4,5,6,7,8]{
+  \ensuremath{\mathsf{\color{russian-green}{DEPS}}_{
+    \joinargs[\mathsf{\color{indian-yellow}{#1}}][#2][#3][#4]}^{\joinargs[#5][#6][#7]}}
 }
 
 % Coherence conditions for frame, layer, and painting: the general macro
@@ -149,18 +159,18 @@
 \newcommandx{\cohptype}[2][1,2]{\coh{PAINTING}[][][][][][#1,#2][][]}
 \newcommandx{\cohttype}[2][1,2]{\cohtwo{FRAME}[][][][][][#1,#2][][]}
 
-\newcommandx{\deps}[2][1,2]{\prim{deps}[][#1][#2][][]}
-\newcommandx{\fulldeps}[2][1,2]{\prim{fulldeps}[][#1][][][]}
-\newcommandx{\depscohs}[2][1,2]{\prim{depscohs}[][#1][#2][][]}
-\newcommandx{\fulldepscohs}[2][1,2]{\prim{fulldepscohs}[][#1][][][]}
-\newcommandx{\depscoht}[2][1,2]{\prim{depscoht}[][#1][#2][][]}
-\newcommandx{\fulldepscoht}[2][1,2]{\prim{fulldepscoht}[][#1][][][]}
-\newcommandx{\depstype}[2][1,2]{\prim{depstype}[][#1][#2][][]}
-\newcommandx{\fulldepstype}[2][1,2]{\prim{fulldepstype}[][#1][][][]}
-\newcommandx{\depscohstype}[2][1,2]{\prim{depscohstype}[][#1][#2][][]}
-\newcommandx{\fulldepscohstype}[2][1,2]{\prim{fulldepscohstype}[][#1][][][]}
-\newcommandx{\depscohttype}[2][1,2]{\prim{depscohttype}[][#1][#2][][]}
-\newcommandx{\fulldepscohttype}[2][1,2]{\prim{fulldepscohttype}[][#1][][][]}
+\newcommandx{\deps}[2][1,2]{\depsp{}[][][][#1][#2][][]}
+\newcommandx{\fulldeps}[1][1]{\depsp{full}[][][][#1][][][]}
+\newcommandx{\depscohs}[2][1,2]{\depsp{cohs}[][][][#1][#2][][]}
+\newcommandx{\fulldepscohs}[1][1]{\depsp{fullcohs}[][#1][][][]}
+\newcommandx{\depscoht}[2][1,2]{\depsp{coht}[][][][#1][#2][][]}
+\newcommandx{\fulldepscoht}[1][1]{\depsp{fullcoht}[][][][#1][][][]}
+\newcommandx{\depstype}[2][1,2]{\depstypep{}[][][][#1][#2][][]}
+\newcommandx{\fulldepstype}[2][1,2]{\depstypep{full}[][][][#1][][][]}
+\newcommandx{\depscohstype}[2][1,2]{\depstypep{cohs}[][][][#1][#2][][]}
+\newcommandx{\fulldepscohstype}[1][1]{\depstypep{fullcohs}[][][][#1][][][]}
+\newcommandx{\depscohttype}[2][1,2]{\depstypep{coht}[][][][#1][#2][][]}
+\newcommandx{\fulldepscohttype}[1][1]{\depstypep{fullcoht}[][][][#1][][][]}
 
 \newcommandx{\coht}[6][1,2,3,4,5,6]{\cohtwo{frame}[][#3][#4][#5][#6][#1,#2][][]}
 
@@ -1066,38 +1076,42 @@ structure on which we can reason by induction, for $D:\Xto{m}{n}$
 given:
 
 \begin{align*}
-  \framep[n][0,...,n-1]             & : \frametype[n][0,...,n-1]                           \\
-  \painting[n][0,...,n-1]           & : \paintingtype[n][0,...,n-1](\framep[n][0,...,n-1]) \\
-  \restrf[n][0,...,n-1]             & : \restrftype[n][0,...,n-1]
-  \left(\begin{array}{l}
-            \framep[n][0,...,n-1]   \\
-            \painting[n][0,...,n-1] \\
-          \end{array}\right)                                                            \\
-  \restrp[n][0,...,n-1](E:\framep[n+1][n]
-  \left(\begin{array}{l}
-            \framep[n][0,...,n-1]   \\
-            \painting[n][0,...,n-1] \\
-            \restrf[n][0,...,n-1]   \\
-          \end{array}\right)\rightarrow \U) & : \restrptype[n][0,...,n-1]
-  \left(\begin{array}{l}
-            \framep[n][0,...,n-1]   \\
-            \painting[n][0,...,n-1] \\
-            \restrf[n][0,...,n-1]   \\
-            E                       \\
-          \end{array}\right)                                                            \\
-  \cohf[n][0,...,n-1](E:\framep[n+1][n]
-  \left(\begin{array}{l}
-            \framep[n][0,...,n-1]   \\
-            \painting[n][0,...,n-1] \\
-            \restrf[n][0,...,n-1]   \\
-          \end{array}\right)\rightarrow \U) & : \cohftype[n][0,...,n-1]
-  \left(\begin{array}{l}
-            \framep[n][0,...,n-1]   \\
-            \painting[n][0,...,n-1] \\
-            \restrf[n][0,...,n-1]   \\
-            E                       \\
-            \restrp[n][0,...,n-1]   \\
-          \end{array}\right)                                                            \\
+  \depscohs[n][p]\begin{cases}
+                   \deps[n][p]\begin{cases}
+                 \framep[n][0,...,n-1]   & : \frametype[n][0,...,n-1]                           \\
+                 \painting[n][0,...,n-1] & : \paintingtype[n][0,...,n-1](\framep[n][0,...,n-1]) \\
+                 \restrf[n][0,...,n-1]   & : \restrftype[n][0,...,n-1]
+                 \left(\begin{array}{l}
+                \framep[n][0,...,n-1]   \\
+                \painting[n][0,...,n-1] \\
+              \end{array}\right)
+               \end{cases} \\
+                   \restrp[n][0,...,n-1](E:\framep[n+1][n]
+                   \left(\begin{array}{l}
+              \framep[n][0,...,n-1]   \\
+              \painting[n][0,...,n-1] \\
+              \restrf[n][0,...,n-1]   \\
+            \end{array}\right)\rightarrow \U) & : \restrptype[n][0,...,n-1]
+                   \left(\begin{array}{l}
+              \framep[n][0,...,n-1]   \\
+              \painting[n][0,...,n-1] \\
+              \restrf[n][0,...,n-1]   \\
+              E                       \\
+            \end{array}\right)                                                             \\
+                   \cohf[n][0,...,n-1](E:\framep[n+1][n]
+                   \left(\begin{array}{l}
+              \framep[n][0,...,n-1]   \\
+              \painting[n][0,...,n-1] \\
+              \restrf[n][0,...,n-1]   \\
+            \end{array}\right)\rightarrow \U) & : \cohftype[n][0,...,n-1]
+                   \left(\begin{array}{l}
+              \framep[n][0,...,n-1]   \\
+              \painting[n][0,...,n-1] \\
+              \restrf[n][0,...,n-1]   \\
+              E                       \\
+              \restrp[n][0,...,n-1]   \\
+            \end{array}\right)
+                 \end{cases} \\
   \cohp[n][0,...,n-1]
   \left(\begin{array}{l}
             E:\framep[n+1][n]
@@ -1115,8 +1129,8 @@ given:
                 \restrp[n][0,...,n-1]   \\
                 \cohf[n][0,...,n-1]     \\
               \end{array}\right))\rightarrow \U
-          \end{array}\right)                              \\
-                                    & : \cohptype[n][0,...,n-1]
+          \end{array}\right)
+  : \cohptype[n][0,...,n-1]
   \left(\begin{array}{l}
             \framep[n][0,...,n-1]   \\
             \painting[n][0,...,n-1] \\
@@ -1125,7 +1139,7 @@ given:
             \restrp[n][0,...,n-1]   \\
             \cohf[n][0,...,n-1]     \\
             E'                      \\
-          \end{array}\right)                                                            \\
+          \end{array}\right)                                                                           \\
 \end{align*}
 
 Indeed, to build this structure at level $n+1$, from level $n$, it is
