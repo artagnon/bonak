@@ -338,7 +338,7 @@ Note that for a fixed constant $n$, relying on the evaluation rules of type theo
 
 In \citep{hr25}, the well-foundedness was justified by induction on $n$ and subinductions, one on $p$ to mutually build $\framep[n][p]$, $\restrf[n][p]$ and $\cohf[n][p]$, and three others to build each of $\painting[n][p]$, $\restrp[n][p]$ and $\cohp[n][p]$ by induction on $n-p$.
 
-Since $\restrf[n][p]$ is referring to $\framep[n][p]$ and $\framep[n-1][p]$, and $\cohf[n][p]$ is referring to $\restrf[n][p]$ and $\restrf[n-1][p]$, thus also to $\framep[n][p]$, $\framep[n-1][p]$ and $\framep[n-2][p]$, we built all of these 6 components at the same time. But equations were also needed to state the properties of $\framep[n][p]$, $\framep[n-1][p]$ and $\restrf[n][p]$ so that we were building by induction on $n+p$ (that is on $n$, using the convention of \citep{hr25}) the following block of information:
+Since $\restrf[n][p]$ is referring to $\framep[n][p]$ and $\framep[n-1][p]$, and $\cohf[n][p]$ is referring to $\restrf[n][p]$ and $\restrf[n-1][p]$, thus also to $\framep[n][p]$, $\framep[n-1][p]$ and $\framep[n-2][p]$, we built all of these 6 components at the same time. But equations were also needed to state the properties of $\framep[n][p]$, $\framep[n-1][p]$ and $\restrf[n][p]$ so that we were building by induction on $n+p$ (that is on $n$, using the convention of \cite{hr25}), for any $D:\Xto{m}{n}$, the following block of information:
 
 \begin{align*}
   \framep[n][p]      & : \U                                                                                                                 & \mbox{for all $p\leq n$}   \\
@@ -358,25 +358,29 @@ Since $\restrf[n][p]$ is referring to $\framep[n][p]$ and $\framep[n-1][p]$, and
   \ldots             & \;\;\;\;\texttt{fields for painting, restrf, cohp}
 \end{align*}
 
-In the current paper and associated formalisation, we replace the equational properties by definitions, building instead by induction a block of the form:
+In the current paper and associated formalisation, we switch the point
+of view, take $\framep[n-2][p]$ $\painting[n-2][p]$, $\restrf[n-1][p]$
+and $\restrp[n-1][p]$ as references and renaming them respectively as
+$\framep[n][p]$, $\painting[n][p]$, $\restrf[n][p]$ and
+$\restrp[n][p]$, replace the equational properties of $\framep[n][p]$,
+$\framep[n-1][p]$, $\restrf[n][p]$, $\painting[n][p]$,
+$\painting[n-1][p]$ and $\restrp[n][p]$ as definitions of objects
+respectively renamed to $\framep[n+2][p]$, $\framep[n+1][p]$,
+$\restrf[n+1][p]$, $\painting[n+2][p]$, $\painting[n+1][p]$ and
+$\restrp[n+1][p]$, building instead by induction a block of the form:
 
 \begin{align*}
   \framep[n][p]   & : \U[m]                                                                                                     & \mbox{for all $p\leq n$} \\
   \painting[n][p] & : \framep[n][p] \rightarrow \U[m]                                                                           & \mbox{for all $p\leq n$} \\
-  \restrf[n][p]   & : \Pi q \leq n+p.\, \framep[n+1][p] \rightarrow \framep[n][p]                                               & \mbox{for all $p\leq n$} \\
-  E               & : \fullframe[m][n+1] \imp \U[m]                                                                                                        \\
-  \restrp[n][p]   & : \Pi q \leq n+p.\, \Pi d:\framep[n+1][p].\,                                                                                           \\
+  \restrf[n][p]   & : \Pi q \leq n+p.\, \Pi \epsilon.\, \framep[n+1][p] \rightarrow \framep[n][p]                                               & \mbox{for all $p\leq n$} \\
+  \restrp[n][p]   & : \Pi q \leq n+p.\, \Pi \epsilon.\, \Pi d:\framep[n+1][p].\,                                                                                           \\
                   & \;\;\;\;\painting[n+1][p](d) \rightarrow \painting[n][p](\restrf[n][p](d))                                  & \mbox{for all $p\leq n$} \\
   \cohf[n][p]     & : \Pi qr\epsilon\omega.\, \restrf[n][p][\epsilon][q] \circ \restrf[n+1][p][\omega][r] =                                                \\
                   & \;\;\;\;\restrf[n][p][\omega][r] \circ \restrf[n+1][p][\epsilon][q+1]                                       & \mbox{for all $p\leq n$} \\
-  E'              & : \fullframe[m][n+2] \imp \U[m]                                                                                                        \\
-  \cohp[n][p]     & \Pi qr\epsilon\omega.\,\Pi d:\framep[n+2][p].\,
+  \cohp[n][p]     & \Pi qr\epsilon\omega.\,\Pi d:\framep[n+2][p].\,\\
                   & \;\;\;\;\restrp[n][p][q][\epsilon](\restrf[n+1][p][r][\omega](d)) \circ \restrp[n+1][p][r][\omega](d) =                                \\
                   & \;\;\;\;\restrp[n][p][r][\omega](\restrf[n+1][p][q+1][\epsilon](d)) \circ \restrp[n+1][p][q+1][\epsilon](d) & \mbox{for all $p\leq n$} \\
 \end{align*}
-where $\framep[n+2][p]$, $\framep[n+1][p]$ and $\restrf[n+1][p]$, as
-well as $\painting[n+2][p]$, $\painting[n+1][p]$ and $\restrp[n+1][p]$
-are now appropriate definitions.
 
 Turning $\framep[n+2][p]$, $\framep[n+1][p]$ and $\restrf[n+1][p]$ into definitions involves however circularities. To start with, the definition of $\framep[n+1][p]$, which is by induction on $p$, depends on $\restrf[n][p-1]$ whose type depends in turn on $\framep[n+1][p-1]$. This means that $\framep[n+1][p]$ and the type of $\restrf[n][p]$ have to be mutually defined.
 
@@ -395,7 +399,7 @@ Schematically, using dotted arrows for dependencies in the type and plain arrows
 
 In particular, the mutual dependency on one side of $\framep[n][0,...,p-1]$ within the type of $\restrf[n][0,...,p-1]$ and on the other side of $\restrf[n][0,...,p-1]$ within the definition of $\framep[n][0,...,p]$ requires to mutually define the type of $\restrf[n][0,...,p-1]$ together with $\framep[n][p]$ (or $\framep[n][0,...,p]$) as a \emph{function} from $\restrf[n][0,...,p-1]$.
 
-So far, this means that we are able to specify a dependent structure of the form:
+So far, using this recursive definition of  $\framep[n][0,...,p-1]$ and $\restrf[n][0,...,p-1]$, we are able to specify the three first component of the exected dependent structure:
 \begin{align*}
   \framep[n][p]             & : \U                                & \mbox{for all $p\leq n$} \\
   \painting[n][p]           & : \framep[n][p] \rightarrow \U      & \mbox{for all $p\leq n$} \\
@@ -419,7 +423,7 @@ which can appropriately be reformulated using sequences for appropriate definiti
           \end{array}\right)                                            \\
 \end{align*}
 
-In general, the types of sequences such as $\restrf[n][0,...,p]$ will be nested since components, such as $\restrf[n][p]$, may depend on previous components of the sequence. So, the type of a sequence of length $p$ will be expressed as a $p$-iterated $\Sigma$-type. In the case of $\framep$ and $\painting$, there will be however no dependency, so an ordinary product can be used. If $\framep[n][0,...,p]$ is such a sequence of length $p+1$, we write $\framep[n][0,...,p-1]$ for its immediate subsequence of length $p$ and $\framep[n][p]$ for its last component, and similarly for all such sequences.
+The type of sequences such as $\restrf[n][0,...,p]$ will be represented by iterated $\Sigma$-types since each $\restrf[n][p]$ may depend on the previous components of the sequence. In the case of $\framep$ and $\painting$, there will be however no dependency, so an ordinary product can be used to represent $\framep[n][0,...,p]$ and $\painting[n][0,...,p]$. Later on, we will write $\framep[n][0,...,p-1]$ for the immediate subsequence of length $p$ of $\framep[n][0,...,p]$ and $\framep[n][p]$ for its last component, and similarly for $\painting[n][0,...,p]$, $\restrf[n][0,...,p]$, etc.
 
 \section{The construction}
 
@@ -584,9 +588,9 @@ We can now formally define $\painting[n+1][p]$ by recursion on $n+1-p$:
     \painting[n+1][p]      &
     (\fulldeps[n]:\fulldepstype[n])                           \\
     \painting[n+1][n]      &
-    (\fulldeps[n])         & \defeq & \fulldeps.E             \\
+    \fulldeps[n]         & \defeq & \fulldeps.E             \\
     \painting[n+1][p](p<n) &
-    (\fulldeps[n])         & \defeq & d \mapsto
+    \fulldeps[n]         & \defeq & d \mapsto
     \left(\begin{array}{l}
               \Sigma l:\layer[n][p](\fulldeps.\deps[n][0,...,p]). \\
               \painting[n+1][p+1]
@@ -601,13 +605,13 @@ From which we can deduce $\painting[n+1][0,...,p]$ by a second recursion, this t
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
     \painting[n+1][0,...,p]   &
-    (\fulldeps[n-1])          & :      & \paintingtype[n+1][0,...,p](\framep[n+1][0,...,p](\fulldeps.\deps[n-1][0,...,p])) \\
+    (\fulldeps[n]:\fulldepstype[n])          & :      & \paintingtype[n+1][0,...,p](\framep[n+1][0,...,p](\fulldeps.\deps[n-1][0,...,p])) \\
     \painting[n+1][0,...,0-1] &
-    E                         & \defeq & \unittype                                                                         \\
+    \fulldeps[n]                         & \defeq & \unittype                                                                         \\
     \painting[n+1][0,...,p]   &
-    (\fulldeps[n-1])
+    \fulldeps[n]
                               & \defeq &
-    (\painting[n+1][0,...,p-1](\fulldeps[n-1]),\painting[n+1][p](\fulldeps[n-1]))                                          \\
+    (\painting[n+1][0,...,p-1](\fulldeps[n-1]),\painting[n+1][p](\fulldeps[n]))                                          \\
   \end{array}
 \end{equation*}
 
@@ -808,11 +812,11 @@ From which we can deduce $\restrp[n][0,...,p]$ again by a second recursion, this
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
     \restrp[n+1][0,...,p]   &
-    (\fulldepscohs[n])      & :      & \restrptype[n+1][0,...,p](\fulldepscohs.\depscohs.\fulldeps[n])) \\
+    (\fulldepscohs[n]:\fulldepscohstype[n])      & :      & \restrptype[n+1][0,...,p](\fulldepscohs.\depscohs.\fulldeps[n])) \\
     \restrp[n+1][0,...,0-1] &
-    E                       & \defeq & \unittype                                                        \\
+    \fulldepscohs[n]                       & \defeq & \unittype                                                        \\
     \restrp[n+1][0,...,p]   &
-    (\fulldepscohs[n])
+    \fulldepscohs[n]
                             & \defeq &
     (\restrp[n+1][0,...,p-1](\fulldepscohs[n]),\restrp[n+1][p](\fulldepscohs[n]))                       \\
   \end{array}
@@ -1045,11 +1049,11 @@ From which we can deduce $\cohp[n+1][0,...,p]$ again by a second recursion, this
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
     \cohp[n+1][0,...,p]   &
-    (\fulldepscoht[n])    & :      & \cohptype[n+1][0,...,p](\fulldepscoht.\depscoht.\fulldepscohs[n])) \\
+    (\fulldepscoht[n]:\fulldepscohttype[n])    & :      & \cohptype[n+1][0,...,p](\fulldepscoht.\depscoht.\fulldepscohs[n])) \\
     \cohp[n+1][0,...,0-1] &
-    E                     & \defeq & \unittype                                                          \\
+    \fulldepscohs[n]      & \defeq & \unittype                                                          \\
     \cohp[n+1][0,...,p]   &
-    (\fulldepscoht[n])
+    \fulldepscoht[n]
                           & \defeq &
     (\cohp[n+1][0,...,p-1](\fulldepscoht[n]),\cohp[n+1][p](\fulldepscoht[n]))                           \\
   \end{array}
@@ -1057,16 +1061,91 @@ From which we can deduce $\cohp[n+1][0,...,p]$ again by a second recursion, this
 
 \subsection{Completing the construction by induction}
 
-Armed with all the constructions and assuming enough $E:\framep[n][n-1]
-  \rightarrow \U$ given, we can now define $\framep[n][p]$,
-$\painting[n][p]$, $\restrf[n][p]$, $\restrp[n][p]$, $\cohf[n][p]$,
-and $\cohp[n][p]$ for all $n$ and $p$. It is indeed enough to build
-$\fulldepscoht[n]$ by induction on $n$:
+Armed with all the constructions, we are now able to specify the whole
+structure on which we can reason by induction, for $D:\Xto{m}{n}$
+given:
+
+\begin{align*}
+  \framep[n][0,...,n-1]   & : \frametype[n][0,...,n-1]                         \\
+  \painting[n][0,...,n-1] & : \paintingtype[n][0,...,n-1](\framep[n][0,...,n-1]) \\
+  \restrf[n][0,...,n-1]   & : \restrftype[n][0,...,n-1]
+    \left(\begin{array}{l}
+              \framep[n][0,...,n-1]   \\
+              \painting[n][0,...,n-1] \\
+    \end{array}\right)                                            \\
+  \restrp[n][0,...,n-1](E:\framep[n+1][n]
+    \left(\begin{array}{l}
+              \framep[n][0,...,n-1]   \\
+              \painting[n][0,...,n-1] \\
+              \restrf[n][0,...,n-1]   \\
+    \end{array}\right)\rightarrow \U) & : \restrptype[n][0,...,n-1]
+    \left(\begin{array}{l}
+              \framep[n][0,...,n-1]   \\
+              \painting[n][0,...,n-1] \\
+              \restrf[n][0,...,n-1]   \\
+              E\\
+    \end{array}\right)                                            \\
+  \cohf[n][0,...,n-1](E:\framep[n+1][n]
+    \left(\begin{array}{l}
+              \framep[n][0,...,n-1]   \\
+              \painting[n][0,...,n-1] \\
+              \restrf[n][0,...,n-1]   \\
+    \end{array}\right)\rightarrow \U) & : \cohftype[n][0,...,n-1]
+    \left(\begin{array}{l}
+              \framep[n][0,...,n-1]   \\
+              \painting[n][0,...,n-1] \\
+              \restrf[n][0,...,n-1]   \\
+              E\\
+              \restrp[n][0,...,n-1]   \\
+    \end{array}\right)                                            \\
+    \cohp[n][0,...,n-1]
+      \left(\begin{array}{l}
+              E:\framep[n+1][n]
+                \left(\begin{array}{l}
+              \framep[n][0,...,n-1]   \\
+              \painting[n][0,...,n-1] \\
+              \restrf[n][0,...,n-1]   \\
+        \end{array}\right)\rightarrow \U \\
+              E':\framep[n+2][n+1](\overline{\deps}
+              \left(\begin{array}{l}
+              \framep[n][0,...,n-1]   \\
+              \painting[n][0,...,n-1] \\
+              \restrf[n][0,...,n-1]   \\
+              E\\
+              \restrp[n][0,...,n-1]   \\
+              \cohf[n][0,...,n-1]   \\
+        \end{array}\right))\rightarrow \U
+      \end{array}\right)                                            \\
+      & : \cohptype[n][0,...,n-1]
+      \left(\begin{array}{l}
+              \framep[n][0,...,n-1]   \\
+              \painting[n][0,...,n-1] \\
+              \restrf[n][0,...,n-1]   \\
+              E\\
+              \restrp[n][0,...,n-1]   \\
+              \cohf[n][0,...,n-1]   \\
+              E'\\
+      \end{array}\right)                                            \\
+\end{align*}
+
+Indeed, to build this structure at level $n+1$, from level $n$, it is
+enough to assume $E:\framep[n+1][n](\deps[n]) \rightarrow \U$ (where
+$\deps[n]$ come from the assumptions at level $n$) and to build the
+following:
 \begin{itemize}
-  \item $\fulldepscohs[n+1]$ is $\overline{\fulldepscohs}(\fulldepscoht[n])$
-  \item $\cohp[n+1][0,...,n]$ is given from $\fulldepscoht$ as above
-  \item $\coht[n+1][0,...,n]$ is given by uniqueness of identity proofs
+  \item $\framep[n+1][0,...,n]$ comes from $\deps[n]$ which holds by assumptions (using $\framep[n][0,...,n-1]$, $\painting[n][0,...,n-1]$ and $\restrf[n][0,...,n-1]$)
+  \item $\painting[n+1][0,...,n]$ comes from $\fulldeps[n]$ which holds by assumptions (also using $E$)
+  \item $\restrf[n+1][0,...,n]$ comes from $\depscohs[n][0,...,n-1]$ which holds by assumptions (additionally using the assumptions of $\restrp[n][0,...,n-1]$ and $\cohf[n][0,...,n-1]$)
+  \item $\restrp[n+1][0,...,n]$ assuming $E':\framep[n+2][n+1](\overline{\deps}(\depscohs[n][0,...,n-1])) \rightarrow \U$ comes from $\fulldepscohs[n][0,...,n-1]$ which holds by assumptions (additionally using $E'$)
+  \item $\cohf[n+1][0,...,n]$ assuming $E'$ comes from $\depscoht[n][0,...,n-1]$ which holds by assumptions (additionally using the assumption of $\cohp[n][0,...,n-1]$ and proving $\coht[n][0,...,n-1]$ by uniqueness of identity proofs)
+  \item $\cohp[n+1][0,...,n]$ assuming $E'$ and $E'': \framep[n+3][n+2](\overline{\deps}(\overline{\depscohs}(\depscoht[n][0,...,n-1]))) \rightarrow \U$ comes from $\fulldepscoht[n][0,...,n-1]$ which holds by assumptions (additionally using $E''$)
 \end{itemize}
+
+Therefore, assuming a construction of $\framep[n][n-1]$ from
+$D:\Xto{m}{n}$, we are able to build a $\framep[n+1][n]$ from $D$
+extended with some $E:\framep[n+1][n](\deps[n]) \rightarrow \U$. This
+is enough to build $\Xcomp{m}{n}(D)$, for $D:\Xto{m}{n}$, and thus
+$\Xp{m}$, by starting with an empty $D$.
 
 \bibliographystyle{msclike}
 \bibliography{paper}
