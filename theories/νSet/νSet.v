@@ -459,12 +459,14 @@ Definition mkRestrPaintingType `{depsCohs: DepsCohs p n}
 Fixpoint mkRestrPainting `{depsCohs: DepsCohs p n}
   (extraDepsCohs: DepsCohsExtension depsCohs): mkRestrPaintingType extraDepsCohs.
 Proof.
-  red; intros * (l, c). destruct extraDepsCohs, q; try now exact (l ε).
-  - exfalso; now apply leY_O_contra in Hq.
-  - rewrite <- unfoldPaintingProj. unshelve esplit.
-    + now exact (mkRestrLayer depsCohs.(_restrPaintings') depsCohs.(_cohs)
-      q (⇓ Hq) ε d l).
-    + now exact (mkRestrPainting p.+1 n depsCohs extraDepsCohs q (⇓ Hq) ε (d; l) c).
+  red; intros * (l, c); destruct q.
+  - now exact (l ε).
+  - destruct extraDepsCohs.
+    + exfalso; now apply leY_O_contra in Hq.
+    + rewrite <- unfoldPaintingProj. unshelve esplit.
+      * now exact (mkRestrLayer depsCohs.(_restrPaintings') depsCohs.(_cohs)
+        q (⇓ Hq) ε d l).
+      * now exact (mkRestrPainting p.+1 n depsCohs extraDepsCohs q (⇓ Hq) ε (d; l) c).
 Defined.
 
 Definition mkRestrPaintingTypes `{depsCohs: DepsCohs p n}
