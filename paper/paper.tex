@@ -246,9 +246,9 @@ In the previous paper~\citep{hr25}, we described the construction of augmented s
 we consider a family of families as shown below:
 \begin{equation*}
   \begin{array}{lll}
-    X_0 & :               \U                                                                          \\
-    X_1 & :               X_0 \times X_0 \rightarrow  \U                                              \\
-    X_2 & : \Pi a b c d.\,  X_1(a,b) \times X_1 (c,d) \times X_1(a,c) \times X_1 (b,d) \rightarrow \U \\
+    E_0 & :               \U                                                                          \\
+    E_1 & :               E_0 \times X_0 \rightarrow  \U                                              \\
+    E_2 & : \Pi a b c d.\,  E_1(a,b) \times E_1 (c,d) \times E_1(a,c) \times E_1 (b,d) \rightarrow \U \\
     \ldots
   \end{array}
 \end{equation*}
@@ -877,13 +877,13 @@ Thanks to $\cohptype[n][0,...,p-1]$, we can mutually define $\cohf[n+1][0,...,p]
     \overline{\depscohs}                                             & \depscoht[n][0,...,p]                             & \defeq                                                                            &
     \left(\begin{array}{l}
               \overline{\deps}(\depscoht.\fulldepscohs.\depscohs[n][0,...,p-1]) \\
-              \restrp[n+1][p](\depscoht.\fulldepscohs[n][0,...,n])              \\
+              \restrp[n+1][p](\depscoht.\fulldepscohs[n])                       \\
               \cohf[n+1][p](\depscoht[n][0,...,p-1])                            \\
             \end{array}\right)                                                                                                                                                                \\
     \cohf[n+1][0,...,p]                                              &
     (\fulldepscoht[n]:\fulldepscohttype[n])                          & :                                                 & \cohftype[n+1][0,...,p]                                                                                         \\
     \cohf[n][0,...,(0+1)-1]                                          &
-    (\unitpoint)                                                     & \defeq                                            & (\unitpoint,\lambda q.\lambda r. \lambda\epsilon. \lambda\omega.\lambda \_.\refl)                               \\
+    \unitpoint                                                       & \defeq                                            & (\unitpoint,\lambda q.\lambda r. \lambda\epsilon. \lambda\omega.\lambda \_.\refl)                               \\
     \cohf[n][0,...,((p+1)+1)-1]                                      &
     (\fulldepscoht[n])                                               & \defeq                                            &
     \left(\begin{array}{l}
