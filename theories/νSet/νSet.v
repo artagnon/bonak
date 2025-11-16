@@ -619,12 +619,14 @@ Fixpoint mkCohPainting `{depsCohs: DepsCohs p n}
 Proof.
   red; intros *.
   repeat rewrite unfoldRestrPaintings; rewrite rew_opp_l.
-  destruct unfoldPaintingProj, c as (l, c), extraCohPaintings, r, q;
+  destruct unfoldPaintingProj, c as (l, c), r;
   unfold mkRestrLayer; simpl; try now rewrite unfoldRestrPaintings.
-  - exfalso; now apply leY_O_contra in Hrq.
-  - exfalso; now apply leY_O_contra in Hq.
-  - exfalso; now apply leY_O_contra in Hrq.
-  - rewrite <- rew_permute_ll_hset with
+  - (* r = 0 *)
+    destruct extraCohPaintings; simpl; rewrite unfoldRestrPaintings; reflexivity.
+  - (* r = r'+1, q is necessarily q'+1 and extraDepsCohs non empty *)
+    destruct q. exfalso; now apply leY_O_contra in Hrq.
+    destruct extraCohPaintings. exfalso; now apply leY_O_contra in Hq.
+    rewrite <- rew_permute_ll_hset with
       (P := mkPainting' (depsCohs.(_deps).(2); depsCohs.(_extraDeps))).
     apply rew_swap.
     do 2 rewrite rew_opp_l.
