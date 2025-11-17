@@ -507,6 +507,43 @@ Fixpoint mkCohPaintingTypes {p}: forall `{depsCohs: DepsCohs p n}
          mkCohPaintingType extraDepsCohs }
   end.
 
+Lemma mkCoh2Frame `(depsCohs : DepsCohs p.+1 n)
+  (extraDepsCohs : DepsCohsExtension depsCohs)
+  (cohPaintings : mkCohPaintingTypes extraDepsCohs)
+  (prevCohFrames : mkCohFrameTypes
+     (extraDeps := (mkFullDepsRestr.(2); mkExtraDeps extraDepsCohs))
+     (mkRestrPaintings extraDepsCohs).1) :
+  forall (r q : nat) (Hrq : r <= q) (Hq : q <= n) (ε ω : arity)
+  (d : mkPrevFrame (mkRestrFrames (depsCohs := {| _cohs := prevCohFrames.1 |})))
+  (𝛉 : arity),
+  f_equal
+    (fun x : mkFrame' depsCohs.(_deps).(1) =>
+     depsCohs.(_deps).(2).(_restrFrame') q ε x)
+    (prevCohFrames.2 0 r leY_O (Hrq ↕ ↑ Hq) ω 𝛉 d)
+  • (depsCohs.(_cohs).2 0 q leY_O Hq ε 𝛉
+       (((mkCohFrameTypesAndRestrFrames
+            (mkRestrPaintings (depsCohs;extraDepsCohs)).1).(
+         RestrFramesDef) prevCohFrames.1).2 r.+1 (⇑ (Hrq ↕ ↑ Hq)) ω d)
+     • f_equal
+         (fun x =>
+          depsCohs.(_deps).(_restrFrames').2 0 leY_O 𝛉 x)
+         (prevCohFrames.2 r.+1 q.+1 (⇑ Hrq) (⇑ Hq) ε ω d)) =
+  depsCohs.(_cohs).2 r q Hrq Hq ε ω
+    (((mkCohFrameTypesAndRestrFrames
+         (mkRestrPaintings (depsCohs;extraDepsCohs)).1).(
+      RestrFramesDef) prevCohFrames.1).2 0 leY_O 𝛉 d)
+  • (f_equal
+       (fun x : mkFrame' depsCohs.(_deps).(1) =>
+        depsCohs.(_deps).(2).(_restrFrame') r ω x)
+       (prevCohFrames.2 0 q.+1 leY_O (⇑ Hq) ε 𝛉 d)
+     • depsCohs.(_cohs).2 0 r leY_O (Hrq ↕ Hq) ω 𝛉
+         (((mkCohFrameTypesAndRestrFrames
+              (mkRestrPaintings (depsCohs;extraDepsCohs)).1).(
+           RestrFramesDef) prevCohFrames.1).2 q.+2 (⇑ (⇑ Hq)) ε d)).
+Proof.
+  now intros; apply depsCohs.(_deps).(2).(_frame'').(UIP).
+Defined.
+
 Definition mkCohLayer `{depsCohs: DepsCohs p.+1 n}
   {extraDepsCohs: DepsCohsExtension depsCohs}
   (cohPaintings: mkCohPaintingTypes extraDepsCohs)
@@ -539,7 +576,7 @@ Proof.
   repeat rewrite rew_compose.
   apply rew_swap with (P := fun x => depsCohs.(_deps).(_paintings'').2 x).
   rewrite rew_app_rl. now trivial.
-  now apply depsCohs.(_deps).(2).(_frame'').(UIP).
+  now apply mkCoh2Frame.
 Defined.
 
 Fixpoint mkCohFrames `{depsCohs: DepsCohs p n}
