@@ -62,22 +62,22 @@ That is, we build:
                                                        frame(p+n,p)] }
 *)
 
+Generalizable Variables p n frames.
+
 Definition mkRestrFrameTypesStep {p n}
   (frames: mkFrameTypes p.+1)
   (prev: RestrFrameTypeBlock p) :=
   { R: prev.(RestrFrameTypesDef) &T
     forall q (Hq: q <= n) (ε: arity), (prev.(FrameDef) R).2 -> frames.2 }.
 
-Definition mkLayer {p n}
-  {frames: mkFrameTypes p.+1}
-  {paintings: mkPaintingTypes p.+1 frames}
+Definition mkLayer {p n} `{paintings: mkPaintingTypes p.+1 frames}
   {prev: RestrFrameTypeBlock p}
   (restrFrames: mkRestrFrameTypesStep (n := n) frames prev)
   (d: (prev.(FrameDef) restrFrames.1).2) :=
   hforall ε, paintings.2 (restrFrames.2 0 leY_O ε d).
 
-Fixpoint mkRestrFrameTypesAndFrames {p n}: forall (frames: mkFrameTypes p)
-  (paintings: mkPaintingTypes p frames), RestrFrameTypeBlock p :=
+Fixpoint mkRestrFrameTypesAndFrames {p n}:
+  forall `(paintings: mkPaintingTypes p frames), RestrFrameTypeBlock p :=
   match p with
   | 0 => fun frames paintings =>
     {|
@@ -86,7 +86,7 @@ Fixpoint mkRestrFrameTypesAndFrames {p n}: forall (frames: mkFrameTypes p)
     |}
   | p.+1 => fun frames paintings =>
     let prev :=
-      mkRestrFrameTypesAndFrames (n := n.+1) frames.1 paintings.1 in
+      mkRestrFrameTypesAndFrames (n := n.+1) paintings.1 in
     let frames' := prev.(FrameDef) in
     {|
       RestrFrameTypesDef := mkRestrFrameTypesStep (n := n) frames prev;
@@ -99,14 +99,12 @@ Fixpoint mkRestrFrameTypesAndFrames {p n}: forall (frames: mkFrameTypes p)
 Class DepsRestr p n := {
   _frames: mkFrameTypes p;
   _paintings: mkPaintingTypes p _frames;
-  _restrFrames: (mkRestrFrameTypesAndFrames _frames _paintings
+  _restrFrames: (mkRestrFrameTypesAndFrames _paintings
     (n := n)).(RestrFrameTypesDef);
 }.
 
-Generalizable Variables p n.
-
 Definition mkFrames `(deps: DepsRestr p n): mkFrameTypes p.+1 :=
-  (mkRestrFrameTypesAndFrames deps.(_frames)
+  (mkRestrFrameTypesAndFrames
     deps.(_paintings)).(FrameDef) deps.(_restrFrames).
 
 Definition mkFrame `(deps: DepsRestr p n): HSet := (mkFrames deps).2.
@@ -208,7 +206,7 @@ Defined.
 
 Definition mkRestrFrameTypes `{deps: DepsRestr p n}
   (extraDeps: DepsRestrExtension deps) :=
-  (mkRestrFrameTypesAndFrames (n := n) (mkFrames deps)
+  (mkRestrFrameTypesAndFrames (n := n)
     (mkPaintings extraDeps)).(RestrFrameTypesDef).
 
 (** We combining mkFrames, mkPaintings and an assumed restrFrames.
