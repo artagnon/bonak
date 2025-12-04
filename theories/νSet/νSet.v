@@ -316,7 +316,7 @@ Instance mkDepsCohs0 `{deps: DepsRestr p 0} {E': mkFrame deps -> HSet}
   (cohs: mkCohFrameTypes restrPaintings): DepsCohs p 0 := {| _cohs := cohs |}.
 
 #[local]
-Instance slideDepsCohs `(depsCohs: DepsCohs p.+1 k): DepsCohs p k.+1 :=
+Instance proj1DepsCohs `(depsCohs: DepsCohs p.+1 k): DepsCohs p k.+1 :=
 {|
   _deps := depsCohs.(_deps).(1);
   _extraDeps := (depsCohs.(_deps); depsCohs.(_extraDeps));
@@ -327,7 +327,7 @@ Instance slideDepsCohs `(depsCohs: DepsCohs p.+1 k): DepsCohs p k.+1 :=
 Declare Scope depscohs_scope.
 Delimit Scope depscohs_scope with depscohs.
 Bind Scope depscohs_scope with DepsCohs.
-Notation "x .(1)" := (slideDepsCohs x%depscohs)
+Notation "x .(1)" := (proj1DepsCohs x%depscohs)
   (at level 1, left associativity, format "x .(1)"): depscohs_scope.
 
 (** The restrFrame(n+1,0..p) component of the fixpoint *)
