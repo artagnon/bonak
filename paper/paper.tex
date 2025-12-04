@@ -500,9 +500,9 @@ $\depstype[n][0,...p-1]$:
     \left(\begin{array}{l}
               \framep[n+1][0,...,p]
               (\deps[n][0,...,p-1]), \\
-              \Sigma d:\framep[n+1][0,...,p]
-              (\deps[n][0,...,p-1])  \\
-              \quad \layer[n][p]
+              \Sigma d:\framep[n+1][p]
+              (\deps[n][0,...,p-1]).
+              \, \layer[n][p]
               (\deps[n][0,...,p])
               (d)                    \\
             \end{array}\right)                                              \\
@@ -555,11 +555,13 @@ $\depstype[n][0,...p-1]$:
     \layer[n][p]                    &
     \deps[n][0,...,p]
                                     & \defeq &
-    d \mapsto \Pi\omega.\,\painting[n][p](\restrf[n][p](d))                          \\
+    d \mapsto \Pi\omega.\,\painting[n][p](\deps.\restrf[n][p][0][\omega](d))                          \\
   \end{array}
 \end{equation*}
 
-Later, we shall write $\deps.\framep$, $\deps.\painting$, $\deps.\restrf$ for the projections of a $\deps$. Note that by abuse of notation, we also write $\unitpoint$ for the only inhabitant of $\depstype[n][0,..,0-1]$.
+Note that we write $\deps.\framep$, $\deps.\painting$, $\deps.\restrf$ for the
+projections of a $\deps$. Also, by abuse of notation, we write $\unitpoint$ for
+the only inhabitant of $\depstype[n][0,..,0-1]$.
 
 \subsection{Defining paintings}
 
