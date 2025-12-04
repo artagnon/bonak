@@ -14,29 +14,30 @@ Remove Printing Let prod.
 Section νSet.
 Variable arity: HSet.
 
-(** The type of lists [frame(n,0);...;frame(n,p-1)] for arbitrary n *)
+(** The type of lists [frame(n,0);...;frame(n,p-1)] for arbitrary k := n-p
+    (the non-mandatory dependency in k is useful for type inference) *)
 
-Fixpoint mkFrameTypes p: Type :=
+Fixpoint mkFrameTypes p k: Type :=
   match p with
   | 0 => unit
-  | S p => { frames: mkFrameTypes p &T HSet }
+  | S p => { frames: mkFrameTypes p k.+1 &T HSet }
   end.
 
 (** The type of lists [painting(n,0);...;painting(n,p-1)] for arbitrary n *)
 
-Fixpoint mkPaintingTypes p: mkFrameTypes p -> Type :=
+Fixpoint mkPaintingTypes p k: mkFrameTypes p k -> Type :=
   match p with
   | 0 => fun _ => unit
   | S p => fun frames =>
-    { paintings: mkPaintingTypes p frames.1 &T frames.2 -> HSet }
+    { paintings: mkPaintingTypes p k.+1 frames.1 &T frames.2 -> HSet }
   end.
 
 (** A helper type so as to mutually build the types of restrFrames and
     the body of frames using a single fixpoint *)
 
-Class RestrFrameTypeBlock p := {
+Class RestrFrameTypeBlock p k := {
   RestrFrameTypesDef: Type;
-  FrameDef: RestrFrameTypesDef -> mkFrameTypes p.+1;
+  FrameDef: RestrFrameTypesDef -> mkFrameTypes p.+1 k;
 }.
 
 (**
@@ -70,49 +71,47 @@ That is, we build:
 
 Generalizable Variables p k frames.
 
-Definition mkRestrFrameTypesStep {p k}
-  (frames: mkFrameTypes p.+1)
-  (prev: RestrFrameTypeBlock p) :=
+Definition mkRestrFrameTypesStep `(frames: mkFrameTypes p.+1 k)
+  (prev: RestrFrameTypeBlock p k.+1) :=
   { R: prev.(RestrFrameTypesDef) &T
     forall q (Hq: q <= k) (ε: arity), (prev.(FrameDef) R).2 -> frames.2 }.
 
-Definition mkLayer {p k} `{paintings: mkPaintingTypes p.+1 frames}
-  {prev: RestrFrameTypeBlock p}
-  (restrFrames: mkRestrFrameTypesStep (k := k) frames prev)
+Definition mkLayer `{paintings: mkPaintingTypes p.+1 k frames}
+  {prev: RestrFrameTypeBlock p k.+1}
+  (restrFrames: mkRestrFrameTypesStep frames prev)
   (d: (prev.(FrameDef) restrFrames.1).2) :=
   hforall ε, paintings.2 (restrFrames.2 0 leY_O ε d).
 
 Fixpoint mkRestrFrameTypesAndFrames {p k}:
-  forall `(paintings: mkPaintingTypes p frames), RestrFrameTypeBlock p :=
+  forall `(paintings: mkPaintingTypes p k frames), RestrFrameTypeBlock p k :=
   match p with
   | 0 => fun frames paintings =>
     {|
       RestrFrameTypesDef := unit;
-      FrameDef _ := (tt; hunit): mkFrameTypes 1
+      FrameDef _ := (tt; hunit): mkFrameTypes 1 k
     |}
   | p.+1 => fun frames paintings =>
     let prev :=
-      mkRestrFrameTypesAndFrames (k := k.+1) paintings.1 in
+      mkRestrFrameTypesAndFrames paintings.1 in
     let frames' := prev.(FrameDef) in
     {|
-      RestrFrameTypesDef := mkRestrFrameTypesStep (k := k) frames prev;
+      RestrFrameTypesDef := mkRestrFrameTypesStep frames prev;
       FrameDef R :=
         (frames' R.1; { d: (frames' R.1).2 &
-          mkLayer (paintings := paintings) R d }): mkFrameTypes p.+2
+          mkLayer (paintings := paintings) R d }): mkFrameTypes p.+2 k
     |}
   end.
 
-Definition mkRestrFrameTypes {p k} `(paintings: mkPaintingTypes p frames) :=
-  (mkRestrFrameTypesAndFrames (k := k) paintings).(RestrFrameTypesDef).
+Definition mkRestrFrameTypes `(paintings: mkPaintingTypes p k frames) :=
+  (mkRestrFrameTypesAndFrames paintings).(RestrFrameTypesDef).
 
 Class DepsRestr p k := {
-  _frames: mkFrameTypes p;
-  _paintings: mkPaintingTypes p _frames;
-  _restrFrames: (mkRestrFrameTypesAndFrames _paintings
-    (k := k)).(RestrFrameTypesDef);
+  _frames: mkFrameTypes p k;
+  _paintings: mkPaintingTypes p k _frames;
+  _restrFrames: (mkRestrFrameTypesAndFrames _paintings).(RestrFrameTypesDef);
 }.
 
-Definition mkFrames `(deps: DepsRestr p k): mkFrameTypes p.+1 :=
+Definition mkFrames `(deps: DepsRestr p k): mkFrameTypes p.+1 k :=
   (mkRestrFrameTypesAndFrames
     deps.(_paintings)).(FrameDef) deps.(_restrFrames).
 
@@ -121,15 +120,14 @@ Definition mkFrame `(deps: DepsRestr p k): HSet := (mkFrames deps).2.
 Class DepRestr `(deps: DepsRestr p k.+1) := {
   _frame: HSet;
   _painting: _frame -> HSet;
-  _restrFrame: forall q {Hq: q <= k} (ε: arity),
-    mkFrame (k := k.+1) deps -> _frame;
+  _restrFrame: forall q {Hq: q <= k} (ε: arity), mkFrame deps -> _frame;
 }.
 
 #[local]
 Instance consDep `(deps: DepsRestr p k.+1)
   (dep: DepRestr deps): DepsRestr p.+1 k :=
 {|
-  _frames := (deps.(_frames); dep.(_frame)): mkFrameTypes p.+1;
+  _frames := (deps.(_frames); dep.(_frame)): mkFrameTypes p.+1 k;
   _paintings := (deps.(_paintings); dep.(_painting));
   _restrFrames := (deps.(_restrFrames); dep.(_restrFrame));
 |}.
@@ -188,7 +186,7 @@ Fixpoint mkPainting `(extraDeps: DepsRestrExtension p k deps):
   end.
 
 Fixpoint mkPaintings {p k}: forall `(extraDeps: DepsRestrExtension p k deps),
-  mkPaintingTypes p.+1 (mkFrames deps) :=
+  mkPaintingTypes p.+1 k (mkFrames deps) :=
   match p with
   | 0 => fun deps extraDeps => (tt; mkPainting extraDeps)
   | S p => fun deps extraDeps =>
@@ -225,7 +223,7 @@ Defined.
        [restrFrame(n+1,0);...;restrFrame(n+1,p)] *)
 
 Definition mkDepsRestr `{extraDeps: DepsRestrExtension p k deps}
-  (restrFrames: mkRestrFrameTypes (k := k) (mkPaintings extraDeps)) :=
+  (restrFrames: mkRestrFrameTypes (mkPaintings extraDeps)) :=
 {|
   _frames := mkFrames deps;
   _paintings := mkPaintings extraDeps;
@@ -253,7 +251,7 @@ Fixpoint mkRestrPaintingTypes {p}:
 
 Class CohFrameTypeBlock `{extraDeps: DepsRestrExtension p k deps} := {
   CohFrameTypesDef: Type;
-  RestrFramesDef: CohFrameTypesDef -> mkRestrFrameTypes (k := k) (mkPaintings extraDeps)
+  RestrFramesDef: CohFrameTypesDef -> mkRestrFrameTypes (mkPaintings extraDeps)
 }.
 
 (** Auxiliary definitions to mutually build cohFrameTypes and restrFrames *)
