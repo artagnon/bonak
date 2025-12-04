@@ -155,17 +155,15 @@ Notation "x .(1)" := (proj1Deps x%_depsrestr)
   (at level 1, left associativity, format "x .(1)"): depsrestr_scope.
 Notation "x .(2)" := (proj2Deps x%_depsrestr)
   (at level 1, left associativity, format "x .(2)"): type_scope.
-Notation "( x ; y )" := (consDep x%_depsrestr y)
-  (at level 0, format "( x ; y )"): depsrestr_scope.
 
 Inductive DepsRestrExtension p: forall k, DepsRestr p k -> Type :=
 | TopDep {deps}:
   forall E': mkFrame deps -> HSet, DepsRestrExtension p 0 deps
-| AddDep {k deps} dep:
-  DepsRestrExtension p.+1 k (deps; dep) -> DepsRestrExtension p k.+1 deps.
+| AddDep {k} deps:
+  DepsRestrExtension p.+1 k deps -> DepsRestrExtension p k.+1 deps.(1).
 
 Arguments TopDep {p deps}.
-Arguments AddDep {p k deps}.
+Arguments AddDep {p k} deps.
 
 Declare Scope extra_deps_scope.
 Delimit Scope extra_deps_scope with extradeps.
@@ -181,8 +179,8 @@ Fixpoint mkPainting `(extraDeps: DepsRestrExtension p k deps):
   mkFrame deps -> HSet :=
   match extraDeps with
   | @TopDep _ deps E' => fun (d: mkFrame deps) => E' d
-  | @AddDep _ _ deps dep extraDeps => fun (d: mkFrame deps) =>
-      {l: mkLayer (deps; dep).(_restrFrames) d & mkPainting extraDeps (d; l)}
+  | @AddDep _ _ deps extraDeps => fun (d: mkFrame deps.(1)) =>
+      {l: mkLayer deps.(_restrFrames) d & mkPainting extraDeps (d; l)}
   end.
 
 Fixpoint mkPaintings {p k}: forall `(extraDeps: DepsRestrExtension p k deps),
@@ -190,7 +188,7 @@ Fixpoint mkPaintings {p k}: forall `(extraDeps: DepsRestrExtension p k deps),
   match p with
   | 0 => fun deps extraDeps => (tt; mkPainting extraDeps)
   | S p => fun deps extraDeps =>
-    (mkPaintings (deps.(2); extraDeps)%extradeps; mkPainting extraDeps)
+    (mkPaintings (deps; extraDeps)%extradeps; mkPainting extraDeps)
   end.
 
 Lemma unfoldPaintingProj `{extraDeps: DepsRestrExtension p k deps}
@@ -233,7 +231,7 @@ Definition mkDepsRestr `{extraDeps: DepsRestrExtension p k deps}
 Definition mkRestrPaintingType
   `(extraDeps: DepsRestrExtension p.+1 k deps) :=
   forall q (Hq: q <= k) ε (d: mkFrame deps.(1)),
-  (mkPaintings (deps.(2); extraDeps)).2 d ->
+  (mkPaintings (deps; extraDeps)).2 d ->
   deps.(2).(_painting) (deps.(2).(_restrFrame) q ε d).
 
 Fixpoint mkRestrPaintingTypes {p}:
@@ -242,7 +240,7 @@ Fixpoint mkRestrPaintingTypes {p}:
   | 0 => fun _ _ _ => unit
   | S p =>
     fun k deps extraDeps =>
-    { _: mkRestrPaintingTypes (deps.(2); extraDeps) &T
+    { _: mkRestrPaintingTypes (deps; extraDeps) &T
       mkRestrPaintingType extraDeps }
   end.
 
@@ -258,7 +256,7 @@ Class CohFrameTypeBlock `{extraDeps: DepsRestrExtension p k deps} := {
 
 Definition mkCohFrameTypesStep `{extraDeps: DepsRestrExtension p.+1 k deps}
   {restrPaintings: mkRestrPaintingTypes extraDeps}
-  (prev: CohFrameTypeBlock (extraDeps := (deps.(2); extraDeps))): Type :=
+  (prev: CohFrameTypeBlock (extraDeps := (deps; extraDeps))): Type :=
   { Q: prev.(CohFrameTypesDef) &T
     forall r q (Hrq: r <= q) (Hq: q <= k) (ε ω: arity) d,
     deps.(_restrFrames).2 q Hq ε
@@ -268,7 +266,7 @@ Definition mkCohFrameTypesStep `{extraDeps: DepsRestrExtension p.+1 k deps}
 
 Definition mkRestrLayer `{extraDeps: DepsRestrExtension p.+1 k deps}
   (restrPaintings: mkRestrPaintingTypes extraDeps)
-  {prev: CohFrameTypeBlock (extraDeps := (deps.(2); extraDeps))}
+  {prev: CohFrameTypeBlock (extraDeps := (deps; extraDeps))}
   (cohFrames: mkCohFrameTypesStep (restrPaintings := restrPaintings) prev)
   q (Hq: q <= k) (ε: arity)
   (d: mkFrame (mkDepsRestr (prev.(RestrFramesDef) cohFrames.1)).(1)):
@@ -300,7 +298,7 @@ Instance mkCohFrameTypesAndRestrFrames:
   | S p =>
     fun k deps extraDeps restrPaintings =>
     let prev := mkCohFrameTypesAndRestrFrames
-      (deps.(2); extraDeps)%extradeps restrPaintings.1 in
+      (deps; extraDeps)%extradeps restrPaintings.1 in
     let restrFrames := prev.(RestrFramesDef) in
     let cohFrameTypes := prev.(CohFrameTypesDef) in
     {|
@@ -309,7 +307,7 @@ Instance mkCohFrameTypesAndRestrFrames:
       (* RestrFrame(n+2,p+1) *)
       let restrFrame q (Hq: q <= k) ε
         (d: mkFrame (mkDepsRestr
-          (extraDeps := (deps.(2); extraDeps)) (restrFrames Q.1))) :=
+          (extraDeps := (deps; extraDeps)) (restrFrames Q.1))) :=
           ((restrFrames Q.1).2 q.+1 (⇑ Hq) ε d.1;
            mkRestrLayer restrPaintings Q q _ ε d.1 d.2)
       in (restrFrames Q.1; restrFrame)
@@ -339,7 +337,7 @@ Instance mkDepsCohs0 `{deps: DepsRestr p 0} {E': mkFrame deps -> HSet}
 Instance slideDepsCohs `(depsCohs: DepsCohs p.+1 k): DepsCohs p k.+1 :=
 {|
   _deps := depsCohs.(_deps).(1);
-  _extraDeps := (depsCohs.(_deps).(2); depsCohs.(_extraDeps));
+  _extraDeps := (depsCohs.(_deps); depsCohs.(_extraDeps));
   _restrPaintings := depsCohs.(_restrPaintings).1;
   _cohs := depsCohs.(_cohs).1;
 |}.
@@ -403,9 +401,7 @@ Fixpoint mkExtraDeps `(extraDepsCohs: DepsCohsExtension p k depsCohs):
 Proof.
   destruct extraDepsCohs.
   - now constructor.
-  - unshelve econstructor.
-    + now exact mkFullDepsRestr.(2).
-    + now exact (mkExtraDeps p.+1 k depsCohs extraDepsCohs).
+  - apply (AddDep mkFullDepsRestr (mkExtraDeps p.+1 k depsCohs extraDepsCohs)).
 Defined.
 
 (* Note: We could type mkRestrPainting(n+1,p) of type
@@ -415,7 +411,7 @@ Defined.
 Definition mkRestrPaintingType'
   `(extraDepsCohs: DepsCohsExtension p k depsCohs) :=
   forall q (Hq: q <= k) ε (d: mkFrame (mkDepsRestr mkRestrFrames).(1)),
-  mkPainting (mkFullDepsRestr.(2); mkExtraDeps extraDepsCohs)%extradeps d ->
+  mkPainting (mkFullDepsRestr; mkExtraDeps extraDepsCohs)%extradeps d ->
   (mkPaintings depsCohs.(_extraDeps)).2 (mkRestrFrame q Hq ε d).
 
 (* Note: a priori, unfoldPaintingProj can be avoided because only
@@ -452,7 +448,7 @@ Definition mkCohPaintingType
   `(extraDepsCohs: DepsCohsExtension p.+1 k depsCohs) :=
   forall r q (Hrq: r <= q) (Hq: q <= k) (ε ω: arity)
     (d: mkFrame (mkDepsRestr mkRestrFrames).(1))
-    (c: (mkPaintings (mkFullDepsRestr.(2);
+    (c: (mkPaintings (mkFullDepsRestr;
       mkExtraDeps (depsCohs; extraDepsCohs))).2 d),
   rew [depsCohs.(_deps).(2).(_painting)] depsCohs.(_cohs).2 r q Hrq Hq ε ω d in
   depsCohs.(_restrPaintings).2 q Hq ε _
@@ -473,7 +469,7 @@ Fixpoint mkCohPaintingTypes {p}:
 Lemma mkCoh2Frame `(extraDepsCohs: DepsCohsExtension p.+1 k depsCohs)
   (cohPaintings: mkCohPaintingTypes extraDepsCohs)
   (prevCohFrames: mkCohFrameTypes
-     (extraDeps := (mkFullDepsRestr.(2); mkExtraDeps extraDepsCohs))
+     (extraDeps := (mkFullDepsRestr; mkExtraDeps extraDepsCohs))
      (mkRestrPaintings extraDepsCohs).1) :
   forall (r q: nat) (Hrq: r <= q) (Hq: q <= k) (ε ω: arity)
   (d : mkFrame (mkDepsRestr (mkRestrFrames (depsCohs := {| _cohs := prevCohFrames.1 |}))).(1))
@@ -484,7 +480,7 @@ Lemma mkCoh2Frame `(extraDepsCohs: DepsCohsExtension p.+1 k depsCohs)
     (prevCohFrames.2 0 r leY_O (Hrq ↕ ↑ Hq) ω 𝛉 d)
   • (depsCohs.(_cohs).2 0 q leY_O Hq ε 𝛉
        (((mkCohFrameTypesAndRestrFrames
-            (mkRestrPaintings (depsCohs;extraDepsCohs)).1).(
+            (mkRestrPaintings (depsCohs; extraDepsCohs)).1).(
          RestrFramesDef) prevCohFrames.1).2 r.+1 (⇑ (Hrq ↕ ↑ Hq)) ω d)
      • f_equal
          (fun x =>
@@ -492,7 +488,7 @@ Lemma mkCoh2Frame `(extraDepsCohs: DepsCohsExtension p.+1 k depsCohs)
          (prevCohFrames.2 r.+1 q.+1 (⇑ Hrq) (⇑ Hq) ε ω d)) =
   depsCohs.(_cohs).2 r q Hrq Hq ε ω
     (((mkCohFrameTypesAndRestrFrames
-         (mkRestrPaintings (depsCohs;extraDepsCohs)).1).(
+         (mkRestrPaintings (depsCohs; extraDepsCohs)).1).(
       RestrFramesDef) prevCohFrames.1).2 0 leY_O 𝛉 d)
   • (f_equal
        (fun x : mkFrame depsCohs.(_deps).(1) =>
@@ -500,7 +496,7 @@ Lemma mkCoh2Frame `(extraDepsCohs: DepsCohsExtension p.+1 k depsCohs)
        (prevCohFrames.2 0 q.+1 leY_O (⇑ Hq) ε 𝛉 d)
      • depsCohs.(_cohs).2 0 r leY_O (Hrq ↕ Hq) ω 𝛉
          (((mkCohFrameTypesAndRestrFrames
-              (mkRestrPaintings (depsCohs;extraDepsCohs)).1).(
+              (mkRestrPaintings (depsCohs; extraDepsCohs)).1).(
            RestrFramesDef) prevCohFrames.1).2 q.+2 (⇑ (⇑ Hq)) ε d)).
 Proof.
   now intros; apply depsCohs.(_deps).(2).(_frame).(UIP).
@@ -509,7 +505,7 @@ Defined.
 Definition mkCohLayer `{extraDepsCohs: DepsCohsExtension p.+1 k depsCohs}
   (cohPaintings: mkCohPaintingTypes extraDepsCohs)
   {prevCohFrames: mkCohFrameTypes
-    (extraDeps := (mkFullDepsRestr.(2); mkExtraDeps extraDepsCohs))
+    (extraDeps := (mkFullDepsRestr; mkExtraDeps extraDepsCohs))
     (mkRestrPaintings extraDepsCohs).1}
   r q {Hrq: r <= q} {Hq: q <= k} (ε ω: arity)
   (d: mkFrame (mkDepsRestr (mkRestrFrames (depsCohs := {| _cohs := prevCohFrames.1 |}))).(1))
@@ -600,7 +596,7 @@ Defined.
 Lemma unfoldRestrPaintings
   `{extraDepsCohs: DepsCohsExtension p k depsCohs} q {Hq: q <= k} ε
   (d: mkFrame mkFullDepsRestr.(1))
-  (c: (mkPaintings (mkFullDepsRestr.(2); mkExtraDeps extraDepsCohs)).2 d):
+  (c: (mkPaintings (mkFullDepsRestr; mkExtraDeps extraDepsCohs)).2 d):
   (mkRestrPaintings extraDepsCohs).2 q Hq ε d c =
   mkRestrPainting extraDepsCohs q Hq ε d (rew <- unfoldPaintingProj in c).
 Proof.
@@ -623,7 +619,7 @@ Proof.
     destruct q. exfalso; now apply leY_O_contra in Hrq.
     destruct extraCohPaintings. exfalso; now apply leY_O_contra in Hq.
     rewrite <- rew_permute_ll_hset with
-      (P := mkPainting (depsCohs.(_deps).(2); depsCohs.(_extraDeps))).
+      (P := mkPainting (depsCohs.(_deps); depsCohs.(_extraDeps))).
     apply rew_swap.
     do 2 rewrite rew_opp_l.
     unshelve eapply (rew_existT_curried
