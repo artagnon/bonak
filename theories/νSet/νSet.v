@@ -386,14 +386,8 @@ Proof.
   - apply (AddRestrDep mkFullDepsRestr (mkExtraDeps p.+1 k depsCohs extraDepsCohs)).
 Defined.
 
-Definition mkRestrPaintingType'
-  `(extraDepsCohs: DepsCohsExtension p k depsCohs) :=
-  forall q (Hq: q <= k) ε (d: mkFrame (mkDepsRestr mkRestrFrames).(1)),
-  mkPainting (mkFullDepsRestr; mkExtraDeps extraDepsCohs)%extradeps d ->
-  (mkPaintings depsCohs.(_extraDeps)).2 (mkRestrFrame q Hq ε d).
-
 Fixpoint mkRestrPainting `(extraDepsCohs: DepsCohsExtension p k depsCohs):
-  mkRestrPaintingType' extraDepsCohs.
+  mkRestrPaintingType (mkExtraDeps extraDepsCohs).
 Proof.
   red; intros * (l, c); destruct q.
   - now exact (l ε).
