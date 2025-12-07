@@ -604,7 +604,7 @@ Proof.
     now exact (mkCohPainting extraDepsCohs2).
 Defined.
 
-Class νSetAux p := {
+Class νSetData p := {
   deps: DepsRestr p 0;
   restrPaintings E: mkRestrPaintingTypes (TopRestrDep E);
   cohFrames E: mkCohFrameTypes (restrPaintings E);
@@ -612,9 +612,44 @@ Class νSetAux p := {
     (depsCohs := mkDepsCohs0 (cohFrames E)) (TopCohDep E');
 }.
 
+Section νSetData.
+Variable p: nat.
+Variable C: νSetData p.
+Variable E: mkFrame C.(deps) -> HSet.
+
+Definition mkDepsCohs': DepsCohs p 0 :=
+  mkDepsCohs0 (C.(cohFrames) E).
+
+Definition mkDepsRestr': DepsRestr p.+1 0 :=
+  mkFullDepsRestr (depsCohs := mkDepsCohs').
+
+Definition mkRestrPaintings' E': mkRestrPaintingTypes (TopRestrDep E') :=
+  mkRestrPaintings (depsCohs := mkDepsCohs') (TopCohDep E').
+
+Definition mkCohFrames' E': mkCohFrameTypes (mkRestrPaintings' E') :=
+  mkCohFrames (depsCohs := mkDepsCohs')
+    (C.(cohPaintings) E E').
+
+Definition mkDepsCohs2' E': DepsCohs2 p 0 :=
+  {| _cohPaintings := C.(cohPaintings) E E' |}.
+
+Definition mkCohPaintings' E' E'':
+  mkCohPaintingTypes (TopCohDep E'') :=
+  mkCohPaintings (TopCoh2Dep (depsCohs2 := mkDepsCohs2' E') E'').
+
+#[local]
+Instance mkνSetData: νSetData p.+1 :=
+{|
+  deps := mkDepsRestr';
+  restrPaintings := mkRestrPaintings';
+  cohFrames := mkCohFrames';
+  cohPaintings := mkCohPaintings';
+|}.
+End νSetData.
+
 Class νSet p := {
   prefix: Type;
-  data: prefix -> νSetAux p;
+  data: prefix -> νSetData p;
 }.
 
 (***************************************************)
@@ -623,33 +658,6 @@ Class νSet p := {
 (** Extending the initial prefix *)
 Definition mkPrefix p {C: νSet p}: Type :=
   { D: C.(prefix) &T mkFrame (C.(data) D).(deps) -> HSet }.
-
-Section νSetData.
-Variable p: nat.
-Variable C: νSet p.
-Variable D: mkPrefix p.
-
-Definition mkDepsCohs': DepsCohs p 0 :=
-  mkDepsCohs0 ((C.(data) D.1).(cohFrames) D.2).
-
-Definition mkDepsRestr': DepsRestr p.+1 0 :=
-  mkFullDepsRestr (depsCohs := mkDepsCohs').
-
-Definition mkRestrPaintings' E: mkRestrPaintingTypes (TopRestrDep E) :=
-  mkRestrPaintings (depsCohs := mkDepsCohs') (TopCohDep E).
-
-Definition mkCohFrames' E: mkCohFrameTypes (mkRestrPaintings' E) :=
-  mkCohFrames (depsCohs := mkDepsCohs')
-    ((C.(data) D.1).(cohPaintings) D.2 E).
-
-Definition mkDepsCohs2' E: DepsCohs2 p 0 :=
-  {| _cohPaintings := (C.(data) D.1).(cohPaintings) D.2 E |}.
-
-Definition mkCohPaintings' E E':
-  mkCohPaintingTypes (TopCohDep E') :=
-  mkCohPaintings (TopCoh2Dep (depsCohs2 := mkDepsCohs2' E) E').
-
-End νSetData.
 
 #[local]
 Instance mkνSet0: νSet 0.
@@ -662,13 +670,7 @@ Defined.
 Instance mkνSet {p} (C: νSet p): νSet p.+1 :=
 {|
   prefix := mkPrefix p;
-  data := fun D: mkPrefix p =>
-  {|
-    deps := mkDepsRestr' p C D;
-    restrPaintings := mkRestrPaintings' p C D;
-    cohFrames := mkCohFrames' p C D;
-    cohPaintings := mkCohPaintings' p C D
-  |}
+  data := fun D: mkPrefix p => mkνSetData p (C.(data) D.1) D.2;
 |}.
 
 (** An [νSet] truncated up to dimension [n] *)
