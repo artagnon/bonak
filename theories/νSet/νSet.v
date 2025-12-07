@@ -568,12 +568,6 @@ Proof.
     now exact (mkExtraCohs p.+1 k depsCohs2 extraDepsCohs2).
 Defined.
 
-Lemma invertDepsCohs0 `(extraDepsCohs: DepsCohsExtension p 0 depsCohs):
-  {E: mkFrame mkFullDepsRestr -> HSet &T extraDepsCohs = TopCohDep E}.
-Proof.
-  now refine (match extraDepsCohs with TopCohDep E => (E; eq_refl) end).
-Defined.
-
 Fixpoint mkCohPainting `{depsCohs2: DepsCohs2 p k}
   (extraDepsCohs2: DepsCohs2Extension p k depsCohs2):
   mkCohPaintingType (mkExtraCohs extraDepsCohs2).
@@ -581,8 +575,9 @@ Proof.
   red; intros *. destruct c as (l, c), r.
   - (* r = 0 *)
     destruct extraDepsCohs2, depsCohs2.
-    destruct (invertDepsCohs0 _extraDepsCohs0) as (E', ->);
-    now reflexivity. now reflexivity.
+    generalize dependent _extraDepsCohs0. intro.
+    now refine (match _extraDepsCohs0 with TopCohDep E => _ end).
+    now reflexivity.
   - (* r = r'+1, q is necessarily q'+1 and extraDepsCohs non empty *)
     destruct q.
     { exfalso; now apply leY_O_contra in Hrq. }
