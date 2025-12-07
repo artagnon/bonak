@@ -604,13 +604,19 @@ Proof.
     now exact (mkCohPainting extraDepsCohs2).
 Defined.
 
+Class νSetDataNext {p} (deps: DepsRestr p 0) (E: mkFrame deps -> HSet) := {
+  restrPaintings: mkRestrPaintingTypes (TopRestrDep E);
+  cohFrames: mkCohFrameTypes restrPaintings;
+  cohPaintings E': mkCohPaintingTypes
+    (depsCohs := mkDepsCohs0 cohFrames) (TopCohDep E');
+}.
+
 Class νSetData p := {
   deps: DepsRestr p 0;
-  restrPaintings E: mkRestrPaintingTypes (TopRestrDep E);
-  cohFrames E: mkCohFrameTypes (restrPaintings E);
-  cohPaintings E E': mkCohPaintingTypes
-    (depsCohs := mkDepsCohs0 (cohFrames E)) (TopCohDep E');
+  next E: νSetDataNext deps E;
 }.
+
+Arguments next {p}.
 
 Section νSetData.
 Variable p: nat.
@@ -618,7 +624,7 @@ Variable C: νSetData p.
 Variable E: mkFrame C.(deps) -> HSet.
 
 Definition mkDepsCohs': DepsCohs p 0 :=
-  mkDepsCohs0 (C.(cohFrames) E).
+  mkDepsCohs0 ((C.(next) E).(cohFrames)).
 
 Definition mkDepsRestr': DepsRestr p.+1 0 :=
   mkFullDepsRestr (depsCohs := mkDepsCohs').
@@ -628,10 +634,10 @@ Definition mkRestrPaintings' E': mkRestrPaintingTypes (TopRestrDep E') :=
 
 Definition mkCohFrames' E': mkCohFrameTypes (mkRestrPaintings' E') :=
   mkCohFrames (depsCohs := mkDepsCohs')
-    (C.(cohPaintings) E E').
+    ((C.(next) E).(cohPaintings) E').
 
 Definition mkDepsCohs2' E': DepsCohs2 p 0 :=
-  {| _cohPaintings := C.(cohPaintings) E E' |}.
+  {| _cohPaintings := (C.(next) E).(cohPaintings) E' |}.
 
 Definition mkCohPaintings' E' E'':
   mkCohPaintingTypes (TopCohDep E'') :=
@@ -641,9 +647,11 @@ Definition mkCohPaintings' E' E'':
 Instance mkνSetData: νSetData p.+1 :=
 {|
   deps := mkDepsRestr';
-  restrPaintings := mkRestrPaintings';
-  cohFrames := mkCohFrames';
-  cohPaintings := mkCohPaintings';
+  next E' := {|
+    restrPaintings := mkRestrPaintings' E';
+    cohFrames := mkCohFrames' E';
+    cohPaintings := mkCohPaintings' E';
+  |}
 |}.
 End νSetData.
 
