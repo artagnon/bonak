@@ -166,7 +166,7 @@
 \newcommandx{\depscoht}[2][1,2]{\depsp{coht}[][][][#1][#2][][]}
 \newcommandx{\fulldepscoht}[1][1]{\depsp{fullcoht}[][][][#1][][][]}
 \newcommandx{\depstype}[2][1,2]{\depstypep{}[][][][#1][#2][][]}
-\newcommandx{\fulldepstype}[2][1,2]{\depstypep{full}[][][][#1][][][]}
+\newcommandx{\fulldepstype}[1][1]{\depstypep{full}[][][][#1][][][]}
 \newcommandx{\depscohstype}[2][1,2]{\depstypep{cohs}[][][][#1][#2][][]}
 \newcommandx{\fulldepscohstype}[1][1]{\depstypep{fullcohs}[][][][#1][][][]}
 \newcommandx{\depscohttype}[2][1,2]{\depstypep{coht}[][][][#1][#2][][]}
@@ -439,29 +439,27 @@ The type of sequences such as $\restrf[n][\lbrack 0,p \rbrack]$ will be represen
 
 \subsection{Specifying frames}
 
-Assuming $\framep[n][\lbrack 0,p \rbrack]$ for $p \leq n$ only requires to define the type of frames, which are just finite products of $\U$:
+Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ only requires to define the type of frames, which are just finite products of $\U$:
 
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \frametype[n][\lbrack 0,p \rbrack] &  & :      & \U                                               \\
-    \frametype[n][]                    &  & \defeq & \unittype                                        \\
-    \frametype[n][\lbrack 0,p \rbrack] &  & \defeq & \frametype[n+1][\lbrack 0,p-1 \rbrack] \times \U \\
+    \frametype[n][\lbrack 0,p-1 \rbrack] &  & :      & \U                                               \\
+    \frametype[n][\lbrack \rbrack]       &  & \defeq & \unittype                                        \\
+    \frametype[n][\lbrack 0,p \rbrack]   &  & \defeq & \frametype[n+1][\lbrack 0,p-1 \rbrack] \times \U \\
   \end{array}
 \end{equation*}
 
 \subsection{Specifying paintings}
 
-The types $\paintingtype[n][\lbrack 0,p \rbrack]$ of $\painting[n][\lbrack 0,p \rbrack]$ for $p \leq n$
-are type families over frames, so $\framep[n][\lbrack 0,p \rbrack]$ needs to be assumed
-beforehand:
+The types $\paintingtype[n][\lbrack 0,p-1 \rbrack]$ of $\painting[n][\lbrack 0,p \rbrack]$ for $p \leq n+1$ are type families over frames, so $\framep[n][\lbrack 0,p-1 \rbrack]$ needs to be assumed beforehand:
 
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \paintingtype[n][\lbrack 0,p \rbrack] & (\framep[n][\lbrack 0,p \rbrack]:\frametype[n][\lbrack 0,p \rbrack]) & :      & \U                                                                                                                   \\
-    \paintingtype[n][]                    & \unitpoint                                                           & \defeq & \unittype                                                                                                            \\
-    \paintingtype[n][\lbrack 0,p \rbrack] & (\framep[n][\lbrack 0,p \rbrack])                                    & \defeq & \paintingtype[n+1][\lbrack 0,p-1 \rbrack](\framep[n+1][\lbrack 0,p-1 \rbrack]) \times (\framep[n][p] \rightarrow \U) \\
+    \paintingtype[n][\lbrack 0,p-1 \rbrack] & (\framep[n][\lbrack 0,p \rbrack]:\frametype[n][\lbrack 0,p-1 \rbrack]) & :      & \U                                                                                                                   \\
+    \paintingtype[n][\lbrack \rbrack]       & \unitpoint                                                             & \defeq & \unittype                                                                                                            \\
+    \paintingtype[n][\lbrack 0,p \rbrack]   & (\framep[n][\lbrack 0,p \rbrack])                                      & \defeq & \paintingtype[n+1][\lbrack 0,p-1 \rbrack](\framep[n+1][\lbrack 0,p-1 \rbrack]) \times (\framep[n][p] \rightarrow \U) \\
   \end{array}
 \end{equation*}
 
@@ -469,7 +467,7 @@ beforehand:
 
 Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\painting[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$, we can
 mutually define the types $\restrftype[n][\lbrack 0,p-1 \rbrack]$ of frame
-restrictions together with $\framep[n+1][0,...p]$ as a function from
+restrictions together with $\framep[n+1][\lbrack 0,p-1 \rbrack]$ as a function from
 $\restrf[n][\lbrack 0,p-1 \rbrack]$, introducing also abbreviations for the types
 and definitions of layers, as well as for the combination of sequences
 of $\framep[n][\lbrack 0,p-1 \rbrack]$, $\painting[n][\lbrack 0,p-1 \rbrack]$ and
@@ -611,19 +609,19 @@ We can now formally define $\painting[n+1][p]$ by recursion on $n+1-p$:
   \end{array}
 \end{equation*}
 
-From which we can deduce $\painting[n+1][\lbrack 0,p \rbrack]$ for $p \leq n+1$ by a second recursion, this time on $p$:
+From which we can deduce $\painting[n+1][\lbrack 0,p-1 \rbrack]$ for $p \leq n+2$ by a second recursion, this time on $p$:
 
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \painting[n+1][\lbrack 0,p \rbrack]   &
-    (\fulldeps[n]:\fulldepstype[n])       & :      & \paintingtype[n+1][\lbrack 0,p \rbrack](\framep[n+1][\lbrack 0,p \rbrack](\fulldeps.\deps[n-1][\lbrack 0,p \rbrack])) \\
-    \painting[n+1][\lbrack 0,0-1 \rbrack] &
-    \fulldeps[n]                          & \defeq & \unittype                                                                                                             \\
+    \painting[n+1][\lbrack 0,p-1 \rbrack] &
+    (\fulldeps[n]:\fulldepstype[n])       & :      & \paintingtype[n+1][\lbrack 0,p-1 \rbrack](\framep[n+1][\lbrack 0,p-1 \rbrack](\fulldeps.\deps[n][\lbrack 0,p-1 \rbrack])) \\
+    \painting[n+1][\lbrack \rbrack]       &
+    \fulldeps[n]                          & \defeq & \unittype                                                                                                                 \\
     \painting[n+1][\lbrack 0,p \rbrack]   &
     \fulldeps[n]
                                           & \defeq &
-    (\painting[n+1][\lbrack 0,p-1 \rbrack](\fulldeps[n-1]),\painting[n+1][p](\fulldeps[n]))                                                                                \\
+    (\painting[n+1][\lbrack 0,p-1 \rbrack](\fulldeps[n-1]),\painting[n+1][p](\fulldeps[n]))                                                                                    \\
   \end{array}
 \end{equation*}
 
@@ -634,17 +632,17 @@ At this stage, we are able to define $\framep[n+1][\lbrack 0,n+1 \rbrack]$, $\pa
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \restrptype[n][\lbrack 0,p-1 \rbrack]     &
-    (\fulldeps[n]:\fulldepstype[n])           & :      & \U                                                                \\
-    \restrptype[n][\lbrack 0,0-1 \rbrack]     & E      & \defeq                                                & \unittype \\
-    \restrptype[n][\lbrack 0,(p+1)-1 \rbrack] &
+    \restrptype[n][\lbrack 0,p-1 \rbrack] &
+    (\fulldeps[n]:\fulldepstype[n])       & :      & \U                                                                \\
+    \restrptype[n][\lbrack \rbrack]       & E      & \defeq                                                & \unittype \\
+    \restrptype[n][\lbrack 0,p \rbrack]   &
     (\fulldeps[n])
-                                              & \defeq & \restrptype[n+1][\lbrack 0,p-1 \rbrack] \times \left(
+                                          & \defeq & \restrptype[n+1][\lbrack 0,p-1 \rbrack] \times \left(
     \begin{array}{l}
         \Pi q\leq n.\Pi \epsilon.\Pi d:\framep[n+1][p](\fulldeps.\deps[n][\lbrack 0,p-1 \rbrack]). \\
         \painting[n+1][p]
         (\fulldeps[n])(d) \rightarrow                                                              \\ \fulldeps.\deps.\painting[n][p](\fulldeps.\deps.\restrf[n][p][q][\epsilon](d))\end{array}
-    \right)                                                                                                                \\
+    \right)                                                                                                            \\
   \end{array}
 \end{equation*}
 
@@ -656,14 +654,14 @@ Thanks to $\restrptype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$, we can mutua
   \begin{array}{llcl}
     \depscohstype[n][\lbrack 0,p-1 \rbrack] &                                     & \defeq                                                         &
     \left(\begin{array}{lcl}
-              \fulldeps[n][\lbrack 0,n \rbrack] & : & \fulldepstype[n][\lbrack 0,n \rbrack]               \\
-              \restrp[n][0,...p-1]              & : & \restrptype[n][\lbrack 0,p-1 \rbrack](\fulldeps[n]) \\
-              \cohf[n][\lbrack 0,p-1 \rbrack]   & : & \cohftype[n][\lbrack 0,p-1 \rbrack]
+              \fulldeps[n]                    & : & \fulldepstype[n]                                    \\
+              \restrp[n][0,...p-1]            & : & \restrptype[n][\lbrack 0,p-1 \rbrack](\fulldeps[n]) \\
+              \cohf[n][\lbrack 0,p-1 \rbrack] & : & \cohftype[n][\lbrack 0,p-1 \rbrack]
               \left(\begin{array}{l}
                   \fulldeps[n]                      \\
                   \restrp[n][\lbrack 0,p-1 \rbrack] \\
-                \end{array}\right)                                                     \\
-            \end{array}\right)                                                                                                                         \\
+                \end{array}\right)                                                   \\
+            \end{array}\right)                                                                                                                           \\
     \overline{\deps}                        &
     \multicolumn{3}{l}{
     (\depscohs[n][\lbrack 0,p-1 \rbrack]:\depscohstype[n][\lbrack 0,p-1 \rbrack]) : \depstype[n+1][\lbrack 0,p \rbrack]}                                                                                                      \\
@@ -702,13 +700,13 @@ Thanks to $\restrptype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$, we can mutua
               \restrp[n][\lbrack 0,p-1 \rbrack]:\restrptype[n][\lbrack 0,p-1 \rbrack](\fulldeps[n]) \\
             \end{array}\right) : \U
     }                                                                                                                  n                                                                                                      \\
-    \cohftype[n][\lbrack 0,0-1 \rbrack]     &
+    \cohftype[n][\lbrack \rbrack]           &
     \left(\begin{array}{l}
               E          \\
               \unitpoint \\
             \end{array}\right)                  & \defeq                              &
     \unittype                                                                                                                                                                                                                 \\
-    \cohftype[n][\lbrack 0,(p+1)-1 \rbrack] &
+    \cohftype[n][\lbrack 0,p \rbrack]       &
     \left(\begin{array}{l}
               \fulldeps[n]                    \\
               \restrp[n][\lbrack 0,p \rbrack] \\
@@ -816,19 +814,19 @@ Armed with $\restrf$, $\cohftype$ and these abbreviations, it is now possible to
   \end{array}
 \end{equation*}
 
-From which we can deduce $\restrp[n+1][\lbrack 0,p \rbrack]$ for $p \leq n+1$ again by a second recursion, this time on $p$:
+From which we can deduce $\restrp[n+1][\lbrack 0,p-1 \rbrack]$ for $p \leq n+2$ again by a second recursion, this time on $p$:
 
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \restrp[n+1][\lbrack 0,p \rbrack]       &
-    (\fulldepscohs[n]:\fulldepscohstype[n]) & :      & \restrptype[n+1][\lbrack 0,p \rbrack](\fulldepscohs.\depscohs.\fulldeps[n])) \\
-    \restrp[n+1][\lbrack 0,0-1 \rbrack]     &
-    \fulldepscohs[n]                        & \defeq & \unittype                                                                    \\
+    \restrp[n+1][\lbrack 0,p-1 \rbrack]     &
+    (\fulldepscohs[n]:\fulldepscohstype[n]) & :      & \restrptype[n+1][\lbrack 0,p-1 \rbrack](\fulldepscohs.\depscohs.\fulldeps[n])) \\
+    \restrp[n+1][\lbrack \rbrack]           &
+    \fulldepscohs[n]                        & \defeq & \unittype                                                                      \\
     \restrp[n+1][\lbrack 0,p \rbrack]       &
     \fulldepscohs[n]
                                             & \defeq &
-    (\restrp[n+1][\lbrack 0,p-1 \rbrack](\fulldepscohs[n]),\restrp[n+1][p](\fulldepscohs[n]))                                       \\
+    (\restrp[n+1][\lbrack 0,p-1 \rbrack](\fulldepscohs[n]),\restrp[n+1][p](\fulldepscohs[n]))                                         \\
   \end{array}
 \end{equation*}
 
@@ -858,7 +856,7 @@ sequence $\cohptype[n][\lbrack 0,p-1 \rbrack]$ of types of painting coherence la
 
 \subsection{Defining frame coherence laws and specifying frame 2-dimensional coherence laws}
 
-Thanks to $\cohptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\cohf[n+1][\lbrack 0,p \rbrack]$ and $\cohttype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ from $\fulldepscohs[n][\lbrack 0,p-1 \rbrack]$, abbreviating this and the dependency in a $\coht[n][\lbrack 0,p-1 \rbrack]$ as $\depscohttype[n][\lbrack 0,p-1 \rbrack]$, and using also abbreviations in passing for $\cohl$ and $\cohltype$. It is also convenient to build $\depscohs[n+1][\lbrack 0,p \rbrack]$ from $\depscoht[n][\lbrack 0,p-1 \rbrack]$, so that we can now build $\framep[n+3][p]$. Thus, we also include this abbreviation in the definition:
+Thanks to $\cohptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\cohf[n+1][\lbrack 0,p \rbrack]$ and $\cohttype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ from $\fulldepscohs[n]$, abbreviating this and the dependency in a $\coht[n][\lbrack 0,p-1 \rbrack]$ as $\depscohttype[n][\lbrack 0,p-1 \rbrack]$, and using also abbreviations in passing for $\cohl$ and $\cohltype$. It is also convenient to build $\depscohs[n+1][\lbrack 0,p \rbrack]$ from $\depscoht[n][\lbrack 0,p-1 \rbrack]$, so that we can now build $\framep[n+3][p]$. Thus, we also include this abbreviation in the definition:
 
 \begin{align*}
   \fontsize{7.2}{9}\selectfont
@@ -904,13 +902,13 @@ Thanks to $\cohptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\cohf[n
               \fulldepscohs[n]:\fulldepscohstype[n]                                                 \\
               \cohp[n][\lbrack 0,p-1 \rbrack]:\cohptype[n][\lbrack 0,p-1 \rbrack](\fulldepscohs[n]) \\
             \end{array}\right) & :                                                                             & \U                                                                                                                                                                                          \\
-    \cohttype[n][\lbrack 0,0-1 \rbrack]                                                      &
+    \cohttype[n][\lbrack \rbrack]                                                            &
     \left(\begin{array}{l}
               (E,E')     \\
               \unitpoint \\
             \end{array}\right)                                                                   & \defeq                                                                        &
     \unittype                                                                                                                                                                                                                                                                                              \\
-    \cohttype[n][\lbrack 0,(p+1)-1 \rbrack]                                                  &
+    \cohttype[n][\lbrack 0,p \rbrack]                                                        &
     \left(\begin{array}{l}
               \fulldepscohs[n]              \\
               \cohp[n][\lbrack 0,p \rbrack] \\
@@ -976,13 +974,13 @@ The last key construction we need is $\cohp[n+1][p]$, which is by recursion on $
     (\fulldepscoht[n]:\fulldepscohttype[n]) & :      &
     \left(
     \begin{array}{l}
-        \Pi q\leq n.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.\,\Pi d.\,\Pi c.\,   \\
+        \Pi q\leq n.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.\,\Pi d.\,\Pi c.\, \\
         \restrp[n][p][q][\epsilon](\overline{\fulldeps}(\depscoht))(\restrp[n+1][p][r][\omega]
-        (\fulldepscoht.\depscoht.\fulldepscohs[n+1][\lbrack 0,n \rbrack])(d)(c)) = \\
+        (\fulldepscoht.\depscoht.\fulldepscohs[n+1])(d)(c)) =                    \\
         \restrp[n][p][r][\omega](\overline{\fulldeps}(\depscoht))(\restrp[n+1][p][q+1][\epsilon]
-        (\fulldepscoht.\depscoht.\fulldepscohs[n+1][\lbrack 0,n \rbrack])(d)(c))   \\
-        (\fulldepscoht.\depscoht.\fulldepscohs[n+1][\lbrack 0,n \rbrack])(d)(c))   \\
-      \end{array}\right)                                                                         \\
+        (\fulldepscoht.\depscoht.\fulldepscohs[n+1])(d)(c))                      \\
+        (\fulldepscoht.\depscoht.\fulldepscohs[n+1])(d)(c))                      \\
+      \end{array}\right)                                                      \\
     \cohp[n+1][n]                           &
     (\fulldepscoht[n])
                                             & \defeq & \lambda q\leq n.\lambda r\leq q.\lambda \epsilon.\lambda \omega.\lambda d. \lambda (l,c). l\epsilon \\
@@ -996,19 +994,19 @@ The last key construction we need is $\cohp[n+1][p]$, which is by recursion on $
   \end{array}
 \end{equation*}
 
-From which we can deduce $\cohp[n+1][\lbrack 0,p \rbrack]$ again by a second recursion, this time on $p$:
+From which we can deduce $\cohp[n+1][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ again by a second recursion, this time on $p$:
 
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \cohp[n+1][\lbrack 0,p \rbrack]         &
-    (\fulldepscoht[n]:\fulldepscohttype[n]) & :      & \cohptype[n+1][\lbrack 0,p \rbrack](\fulldepscoht.\depscoht.\fulldepscohs[n])) \\
-    \cohp[n+1][\lbrack 0,0-1 \rbrack]       &
-    \fulldepscohs[n]                        & \defeq & \unittype                                                                      \\
+    \cohp[n+1][\lbrack 0,p-1 \rbrack]       &
+    (\fulldepscoht[n]:\fulldepscohttype[n]) & :      & \cohptype[n+1][\lbrack 0,p-1 \rbrack](\fulldepscoht.\depscoht.\fulldepscohs[n])) \\
+    \cohp[n+1][\lbrack \rbrack]             &
+    \fulldepscohs[n]                        & \defeq & \unittype                                                                        \\
     \cohp[n+1][\lbrack 0,p \rbrack]         &
     \fulldepscoht[n]
                                             & \defeq &
-    (\cohp[n+1][\lbrack 0,p-1 \rbrack](\fulldepscoht[n]),\cohp[n+1][p](\fulldepscoht[n]))                                             \\
+    (\cohp[n+1][\lbrack 0,p-1 \rbrack](\fulldepscoht[n]),\cohp[n+1][p](\fulldepscoht[n]))                                               \\
   \end{array}
 \end{equation*}
 
