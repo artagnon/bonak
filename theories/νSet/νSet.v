@@ -117,12 +117,6 @@ Definition mkFrames `(deps: DepsRestr p k): mkFrameTypes p.+1 k :=
 
 Definition mkFrame `(deps: DepsRestr p k): HSet := (mkFrames deps).2.
 
-Class DepRestr `(deps: DepsRestr p k.+1) := {
-  _frame: HSet;
-  _painting: _frame -> HSet;
-  _restrFrame: forall q {Hq: q <= k} (ε: arity), mkFrame deps -> _frame;
-}.
-
 #[local]
 Instance proj1Deps `(deps: DepsRestr p.+1 k): DepsRestr p k.+1 :=
 {|
