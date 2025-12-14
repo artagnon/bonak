@@ -115,12 +115,6 @@ Instance toDepsRestr `{paintings: mkPaintingTypes p k frames}
   (restrFrames: mkRestrFrameTypes paintings) : DepsRestr p k :=
   {| _restrFrames := restrFrames |}.
 
-Definition mkFrames `(deps: DepsRestr p k): mkFrameTypes p.+1 k :=
-  (mkRestrFrameTypesAndFrames
-    deps.(_paintings)).(FrameDef) deps.(_restrFrames).
-
-Definition mkFrame `(deps: DepsRestr p k): HSet := (mkFrames deps).2.
-
 #[local]
 Instance proj1DepsRestr `(deps: DepsRestr p.+1 k): DepsRestr p k.+1 :=
 {|
@@ -134,6 +128,12 @@ Delimit Scope depsrestr_scope with depsrestr.
 Bind Scope depsrestr_scope with DepsRestr.
 Notation "x .(1)" := (proj1DepsRestr x%_depsrestr)
   (at level 1, left associativity, format "x .(1)"): depsrestr_scope.
+
+Definition mkFrames `(deps: DepsRestr p k): mkFrameTypes p.+1 k :=
+  (mkRestrFrameTypesAndFrames
+    deps.(_paintings)).(FrameDef) deps.(_restrFrames).
+
+Definition mkFrame `(deps: DepsRestr p k): HSet := (mkFrames deps).2.
 
 Inductive DepsRestrExtension p: forall k, DepsRestr p k -> Type :=
 | TopRestrDep {deps} (E: mkFrame deps -> HSet): DepsRestrExtension p 0 deps
@@ -273,6 +273,21 @@ Instance toDepsCohs `{extraDeps: DepsRestrExtension p k deps}
   (cohs: mkCohFrameTypes restrPaintings): DepsCohs p k :=
   {| _cohs := cohs |}.
 
+#[local]
+Instance proj1DepsCohs `(depsCohs: DepsCohs p.+1 k): DepsCohs p k.+1 :=
+{|
+  _deps := depsCohs.(_deps).(1);
+  _extraDeps := (depsCohs.(_deps); depsCohs.(_extraDeps));
+  _restrPaintings := depsCohs.(_restrPaintings).1;
+  _cohs := depsCohs.(_cohs).1;
+|}.
+
+Declare Scope depscohs_scope.
+Delimit Scope depscohs_scope with depscohs.
+Bind Scope depscohs_scope with DepsCohs.
+Notation "x .(1)" := (proj1DepsCohs x%depscohs)
+  (at level 1, left associativity, format "x .(1)"): depscohs_scope.
+
 (** The restrFrame(n+1,0..p) component of the fixpoint *)
 
 Definition mkRestrFrames `{depsCohs: DepsCohs p k} :=
@@ -321,21 +336,6 @@ Definition mkRestrFrame `{depsCohs: DepsCohs p k}:
   forall q (Hq: q <= k) (ε: arity),
   mkFrame mkDepsRestr.(1) -> mkFrame depsCohs.(_deps) :=
   mkRestrFrames.2.
-
-#[local]
-Instance proj1DepsCohs `(depsCohs: DepsCohs p.+1 k): DepsCohs p k.+1 :=
-{|
-  _deps := depsCohs.(_deps).(1);
-  _extraDeps := (depsCohs.(_deps); depsCohs.(_extraDeps));
-  _restrPaintings := depsCohs.(_restrPaintings).1;
-  _cohs := depsCohs.(_cohs).1;
-|}.
-
-Declare Scope depscohs_scope.
-Delimit Scope depscohs_scope with depscohs.
-Bind Scope depscohs_scope with DepsCohs.
-Notation "x .(1)" := (proj1DepsCohs x%depscohs)
-  (at level 1, left associativity, format "x .(1)"): depscohs_scope.
 
 Inductive DepsCohsExtension p: forall k (depsCohs: DepsCohs p k), Type :=
 | TopCohDep `{depsCohs: DepsCohs p 0}
@@ -509,19 +509,12 @@ Class DepsCohs2 p k := {
   _cohPaintings: mkCohPaintingTypes _extraDepsCohs;
 }.
 
-Definition toDepsCohs2 `{extraDepsCohs: DepsCohsExtension p k depsCohs}
+#[local]
+Instance toDepsCohs2 `{extraDepsCohs: DepsCohsExtension p k depsCohs}
   (cohPaintings: mkCohPaintingTypes extraDepsCohs): DepsCohs2 p k :=
   {| _cohPaintings := cohPaintings |}.
 
 #[local]
-Instance mkDepsCohs `(depsCohs2: DepsCohs2 p k): DepsCohs p.+1 k :=
-{|
-  _deps := mkDepsRestr;
-  _extraDeps := mkExtraDeps depsCohs2.(_extraDepsCohs);
-  _restrPaintings := mkRestrPaintings depsCohs2.(_extraDepsCohs);
-  _cohs := mkCohFrames depsCohs2.(_cohPaintings);
-|}.
-
 Instance proj1DepsCohs2 `(depsCohs2: DepsCohs2 p.+1 k): DepsCohs2 p k.+1 :=
 {|
   _depsCohs := depsCohs2.(_depsCohs).(1);
@@ -534,6 +527,15 @@ Delimit Scope depscohs2_scope with depscohs2.
 Bind Scope depscohs2_scope with DepsCohs2.
 Notation "x .(1)" := (proj1DepsCohs2 x%depscohs2)
   (at level 1, left associativity, format "x .(1)"): depscohs2_scope.
+
+#[local]
+Instance mkDepsCohs `(depsCohs2: DepsCohs2 p k): DepsCohs p.+1 k :=
+{|
+  _deps := mkDepsRestr;
+  _extraDeps := mkExtraDeps depsCohs2.(_extraDepsCohs);
+  _restrPaintings := mkRestrPaintings depsCohs2.(_extraDepsCohs);
+  _cohs := mkCohFrames depsCohs2.(_cohPaintings);
+|}.
 
 Inductive DepsCohs2Extension p: forall k (depsCohs2: DepsCohs2 p k), Type :=
 | TopCoh2Dep `{depsCohs2: DepsCohs2 p 0}
