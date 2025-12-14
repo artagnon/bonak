@@ -601,45 +601,31 @@ Proof.
 Defined.
 
 Class νSetData p := {
-  deps: DepsRestr p 0;
+  frames: mkFrameTypes p 0;
+  paintings: mkPaintingTypes p 0 frames;
+  restrFrames: mkRestrFrameTypes paintings;
   restrPaintings E: mkRestrPaintingTypes (TopRestrDep E);
   cohFrames E: mkCohFrameTypes (restrPaintings E);
   cohPaintings E E': mkCohPaintingTypes
-    (depsCohs := toDepsCohs (cohFrames E)) (TopCohDep E');
+    (depsCohs := toDepsCohs (deps := toDepsRestr restrFrames) (cohFrames E))
+    (TopCohDep E');
 }.
 
 Section νSetData.
 Variable p: nat.
 Variable C: νSetData p.
-Variable E: mkFrame C.(deps) -> HSet.
-
-Definition mkDepsCohs': DepsCohs p 0 :=
-  toDepsCohs (C.(cohFrames) E).
-
-Definition mkDepsRestr': DepsRestr p.+1 0 :=
-  mkDepsRestr (depsCohs := mkDepsCohs').
-
-Definition mkRestrPaintings' E': mkRestrPaintingTypes (TopRestrDep E') :=
-  mkRestrPaintings (depsCohs := mkDepsCohs') (TopCohDep E').
-
-Definition mkCohFrames' E': mkCohFrameTypes (mkRestrPaintings' E') :=
-  mkCohFrames (depsCohs := mkDepsCohs')
-    (C.(cohPaintings) E E').
-
-Definition mkDepsCohs2' E': DepsCohs2 p 0 :=
-  {| _cohPaintings := C.(cohPaintings) E E' |}.
-
-Definition mkCohPaintings' E' E'':
-  mkCohPaintingTypes (TopCohDep E'') :=
-  mkCohPaintings (TopCoh2Dep (depsCohs2 := mkDepsCohs2' E') E'').
+Variable E: mkFrame (toDepsRestr C.(restrFrames)) -> HSet.
 
 #[local]
 Instance mkνSetData: νSetData p.+1 :=
 {|
-  deps := mkDepsRestr';
-  restrPaintings := mkRestrPaintings';
-  cohFrames := mkCohFrames';
-  cohPaintings := mkCohPaintings';
+  frames := mkFrames _;
+  paintings := mkPaintings _;
+  restrFrames := mkRestrFrames;
+  restrPaintings E' := mkRestrPaintings (TopCohDep E');
+  cohFrames E' := mkCohFrames (C.(cohPaintings) E E');
+  cohPaintings E' E'' :=
+    mkCohPaintings (TopCoh2Dep (depsCohs2 := toDepsCohs2 (C.(cohPaintings) E E')) E'');
 |}.
 End νSetData.
 
@@ -653,13 +639,13 @@ Class νSet p := {
 
 (** Extending the initial prefix *)
 Definition mkPrefix p {C: νSet p}: Type :=
-  { D: C.(prefix) &T mkFrame (C.(data) D).(deps) -> HSet }.
+  { D: C.(prefix) &T mkFrame (toDepsRestr (C.(data) D).(restrFrames)) -> HSet }.
 
 #[local]
 Instance mkνSet0: νSet 0.
   unshelve esplit.
   - now exact hunit.
-  - unshelve esplit; try now trivial. unshelve esplit; now trivial.
+  - unshelve esplit; try now trivial.
 Defined.
 
 #[local]
@@ -677,7 +663,7 @@ Fixpoint νSetAt n: νSet n :=
   end.
 
 CoInductive νSetFrom n (X: (νSetAt n).(prefix)): Type := cons {
-  this: mkFrame ((νSetAt n).(data) X).(deps) -> HSet;
+  this: mkFrame (toDepsRestr ((νSetAt n).(data) X).(restrFrames)) -> HSet;
   next: νSetFrom n.+1 (X; this);
 }.
 
