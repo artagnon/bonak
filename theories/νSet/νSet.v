@@ -202,7 +202,6 @@ Class CohFrameTypeBlock `{extraDeps: DepsRestrExtension p k deps} := {
 (** Auxiliary definitions to mutually build cohFrameTypes and restrFrames *)
 
 Definition mkCohFrameTypesStep `{extraDeps: DepsRestrExtension p.+1 k deps}
-  {restrPaintings: mkRestrPaintingTypes extraDeps}
   (prev: CohFrameTypeBlock (extraDeps := (deps; extraDeps))): Type :=
   { Q: prev.(CohFrameTypesDef) &T
     forall r q (Hrq: r <= q) (Hq: q <= k) (ε ω: arity) d,
@@ -214,7 +213,7 @@ Definition mkCohFrameTypesStep `{extraDeps: DepsRestrExtension p.+1 k deps}
 Definition mkRestrLayer `{extraDeps: DepsRestrExtension p.+1 k deps}
   (restrPaintings: mkRestrPaintingTypes extraDeps)
   {prev: CohFrameTypeBlock (extraDeps := (deps; extraDeps))}
-  (cohFrames: mkCohFrameTypesStep (restrPaintings := restrPaintings) prev)
+  (cohFrames: mkCohFrameTypesStep prev)
   q (Hq: q <= k) (ε: arity)
   (d: mkFrame (toDepsRestr (prev.(RestrFramesDef) cohFrames.1)).(1)):
   mkLayer (prev.(RestrFramesDef) cohFrames.1) d -> mkLayer deps.(_restrFrames)
