@@ -1,5 +1,4 @@
 From Stdlib Require Import Logic.FunctionalExtensionality.
-Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT RewLemmas HSet LeYoneda Notation.
@@ -7,9 +6,6 @@ From Bonak Require Import SigT RewLemmas HSet LeYoneda Notation.
 Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.
-Set Typeclasses Depth 10.
-Remove Printing Let sigT.
-Remove Printing Let prod.
 
 Section νSet.
 Variable arity: HSet.
