@@ -989,9 +989,9 @@ structure on which we can reason by induction, for $D:\Xto{m}{n}$
 given:
 
 \begin{align*}
-  \framep[n][\lbrack 0,n \rbrack]                                                                      & :      & \frametype[n][\lbrack 0,n-1 \rbrack]                                       \\
-  \painting[n][\lbrack 0,n \rbrack]                                                                    & :      & \paintingtype[n][\lbrack 0,n-1 \rbrack](\framep[n][\lbrack 0,n-1 \rbrack]) \\
-  \restrf[n][\lbrack 0,n \rbrack]                                                                      & :      & \restrftype[n][\lbrack 0,n-1 \rbrack]
+  \framep[n][\lbrack 0,n \rbrack]                                                                      & :      & \frametype[n][\lbrack 0,n \rbrack]                                       \\
+  \painting[n][\lbrack 0,n \rbrack]                                                                    & :      & \paintingtype[n][\lbrack 0,n \rbrack](\framep[n][\lbrack 0,n \rbrack]) \\
+  \restrf[n][\lbrack 0,n \rbrack]                                                                      & :      & \restrftype[n][\lbrack 0,n \rbrack]
   \left(
   \begin{array}{l}
       \framep[n][\lbrack 0,n \rbrack]   \\
@@ -1035,7 +1035,7 @@ given:
       \depscohs[n][\lbrack 0,n \rbrack](E) \\
       E'                                   \\
     \end{array}\right)                                                                                                                                                       \\
-  \cohp[n][\lbrack 0,n-1 \rbrack](E)(E')                                                               & :      & \cohptype[n][\lbrack 0,n \rbrack]
+  \cohp[n][\lbrack 0,n \rbrack](E)(E')                                                               & :      & \cohptype[n][\lbrack 0,n \rbrack]
   (\fulldepscohs[n](E)(E'))                                                                                                                                                                  \\
 \end{align*}
 
@@ -1044,15 +1044,15 @@ enough to assume $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow
 \begin{itemize}
   \item $\framep[n+1][\lbrack 0,n+1 \rbrack]$ comes from $\deps[n][\lbrack 0,n \rbrack]$.
   \item $\painting[n+1][\lbrack 0,n+1 \rbrack]$ comes from $\fulldeps[n](E)$.
-  \item $\restrf[n+1][\lbrack 0,n+1 \rbrack]$ comes from $\depscohs[n][\lbrack 0,n \rbrack]$.
+  \item $\restrf[n+1][\lbrack 0,n+1 \rbrack]$ comes from $\depscohs[n][\lbrack 0,n \rbrack](E)$.
   \item $\restrp[n+1][\lbrack 0,n+1 \rbrack](E')$, for $E':\framep[n+2][n+2](\overline{\deps}(\depscohs[n][\lbrack 0,n \rbrack])) \rightarrow \U$, comes from $\fulldepscohs[n](E)(E')$.
-  \item $\depscoht[n][\lbrack 0,n \rbrack](E)(E')$ comes from $\fulldepscohs[n](E)(E')$ and $\restrp[n][\lbrack 0,n \rbrack](E)$.
+  \item $\depscoht[n][\lbrack 0,n \rbrack](E)(E')$ comes from $\fulldepscohs[n](E)(E')$ and $\cohp[n][\lbrack 0,n \rbrack](E)(E')$.
   \item $\cohf[n+1][\lbrack 0,n+1 \rbrack](E')$ comes from $\depscoht[n][\lbrack 0,n \rbrack](E)(E')$.
-  \item $\fulldepscoht[n](E)(E')(E'')$, for $E'': \framep[n+3][n+3](\overline{\deps}(\overline{\depscohs}(\depscoht[n][\lbrack 0,n \rbrack]))) \rightarrow \U$, comes from $\depscoht[n][\lbrack 0,n \rbrack](E)(E')$, $\cohp[n][\lbrack 0,n \rbrack](E)(E')$ and $E''$.
+  \item $\fulldepscoht[n](E)(E')(E'')$, for $E'': \framep[n+3][n+3](\overline{\deps}(\overline{\depscohs}(\depscoht[n][\lbrack 0,n \rbrack]))) \rightarrow \U$, comes from $\depscoht[n][\lbrack 0,n \rbrack](E)(E')$ and $E''$.
   \item $\cohp[n+1][\lbrack 0,n+1 \rbrack](E')(E'')$ comes from $\fulldepscoht[n](E)(E')(E'')$.
 \end{itemize}
 
-Therefore, assuming a construction of $\framep[n][n]$ from $D:\Xto{m}{n}$, we are able to build a $\framep[n+1][n+1]$ from $D$ extended with some $E:\framep[n+1][n+1](\deps[n+1][\lbrack 0,n+1 \rbrack]) \rightarrow \U$. This is enough to build $\Xcomp{m}{n}(D)$, for $D:\Xto{m}{n}$, and thus $\Xp{m}$, by starting with an empty $D$.
+Therefore, assuming a construction of $\framep[n][n]$ from $D:\Xto{m}{n}$, we are able to build a $\framep[n+1][n+1]$ from $D$ extended with some $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow \U$. This is enough to build $\Xcomp{m}{n}(D)$, for $D:\Xto{m}{n}$, and thus $\Xp{m}$, by starting with an empty $D$.
 
 \bibliographystyle{msclike}
 \bibliography{paper}
