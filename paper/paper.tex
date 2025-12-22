@@ -172,7 +172,7 @@
 \newcommandx{\depscohttype}[2][1,2]{\depstypep{coht}[][][][#1][#2][][]}
 \newcommandx{\fulldepscohttype}[1][1]{\depstypep{fullcoht}[][][][#1][][][]}
 
-\newcommandx{\coht}[6][1,2,3,4,5,6]{\cohtwo{frame}[][#3][#4][#5][#6][#1,#2][][]}
+\newcommandx{\coht}[7][1,2,3,4,5,6,7]{\cohtwo{frame}[#3][#4][#5][#6][#7][#1][#2][]}
 
 % For typesetting type theory rules
 \newcommand \seqr[3]
@@ -356,8 +356,8 @@ Since $\restrf[n][p]$ is referring to $\framep[n][p]$ and $\framep[n-1][p]$, and
   \framep[n-2][p]    & : \U                                                                                                                 & \mbox{for all $p\leq n-2$} \\
   \restrf[n][p]      & : \Pi q.\, \Pi \omega.\, \framep[n][p] \rightarrow \framep[n-1][p]                                                   & \mbox{for all $p\leq n$}   \\
   \restrf[n-1][p]    & : \Pi q.\, \Pi \omega.\, \framep[n-1][p] \rightarrow \framep[n-2][p]                                                 & \mbox{for all $p\leq n-1$} \\
-  \cohf[n][p]        & : \Pi qr\epsilon\omega.\, \restrf[n-1][p][\epsilon][q] \circ \restrf[n][p][\omega][r] =                                                           \\
-                     & \;\;\;\;\restrf[n-1][p][\omega][r] \circ \restrf[n][p][\epsilon][q+1]                                                & \mbox{for all $p\leq n$}   \\
+  \cohf[n][p]        & : \Pi qr\epsilon\omega.\, \restrf[n-1][p][q][\epsilon] \circ \restrf[n][p][\omega][r] =                                                           \\
+                     & \;\;\;\;\restrf[n-1][p][r][\omega] \circ \restrf[n][p][\epsilon][q+1]                                                & \mbox{for all $p\leq n$}   \\
   \mathsf{hypF0}     & : \framep[n][0]         = \unitpoint
   \\
   \mathsf{hypFS}     & : \framep[n][p+1]       = \Sigma d: \framep[n+1][p]. \Pi \omega.\, \painting[n][p] (\restrf[n+1][p](d))              & \mbox{for all $p\leq n-1$} \\
@@ -385,8 +385,8 @@ $\restrp[n+1][p]$. This means that we build instead by induction a block of the 
   \restrf[n][p]   & : \Pi q \leq n-p.\, \Pi \epsilon.\, \framep[n+1][p] \rightarrow \framep[n][p]                               & \mbox{for all $p\leq n$} \\
   \restrp[n][p]   & : \Pi q \leq n-p.\, \Pi \epsilon.\, \Pi d:\framep[n+1][p].\,                                                                           \\
                   & \;\;\;\;\painting[n+1][p](d) \rightarrow \painting[n][p](\restrf[n][p](d))                                  & \mbox{for all $p\leq n$} \\
-  \cohf[n][p]     & : \Pi qr\epsilon\omega.\, \restrf[n][p][\epsilon][q] \circ \restrf[n+1][p][\omega][r] =                                                \\
-                  & \;\;\;\;\restrf[n][p][\omega][r] \circ \restrf[n+1][p][\epsilon][q+1]                                       & \mbox{for all $p\leq n$} \\
+  \cohf[n][p]     & : \Pi qr\epsilon\omega.\, \restrf[n][p][q][\epsilon] \circ \restrf[n+1][p][\omega][r] =                                                \\
+                  & \;\;\;\;\restrf[n][p][\omega][r] \circ \restrf[n+1][p][q+1][\epsilon]                                       & \mbox{for all $p\leq n$} \\
   \cohp[n][p]     & \Pi qr\epsilon\omega.\,\Pi d:\framep[n+2][p].\,                                                                                        \\
                   & \;\;\;\;\restrp[n][p][q][\epsilon](\restrf[n+1][p][r][\omega](d)) \circ \restrp[n+1][p][r][\omega](d) =                                \\
                   & \;\;\;\;\restrp[n][p][r][\omega](\restrf[n+1][p][q+1][\epsilon](d)) \circ \restrp[n+1][p][q+1][\epsilon](d) & \mbox{for all $p\leq n$} \\
@@ -661,16 +661,16 @@ Thanks to $\restrptype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$, we can mutua
                   \fulldeps[n]                      \\
                   \restrp[n][\lbrack 0,p-1 \rbrack] \\
                 \end{array}\right)                                                   \\
-            \end{array}\right)                                                                                                                              \\
+            \end{array}\right)                                                                                                     \\
     \overline{\deps}                        &
     \multicolumn{3}{l}{
-    (\depscohs[n][\lbrack 0,p-1 \rbrack]:\depscohstype[n][\lbrack 0,p-1 \rbrack]) : \depstype[n+1][\lbrack 0,p \rbrack]}                                                                                                         \\
+    (\depscohs[n][\lbrack 0,p-1 \rbrack]:\depscohstype[n][\lbrack 0,p-1 \rbrack]) : \depstype[n+1][\lbrack 0,p \rbrack]}                                                                                \\
     \overline{\deps}                        & \depscohs[n][\lbrack 0,p-1 \rbrack] & \defeq                                                         &
     \left(\begin{array}{l}
               \framep[n+1][\lbrack 0,p \rbrack](\depscohs.\fulldeps.\deps[n][\lbrack 0,p-1 \rbrack]) \\
               \painting[n+1][\lbrack 0,p \rbrack](\depscohs.\fulldeps[n])                            \\
               \restrf[n+1][\lbrack 0,p \rbrack](\depscohs[n][\lbrack 0,p-1 \rbrack])                 \\
-            \end{array}\right)                                                                                                                                 \\
+            \end{array}\right)                                                                                                        \\
     \restrf[n+1][\lbrack 0,p \rbrack]       &
     \multicolumn{3}{l}{
       (\depscohs[n][\lbrack 0,p-1 \rbrack]:\depscohstype[n][\lbrack 0,p-1 \rbrack]) :
@@ -679,10 +679,10 @@ Thanks to $\restrptype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$, we can mutua
                 \framep[n+1][\lbrack 0,p \rbrack](\depscohs.\fulldeps.\deps[n][\lbrack 0,p \rbrack]) \\
                 \painting[n+1][\lbrack 0,p \rbrack](\depscohs.\fulldeps[n])                          \\
               \end{array}\right)
-    }                                                                                                                                                                                                                            \\
+    }                                                                                                                                                                                                   \\
     \restrf[n+1][\lbrack 0,0 \rbrack]       &
     E
-                                            & \defeq                              & (\unitpoint,\lambda q. \lambda\epsilon. \lambda \_.\unitpoint)                                                                               \\
+                                            & \defeq                              & (\unitpoint,\lambda q. \lambda\epsilon. \lambda \_.\unitpoint)                                                      \\
     \restrf[n+1][\lbrack 0,p+1 \rbrack]     &
     (\depscohs[n][\lbrack 0,p \rbrack])     & \defeq                              &
     \left(\begin{array}{l}
@@ -692,33 +692,33 @@ Thanks to $\restrptype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$, we can mutua
               \left(\restrf[n][p][q][\epsilon]
                 (\depscohs[n][\lbrack 0,p-1 \rbrack])(d), \restrl[n][p][q][\epsilon]
               (\depscohs[n][\lbrack 0,p \rbrack])(d)(l)\right) \\
-            \end{array} \right)                                                                                                                                                          \\
+            \end{array} \right)                                                                                                                                 \\
     \cohftype[n][\lbrack 0,p-1 \rbrack]     &
     \multicolumn{3}{l}{
       \left(\begin{array}{l}
               \fulldeps[n]:\fulldepstype[n]                                                         \\
               \restrp[n][\lbrack 0,p-1 \rbrack]:\restrptype[n][\lbrack 0,p-1 \rbrack](\fulldeps[n]) \\
             \end{array}\right) : \U
-    }                                                                                                                  n                                                                                                         \\
+    }                                                                                                                  n                                                                                \\
     \cohftype[n]                            &
     \left(\begin{array}{l}
               E          \\
               \unitpoint \\
             \end{array}\right)                  & \defeq                              &
-    \unittype                                                                                                                                                                                                                    \\
+    \unittype                                                                                                                                                                                           \\
     \cohftype[n][\lbrack 0,p \rbrack]       &
     \left(\begin{array}{l}
               \fulldeps[n]                    \\
               \restrp[n][\lbrack 0,p \rbrack] \\
             \end{array}\right)      & \defeq                              &
     \left\{\begin{array}{l}
-             \Sigma \cohf[n][\lbrack 0,p-1 \rbrack]
+             \Sigma \cohf[n][\lbrack 0,p-1 \rbrack][q][r][\epsilon][\omega]
              :\cohftype[n][\lbrack 0,p-1 \rbrack]
              \left(\begin{array}{l}
                 \fulldeps[n]                      \\
                 \restrp[n][\lbrack 0,p-1 \rbrack] \\
               \end{array}\right).                  \\
-             \Pi q \leq n-p.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.\,\Pi d:\framep[n+2][p]
+             \Pi d:\framep[n+2][p]
              (\overline{\deps}\left(\begin{array}{l}
                                  \fulldeps[n]                      \\
                                  \restrp[n][\lbrack 0,p-1 \rbrack] \\
@@ -737,11 +737,11 @@ Thanks to $\restrptype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$, we can mutua
                 \restrp[n][\lbrack 0,p-1 \rbrack] \\
                 \cohf[n][\lbrack 0,p \rbrack]
               \end{array}\right)(d))                  \\
-           \end{array}\right.                                                                                                                                       \\
+           \end{array}\right.                                                                                                                          \\
     \restrltype[n][p]                       &
     \multicolumn{3}{l}{
       (\depscohs[n][\lbrack 0,p-1 \rbrack]:\depscohstype[n][\lbrack 0,p-1 \rbrack])
-    : \U}                                                                                                                                                                                                                        \\
+    : \U}                                                                                                                                                                                               \\
     \restrltype[n][p]                       &
     \depscohs[n][\lbrack 0,p-1 \rbrack]
                                             & \defeq                              &
@@ -750,14 +750,14 @@ Thanks to $\restrptype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$, we can mutua
              \layer[n+1][p](\overline{\deps}(\depscohs[n][\lbrack 0,p-1 \rbrack])(d) \rightarrow                            \\
              \layer[n][p](\fulldeps.\deps[n][\lbrack 0,p \rbrack])(\restrf[n][p]
              (\depscohs[n][\lbrack 0,p-1 \rbrack])(d))
-           \end{array}\right.                                                                                                        \\
+           \end{array}\right.                                                                               \\
     \restrl[n][p]                           &
     \multicolumn{3}{l}{
       (\depscohs[n][\lbrack 0,p \rbrack]:\depscohstype[n][\lbrack 0,p \rbrack]) :
-    \restrltype[n][p] (\depscohs[n][\lbrack 0,p \rbrack])}                                                                                                                                                                       \\
-    \restrl[n][p]                           &
+    \restrltype[n][p] (\depscohs[n][\lbrack 0,p \rbrack])}                                                                                                                                              \\
+    \restrl[n][p][q][\epsilon]              &
     \depscohs[n][\lbrack 0,p \rbrack]       & \defeq                              &
-    \lambda q \leq n-p. \lambda \epsilon.\,\lambda d.\lambda l.\overrightarrow{\cohf[n][p][q][q][\epsilon][\omega](d)}{\restrp[n][p][q][\epsilon](\restrf[n][p][q][\epsilon](\depscohs[n][\lbrack 0,p-1 \rbrack])(d))(l \omega)} \\
+    \lambda d.\lambda l.\lambda \omega\overrightarrow{\cohf[n][p][q][0][\epsilon][\omega](d)}{\restrp[n][p][q][\epsilon](\restrf[n][p][q][\epsilon](\depscohs[n][\lbrack 0,p-1 \rbrack])(d))(l_\omega)} \\
   \end{array}
 \end{equation*}
 
@@ -858,37 +858,33 @@ sequence $\cohptype[n][\lbrack 0,p-1 \rbrack]$ of types of painting coherence la
 
 Thanks to $\cohptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\cohf[n+1][\lbrack 0,p \rbrack]$ and $\cohttype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ from $\fulldepscohs[n]$, abbreviating this and the dependency in a $\coht[n][\lbrack 0,p-1 \rbrack]$ as $\depscohttype[n][\lbrack 0,p-1 \rbrack]$, and using also abbreviations in passing for $\cohl$ and $\cohltype$. It is also convenient to build $\depscohs[n+1][\lbrack 0,p \rbrack]$ from $\depscoht[n][\lbrack 0,p-1 \rbrack]$, so that we can now build $\framep[n+3][p]$. Thus, we also include this abbreviation in the definition:
 
-\begin{align*}
+\begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \depscohttype[n][\lbrack 0,p-1 \rbrack]                                                  &                                                                               & \defeq                                                                            &
+    \depscohttype[n][\lbrack 0,p-1 \rbrack]                                       &                                                                               & \defeq                                                                            &
     \left(\begin{array}{lll}
-              \fulldepscohs[n]                & : & \fulldepscohstype[n]                                  \\
-              \cohp[n][0,...p-1]              & : & \cohptype[n][\lbrack 0,p-1 \rbrack](\fulldepscohs[n]) \\
-              \coht[n][\lbrack 0,p-1 \rbrack] & : & \cohttype[n][\lbrack 0,p-1 \rbrack]
-              \left(\begin{array}{l}
-                  \fulldepscohs[n]                \\
-                  \cohp[n][\lbrack 0,p-1 \rbrack] \\
-                \end{array}\right)                                                       \\
-            \end{array}\right)                                                                                                                                                                                                    \\
-    \overline{\depscohs}                                                                     & (\depscoht[n][\lbrack 0,p-1 \rbrack]:\depscohttype[n][\lbrack 0,p-1 \rbrack]) & :                                                                                 & \depscohstype[n+1][\lbrack 0,p \rbrack] \\
-    \overline{\depscohs}                                                                     & \depscoht[n][\lbrack 0,p-1 \rbrack]                                           & \defeq                                                                            &
+              \fulldepscohs[n]   & : & \fulldepscohstype[n]                                  \\
+              \cohp[n][0,...p-1] & : & \cohptype[n][\lbrack 0,p-1 \rbrack](\fulldepscohs[n]) \\
+            \end{array}
+    \right)                                                                                                                                                                                                                                                                                     \\
+    \overline{\depscohs}                                                          & (\depscoht[n][\lbrack 0,p-1 \rbrack]:\depscohttype[n][\lbrack 0,p-1 \rbrack]) & :                                                                                 & \depscohstype[n+1][\lbrack 0,p \rbrack] \\
+    \overline{\depscohs}                                                          & \depscoht[n][\lbrack 0,p-1 \rbrack]                                           & \defeq                                                                            &
     \left(\begin{array}{l}
               \overline{\deps}(\depscoht.\fulldepscohs.\depscohs[n][\lbrack 0,p-1 \rbrack]) \\
               \restrp[n+1][p](\depscoht.\fulldepscohs[n])                                   \\
               \cohf[n+1][p](\depscoht[n][\lbrack 0,p-1 \rbrack])                            \\
-            \end{array}\right)                                                                                                                                                                                                                    \\
-    \cohf[n+1][\lbrack 0,p \rbrack]                                                          &
-    (\depscoht[n][\lbrack 0,p-1 \rbrack]:\depscohttype[n][\lbrack 0,p-1 \rbrack])            & :                                                                             & \cohftype[n+1][\lbrack 0,p \rbrack]
+            \end{array}\right)                                                                                                                                                                                                         \\
+    \cohf[n+1][\lbrack 0,p \rbrack]                                               &
+    (\depscoht[n][\lbrack 0,p-1 \rbrack]:\depscohttype[n][\lbrack 0,p-1 \rbrack]) & :                                                                             & \cohftype[n+1][\lbrack 0,p \rbrack]
     \left(\begin{array}{l}
               \overline{\fulldeps}(\depscoht.\fulldepscohs[n])              \\
               \restrp[n+1][\lbrack 0,p \rbrack](\depscoht.\fulldepscohs[n]) \\
-            \end{array}\right)                                                                                                                                                                                                                                    \\
+            \end{array}\right)                                                                                                                                                                                                                         \\
     \\
-    \cohf[n][\lbrack 0,0 \rbrack]                                                            &
-    \unitpoint                                                                               & \defeq                                                                        & (\unitpoint,\lambda q.\lambda r. \lambda\epsilon. \lambda\omega.\lambda \_.\refl)                                           \\
-    \cohf[n][\lbrack 0,p+1 \rbrack]                                                          &
-    (\depscoht[n][\lbrack 0,p-1 \rbrack])                                                    & \defeq                                                                        &
+    \cohf[n][\lbrack 0,0 \rbrack]                                                 &
+    \unitpoint                                                                    & \defeq                                                                        & (\unitpoint,\lambda q.\lambda r. \lambda\epsilon. \lambda\omega.\lambda \_.\refl)                                           \\
+    \cohf[n][\lbrack 0,p+1 \rbrack]                                               &
+    (\depscoht[n][\lbrack 0,p-1 \rbrack])                                         & \defeq                                                                        &
     \left(\begin{array}{l}
               \cohf[n+1][\lbrack 0,p \rbrack]
               (\depscoht[n]),                                                    \\
@@ -896,53 +892,37 @@ Thanks to $\cohptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\cohf[n
               (\cohf[n][\lbrack 0,p \rbrack][q][r][\epsilon][\omega]
               (\depscoht[n])(d), \cohl[n][p][q][r][\epsilon][\omega]
               (\depscoht[n])(d)(l))                                              \\
-            \end{array}\right)                                                                                                                                                                                                                               \\
-    \cohttype[n][\lbrack 0,p-1 \rbrack]                                                      &
+            \end{array}\right)                                                                                                                                                                                                                    \\
+    \cohttype[n][p]                                                               &
+    \fulldepscohs[n]                                                              & \defeq                                                                        &
     \left(\begin{array}{l}
-              \fulldepscohs[n]:\fulldepscohstype[n]                                                 \\
-              \cohp[n][\lbrack 0,p-1 \rbrack]:\cohptype[n][\lbrack 0,p-1 \rbrack](\fulldepscohs[n]) \\
-            \end{array}\right) & :                                                                             & \U                                                                                                                                                                                          \\
-    \cohttype[n]                                                                             &
-    \left(\begin{array}{l}
-              (E,E')     \\
-              \unitpoint \\
-            \end{array}\right)                                                                   & \defeq                                                                        &
-    \unittype                                                                                                                                                                                                                                                                                              \\
-    \cohttype[n][\lbrack 0,p \rbrack]                                                        &
-    \left(\begin{array}{l}
-              \fulldepscohs[n]              \\
-              \cohp[n][\lbrack 0,p \rbrack] \\
-            \end{array}\right)                                                         & \defeq                                                                        &
-    \left(\begin{array}{l}
-              \Sigma \coht[n][\lbrack 0,p-1 \rbrack]
-              :\cohttype[n][\lbrack 0,p-1 \rbrack]
-              \left(\begin{array}{l}
-                  \fulldepscohs[n+1]                \\
-                  \cohp[n+1][\lbrack 0,p-1 \rbrack] \\
-                \end{array}\right).                                    \\
-              \Pi q \leq n - p.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.\,\Pi \theta.\, \\
-              \fulldepscohs.\depscohs.\cohf[n][p][r][p][\omega][\theta] \circ \cohf[n+1][p][q+1][p][\epsilon][\theta]
+              \Pi q \leq n-p.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.\,\Pi \theta.\, \\
+              \fulldepscohs.\depscohs.\cohf[n][p][r][0][\omega][\theta] \circ \cohf[n+1][p][q+1][0][\epsilon][\theta]
               (\fulldepscoht[n])
-              \circ \fulldepscohs.\depscohs.\cohf[n][p][q][r][\epsilon][\omega] =        \\
+              \circ \fulldepscohs.\depscohs.\cohf[n][p][q][r][\epsilon][\omega] =      \\
               \cohf[n+1][p][q+1][r+1][\epsilon][\omega]
               (\fulldepscoht[n+1])
-              \circ \fulldepscohs.\depscohs.\cohf[n][p][q][p][\epsilon][\theta]
-              \circ \cohf[n+1][p][r][p][\omega][\theta]
-              (\fulldepscoht[n])                                                         \\
-            \end{array}\right)                                                                                                                                                                                           \\
-    \cohl[n][p]                                                                              &
-    (\depscoht[n][\lbrack 0,p-1 \rbrack]:\depscohttype[n][\lbrack 0,p-1 \rbrack])            & :                                                                             &
+              \circ \fulldepscohs.\depscohs.\cohf[n][p][q][0][\epsilon][\theta]
+              \circ \cohf[n+1][p][r][0][\omega][\theta]
+              (\fulldepscoht[n])                                                       \\
+            \end{array}\right)                                                                                                                                                                                \\
+    \coht[n][p]                                                                   &
+    \fulldepscohs[n]                                                              & :                                                                             & \cohttype[n][p](\fulldepscohs[n])                                                                                           \\
+    \coht[n][p]                                                                   &
+    \fulldepscohs[n]                                                              & \defeq                                                                        & \UIP                                                                                                                        \\
+
+    \cohl[n][p]                                                                   &
+    (\depscoht[n][\lbrack 0,p-1 \rbrack]:\depscohttype[n][\lbrack 0,p-1 \rbrack]) & :                                                                             &
     \begin{array}{l}
       \Pi q \leq n-p.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.                                                                          \\
       \Pi d.\Pi l. \overrightarrow{\cohf[n][p][r+1][q+1][\epsilon][\omega]}{(\restrl[n][p][q][\epsilon](\restrl[n][p][r][\omega](l)))} = \\
       \restrl[n][p][r][\omega](\restrl[n][p][q+1][\epsilon](l))
-    \end{array}                                                                                                                                                                     \\
-    \cohl[n][p][q][\epsilon][r][\omega]                                                      &
-    (\depscoht[n][\lbrack 0,p-1 \rbrack])                                                    & \defeq                                                                        &
-    \lambda d. \lambda l. \lambda \theta. (\cohp[n][p][q][\epsilon][r][\omega](l))  ...                                                                                                                                                                                                                    \\
+    \end{array}                                                                                                                                                          \\
+    \cohl[n][p][q][r][\epsilon][\omega]                                           &
+    (\depscoht[n][\lbrack 0,p-1 \rbrack])                                         & \defeq                                                                        &
+    \lambda d. \lambda l. \lambda \theta. \overrightarrow{\coht[n][p][q][r][\epsilon][\omega][\theta](\fulldepscohs[n])}{(\cohp[n][p][q][r][\epsilon][\omega](l_\theta))}                                                                                                                       \\
   \end{array}
-\end{align*}
-
+\end{equation*}
 We need also the notion of full dependencies at the level of the coherence conditions of dimension 2, that combines a full $\depscoht[n][\lbrack 0,n \rbrack]$ with a set $E:\framep[n+3][n+3](\overline{\deps}(\overline{\depscohs}(\depscoht[n][\lbrack 0,n \rbrack]))) \rightarrow \U$:
 \begin{align*}
   \fulldepscohttype[n] \defeq
