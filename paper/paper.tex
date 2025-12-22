@@ -1010,9 +1010,9 @@ given:
   \cohf[n][\lbrack 0,n-1 \rbrack](E)                                              & :      & \cohftype[n][\lbrack 0,n-1 \rbrack]
   \left(
   \begin{array}{l}
-      \fulldeps[n](E)                   \\
-      \restrp[n][\lbrack 0,n-1 \rbrack] \\
-    \end{array}\right)                                                                                                                                     \\
+      \fulldeps[n](E)                      \\
+      \restrp[n][\lbrack 0,n-1 \rbrack](E) \\
+    \end{array}\right)                                                                                                                                  \\
   \fulldepscohs[n]
   \left(\begin{array}{l}
             E: \framep[n+1][n](\deps[n][\lbrack 0,n-1 \rbrack])\rightarrow \U \\
@@ -1025,12 +1025,7 @@ given:
       \cohf[n][\lbrack 0,n-1 \rbrack](E)   \\
       E'                                   \\
     \end{array}\right)                                                                                                                                  \\
-  \cohp[n][\lbrack 0,n-1 \rbrack]
-  \left(\begin{array}{l}
-            E  \\
-            E' \\
-          \end{array}\right)
-                                                                                  & :      & \cohptype[n][\lbrack 0,n-1 \rbrack]
+  \cohp[n][\lbrack 0,n-1 \rbrack](E)(E')                                          & :      & \cohptype[n][\lbrack 0,n-1 \rbrack]
   (\fulldepscohs[n](E)(E'))                                                                                                                                             \\
 \end{align*}
 
