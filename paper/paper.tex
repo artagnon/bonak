@@ -989,38 +989,52 @@ structure on which we can reason by induction, for $D:\Xto{m}{n}$
 given:
 
 \begin{align*}
-  \framep[n][\lbrack 0,n-1 \rbrack]    & : & \frametype[n][\lbrack 0,n-1 \rbrack]                                       \\
-  \painting[n][\lbrack 0,n-1 \rbrack]  & : & \paintingtype[n][\lbrack 0,n-1 \rbrack](\framep[n][\lbrack 0,n-1 \rbrack]) \\
-  \restrf[n][\lbrack 0,n-1 \rbrack]    & : & \restrftype[n][\lbrack 0,n-1 \rbrack]
+  \framep[n][\lbrack 0,n-1 \rbrack]      & :      & \frametype[n][\lbrack 0,n-1 \rbrack]                                       \\
+  \painting[n][\lbrack 0,n-1 \rbrack]    & :      & \paintingtype[n][\lbrack 0,n-1 \rbrack](\framep[n][\lbrack 0,n-1 \rbrack]) \\
+  \restrf[n][\lbrack 0,n-1 \rbrack]      & :      & \restrftype[n][\lbrack 0,n-1 \rbrack]
   \left(
   \begin{array}{l}
       \framep[n][\lbrack 0,n-1 \rbrack]   \\
       \painting[n][\lbrack 0,n-1 \rbrack] \\
-    \end{array}\right)                                                                                   \\
-  \restrp[n][\lbrack 0,n-1 \rbrack](E) & : & \restrptype[n][\lbrack 0,n-1 \rbrack]
+    \end{array}\right)                                                                                          \\
+  \deps[n][\lbrack 0,n-1 \rbrack]        & \defeq &
+  \left(
+  \begin{array}{l}
+      \framep[n][\lbrack 0,n-1 \rbrack]   \\
+      \painting[n][\lbrack 0,n-1 \rbrack] \\
+      \restrf[n][\lbrack 0,n-1 \rbrack]   \\
+    \end{array}\right)                                                                                          \\
+  \fulldeps[n](E)                        & \defeq &
   \left(
   \begin{array}{l}
       \deps[n][\lbrack 0,n-1 \rbrack] \\
       E                               \\
-    \end{array}\right)                                                                                       \\
-  \cohf[n][\lbrack 0,n-1 \rbrack](E)   & : & \cohftype[n][\lbrack 0,n-1 \rbrack]
+    \end{array}\right)                                                                                              \\
+  \restrp[n][\lbrack 0,n-1 \rbrack](E)   & :      & \restrptype[n][\lbrack 0,n-1 \rbrack]
+  \fulldeps[n](E)                                                                                                              \\
+  \cohf[n][\lbrack 0,n-1 \rbrack](E)     & :      & \cohftype[n][\lbrack 0,n-1 \rbrack]
   \left(
   \begin{array}{l}
-      \deps[n][\lbrack 0,n-1 \rbrack]                 \\
-      E:\framep[n+1][n]
-      (\deps[n][\lbrack 0,n-1 \rbrack])\rightarrow \U \\
-      \restrp[n][\lbrack 0,n-1 \rbrack]               \\
-    \end{array}\right)                                                                       \\
+      \fulldeps[n](E)                   \\
+      \restrp[n][\lbrack 0,n-1 \rbrack] \\
+    \end{array}\right)                                                                                            \\
+  \depscohs[n][\lbrack 0,n-1 \rbrack](E) & \defeq &
+  \left(
+  \begin{array}{l}
+      \fulldeps[n](E))                     \\
+      \restrp[n][\lbrack 0,n-1 \rbrack](E) \\
+      \cohf[n][\lbrack 0,n-1 \rbrack](E)   \\
+    \end{array}\right)                                                                                         \\
   \cohp[n][\lbrack 0,n-1 \rbrack]
   \left(\begin{array}{l}
             E  \\
             E' \\
           \end{array}\right)
-                                       & : & \cohptype[n][\lbrack 0,n-1 \rbrack]
+                                         & :      & \cohptype[n][\lbrack 0,n-1 \rbrack]
   \left(\begin{array}{l}
-            \depscohs[n][\lbrack 0,n-1 \rbrack] \\
-            E'                                  \\
-          \end{array}\right)                                                                             \\
+            \depscohs[n][\lbrack 0,n-1 \rbrack](E) \\
+            E'                                     \\
+          \end{array}\right)                                                                                 \\
 \end{align*}
 
 Indeed, to build this structure at level $n+1$, from level $n$, it is
