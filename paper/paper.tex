@@ -154,10 +154,10 @@
 \newcommandx{\restrftype}[2][1,2]{\restr{FRAME}[][][][#1][#2][][]}
 \newcommandx{\restrltype}[2][1,2]{\restr{LAYER}[][][][#1][#2][][]}
 \newcommandx{\restrptype}[2][1,2]{\restr{PAINTING}[][][][#1][#2][][]}
-\newcommandx{\cohftype}[2][1,2]{\coh{FRAME}[][][][][][#1,#2][][]}
-\newcommandx{\cohltype}[2][1,2]{\coh{LAYER}[][][][][][#1,#2][][]}
-\newcommandx{\cohptype}[2][1,2]{\coh{PAINTING}[][][][][][#1,#2][][]}
-\newcommandx{\cohttype}[2][1,2]{\cohtwo{FRAME}[][][][][][#1,#2][][]}
+\newcommandx{\cohftype}[2][1,2]{\coh{FRAME}[][][][][][#1][#2][]}
+\newcommandx{\cohltype}[2][1,2]{\coh{LAYER}[][][][][][#1][#2][]}
+\newcommandx{\cohptype}[2][1,2]{\coh{PAINTING}[][][][][][#1][#2][]}
+\newcommandx{\cohttype}[2][1,2]{\cohtwo{FRAME}[][][][][][#1][#2][]}
 
 \newcommandx{\deps}[2][1,2]{\depsp{}[][][][#1][#2][][]}
 \newcommandx{\fulldeps}[1][1]{\depsp{full}[][][][#1][][][]}
@@ -793,24 +793,24 @@ Armed with $\restrf$, $\cohftype$ and these abbreviations, it is now possible to
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \restrp[n+1][p]                         &
+    \restrp[n+1][p][q][\epsilon]            &
     (\fulldepscohs[n]:\fulldepscohstype[n]) & :      &
     \left(
     \begin{array}{l}
-        \Pi q \leq n-p. \Pi \epsilon. \Pi d:\framep[n+2][p]
+        \Pi d:\framep[n+2][p]
         (\overline{\deps}(\fulldepscohs.\depscohs[n][\lbrack 0,p-1 \rbrack])). \\
         \painting[n+2][p]
         (\overline{\fulldeps}(\fulldepscohs[n]))(d) \rightarrow                \\
         \painting[n+1][p](\fulldepscohs.\depscohs.\fulldeps[n])
-        (\restrf[n+1][p](\fulldepscohs.\depscohs[n][\lbrack 0,p-1 \rbrack])(d))\end{array}\right)                                                           \\
-    \restrp[n+1][n+1]                       &
-    (\fulldepscohs[n])                      & \defeq & \lambda q \leq n-p.\lambda \epsilon. \lambda d. \lambda (l,c). l\epsilon \\
-    \restrp[n+1][p \leq n]                  &
-    (\fulldepscohs[n])                      & \defeq & \lambda q \leq n-p.\lambda \epsilon. \lambda d. \lambda (l,c).
+        (\restrf[n+1][p](\fulldepscohs.\depscohs[n][\lbrack 0,p-1 \rbrack])(d))\end{array}\right)                        \\
+    \restrp[n+1][n+1][q][\epsilon]          &
+    (\fulldepscohs[n])                      & \defeq & \lambda d. \lambda (l,c). l\epsilon   \\
+    \restrp[n+1][p \leq n][q][\epsilon]     &
+    (\fulldepscohs[n])                      & \defeq & \lambda d. \lambda (l,c).
     \left(\begin{array}{l}
               \restrl[n][p][q][\epsilon](\fulldepscohs.\depscohs[n][\lbrack 0,p \rbrack])(d)(l), \\
               \restrp[n+1][p+1][q][\epsilon](\fulldepscohs[n])(d,l)(c)                           \\
-            \end{array}\right)                                    \\
+            \end{array}\right) \\
   \end{array}
 \end{equation*}
 
@@ -970,19 +970,19 @@ The last key construction we need is $\cohp[n+1][p]$ for $p \leq n+1$, which is 
 \begin{equation*}
   \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
-    \cohp[n+1][p]                           &
-    (\fulldepscoht[n]:\fulldepscohttype[n]) & :      &
-    \cohptype[n+1][p](\overline{\fulldepscohs}(\fulldepscoht[n]))                                                                                             \\
-    \cohp[n+1][n+1]                         &
+    \cohp[n+1][p]                                &
+    (\fulldepscoht[n]:\fulldepscohttype[n])      & :      &
+    \cohptype[n+1][p](\overline{\fulldepscohs}(\fulldepscoht[n]))                                       \\
+    \cohp[n+1][n+1][q][r][\epsilon][\omega]      &
     (\fulldepscoht[n])
-                                            & \defeq & \lambda q \leq n-p.\lambda r\leq q.\lambda \epsilon.\lambda \omega.\lambda d. \lambda (l,c). l\epsilon \\
-    \cohp[n+1][p \leq n]                    &
+                                                 & \defeq & \lambda d. \lambda (l,c). l\epsilon         \\
+    \cohp[n+1][p \leq n][q][r][\epsilon][\omega] &
     (\fulldepscoht[n])
-                                            & \defeq & \lambda q \leq n-p.\lambda r\leq q.\lambda \epsilon.\lambda \omega.\lambda d. \lambda (l,c).
+                                                 & \defeq & \lambda d. \lambda (l,c).
     \left(\begin{array}{l}
               \cohl[n][p][q][r][\epsilon][\omega](\fulldepscoht.\depscoht[n][\lbrack 0,p-1 \rbrack])(d)(l), \\
               \cohp[n+1][p+1][q][r][\epsilon][\omega](\fulldepscoht[n])(d,l))(c)                            \\
-            \end{array}\right)                                                       \\
+            \end{array}\right) \\
   \end{array}
 \end{equation*}
 
@@ -1040,7 +1040,7 @@ given:
       \end{array}\right)
   \end{cases} \\
   E': \framep[n+2][n+1](\overline{\deps}
-  (\depscohs[n][\lbrack 0,n-1 \rbrack])\rightarrow \U                                                                                                                       \\
+  (\depscohs[n][\lbrack 0,n-1 \rbrack])\rightarrow \U                                                                \\
   \cohp[n][\lbrack 0,n-1 \rbrack]
   \left(\begin{array}{l}
             E  \\
@@ -1050,7 +1050,7 @@ given:
   \left(\begin{array}{l}
             \depscohs[n][\lbrack 0,n-1 \rbrack] \\
             E'                                  \\
-          \end{array}\right)                                                                                                                                 \\
+          \end{array}\right)                                                                          \\
 \end{align*}
 
 Indeed, to build this structure at level $n+1$, from level $n$, it is
