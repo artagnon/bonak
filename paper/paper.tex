@@ -989,64 +989,70 @@ structure on which we can reason by induction, for $D:\Xto{m}{n}$
 given:
 
 \begin{align*}
-  \framep[n][\lbrack 0,n-1 \rbrack]                                               & :      & \frametype[n][\lbrack 0,n-1 \rbrack]                                       \\
-  \painting[n][\lbrack 0,n-1 \rbrack]                                             & :      & \paintingtype[n][\lbrack 0,n-1 \rbrack](\framep[n][\lbrack 0,n-1 \rbrack]) \\
-  \restrf[n][\lbrack 0,n-1 \rbrack]                                               & :      & \restrftype[n][\lbrack 0,n-1 \rbrack]
+  \framep[n][\lbrack 0,n \rbrack]                                                                      & :      & \frametype[n][\lbrack 0,n-1 \rbrack]                                       \\
+  \painting[n][\lbrack 0,n \rbrack]                                                                    & :      & \paintingtype[n][\lbrack 0,n-1 \rbrack](\framep[n][\lbrack 0,n-1 \rbrack]) \\
+  \restrf[n][\lbrack 0,n \rbrack]                                                                      & :      & \restrftype[n][\lbrack 0,n-1 \rbrack]
   \left(
   \begin{array}{l}
-      \framep[n][\lbrack 0,n-1 \rbrack]   \\
-      \painting[n][\lbrack 0,n-1 \rbrack] \\
-    \end{array}\right)                                                                                                                                   \\
-  \fulldeps[n](E: \framep[n+1][n](\deps[n][\lbrack 0,n-1 \rbrack])\rightarrow \U) & \defeq &
+      \framep[n][\lbrack 0,n \rbrack]   \\
+      \painting[n][\lbrack 0,n \rbrack] \\
+    \end{array}\right)                                                                                                                                                          \\
+  \deps[n][\lbrack 0,n \rbrack]                                                                        & \defeq &
   \left(
   \begin{array}{l}
-      \framep[n][\lbrack 0,n-1 \rbrack]   \\
-      \painting[n][\lbrack 0,n-1 \rbrack] \\
-      \restrf[n][\lbrack 0,n-1 \rbrack]   \\
-      E                                   \\
-    \end{array}\right)                                                                                                                                   \\
-  \restrp[n][\lbrack 0,n-1 \rbrack](E)                                            & :      & \restrptype[n][\lbrack 0,n-1 \rbrack]
-  (\fulldeps[n](E))                                                                                                                                                     \\
-  \cohf[n][\lbrack 0,n-1 \rbrack](E)                                              & :      & \cohftype[n][\lbrack 0,n-1 \rbrack]
+      \framep[n][\lbrack 0,n \rbrack]   \\
+      \painting[n][\lbrack 0,n \rbrack] \\
+      \restrf[n][\lbrack 0,n \rbrack]   \\
+    \end{array}\right)                                                                                                                                                          \\
+  \fulldeps[n](E: \framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack])\rightarrow \U)                      & \defeq &
   \left(
   \begin{array}{l}
-      \fulldeps[n](E)                      \\
-      \restrp[n][\lbrack 0,n-1 \rbrack](E) \\
-    \end{array}\right)                                                                                                                                  \\
+      \deps[n][\lbrack 0,n \rbrack] \\
+      E                             \\
+    \end{array}\right)                                                                                                                                                              \\
+  \restrp[n][\lbrack 0,n \rbrack](E)                                                                   & :      & \restrptype[n][\lbrack 0,n \rbrack]
+  (\fulldeps[n](E))                                                                                                                                                                          \\
+  \cohf[n][\lbrack 0,n \rbrack](E)                                                                     & :      & \cohftype[n][\lbrack 0,n \rbrack]
+  \left(
+  \begin{array}{l}
+      \fulldeps[n](E)                    \\
+      \restrp[n][\lbrack 0,n \rbrack](E) \\
+    \end{array}\right)                                                                                                                                                         \\
+  \depscohs[n][\lbrack 0,n \rbrack](E: \framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack])\rightarrow \U) & \defeq &
+  \left(
+  \begin{array}{l}
+      \fulldeps[n](E)                    \\
+      \restrp[n][\lbrack 0,n \rbrack](E) \\
+      \cohf[n][\lbrack 0,n \rbrack](E)   \\
+    \end{array}\right)                                                                                                                                                         \\
   \fulldepscohs[n]
   \left(\begin{array}{l}
-            E: \framep[n+1][n](\deps[n][\lbrack 0,n-1 \rbrack])\rightarrow \U \\
-            E': \framep[n+2][n](\deps[n][\lbrack 0,n \rbrack])\rightarrow \U  \\
-          \end{array}\right)            & \defeq &
+            E: \framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack])\rightarrow \U                        \\
+            E': \framep[n+2][n+2](\overline{\deps}(\depscohs[n][\lbrack 0,n \rbrack]))\rightarrow \U \\
+          \end{array}\right)          & \defeq &
   \left(
   \begin{array}{l}
-      \fulldeps[n](E)                      \\
-      \restrp[n][\lbrack 0,n-1 \rbrack](E) \\
-      \cohf[n][\lbrack 0,n-1 \rbrack](E)   \\
+      \depscohs[n][\lbrack 0,n \rbrack](E) \\
       E'                                   \\
-    \end{array}\right)                                                                                                                                  \\
-  \cohp[n][\lbrack 0,n-1 \rbrack](E)(E')                                          & :      & \cohptype[n][\lbrack 0,n-1 \rbrack]
-  (\fulldepscohs[n](E)(E'))                                                                                                                                             \\
+    \end{array}\right)                                                                                                                                                       \\
+  \cohp[n][\lbrack 0,n-1 \rbrack](E)(E')                                                               & :      & \cohptype[n][\lbrack 0,n \rbrack]
+  (\fulldepscohs[n](E)(E'))                                                                                                                                                                  \\
 \end{align*}
 
 Indeed, to build this structure at level $n+1$, from level $n$, it is
-enough to assume $E:\framep[n+1][n](\deps[n]) \rightarrow \U$ (where
-$\deps[n]$ come from the assumptions at level $n$) and to build the
-following:
+enough to assume $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow \U$ (where $\deps[n][\lbrack 0,n \rbrack]$ come from the assumptions at level $n$) and to build the following:
 \begin{itemize}
-  \item $\framep[n+1][\lbrack 0,n \rbrack]$ comes from $\deps[n]$ which holds by assumptions (using $\framep[n][\lbrack 0,n-1 \rbrack]$, $\painting[n][\lbrack 0,n-1 \rbrack]$ and $\restrf[n][\lbrack 0,n-1 \rbrack]$)
-  \item $\painting[n+1][\lbrack 0,n \rbrack]$ comes from $\fulldeps[n]$ which holds by assumptions (also using $E$)
-  \item $\restrf[n+1][\lbrack 0,n \rbrack]$ comes from $\depscohs[n][\lbrack 0,n-1 \rbrack]$ which holds by assumptions (additionally using the assumptions of $\restrp[n][\lbrack 0,n-1 \rbrack]$ and $\cohf[n][\lbrack 0,n-1 \rbrack]$)
-  \item $\restrp[n+1][\lbrack 0,n \rbrack]$ assuming $E':\framep[n+2][n+1](\overline{\deps}(\depscohs[n][\lbrack 0,n-1 \rbrack])) \rightarrow \U$ comes from $\fulldepscohs[n]$ which holds by assumptions (additionally using $E'$)
-  \item $\cohf[n+1][\lbrack 0,n \rbrack]$ assuming $E'$ comes from $\depscoht[n][\lbrack 0,n-1 \rbrack]$ which holds by assumptions (additionally using the assumption of $\cohp[n][\lbrack 0,n-1 \rbrack]$ and proving $\coht[n][\lbrack 0,n-1 \rbrack]$ by uniqueness of identity proofs)
-  \item $\cohp[n+1][\lbrack 0,n \rbrack]$ assuming $E'$ and $E'': \framep[n+3][n+2](\overline{\deps}(\overline{\depscohs}(\depscoht[n][\lbrack 0,n-1 \rbrack]))) \rightarrow \U$ comes from $\fulldepscoht[n]$ which holds by assumptions (additionally using $E''$)
+  \item $\framep[n+1][\lbrack 0,n+1 \rbrack]$ comes from $\deps[n][\lbrack 0,n \rbrack]$.
+  \item $\painting[n+1][\lbrack 0,n+1 \rbrack]$ comes from $\fulldeps[n](E)$.
+  \item $\restrf[n+1][\lbrack 0,n+1 \rbrack]$ comes from $\depscohs[n][\lbrack 0,n \rbrack]$.
+  \item $\restrp[n+1][\lbrack 0,n+1 \rbrack](E')$, for $E':\framep[n+2][n+2](\overline{\deps}(\depscohs[n][\lbrack 0,n \rbrack])) \rightarrow \U$, comes from $\fulldepscohs[n](E)(E')$.
+  \item $\depscoht[n][\lbrack 0,n+1 \rbrack](E)(E')$ comes from $\fulldepscohs[n](E)(E')$ and $\restrp[n][\lbrack 0,n \rbrack](E)$.
+  \item $\cohf[n+1][\lbrack 0,n+1 \rbrack](E')$ comes from $\depscoht[n][\lbrack 0,n \rbrack](E)(E')$.
+  \item $\fulldepscoht[n](E)(E')(E'')$, for $E'': \framep[n+3][n+3](\overline{\deps}(\overline{\depscohs}(\depscoht[n][\lbrack 0,n \rbrack]))) \rightarrow \U$, comes from $\depscoht[n](E)(E')$, $\cohp[n][\lbrack 0,n \rbrack](E)(E')$ and $E''$.
+  \item $\cohp[n+1][\lbrack 0,n+1 \rbrack](E')(E'')$ comes from $\fulldepscoht[n](E)(E')(E'')$.
 \end{itemize}
 
-Therefore, assuming a construction of $\framep[n][n-1]$ from
-$D:\Xto{m}{n}$, we are able to build a $\framep[n+1][n]$ from $D$
-extended with some $E:\framep[n+1][n](\deps[n]) \rightarrow \U$. This
-is enough to build $\Xcomp{m}{n}(D)$, for $D:\Xto{m}{n}$, and thus
-$\Xp{m}$, by starting with an empty $D$.
+Therefore, assuming a construction of $\framep[n][n]$ from $D:\Xto{m}{n}$, we are able to build a $\framep[n+1][n+1]$ from $D$ extended with some $E:\framep[n+1][n+1](\deps[n+1][\lbrack 0,n+1 \rbrack]) \rightarrow \U$. This is enough to build $\Xcomp{m}{n}(D)$, for $D:\Xto{m}{n}$, and thus $\Xp{m}$, by starting with an empty $D$.
 
 \bibliographystyle{msclike}
 \bibliography{paper}
