@@ -901,14 +901,14 @@ Thanks to $\cohptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\cohf[n
               (\fulldepscoht[n])
               \circ \fulldepscohs.\depscohs.\cohf[n][p][q][r][\epsilon][\omega] =      \\
               \cohf[n+1][p][q+1][r+1][\epsilon][\omega]
-              (\fulldepscoht[n+1])
+              (\fulldepscoht[n])
               \circ \fulldepscohs.\depscohs.\cohf[n][p][q][0][\epsilon][\theta]
               \circ \cohf[n+1][p][r][0][\omega][\theta]
               (\fulldepscoht[n])                                                       \\
             \end{array}\right)                                                                                                                                                                                \\
     \coht[n][p]                                                                   &
     \fulldepscohs[n]                                                              & :                                                                             & \cohttype[n][p](\fulldepscohs[n])                                                                                           \\
-    \coht[n][p]                                                                   &
+    \coht[n][p][q][r][\epsilon][\omega][\theta]                                   &
     \fulldepscohs[n]                                                              & \defeq                                                                        & \UIP                                                                                                                        \\
 
     \cohl[n][p]                                                                   &
@@ -920,7 +920,7 @@ Thanks to $\cohptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\cohf[n
     \end{array}                                                                                                                                                          \\
     \cohl[n][p][q][r][\epsilon][\omega]                                           &
     (\depscoht[n][\lbrack 0,p-1 \rbrack])                                         & \defeq                                                                        &
-    \lambda d. \lambda l. \lambda \theta. \overrightarrow{\coht[n][p][q][r][\epsilon][\omega][\theta](\fulldepscohs[n])}{(\cohp[n][p][q][r][\epsilon][\omega](l_\theta))}                                                                                                                       \\
+    \lambda d. \lambda l. \lambda \theta. \overrightarrow{\coht[n][p][q][r][\epsilon][\omega][\theta](\depscoht.\fulldepscohs[n])}{(\depscoht.\cohp[n][p][q][r][\epsilon][\omega](l_\theta))}                                                                                                   \\
   \end{array}
 \end{equation*}
 We need also the notion of full dependencies at the level of the coherence conditions of dimension 2, that combines a full $\depscoht[n][\lbrack 0,n \rbrack]$ with a set $E:\framep[n+3][n+3](\overline{\deps}(\overline{\depscohs}(\depscoht[n][\lbrack 0,n \rbrack]))) \rightarrow \U$:
@@ -989,48 +989,38 @@ structure on which we can reason by induction, for $D:\Xto{m}{n}$
 given:
 
 \begin{align*}
-  \rotatebox[origin=c]{90}{\depscohs[n][\lbrack 0,n-1 \rbrack]}
-  \begin{cases}
-    \rotatebox[origin=c]{90}{\deps[n][\lbrack 0,n-1 \rbrack]}
-    \begin{cases}
-      \framep[n][\lbrack 0,n-1 \rbrack]   : \frametype[n][\lbrack 0,n-1 \rbrack]                                       \\
-      \painting[n][\lbrack 0,n-1 \rbrack] : \paintingtype[n][\lbrack 0,n-1 \rbrack](\framep[n][\lbrack 0,n-1 \rbrack]) \\
-      \restrf[n][\lbrack 0,n-1 \rbrack]   : \restrftype[n][\lbrack 0,n-1 \rbrack]
-      \left(
-      \begin{array}{l}
-          \framep[n][\lbrack 0,n-1 \rbrack]   \\
-          \painting[n][\lbrack 0,n-1 \rbrack] \\
-        \end{array}\right)
-    \end{cases} \\
-    E:\framep[n+1][n]
-    (\deps[n][\lbrack 0,n-1 \rbrack])\rightarrow \U                                                                  \\
-    \restrp[n][\lbrack 0,n-1 \rbrack](E) : \restrptype[n][\lbrack 0,n-1 \rbrack]
-    \left(
-    \begin{array}{l}
-        \deps[n][\lbrack 0,n-1 \rbrack] \\
-        E                               \\
-      \end{array}\right)                                                                                  \\
-    \cohf[n][\lbrack 0,n-1 \rbrack](E)   : \cohftype[n][\lbrack 0,n-1 \rbrack]
-    \left(
-    \begin{array}{l}
-        \deps[n][\lbrack 0,n-1 \rbrack]                 \\
-        E:\framep[n+1][n]
-        (\deps[n][\lbrack 0,n-1 \rbrack])\rightarrow \U \\
-        \restrp[n][\lbrack 0,n-1 \rbrack]               \\
-      \end{array}\right)
-  \end{cases} \\
-  E': \framep[n+2][n+1](\overline{\deps}
-  (\depscohs[n][\lbrack 0,n-1 \rbrack])\rightarrow \U                                                                \\
+  \framep[n][\lbrack 0,n-1 \rbrack]    & : & \frametype[n][\lbrack 0,n-1 \rbrack]                                       \\
+  \painting[n][\lbrack 0,n-1 \rbrack]  & : & \paintingtype[n][\lbrack 0,n-1 \rbrack](\framep[n][\lbrack 0,n-1 \rbrack]) \\
+  \restrf[n][\lbrack 0,n-1 \rbrack]    & : & \restrftype[n][\lbrack 0,n-1 \rbrack]
+  \left(
+  \begin{array}{l}
+      \framep[n][\lbrack 0,n-1 \rbrack]   \\
+      \painting[n][\lbrack 0,n-1 \rbrack] \\
+    \end{array}\right)                                                                                   \\
+  \restrp[n][\lbrack 0,n-1 \rbrack](E) & : & \restrptype[n][\lbrack 0,n-1 \rbrack]
+  \left(
+  \begin{array}{l}
+      \deps[n][\lbrack 0,n-1 \rbrack] \\
+      E                               \\
+    \end{array}\right)                                                                                       \\
+  \cohf[n][\lbrack 0,n-1 \rbrack](E)   & : & \cohftype[n][\lbrack 0,n-1 \rbrack]
+  \left(
+  \begin{array}{l}
+      \deps[n][\lbrack 0,n-1 \rbrack]                 \\
+      E:\framep[n+1][n]
+      (\deps[n][\lbrack 0,n-1 \rbrack])\rightarrow \U \\
+      \restrp[n][\lbrack 0,n-1 \rbrack]               \\
+    \end{array}\right)                                                                       \\
   \cohp[n][\lbrack 0,n-1 \rbrack]
   \left(\begin{array}{l}
             E  \\
             E' \\
           \end{array}\right)
-  : \cohptype[n][\lbrack 0,n-1 \rbrack]
+                                       & : & \cohptype[n][\lbrack 0,n-1 \rbrack]
   \left(\begin{array}{l}
             \depscohs[n][\lbrack 0,n-1 \rbrack] \\
             E'                                  \\
-          \end{array}\right)                                                                          \\
+          \end{array}\right)                                                                             \\
 \end{align*}
 
 Indeed, to build this structure at level $n+1$, from level $n$, it is
