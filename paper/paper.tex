@@ -170,11 +170,6 @@
 
 \newcommandx{\coht}[7][1,2,3,4,5,6,7]{\cohtwo{frame}[#3][#4][#5][#6][#7][#1][#2][]}
 
-% For typesetting type theory rules
-\newcommand \seqr[3]
-  {\shortstack{$#2$ \\ \mbox{}\\
-                   \mbox{}\hrulefill\mbox{}\\ \mbox{}\\ $#3$} \raisebox{2ex}{$\;\;\mbox{$#1$}$}}
-
 % Kerning for star
 \newcommand{\kstar}{{\star}}
 
@@ -185,7 +180,7 @@
 % The eqntable environment
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 \NewEnviron{eqntable}[1]{
-  \fontsize{7.2}{9}\selectfont
+  \small
   \begin{tabularx}{0.94\linewidth}{
     @{}
     >{$}l<{$}
