@@ -413,7 +413,6 @@ Fixpoint mkCohPaintingTypes {p}:
   end.
 
 Lemma mkCoh2Frame `(extraDepsCohs: DepsCohsExtension p.+1 k depsCohs)
-  (cohPaintings: mkCohPaintingTypes extraDepsCohs)
   (prevCohFrames: mkCohFrameTypes
      (extraDeps := (mkDepsRestr; mkExtraDeps extraDepsCohs))
      (mkRestrPaintings extraDepsCohs).1):
