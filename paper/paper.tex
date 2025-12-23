@@ -61,14 +61,9 @@
   \setkeys*[bonak]{restr#1}{#8}
 }
 
-\newcommandx{\depsp}[8][2,3,4,5,6,7,8]{
-  \ensuremath{\mathsf{\color{strawberry}{deps}}_{
-    \joinargs[\mathsf{\color{yaleblue}{#1}}][#2][#3][#4]}^{\joinargs[#5][#6][#7]}}
-}
-
-\newcommandx{\depstypep}[8][2,3,4,5,6,7,8]{
-  \ensuremath{\mathsf{\color{strawberry}{DEPS}}_{
-    \joinargs[\mathsf{\color{yaleblue}{#1}}][#2][#3][#4]}^{\joinargs[#5][#6][#7]}}
+\newcommandx{\depsmacro}[5][4,5]{
+  \ensuremath{\mathsf{\color{strawberry}{#1}}_{
+    \joinargs[\mathsf{\color{#3}{#2}}][#4][#5]}}
 }
 
 % Coherence conditions for frame, layer, and painting: the general macro
@@ -160,18 +155,18 @@
 \newcommandx{\cohptype}[2][1,2]{\coh{PAINTING}[][][][][][#1][#2][]}
 \newcommandx{\cohttype}[2][1,2]{\cohtwo{FRAME}[][][][][][#1][#2][]}
 
-\newcommandx{\deps}[2][1,2]{\depsp{}[][][][#1][#2][][]}
-\newcommandx{\fulldeps}[1][1]{\depsp{full}[][][][#1][][][]}
-\newcommandx{\depscohs}[2][1,2]{\depsp{cohs}[][][][#1][#2][][]}
-\newcommandx{\fulldepscohs}[1][1]{\depsp{fullcohs}[][][][#1][][][]}
-\newcommandx{\depscoht}[2][1,2]{\depsp{coht}[][][][#1][#2][][]}
-\newcommandx{\fulldepscoht}[1][1]{\depsp{fullcoht}[][][][#1][][][]}
-\newcommandx{\depstype}[2][1,2]{\depstypep{}[][][][#1][#2][][]}
-\newcommandx{\fulldepstype}[1][1]{\depstypep{full}[][][][#1][][][]}
-\newcommandx{\depscohstype}[2][1,2]{\depstypep{cohs}[][][][#1][#2][][]}
-\newcommandx{\fulldepscohstype}[1][1]{\depstypep{fullcohs}[][][][#1][][][]}
-\newcommandx{\depscohttype}[2][1,2]{\depstypep{coht}[][][][#1][#2][][]}
-\newcommandx{\fulldepscohttype}[1][1]{\depstypep{fullcoht}[][][][#1][][][]}
+\newcommandx{\deps}[2][1,2]{\depsmacro{deps}{restr}{russian-green}}
+\newcommandx{\fulldeps}[1][1]{\depsmacro{deps}{fullrestr}{russian-green}[#1]}
+\newcommandx{\depscohs}[2][1,2]{\depsmacro{deps}{coh}{chestnut}[#1][#2]}
+\newcommandx{\fulldepscohs}[1][1]{\depsmacro{deps}{fullcoh}{chestnut}[#1]}
+\newcommandx{\depscoht}[2][1,2]{\depsmacro{deps}{coht}{chestnut}[#1][#2]}
+\newcommandx{\fulldepscoht}[1][1]{\depsmacro{deps}{fullcoht}{chestnut}[#1]}
+\newcommandx{\depstype}[2][1,2]{\depsmacro{DEPS}{restr}{russian-green}}
+\newcommandx{\fulldepstype}[1][1]{\depsmacro{DEPS}{fullrestr}{russian-green}[#1]}
+\newcommandx{\depscohstype}[2][1,2]{\depsmacro{DEPS}{coh}{chestnut}[#1][#2]}
+\newcommandx{\fulldepscohstype}[1][1]{\depsmacro{DEPS}{fullcoh}{chestnut}[#1]}
+\newcommandx{\depscohttype}[2][1,2]{\depsmacro{DEPS}{coht}{chestnut}[#1][#2]}
+\newcommandx{\fulldepscohttype}[1][1]{\depsmacro{DEPS}{fullcoht}{chestnut}[#1]}
 
 \newcommandx{\coht}[7][1,2,3,4,5,6,7]{\cohtwo{frame}[#3][#4][#5][#6][#7][#1][#2][]}
 
@@ -643,7 +638,6 @@ At this stage, we are able to define $\framep[n+1][\lbrack 0,n+1 \rbrack]$, $\pa
 
 Thanks to $\restrptype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$, we can mutually define $\restrf[n+1][\lbrack 0,p \rbrack]$ and $\cohftype[n][\lbrack 0,p-1 \rbrack]$ from $\framep[n][\lbrack 0,n \rbrack]$, $\painting[n][\lbrack 0,n \rbrack]$, $\restrf[n][\lbrack 0,n \rbrack]$, $\restrptype[n][\lbrack 0,p-1 \rbrack]$ and some $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow \U$, abbreviating these dependencies and the dependency in a $\cohf[n][\lbrack 0,p-1 \rbrack]$ as $\depscohstype[n][\lbrack 0,p-1 \rbrack]$, and using also abbreviations in passing for $\restrl$ and $\restrltype$. It is also convenient to build $\deps[n+1][\lbrack 0,p \rbrack]$ from $\depscohs[n][\lbrack 0,p-1 \rbrack]$, so that we can now build $\framep[n+2][p]$ one step further. Thus, we also include this abbreviation in the definition:
 \begin{equation*}
-  \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
     \depscohstype[n][\lbrack 0,p-1 \rbrack] &                                     & \defeq                                                         &
     \left(\begin{array}{lcl}
@@ -843,7 +837,6 @@ sequence $\cohptype[n][\lbrack 0,p-1 \rbrack]$ of types of painting coherence la
 Thanks to $\cohptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\cohf[n+1][\lbrack 0,p \rbrack]$ and $\cohttype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ from $\fulldepscohs[n]$, abbreviating this and the dependency in a $\coht[n][\lbrack 0,p-1 \rbrack]$ as $\depscohttype[n][\lbrack 0,p-1 \rbrack]$, and using also abbreviations in passing for $\cohl$ and $\cohltype$. It is also convenient to build $\depscohs[n+1][\lbrack 0,p \rbrack]$ from $\depscoht[n][\lbrack 0,p-1 \rbrack]$, so that we can now build $\framep[n+3][p]$. Thus, we also include this abbreviation in the definition:
 
 \begin{equation*}
-  \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
     \depscohttype[n][\lbrack 0,p-1 \rbrack]     &                                     & \defeq                                                                            &
     \left(\begin{array}{lll}
