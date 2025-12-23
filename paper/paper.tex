@@ -155,13 +155,13 @@
 \newcommandx{\cohptype}[2][1,2]{\coh{PAINTING}[][][][][][#1][#2][]}
 \newcommandx{\cohttype}[2][1,2]{\cohtwo{FRAME}[][][][][][#1][#2][]}
 
-\newcommandx{\deps}[2][1,2]{\depsmacro{deps}{restr}{russian-green}}
+\newcommandx{\deps}[2][1,2]{\depsmacro{deps}{restr}{russian-green}[#1][#2]}
 \newcommandx{\fulldeps}[1][1]{\depsmacro{deps}{fullrestr}{russian-green}[#1]}
 \newcommandx{\depscohs}[2][1,2]{\depsmacro{deps}{coh}{chestnut}[#1][#2]}
 \newcommandx{\fulldepscohs}[1][1]{\depsmacro{deps}{fullcoh}{chestnut}[#1]}
 \newcommandx{\depscoht}[2][1,2]{\depsmacro{deps}{coht}{chestnut}[#1][#2]}
 \newcommandx{\fulldepscoht}[1][1]{\depsmacro{deps}{fullcoht}{chestnut}[#1]}
-\newcommandx{\depstype}[2][1,2]{\depsmacro{DEPS}{restr}{russian-green}}
+\newcommandx{\depstype}[2][1,2]{\depsmacro{DEPS}{restr}{russian-green}[#1][#2]}
 \newcommandx{\fulldepstype}[1][1]{\depsmacro{DEPS}{fullrestr}{russian-green}[#1]}
 \newcommandx{\depscohstype}[2][1,2]{\depsmacro{DEPS}{coh}{chestnut}[#1][#2]}
 \newcommandx{\fulldepscohstype}[1][1]{\depsmacro{DEPS}{fullcoh}{chestnut}[#1]}
@@ -814,7 +814,6 @@ from $\depscohs[n][\lbrack 0,p-1 \rbrack]$ at the previous level. To go further,
 sequence $\cohptype[n][\lbrack 0,p-1 \rbrack]$ of types of painting coherence laws:
 
 \begin{equation*}
-  \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
     \cohptype[n][\lbrack 0,p-1 \rbrack] & \fulldepscohs[n] & :      & \U                                                           \\
     \cohptype[n]                        & \unitpoint       & \defeq & \unittype                                                    \\
@@ -931,7 +930,6 @@ We can then extend $\overline{\depscohs}$ to build $\fulldepscohs$ from $\fullde
 The last key construction we need is $\cohp[n+1][p]$ for $p \leq n+1$, which is by recursion on $n-p$:
 
 \begin{equation*}
-  \fontsize{7.2}{9}\selectfont
   \begin{array}{llcl}
     \cohp[n+1][p]                                &
     \fulldepscoht[n]                             & :      &
