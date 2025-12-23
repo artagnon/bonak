@@ -2,7 +2,9 @@ name: coq-action
 
 on:
   push:
-    branches: [master]
+    paths: "**.v"
+  pull_request:
+    types: [opened, reopened]
 jobs:
   build:
     runs-on: "ubuntu-latest"
