@@ -421,29 +421,19 @@ Lemma mkCoh2Frame `(extraDepsCohs: DepsCohsExtension p.+1 k depsCohs)
   (d: mkFrame (mkDepsRestr (depsCohs := toDepsCohs prevCohFrames.1)).(1))
   (𝛉: arity),
   f_equal
-    (fun x : mkFrame depsCohs.(_deps).(1) =>
-     depsCohs.(_deps).(_restrFrames).2 q _ ε x)
+    (fun x => depsCohs.(_deps).(_restrFrames).2 q _ ε x)
     (prevCohFrames.2 0 r leY_O (Hrq ↕ ↑ Hq) ω 𝛉 d)
   • (depsCohs.(_cohs).2 0 q leY_O Hq ε 𝛉
-       (((mkCohFrameTypesAndRestrFrames
-            (mkRestrPaintings (depsCohs; extraDepsCohs)).1).(
-         RestrFramesDef) prevCohFrames.1).2 r.+1 (⇑ (Hrq ↕ ↑ Hq)) ω d)
-     • f_equal
-         (fun x =>
-          depsCohs.(_deps).(_restrFrames).2 0 leY_O 𝛉 x)
-         (prevCohFrames.2 r.+1 q.+1 (⇑ Hrq) (⇑ Hq) ε ω d)) =
-  depsCohs.(_cohs).2 r q Hrq Hq ε ω
-    (((mkCohFrameTypesAndRestrFrames
-         (mkRestrPaintings (depsCohs; extraDepsCohs)).1).(
-      RestrFramesDef) prevCohFrames.1).2 0 leY_O 𝛉 d)
+      (mkRestrFrame r.+1 (⇑ (Hrq ↕ ↑ Hq)) ω d)
+  • f_equal
+      (fun x => depsCohs.(_deps).(_restrFrames).2 0 leY_O 𝛉 x)
+      (prevCohFrames.2 r.+1 q.+1 (⇑ Hrq) (⇑ Hq) ε ω d)) =
+  depsCohs.(_cohs).2 r q Hrq Hq ε ω (mkRestrFrame 0 leY_O 𝛉 d)
   • (f_equal
-       (fun x : mkFrame depsCohs.(_deps).(1) =>
-        depsCohs.(_deps).(_restrFrames).2 r _ ω x)
-       (prevCohFrames.2 0 q.+1 leY_O (⇑ Hq) ε 𝛉 d)
-     • depsCohs.(_cohs).2 0 r leY_O (Hrq ↕ Hq) ω 𝛉
-         (((mkCohFrameTypesAndRestrFrames
-              (mkRestrPaintings (depsCohs; extraDepsCohs)).1).(
-           RestrFramesDef) prevCohFrames.1).2 q.+2 (⇑ (⇑ Hq)) ε d)).
+      (fun x => depsCohs.(_deps).(_restrFrames).2 r _ ω x)
+      (prevCohFrames.2 0 q.+1 leY_O (⇑ Hq) ε 𝛉 d)
+  • depsCohs.(_cohs).2 0 r leY_O (Hrq ↕ Hq) ω 𝛉
+      (mkRestrFrame q.+2 (⇑ (⇑ Hq)) ε d)).
 Proof.
   now intros; apply depsCohs.(_deps).(_frames).2.(UIP).
 Defined.
