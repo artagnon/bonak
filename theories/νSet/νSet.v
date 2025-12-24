@@ -564,7 +564,7 @@ Proof.
     destruct extraDepsCohs2.
     { exfalso; now apply leY_O_contra in Hq. }
     simpl.
-    unshelve eapply (rew_existT_curried
+    unshelve eapply (eq_existT_curried_dep
       (Q := mkPainting depsCohs2.(_depsCohs).(_extraDeps))).
     + now exact
       (mkCohLayer depsCohs2.(_cohPaintings) r q (Hrq := ⇓ Hrq) ε ω d l).

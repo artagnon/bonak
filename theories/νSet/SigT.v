@@ -51,3 +51,13 @@ Definition projT2_eq {A} {P: A -> Type} {u v: { a: A &T P a }} (p: u = v):
 
 Notation "(= u ; v )" := (eq_existT_curried u v)
   (at level 0, format "(= u ;  '/  ' v )").
+
+Lemma eq_existT_curried_dep {A x} {P: A -> Type} {Q: {a &T P a} -> Type}
+   {y} {H: x = y}
+   {u: P x} {v: Q (x; u)}
+   {u': P y} {v': Q (y; u')}
+   {Hu: rew H in u = u'} {Hv: rew (=H; Hu) in v = v'}:
+   rew [fun x => {a: P x &T Q (x; a)}] H in (u; v) = (u'; v').
+Proof.
+   now destruct Hu, Hv, H.
+Qed.
