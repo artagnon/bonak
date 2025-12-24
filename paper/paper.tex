@@ -827,8 +827,8 @@ sequence $\cohptype[n][\lbrack 0,p-1 \rbrack]$ of types of painting coherence la
     \begin{array}{l}
       \Pi q \leq n-p.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.                                                                                       \\
       \Pi d:\framep[n+2][p](\overline{\deps}(\depscohs[n][\lbrack 0,p-1 \rbrack])).\,\Pi c:\painting[n+2][p](\overline{\fulldeps}(\fulldepscohs[n])). \\
-      \overrightarrow{\cohf[n][p][q][r][\epsilon][\omega]}\restrp[n][p][q][\epsilon](\restrf[n+1][p](\depscohs[n][\lbrack 0,p-1 \rbrack])(d))(\restrp[n+1][p][r][\omega]
-      (\fulldepscohs[n])(d)(c)) =                                                                                                                     \\
+      \restrp[n][p][q][\epsilon](\restrf[n+1][p](\depscohs[n][\lbrack 0,p-1 \rbrack])(d))(\restrp[n+1][p][r][\omega]
+      (\fulldepscohs[n])(d)(c)) =_{\cohf[n][p][q][r][\epsilon][\omega]}                                                                               \\
       \restrp[n][p][r][\omega](\restrf[n+1][p](\depscohs[n][\lbrack 0,p-1 \rbrack])(d))(\restrp[n+1][p][q+1][\epsilon]
       (\fulldepscohs[n])(d)(c))
     \end{array}
@@ -882,10 +882,10 @@ Thanks to $\cohptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\cohf[n
     \cohl[n][p]                                 &
     \depscoht[n][\lbrack 0,p-1 \rbrack]         & :                                   &
     \begin{array}{l}
-      \Pi q \leq n-p.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.                                                                          \\
-      \Pi d.\Pi l. \overrightarrow{\cohf[n][p][r+1][q+1][\epsilon][\omega]}{(\restrl[n][p][q][\epsilon](\restrl[n][p][r][\omega](l)))} = \\
+      \Pi q \leq n-p.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.                                                            \\
+      \Pi d.\Pi l. {(\restrl[n][p][q][\epsilon](\restrl[n][p][r][\omega](l)))} =_{\cohf[n][p][r+1][q+1][\epsilon][\omega]} \\
       \restrl[n][p][r][\omega](\restrl[n][p][q+1][\epsilon](l))
-    \end{array}                                                                              \\
+    \end{array}                                                                                            \\
     \cohl[n][p][q][r][\epsilon][\omega]         &
     \depscoht[n][\lbrack 0,p-1 \rbrack]         & \defeq                              &
     \begin{array}{l}
@@ -920,12 +920,11 @@ and where the functoriality of equality and transport was used to go from (omitt
   \Pi \theta.\left(
   \begin{array}{lcl}
     \begin{array}{l}
-      \overrightarrow{\cohf[n+1][p][q+1][r+1][\epsilon][\omega]}
       \overrightarrow{\cohf[n][p][q][0][\epsilon][\theta]}
       \overrightarrow{\cohf[n+1][p][r][0][\omega][\theta]} \\
       (\restrp[n][p][q][\epsilon]                          \\
       (\restrp[n+1][p][r][\omega](l_\theta)))
-    \end{array} & = &
+    \end{array} & =_{\cohf[n+1][p][q+1][r+1][\epsilon][\omega]} &
     \begin{array}{l}
       \overrightarrow{\cohf[n][p][r][0][\omega][\theta]}\overrightarrow{\cohf[n+1][p][q+1][0][\epsilon][\theta]} \\
       (\restrp[n][p][r][\omega]                                                                                  \\
@@ -939,11 +938,10 @@ to
   \Pi \theta.\left(
   \begin{array}{lcl}
     \begin{array}{l}
-      \overrightarrow{\cohf[n+1][p][q+1][r+1][\epsilon][\omega]}
       \overrightarrow{\cohf[n][p][q][0][\epsilon][\theta]} \\
       (\restrp[n][p][q][\epsilon]                          \\
       (\overrightarrow{\cohf[n+1][p][r][0][\omega][\theta]}\restrp[n+1][p][r][\omega](l_\theta)))
-    \end{array} & = &
+    \end{array} & =_{\cohf[n+1][p][q+1][r+1][\epsilon][\omega]} &
     \begin{array}{l}
       \overrightarrow{\cohf[n][p][r][0][\omega][\theta]} \\
       (\restrp[n][p][r][\omega]                          \\
