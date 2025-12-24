@@ -883,7 +883,7 @@ Thanks to $\cohptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\cohf[n
     \depscoht[n][\lbrack 0,p-1 \rbrack]         & :                                   &
     \begin{array}{l}
       \Pi q \leq n-p.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.\,\Pi d.\,\Pi l.                                                             \\
-      \restrl[n][p][q][\epsilon](\depscohs[n][\lbrack 0,p-1 \rbrack])(\restrl[n+1][p][r][\omega](\overline{\depscohs}(\depscoht[n][\lbrack 0,p-1 \rbrack]))(l))\\ =_{\cohf[n+1][p][r+1][q+1][\epsilon][\omega](\depscoht[n][\lbrack 0,p-1 \rbrack])} \\
+      \restrl[n][p][q][\epsilon](\depscohs[n][\lbrack 0,p-1 \rbrack])(\restrl[n+1][p][r][\omega](\overline{\depscohs}(\depscoht[n][\lbrack 0,p-1 \rbrack]))(l))\\ =_{\cohf[n+1][p][r+1][q+1][\epsilon][\omega](\depscoht[n][\lbrack 0,p-1 \rbrack])(d)} \\
       \restrl[n][p][r][\omega](\depscohs[n][\lbrack 0,p-1 \rbrack])(\restrl[n+1][p][q+1][\epsilon](\overline{\depscohs}(\depscoht[n][\lbrack 0,p-1 \rbrack]))(l))
     \end{array}                                                                                            \\
     \cohl[n][p][q][r][\epsilon][\omega]         &
@@ -915,7 +915,7 @@ where $\cohttype$ is:
     \end{array}
   \right)
 \end{equation*}
-and where the functoriality of equality and transport was used to go from (omitting the $\framep$ argument of $\restrp$ and the deps argument):
+and where the functoriality of equality and transport was used to go from (omitting the $\framep$ argument and the deps argument of $\restrp$ and $\cohf$):
 \begin{equation*}
   \Pi \theta.\left(
   \begin{array}{lcl}
