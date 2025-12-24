@@ -915,19 +915,21 @@ where $\cohttype$ is:
     \end{array}
   \right)
 \end{equation*}
-and where the functoriality of equality and transport was used to go from (omitting the $\framep$ argument of $\restrp$)
+and where the functoriality of equality and transport was used to go from (omitting the $\framep$ argument of $\restrp$ and the deps argument)
 \begin{equation*}
   \Pi \theta.\left(
   \begin{array}{lcl}
     \begin{array}{l}
-      \overrightarrow{\cohf[n][p][r][0][\omega][\theta]}\overrightarrow{\cohf[n+1][p][q+1][0][\epsilon][\theta]}\overrightarrow{\cohf[n][p][q][r][\epsilon][\omega]} \\
-      (\restrp[n][p][q][\epsilon]                                                                                                                                    \\
-      (\restrp[n+1][p][r][\omega](\fulldepscohs[n])(l_\theta)))
+      \overrightarrow{\cohf[n+1][p][q+1][r+1][\epsilon][\omega]}
+      \overrightarrow{\cohf[n][p][q][0][\epsilon][\theta]}
+      \overrightarrow{\cohf[n+1][p][r][0][\omega][\theta]} \\
+      (\restrp[n][p][q][\epsilon]                          \\
+      (\restrp[n+1][p][r][\omega](l_\theta)))
     \end{array} & = &
     \begin{array}{l}
       \overrightarrow{\cohf[n][p][r][0][\omega][\theta]}\overrightarrow{\cohf[n+1][p][q+1][0][\epsilon][\theta]} \\
       (\restrp[n][p][r][\omega]                                                                                  \\
-      (\restrp[n+1][p][q+1][\epsilon](\fulldepscohs[n])(l_\theta)))
+      (\restrp[n+1][p][q+1][\epsilon](l_\theta)))
     \end{array}
   \end{array}
   \right)
@@ -937,14 +939,15 @@ to
   \Pi \theta.\left(
   \begin{array}{lcl}
     \begin{array}{l}
-      \overrightarrow{\cohf[n][p][r][0][\omega][\theta]}\overrightarrow{\cohf[n][p][q+1][0][\epsilon][\theta]} \\
-      (\restrp[n][p][q][\epsilon]                                                                              \\
-      (\overrightarrow{\cohf[n+1][p][q][r][\epsilon][\omega]}\restrp[n+1][p][r][\omega](\fulldepscohs[n])(l_\theta)))
+      \overrightarrow{\cohf[n+1][p][q+1][r+1][\epsilon][\omega]}
+      \overrightarrow{\cohf[n][p][q][0][\epsilon][\theta]} \\
+      (\restrp[n][p][q][\epsilon]                          \\
+      (\overrightarrow{\cohf[n+1][p][r][0][\omega][\theta]}\restrp[n+1][p][r][\omega](l_\theta)))
     \end{array} & = &
     \begin{array}{l}
       \overrightarrow{\cohf[n][p][r][0][\omega][\theta]} \\
       (\restrp[n][p][r][\omega]                          \\
-      (\overrightarrow{\cohf[n+1][p][q+1][0][\epsilon][\theta]}\restrp[n+1][p][q+1][\epsilon](\fulldepscohs[n])(l_\theta)))
+      (\overrightarrow{\cohf[n+1][p][q+1][0][\epsilon][\theta]}\restrp[n+1][p][q+1][\epsilon](l_\theta)))
     \end{array}
   \end{array}
   \right)
