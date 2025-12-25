@@ -219,15 +219,36 @@
   \affiliation{Unaffiliated \email{r@artagnon.com}}
 \end{authgrp}
 \begin{abstract}
-  In a previous paper, we gave equations describing the construction of semi-simplicial and semi-cubical sets via iterated parametricity. The construction was formalised in the Rocq (formerly, Coq) proof assistant building $n$-truncated sets using an induction on a large structure embedding equational reasoning.
+  Reynolds' parametricity originally eequips types with binary propositional relations over the types. Such relations can be taken proof-relevant, or unary, and described either in an indexed or fibered way. Parametricity can be iterated, and when types are sets, this results in an interpretation of sets as augmented semi-simplicial sets (unary case) or semi-cubical sets (binary case).
+  In a previous paper, we gave equations describing $n$-ary iterated parametricity in indexed form. The construction was formalised in the Rocq (formerly, Coq) proof assistant using a rather complex induction on a large structure embedding equational reasoning.
 
-  The current paper describes a new and lighter presentation of the construction where equational reasoning is replaced by definition. Being lighter, it can now be described in full details, closely following the corresponding new machine-checked formalisation.
+  The current paper analyses the very dependent recursive structure of the equations of the former paper leading to a new terse presentation of the construction where all equational reasoning is replaced by definitions. Now reduced to its computational essence, it can be described in full details, closely following the corresponding new machine-checked formalisation.
 \end{abstract}
 \maketitle
 \vspace{-2em} % Remove space after abstract
 
 \section{Introduction}
-In the previous paper~\citep{hr25}, we described the construction of augmented semi-simplicial and semi-cubical sets in \emph{indexed form} as a special case of iterated parametricity, meaning that instead of the following illustration of the cubical case (upto faces identities),
+
+\paragraph*{Parametricity and its ramifications.}
+
+Introduced by Reynolds in the context of programming language semantics~\cite{Reynolds}, relational parametricity happens to be connected to several similar concepts in logic and mathematics. Associating binary propositional relations to types in its original formulation, it can also associate proof-relevant relations~\cite{GhaniNordvallOrsanigo16} or unary relations, that is predicates (proof-irrelevant case) or families (relevant case). These unary or binary, relevant or proof-irrelevant relations express what it means to belong in a type (unary case) or to be equal in a type (binary case) from an observational point of view. For instance, the canonical predicate associated to $A \rightarrow B$ is the predicate over functions $f$ in $A \rightarrow B$ such that, for all $a$ in the canonical predicate associated to $A$, $f(a)$ is in the canonical predicate associated to $B$. And, similarly, the canonical relation associated to $A \rightarrow B$ is the relations over functions $f$ and $f'$ in $A \rightarrow B$ such that, for all $a$ and $a'$ related through the canonical relation associated to $A$, $f(a)$and $f'(a')$ are related through the canonical relation associated to $B$.
+
+\newcommand{\real}{\textsf{r}}
+
+From the point of view of realisability, unary parametricity over a language is a realisability using the language itself as language of realisers. Like parametricity, realisability can be expressed in a syntactic way, that is as an interpretation from one language to another (i.e. mapping an expression $t$ of $\vdash A$ in some formal system to a derivation $t^*$ of $\vdash' |t| \real A$ in some other formal system, for some program $|t|$ extracted from $t$ -- namely $t$ itself in the case of parametricity), or a semantic way\footnote{This distinction between syntactic realisability and semantic realisability is itself connected to the difference between relative and absolute consistency. In the relative case, consistency of a formal system is reduced to the consistency of another formal system, and this can be done in a very weak logical system such as Primitive Recursive Arithmetic (PRA). On the other side, in the absolute case, consistency of a formal system is reduced to the consistency of the language of discourse, which, by G\"odel incompleteness theorem, if actually consistent, necessarily has to be as strong as the modelled formal system.}, that is as an interpretation in the language of discourse, which we could call in term the ``metalanguage'' (i.e. interpreting $A$ as a set $\textbf{A}$ or a relation $=_A$ of the language of discourse and interpreting a derivation $t$ of $\vdash A$ as an expression $|t|$ such that, respectively, $|t| \in \textbf{A}$ or $|t| =_A |t|$). Thus, the comparison between parametricity and realisability includes the case of reducibility~\cite{Tait}, which is a semantic form of realisability. In the same vein, binary parametricity over a language can be seen as defining logical relations~\cite{Plotkin} over itself, since logical relations are a binary form of reducibility.
+
+\newcommand{\Prop}{\textsf{Prop}}
+\newcommand{\MySet}{\textsf{Set}}
+
+Parametricity, like realisability, reductibility, and logical relations, was most commonly handled in an indexed form, that is, using a type-theoretic language, considering predicates of type $A \rightarrow \Prop$, or families of type $A \rightarrow \MySet$, or relations of type $A \times A \rightarrow \Prop$, or relevant relations -- sometimes called \emph{correspondences} -- of type $A \times A \rightarrow \MySet$, where $\Prop$ and $\MySet$ are types representing, that is classifying -- in category theory terminology --, propositions or sets, respectively. Along the indexed-fibered correspondence, that is along the equivalence between the types $A \rightarrow \Prop$ and $\Sigma B:\MySet. (B \stackrel{inj}{\rightarrow} A)$ (proof-irrelevant case) and $A \rightarrow \MySet$ and $\Sigma B:\MySet. (B \rightarrow A)$ (proof-relevant case), for $A:\MySet$, everything told in the indexed form can morally also be told in fibered form. Such fibered approach to parametricity was for instance considered in Ghani \cite{Ghani...}, who also suggested to iterate parametricity.
+
+\paragraph*{Iterated parametricity.}
+
+A type-theoretic analysis of parametricity in unary indexed form was obtained in \cite{Moulin}, together with an interpretation in a ``unary'' form of cubical set, thus implicitly in fibered form, in \cite{BernardyCoquandMoulin}. The connection between iterated binary parametricity in fibered form and cubical sets can also be found in Johann and Sojakova~\cite{JohannSojakova}. In particular, it became clear at this point that iterated binary parametricity produces semi-cubical sets while it was also observed\footnote{The authors learned it from Hugo Moeneclaye and Thorsten Altenkirch.} that iterated unary parametricity produces augmented semi-simplicial sets.
+
+...
+
+In a previous paper~\citep{hr25}, we exploited this correspondence to construct at the same time augmented semi-simplicial and semi-cubical sets in \emph{indexed form} as a special case of iterated parametricity. That is, instead of the following illustration of the cubical case (upto faces identities),
 
 \begin{equation*}
   \begin{tikzcd}
