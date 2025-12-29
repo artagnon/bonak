@@ -458,7 +458,7 @@ The types $\paintingtype[n][\lbrack 0,p-1 \rbrack]$ of $\painting[n][\lbrack 0,p
   \end{array}
 \end{equation*}
 
-\subsection{Defining frames and specifying frame restrictions}
+\subsection{Defining frames and specifying frame restrictions\label{sec:mkframe}}
 
 Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\painting[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$, we can mutually define the types $\restrftype[n][\lbrack 0,p-1 \rbrack]$ of frame restrictions together with $\framep[n+1][\lbrack 0,p-1 \rbrack]$ as a function from $\restrf[n][\lbrack 0,p-1 \rbrack]$, introducing also abbreviations for the types and definitions of layers, as well as for the combination of sequences of $\framep[n][\lbrack 0,p-1 \rbrack]$, $\painting[n][\lbrack 0,p-1 \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$ in one block, which we call $\depstype[n][\lbrack 0,p-1 \rbrack]$:
 
@@ -542,7 +542,7 @@ Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\painting[n][\lbrack 0,p-1 \rb
 
 Note that $\deps$ behaves here as an abbreviation for a sequence of assumptions. In particular, once a $\deps:\depstype$ is assumed, we can freely refer to $\framep$, $\painting$, $\restrf$. Also, by abuse of notation, we write $\unitpoint$ for the only inhabitant of $\depstype[n][0]$.
 
-\subsection{Defining paintings}
+\subsection{Defining paintings\label{sec:mkpainting}}
 
 Defining $\painting[n+1][p]$ for $p \leq n+1$, in addition to the type dependency in $\framep[n+1][p]$, requires the definition of $\painting[n][p-1]$, thus also $\framep[n][p-1]$ by typing dependency, as well as $\restrf[n][p-1]$. Since $\painting[n+1][p]$ also depends on $\painting[n+1][p+1]$ when $p<n+1$, these dependencies are actually between $\painting[n+1][\lbrack p,n+1 \rbrack]$, $\painting[n][\lbrack p,n \rbrack]$, $\framep[n+1][\lbrack p,n+1 \rbrack]$, $\framep[n][\lbrack p,n \rbrack]$ and $\restrf[n][\lbrack p,n \rbrack]$. Also, for the case $p=n$, this requires the assumption of an inhabitant $X_{n}$ of $\nu$Set$^{=n}$. Finally, $\framep[n+1][\lbrack p,n+1 \rbrack]$, $\framep[n+1][\lbrack p,n \rbrack]$ and $\restrf[n][\lbrack p,n \rbrack]$ respectively depend on the earlier values $\framep[n+1][\lbrack 0,p-1 \rbrack]$, $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$.  Below, we use dashed underline and dashed arrows for dependencies in subconstructions, here in the construction of $\framep$ at level $n$ and $\restrftype$ at level $n$:
 \begin{center}
@@ -623,7 +623,7 @@ At this stage, we are able to define $\framep[n+1][\lbrack 0,n+1 \rbrack]$, $\pa
   \end{array}
 \end{equation*}
 
-\subsection{Defining frame restrictions and specifying frame coherence laws}
+\subsection{Defining frame restrictions and specifying frame coherence laws\label{sec:mkrestrf}}
 
 Thanks to $\restrptype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$, we can mutually define $\restrf[n+1][\lbrack 0,p \rbrack]$ and $\cohftype[n][\lbrack 0,p-1 \rbrack]$ from $\framep[n][\lbrack 0,n \rbrack]$, $\painting[n][\lbrack 0,n \rbrack]$, $\restrf[n][\lbrack 0,n \rbrack]$, $\restrptype[n][\lbrack 0,p-1 \rbrack]$ and some $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow \U$, abbreviating these dependencies and the dependency in a $\cohf[n][\lbrack 0,p-1 \rbrack]$ as $\depscohstype[n][\lbrack 0,p-1 \rbrack]$, and using also abbreviations in passing for $\restrl$ and $\restrltype$. It is also convenient to build $\deps[n+1][\lbrack 0,p \rbrack]$ from $\depscohs[n][\lbrack 0,p-1 \rbrack]$, so that we can now build $\framep[n+2][p]$ one step further. Thus, we also include this abbreviation in the definition:
 \begin{equation*}
@@ -757,7 +757,7 @@ We can then extend $\overline{\deps}$ to build $\fulldeps$ from $\fulldepscohs$:
 
 Also, when $n$ is 0, we write $(E,E')$ to denote an element $(E, E')$ of $\fulldepscohstype[0]$.
 
-\subsection{Defining painting restrictions}
+\subsection{Defining painting restrictions\label{sec:mkrestrp}}
 
 Armed with $\restrf$, $\cohftype$ and these abbreviations, it is now possible to define $\restrp[n+1][p]$ for $p \leq n+1$ by recursion on $n-p$:
 
@@ -823,7 +823,7 @@ sequence $\cohptype[n][\lbrack 0,p-1 \rbrack]$ of types of painting coherence la
   \end{array}
 \end{equation*}
 where we use the ``equality over'' notation $t =_e u$ to mean $\overrightarrow{e}(t) = u$ whenever $t$ is of some type $P(a)$, $u$ of type $P(b)$ and $e$ a proof of $a = b$.
-\subsection{Defining frame coherence laws and specifying frame 2-dimensional coherence laws}
+\subsection{Defining frame coherence laws and specifying frame 2-dimensional coherence laws\label{sec:mkcohf}}
 
 Thanks to $\cohptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\cohf[n+1][\lbrack 0,p \rbrack]$ and $\cohttype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ from $\fulldepscohs[n]$, abbreviating this and the dependency in a $\coht[n][\lbrack 0,p-1 \rbrack]$ as $\depscohttype[n][\lbrack 0,p-1 \rbrack]$, and using also abbreviations in passing for $\cohl$ and $\cohltype$. It is also convenient to build $\depscohs[n+1][\lbrack 0,p \rbrack]$ from $\depscoht[n][\lbrack 0,p-1 \rbrack]$, so that we can now build $\framep[n+3][p]$. Thus, we also include this abbreviation in the definition. Implicitly using in $\cohf[n+1][\lbrack 0,p \rbrack]$ that equalities in a $\Sigma$-type are equivalent to a $\Sigma$-type of the underlying equalities, we altogether have:
 
@@ -956,7 +956,7 @@ We can then extend $\overline{\depscohs}$ to build $\fulldepscohs$ from $\fullde
   \end{array}
 \end{equation*}
 
-\subsection{Defining painting coherence laws}
+\subsection{Defining painting coherence laws\label{sec:mkcohp}}
 
 The last key construction we need is $\cohp[n+1][p]$ for $p \leq n+1$, which is by recursion on $n-p$:
 
@@ -1057,14 +1057,14 @@ where
 Indeed, to build this structure at level $n+1$, from level $n$, it is
 enough to assume $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow \U$ (where $\deps[n][\lbrack 0,n \rbrack]$ come from the assumptions at level $n$) and to build the following:
 \begin{itemize}
-  \item $\framep[n+1][\lbrack 0,n+1 \rbrack]$ comes from $\deps[n][\lbrack 0,n \rbrack]$.
-  \item $\painting[n+1][\lbrack 0,n+1 \rbrack]$ comes from $\fulldeps[n](E)$.
-  \item $\restrf[n+1][\lbrack 0,n+1 \rbrack]$ comes from $\depscohs[n][\lbrack 0,n \rbrack](E)$.
-  \item $\restrp[n+1][\lbrack 0,n+1 \rbrack](E')$, for $E':\framep[n+2][n+2](\overline{\deps}(\depscohs[n][\lbrack 0,n \rbrack])) \rightarrow \U$, comes from $\fulldepscohs[n](E)(E')$.
+  \item $\framep[n+1][\lbrack 0,n+1 \rbrack]$ comes from $\deps[n][\lbrack 0,n \rbrack]$ (section~\ref{sec:mkframe}).
+  \item $\painting[n+1][\lbrack 0,n+1 \rbrack]$ comes from $\fulldeps[n](E)$ (section~\ref{sec:mkpainting}).
+  \item $\restrf[n+1][\lbrack 0,n+1 \rbrack]$ comes from $\depscohs[n][\lbrack 0,n \rbrack](E)$ (section~\ref{sec:mkrestrf}).
+  \item $\restrp[n+1][\lbrack 0,n+1 \rbrack](E')$, for $E':\framep[n+2][n+2](\overline{\deps}(\depscohs[n][\lbrack 0,n \rbrack])) \rightarrow \U$, comes from $\fulldepscohs[n](E)(E')$ (section~\ref{sec:mkrestrp}).
   \item we define $\depscoht[n][\lbrack 0,n \rbrack](E)(E')$ from $\fulldepscohs[n](E)(E')$ and $\cohp[n][\lbrack 0,n \rbrack](E)(E')$.
-  \item $\cohf[n+1][\lbrack 0,n+1 \rbrack](E')$ comes from $\depscoht[n][\lbrack 0,n \rbrack](E)(E')$.
+  \item $\cohf[n+1][\lbrack 0,n+1 \rbrack](E')$ comes from $\depscoht[n][\lbrack 0,n \rbrack](E)(E')$ (section~\ref{sec:mkcohf}).
   \item we define $\fulldepscoht[n](E)(E')(E'')$, for $E'': \framep[n+3][n+3](\overline{\deps}(\overline{\depscohs}(\depscoht[n][\lbrack 0,n \rbrack]))) \rightarrow \U$, from $\depscoht[n][\lbrack 0,n \rbrack](E)(E')$ and $E''$.
-  \item $\cohp[n+1][\lbrack 0,n+1 \rbrack](E')(E'')$ comes from $\fulldepscoht[n](E)(E')(E'')$.
+  \item $\cohp[n+1][\lbrack 0,n+1 \rbrack](E')(E'')$ comes from $\fulldepscoht[n](E)(E')(E'')$ (section~\ref{sec:mkcohp}).
 \end{itemize}
 
 Therefore, assuming a construction of $\framep[n][n]$ from $D:\Xto{m}{n}$, we are able to build a $\framep[n+1][n+1]$ from $D$ extended with some $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow \U$. This is enough to build $\Xcomp{m}{n}(D)$, for $D:\Xto{m}{n}$, and thus $\Xp{m}$, by starting with an empty $D$.
