@@ -568,7 +568,7 @@ Let us introduce another abbreviation to combine a full $\deps[n][\lbrack 0,n \r
     \end{array}\right)
 \end{equation*}
 
-Also, when $n$ is 0, we write $E$ to denote an element $(\unitpoint, E)$ of $\fulldepstype[0]$.
+Also, when $n$ is $0$, we write $E$ to denote an element of $\fulldepstype[0]$ where all other components are degenerate.
 
 We can now formally define $\painting[n+1][p]$ for $p \leq n+1$ by recursion on $n-p$:
 \begin{equation*}
@@ -732,8 +732,6 @@ Thanks to $\restrptype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$, we can mutua
     \end{array}
   \end{array}
 \end{equation*}
-
-By abuse of notation, we also write $E$ for an inhabitant of $\depscohstype[n]$ (standing for a non trivial inhabitant of $\fulldeps[n]$).
 
 We need also the notion of full dependencies at the level of coherence conditions, that combines a full $\depscohs[n][\lbrack 0,n \rbrack]$ with a set $E:\framep[n+2][n+2](\overline{\deps}(\depscohs[n][\lbrack 0,n \rbrack])) \rightarrow \U$:
 \begin{equation*}
@@ -950,11 +948,12 @@ We can then extend $\overline{\depscohs}$ to build $\fulldepscohs$ from $\fullde
 
 \begin{equation*}
   \begin{array}{lcl}
-    \overline{\fulldepscohs}(\fulldepscoht[n]) & :      & \fulldepscohstype[n+1]                                        \\
-    \overline{\fulldepscohs}(\fulldepscoht[n]) & \defeq & \left(\begin{array}{l}
-                                                                    \overline{\depscohs}(\depscoht[n][\lbrack 0,n \rbrack]) \\
-                                                                    E                                                       \\
-                                                                  \end{array}\right) \\
+    \overline{\fulldepscohs}(\fulldepscoht[n]) & :      & \fulldepscohstype[n+1] \\
+    \overline{\fulldepscohs}(\fulldepscoht[n]) & \defeq & \left(
+    \begin{array}{l}
+        \overline{\depscohs}(\depscoht[n][\lbrack 0,n \rbrack]) \\
+        E                                                       \\
+      \end{array}\right)                      \\
   \end{array}
 \end{equation*}
 
