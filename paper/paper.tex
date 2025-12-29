@@ -320,7 +320,7 @@ a family of relevant relations was considered, as shown below:
 
 For $\nu$ an arity, that is $1$ in the case of predicates, families and augmented semi-simplicial sets, or $2$ in the case of relations, correspondences and semi-cubical sets, such sequence of was called a $\nu$-set. Equations specifying $\nu$-sets were given in \cite{hr25} with an accompanying formalisation in Rocq. The argument used to justify the well-foundedness of the construction was however heavy. In this paper, we present a refined well-foundedness argument which reflects the recursive essence of the construction.
 
-\section{Description of iterated parametricity in indexed form\label{sec:reminder}}
+\section{High-level description of iterated parametricity in indexed form\label{sec:reminder}}
 
 Because of the dependency of $E_{n+1}$ into all $E_p$ for $p \leq n$, the family could not be expressed as a function. Instead, it was expressed as a stream whose $(n+1)$-th element $E_{n+1}$ was dependent on the bundle of all previous elements of the stream. Such a bundle was called $\Xto{m}{n}$ while the residual stream of all $E_{n}$, $E_{n+1}$, ..., all of them precisely dependent on the bundle $E:\Xto{m}{n}$ of previous $E_0$, ..., $E_{n-1}$, was called $\Xfrom{m}{n}{D}$. The type of $E_n$, also dependent on a bundle $D:\Xto{m}{n}$, was denoted $\Xcomp{m}{n}[D=\D]$, as shown on tables~\ref{tab:coind} and~\ref{tab:core}, using an type theory as language of discourse. When $n$ is $0$, $\Xto{m}{0}$ is degenerated, that is reduced to the canonical inhabitant $\kstar$ of $\unittype$. Then, $\Xfrom{m}{0}{\kstar}$ denotes the full stream $E_0, E_1, \ldots$.
 
@@ -370,7 +370,7 @@ Notably, the definition of $\restrl$ relies on an equality expressing the commut
 \renewcommandx{\cohl}[6][1,2,3,4,5,6]{\coh{layer}[][#3][#4][#5][#6][#1][#2][]}
 \renewcommandx{\cohp}[6][1,2,3,4,5,6]{\coh{painting}[][#3][#4][#5][#6][#1][#2][]}
 
-\section{Outline of the recursive structure of iterated parametricity construction}
+\section{Analysis of the recursive structure of iterated parametricity in indexed form}
 
 To build $\framep[n+1]$ from $\framep[n]$, it happens to be enough to assume the following built at level $n$, for all $p \leq n$:
 
@@ -433,7 +433,7 @@ which can appropriately be reformulated using sequences for appropriate definiti
 
 The type of sequences such as $\restrf[n][\lbrack 0,p \rbrack]$ will be represented by iterated $\Sigma$-types since each $\restrf[n][p]$ may depend on the previous components of the sequence. In the case of $\framep$ and $\painting$, there will be however no dependency, so an ordinary product can be used to represent $\framep[n][\lbrack 0,p \rbrack]$ and $\painting[n][\lbrack 0,p \rbrack]$. Later on, we will write $\framep[n][\lbrack 0,p-1 \rbrack]$ for the immediate subsequence of length $p$ of $\framep[n][\lbrack 0,p \rbrack]$ and $\framep[n][p]$ for its last component, and similarly for $\painting[n][\lbrack 0,p \rbrack]$, $\restrf[n][\lbrack 0,p \rbrack]$, etc.
 
-\section{The construction}
+\section{Detailed construction}
 
 \subsection{Specifying frames}
 
@@ -507,7 +507,7 @@ Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\painting[n][\lbrack 0,p-1 \rb
               \framep[n][\lbrack 0,p \rbrack]   \\
               \painting[n][\lbrack 0,p \rbrack] \\
             \end{array}\right)   & \defeq &
-    \begin{array}{l}
+    \left\{\begin{array}{l}
       \Sigma \restrf[n][\lbrack 0,p-1 \rbrack]
       :\restrftype[n][\lbrack 0,p-1 \rbrack]
       \left(\begin{array}{l}
@@ -520,7 +520,7 @@ Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\painting[n][\lbrack 0,p-1 \rb
                 \painting[n][\lbrack 0,p-1 \rbrack] \\
                 \restrf[n+1][\lbrack 0,p-1 \rbrack] \\
               \end{array}\right) \rightarrow  \framep[n][p] \\
-    \end{array}                       \\
+    \end{array}\right.                       \\
     \layertype[n][p]                       &
     \deps[n][\lbrack 0,p \rbrack]
                                            & :      & \U                                     \\
@@ -579,12 +579,10 @@ We can now formally define $\painting[n+1][p]$ for $p \leq n+1$ by recursion on 
     \painting[n+1][n+1]      &
     \fulldeps[n]             & \defeq & E                       \\
     \painting[n+1][p \leq n] &
-    \fulldeps[n]             & \defeq & d \mapsto
-    \left(\begin{array}{l}
-              \Sigma l:\layer[n][p](\deps[n][\lbrack 0,p \rbrack]). \\
+    \fulldeps[n]             & \defeq & \lambda d.\,
+              \Sigma l:\layer[n][p](\deps[n][\lbrack 0,p \rbrack]). 
               \painting[n+1][p+1]
               (\fulldeps[n])(d,l)                                   \\
-            \end{array}\right) \\
   \end{array}
 \end{equation*}
 
