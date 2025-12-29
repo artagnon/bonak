@@ -237,35 +237,30 @@ Introduced by Reynolds in the context of programming language semantics~\cite{re
 
 From the point of view of realisability, unary parametricity over a language is a realisability using the language itself as language of realisers. Like parametricity, realisability can be expressed in a \emph{syntactic} way, that is as an interpretation from one language to another (i.e. mapping an expression $t$ of $\vdash A$ in some formal system to a derivation $t^*$ of $\vdash' |t| \real A$ in some other formal system, for some program $|t|$ extracted from $t$ -- namely $t$ itself in the case of parametricity), or a \emph{semantic} way\footnote{This distinction between syntactic realisability and semantic realisability is itself connected to the difference between relative and absolute consistency. In the relative case, consistency of a formal system is reduced to the consistency of another formal system, and this can be done in a very weak logical system such as Primitive Recursive Arithmetic (PRA). On the other side, in the absolute case, consistency of a formal system is reduced to the consistency of the language of discourse, which, by G\"odel incompleteness theorem, if actually consistent, necessarily has to be as strong as the modelled formal system.}, that is as an interpretation in the language of discourse, which we could call in term the ``metalanguage'' (i.e. interpreting $A$ as a set $\textbf{A}$ or a relation $=_A$ of the language of discourse and interpreting a derivation $t$ of $\vdash A$ as an expression $|t|$ such that, respectively, $|t| \in \textbf{A}$ or $|t| =_A |t|$). Thus, the comparison between parametricity and realisability includes the case of \emph{reducibility}~\cite{Tait}, which is a semantic form of realisability, also known as \emph{glueing} in the context of category theory. In the same vein, binary parametricity over a language can be seen as defining \emph{logical relations}~\cite{Plotkin} over itself, since logical relations are a binary form of reducibility.
 
-\newcommand{\Prop}{\textsf{Prop}}
-\newcommand{\MySet}{\textsf{Set}}
-
-Parametricity, like realisability, reducibility, and logical relations, was most commonly handled in an \emph{indexed} form, that is, using a type-theoretic language, considering predicates of type $A \rightarrow \Prop$, or families of type $A \rightarrow \MySet$, or relations of type $A \times A \rightarrow \Prop$, or relevant relations -- sometimes called \emph{correspondences} -- of type $A \times A \rightarrow \MySet$, where $\Prop$ and $\MySet$ are types representing, that is classifying -- in category theory terminology --, propositions or sets, respectively. Along the indexed-fibered correspondence, that is along the equivalence between the types $A \rightarrow \Prop$ and $\Sigma B:\MySet. (B \stackrel{inj}{\rightarrow} A)$ (proof-irrelevant case) and $A \rightarrow \MySet$ and $\Sigma B:\MySet. (B \rightarrow A)$ (proof-relevant case), for $A:\MySet$, everything told in the indexed form can morally also be told in \emph{fibered} form. Such fibered approach to parametricity was for instance considered in Ghani \cite{Ghani...}, who also suggested to iterate parametricity.
+Parametricity, like realisability, reducibility, and logical relations, was most commonly handled in an \emph{indexed} form, that is, using a type-theoretic language, considering predicates of type $A \rightarrow \Prop$, or families of type $A \rightarrow \Set$, or relations of type $A \times A \rightarrow \Prop$, or relevant relations -- sometimes called \emph{correspondences} -- of type $A \times A \rightarrow \Set$, where $\Prop$ and $\Set$ are types representing, that is classifying -- in category theory terminology --, propositions or sets, respectively. Along the indexed-fibered correspondence, that is along the equivalence between the types $A \rightarrow \Prop$ and $\Sigma B:\Set. (B \stackrel{inj}{\rightarrow} A)$ (proof-irrelevant case) and $A \rightarrow \Set$ and $\Sigma B:\Set. (B \rightarrow A)$ (proof-relevant case), for $A:\Set$, everything told in the indexed form can morally also be told in \emph{fibered} form. Such fibered approach to parametricity was for instance considered in Ghani \cite{Ghani...}, who also suggested to iterate parametricity.
 
 \paragraph*{Iterated parametricity.}
 
-The internalisation of parametricity in unary indexed form was studied by \cite{Moulin,Bernardy} directly leading to a type theory of iterated parametricity. Such type theory could be interpreted in a ``unary'' form of cubical set~\cite{bernardy15}, thus implicitly in fibered form since, in a binary cubical set (resp. in a unary cubical set and simplicial set as well), a set of segments over two points, that is a relevant relation, is given by first and second projection rather than as a function to $\MySet$ (resp. a family is given as a \emph{total space} projected over a set of points $A:\MySet$ rather than a family of type $A \rightarrow \MySet$. This connection between iterated binary parametricity in fibered form and cubical sets includes an identification of degeneracies and reflexivity proofs, which can also be found in Johann and Sojakova~\cite{johann17}. In particular, it became clear at this point that iterated binary parametricity (without reflexivity) produces semi-cubical sets while it was also observed\footnote{The authors learned it from Hugo Moeneclaye and Thorsten Altenkirch.} that iterated unary parametricity produces augmented semi-simplicial sets.
+The internalisation of parametricity in unary indexed form was studied by \cite{Moulin,Bernardy} directly leading to a type theory of iterated parametricity. Such type theory could be interpreted in a ``unary'' form of cubical set~\cite{bernardy15}, thus implicitly in fibered form since, in a binary cubical set (resp. in a unary cubical set and simplicial set as well), a set of segments over two points, that is a relevant relation, is given by first and second projection rather than as a function to $\Set$ (resp. a family is given as a \emph{total space} projected over a set of points $A:\Set$ rather than a family of type $A \rightarrow \Set$. This connection between iterated binary parametricity in fibered form and cubical sets includes an identification of degeneracies and reflexivity proofs, which can also be found in \cite{johann17}. In particular, it became clear at this point that iterated binary parametricity (without reflexivity) produces semi-cubical sets while it was also observed\footnote{The authors learned it from Hugo Moeneclaye and Thorsten Altenkirch.} that iterated unary parametricity produces augmented semi-simplicial sets.
 
-$$
-  \begin{tabular}{lllllll}
-                              &                              &                                 &                               & structure                          & kind of semantics   \\
-    \hline
-    \multirow{6}{1cm}{unary}  & \multirow{3}{1.5cm}{indexed} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant              & predicate                          & reducibility        \\
-                              &                              &                                 & relevant                      & family                             &                     \\
-                              &                              & \multicolumn{2}{l}{iterated}    & \emph{this work}              &                                                          \\
-                              & \multirow{3}{1.5cm}{fibered} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant              & subobject                          &                     \\
-                              &                              &                                 & relevant                      & fibration                          &                     \\
-                              &                              & \multicolumn{2}{l}{iterated}    & augmented semi-simplicial set &                                                          \\
-    \hline
-    \multirow{6}{1cm}{binary} & \multirow{3}{1.5cm}{indexed} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant              & relation                           & logical relation    \\
-                              &                              &                                 & relevant                      & correspondence (relevant relation) &                     \\
-                              &                              & \multicolumn{2}{l}{iterated}    & \emph{this work}              &                                                          \\
-                              & \multirow{3}{1.5cm}{fibered} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant              & fibered relation ?                 &                     \\
-                              &                              &                                 & relevant                      & span                               &                   & \\
-                              &                              & \multicolumn{2}{l}{iterated}    & semi-cubical set              &                                                          \\
-    \hline
-  \end{tabular}
-$$
+\begin{tabular}{lllllll}
+                            &                              &                                 &                               & structure                          & kind of semantics   \\
+  \hline
+  \multirow{6}{1cm}{unary}  & \multirow{3}{1.5cm}{indexed} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant              & predicate                          & reducibility        \\
+                            &                              &                                 & relevant                      & family                             &                     \\
+                            &                              & \multicolumn{2}{l}{iterated}    & \emph{this work}              &                                                          \\
+                            & \multirow{3}{1.5cm}{fibered} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant              & subobject                          &                     \\
+                            &                              &                                 & relevant                      & fibration                          &                     \\
+                            &                              & \multicolumn{2}{l}{iterated}    & augmented semi-simplicial set &                                                          \\
+  \hline
+  \multirow{6}{1cm}{binary} & \multirow{3}{1.5cm}{indexed} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant              & relation                           & logical relation    \\
+                            &                              &                                 & relevant                      & correspondence (relevant relation) &                     \\
+                            &                              & \multicolumn{2}{l}{iterated}    & \emph{this work}              &                                                          \\
+                            & \multirow{3}{1.5cm}{fibered} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant              & fibered relation ?                 &                     \\
+                            &                              &                                 & relevant                      & span                               &                   & \\
+                            &                              & \multicolumn{2}{l}{iterated}    & semi-cubical set              &                                                          \\
+  \hline
+\end{tabular}
 
 In a previous paper~\citep{hr25}, we exploited this correspondence to construct at the same time augmented semi-simplicial and semi-cubical sets in \emph{indexed form} as a special case of iterated parametricity. That is, instead of the following illustration of the semi-cubical case (upto faces identities),
 
@@ -325,7 +320,7 @@ we consider a family of relevant relations as shown below:
 
 A $\nu$-set in indexed form is a sequence of families of $\U$, that is $\U[m]$ for some universe level $m$. We call such sequence a $\nu$-set at level $m$, whose type thus lives in $\U[m+1]$.
 
-Table~\ref{tab:coind} describes the type of a $\nu$-set at level $m$ as a dependent stream of type families representing the limit of $n$-truncated $\nu$-sets: the recursive equation $\Xfrom{m}{n}{D} \,\defeq\, \Sigma R: \Xcomp{m}{n}[D=\D].\, \Xfrom{m}{n+1}[D=\pair{D}{R}]$ from the table formally corresponds to the stream $Stream_{\Sigma n.\, \Xto{m}{n},\, \lambda (n, \D).\, \Xcomp{m}{n}[D=\D],\,\lambda ((n, D),R).(n+1,(\pair{D}{R}))}(n, \D)$. Therefore, $\Xfrom{m}{n}$ denotes an infinite sequence $X_{n}, X_{n+1}, \ldots$ dependent on a $(<n)$-truncated $\nu$-set, $\Xto{m}{n}$, so that, when $n$ is $0$, it denotes a full $\nu$-set, written $\Xp{m}$. This is made possible because the $(<0)$-truncated $\nu$-set, $\Xto{m}\lbrack 0,0 \rbrack$, is degenerated: it is an empty family, and there is thus only one $(<0)$-truncated $\nu$-set, namely the canonical inhabitant $\kstar$ of $\unittype$.
+Table~\ref{tab:coind} describes the type of a $\nu$-set at level $m$ as a dependent stream of type families representing the limit of $n$-truncated $\nu$-sets: the recursive equation $\Xfrom{m}{n}{D} \,\defeq\, \Sigma R: \Xcomp{m}{n}[D=\D].\, \Xfrom{m}{n+1}[D=\pair{D}{R}]$ from the table formally corresponds to the stream $Stream_{\Sigma n.\, \Xto{m}{n},\, \lambda (n, \D).\, \Xcomp{m}{n}[D=\D],\,\lambda ((n, D),R).(n+1,(\pair{D}{R}))}(n, \D)$. Therefore, $\Xfrom{m}{n}$ denotes an infinite sequence $X_{n}, X_{n+1}, \ldots$ dependent on a $(<n)$-truncated $\nu$-set, $\Xto{m}{n}$, so that, when $n$ is $0$, it denotes a full $\nu$-set, written $\Xp{m}$. This is made possible because the $(<0)$-truncated $\nu$-set, $\Xto{m}{0}$, is degenerated: it is an empty family, and there is thus only one $(<0)$-truncated $\nu$-set, namely the canonical inhabitant $\kstar$ of $\unittype$.
 
 The definition of the type of a $n$-truncated $\nu$-set is in turn described in table~\ref{tab:core}. In the infinite sequence of type families representing a $\nu$-set, the $n$-th component is a type dependent over a $\fullframe$. It is recursively defined in table~\ref{tab:frames}, using the auxiliary definitions of $\framep$, $\layer$ and $\painting$. A $\fullframe$ describes a boundary of a standard form (simplex, cube), which we decompose into $\layer$, and a $\painting$ corresponds to a filled frame. Notice that the type $\layer$ relies on an operator of frame restriction $\restrf$ which is defined in table~\ref{tab:faces}, and this restriction operator is in turn defined using auxiliary definitions $\restrl$ and $\restrp$.
 
@@ -379,38 +374,7 @@ Note that for a fixed constant $n$, relying on the evaluation rules of type theo
 
 In \citep{hr25}, the well-foundedness was justified by induction on $n$ and subinductions, one on $p$ to mutually build $\framep[n][p]$, $\restrf[n][p]$ and $\cohf[n][p]$, and three others to build each of $\painting[n][p]$, $\restrp[n][p]$ and $\cohp[n][p]$ by induction on $n-p$.
 
-Since $\restrf[n][p]$ is referring to $\framep[n][p]$ and $\framep[n-1][p]$, and $\cohf[n][p]$ is referring to $\restrf[n][p]$ and $\restrf[n-1][p]$, thus also to $\framep[n][p]$, $\framep[n-1][p]$ and $\framep[n-2][p]$, we built all of these 6 components at the same time. But equations were also needed to state the properties of $\framep[n][p]$, $\framep[n-1][p]$ and $\restrf[n][p]$ so that we were building by induction on $n$, for any $D:\Xto{m}{n}$, the following block of information:
-
-\begin{equation*}
-  \begin{array}{lclr}
-    \framep[n][p]      & : & \U                                                                                                                 & \mbox{for all $p\leq n$}   \\
-    \framep[n-1][p]    & : & \U                                                                                                                 & \mbox{for all $p\leq n-1$} \\
-    \framep[n-2][p]    & : & \U                                                                                                                 & \mbox{for all $p\leq n-2$} \\
-    \restrf[n][p]      & : & \Pi q.\, \Pi \omega.\, \framep[n][p] \rightarrow \framep[n-1][p]                                                   & \mbox{for all $p\leq n$}   \\
-    \restrf[n-1][p]    & : & \Pi q.\, \Pi \omega.\, \framep[n-1][p] \rightarrow \framep[n-2][p]                                                 & \mbox{for all $p\leq n-1$} \\
-    \cohf[n][p]        & : & \Pi qr\epsilon\omega.\, \restrf[n-1][p][q][\epsilon] \circ \restrf[n][p][\omega][r] =                                                           \\
-                       &   & \restrf[n-1][p][r][\omega] \circ \restrf[n][p][\epsilon][q+1]                                                      & \mbox{for all $p\leq n$}   \\
-    \mathsf{hypF0}     & : & \framep[n][0]         = \unitpoint
-    \\
-    \mathsf{hypFS}     & : & \framep[n][p+1]       = \Sigma d: \framep[n+1][p]. \Pi \omega.\, \painting[n][p] (\restrf[n+1][p](d))              & \mbox{for all $p\leq n-1$} \\
-    \mathsf{hypPrevF0} & : & \framep[n-1][0]                                                                                       = \unitpoint                              \\
-    \mathsf{hypPrevFS} & : & \framep[n-1][p+1] = \Sigma d: \framep[n][p]. \Pi \omega.\, \painting[n-1][p] (\restrf[n][p](d))                    & \mbox{for all $p\leq n-2$} \\
-    \mathsf{hypRF0}    & : & \restrf[n][0]        = \ldots \texttt{depending on hypF0}                                                                                       \\
-    \mathsf{hypRFS}    & : & \restrf[n][p+1]      = \ldots \texttt{depending on hypFS and hypPrevFS}                                            & \mbox{for all $p\leq n-1$} \\
-    \ldots             &   & \texttt{fields for painting, restrf, cohp}
-  \end{array}
-\end{equation*}
-
-In the current paper and associated formalisation, we switch the point
-of view, take $\framep[n-2][p]$ $\painting[n-2][p]$, $\restrf[n-1][p]$
-and $\restrp[n-1][p]$ as references and rename them respectively as
-$\framep[n][p]$, $\painting[n][p]$, $\restrf[n][p]$ and
-$\restrp[n][p]$. We replace the equational properties of $\framep[n][p]$,
-$\framep[n-1][p]$, $\restrf[n][p]$, $\painting[n][p]$,
-$\painting[n-1][p]$ and $\restrp[n][p]$ with definitions, renaming them
-respectively to $\framep[n+2][p]$, $\framep[n+1][p]$,
-$\restrf[n+1][p]$, $\painting[n+2][p]$, $\painting[n+1][p]$ and
-$\restrp[n+1][p]$. This means that we build instead by induction a block of the form:
+In the current paper and associated formalisation, we take $\framep[n-2][p]$ $\painting[n-2][p]$, $\restrf[n-1][p]$ and $\restrp[n-1][p]$ as references and rename them respectively as $\framep[n][p]$, $\painting[n][p]$, $\restrf[n][p]$ and $\restrp[n][p]$. We replace the equational properties of $\framep[n][p]$, $\framep[n-1][p]$, $\restrf[n][p]$, $\painting[n][p]$, $\painting[n-1][p]$ and $\restrp[n][p]$ with definitions, renaming them respectively to $\framep[n+2][p]$, $\framep[n+1][p]$, $\restrf[n+1][p]$, $\painting[n+2][p]$, $\painting[n+1][p]$ and $\restrp[n+1][p]$. This means that we build instead by induction a block of the form:
 
 \begin{equation*}
   \begin{array}{lclr}
@@ -501,14 +465,7 @@ The types $\paintingtype[n][\lbrack 0,p-1 \rbrack]$ of $\painting[n][\lbrack 0,p
 
 \subsection{Defining frames and specifying frame restrictions}
 
-Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\painting[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$, we can
-mutually define the types $\restrftype[n][\lbrack 0,p-1 \rbrack]$ of frame
-restrictions together with $\framep[n+1][\lbrack 0,p-1 \rbrack]$ as a function from
-$\restrf[n][\lbrack 0,p-1 \rbrack]$, introducing also abbreviations for the types
-and definitions of layers, as well as for the combination of sequences
-of $\framep[n][\lbrack 0,p-1 \rbrack]$, $\painting[n][\lbrack 0,p-1 \rbrack]$ and
-$\restrf[n][\lbrack 0,p-1 \rbrack]$ in one block, which we call
-$\depstype[n][\lbrack 0,p-1 \rbrack]$:
+Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\painting[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$, we can mutually define the types $\restrftype[n][\lbrack 0,p-1 \rbrack]$ of frame restrictions together with $\framep[n+1][\lbrack 0,p-1 \rbrack]$ as a function from $\restrf[n][\lbrack 0,p-1 \rbrack]$, introducing also abbreviations for the types and definitions of layers, as well as for the combination of sequences of $\framep[n][\lbrack 0,p-1 \rbrack]$, $\painting[n][\lbrack 0,p-1 \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$ in one block, which we call $\depstype[n][\lbrack 0,p-1 \rbrack]$:
 
 \begin{equation*}
   \begin{array}{llcl}
