@@ -247,24 +247,24 @@ Parametricity, like realisability, reducibility, and logical relations, was most
 The internalisation of parametricity in unary indexed form was studied by \cite{Moulin,Bernardy} directly leading to a type theory of iterated parametricity. Such type theory could be interpreted in a ``unary'' form of cubical set~\cite{bernardy15}, thus implicitly in fibered form since, in a binary cubical set (resp. in a unary cubical set and simplicial set as well), a set of segments over two points, that is a relevant relation, is given by first and second projection rather than as a function to $\MySet$ (resp. a family is given as a \emph{total space} projected over a set of points $A:\MySet$ rather than a family of type $A \rightarrow \MySet$. This connection between iterated binary parametricity in fibered form and cubical sets includes an identification of degeneracies and reflexivity proofs, which can also be found in Johann and Sojakova~\cite{johann17}. In particular, it became clear at this point that iterated binary parametricity (without reflexivity) produces semi-cubical sets while it was also observed\footnote{The authors learned it from Hugo Moeneclaye and Thorsten Altenkirch.} that iterated unary parametricity produces augmented semi-simplicial sets.
 
 $$
-\begin{tabular}{lllllll}
-                           &                            &                                 &                   & structure & kind of semantics \\
- \hline
- \multirow{6}{1cm}{unary}  & \multirow{3}{1.5cm}{indexed} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant  & predicate &        reducibility \\
-                           &                            &                                 & relevant          & family & \\
-                           &                            & \multicolumn{2}{l}{iterated}                        & \emph{this work}       & \\
-                           & \multirow{3}{1.5cm}{fibered} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant  & subobject & \\
-                           &                            &                                 & relevant          & fibration & \\
-                           &                            & \multicolumn{2}{l}{iterated}                        & augmented semi-simplicial set & \\
- \hline
- \multirow{6}{1cm}{binary} & \multirow{3}{1.5cm}{indexed} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant  & relation & logical relation \\
-                           &                            &                                 & relevant          & correspondence (relevant relation) & \\
-                           &                            & \multicolumn{2}{l}{iterated}                        & \emph{this work}       & \\
-                           & \multirow{3}{1.5cm}{fibered} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant  & fibered relation ? & \\
-                           &                            &                                 & relevant          & span & & \\
-                           &                            & \multicolumn{2}{l}{iterated}                        & semi-cubical set & \\
- \hline
-\end{tabular}
+  \begin{tabular}{lllllll}
+                              &                              &                                 &                               & structure                          & kind of semantics   \\
+    \hline
+    \multirow{6}{1cm}{unary}  & \multirow{3}{1.5cm}{indexed} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant              & predicate                          & reducibility        \\
+                              &                              &                                 & relevant                      & family                             &                     \\
+                              &                              & \multicolumn{2}{l}{iterated}    & \emph{this work}              &                                                          \\
+                              & \multirow{3}{1.5cm}{fibered} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant              & subobject                          &                     \\
+                              &                              &                                 & relevant                      & fibration                          &                     \\
+                              &                              & \multicolumn{2}{l}{iterated}    & augmented semi-simplicial set &                                                          \\
+    \hline
+    \multirow{6}{1cm}{binary} & \multirow{3}{1.5cm}{indexed} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant              & relation                           & logical relation    \\
+                              &                              &                                 & relevant                      & correspondence (relevant relation) &                     \\
+                              &                              & \multicolumn{2}{l}{iterated}    & \emph{this work}              &                                                          \\
+                              & \multirow{3}{1.5cm}{fibered} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant              & fibered relation ?                 &                     \\
+                              &                              &                                 & relevant                      & span                               &                   & \\
+                              &                              & \multicolumn{2}{l}{iterated}    & semi-cubical set              &                                                          \\
+    \hline
+  \end{tabular}
 $$
 
 In a previous paper~\citep{hr25}, we exploited this correspondence to construct at the same time augmented semi-simplicial and semi-cubical sets in \emph{indexed form} as a special case of iterated parametricity. That is, instead of the following illustration of the semi-cubical case (upto faces identities),
@@ -565,7 +565,7 @@ $\depstype[n][\lbrack 0,p-1 \rbrack]$:
       \left(\begin{array}{l}
                 \framep[n][\lbrack 0,p-1 \rbrack]   \\
                 \painting[n][\lbrack 0,p-1 \rbrack] \\
-                \restrf[n+1][\lbrack 0,p-1 \rbrack]   \\
+                \restrf[n+1][\lbrack 0,p-1 \rbrack] \\
               \end{array}\right) \rightarrow  \framep[n][p] \\
     \end{array}                       \\
     \layertype[n][p]                       &
@@ -712,7 +712,7 @@ Thanks to $\restrptype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$, we can mutua
     \depscohs[n][\lbrack 0,p \rbrack]       & \defeq                              &
     \left(\begin{array}{l}
               \restrf[n+1][\lbrack 0,p \rbrack][q][\epsilon]
-              (\depscohs[n][\lbrack 0,p-1 \rbrack]),           \\
+              (\depscohs[n][\lbrack 0,p-1 \rbrack]),
               \lambda q.\lambda \epsilon.\lambda (d,l).        \\
               \left(\restrf[n][p][q][\epsilon]
                 (\depscohs[n][\lbrack 0,p-1 \rbrack])(d), \restrl[n][p][q][\epsilon]
@@ -922,15 +922,15 @@ Thanks to $\cohptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\cohf[n
     \cohl[n][p]                                 &
     \depscoht[n][\lbrack 0,p-1 \rbrack]         & :                                   &
     \begin{array}{l}
-      \Pi q \leq n-p.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.\,\Pi d.\,\Pi l.                                                             \\
-      \restrl[n][p][q][\epsilon](\depscohs[n][\lbrack 0,p-1 \rbrack])(\restrl[n+1][p][r][\omega](\overline{\depscohs}(\depscoht[n][\lbrack 0,p-1 \rbrack]))(l))\\ =_{\cohf[n+1][p][r+1][q+1][\epsilon][\omega](\depscoht[n][\lbrack 0,p-1 \rbrack])(d)} \\
+      \Pi q \leq n-p.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.\,\Pi d.\,\Pi l.                                                                                 \\
+      \restrl[n][p][q][\epsilon](\depscohs[n][\lbrack 0,p-1 \rbrack])(\restrl[n+1][p][r][\omega](\overline{\depscohs}(\depscoht[n][\lbrack 0,p-1 \rbrack]))(l)) \\ =_{\cohf[n+1][p][r+1][q+1][\epsilon][\omega](\depscoht[n][\lbrack 0,p-1 \rbrack])(d)} \\
       \restrl[n][p][r][\omega](\depscohs[n][\lbrack 0,p-1 \rbrack])(\restrl[n+1][p][q+1][\epsilon](\overline{\depscohs}(\depscoht[n][\lbrack 0,p-1 \rbrack]))(l))
-    \end{array}                                                                                            \\
+    \end{array}                                           \\
     \cohl[n][p][q][r][\epsilon][\omega]         &
     \depscoht[n][\lbrack 0,p-1 \rbrack]         & \defeq                              &
     \begin{array}{l}
-      \lambda d. \lambda l. \lambda \theta. \overrightarrow{\coht[n][p][q][r][\epsilon][\omega][\theta](\fulldepscohs[n])(d)}                                                                                         \\
-      (\ap \overrightarrow{\cohf[n][p][r][0][\omega][\theta](\restrf[n+2][p][q+2][\epsilon](\overline{\depscohs}(\depscoht[n][\lbrack 0,p \rbrack]))(d))}\\ (\ap \overrightarrow{\cohf[n+1][p][q+1][0][\epsilon][\theta](\depscoht[n][\lbrack 0,p-1 \rbrack])(d)} \\(\cohp[n][p][q][r][\epsilon][\omega](l_\theta)))) \\
+      \lambda d. \lambda l. \lambda \theta. \overrightarrow{\coht[n][p][q][r][\epsilon][\omega][\theta](\fulldepscohs[n])(d)}                             \\
+      (\ap \overrightarrow{\cohf[n][p][r][0][\omega][\theta](\restrf[n+2][p][q+2][\epsilon](\overline{\depscohs}(\depscoht[n][\lbrack 0,p \rbrack]))(d))} \\ (\ap \overrightarrow{\cohf[n+1][p][q+1][0][\epsilon][\theta](\depscoht[n][\lbrack 0,p-1 \rbrack])(d)} \\(\cohp[n][p][q][r][\epsilon][\omega](l_\theta)))) \\
     \end{array}
   \end{array}
 \end{equation*}
@@ -939,17 +939,17 @@ where $\cohttype$ is:
   \cohttype[n][p](\depscoht[n][\lbrack 0,p \rbrack]) \defeq
   \left(
   \begin{array}{l}
-      \Pi q \leq n-p.\,\Pi r \leq q.\,\Pi \epsilon.\,\Pi \omega.\,\Pi \theta.\,\Pi d.                                                          \\
+      \Pi q \leq n-p.\,\Pi r \leq q.\,\Pi \epsilon.\,\Pi \omega.\,\Pi \theta.\,\Pi d.                                                     \\
       \cohf[n][p][r][0][\omega][\theta](\restrf[n+2][p][q+2][\epsilon](\overline{\depscohs}(\depscoht[n][\lbrack 0,p \rbrack]))(d)) \circ \\
       \ap\restrf[n][p][r][\omega](\cohf[n+1][p][q+1][0][\epsilon][\theta]
       (\depscoht[n][p])(d))
-      \circ                                                                                                                            \\
+      \circ                                                                                                                               \\
       \cohf[n][p][q][r][\epsilon][\omega](\restrf[n+2][p][0][\theta](\overline{\depscohs}(\depscoht[n][\lbrack 0,p \rbrack]))(d)) =       \\
       \ap\restrf[n][p][0][\theta](\cohf[n+1][p][q+1][r+1][\epsilon][\omega]
       (\depscoht[n][p])(d))
-      \circ                                                                                                                            \\
+      \circ                                                                                                                               \\
       \cohf[n][p][q][0][\epsilon][\theta](\restrf[n+2][p][r+1][\omega](\overline{\depscohs}(\depscoht[n][\lbrack 0,p \rbrack]))(d))
-      \circ                                                                                                                            \\
+      \circ                                                                                                                               \\
       \ap\restrf[n][p][q][\epsilon](\cohf[n+1][p][r][0][\omega][\theta]
       (\depscoht[n][p])(d))
     \end{array}
