@@ -321,7 +321,7 @@ a family of relevant relations was considered, as shown below:
 
 For $\nu$ an arity, that is $1$ in the case of predicates, families and augmented semi-simplicial sets or $2$ in the case of relations, correspondences and semi-cubical sets, such sequence of was called a $\nu$-set. Equations specifying $\nu$-sets were given in \cite{hr25}. Because of the dependency of $E_{n+1}$ into all $E_p$ for $p \leq n$, the family could not be expressed as a function. Instead, it was expressed as a stream whose $(n+1)$-th element $E_{n+1}$ was dependent on the bundle of all previous elements of the stream. Such a bundle was called $\Xto{m}{n}$ while the residual stream of all $E_{n}$, $E_{n+1}$, ..., all of them precisely dependent on the bundle $E:\Xto{m}{n}$ of previous $E_0$, ..., $E_{n-1}$, was called $\Xfrom{m}{n}{D}$. The type of $E_n$, also dependent on a bundle $D:\Xto{m}{n}$, was denoted $\Xcomp{m}{n}[D=\D]$, as shown on tables~\ref{tab:coind} and~\ref{tab:core}, using an type theory as language of discourse. When $n$ is $0$, $\Xto{m}{0}$ is degenerated, that is reduced to the canonical inhabitant $\kstar$ of $\unittype$. Then, $\Xfrom{m}{0}{\kstar}$ denotes the full stream $E_0, E_1, \ldots$.
 
-The type $\Xcomp{m}{n}[D=E_0,\ldots,E_{n-1}]$ of $E_n$ represents a family whose type can be presented into the form $\fullframe(E_0,\ldots,E_{n-1}) \rightarrow \U$ where $\fullframe$ collects all the components on which $E_n$ is expected to depend. It is recursively defined in table~\ref{tab:frames}, using the auxiliary definitions of $\framep$, $\layer$ and $\painting$. A $\fullframe$ describes a boundary of a standard form (simplex, cube), which we decompose into $\layer$, and a $\painting$ corresponds to a filled frame. Notice that the type $\layer$ relies on an operator of frame restriction $\restrf$ which is defined in table~\ref{tab:faces}, and this restriction operator is in turn defined using auxiliary definitions $\restrl$ and $\restrp$.
+The type $\Xcomp{m}{n}[D=E_0,\ldots,E_{n-1}]$ of $E_n$ represents a family whose type can be presented into the form $\fullframe(E_0,\ldots,E_{n-1}) \rightarrow \U$ where $\fullframe$ collects all the dependencies of $E_n$. It is recursively defined in table~\ref{tab:frames}, using the auxiliary definitions of $\framep$, $\layer$ and $\painting$. A $\fullframe$ describes a boundary of a standard form (simplex, cube), which we decompose into $\layer$ themselves made of $\nu$ $\painting$ ($\nu=1$, $\nu=2$, ...), where a $\painting$ corresponds to a filled frame. Notice that the type $\layer$ relies on an operator of frame restriction $\restrf$ which is defined in table~\ref{tab:faces}, and this restriction operator is in turn defined using auxiliary definitions $\restrl$ and $\restrp$ (see \cite{hr25} for details).
 
 Notably, the definition of $\restrl$ relies on an equality expressing the commutation of the composition of two $\restrf$. The proof of this commutation is worth being made explicit, which we do in table~\ref{tab:coh} using proof-term notations\footnote{We however omit type conversions, as if working in extensional type theory. E.g. the definition of $\restrl$ implicitly use $\cohf$ so that the type of $\restrp$ gets its expected type.}. The proof is by recursion on the structure of $\framep$, $\layer$, and $\painting$. This is what $\cohf$ does using auxiliary proofs $\cohl$ and $\cohp$. Note that for a fixed constant $n$, relying on the evaluation rules of type theory, the coherence conditions degenerate to a reflexivity proof, so that the construction builds an effective sequence of types not mentioning coherences anymore.
 
@@ -371,9 +371,7 @@ Due to the intricate dependencies, the reason the whole construction is recursiv
 
 \section{Outline of the recursive structure of iterated parametricity construction}
 
-In \citep{hr25}, the well-foundedness was justified by induction on $n$ and subinductions, one on $p$ to mutually build $\framep[n][p]$, $\restrf[n][p]$ and $\cohf[n][p]$, and three others to build each of $\painting[n][p]$, $\restrp[n][p]$ and $\cohp[n][p]$ by induction on $n-p$.
-
-In the current paper and associated formalisation, we take $\framep[n-2][p]$ $\painting[n-2][p]$, $\restrf[n-1][p]$ and $\restrp[n-1][p]$ as references and rename them respectively as $\framep[n][p]$, $\painting[n][p]$, $\restrf[n][p]$ and $\restrp[n][p]$. We replace the equational properties of $\framep[n][p]$, $\framep[n-1][p]$, $\restrf[n][p]$, $\painting[n][p]$, $\painting[n-1][p]$ and $\restrp[n][p]$ with definitions, renaming them respectively to $\framep[n+2][p]$, $\framep[n+1][p]$, $\restrf[n+1][p]$, $\painting[n+2][p]$, $\painting[n+1][p]$ and $\restrp[n+1][p]$. This means that we build instead by induction a block of the form:
+To build $\framep[n+1]$ from $\frame[n]$, it happens to be enough to assume the following built at level $n$:
 
 \begin{equation*}
   \begin{array}{lclr}
@@ -389,12 +387,10 @@ In the current paper and associated formalisation, we take $\framep[n-2][p]$ $\p
                     &   & \restrp[n][p][r][\omega](\restrf[n+1][p][q+1][\epsilon](d)) \circ \restrp[n+1][p][q+1][\epsilon](d) & \mbox{for all $p\leq n$} \\
   \end{array}
 \end{equation*}
+and to build it at level $n+1$. This is however not so easy because some components of this structure, e.g. $\restrf$ and further fields, depend on $\framep[n+1]$, that is already depend on the ability of building the $\framep$ component of the structure at level $n+1$. We are thus facing an interdependency between specifying the structure assumed at level $n$ and defining from it the structure at level $n+1$. So, we have to proceed in order: specifying $\framep[n]$, from which $\painting[n]$ can be specified, from which $\framep[n+1]$ can be built and thus $\restrf[n+1]$ be specified. Now, the definition of $\framep[n+1][p]$, which is by induction on $p$, itself depends on $\restrf[n][p-1]$ whose type depends in turn on $\framep[n+1][p-1]$. This means that $\framep[n+1][p]$ and the type of $\restrf[n][p]$ have to be mutually defined.
 
-Turning $\framep[n+2][p]$, $\framep[n+1][p]$ and $\restrf[n+1][p]$ into definitions involves however circularities. To start with, the definition of $\framep[n+1][p]$, which is by induction on $p$, depends on $\restrf[n][p-1]$ whose type depends in turn on $\framep[n+1][p-1]$. This means that $\framep[n+1][p]$ and the type of $\restrf[n][p]$ have to be mutually defined.
+The definition of $\framep[n+1][p]$ also depends, via $\layer[n][p-1]$, on $\painting[n][p-1]$. Both via $\painting[n][p-1]$ and $\restrf[n][p-1]$, it depends also on $\framep[n][p-1]$ by typing dependency. This requires to assume $\framep[n][p-1]$ and $\painting[n][p-1]$ known in advance. Moreover, the definition of $\framep[n+1][p]$ depends on $\framep[n+1][p-1]$, so all of $\framep[n][k]$, $\painting[n][k]$ and $\restrf[n][k]$ for $k< p$ need to be known, which we respectively abbreviate as $\framep[n][\lbrack 0,p-1 \rbrack]$, $\painting[n][\lbrack 0,p-1 \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$. Schematically, using dotted arrows for dependencies in the type and plain arrows for dependencies in the definition, this gives the following dependencies for $p\leq n+1$ fixed:
 
-The definition of $\framep[n+1][p]$ also depends, via $\layer[n][p-1]$, on $\painting[n][p-1]$. Both via $\painting[n][p-1]$ and $\restrf[n][p-1]$, it depends also on $\framep[n][p-1]$ by typing dependency. This requires to assume $\framep[n][p-1]$ and $\painting[n][p-1]$ known in advance.
-Moreover, the definition of $\framep[n+1][p]$ depends on $\framep[n+1][p-1]$, so all of $\framep[n][k]$, $\painting[n][k]$ and $\restrf[n][k]$ for $k< p$ need to be known, which we respectively abbreviate as $\framep[n][\lbrack 0,p-1 \rbrack]$, $\painting[n][\lbrack 0,p-1 \rbrack]$ and $\restrf[n][p-1]$.
-Schematically, using dotted arrows for dependencies in the type and plain arrows for dependencies in the definition, this gives the following dependencies for $p\leq n+1$ fixed:
 \begin{center}
   \begin{tikzcd}
     \framep[n+1][\lbrack 0,p \rbrack] \arrow[d] \arrow[ddr]\\
@@ -544,9 +540,7 @@ Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\painting[n][\lbrack 0,p-1 \rb
   \end{array}
 \end{equation*}
 
-Note that we write $\framep$, $\painting$, $\restrf$ for the
-projections of a $\deps$. Also, by abuse of notation, we write $\unitpoint$ for
-the only inhabitant of $\depstype[n]$.
+Note that $\deps$ behaves here as an abbreviation for a sequence of assumptions. In particular, once a $\deps:\depstype$ is assumed, we can freely refer to $\framep$, $\painting$, $\restrf$. Also, by abuse of notation, we write $\unitpoint$ for the only inhabitant of $\depstype[n][0]$.
 
 \subsection{Defining paintings}
 
@@ -573,8 +567,6 @@ Let us introduce another abbreviation to combine a full $\deps[n][\lbrack 0,n \r
       E                             & : & \framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow \U \\
     \end{array}\right)
 \end{equation*}
-
-TODO: say the convention on projection in the Introduction
 
 Also, when $n$ is 0, we write $E$ to denote an element $(\unitpoint, E)$ of $\fulldepstype[0]$.
 
@@ -751,7 +743,6 @@ We need also the notion of full dependencies at the level of coherence condition
       E                                   & : & \framep[n+2][n+2](\overline{\deps}(\depscohs[n][\lbrack 0,n \rbrack]))\rightarrow \U \\
     \end{array}\right)
 \end{equation*}
-TODO: say the convention on projection in the Introduction
 
 We can then extend $\overline{\deps}$ to build $\fulldeps$ from $\fulldepscohs$:
 \begin{equation*}
