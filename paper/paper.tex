@@ -243,34 +243,34 @@ Parametricity, like realisability, reducibility, and logical relations, was most
 
 The internalisation of parametricity in unary indexed form was studied by \cite{Moulin,Bernardy} directly leading to a type theory of iterated parametricity. Such type theory could be interpreted in a ``unary'' form of cubical set~\cite{bernardy15}, thus implicitly in fibered form since, in a binary cubical set (resp. in a unary cubical set and simplicial set as well), a set of segments over two points, that is a relevant relation, is given by first and second projection rather than as a function to $\Set$ (resp. a family is given as a \emph{total space} projected over a set of points $A:\Set$ rather than a family of type $A \rightarrow \Set$. This connection between iterated binary parametricity in fibered form and cubical sets includes an identification of degeneracies and reflexivity proofs, which can also be found in \cite{johann17}. In particular, it became clear at this point that iterated binary parametricity (without reflexivity) produces semi-cubical sets while it was also observed\footnote{The authors learned it from Hugo Moeneclaey and Thorsten Altenkirch.} that iterated unary parametricity produces augmented semi-simplicial sets.
 
-\begin{tabularx}{\linewidth}{lYcYYl}
+\begin{tabularx}{\linewidth}{cYcYYl}
   \toprule
-  arity                     & formalisation style          & iteration                       & relevance                     & logical structure    \\
+  arity                       & formalisation style        & iteration                       & relevance        & logical structure               \\
   \midrule
-  \multirow{6}{1cm}{unary}  & \multirow{3}{1.5cm}{indexed} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant              & predicate            \\
-                            &                              &                                 & relevant                      & family               \\
-                            &                              & \multicolumn{2}{l}{iterated}    & \emph{this work}                                     \\
-                            & \multirow{3}{1.5cm}{fibered} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant              & subobject            \\
-                            &                              &                                 & relevant                      & fibration            \\
-                            &                              & \multicolumn{2}{l}{iterated}    & augmented semi-simplicial set                        \\
+  \multirow{6}{0.6cm}{unary}  & \multirow{3}{1cm}{indexed} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant & predicate                       \\
+                              &                            &                                 & relevant         & family                          \\
+                              &                            & iterated                        & relevant         & \emph{this work}                \\
+                              & \multirow{3}{1cm}{fibered} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant & subobject                       \\
+                              &                            &                                 & relevant         & fibration                       \\
+                              &                            & iterated                        & relevant         & augmented semi-simplicial set   \\
   \midrule
-  \multirow{6}{1cm}{binary} & \multirow{3}{1.5cm}{indexed} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant              & relation             \\
-                            &                              &                                 & relevant                      & correspondence       \\
-                            &                              & \multicolumn{2}{l}{iterated}    & \emph{this work}                                     \\
-                            & \multirow{3}{1.5cm}{fibered} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant              & fibered relation ?   \\
-                            &                              &                                 & relevant                      & span               & \\
-                            &                              & \multicolumn{2}{l}{iterated}    & semi-cubical set                                     \\
+  \multirow{6}{0.6cm}{binary} & \multirow{3}{1cm}{indexed} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant & relation                        \\
+                              &                            &                                 & relevant         & correspondence                  \\
+                              &                            & iterated                        & relevant         & \emph{this work}                \\
+                              & \multirow{3}{1cm}{fibered} & \multirow{2}{2cm}{non-iterated} & proof-irrelevant & fibered relation ?              \\
+                              &                            &                                 & relevant         & span                          & \\
+                              &                            & iterated                        & relevant         & semi-cubical set                \\
   \bottomrule
 \end{tabularx}
 
-In a previous paper~\citep{hr25}, we exploited this correspondence to construct at the same time augmented semi-simplicial and semi-cubical sets in \emph{indexed form} as a special case of iterated parametricity. That is, instead of the following illustration of the semi-cubical case (upto faces identities),
+In~\citep{hr25}, this correspondence was exploited to construct at the same time augmented semi-simplicial and semi-cubical sets in \emph{indexed form} as a special case of iterated parametricity. That is, instead of the following illustration of the semi-cubical case (upto faces identities),
 
 \begin{equation*}
   \begin{tikzcd}
     X_0: \U & X_1: \U \arrow[l, "\partial^L" description, shift left=2] \arrow[l, "\partial^R" description, shift right=2] & X_2: \U \arrow[l, "\partial^{L\kstar}" description, shift left=6] \arrow[l, "\partial^{R\kstar}" description, shift left=2] \arrow[l, "\partial^{\kstar L}" description, shift right=2] \arrow[l, "\partial^{\kstar R}" description, shift right=6] & \ldots
   \end{tikzcd}
 \end{equation*}
-we consider a family of relevant relations as shown below:
+a family of relevant relations was considered, as shown below:
 \begin{equation*}
   \begin{array}{lll}
     E_0 & :               \U                                                                          \\
@@ -318,6 +318,9 @@ we consider a family of relevant relations as shown below:
 \renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][][][#9]}
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][][][][][#9]}
 \renewcommandx{\cohp}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][][][][][#9]}
+
+For $\nu$ an arity, that is $1$ in the case of predicates, families and augmented semi-simplicial sets or $2$ in the case of relations, correspondences and semi-cubical sets, such sequence of was called a $\nu$-set.
+Equations specifying such sequence of relevant relations were given in \cite{hr25}. Because of the dependency of $E_{n+1}$ into all $E_p$ for $p \leq n$, the family could not be expressed as a function. Instead, it was expressed as a stream whose $(n+1)$-th element $E_{n+1}$ was dependent on the bundle of all previous elements of the stream.
 
 A $\nu$-set in indexed form is a sequence of families of $\U$, that is $\U[m]$ for some universe level $m$. We call such sequence a $\nu$-set at level $m$, whose type thus lives in $\U[m+1]$.
 
