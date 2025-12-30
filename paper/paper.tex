@@ -744,11 +744,12 @@ We need also the notion of full dependencies at the level of coherence condition
 We can then extend $\overline{\deps}$ to build $\fulldeps$ from $\fulldepscohs$:
 \begin{equation*}
   \begin{array}{lcl}
-    \overline{\fulldeps}(\fulldepscohs[n]) & :      & \fulldepstype[n+1]                                        \\
-    \overline{\fulldeps}(\fulldepscohs[n]) & \defeq & \left(\begin{array}{l}
-                                                                \overline{\deps}(\depscohs[n][\lbrack 0,n \rbrack]) \\
-                                                                E                                                   \\
-                                                              \end{array}\right) \\
+    \overline{\fulldeps}(\fulldepscohs[n]) & :      & \fulldepstype[n+1] \\
+    \overline{\fulldeps}(\fulldepscohs[n]) & \defeq & \left(
+    \begin{array}{l}
+        \overline{\deps}(\depscohs[n][\lbrack 0,n \rbrack]) \\
+        E                                                   \\
+      \end{array}\right)                  \\
   \end{array}
 \end{equation*}
 
