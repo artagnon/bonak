@@ -508,19 +508,19 @@ Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\painting[n][\lbrack 0,p-1 \rb
               \painting[n][\lbrack 0,p \rbrack] \\
             \end{array}\right)   & \defeq &
     \left\{\begin{array}{l}
-      \Sigma \restrf[n][\lbrack 0,p-1 \rbrack]
-      :\restrftype[n][\lbrack 0,p-1 \rbrack]
-      \left(\begin{array}{l}
+             \Sigma \restrf[n][\lbrack 0,p-1 \rbrack]
+             :\restrftype[n][\lbrack 0,p-1 \rbrack]
+             \left(\begin{array}{l}
                 \framep[n+1][\lbrack 0,p-1 \rbrack]   \\
                 \painting[n+1][\lbrack 0,p-1 \rbrack] \\
               \end{array}\right).         \\
-      \Pi q \leq n-p.\,\Pi \epsilon.\,\framep[n+1][p]
-      \left(\begin{array}{l}
+             \Pi q \leq n-p.\,\Pi \epsilon.\,\framep[n+1][p]
+             \left(\begin{array}{l}
                 \framep[n][\lbrack 0,p-1 \rbrack]   \\
                 \painting[n][\lbrack 0,p-1 \rbrack] \\
                 \restrf[n+1][\lbrack 0,p-1 \rbrack] \\
               \end{array}\right) \rightarrow  \framep[n][p] \\
-    \end{array}\right.                       \\
+           \end{array}\right.                \\
     \layertype[n][p]                       &
     \deps[n][\lbrack 0,p \rbrack]
                                            & :      & \U                                     \\
@@ -575,14 +575,14 @@ We can now formally define $\painting[n+1][p]$ for $p \leq n+1$ by recursion on 
 \begin{equation*}
   \begin{array}{llcl}
     \painting[n+1][p]        &
-    \fulldeps[n]             & :      & \paintingtype[n+1][p]   \\
+    \fulldeps[n]             & :      & \paintingtype[n+1][p] \\
     \painting[n+1][n+1]      &
-    \fulldeps[n]             & \defeq & E                       \\
+    \fulldeps[n]             & \defeq & E                     \\
     \painting[n+1][p \leq n] &
     \fulldeps[n]             & \defeq & \lambda d.\,
-              \Sigma l:\layer[n][p](\deps[n][\lbrack 0,p \rbrack]). 
-              \painting[n+1][p+1]
-              (\fulldeps[n])(d,l)                                   \\
+    \Sigma l:\layer[n][p](\deps[n][\lbrack 0,p \rbrack]).
+    \painting[n+1][p+1]
+    (\fulldeps[n])(d,l)                                       \\
   \end{array}
 \end{equation*}
 
@@ -902,7 +902,7 @@ where $\cohttype$ is:
   \end{array}
   \right.
 \end{equation*}
-and where the functoriality of equality and transport was used to go from (omitting the $\framep$ argument and the deps argument of $\restrp$ and $\cohf$):
+and where the functoriality of equality and transport was used to go from (omitting the $\framep$ argument):
 \begin{equation*}
   \Pi \theta.\left(
   \begin{array}{lcl}
