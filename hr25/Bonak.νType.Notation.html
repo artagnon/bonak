@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>Bonak.νType.Notation</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Bonak.νType.Notation</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+Miscellaneous notations and lemmas 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="7957360534ce47b451efaf295515cd1d" class="idref" href="#7957360534ce47b451efaf295515cd1d"><span class="id" title="notation">&quot;</span></a>( x ; y )" := (<a class="idref" href="http://coq.inria.fr/doc/V8.20.0/stdlib//Coq.Init.Specif.html#existT"><span class="id" title="constructor">existT</span></a> <span class="id" title="var">_</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 0, <span class="id" title="var">format</span> "'[' ( x ;  '/  ' y ) ']'").<br/>
+<span class="id" title="keyword">Notation</span> <a id=":::x_'.1'" class="idref" href="#:::x_'.1'"><span class="id" title="notation">&quot;</span></a>x .1" := (<a class="idref" href="http://coq.inria.fr/doc/V8.20.0/stdlib//Coq.Init.Specif.html#projT1"><span class="id" title="definition">projT1</span></a> <span class="id" title="var">x</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 1, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>, <span class="id" title="var">format</span> "x .1").<br/>
+<span class="id" title="keyword">Notation</span> <a id=":::x_'.2'" class="idref" href="#:::x_'.2'"><span class="id" title="notation">&quot;</span></a>x .2" := (<a class="idref" href="http://coq.inria.fr/doc/V8.20.0/stdlib//Coq.Init.Specif.html#projT2"><span class="id" title="definition">projT2</span></a> <span class="id" title="var">x</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 1, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>, <span class="id" title="var">format</span> "x .2").<br/>
+<span class="id" title="keyword">Notation</span> <a id="9c103920f8e0be789ba768cf55671c49" class="idref" href="#9c103920f8e0be789ba768cf55671c49"><span class="id" title="notation">&quot;</span></a>x .+1" := (<a class="idref" href="http://coq.inria.fr/doc/V8.20.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">x</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 1, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>, <span class="id" title="var">format</span> "x .+1").<br/>
+<span class="id" title="keyword">Notation</span> <a id="f53d76ab8d989013d00f796d50d03153" class="idref" href="#f53d76ab8d989013d00f796d50d03153"><span class="id" title="notation">&quot;</span></a>x .+2" := (<a class="idref" href="http://coq.inria.fr/doc/V8.20.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="http://coq.inria.fr/doc/V8.20.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">x</span>)) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 1, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>, <span class="id" title="var">format</span> "x .+2").<br/>
+<span class="id" title="keyword">Notation</span> <a id="781c9f631ae81227453a7bdae7e64b9e" class="idref" href="#781c9f631ae81227453a7bdae7e64b9e"><span class="id" title="notation">&quot;</span></a>x .+3" := (<a class="idref" href="http://coq.inria.fr/doc/V8.20.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="http://coq.inria.fr/doc/V8.20.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="http://coq.inria.fr/doc/V8.20.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">x</span>))) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 1, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>, <span class="id" title="var">format</span> "x .+3").<br/>
+<span class="id" title="keyword">Notation</span> <a id=":::x_'.-1'" class="idref" href="#:::x_'.-1'"><span class="id" title="notation">&quot;</span></a>x .-1" := (<a class="idref" href="http://coq.inria.fr/doc/V8.20.0/stdlib//Coq.Init.Peano.html#pred"><span class="id" title="abbreviation">pred</span></a> <span class="id" title="var">x</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 1, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>, <span class="id" title="var">format</span> "x .-1").<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+This is in Program.Basics for some strange reason 
+</div>
+<div class="code">
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="http://coq.inria.fr/doc/V8.20.0/stdlib//Coq.Init.Datatypes.html#id"><span class="id" title="definition">id</span></a> {<span class="id" title="var">A</span>} <span class="id" title="var">x</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Notations for rew 
+</div>
+<div class="code">
+<span class="id" title="keyword">Notation</span> <a id="929da304a703235ef84b8380c7559750" class="idref" href="#929da304a703235ef84b8380c7559750"><span class="id" title="notation">&quot;</span></a>'rew' [ P ] H 'in' H'" := (<a class="idref" href="http://coq.inria.fr/doc/V8.20.0/stdlib//Coq.Init.Logic.html#eq_rect"><span class="id" title="definition">eq_rect</span></a> <span class="id" title="var">_</span> <span class="id" title="var">P</span> <span class="id" title="var">H'</span> <span class="id" title="var">_</span> <span class="id" title="var">H</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 10, <span class="id" title="var">H'</span> <span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 10,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">format</span> "'[' 'rew'  [ P ]  '/    ' H  in  '/' H' ']'").<br/>
+<span class="id" title="keyword">Notation</span> <a id="0fcaa5eef7d4d56eebbaff6ce6155e1a" class="idref" href="#0fcaa5eef7d4d56eebbaff6ce6155e1a"><span class="id" title="notation">&quot;</span></a>'rew' &lt;- [ P ] H 'in' H'" := (<a class="idref" href="http://coq.inria.fr/doc/V8.20.0/stdlib//Coq.Init.Logic.html#eq_rect_r"><span class="id" title="definition">eq_rect_r</span></a> <span class="id" title="var">P</span> <span class="id" title="var">H'</span> <span class="id" title="var">H</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 10, <span class="id" title="var">H'</span> <span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 10,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">format</span> "'[' 'rew'  &lt;-  [ P ]  '/    ' H  in  '/' H' ']'").<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="49194e42d5322a4ebc255144e4abd27a" class="idref" href="#49194e42d5322a4ebc255144e4abd27a"><span class="id" title="notation">&quot;</span></a>(= u ; v )" := (<a class="idref" href="http://coq.inria.fr/doc/V8.20.0/stdlib//Coq.Init.Specif.html#eq_existT_curried"><span class="id" title="lemma">eq_existT_curried</span></a> <span class="id" title="var">u</span> <span class="id" title="var">v</span>)<br/>
+(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 0, <span class="id" title="var">format</span> "(= u ;  '/  ' v )").<br/>
+
+<br/>
+<span class="id" title="keyword">Infix</span> <a id="71ca1960dd16f5a2fd2bf72245ca13b9" class="idref" href="#71ca1960dd16f5a2fd2bf72245ca13b9"><span class="id" title="notation">&quot;</span></a>•" := <a class="idref" href="http://coq.inria.fr/doc/V8.20.0/stdlib//Coq.Init.Logic.html#eq_trans"><span class="id" title="lemma">eq_trans</span></a> (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 65, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>).<br/>
+<span class="id" title="keyword">Notation</span> <a id="dbc052af68e87be1803dc56af03eb562" class="idref" href="#dbc052af68e87be1803dc56af03eb562"><span class="id" title="notation">&quot;</span></a>[ x ⇒ f ] e" := (<a class="idref" href="http://coq.inria.fr/doc/V8.20.0/stdlib//Coq.Init.Logic.html#f_equal"><span class="id" title="lemma">f_equal</span></a> (<span class="id" title="keyword">fun</span> <a id="x:1" class="idref" href="#x:1"><span class="id" title="binder">x</span></a> ⇒ <span class="id" title="var">f</span>) <span class="id" title="var">e</span>)<br/>
+(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 60, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>).<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
