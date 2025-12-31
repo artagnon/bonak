@@ -1,7 +1,7 @@
 From Stdlib Require Import Logic.FunctionalExtensionality.
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT RewLemmas HSet LeYoneda Notation.
+From Bonak Require Import SigT RewLemmas HSet Notation LeSProp.
 
 Set Primitive Projections.
 Set Printing Projections.
@@ -76,7 +76,7 @@ Definition mkLayer `{paintings: mkPaintingTypes p.+1 k frames}
   {prev: RestrFrameTypeBlock p k.+1}
   (restrFrames: mkRestrFrameTypesStep frames prev)
   (d: (prev.(FrameDef) restrFrames.1).2) :=
-  hforall ε, paintings.2 (restrFrames.2 0 leY_O ε d).
+  hforall ε, paintings.2 (restrFrames.2 0 leR_O ε d).
 
 Fixpoint mkRestrFrameTypesAndFrames {p k}:
   forall `(paintings: mkPaintingTypes p k frames), RestrFrameTypeBlock p k :=
@@ -175,7 +175,7 @@ Definition mkRestrPaintingType
   `(extraDeps: DepsRestrExtension p.+1 k deps) :=
   forall q (Hq: q <= k) ε (d: mkFrame deps.(1)),
   (mkPaintings (deps; extraDeps)).2 d ->
-  deps.(_paintings).2 (deps.(_restrFrames).2 q _ ε d).
+  deps.(_paintings).2 (deps.(_restrFrames).2 q Hq ε d).
 
 Fixpoint mkRestrPaintingTypes {p}:
   forall `(extraDeps: DepsRestrExtension p k deps), Type :=
@@ -214,7 +214,7 @@ Definition mkRestrLayer `{extraDeps: DepsRestrExtension p.+1 k deps}
   (d: mkFrame (toDepsRestr (prev.(RestrFramesDef) cohFrames.1)).(1)):
   mkLayer (prev.(RestrFramesDef) cohFrames.1) d -> mkLayer deps.(_restrFrames)
     ((prev.(RestrFramesDef) cohFrames.1).2 q.+1 (⇑ Hq) ε d) :=
-  fun l ω => rew [deps.(_paintings).2] cohFrames.2 0 q leY_O Hq ε ω d in
+  fun l ω => rew [deps.(_paintings).2] cohFrames.2 0 q leR_O Hq ε ω d in
              restrPaintings.2 q Hq ε _ (l ω).
 
 (** Under previous assumptions, and, additionally:
@@ -365,7 +365,7 @@ Proof.
   red; intros * (l, c); destruct q.
   - now exact (l ε).
   - destruct extraDepsCohs.
-    + exfalso; now apply leY_O_contra in Hq.
+    + exfalso; now apply leR_O_contra in Hq.
     + unshelve esplit.
       * now exact (mkRestrLayer depsCohs.(_restrPaintings) depsCohs.(_cohs)
         q (⇓ Hq) ε d l).
@@ -421,17 +421,17 @@ Lemma mkCoh2Frame `(extraDepsCohs: DepsCohsExtension p.+1 k depsCohs)
   (𝛉: arity),
   f_equal
     (fun x => depsCohs.(_deps).(_restrFrames).2 q _ ε x)
-    (prevCohFrames.2 0 r leY_O (Hrq ↕ ↑ Hq) ω 𝛉 d)
-  • (depsCohs.(_cohs).2 0 q leY_O Hq ε 𝛉
+    (prevCohFrames.2 0 r leR_O (Hrq ↕ ↑ Hq) ω 𝛉 d)
+  • (depsCohs.(_cohs).2 0 q leR_O Hq ε 𝛉
       (mkRestrFrame r.+1 (⇑ (Hrq ↕ ↑ Hq)) ω d)
   • f_equal
-      (fun x => depsCohs.(_deps).(_restrFrames).2 0 leY_O 𝛉 x)
+      (fun x => depsCohs.(_deps).(_restrFrames).2 0 leR_O 𝛉 x)
       (prevCohFrames.2 r.+1 q.+1 (⇑ Hrq) (⇑ Hq) ε ω d)) =
-  depsCohs.(_cohs).2 r q Hrq Hq ε ω (mkRestrFrame 0 leY_O 𝛉 d)
+  depsCohs.(_cohs).2 r q Hrq Hq ε ω (mkRestrFrame 0 leR_O 𝛉 d)
   • (f_equal
       (fun x => depsCohs.(_deps).(_restrFrames).2 r _ ω x)
-      (prevCohFrames.2 0 q.+1 leY_O (⇑ Hq) ε 𝛉 d)
-  • depsCohs.(_cohs).2 0 r leY_O (Hrq ↕ Hq) ω 𝛉
+      (prevCohFrames.2 0 q.+1 leR_O (⇑ Hq) ε 𝛉 d)
+  • depsCohs.(_cohs).2 0 r leR_O (Hrq ↕ Hq) ω 𝛉
       (mkRestrFrame q.+2 (⇑ (⇑ Hq)) ε d)).
 Proof.
   now intros; apply depsCohs.(_deps).(_frames).2.(UIP).
@@ -458,7 +458,7 @@ Proof.
     <- map_subst with
         (f := fun x => depsCohs.(_restrPaintings).2 r (Hrq ↕ Hq) ω x),
     -> rew_map with (P := fun x => depsCohs.(_deps).(_paintings).2 x)
-        (f := fun x => depsCohs.(_deps).(_restrFrames).2 O leY_O 𝛉 x),
+        (f := fun x => depsCohs.(_deps).(_restrFrames).2 O leR_O 𝛉 x),
     -> rew_map with (P := fun x => depsCohs.(_deps).(_paintings).2 x)
         (f := fun x => depsCohs.(_deps).(_restrFrames).2 r
           (Hrq ↕ Hq) ω x),
@@ -560,9 +560,9 @@ Proof.
     now reflexivity.
   - (* r = r'+1, q is necessarily q'+1 and extraDepsCohs non empty *)
     destruct q.
-    { exfalso; now apply leY_O_contra in Hrq. }
+    { exfalso; now apply leR_O_contra in Hrq. }
     destruct extraDepsCohs2.
-    { exfalso; now apply leY_O_contra in Hq. }
+    { exfalso; now apply leR_O_contra in Hq. }
     simpl.
     unshelve eapply (eq_existT_curried_dep
       (Q := mkPainting depsCohs2.(_depsCohs).(_extraDeps))).
