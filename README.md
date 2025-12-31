@@ -24,6 +24,6 @@ Our approach is generic over the arity of the parametricity translation: we use 
 
 ## Current status
 
-The first paper describing our initial work can be found at [arXiv:2401.00512](https://arxiv.org/abs/2401.00512) (pre-print) or [10.1017/S096012952500009X](https://doi.org/10.1017/S096012952500009X) (published version), and the corresponding code can be found under the tag [hr25](https://github.com/artagnon/bonak/tree/962647e33cfe653eaac989bae16817b42dab3280).
+The first paper describing our initial work can be found at [arXiv:2401.00512](https://arxiv.org/abs/2401.00512) (pre-print) or [10.1017/S096012952500009X](https://doi.org/10.1017/S096012952500009X) (published version), and the corresponding code can be found under the tag [hr25](https://github.com/artagnon/bonak/tree/962647e33cfe653eaac989bae16817b42dab3280). The coqdoc documentation is under the subdirectory [hr25](https://artagnon.github.io/bonak/hr25/).
 
 `master` and other branches contain work-in-progress for future publications.
