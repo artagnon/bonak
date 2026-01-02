@@ -6,6 +6,7 @@
 *.bbl
 *.bcf
 *.xml
+*.vtc
 *.pdf
 *.out
 *.log
