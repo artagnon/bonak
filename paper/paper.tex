@@ -171,10 +171,6 @@
 % Kerning for star
 \newcommand{\kstar}{{\star}}
 
-% Caption setup
-\DeclareCaptionFormat{plain}{#1#3}
-\captionsetup{font=footnotesize,labelfont=bf}
-
 % The eqntable environment
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 \NewEnviron{eqntable}[1]{
@@ -227,11 +223,11 @@ Introduced by Reynolds in the context of programming language semantics~\cite{re
 
 From the point of view of realisability, unary parametricity over a language is a realisability using the language itself as language of realisers. The comparison between parametricity and realisability includes the case of \emph{reducibility}, also known as \emph{Tait computability}~\cite{Tait67}, which is a semantic form of realisability, also known as \emph{glueing} in the context of category theory. In the same vein, binary parametricity over a language can be seen as defining \emph{logical relations}~\cite{Plotkin73} over itself, since logical relations are a binary form of reducibility.
 
-Parametricity, like realisability, reducibility, and logical relations, is most commonly expressed in \emph{indexed} form. Let us use a type-theoretic language featuring a type of subsingleton types called $\HProp$, a type of sets $\U$, as well, as the standard $\Sigma$ and $\Pi$ constructions. In such language, predicates have type $A \rightarrow \HProp$, families have type $A \rightarrow \U$, relations have type $A \times A \rightarrow \HProp$, and relevant relations, sometimes simply called \emph{graphs}, or also \emph{correspondences}, have type $A \times A \rightarrow \U$. All constructions in indexed form can also be expressed in the \emph{fibred} form, by the indexed-fibred correspondence: there is an equivalence between $A \rightarrow \HProp$ and $\Sigma B:\U. (B \stackrel{inj}{\rightarrow} A)$ in the proof-irrelevant case, and $A \rightarrow \U$ and $\Sigma B:\U. (B \rightarrow A)$, in the proof-relevant case, for $A:\U$. A fibred approach to parametricity was considered in~\cite{atkey14}, who also suggested to iterate parametricity.
+Parametricity, like realisability, reducibility, and logical relations, is most commonly expressed in \emph{indexed} form. Let us use a type-theoretic language featuring a type of subsingleton types called $\HProp$, a type of sets $\U$, as well, as the standard $\Sigma$ and $\Pi$ constructions. In such language, predicates have type $A \rightarrow \HProp$, families have type $A \rightarrow \U$, relations have type $A \times A \rightarrow \HProp$, and relevant relations, sometimes simply called \emph{graphs}, or also \emph{correspondences}, have type $A \times A \rightarrow \U$. All constructions in indexed form can also be expressed in the \emph{fibred} form, via the indexed-fibred correspondence: there is an equivalence between $A \rightarrow \HProp$ and $\Sigma B:\U. (B \stackrel{inj}{\rightarrow} A)$ in the proof-irrelevant case, and between $A \rightarrow \U$ and $\Sigma B:\U. (B \rightarrow A)$, in the proof-relevant case, for $A:\U$. A fibred approach to parametricity was considered in~\cite{atkey14}, who also suggested to iterate parametricity.
 
 \paragraph*{Iterated parametricity.}
 
-The internalisation of parametricity in unary indexed form was studied by \cite{bernardy12} directly leading to a type theory of iterated parametricity. Such a type theory could be interpreted in a ``unary'' form of cubical set~\cite{bernardy15}, which is implicitly in fibred form since, in a binary cubical set, a set of segments over two points (or a relevant relation) is given by first and second projection rather than as a function to $\U$. This connection between iterated binary parametricity in fibred form and cubical sets includes an identification of degeneracies and reflexivity proofs, which can also be found in \cite{johann17}. While iterated binary parametricity without reflexivity produces semi-cubical sets, it was also observed\footnote{The authors learned it from Hugo Moeneclaey and Thorsten Altenkirch.} that iterated unary parametricity produces augmented semi-simplicial sets.
+The internalisation of parametricity in unary indexed form was studied by \cite{bernardy12} directly leading to a type theory of iterated parametricity. Such a type theory could be interpreted in a ``unary'' form of cubical set~\cite{bernardy15}. Cubical sets  which is implicitly in fibred form since, in a binary cubical set, a set of segments over two points (or a relevant relation) is given by first and second projection rather than as a function to $\U$. This connection between iterated binary parametricity in fibred form and cubical sets includes an identification of degeneracies and reflexivity proofs, which can also be found in \cite{johann17}. While iterated binary parametricity without reflexivity produces semi-cubical sets, it was also observed\footnote{The authors learned it from Hugo Moeneclaey and Thorsten Altenkirch.} that iterated unary parametricity produces augmented semi-simplicial sets.
 
 \begin{tabularx}{0.94\linewidth}{cYcYYl}
   \toprule
@@ -254,7 +250,7 @@ The internalisation of parametricity in unary indexed form was studied by \cite{
 \end{tabularx}
 
 \paragraph*{Iterated parametricity in indexed form.}
-In \cite{hr25}, the fibred-indexeed correspondence was exploited to simultaneously construct augmented semi-simplicial and semi-cubical sets in \emph{indexed form}, as a special case of iterated parametricity. Instead of the following illustration of semi-cubical sets,
+In \cite{hr25}, the fibred-indexed correspondence was exploited to simultaneously construct augmented semi-simplicial and semi-cubical sets in \emph{indexed form}, as a special case of iterated parametricity. Instead of the following illustration of semi-cubical sets,
 
 \begin{equation*}
   \begin{tikzcd}
