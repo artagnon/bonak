@@ -314,7 +314,7 @@ Let us sketch how to define iterated parametricity in indexed form. The dependen
 
 The type $\Xcomp{m}{n}[D={E_0,\ldots,E_{n-1}}]$ of $E_n$ represents a family whose type can be presented into the form $\fullframe(E_0,\ldots,E_{n-1}) \rightarrow \U$ where $\fullframe$ collects all the dependencies of $E_n$. It is recursively defined in table~\ref{tab:frames}, using the auxiliary definitions of $\framep$, $\layer$ and $\painting$. A $\fullframe$ describes a boundary of a standard form (simplex, cube), which we decompose into $n$ $\layer$, one per dimension, each of them made of $\nu$ $\painting$ ($\nu=1, \nu=2, \ldots$), where a $\painting$ corresponds to a filled frame. Notice that the type $\layer$ relies on an operator of frame restriction $\restrf$ which is defined in table~\ref{tab:faces}, and this restriction operator is in turn defined using auxiliary definitions $\restrl$ and $\restrp$.
 
-Notably, the definition of $\restrl$ relies on an equality expressing the commutation of the composition of two $\restrf$. The proof of this commutation is made explicit in table~\ref{tab:coh} using proof-term notations\footnote{We however omit type conversions, as if working in extensional type theory.}. The proof is by recursion on the structure of $\framep$, $\layer$, and $\painting$. This is what $\cohf$ does using auxiliary proofs $\cohl$ and $\cohp$. Note that for a fixed constant $n$, relying on the evaluation rules of type theory, the coherence conditions degenerate to a reflexivity proof, so that the construction builds an effective sequence of types not mentioning coherences anymore.
+Notably, the definition of $\restrl$ relies on an equality expressing the commutation of the composition of two $\restrf$. The proof of this commutation is made explicit in table~\ref{tab:coh} using proof-term notations\footnote{We however omit type conversions, as if working in extensional type theory.}. The proof is by recursion on the structure of $\framep$, $\layer$, and $\painting$. This is what $\cohf$ does using auxiliary proofs $\cohl$ and $\cohp$. Note that for a fixed constant $n$, relying on the evaluation rules of type theory, the coherence conditions degenerate to a reflexivity proof, so that the construction builds an effective sequence of types not mentioning coherences anymore. \\
 
 \def\lab{tab:coind}
 \input{tab-coind.tex}
@@ -407,7 +407,7 @@ So far, using this recursive definition of  $\framep[n+1][\lbrack 0,p \rbrack]$ 
     \rightarrow \framep[n][p]                                               \\
   \end{array}
 \end{equation*}
-which can be reformulated using sequences for appropriate definitions of $\frametype[n][\lbrack 0,p \rbrack] \defeq $, $\paintingtype[n][\lbrack 0,p \rbrack]$ and $\restrftype[n][\lbrack 0,p \rbrack]$:
+which can be reformulated using sequences for appropriate definitions of $\frametype[n][\lbrack 0,p \rbrack] \defeq \overbrace{\mbox{$p+1$ times}}{\U \times \ldots \times \U}$, $\paintingtype[n][\lbrack 0,p \rbrack] \defeq (\framep[n][0] \rightarrow \U) \times \ldots \times (\framep[n][p] \rightarrow \U)$ and $\restrftype[n][\lbrack 0,p \rbrack]$:
 \begin{equation*}
   \begin{array}{lcl}
     \framep[n][\lbrack 0,p \rbrack]   & : & \frametype[n][\lbrack 0,p \rbrack]                                     \\
@@ -421,7 +421,7 @@ which can be reformulated using sequences for appropriate definitions of $\frame
   \end{array}
 \end{equation*}
 
-The type of sequences such as $\restrf[n][\lbrack 0,p \rbrack]$ will be represented by iterated $\Sigma$-types since each $\restrf[n][p]$ may depend on the previous components of the sequence. In the case of $\framep$ and $\painting$, there will be however no dependency, so an ordinary product can be used to represent $\framep[n][\lbrack 0,p \rbrack]$ and $\painting[n][\lbrack 0,p \rbrack]$. Later on, we will write $\framep[n][\lbrack 0,p-1 \rbrack]$ for the immediate subsequence of length $p$ of $\framep[n][\lbrack 0,p \rbrack]$ and $\framep[n][p]$ for its last component, and similarly for $\painting[n][\lbrack 0,p \rbrack]$, $\restrf[n][\lbrack 0,p \rbrack]$, etc.
+The type of sequences such as $\restrftype[n][\lbrack 0,p \rbrack]$ will be represented by iterated $\Sigma$-types since each $\restrf[n][p]$ may depend on the previous components of the sequence. In the case of $\framep$ and $\painting$, there will be however no dependency, so an ordinary product can be used to represent $\framep[n][\lbrack 0,p \rbrack]$ and $\painting[n][\lbrack 0,p \rbrack]$. Later on, we will write $\framep[n][\lbrack 0,p-1 \rbrack]$ for the immediate subsequence of length $p$ of $\framep[n][\lbrack 0,p \rbrack]$ and $\framep[n][p]$ for its last component, and similarly for $\painting[n][\lbrack 0,p \rbrack]$, $\restrf[n][\lbrack 0,p \rbrack]$, etc.
 
 \section{Detailed construction}
 
@@ -598,22 +598,23 @@ From which we can deduce $\painting[n+1][\lbrack 0,p-1 \rbrack]$ for $p \leq n+2
 
 At this stage, we are able to define $\framep[n+1][\lbrack 0,n+1 \rbrack]$, $\painting[n+1][\lbrack 0,n+1 \rbrack]$ and $\restrftype[n][\lbrack 0,n \rbrack]$ from $\framep[n][\lbrack 0,n \rbrack]$, $\painting[n][\lbrack 0,n \rbrack]$ and $\restrf[n][\lbrack 0,n \rbrack]$, that is from $\deps[n][\lbrack 0,n \rbrack]$. To go further, we need to specify the sequence $\restrptype[n][\lbrack 0,p-1 \rbrack]$ of types of painting restrictions, for $p \leq n+1$:
 
-\begin{equation*}
-  \begin{array}{llcl}
-    \restrptype[n][\lbrack 0,p-1 \rbrack] &
-    \fulldeps[n]                          & :      & \U                                                       \\
-    \restrptype[n]                        & E      & \defeq                                       & \unittype \\
-    \restrptype[n][\lbrack 0,p \rbrack]   &
-    \fulldeps[n]
-                                          & \defeq & \restrptype[n][\lbrack 0,p-1 \rbrack] \times             \\
-                                          &        &                                              & \left(
-    \begin{array}{l}
-        \Pi q \leq n-p.\Pi \epsilon.\Pi d:\framep[n+1][p](\deps[n][\lbrack 0,p-1 \rbrack]). \\
-        \painting[n+1][p]
-        (\fulldeps[n])(d) \rightarrow                                                       \\ \painting[n][p](\restrf[n][p][q][\epsilon](d))\end{array}
-    \right)                                                                                                   \\
-  \end{array}
-\end{equation*}
+\scalebox{0.8}{
+  \begin{equation*}
+    \begin{array}{llcl}
+      \restrptype[n][\lbrack 0,p-1 \rbrack] &
+      \fulldeps[n]                          & :      & \U                                                       \\
+      \restrptype[n]                        & E      & \defeq                                       & \unittype \\
+      \restrptype[n][\lbrack 0,p \rbrack]   &
+      \fulldeps[n]
+                                            & \defeq & \restrptype[n][\lbrack 0,p-1 \rbrack] \times
+      \left(
+      \begin{array}{l}
+          \Pi q \leq n-p.\Pi \epsilon.\Pi d:\framep[n+1][p](\deps[n][\lbrack 0,p-1 \rbrack]). \\
+          \painting[n+1][p]
+          (\fulldeps[n])(d) \rightarrow                                                       \\ \painting[n][p](\restrf[n][p][q][\epsilon](d))\end{array}
+      \right)                                                                                                   \\
+    \end{array}
+  \end{equation*}}
 
 \subsection{Defining frame restrictions and specifying frame coherence laws\label{sec:mkrestrf}}
 
@@ -798,23 +799,25 @@ At this stage, we are then able to define $\restrf[n+1][\lbrack 0,p \rbrack]$, $
 from $\depscohs[n][\lbrack 0,p-1 \rbrack]$ at the previous level. To go further, we need to define the
 sequence $\cohptype[n][\lbrack 0,p-1 \rbrack]$ of types of painting coherence laws:
 
-\begin{equation*}
-  \begin{array}{llcl}
-    \cohptype[n][\lbrack 0,p-1 \rbrack] & \fulldepscohs[n] & :      & \U                                                           \\
-    \cohptype[n]                        & \unitpoint       & \defeq & \unittype                                                    \\
-    \cohptype[n][\lbrack 0,p \rbrack]   & \fulldepscohs[n] & \defeq & \cohptype[n][\lbrack 0,p-1 \rbrack](\fulldepscohs[n]) \times \\
-    \multicolumn{4}{c}{\left\{
-      \begin{array}{l}
-        \Pi q \leq n-p.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.                                                                                       \\
-        \Pi d:\framep[n+2][p](\overline{\deps}(\depscohs[n][\lbrack 0,p-2 \rbrack])).\,\Pi c:\painting[n+2][p](\overline{\fulldeps}(\fulldepscohs[n])). \\
-        \restrp[n][p][q][\epsilon](\restrf[n+1][p](\depscohs[n][\lbrack 0,p-1 \rbrack])(d))(\restrp[n+1][p][r][\omega]
-        (\fulldepscohs[n])(d)(c)) =_{\cohf[n][p][q][r][\epsilon][\omega]}                                                                               \\
-        \restrp[n][p][r][\omega](\restrf[n+1][p](\depscohs[n][\lbrack 0,p-1 \rbrack])(d))(\restrp[n+1][p][q+1][\epsilon]
-        (\fulldepscohs[n])(d)(c))
-      \end{array}
-    \right.}                                                                                                                       \\
-  \end{array}
-\end{equation*}
+\scalebox{0.9}{
+  \begin{equation*}
+    \begin{array}{llcl}
+      \cohptype[n][\lbrack 0,p-1 \rbrack] & \fulldepscohs[n] & :      & \U                                                           \\
+      \cohptype[n]                        & \unitpoint       & \defeq & \unittype                                                    \\
+      \cohptype[n][\lbrack 0,p \rbrack]   & \fulldepscohs[n] & \defeq & \cohptype[n][\lbrack 0,p-1 \rbrack](\fulldepscohs[n]) \times \\
+      \multicolumn{4}{c}{\left\{
+        \begin{array}{l}
+          \Pi q \leq n-p.\,\Pi r\leq q.\,\Pi \epsilon.\,\Pi \omega.                                                                                       \\
+          \Pi d:\framep[n+2][p](\overline{\deps}(\depscohs[n][\lbrack 0,p-2 \rbrack])).\,\Pi c:\painting[n+2][p](\overline{\fulldeps}(\fulldepscohs[n])). \\
+          \restrp[n][p][q][\epsilon](\restrf[n+1][p](\depscohs[n][\lbrack 0,p-1 \rbrack])(d))(\restrp[n+1][p][r][\omega]
+          (\fulldepscohs[n])(d)(c)) =_{\cohf[n][p][q][r][\epsilon][\omega]}                                                                               \\
+          \restrp[n][p][r][\omega](\restrf[n+1][p](\depscohs[n][\lbrack 0,p-1 \rbrack])(d))(\restrp[n+1][p][q+1][\epsilon]
+          (\fulldepscohs[n])(d)(c))
+        \end{array}
+      \right.}                                                                                                                       \\
+    \end{array}
+  \end{equation*}}
+
 where we use the ``equality over'' notation $t =_e u$ to mean $\overrightarrow{e}(t) = u$ whenever $t$ is of some type $P(a)$, $u$ of type $P(b)$ and $e$ a proof of $a = b$.
 
 \subsection{Defining frame coherence laws and specifying frame 2-dimensional coherence laws\label{sec:mkcohf}}
@@ -1008,54 +1011,56 @@ Armed with all the constructions, we are now able to specify the whole
 structure on which we can reason by induction, for $D:\Xto{m}{n}$
 given:
 
-\begin{equation*}
-  \begin{array}{lcl}
-    \framep[n][\lbrack 0,n \rbrack]      & :      & \frametype[n][\lbrack 0,n \rbrack]                                     \\
-    \painting[n][\lbrack 0,n \rbrack]    & :      & \paintingtype[n][\lbrack 0,n \rbrack](\framep[n][\lbrack 0,n \rbrack]) \\
-    \restrf[n][\lbrack 0,n \rbrack]      & :      & \restrftype[n][\lbrack 0,n \rbrack]
-    \left(
-    \begin{array}{l}
-        \framep[n][\lbrack 0,n \rbrack]   \\
-        \painting[n][\lbrack 0,n \rbrack] \\
-      \end{array}\right)                                                                                      \\
-    \deps[n][\lbrack 0,n \rbrack]        & \defeq &
-    \left(
-    \begin{array}{l}
-        \framep[n][\lbrack 0,n \rbrack]   \\
-        \painting[n][\lbrack 0,n \rbrack] \\
-        \restrf[n][\lbrack 0,n \rbrack]   \\
-      \end{array}\right)                                                                                      \\
-    \fulldeps[n](E)                      & \defeq &
-    \left(
-    \begin{array}{l}
-        \deps[n][\lbrack 0,n \rbrack] \\
-        E                             \\
-      \end{array}\right)                                                                                          \\
-    \restrp[n][\lbrack 0,n \rbrack](E)   & :      & \restrptype[n][\lbrack 0,n \rbrack]
-    (\fulldeps[n](E))                                                                                                      \\
-    \cohf[n][\lbrack 0,n \rbrack](E)     & :      & \cohftype[n][\lbrack 0,n \rbrack]
-    \left(
-    \begin{array}{l}
-        \fulldeps[n](E)                    \\
-        \restrp[n][\lbrack 0,n \rbrack](E) \\
-      \end{array}\right)                                                                                     \\
-    \depscohs[n][\lbrack 0,n \rbrack](E) & \defeq &
-    \left(
-    \begin{array}{l}
-        \fulldeps[n](E)                    \\
-        \restrp[n][\lbrack 0,n \rbrack](E) \\
-        \cohf[n][\lbrack 0,n \rbrack](E)   \\
-      \end{array}\right)                                                                                     \\
-    \fulldepscohs[n](E)(E')              & \defeq &
-    \left(
-    \begin{array}{l}
-        \depscohs[n][\lbrack 0,n \rbrack](E) \\
-        E'                                   \\
-      \end{array}\right)                                                                                   \\
-    \cohp[n][\lbrack 0,n \rbrack](E)(E') & :      & \cohptype[n][\lbrack 0,n \rbrack]
-    (\fulldepscohs[n](E)(E'))                                                                                              \\
-  \end{array}
-\end{equation*}
+\scalebox{0.9}{
+  \begin{equation*}
+    \begin{array}{lcl}
+      \framep[n][\lbrack 0,n \rbrack]      & :      & \frametype[n][\lbrack 0,n \rbrack]                                     \\
+      \painting[n][\lbrack 0,n \rbrack]    & :      & \paintingtype[n][\lbrack 0,n \rbrack](\framep[n][\lbrack 0,n \rbrack]) \\
+      \restrf[n][\lbrack 0,n \rbrack]      & :      & \restrftype[n][\lbrack 0,n \rbrack]
+      \left(
+      \begin{array}{l}
+          \framep[n][\lbrack 0,n \rbrack]   \\
+          \painting[n][\lbrack 0,n \rbrack] \\
+        \end{array}\right)                                                                                      \\
+      \deps[n][\lbrack 0,n \rbrack]        & \defeq &
+      \left(
+      \begin{array}{l}
+          \framep[n][\lbrack 0,n \rbrack]   \\
+          \painting[n][\lbrack 0,n \rbrack] \\
+          \restrf[n][\lbrack 0,n \rbrack]   \\
+        \end{array}\right)                                                                                      \\
+      \fulldeps[n](E)                      & \defeq &
+      \left(
+      \begin{array}{l}
+          \deps[n][\lbrack 0,n \rbrack] \\
+          E                             \\
+        \end{array}\right)                                                                                          \\
+      \restrp[n][\lbrack 0,n \rbrack](E)   & :      & \restrptype[n][\lbrack 0,n \rbrack]
+      (\fulldeps[n](E))                                                                                                      \\
+      \cohf[n][\lbrack 0,n \rbrack](E)     & :      & \cohftype[n][\lbrack 0,n \rbrack]
+      \left(
+      \begin{array}{l}
+          \fulldeps[n](E)                    \\
+          \restrp[n][\lbrack 0,n \rbrack](E) \\
+        \end{array}\right)                                                                                     \\
+      \depscohs[n][\lbrack 0,n \rbrack](E) & \defeq &
+      \left(
+      \begin{array}{l}
+          \fulldeps[n](E)                    \\
+          \restrp[n][\lbrack 0,n \rbrack](E) \\
+          \cohf[n][\lbrack 0,n \rbrack](E)   \\
+        \end{array}\right)                                                                                     \\
+      \fulldepscohs[n](E)(E')              & \defeq &
+      \left(
+      \begin{array}{l}
+          \depscohs[n][\lbrack 0,n \rbrack](E) \\
+          E'                                   \\
+        \end{array}\right)                                                                                   \\
+      \cohp[n][\lbrack 0,n \rbrack](E)(E') & :      & \cohptype[n][\lbrack 0,n \rbrack]
+      (\fulldepscohs[n](E)(E'))                                                                                              \\
+    \end{array}
+  \end{equation*}}
+
 where
 \begin{align*}
   E: \framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack])\rightarrow \U \\
@@ -1085,12 +1090,13 @@ Therefore, assuming a construction of $\framep[n][n]$ from $D:\Xto{m}{n}$, we ar
 The construction we have presented differs from the Rocq formalisation in \href{https://github.com/artagnon/bonak}{bonak} in the following ways:
 \begin{itemize}
   \item The main difference between the informal presentation and the Rocq formalisation is that the formalisation is not parameterised by $n$ but instead by $k \defeq n = p$. This is a bit less intuitive since the dimension has to be mentally recomputed by adding $p$ and $k$, but technically, it happens to provide a smoother formalisation, that is, the interesting information when building some component up to $p$ is not, computationally speaking, the dimension but the distance from to the expected dimension.
-  \item The second main difference is that structures $\fulldeps$, $\fulldepscohs$ and $\fulldepscoht$ from the informal presentation are implemented by using a ``zipper'' structure~\cite{Huet}: we split $\framep[n][\lbrack 0,n \rbrack]$ at $p$, into two lists: $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\framep[n][\lbrack p,n \rbrack]$, which aids in proofs of induction on $p$.
+  \item The second main difference is that structures $\fulldeps$, $\fulldepscohs$ and $\fulldepscoht$ from the informal presentation are implemented by using a ``zipper'' structure~\cite{Huet97}: we split $\framep[n][\lbrack 0,n \rbrack]$ at $p$, into two lists: $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\framep[n][\lbrack p,n \rbrack]$, which aids in proofs of induction on $p$.
   \item Otherwise, Rocq does not support mutual fixpoints for which one component depends on another component in its type (also termed as a recursive-recursive definition~\cite{}), nor mutual fixpoints including abbreviations, as we expect in sections~\ref{sec:mkframe}, \ref{sec:mkrestrf}, and \ref{sec:mkcohf}. We address the absence of abbreviations by defining abbreviations in advance and address the absence of recursive-recursive definitions by instead recursively defining a $\Sigma$-type of the components of the recursive-recursive definition, and recovering the individual components using projections.
 
 \end{itemize}
 
 \section{Comparison with previous formalisation}
+\label{sec:previous-formalisation}
 
 \section{Perspectives}
 
