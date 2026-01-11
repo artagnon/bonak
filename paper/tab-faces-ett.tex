@@ -3,12 +3,10 @@
   \eqnline{\restrf[m][q][\epsilon][n][p][q \leq n-p]}{\makecell{\eqnarg{restrframe}{D}{\Xto{m}{n+1}} \\ \eqnarg{restrframe}{d}{\framep[m][n+1][p][][D=\D]}}}{:}{\framep[m][n][p][][D=\hdD]}
   \eqnline{\restrf[m][q][\epsilon][n][0]}{D~\unitpoint}{\defeq}{\unitpoint}
   \eqnline{\restrf[m][q][\epsilon][n][p+1]}{D~(\pair{d}{l})}{\defeq}{(\restrf[m][q+1][\epsilon][n][p][][D=\D, d=\d],\restrl[m][q][\epsilon][n-1][p][][D=\D, d=\d, l=\l])}
-  \graymidrule
-
+  \midrule
   \eqnline{\restrl[m][q][\epsilon][n][p][q \leq n-p]}{\makecell{\eqnarg{restrlayer}{D}{\Xto{m}{n+2}} \\ \eqnarg{restrlayer}{d}{\framep[m][n+2][p][][D=\D]} \\ \eqnarg{restrlayer}{l}{\layer[m][n+1][p][][D=\D, d=\d]}}}{:}{\layer[m][n][p][][D=\hdD, d={\restrf[m][q+1][\epsilon][n+1][p][][D=\D, d=\d]}]}
   \eqnline{\restrl[m][q][\epsilon][n][p]}{\D~\d~\l}{\defeq}{\lambda \omega.(\restrp[m][q][\epsilon][n][p][][D=\hdD, E=\tlD, d={\restrf[m][\omega][0][n][p][][D=\D, d=\d]}, c={\l_\omega}])}
-  \graymidrule
-
+  \midrule
   \eqnline{\restrp[m][q][\epsilon][n][p][q \leq n-p]}{\makecell{\eqnarg{restrpainting}{D}{\Xto{m}{n+1}} \\ \eqnarg{restrpainting}{E}{\Xcomp{m}{n+1}[D=\D]} \\\eqnarg{restrpainting}{d}{\framep[m][n+1][p][][D=\D]} \\ \eqnarg{restrpainting}{c}{\painting[m][n+1][p][][D=\D, E=\E, d=\d]}}}{:}{\painting[m][n][p][][D=\hdD, E=\tlD, d={\restrf[m][q][\epsilon][n][p][][D=\D, d=\d]}]}
   \eqnline{\restrp[m][0][\epsilon][n][p][]}{\D~\E~\d~(\pair{l}{\_})}{\defeq}{\l_\epsilon}
   \eqnline{\restrp[m][q+1][\epsilon][n][p][p<n]}{\D~\E~\d~(\pair{l}{c})}{\defeq}{(\restrl[m][q][\epsilon][n-1][p][][D=\D, d=\d, l=\l],\restrp[m][q][\epsilon][n][p+1][][D=\D, E=\E, d=\pair{d}{l}, c=\c])}

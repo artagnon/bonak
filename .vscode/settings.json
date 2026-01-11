@@ -1,11 +1,7 @@
 {
   "editor.wordWrapColumn": 80,
-  "spellright.language": [
-    "en"
-  ],
-  "spellright.documentTypes": [
-    "latex",
-  ],
+  "spellright.language": ["en"],
+  "spellright.documentTypes": ["latex"],
   "files.exclude": {
     "**/*.vo": true,
     "**/*.vok": true,
@@ -19,5 +15,6 @@
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
     "**/.ruby-lsp": true
-  }
+  },
+  "cSpell.words": ["parameterised"]
 }
