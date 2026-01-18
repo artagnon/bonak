@@ -130,7 +130,7 @@
 }%
 
 % Adjust font size
-\newcommand{\smfontsize}{\fontsize{8}{10}\selectfont}
+\newcommand{\smfontsize}{\fontsize{7.6}{9}\selectfont}
 
 % These are renewed in tables, but let's define them now for in-document
 % typesetting
@@ -260,7 +260,7 @@ The internalisation of parametricity in unary indexed form was studied by~\cite{
 
 \paragraph*{Iterated parametricity in indexed form.}
 
-An informal description of what should semi-simplicial sets in indexed form be was given in~\cite{IAS}. Several implementations in type theory were later proposed~\cite{...}. In \cite{hr25}, a construction of both augmented semi-simplicial and semi-cubical sets in \emph{indexed form} was given, as a special case of iterated parametricity in indexed form. Instead of the following illustration of semi-cubical sets in fibered form:
+An informal description of what should semi-simplicial sets in indexed form be was given in~\cite{UFwiki2012}. Several implementations in type theory were later proposed~\cite{voevodsky12,herbelin15,part15,altenkirch16}. In \cite{hr25}, a construction of both augmented semi-simplicial and semi-cubical sets in \emph{indexed form} was given, as a special case of iterated parametricity in indexed form. Instead of the following illustration of semi-cubical sets in fibered form:
 
 \begin{equation*}
   \begin{tikzcd}
@@ -404,7 +404,7 @@ The definition of $\framep[n+1][p]$ also depends, via $\layer[n][p-1]$, on $\pai
   \end{tikzcd}
 \end{center}
 
-In particular, the dependency of $\framep[n+1][\lbrack 0,p-1 \rbrack]$ within the type of $\restrf[n][\lbrack 0,p-1 \rbrack]$ combined with the dependency of $\restrf[n][\lbrack 0,p-1 \rbrack]$ within the definition of $\framep[n+1][\lbrack 0,p \rbrack]$ requires to mutually define the type of $\restrf[n][\lbrack 0,p-1 \rbrack]$ together with $\framep[n+1][p]$ (or $\framep[n+1][\lbrack 0,p \rbrack]$) as a \emph{function} from $\restrf[n][\lbrack 0,p-1 \rbrack]$.
+In particular, the dependency of $\framep[n+1][\lbrack 0,p-1 \rbrack]$ within the type of $\restrf[n][\lbrack 0,p-1 \rbrack]$ combined with the dependency of $\restrf[n][\lbrack 0,p-1 \rbrack]$ within the definition of $\framep[n+1][\lbrack 0,p \rbrack]$ requires a mutual definition the type of $\restrf[n][\lbrack 0,p-1 \rbrack]$ together with $\framep[n+1][p]$ (or $\framep[n+1][\lbrack 0,p \rbrack]$) as a function from $\restrf[n][\lbrack 0,p-1 \rbrack]$.
 
 So far, using this recursive definition of  $\framep[n+1][\lbrack 0,p \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$, we are able to specify the three first component of the expected dependent structure, for $p \leq n$:
 \begin{equation*}
@@ -1118,17 +1118,16 @@ The construction we have presented differs from the Rocq formalisation in \href{
 \begin{itemize}
   \item The main difference between the informal presentation and the Rocq formalisation is that the formalisation is not parameterised by $n$ but instead by $k \defeq n - p$. This makes the presentation a bit less intuitive since the dimension has to be mentally recomputed by adding $p$ to $k$, but technically, it happens to provide a smoother formalisation. That is, the interesting information when building some component up to $p$ is not, computationally speaking, the dimension but the distance from to the expected dimension.
   \item The second main difference is that structures $\fulldeps$, $\fulldepscohs$ and $\fulldepscoht$ from the informal presentation are implemented by using a ``zipper'' structure~\cite{Huet97}: anytime we build some construction at $p$, we split $\framep[n][\lbrack 0,n \rbrack]$ into two lists: $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\framep[n][\lbrack p,n \rbrack]$, which aids in proofs of induction on $p$.
-  \item In section \ref{sec:detailed-construction}, we left implicit the management of inequality proofs occurring in restrictions and coherence conditions. In practice, we stated inequalities as strict propositions~\cite{}, that isas propositions whose proofs are all definitionally equal. This simplified a bit the formalisation.
+  \item In section \ref{sec:detailed-construction}, we left implicit the management of inequality proofs occurring in restrictions and coherence conditions. In practice, we stated inequalities as strict propositions~\cite{gilbert19}, or propositions whose proofs are all definitionally equal. This simplified the formalisation a bit.
   \item Otherwise, Rocq does not support mutual fixpoints for which one component depends on another component in its type (also termed as a recursive-recursive definition~\cite{Forsberg13}), nor mutual fixpoints including abbreviations, as we expect in sections~\ref{sec:mkframe}, \ref{sec:mkrestrf}, and \ref{sec:mkcohf}. We address the absence of abbreviations by defining abbreviations in advance and address the absence of recursive-recursive definitions by instead recursively building the $\Sigma$-type of the two components of the recursive-recursive definition, and recovering the individual components using projections.
 
 \end{itemize}
 
-\section{Comparison with previous formalisation}
-\label{sec:previous-formalisation}
+\section{Comparison with previous formalisation\label{sec:previous-formalisation}}
 
 \section{Perspectives}
 
-Our construction shows a pattern: start from $\frametype$, define $\paintingtype$, mutually define $\framep$ and $\restrftype$, define $\painting$, define $\restrptype$, mutually define $\restrf$ and $\cohftype$, define $\restrp$, define $\cohptype$, mutually define $\cohf$ and $\cohttype$, define $\cohptype$. On $\U$, $\cohttype$ is trivially provable and the construction stopshere. If we were working in an untruncated universe $U$, the construction could go on: prove the coherence at dimension $i$ on frames mutually with the type of coherence on frames at dimension $i+1$, prove the coherence on paintings at dimension $i$, define the type of coherence on paintings at dimension $i+1$ $\cohptype$, and recursively. We believe that such an infinite process can again be represented using streams, that is that a stream made of frames, paintings, frame and painting restrictions as well as frame and painting coherences in all dimensions can be defined. Then, from such a stream of structure at level $n$, we believe that a stream at level $n+1$ can be built, as in section~\ref{sec:detailed-construction}. This would solve the semi-simplicial type problem~\cite{}.
+Our construction shows a pattern: start from $\frametype$, define $\paintingtype$, mutually define $\framep$ and $\restrftype$, define $\painting$, define $\restrptype$, mutually define $\restrf$ and $\cohftype$, define $\restrp$, define $\cohptype$, mutually define $\cohf$ and $\cohttype$, define $\cohptype$. On $\U$, $\cohttype$ is trivially provable and the construction stopshere. If we were working in an untruncated universe $U$, the construction could go on: prove the coherence at dimension $i$ on frames mutually with the type of coherence on frames at dimension $i+1$, prove the coherence on paintings at dimension $i$, define the type of coherence on paintings at dimension $i+1$ $\cohptype$, and recursively. We believe that such an infinite process can again be represented using streams, that is that a stream made of frames, paintings, frame and painting restrictions as well as frame and painting coherences in all dimensions can be defined. Then, from such a stream of structure at level $n$, we believe that a stream at level $n+1$ can be built, as in section~\ref{sec:detailed-construction}. This would solve the semi-simplicial type problem~\cite{UFwiki2012}.
 
 \bibliographystyle{plainurl}
 \bibliography{paper}
