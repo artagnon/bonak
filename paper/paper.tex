@@ -206,7 +206,7 @@
 \author{Hugo Herbelin}{Université Paris Cité, Inria, CNRS, IRIF, Paris}{Hugo.Herbelin@inria.fr}{}{}
 \author{Ramkumar Ramachandra}{Unaffiliated}{r@artagnon.com}{}{}
 \authorrunning{H. Herbelin and R. Ramachandra}
-\keywords{Parametricity, Semi-simplicial sets, Semi-cubical sets, Formalization, Rocq}
+\keywords{Parametricity, Semi-simplicial sets, Semi-cubical sets, Formalization, Rocq, Indexed-fibred correspondence}
 \ccsdesc{10003752.10003790.10011740}
 \Copyright{H. Herbelin and R. Ramachandra}
 
@@ -222,7 +222,7 @@
 
 \section{Introduction}
 
-\paragraph*{Parametricity and its .}
+\paragraph*{Parametricity and its ramifications}
 
 Introduced by Reynolds in the context of programming language semantics~\cite{reynolds83}, relational parametricity is connected to several similar concepts in logic and mathematics. In its original formulation, it associates binary propositional relations to types. The variant in \cite{GhaniNordvallOrsanigo16} associates proof-relevant binary relations to types, and the variant in \cite{bernardy10} associates relations of arbitrary arity to types. This includes, in particular, the case of unary relations which assigns predicates to types in the proof-irrelevant case, and families to types in the proof-relevant case. The unary relation case expresses what it means to belong in a type, and the binary relation case expresses what it means to be equal in a type. For instance, the canonical predicate associated to $A \rightarrow B$ is the predicate over functions $f$ in $A \rightarrow B$ such that, for all $a$ in the canonical predicate associated to $A$, $f(a)$ is in the canonical predicate associated to $B$. Similarly, the canonical relation associated to $A \rightarrow B$ is the relation over functions $f$ and $f'$ in $A \rightarrow B$ such that, for all $a$ and $a'$ related through the canonical relation associated to $A$, $f(a)$and $f'(a')$ are related through the canonical relation associated to $B$.
 
@@ -230,7 +230,7 @@ Unary parametricity over a language is a realisability using the language itself
 
 Parametricity, like realisability, reducibility, and logical relations, is commonly expressed in \emph{indexed} form. Let us use a type-theoretic language featuring a type of subsingleton types called $\HProp$ and a type of sets $\U$. In such language, predicates have type $A \rightarrow \HProp$, families have type $A \rightarrow \U$, relations have type $A \times A \rightarrow \HProp$, and relevant relations, sometimes called \emph{correspondences}, have type $A \times A \rightarrow \U$. All constructions in indexed form can also be expressed in the \emph{fibred} form, via the indexed-fibred correspondence: there is an equivalence between $A \rightarrow \HProp$ and $\Sigma B:\U. (B \stackrel{inj}{\rightarrow} A)$ in the proof-irrelevant case, and between $A \rightarrow \U$ and $\Sigma B:\U. (B \rightarrow A)$, in the proof-relevant case, for $A:\U$. A fibred approach to parametricity was considered in~\cite{atkey14}, who also suggested to iterate parametricity.
 
-\paragraph*{Iterated parametricity.}
+\paragraph*{Iterated parametricity}
 
 The internalisation of parametricity in unary indexed form was studied by~\cite{bernardy12} leading to a type theory of iterated parametricity. Such a type theory can be interpreted in the ``unary'' form of cubical set~\cite{bernardy15}. Cubical sets are presheaves (fibred), corresponing to Grothendieck discrete fibrations (indexed). Note that cubical sets are presheaves over a well-ordered category\footnote{typically, a Reedy category}, and there is a stratification on cubes. As the dependency of $n$-cubes into their faces is represented as maps to the faces, rather than as maps from the faces, cubical sets can be seen as fibred. As part of the correspondence between iterated binary parametricity in fibred form and cubical sets, degeneracies and reflexivity proofs get identified~\cite{johann17}. While iterated binary parametricity without reflexivity produces semi-cubical sets, it was also observed that iterated unary parametricity produces augmented semi-simplicial sets\footnote{The authors learned it from Hugo Moeneclaey and Thorsten Altenkirch}.
 
@@ -258,7 +258,7 @@ The internalisation of parametricity in unary indexed form was studied by~\cite{
   \end{tabularx}
 \end{table}
 
-\paragraph*{Iterated parametricity in indexed form.}
+\paragraph*{Iterated parametricity in indexed form}
 
 An informal description of what should semi-simplicial sets in indexed form be was given in~\cite{UFwiki2012}. Several implementations in type theory were later proposed~\cite{voevodsky12,herbelin15,part15,altenkirch16}. In \cite{hr25}, a construction of both augmented semi-simplicial and semi-cubical sets in \emph{indexed form} was given, as a special case of iterated parametricity in indexed form. Instead of the following illustration of semi-cubical sets in fibered form:
 
@@ -326,8 +326,6 @@ Let us sketch how to define iterated parametricity in indexed form. The dependen
 
 The type $\Xcomp{m}{n}[D={E_0,\ldots,E_{n-1}}]$ of $E_n$ represents a family whose type can be presented into the form $\fullframe(E_0,\ldots,E_{n-1}) \rightarrow \U$ where $\fullframe$ collects all the dependencies of $E_n$. It is recursively defined in table~\ref{tab:frames}, using the auxiliary definitions of $\framep$, $\layer$ and $\painting$. A $\fullframe$ describes a boundary of a standard form (simplex, cube), which we decompose into $n$ $\layer$, one per dimension, each of them made of $\nu$ $\painting$ ($\nu=1, \nu=2, \ldots$), where a $\painting$ corresponds to a filled frame. Notice that the type $\layer$ relies on an operator of frame restriction $\restrf$ which is defined in table~\ref{tab:faces}, and this restriction operator is in turn defined using auxiliary definitions $\restrl$ and $\restrp$.
 
-Notably, the definition of $\restrl$ relies on an equality expressing the commutation of the composition of two $\restrf$. The proof of this commutation is made explicit in table~\ref{tab:coh} using proof-term notations\footnote{We however omit type conversions, as if working in extensional type theory.}. The proof is by recursion on the structure of $\framep$, $\layer$, and $\painting$. This is what $\cohf$ does using auxiliary proofs $\cohl$ and $\cohp$. Note that for a fixed constant $n$, relying on the evaluation rules of type theory, the coherence conditions degenerate to a reflexivity proof, so that the construction builds an effective sequence of types not mentioning coherences anymore.
-
 \def\lab{tab:coind}
 \input{tab-coind.tex}
 
@@ -359,6 +357,8 @@ Notably, the definition of $\restrl$ relies on an equality expressing the commut
 
 \def\lab{tab:coh}
 \input{tab-coh-ett.tex}
+
+The definition of $\restrl$ relies on an equality expressing the commutation of the composition of two $\restrf$. The proof of this commutation is made explicit\footnote{We however omit type conversions, as if working in extensional type theory.} in table~\ref{tab:coh}. It is by recursion on the structure of $\framep$, $\layer$, and $\painting$. This is what $\cohf$ does using auxiliary proofs $\cohl$ and $\cohp$. Note that for a fixed constant $n$, relying on the evaluation rules of type theory, the coherence conditions evaluate to a reflexivity proof, so that the construction builds an effective sequence of types not mentioning coherences anymore.
 
 \renewcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
 \renewcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
