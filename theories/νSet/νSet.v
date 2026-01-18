@@ -200,10 +200,10 @@ Class CohFrameTypeBlock `{extraDeps: DepsRestrExtension p k deps} := {
 Definition mkCohFrameTypesStep `{extraDeps: DepsRestrExtension p.+1 k deps}
   (prev: CohFrameTypeBlock (extraDeps := (deps; extraDeps))): Type :=
   { Q: prev.(CohFrameTypesDef) &T
-    forall q (Hq: q <= k) r (Hrq: r <= q) (ε ω: arity) d,
+    forall q (Hq: q <= k) r (Hr: r <= q) (ε ω: arity) d,
     deps.(_restrFrames).2 q Hq ε
-      ((prev.(RestrFramesDef) Q).2 r (Hrq ↕ (↑ Hq)) ω d) =
-    deps.(_restrFrames).2 r (Hrq ↕ Hq) ω
+      ((prev.(RestrFramesDef) Q).2 r (Hr ↕ (↑ Hq)) ω d) =
+    deps.(_restrFrames).2 r (Hr ↕ Hq) ω
       ((prev.(RestrFramesDef) Q).2 q.+1 (⇑ Hq) ε d) }.
 
 Definition mkRestrLayer `{extraDeps: DepsRestrExtension p.+1 k deps}
@@ -392,14 +392,14 @@ Definition mkRestrPaintings {p k}:
 
 Definition mkCohPaintingType
   `(extraDepsCohs: DepsCohsExtension p.+1 k depsCohs) :=
-  forall q (Hq: q <= k) r (Hrq: r <= q) (ε ω: arity)
+  forall q (Hq: q <= k) r (Hr: r <= q) (ε ω: arity)
     (d: mkFrame mkDepsRestr.(1))
     (c: (mkPaintings (mkDepsRestr;
       mkExtraDeps (depsCohs; extraDepsCohs))).2 d),
-  rew [depsCohs.(_deps).(_paintings).2] depsCohs.(_cohs).2 q Hq r Hrq ε ω d in
+  rew [depsCohs.(_deps).(_paintings).2] depsCohs.(_cohs).2 q Hq r Hr ε ω d in
   depsCohs.(_restrPaintings).2 q Hq ε _
     ((mkRestrPaintings (depsCohs; extraDepsCohs)).2 r _ ω d c) =
-  depsCohs.(_restrPaintings).2 r (Hrq ↕ Hq) ω _
+  depsCohs.(_restrPaintings).2 r (Hr ↕ Hq) ω _
     ((mkRestrPaintings (depsCohs; extraDepsCohs)).2 q.+1 _ ε d c).
 
 Fixpoint mkCohPaintingTypes {p}:
@@ -416,22 +416,22 @@ Lemma mkCoh2Frame `(extraDepsCohs: DepsCohsExtension p.+1 k depsCohs)
   (prevCohFrames: mkCohFrameTypes
      (extraDeps := (mkDepsRestr; mkExtraDeps extraDepsCohs))
      (mkRestrPaintings extraDepsCohs).1):
-  forall q (Hq: q <= k) r (Hrq: r <= q) (ε ω: arity)
+  forall q (Hq: q <= k) r (Hr: r <= q) (ε ω: arity)
   (d: mkFrame (mkDepsRestr (depsCohs := toDepsCohs prevCohFrames.1)).(1))
   (𝛉: arity),
   f_equal
     (fun x => depsCohs.(_deps).(_restrFrames).2 q _ ε x)
-    (prevCohFrames.2 r (Hrq ↕ ↑ Hq) 0 leR_O ω 𝛉 d)
+    (prevCohFrames.2 r (Hr ↕ ↑ Hq) 0 leR_O ω 𝛉 d)
   • (depsCohs.(_cohs).2 q Hq 0 leR_O ε 𝛉
-      (mkRestrFrame r.+1 (⇑ (Hrq ↕ ↑ Hq)) ω d)
+      (mkRestrFrame r.+1 (⇑ (Hr ↕ ↑ Hq)) ω d)
   • f_equal
       (fun x => depsCohs.(_deps).(_restrFrames).2 0 leR_O 𝛉 x)
-      (prevCohFrames.2 q.+1 (⇑ Hq) r.+1 (⇑ Hrq) ε ω d)) =
-  depsCohs.(_cohs).2 q Hq r Hrq ε ω (mkRestrFrame 0 leR_O 𝛉 d)
+      (prevCohFrames.2 q.+1 (⇑ Hq) r.+1 (⇑ Hr) ε ω d)) =
+  depsCohs.(_cohs).2 q Hq r Hr ε ω (mkRestrFrame 0 leR_O 𝛉 d)
   • (f_equal
       (fun x => depsCohs.(_deps).(_restrFrames).2 r _ ω x)
       (prevCohFrames.2 q.+1 (⇑ Hq) 0 leR_O ε 𝛉 d)
-  • depsCohs.(_cohs).2 r (Hrq ↕ Hq) 0 leR_O ω 𝛉
+  • depsCohs.(_cohs).2 r (Hr ↕ Hq) 0 leR_O ω 𝛉
       (mkRestrFrame q.+2 (⇑ (⇑ Hq)) ε d)).
 Proof.
   now intros; apply depsCohs.(_deps).(_frames).2.(UIP).
@@ -442,13 +442,13 @@ Definition mkCohLayer `{extraDepsCohs: DepsCohsExtension p.+1 k depsCohs}
   {prevCohFrames: mkCohFrameTypes
     (extraDeps := (mkDepsRestr; mkExtraDeps extraDepsCohs))
     (mkRestrPaintings extraDepsCohs).1}
-  q {Hq: q <= k} r {Hrq: r <= q} (ε ω: arity)
+  q {Hq: q <= k} r {Hr: r <= q} (ε ω: arity)
   (d: mkFrame (mkDepsRestr (depsCohs := toDepsCohs prevCohFrames.1)).(1))
   (l: mkLayer mkRestrFrames d):
-  rew [mkLayer _] prevCohFrames.2 q.+1 (⇑ Hq) r.+1 (⇑ Hrq) ε ω d in
+  rew [mkLayer _] prevCohFrames.2 q.+1 (⇑ Hq) r.+1 (⇑ Hr) ε ω d in
     mkRestrLayer depsCohs.(_restrPaintings) depsCohs.(_cohs) q Hq ε _
-      (mkRestrLayer (mkRestrPaintings extraDepsCohs).1 _ r (Hrq ↕ ↑ Hq) ω d l) =
-    mkRestrLayer depsCohs.(_restrPaintings) depsCohs.(_cohs) r (Hrq ↕ Hq) ω _
+      (mkRestrLayer (mkRestrPaintings extraDepsCohs).1 _ r (Hr ↕ ↑ Hq) ω d l) =
+    mkRestrLayer depsCohs.(_restrPaintings) depsCohs.(_cohs) r (Hr ↕ Hq) ω _
       (mkRestrLayer (mkRestrPaintings extraDepsCohs).1 _ q.+1 (⇑ Hq) ε d l).
 Proof.
   apply functional_extensionality_dep; intros 𝛉.
@@ -456,12 +456,12 @@ Proof.
   rewrite
     <- map_subst with (f := fun x => depsCohs.(_restrPaintings).2 q Hq ε x),
     <- map_subst with
-        (f := fun x => depsCohs.(_restrPaintings).2 r (Hrq ↕ Hq) ω x),
+        (f := fun x => depsCohs.(_restrPaintings).2 r (Hr ↕ Hq) ω x),
     -> rew_map with (P := fun x => depsCohs.(_deps).(_paintings).2 x)
         (f := fun x => depsCohs.(_deps).(_restrFrames).2 O leR_O 𝛉 x),
     -> rew_map with (P := fun x => depsCohs.(_deps).(_paintings).2 x)
         (f := fun x => depsCohs.(_deps).(_restrFrames).2 r
-          (Hrq ↕ Hq) ω x),
+          (Hr ↕ Hq) ω x),
     -> rew_map with (P := fun x => depsCohs.(_deps).(_paintings).2 x)
         (f := fun x => depsCohs.(_deps).(_restrFrames).2 q _ ε x),
     <- cohPaintings.2.
@@ -480,10 +480,10 @@ Proof.
   - unshelve esplit.
     + now exact (mkCohFrames p k.+1 depsCohs.(1)%depscohs
       (depsCohs; extraDepsCohs)%extradepscohs cohPaintings.1).
-    + intros q Hq r Hrq ε ω d. unshelve eapply eq_existT_curried.
+    + intros q Hq r Hr ε ω d. unshelve eapply eq_existT_curried.
       now exact ((mkCohFrames p k.+1 depsCohs.(1)%depscohs
         (depsCohs; extraDepsCohs)%extradepscohs
-        cohPaintings.1).2 q.+1 (⇑ Hq) r.+1 (⇑ Hrq) ε ω d.1).
+        cohPaintings.1).2 q.+1 (⇑ Hq) r.+1 (⇑ Hr) ε ω d.1).
       now exact (mkCohLayer cohPaintings q r ε ω d.1 d.2).
 Defined.
 
@@ -560,16 +560,16 @@ Proof.
     now reflexivity.
   - (* r = r'+1, q is necessarily q'+1 and extraDepsCohs non empty *)
     destruct q.
-    { exfalso; now apply leR_O_contra in Hrq. }
+    { exfalso; now apply leR_O_contra in Hr. }
     destruct extraDepsCohs2.
     { exfalso; now apply leR_O_contra in Hq. }
     simpl.
     unshelve eapply (eq_existT_curried_dep
       (Q := mkPainting depsCohs2.(_depsCohs).(_extraDeps))).
     + now exact
-      (mkCohLayer depsCohs2.(_cohPaintings) q r (Hrq := ⇓ Hrq) ε ω d l).
+      (mkCohLayer depsCohs2.(_cohPaintings) q r (Hr := ⇓ Hr) ε ω d l).
     + now exact (mkCohPainting p.+1 k depsCohs2 extraDepsCohs2
-      q (⇓ Hq) r (⇓ Hrq) ε ω (d; l) c).
+      q (⇓ Hq) r (⇓ Hr) ε ω (d; l) c).
 Defined.
 
 Fixpoint mkCohPaintings `{depsCohs2: DepsCohs2 p k}
