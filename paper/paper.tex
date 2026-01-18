@@ -376,7 +376,7 @@ The definition of $\restrl$ relies on an equality expressing the commutation of 
 \renewcommandx{\cohl}[6][1,2,3,4,5,6]{\coh{layer}[][#3][#4][#5][#6][#1][#2][]}
 \renewcommandx{\cohp}[6][1,2,3,4,5,6]{\coh{painting}[][#3][#4][#5][#6][#1][#2][]}
 
-\section{Analysis of the recursive structure of iterated parametricity in indexed form}
+\section{Analysis of the recursive structure of iterated parametricity in indexed form\label{sec:detailed-construction}}
 
 In the previous work~\cite{hr25}, a rather heavy justification of the well-foundedness of the construction was given which we recall in section~\ref{sec:previous-work}. Now, we observe that, to build $\framep[n+1]$ from $\framep[n]$, it is enough to assume the following structure built at level $n$, for all $p \leq n$, and to build it at level $n+1$.
 
@@ -443,8 +443,6 @@ which can be reformulated using sequences for appropriate definitions of $\frame
 \end{equation*}
 
 The type of sequences such as $\restrftype[n][\lbrack 0,p \rbrack]$ will be represented by iterated $\Sigma$-types since each $\restrf[n][p]$ may depend on the previous components of the sequence. In the case of $\framep$ and $\painting$, there is no dependency, so an ordinary product can be used to represent $\frametype[n][\lbrack 0,p \rbrack]$ and $\paintingtype[n][\lbrack 0,p \rbrack]$. In the following sections, we will write $\framep[n][\lbrack 0,p-1 \rbrack]$ for the immediate subsequence of length $p$ of $\framep[n][\lbrack 0,p \rbrack]$ and $\framep[n][p]$ for its last component.
-
-\section{Detailed construction\label{sec:detailed-construction}}
 
 \subsection{Specifying frames}
 
@@ -620,7 +618,7 @@ From which we can deduce $\painting[n+1][\lbrack 0,p-1 \rbrack]$ for $p \leq n+2
 
 \subsection{Specifying painting restrictions}
 
-Now, we are able to define $\framep[n+1][\lbrack 0,n+1 \rbrack]$, $\painting[n+1][\lbrack 0,n+1 \rbrack]$ and $\restrftype[n][\lbrack 0,n \rbrack]$ from $\framep[n][\lbrack 0,n \rbrack]$, $\painting[n][\lbrack 0,n \rbrack]$ and $\restrf[n][\lbrack 0,n \rbrack]$, that is from $\deps[n][\lbrack 0,n \rbrack]$. To go further, we need to specify the sequence $\restrptype[n][\lbrack 0,p-1 \rbrack]$ of types of painting restrictions, for $p \leq n+1$:
+Now, we are able to define $\framep[n+1][\lbrack 0,n+1 \rbrack]$, $\painting[n+1][\lbrack 0,n+1 \rbrack]$ and $\restrftype[n][\lbrack 0,n \rbrack]$ from $\deps[n][\lbrack 0,n \rbrack]$. To go further, we need to specify the sequence $\restrptype[n][\lbrack 0,p-1 \rbrack]$ of types of painting restrictions, for $p \leq n+1$.
 
 \begin{equation*}
   \smfontsize
@@ -642,7 +640,7 @@ Now, we are able to define $\framep[n+1][\lbrack 0,n+1 \rbrack]$, $\painting[n+1
 
 \subsection{Defining frame restrictions and specifying frame coherence laws\label{sec:mkrestrf}}
 
-Thanks to $\restrptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\restrf[n+1][\lbrack 0,p \rbrack]$ and specify $\cohftype[n][\lbrack 0,p-1 \rbrack]$ from $\framep[n][\lbrack 0,n \rbrack]$, $\painting[n][\lbrack 0,n \rbrack]$, $\restrf[n][\lbrack 0,n \rbrack]$, $\restrptype[n][\lbrack 0,p-1 \rbrack]$ and some $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow \U$, abbreviating these dependencies and the dependency in a $\cohf[n][\lbrack 0,p-1 \rbrack]$ as $\depscohstype[n][\lbrack 0,p-1 \rbrack]$, and using also abbreviations in passing for $\restrl$ and $\restrltype$. It is also convenient to build $\deps[n+1][\lbrack 0,p \rbrack]$ from $\depscohs[n][\lbrack 0,p-1 \rbrack]$, so that we can now build $\framep[n+2][p]$ one step further. Thus, we also include this abbreviation in the definition:
+Thanks to $\restrptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\restrf[n+1][\lbrack 0,p \rbrack]$ and specify $\cohftype[n][\lbrack 0,p-1 \rbrack]$ from $\framep[n][\lbrack 0,n \rbrack]$, $\painting[n][\lbrack 0,n \rbrack]$, $\restrf[n][\lbrack 0,n \rbrack]$, $\restrptype[n][\lbrack 0,p-1 \rbrack]$ and some $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow \U$, abbreviating these dependencies and the dependency in a $\cohf[n][\lbrack 0,p-1 \rbrack]$ as $\depscohstype[n][\lbrack 0,p-1 \rbrack]$, and using also abbreviations in passing for $\restrl$ and $\restrltype$. It is also convenient to build $\deps[n+1][\lbrack 0,p \rbrack]$ from $\depscohs[n][\lbrack 0,p-1 \rbrack]$, so that we can now build $\framep[n+2][p]$ one step further.
 
 \begin{equation*}
   \smfontsize
@@ -931,7 +929,7 @@ where $\cohttype[n][p]$ is:
   \end{array}
   \right.
 \end{equation*}
-where the functoriality of equality and transport was used to go from~\footnote{omitting the $\framep$ argument}:
+where the functoriality of equality and transport was used to go\footnote{omitting the $\framep$ argument} from:
 \begin{equation*}
   \smfontsize
   \Pi \theta.\left(
@@ -967,11 +965,7 @@ to:
 
 This is exactly the type of $\cohl[n][p][q][r][\epsilon][\omega]$ up to functional extensionality relative to $\theta$.
 
-It is also convenient to introduce a notion of full dependencies at the level of the coherence conditions of dimension $2$, that combines a full $\depscoht[n][\lbrack 0,n \rbrack]$ with a set
-\begin{equation*}
-  \smfontsize
-  E:\framep[n+3][n+3](\overline{\deps}(\overline{\depscohs}(\depscoht[n][\lbrack 0,n \rbrack]))) \rightarrow \U
-\end{equation*}
+It is also convenient to introduce a notion of full dependencies at the level of the coherence conditions of dimension $2$, that combines a full $\depscoht[n][\lbrack 0,n \rbrack]$ with an extra $E$ at level $n+3$.
 
 \begin{equation*}
   \smfontsize
@@ -982,7 +976,7 @@ It is also convenient to introduce a notion of full dependencies at the level of
     \end{array}\right)
 \end{equation*}
 
-We can then extend $\overline{\depscohs}$ to build $\fulldepscohs$ from $\fulldepscoht$:
+We can then extend $\overline{\depscohs}$ to build $\fulldepscohs$ from $\fulldepscoht$.
 
 \begin{equation*}
   \smfontsize
@@ -998,7 +992,7 @@ We can then extend $\overline{\depscohs}$ to build $\fulldepscohs$ from $\fullde
 
 \subsection{Defining painting coherence laws\label{sec:mkcohp}}
 
-The final component of the construction is $\cohp[n+1][p]$ for $p \leq n+1$, by recursion on $n-p$:
+The final component of the construction is $\cohp[n+1][p]$ for $p \leq n+1$, defined by recursion on $n-p$:
 
 \begin{equation*}
   \smfontsize
