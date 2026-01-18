@@ -130,7 +130,7 @@
 }%
 
 % Adjust font size
-\newcommand{\smfontsize}{\fontsize{7.6}{9}\selectfont}
+\newcommand{\smfontsize}{\fontsize{7.7}{11}\selectfont}
 
 % These are renewed in tables, but let's define them now for in-document
 % typesetting
@@ -391,7 +391,7 @@ Indeed, to build $\framep[n+1]$ from $\framep[n]$, it happens to be enough to as
                     &   & \restrp[n][p][r][\omega](\restrf[n+1][p][q+1][\epsilon](d)) \circ \restrp[n+1][p][q+1][\epsilon](d) \\
   \end{array}
 \end{equation*}
-and to build it at level $n+1$. This is however not so easy because some components of this structure, e.g. $\restrf$ and further fields, depend on $\framep[n+1]$, that is, it already depends on the ability of building the $\framep$ component of the structure at level $n+1$. We are thus facing an interdependency between specifying the structure assumed at level $n$ and defining from it the structure at level $n+1$. So, we have to proceed in order: specifying $\framep[n]$, from which $\painting[n]$ can be specified, from which $\framep[n+1]$ can be built and thus $\restrf[n+1]$ be specified. Now, the definition of $\framep[n+1][p]$, which is by induction on $p$, itself depends on $\restrf[n][p-1]$ whose type depends in turn on $\framep[n+1][p-1]$. This means that $\framep[n+1][p]$ and the type of $\restrf[n][p]$ actually have to be mutually defined.
+and to build it at level $n+1$. This is however not so easy because some components of this structure, e.g. $\restrf$ and further fields, depend on $\framep[n+1]$, that is, it already depends on the ability of building the $\framep$ component of the structure at level $n+1$. We are thus facing an interdependency between specifying the structure assumed at level $n$ and defining from it the structure at level $n+1$. So, we have to proceed in order: specifying $\framep[n]$, from which $\painting[n]$ can be specified, from which $\framep[n+1]$ can be built and thus $\restrf[n+1]$ be specified. Now, the definition of $\framep[n+1][p]$, by induction on $p$, itself depends on $\restrf[n][p-1]$ whose type depends in turn on $\framep[n+1][p-1]$. This means that $\framep[n+1][p]$ and the type of $\restrf[n][p]$ actually have to be mutually defined.
 
 The definition of $\framep[n+1][p]$ also depends, via $\layer[n][p-1]$, on $\painting[n][p-1]$. Both via $\painting[n][p-1]$ and $\restrf[n][p-1]$, it depends also on $\framep[n][p-1]$ by typing dependency. This requires to assume $\framep[n][p-1]$ and $\painting[n][p-1]$ known in advance. Moreover, the definition of $\framep[n+1][p]$ depends on $\framep[n+1][p-1]$, so all of $\framep[n][k]$, $\painting[n][k]$ and $\restrf[n][k]$ for $k< p$ need to be known, which we respectively abbreviate as $\framep[n][\lbrack 0,p-1 \rbrack]$, $\painting[n][\lbrack 0,p-1 \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$. Schematically, using dotted arrows for dependencies in the type and plain arrows for dependencies in the definition, this gives the following graph of dependencies for $p\leq n+1$ fixed:
 
@@ -404,9 +404,10 @@ The definition of $\framep[n+1][p]$ also depends, via $\layer[n][p-1]$, on $\pai
   \end{tikzcd}
 \end{center}
 
-In particular, the dependency of $\framep[n+1][\lbrack 0,p-1 \rbrack]$ within the type of $\restrf[n][\lbrack 0,p-1 \rbrack]$ combined with the dependency of $\restrf[n][\lbrack 0,p-1 \rbrack]$ within the definition of $\framep[n+1][\lbrack 0,p \rbrack]$ requires a mutual definition the type of $\restrf[n][\lbrack 0,p-1 \rbrack]$ together with $\framep[n+1][p]$ (or $\framep[n+1][\lbrack 0,p \rbrack]$) as a function from $\restrf[n][\lbrack 0,p-1 \rbrack]$.
+In particular, the dependency of $\framep[n+1][\lbrack 0,p-1 \rbrack]$ within the type of $\restrf[n][\lbrack 0,p-1 \rbrack]$ combined with the dependency of $\restrf[n][\lbrack 0,p-1 \rbrack]$ within the definition of $\framep[n+1][\lbrack 0,p \rbrack]$ requires a mutual definition the type of $\restrf[n][\lbrack 0,p-1 \rbrack]$ together with $\framep[n+1][p]$ as a function from $\restrf[n][\lbrack 0,p-1 \rbrack]$.
 
-So far, using this recursive definition of  $\framep[n+1][\lbrack 0,p \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$, we are able to specify the three first component of the expected dependent structure, for $p \leq n$:
+Using this recursive definition of $\framep[n+1][\lbrack 0,p \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$, we are able to specify the three first component of the expected dependent structure, for $p \leq n$.
+
 \begin{equation*}
   \smfontsize
   \begin{array}{lcl}
@@ -436,13 +437,13 @@ which can be reformulated using sequences for appropriate definitions of $\frame
   \end{array}
 \end{equation*}
 
-The type of sequences such as $\restrftype[n][\lbrack 0,p \rbrack]$ will be represented by iterated $\Sigma$-types since each $\restrf[n][p]$ may depend on the previous components of the sequence. In the case of $\framep$ and $\painting$, there will be however no dependency, so an ordinary product can be used to represent $\framep[n][\lbrack 0,p \rbrack]$ and $\painting[n][\lbrack 0,p \rbrack]$. Later on, we will write $\framep[n][\lbrack 0,p-1 \rbrack]$ for the immediate subsequence of length $p$ of $\framep[n][\lbrack 0,p \rbrack]$ and $\framep[n][p]$ for its last component, and similarly for $\painting[n][\lbrack 0,p \rbrack]$, $\restrf[n][\lbrack 0,p \rbrack]$, etc.
+The type of sequences such as $\restrftype[n][\lbrack 0,p \rbrack]$ will be represented by iterated $\Sigma$-types since each $\restrf[n][p]$ may depend on the previous components of the sequence. In the case of $\framep$ and $\painting$, there will be however no dependency, so an ordinary product can be used to represent $\framep[n][\lbrack 0,p \rbrack]$ and $\painting[n][\lbrack 0,p \rbrack]$. Later on, we will write $\framep[n][\lbrack 0,p-1 \rbrack]$ for the immediate subsequence of length $p$ of $\framep[n][\lbrack 0,p \rbrack]$ and $\framep[n][p]$ for its last component.
 
 \section{Detailed construction\label{sec:detailed-construction}}
 
 \subsection{Specifying frames}
 
-Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ only requires to define the type of frames, which are just finite products of $\U$:
+Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ only requires to define the type of frames, which are just finite products of $\U$.
 
 \begin{equation*}
   \smfontsize
@@ -468,7 +469,9 @@ The types $\paintingtype[n][\lbrack 0,p-1 \rbrack]$ of $\painting[n][\lbrack 0,p
 
 \subsection{Defining frames and specifying frame restrictions\label{sec:mkframe}}
 
-Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\painting[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$, we can mutually define the types $\restrftype[n][\lbrack 0,p-1 \rbrack]$ of frame restrictions together with $\framep[n+1][\lbrack 0,p \rbrack]$ as a function from $\restrf[n][\lbrack 0,p-1 \rbrack]$, introducing also abbreviations for the types and definitions of layers, as well as for the combination of sequences of $\framep[n][\lbrack 0,p-1 \rbrack]$, $\painting[n][\lbrack 0,p-1 \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$ in one block, which we call $\depstype[n][\lbrack 0,p-1 \rbrack]$:
+Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\painting[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$, we can mutually define the types $\restrftype[n][\lbrack 0,p-1 \rbrack]$ of frame restrictions together with $\framep[n+1][\lbrack 0,p \rbrack]$ as a function from $\restrf[n][\lbrack 0,p-1 \rbrack]$, introducing also abbreviations for the types and definitions of layers, as well as for the combination of sequences of $\framep[n][\lbrack 0,p-1 \rbrack]$, $\painting[n][\lbrack 0,p-1 \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$ in one block, which we call $\depstype[n][\lbrack 0,p-1 \rbrack]$.
+
+Note that $\deps$ behaves here as an abbreviation for a sequence of assumptions. In particular, once a $\deps:\depstype$ is assumed, we can freely refer to $\framep$, $\painting$, $\restrf$. Also, by abuse of notation, we write $\unitpoint$ for the only inhabitant of $\depstype[n][0]$.
 
 \begin{equation*}
   \smfontsize
@@ -522,7 +525,8 @@ Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\painting[n][\lbrack 0,p-1 \rb
                 \framep[n+1][\lbrack 0,p-1 \rbrack]   \\
                 \painting[n+1][\lbrack 0,p-1 \rbrack] \\
               \end{array}\right).         \\
-             \Pi q \leq n-p.\,\Pi \epsilon.\,\framep[n+1][p]
+             \Pi q \leq n-p.\,\Pi \epsilon.                      \\
+             \framep[n+1][p]
              \left(\begin{array}{l}
                 \framep[n][\lbrack 0,p-1 \rbrack]   \\
                 \painting[n][\lbrack 0,p-1 \rbrack] \\
@@ -549,11 +553,10 @@ Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\painting[n][\lbrack 0,p-1 \rb
   \end{array}
 \end{equation*}
 
-Note that $\deps$ behaves here as an abbreviation for a sequence of assumptions. In particular, once a $\deps:\depstype$ is assumed, we can freely refer to $\framep$, $\painting$, $\restrf$. Also, by abuse of notation, we write $\unitpoint$ for the only inhabitant of $\depstype[n][0]$.
-
 \subsection{Defining paintings\label{sec:mkpainting}}
 
-Defining $\painting[n+1][p]$ for $p \leq n+1$, in addition to the type dependency in $\framep[n+1][p]$, requires the definition of $\painting[n][p-1]$, thus also $\framep[n][p-1]$ by typing dependency, as well as $\restrf[n][p-1]$. Since $\painting[n+1][p]$ also depends on $\painting[n+1][p+1]$ when $p<n+1$, these dependencies are actually between $\painting[n+1][\lbrack p,n+1 \rbrack]$, $\painting[n][\lbrack p,n \rbrack]$, $\framep[n+1][\lbrack p,n+1 \rbrack]$, $\framep[n][\lbrack p,n \rbrack]$ and $\restrf[n][\lbrack p,n \rbrack]$. Also, for the case $p=n$, this requires the assumption of an inhabitant $E_n$ of $\nu$Set$^{=n}$. Finally, $\framep[n+1][\lbrack p,n+1 \rbrack]$, $\framep[n+1][\lbrack p,n \rbrack]$ and $\restrf[n][\lbrack p,n \rbrack]$ respectively depend on the earlier values $\framep[n+1][\lbrack 0,p-1 \rbrack]$, $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$.  Below, we use dashed underline and dashed arrows for dependencies in subconstructions, here in the construction of $\framep$ at level $n$ and $\restrftype$ at level $n$:
+Defining $\painting[n+1][p]$ for $p \leq n+1$, in addition to the type dependency in $\framep[n+1][p]$, requires the definition of $\painting[n][p-1]$, thus also $\framep[n][p-1]$ by typing dependency, as well as $\restrf[n][p-1]$. Since $\painting[n+1][p]$ also depends on $\painting[n+1][p+1]$ when $p<n+1$, these dependencies are actually between $\painting[n+1][\lbrack p,n+1 \rbrack]$, $\painting[n][\lbrack p,n \rbrack]$, $\framep[n+1][\lbrack p,n+1 \rbrack]$, $\framep[n][\lbrack p,n \rbrack]$ and $\restrf[n][\lbrack p,n \rbrack]$. Also, for the case $p=n$, this requires the assumption of an inhabitant $E_n$ of $\nu$Set$^{=n}$. Finally, $\framep[n+1][\lbrack p,n+1 \rbrack]$, $\framep[n+1][\lbrack p,n \rbrack]$ and $\restrf[n][\lbrack p,n \rbrack]$ respectively depend on the earlier values $\framep[n+1][\lbrack 0,p-1 \rbrack]$, $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$.  Below, we use dashed underline and dashed arrows for dependencies in subconstructions, here in the construction of $\framep$ at level $n$ and $\restrftype$ at level $n$.
+
 \begin{center}
   \begin{tikzcd}
     & & \painting[n+1][\lbrack p,n+1 \rbrack] \arrow[dd, bend right=70] \arrow[dddr] \arrow[d, dotted]\\
@@ -578,9 +581,9 @@ Let us introduce another abbreviation to combine a full $\deps[n][\lbrack 0,n \r
     \end{array}\right)
 \end{equation*}
 
-Also, when $n$ is $0$, we write $E$ to denote an element of $\fulldepstype[0]$ where all other components are degenerate.
+When $n$ is $0$, we write $E$ to denote an element of $\fulldepstype[0]$ where all other components are degenerate.
 
-We can now formally define $\painting[n+1][p]$ for $p \leq n+1$ by recursion from the base case $n+1$ and down to $p$:
+We can now define $\painting[n+1][p]$ for $p \leq n+1$ by recursion from the base case $n+1$, and down to $p$:
 
 \begin{equation*}
   \smfontsize
@@ -747,7 +750,8 @@ Thanks to $\restrptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\rest
   \end{array}
 \end{equation*}
 
-We need also the notion of full dependencies at the level of coherence conditions, that combines a full $\depscohs[n][\lbrack 0,n \rbrack]$ with a set $E:\framep[n+2][n+2](\overline{\deps}(\depscohs[n][\lbrack 0,n \rbrack])) \rightarrow \U$:
+We need also the notion of full dependencies at the level of coherence conditions, that combines a full $\depscohs[n][\lbrack 0,n \rbrack]$ with a set $E:\framep[n+2][n+2](\overline{\deps}(\depscohs[n][\lbrack 0,n \rbrack])) \rightarrow \U$.
+
 \begin{equation*}
   \smfontsize
   \fulldepscohstype[n] \defeq
@@ -757,7 +761,8 @@ We need also the notion of full dependencies at the level of coherence condition
     \end{array}\right)
 \end{equation*}
 
-We can then extend $\overline{\deps}$ to build $\fulldeps$ from $\fulldepscohs$:
+We can then extend $\overline{\deps}$ to build $\fulldeps$ from $\fulldepscohs$.
+
 \begin{equation*}
   \smfontsize
   \begin{array}{lcl}
@@ -770,11 +775,9 @@ We can then extend $\overline{\deps}$ to build $\fulldeps$ from $\fulldepscohs$:
   \end{array}
 \end{equation*}
 
-Also, when $n$ is 0, we write $(E,E')$ to denote an element $(E, E')$ of $\fulldepscohstype[0]$.
-
 \subsection{Defining painting restrictions\label{sec:mkrestrp}}
 
-Armed with $\restrf$, $\cohftype$ and these abbreviations, it is now possible to define $\restrp[n+1][p]$ for $p \leq n+1$ by recursion on $n-p$:
+Armed with $\restrf$ and $\cohftype$, it is now possible to define $\restrp[n+1][p]$ for $p \leq n+1$ by recursion on $n-p$.
 
 \begin{equation*}
   \smfontsize
@@ -800,7 +803,7 @@ Armed with $\restrf$, $\cohftype$ and these abbreviations, it is now possible to
   \end{array}
 \end{equation*}
 
-From which we can deduce $\restrp[n+1][\lbrack 0,p-1 \rbrack]$ for $p \leq n+2$ again by a second recursion, this time on $p$:
+from which we can deduce $\restrp[n+1][\lbrack 0,p-1 \rbrack]$ for $p \leq n+2$ again by a second recursion, this time on $p$.
 
 \begin{equation*}
   \smfontsize
@@ -818,9 +821,8 @@ From which we can deduce $\restrp[n+1][\lbrack 0,p-1 \rbrack]$ for $p \leq n+2$ 
 
 \subsection{Specifying painting coherence laws}
 
-At this stage, we are then able to define $\restrf[n+1][\lbrack 0,p \rbrack]$, $\restrp[n+1][\lbrack 0,p \rbrack]$ and $\cohftype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$
-from $\depscohs[n][\lbrack 0,p-1 \rbrack]$ at the previous level. To go further, we need to define the
-sequence $\cohptype[n][\lbrack 0,p-1 \rbrack]$ of types of painting coherence laws:
+We can define $\restrf[n+1][\lbrack 0,p \rbrack]$, $\restrp[n+1][\lbrack 0,p \rbrack]$ and $\cohftype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$
+from $\depscohs[n][\lbrack 0,p-1 \rbrack]$ at the previous level. To go further, we need to define the sequence $\cohptype[n][\lbrack 0,p-1 \rbrack]$ of types of painting coherence laws.
 
 \begin{equation*}
   \smfontsize
@@ -845,9 +847,9 @@ where we use the ``equality over'' notation $t =_e u$ to mean $\overrightarrow{e
 
 \subsection{Defining frame coherence laws and specifying frame 2-dimensional coherence laws\label{sec:mkcohf}}
 
-Thanks to $\cohptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\cohf[n+1][\lbrack 0,p \rbrack]$ and $\cohttype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ from $\fulldepscohs[n]$. In practice, we now prove coherence conditions at dimension 2 by uniqueness of identity proofs, so, we do not need a mutual definition as it was the case in sections~\ref{sec:mkframe} and~\ref{sec:mkrestrf}. Thus, $\cohttype[n][\lbrack 0,p-1 \rbrack]$ is used here as an abbreviation which we actually need to define only for $p$, that is $\cohttype[n][p]$. Abbreviating the dependency as $\depscohttype[n][\lbrack 0,p-1 \rbrack]$, and using also abbreviations in passing for $\cohl$ and $\cohltype$. Note however that, due to reasoning with $\U$, we do not need to have $\cohf[n+1][\lbrack 0,p \rbrack]$ depending on a proof of $\cohttype[n][\lbrack 0,p-1 \rbrack]$ as the latter can be proved at once by uniqueness of identity proofs.
+With $\cohptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\cohf[n+1][\lbrack 0,p \rbrack]$ and $\cohttype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ from $\fulldepscohs[n]$. Due to reasoning in $\U$, we do not need to have $\cohf[n+1][\lbrack 0,p \rbrack]$ depending on a proof of $\cohttype[n][\lbrack 0,p-1 \rbrack]$ as the latter can be proved by uniqueness of identity proofs. Due to UIP, $\cohttype[n][\lbrack 0,p-1 \rbrack]$ only needs to be defined for $p$.
 
-It is also convenient to build $\depscohs[n+1][\lbrack 0,p \rbrack]$ from $\depscoht[n][\lbrack 0,p-1 \rbrack]$, so that we can now build $\framep[n+3][p]$. Thus, we also include this abbreviation in the definition. Implicitly using in $\cohf[n+1][\lbrack 0,p \rbrack]$ that equalities in a $\Sigma$-type are equivalent to the $\Sigma$-type of the underlying equalities, we altogether have:
+It is also convenient to build $\depscohs[n+1][\lbrack 0,p \rbrack]$ from $\depscoht[n][\lbrack 0,p-1 \rbrack]$, so that we can now build $\framep[n+3][p]$. We implicitly use in $\cohf[n+1][\lbrack 0,p \rbrack]$ that equalities in a $\Sigma$-type are equivalent to the $\Sigma$-type of the underlying equalities.
 
 \begin{equation*}
   \smfontsize
@@ -927,7 +929,7 @@ where $\cohttype[n][p]$ is:
   \end{array}
   \right.
 \end{equation*}
-and where the functoriality of equality and transport was used to go from (omitting the $\framep$ argument):
+where the functoriality of equality and transport was used to go from \footnote{omitting the $\framep$ argument}:
 \begin{equation*}
   \smfontsize
   \Pi \theta.\left(
@@ -961,9 +963,9 @@ to:
   \right)
 \end{equation*}
 
-which is exactly the type of $\cohl[n][p][q][r][\epsilon][\omega]$, up to functional extensionality relative to $\theta$.
+This is exactly the type of $\cohl[n][p][q][r][\epsilon][\omega]$ up to functional extensionality relative to $\theta$.
 
-It is also convenient to introduce a notion of full dependencies at the level of the coherence conditions of dimension 2, that combines a full $\depscoht[n][\lbrack 0,n \rbrack]$ with a set
+It is also convenient to introduce a notion of full dependencies at the level of the coherence conditions of dimension $2$, that combines a full $\depscoht[n][\lbrack 0,n \rbrack]$ with a set
 \begin{equation*}
   \smfontsize
   E:\framep[n+3][n+3](\overline{\deps}(\overline{\depscohs}(\depscoht[n][\lbrack 0,n \rbrack]))) \rightarrow \U
@@ -994,7 +996,7 @@ We can then extend $\overline{\depscohs}$ to build $\fulldepscohs$ from $\fullde
 
 \subsection{Defining painting coherence laws\label{sec:mkcohp}}
 
-The last key construction we need is $\cohp[n+1][p]$ for $p \leq n+1$, which is by recursion on $n-p$:
+The final component of the construction is $\cohp[n+1][p]$ for $p \leq n+1$, by recursion on $n-p$:
 
 \begin{equation*}
   \smfontsize
@@ -1014,9 +1016,8 @@ The last key construction we need is $\cohp[n+1][p]$ for $p \leq n+1$, which is 
             \end{array}\right)        \\
   \end{array}
 \end{equation*}
-where we again implicitly used that equalities in a $\Sigma$-type are equivalent to a $\Sigma$-type of the underlying equalities, componentwise.
 
-From the latter we can deduce $\cohp[n+1][\lbrack 0,p-1 \rbrack]$ for $p \leq n+2$, again by a second recursion, this time on $p$:
+From the latter, we can deduce $\cohp[n+1][\lbrack 0,p-1 \rbrack]$ for $p \leq n+2$, by induction on $p$:
 
 \begin{equation*}
   \smfontsize
@@ -1094,12 +1095,8 @@ where
   E': \framep[n+2][n+2](\overline{\deps}(\depscohs[n][\lbrack 0,n \rbrack](E)))\rightarrow \U
 \end{align*}
 
-To build this structure at level $n+1$, from level $n$, it is
-enough to assume
-\begin{equation*}
-  E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow \U
-\end{equation*}
-where $\deps[n][\lbrack 0,n \rbrack]$ come from the assumptions at level $n$, and to build the following:
+To build this structure at level $n+1$ from level $n$, it is enough to assume
+$E$. $\deps[n][\lbrack 0,n \rbrack]$ come from the assumptions at level $n$, and to build the following:
 \begin{itemize}
   \item $\framep[n+1][\lbrack 0,n+1 \rbrack]$ comes from $\deps[n][\lbrack 0,n \rbrack]$ (section~\ref{sec:mkframe}).
   \item $\painting[n+1][\lbrack 0,n+1 \rbrack]$ comes from $\fulldeps[n](E)$ (section~\ref{sec:mkpainting}).
@@ -1111,19 +1108,19 @@ where $\deps[n][\lbrack 0,n \rbrack]$ come from the assumptions at level $n$, an
   \item $\cohp[n+1][\lbrack 0,n+1 \rbrack](E')(E'')$ comes from $\fulldepscoht[n](E)(E')(E'')$ (section~\ref{sec:mkcohp}).
 \end{itemize}
 
-Therefore, assuming a construction of $\framep[n][n]$ from $D:\Xto{m}{n}$, we are able to build a $\framep[n+1][n+1]$ from $D$ extended with some $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow \U$. This is enough to build $\Xcomp{m}{n}(D)$, for $D:\Xto{m}{n}$, and thus $\Xp{m}$, by starting with an empty $D$, since, obviously, all fields of the structure are trivially inhabited by $\kstar$ when $n$ is $0$.
+Therefore, assuming a construction of $\framep[n][n]$ from $D:\Xto{m}{n}$, we are able to build a $\framep[n+1][n+1]$ from $D$ extended with some $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow \U$. This is enough to build $\Xcomp{m}{n}(D)$, for $D:\Xto{m}{n}$, and thus $\Xp{m}$, by starting with an empty $D$, since all fields of the structure are trivially inhabited by $\kstar$ when $n$ is $0$.
 
-\section{Notes on formalization}
-The construction we have presented differs from the Rocq formalisation in \href{https://github.com/artagnon/bonak}{the bonak repository} in the following ways:
+\section{Differences between presentation and Rocq formalisation}
 \begin{itemize}
-  \item The main difference between the informal presentation and the Rocq formalisation is that the formalisation is not parameterised by $n$ but instead by $k \defeq n - p$. This makes the presentation a bit less intuitive since the dimension has to be mentally recomputed by adding $p$ to $k$, but technically, it happens to provide a smoother formalisation. That is, the interesting information when building some component up to $p$ is not, computationally speaking, the dimension but the distance from to the expected dimension.
-  \item The second main difference is that structures $\fulldeps$, $\fulldepscohs$ and $\fulldepscoht$ from the informal presentation are implemented by using a ``zipper'' structure~\cite{Huet97}: anytime we build some construction at $p$, we split $\framep[n][\lbrack 0,n \rbrack]$ into two lists: $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\framep[n][\lbrack p,n \rbrack]$, which aids in proofs of induction on $p$.
-  \item In section \ref{sec:detailed-construction}, we left implicit the management of inequality proofs occurring in restrictions and coherence conditions. In practice, we stated inequalities as strict propositions~\cite{gilbert19}, or propositions whose proofs are all definitionally equal. This simplified the formalisation a bit.
-  \item Otherwise, Rocq does not support mutual fixpoints for which one component depends on another component in its type (also termed as a recursive-recursive definition~\cite{Forsberg13}), nor mutual fixpoints including abbreviations, as we expect in sections~\ref{sec:mkframe}, \ref{sec:mkrestrf}, and \ref{sec:mkcohf}. We address the absence of abbreviations by defining abbreviations in advance and address the absence of recursive-recursive definitions by instead recursively building the $\Sigma$-type of the two components of the recursive-recursive definition, and recovering the individual components using projections.
-
+  \item The formalisation is not parameterised by $n$ but instead by $k \defeq n - p$. This makes the presentation less intuitive since the dimension has to be mentally recomputed by adding $p$ to $k$, but it eases formalisation. The interesting information when building some component up to $p$ is not the dimension, but the distance from to the expected dimension, computationally speaking.
+  \item The structures $\fulldeps$, $\fulldepscohs$ and $\fulldepscoht$ from the informal presentation are implemented by using a ``zipper'' structure~\cite{Huet97}: anytime we build some construction at $p$, we split $\framep[n][\lbrack 0,n \rbrack]$ into two lists: $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\framep[n][\lbrack p,n \rbrack]$, which aids in proofs of induction on $p$.
+  \item In section \ref{sec:detailed-construction}, we left implicit the management of inequality proofs occurring in restrictions and coherence conditions. In practice, we stated inequalities as strict propositions~\cite{gilbert19}, or propositions whose proofs are all definitionally equal, which simplified formalisation.
+  \item Rocq does not support mutual fixpoints for which one component depends on another component in its type (also termed as a recursive-recursive definition~\cite{Forsberg13}), nor mutual fixpoints including abbreviations, as we expect in sections~\ref{sec:mkframe}, \ref{sec:mkrestrf}, and \ref{sec:mkcohf}. We address the absence of abbreviations by defining abbreviations in advance and address the absence of recursive-recursive definitions by instead recursively building the $\Sigma$-type of the two components of the recursive-recursive definition, and recovering the individual components using projections.
 \end{itemize}
 
 \section{Comparison with previous formalisation\label{sec:previous-formalisation}}
+
+To address the dependency of $\restrf[n][p]$ into $\framep[n+1][p]$ and the extra dependency of $\cohf[n][p]$ into $\framep[n+2][p]$ and $\restrf[n+1][p]$ (and similarly for $\painting$), the formalization given in \cite{hr25} was assuming all of $\framep[n][p]$, $\framep[n+1][p]$, $\framep[n+2][p]$, $\restrf[n][p]$, $\restrf[n+1][p]$ and $\cohf[n][p]$ together with propositional equations defining $\framep[n+1][p]$, $\framep[n+2][p]$ and $\restrf[n+1][p]$ (and similarly for $\painting$). The induction step then amounted to build $\framep[n+3][p]$, $\restrf[n+2][p]$ and $\cohf[n+1][p]$ (and similarly for $\painting$). This paper can be seen as the result of analysing how dependencies are finely organised so that the propositional equations in \cite{hr25} are replaceable by definitional equations of $\framep[n+1][p]$, $\framep[n+2][p]$ and $\restrf[n+1][p]$ (and similarly for $\painting$).
 
 \section{Perspectives}
 
