@@ -213,11 +213,11 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-  Reynolds' parametricity originally equips types with (proof-irrelevant) (binary) propositional relations over the types. But such relations can also be taken proof-relevant or unary, and described either in an indexed or fibred way. Parametricity can be iterated, and when types are sets, this results in an interpretation of sets as augmented simplicial sets in the unary case, or cubical sets in the binary case.
+  Reynolds' parametricity originally equips types with proof-irrelevant binary propositional relations over the types. But such relations can also be taken proof-relevant or unary, and described either in an indexed or fibred way. Parametricity can be iterated, and when types are sets, this results in an interpretation of sets as augmented simplicial sets in the unary case, or cubical sets in the binary case.
 
-  In a previous paper, equations were given describing the $n$-ary iterated parametricity translation of sets in indexed form. The construction was formalised in Rocq by induction on a large structure embedding equational reasoning.
+  In earlier work, equations were given describing the $n$-ary iterated parametricity translation of sets in indexed form. The construction was formalised in Rocq by induction on a large structure embedding equational reasoning.
 
-  This paper analyses the very dependent recursive structure of the equations of the earlier paper leading to a presentation of the construction replacing equational reasoning with definitional reasoning. The construction has been reduced to its computational essence, and can be described in full detail, closely following the new machine-checked formalisation.
+  The current work analyses the very dependent recursive structure of the equations of the earlier paper leading to a presentation of the construction replacing equational reasoning with definitional reasoning. The construction has been reduced to its computational essence, and can be described in full detail, closely following the new machine-checked formalisation.
 \end{abstract}
 
 \section{Introduction}
@@ -320,7 +320,7 @@ For $\nu$ an arity, $1$ in the case of predicates, families and augmented semi-s
 
 \section{High-level description of iterated parametricity in indexed form\label{sec:reminder}}
 
-We recall from the previous work how to formally define a type characterizing the sequences $E_0, E_1, \ldots$. The type theory we consider is with $\Sigma$ and $\Pi$ types, Martin-L\"of identity type $=$, universes $U_m$, a unit type $\unittype$, natural numbers, a definitionally proof-irrelevant inequality on natural numbers, streams, and function extensionality. The non-dependent variants of $\Pi$ and $\Sigma$ are written $\rightarrow$ and $\times$ respectively. The canonical inhabitant of $\unittype$ is written $\kstar$, and the subtype of types $T : U_m$ satisfying $\UIP : \Pi xy : T. \Pi pq : x = y. p = q$ is written $\HSet[m]$. The definitional proof-irrelevance of inequality is not essential, and can be replaced with propositional proof-irrelevance up to a few extra transports. Our use of function extensionality comes from representing $n$-tuples as functions, andd can be avoided by representing $n$-tuples as lists.
+We recall from the previous work how to formally define a type characterizing the sequences $E_0, E_1, \ldots$. The type theory we consider is with $\Sigma$ and $\Pi$ types, Martin-L\"of identity type $=$, universes $U_m$, a unit type $\unittype$, natural numbers, a definitionally proof-irrelevant inequality on natural numbers, streams, and function extensionality. The non-dependent variants of $\Pi$ and $\Sigma$ are written $\rightarrow$ and $\times$ respectively. The canonical inhabitant of $\unittype$ is written $\kstar$, and the subtype of types $T : U_m$ satisfying $\UIP : \Pi xy : T. \Pi pq : x = y. p = q$ is written $\HSet[m]$. The definitional proof-irrelevance of inequality is not essential, and can be replaced with propositional proof-irrelevance up to a few extra transports. Our use of function extensionality comes from representing $n$-tuples as functions, and can be avoided by representing $n$-tuples as lists.
 
 Let us sketch how to define iterated parametricity in indexed form. The dependency of $E_{n+1}$ into all $E_p$ for $p \leq n$ makes the family $E$ a \emph{very dependent function}~\cite{Hickey96}. The standard way to express it is as a stream whose $(n+1)$-th element $E_{n+1}$ is dependent on the bundle of all previous elements of the stream. We write $\Xto{m}{n}$ for the bundle of all $E_0, \ldots, E_{n-1}$, and we write $\Xfrom{m}{n}{D}$ for the residual stream $E_{n}, E_{n+1}, \ldots$, which is dependent on the bundle $E:\Xto{m}{n}$ of previous $E_0, \ldots, E_{n-1}$. The type of $E_n$, also dependent on a bundle $D:\Xto{m}{n}$, is denoted $\Xcomp{m}{n}[D=\D]$, as shown on tables~\ref{tab:coind} and~\ref{tab:core}. When $n = 0$, $\Xto{m}{0}$ is degenerated, and reduced to the unit type $\unittype$. Then, $\Xfrom{m}{0}{(\kstar)}$ represents the type of the full stream $E_0, \ldots, E_n$.
 
@@ -396,7 +396,10 @@ The well-foundedness of the construction from tables~\ref{tab:coind} to~\ref{tab
 
 The price to pay for this conciseness is mixing the specification of the induction hypothesis and the construction of the induction step. On the outset, $\restrf$ depends on $\framep[n+1]$: it already depends on the ability of building the $\framep$ component of the structure at level $n+1$. There is an interdependency between specifying the structure assumed at level $n$ and defining from it the structure at level $n+1$. We have to proceed in a specific order: specifying $\framep[n]$, from which $\painting[n]$ can be specified, from which $\framep[n+1]$ can be built, from which $\restrf[n+1]$ can be specified. Now, the definition of $\framep[n+1][p]$, which proceeds by induction on $p$, itself depends on $\restrf[n][p-1]$ whose type depends in turn on $\framep[n+1][p-1]$. Hence, $\framep[n+1][p]$ and the type of $\restrf[n][p]$ have to be mutually defined.
 
-The definition of $\framep[n+1][p]$ also depends, via $\layer[n][p-1]$, on $\painting[n][p-1]$. Both via $\painting[n][p-1]$ and $\restrf[n][p-1]$, it depends also on $\framep[n][p-1]$ by typing dependency. This requires us to assume $\framep[n][p-1]$ and $\painting[n][p-1]$. Moreover, the definition of $\framep[n+1][p]$ depends on $\framep[n+1][p-1]$, so $\framep[n][k]$, $\painting[n][k]$, and $\restrf[n][k]$, for $k < p$, need to be known. We abbreviate the collection of all $\framep[n][k]$ for $k < p$ as $\framep[n][\lbrack 0,p-1 \rbrack]$ and similarly for $\painting[n][\lbrack 0,p-1 \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$. Conversely, if $\framep[n][\lbrack 0,p \rbrack]$ is a non-empty sequence, we will write $\framep[n][\lbrack 0,p-1 \rbrack]$ for the immediate subsequence of length $p$ and $\framep[n][p]$ for the last component of the sequence.
+The definition of $\framep[n+1][p]$ also depends, via $\layer[n][p-1]$, on $\painting[n][p-1]$. Both via $\painting[n][p-1]$ and $\restrf[n][p-1]$, it depends also on $\framep[n][p-1]$ by typing dependency. This requires us to assume $\framep[n][p-1]$ and $\painting[n][p-1]$. Moreover, the definition of $\framep[n+1][p]$ depends on $\framep[n+1][p-1]$, so $\framep[n][k]$, $\painting[n][k]$, and $\restrf[n][k]$, for $k < p$, need to be known.
+
+We abbreviate the collection of all $\framep[n][k]$ for $k < p$ as $\framep[n][\lbrack 0,p-1 \rbrack]$ and similarly for $\painting[n][\lbrack 0,p-1 \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$. Conversely, if $\framep[n][\lbrack 0,p \rbrack]$ is a non-empty sequence, we will write $\framep[n][\lbrack 0,p-1 \rbrack]$ for the immediate subsequence of length $p$ and $\framep[n][p]$ for the last component of the sequence. We may also write $\framep[n][]$ for $\framep[n][\lbrack 0,0-1 \rbrack]$.
+
 Schematically, using dotted arrows for dependencies in the type and plain arrows for dependencies in the definition, this gives the following graph of dependencies for $p\leq n+1$.
 
 \begin{center}
@@ -459,7 +462,7 @@ Let us turn now to the specification of $\restrp[n][p]$. Since it depends on $\p
   \end{tikzcd}
 \end{center}
 
-This is eventually enough to specify $\restrp[n][\lbrack 0,p \rbrack]$ so that we can focus on the specification of $\cohf[n][p]$. An analysis similar to the one done for $\restrf[n][p]$ leads to conclude that the specification of $\cohf[n][\lbrack 0,p \rbrack]$ should be done mutually with the definition of $\restrf[n][\lbrack 0,p \rbrack]$.
+This is eventually enough to specify $\restrp[n][\lbrack 0,p \rbrack]$ so that we can focus on the specification of $\cohf[n][p]$. An analysis similar to the one done for $\restrf[n][p]$ leads to conclude that the specification of $\cohf[n][\lbrack 0,p \rbrack]$ should be done mutually with the definition of $\restrf[n+1][\lbrack 0,p+1 \rbrack]$.
 
 Then, $\cohp[n][p]$ has to be specified, for which the same analysis done for specifying $\restrp[n][p]$ applies. In particular, it requires first to define $\restrp[n+1][\lbrack 0,p \rbrack]$.
 
@@ -467,7 +470,7 @@ The specification of the six fields being complete, the induction step can be bu
 
 \subsection{Specifying frames}
 
-Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ only requires defining the type of frames, which are just finite products of $\HSet$.
+Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ only requires defining the type of frames, which are just $p$-ary products of $\HSet$.
 
 \begin{equation*}
   \smfontsize
@@ -495,7 +498,7 @@ The types $\paintingtype[n][\lbrack 0,p-1 \rbrack]$ of $\painting[n][\lbrack 0,p
 
 Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\painting[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$, we can mutually define the types $\restrftype[n][\lbrack 0,p-1 \rbrack]$ together with $\framep[n+1][\lbrack 0,p \rbrack]$, as a function from $\restrf[n][\lbrack 0,p-1 \rbrack]$. We introduce the abbreviation $\depstype[n][\lbrack 0,p-1 \rbrack]$ for the combination of sequences of $\framep[n][\lbrack 0,p-1 \rbrack]$, $\painting[n][\lbrack 0,p-1 \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$.
 
-Once a $\deps:\depstype$ is assumed, we freely refer to $\framep$, $\painting$, $\restrf$. We write $\unitpoint$ for the only inhabitant of $\depstype[n][0]$.
+Once a $\deps: \depstype$ is assumed, we freely refer to $\framep$, $\painting$, $\restrf$. We write $\unitpoint$ for the only inhabitant of $\depstype[n]$.
 
 \begin{equation*}
   \smfontsize
@@ -579,7 +582,7 @@ Once a $\deps:\depstype$ is assumed, we freely refer to $\framep$, $\painting$, 
 
 \subsection{Defining paintings\label{sec:mkpainting}}
 
-Let us introduce another abbreviation to combine a full $\deps[n][\lbrack 0,n \rbrack]:\depstype[n][\lbrack 0,n \rbrack]$ with a family $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack])\rightarrow \HSet$. When $n$ is $0$, we write $E$ to denote an element of $\fulldepstype[0]$ where all other components are degenerate.
+Let us introduce another abbreviation to combine a full $\deps[n][\lbrack 0,n \rbrack]:\depstype[n][\lbrack 0,n \rbrack]$ with a family $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack])\rightarrow \HSet$.
 
 \begin{equation*}
   \smfontsize
@@ -632,7 +635,7 @@ Now, we are able to define $\framep[n+1][\lbrack 0,n+1 \rbrack]$, $\painting[n+1
   \begin{array}{llcl}
     \restrptype[n][\lbrack 0,p-1 \rbrack] &
     \fulldeps[n]                          & :      & \HSet                                                    \\
-    \restrptype[n]                        & E      & \defeq                                       & \unittype \\
+    \restrptype[n]                        & \fulldeps[n] & \defeq                                       & \unittype \\
     \restrptype[n][\lbrack 0,p \rbrack]   &
     \fulldeps[n]
                                           & \defeq & \restrptype[n][\lbrack 0,p-1 \rbrack] \times
@@ -1113,23 +1116,23 @@ $E$ at level $n+1$. $\deps[n][\lbrack 0,n \rbrack]$ come from the assumptions at
   \item $\cohp[n+1][\lbrack 0,n+1 \rbrack](E')(E'')$ comes from $\fulldepscoht[n](E)(E')(E'')$ (section~\ref{sec:mkcohp}).
 \end{itemize}
 
-Therefore, assuming a construction of $\framep[n][n]$ from $D:\Xto{m}{n}$, we are able to build a $\framep[n+1][n+1]$ from $D$ extended with some $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow \HSet$. This is enough to build $\Xcomp{m}{n}(D)$, for $D:\Xto{m}{n}$, and thus $\Xp{m}$, by starting with an empty $D$, since all fields of the structure are trivially inhabited by $\kstar$ when $n$ is $0$.
+Therefore, assuming a construction of $\framep[n][n]$ from $D:\Xto{m}{n}$, we are able to build a $\framep[n+1][n+1]$ from $D$ extended with some $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow \HSet$. This is enough to build $\Xcomp{m}{n}(D)$, for $D:\Xto{m}{n}$, and thus $\Xp{m}$, by starting with an empty $D$, since all fields of the structure are trivially inhabited by $\kstar$ when $n = 0$.
 
 \section{Differences between presentation and Rocq formalisation}
 \begin{itemize}
   \item The formalisation is not parameterised by $n$ but instead by $k \defeq n - p$. This makes the presentation less intuitive since the dimension has to be mentally recomputed by adding $p$ to $k$, but it eases formalisation. The interesting information when building some component up to $p$ is not the dimension, but the distance from to the expected dimension, computationally speaking.
   \item The structures $\fulldeps$, $\fulldepscohs$ and $\fulldepscoht$ from the informal presentation are implemented by using a ``zipper'' structure~\cite{Huet97}: anytime we build some construction at $p$, we split $\framep[n][\lbrack 0,n \rbrack]$ into two lists: $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\framep[n][\lbrack p,n \rbrack]$, which aids in proofs of induction on $p$.
   \item In section \ref{sec:detailed-construction}, we left implicit the management of inequality proofs occurring in restrictions and coherence conditions. In practice, we stated inequalities as strict propositions~\cite{gilbert19}, or propositions whose proofs are all definitionally equal, which simplified formalisation.
-  \item Rocq does not support mutual fixpoints for which one component depends on another component in its type (also termed as a recursive-recursive definition~\cite{Forsberg13}), nor mutual fixpoints including abbreviations, as we expect in sections~\ref{sec:mkframe}, \ref{sec:mkrestrf}, and \ref{sec:mkcohf}. We address the absence of abbreviations by defining abbreviations in advance and address the absence of recursive-recursive definitions by instead recursively building the $\Sigma$-type of the two components of the recursive-recursive definition, and recovering the individual components using projections.
+  \item Rocq does not support mutual fixpoints for which one component depends on another component in its type~\footnote{also termed as a recursive-recursive definition~\cite{Forsberg13}}, nor mutual fixpoints including abbreviations, as we expect in sections~\ref{sec:mkframe}, \ref{sec:mkrestrf}, and \ref{sec:mkcohf}. We address the absence of abbreviations by defining abbreviations in advance and address the absence of recursive-recursive definitions by instead recursively building the $\Sigma$-type of the two components of the recursive-recursive definition, and recovering the individual components using projections.
 \end{itemize}
 
 \section{Comparison with previous work\label{sec:previous-work}}
 
-To address the dependency of $\restrf[n][p]$ in $\framep[n+1][p]$, and that of $\cohf[n][p]$ in $\framep[n+2][p]$ and $\restrf[n+1][p]$ without having to mix the specification of the induction hypothesis and the construction of the next step, the previous work~\cite{hr25} was assuming all of $\framep[n][p]$, $\framep[n+1][p]$, $\framep[n+2][p]$, $\restrf[n][p]$, $\restrf[n+1][p]$, and $\cohf[n][p]$, together with propositional equations defining $\framep[n+1][p]$, $\framep[n+2][p]$, and $\restrf[n+1][p]$. The induction step then constructed $\framep[n+3][p]$, $\restrf[n+2][p]$ and $\cohf[n+1][p]$ and inherited $\framep[n+1][p]$, $\framep[n+2][p]$ and $\restrf[n+1][p]$ from the induction hypothesis. This work can be seen as the result of analysing how dependencies are finely organised so that those propositional equations are replaced by definitions of $\framep[n+1][p]$, $\framep[n+2][p]$ and $\restrf[n+1][p]$. That is, the induction hypothesis in \cite{hr25} combines assumptions of the form $\framep[n+1][p] : \HSet$ with equations of the form $\framep[n+1][0] = \unittype$ and $\framep[n+1][p+1] = \Sigma d:\framep[n+1][p].\forall \epsilon.\painting[n][p](\restrf[n][p][0][\epsilon])$. On the other side, these are replaced in the current work by a \emph{definition} of $\frame[n+1][p]$. And similarly for $\framep[n+2][p]$, $\restrf[n+1][p]$, as well as for $\painting[n+1][p]$, $\painting[n+2][p]$, $\restrp[n+1][p]$.
+To address the dependency of $\restrf[n][p]$ in $\framep[n+1][p]$, and that of $\cohf[n][p]$ in $\framep[n+2][p]$ and $\restrf[n+1][p]$ without having to mix the specification of the induction hypothesis and the construction of the next step, the previous work~\cite{hr25} was assuming all of $\framep[n][p]$, $\framep[n+1][p]$, $\framep[n+2][p]$, $\restrf[n][p]$, $\restrf[n+1][p]$, and $\cohf[n][p]$, together with propositional equations defining $\framep[n+1][p]$, $\framep[n+2][p]$, and $\restrf[n+1][p]$. The induction step then constructed $\framep[n+3][p]$, $\restrf[n+2][p]$ and $\cohf[n+1][p]$ and inherited $\framep[n+1][p]$, $\framep[n+2][p]$ and $\restrf[n+1][p]$ from the induction hypothesis. The current work can be seen as the result of analysing how dependencies are finely organised so that those propositional equations are replaced by definitions of $\framep[n+1][p]$, $\framep[n+2][p]$ and $\restrf[n+1][p]$. In other words, in the previous work, the induction hypothesis combines assumptions of the form $\framep[n+1][p] : \HSet$ with equations of the form $\framep[n+1][0] = \unittype$ and $\framep[n+1][p+1] = \Sigma d:\framep[n+1][p].\forall \epsilon.\painting[n][p](\restrf[n][p][0][\epsilon])$. These are replaced by a \emph{definition} of $\frame[n+1][p]$. And similarly for $\framep[n+2][p]$, $\restrf[n+1][p]$, as well as for $\painting[n+1][p]$, $\painting[n+2][p]$, $\restrp[n+1][p]$, in the current work.
 
 \section{Perspectives}
 
-Our construction shows a pattern: start from $\frametype$, define $\paintingtype$, mutually define $\framep$ and $\restrftype$, define $\painting$, define $\restrptype$, mutually define $\restrf$ and $\cohftype$, define $\restrp$, define $\cohptype$, mutually define $\cohf$ and $\cohttype$, define $\cohptype$. On $\HSet$, $\cohttype$ is trivially provable and the construction stopshere. If we were working in an untruncated universe $U$, the construction could go on: prove the coherence at dimension $i$ on frames mutually with the type of coherence on frames at dimension $i+1$, prove the coherence on paintings at dimension $i$, define the type of coherence on paintings at dimension $i+1$ $\cohptype$, and recursively. We believe that such an infinite process can again be represented using streams, that is that a stream made of frames, paintings, frame and painting restrictions as well as frame and painting coherences in all dimensions can be defined. Then, from such a stream of structure at level $n$, we believe that a stream at level $n+1$ can be built, as in section~\ref{sec:detailed-construction}. This would solve the semi-simplicial type problem~\cite{UFwiki2012}.
+Our construction shows a pattern: start from $\frametype$, define $\paintingtype$, mutually define $\framep$ and $\restrftype$, define $\painting$, define $\restrptype$, mutually define $\restrf$ and $\cohftype$, define $\restrp$, define $\cohptype$, mutually define $\cohf$ and $\cohttype$, define $\cohptype$. On $\HSet$, $\cohttype$ is trivially provable and the construction stops here. If we were working in an untruncated universe $U$, the construction would continue recursively: prove the coherence at dimension $i$ on frames mutually with the type of coherence on frames at dimension $i+1$, prove the coherence on paintings at dimension $i$, define the type of coherence on paintings at dimension $i+1$. Such an infinite process can again be represented using streams, so that from a stream at level $n$, a stream at level $n+1$ can be built, as in section~\ref{sec:detailed-construction}. This would solve the semi-simplicial type problem~\cite{UFwiki2012}.
 
 \bibliographystyle{plainurl}
 \bibliography{paper}

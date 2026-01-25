@@ -16,7 +16,22 @@
     "**/Thumbs.db": true,
     "**/.ruby-lsp": true
   },
-  "cSpell.words": ["parameterised"],
+  "cSpell.words": [
+    "cmdkey",
+    "cohframe",
+    "cohlayer",
+    "cohpainting",
+    "eqntable",
+    "fullframe",
+    "parameterised",
+    "restr",
+    "restrframe",
+    "restrlayer",
+    "restrpainting",
+    "Tait",
+    "todotted",
+    "xkeyval"
+  ],
   "python-envs.defaultEnvManager": "ms-python.python:system",
   "python-envs.pythonProjects": []
 }
