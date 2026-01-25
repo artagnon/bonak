@@ -634,17 +634,17 @@ Now, we are able to define $\framep[n+1][\lbrack 0,n+1 \rbrack]$, $\painting[n+1
   \smfontsize
   \begin{array}{llcl}
     \restrptype[n][\lbrack 0,p-1 \rbrack] &
-    \fulldeps[n]                          & :      & \HSet                                                    \\
+    \fulldeps[n]                          & :            & \HSet                                                    \\
     \restrptype[n]                        & \fulldeps[n] & \defeq                                       & \unittype \\
     \restrptype[n][\lbrack 0,p \rbrack]   &
     \fulldeps[n]
-                                          & \defeq & \restrptype[n][\lbrack 0,p-1 \rbrack] \times
+                                          & \defeq       & \restrptype[n][\lbrack 0,p-1 \rbrack] \times
     \left(
     \begin{array}{l}
         \Pi q \leq n-p.\Pi \epsilon.\Pi d:\framep[n+1][p](\deps[n][\lbrack 0,p-1 \rbrack]). \\
         \painting[n+1][p]
         (\fulldeps[n])(d) \rightarrow                                                       \\ \painting[n][p](\restrf[n][p][q][\epsilon](d))\end{array}
-    \right)                                                                                                   \\
+    \right)                                                                                                         \\
   \end{array}
 \end{equation*}
 
@@ -1128,7 +1128,7 @@ Therefore, assuming a construction of $\framep[n][n]$ from $D:\Xto{m}{n}$, we ar
 
 \section{Comparison with previous work\label{sec:previous-work}}
 
-To address the dependency of $\restrf[n][p]$ in $\framep[n+1][p]$, and that of $\cohf[n][p]$ in $\framep[n+2][p]$ and $\restrf[n+1][p]$ without having to mix the specification of the induction hypothesis and the construction of the next step, the previous work~\cite{hr25} was assuming all of $\framep[n][p]$, $\framep[n+1][p]$, $\framep[n+2][p]$, $\restrf[n][p]$, $\restrf[n+1][p]$, and $\cohf[n][p]$, together with propositional equations defining $\framep[n+1][p]$, $\framep[n+2][p]$, and $\restrf[n+1][p]$. The induction step then constructed $\framep[n+3][p]$, $\restrf[n+2][p]$ and $\cohf[n+1][p]$ and inherited $\framep[n+1][p]$, $\framep[n+2][p]$ and $\restrf[n+1][p]$ from the induction hypothesis. The current work can be seen as the result of analysing how dependencies are finely organised so that those propositional equations are replaced by definitions of $\framep[n+1][p]$, $\framep[n+2][p]$ and $\restrf[n+1][p]$. In other words, in the previous work, the induction hypothesis combines assumptions of the form $\framep[n+1][p] : \HSet$ with equations of the form $\framep[n+1][0] = \unittype$ and $\framep[n+1][p+1] = \Sigma d:\framep[n+1][p].\forall \epsilon.\painting[n][p](\restrf[n][p][0][\epsilon])$. These are replaced by a \emph{definition} of $\frame[n+1][p]$. And similarly for $\framep[n+2][p]$, $\restrf[n+1][p]$, as well as for $\painting[n+1][p]$, $\painting[n+2][p]$, $\restrp[n+1][p]$, in the current work.
+To address the dependency of $\restrf[n][p]$ in $\framep[n+1][p]$, and that of $\cohf[n][p]$ in $\framep[n+2][p]$ and $\restrf[n+1][p]$ without having to mix the specification of the induction hypothesis and the construction of the next step, the previous work~\cite{hr25} was assuming all of $\framep[n][p]$, $\framep[n+1][p]$, $\framep[n+2][p]$, $\restrf[n][p]$, $\restrf[n+1][p]$, and $\cohf[n][p]$, together with propositional equations defining $\framep[n+1][p]$, $\framep[n+2][p]$, and $\restrf[n+1][p]$. The induction step then constructed $\framep[n+3][p]$, $\restrf[n+2][p]$ and $\cohf[n+1][p]$ and inherited $\framep[n+1][p]$, $\framep[n+2][p]$ and $\restrf[n+1][p]$ from the induction hypothesis. The current work can be seen as the result of analysing how dependencies are finely organised so that those propositional equations are replaced by definitions of $\framep[n+1][p]$, $\framep[n+2][p]$ and $\restrf[n+1][p]$. In other words, in the previous work, the induction hypothesis combines assumptions of the form $\framep[n+1][p] : \HSet$ with equations of the form $\framep[n+1][0] = \unittype$ and $\framep[n+1][p+1] = \Sigma d:\framep[n+1][p].\forall \epsilon.\painting[n][p](\restrf[n][p][0][\epsilon])$. These are replaced by a \emph{definition} of $\framep[n+1][p]$. And similarly for $\framep[n+2][p]$, $\restrf[n+1][p]$, as well as for $\painting[n+1][p]$, $\painting[n+2][p]$, $\restrp[n+1][p]$, in the current work.
 
 \section{Perspectives}
 
