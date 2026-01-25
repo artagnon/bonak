@@ -324,7 +324,7 @@ We recall from the previous work how to formally define a type characterizing th
 
 Let us sketch how to define iterated parametricity in indexed form. The dependency of $E_{n+1}$ into all $E_p$ for $p \leq n$ makes the family $E$ a \emph{very dependent function}~\cite{Hickey96}. The standard way to express it is as a stream whose $(n+1)$-th element $E_{n+1}$ is dependent on the bundle of all previous elements of the stream. We write $\Xto{m}{n}$ for the bundle of all $E_0, \ldots, E_{n-1}$, and we write $\Xfrom{m}{n}{D}$ for the residual stream $E_{n}, E_{n+1}, \ldots$, which is dependent on the bundle $E:\Xto{m}{n}$ of previous $E_0, \ldots, E_{n-1}$. The type of $E_n$, also dependent on a bundle $D:\Xto{m}{n}$, is denoted $\Xcomp{m}{n}[D=\D]$, as shown on tables~\ref{tab:coind} and~\ref{tab:core}. When $n = 0$, $\Xto{m}{0}$ is degenerated, and reduced to the unit type $\unittype$. Then, $\Xfrom{m}{0}{(\kstar)}$ represents the type of the full stream.
 
-The type $\Xcomp{m}{n}[D={E_0,\ldots,E_{n-1}}]$ of $E_n$ represents a family. It can canonically presented into a form $\fullframe(E_0,\ldots,E_{n-1}) \rightarrow \HSet$ where $\fullframe$ collects all the dependencies of $E_n$. It is recursively defined in table~\ref{tab:frames}, using $\framep$, $\layer$ and $\painting$. A $\fullframe$ describes a boundary of a standard form (simplex, cube), which we decompose into $n$ $\layer$, one per dimension, each of them made of $\nu$ $\painting$ ($\nu=1, \nu=2, \ldots$), where a $\painting$ corresponds to a filled frame. Notice that the type $\layer$ relies on an operator of frame restriction $\restrf$ which is defined in table~\ref{tab:faces}, and this restriction operator is in turn defined using $\restrl$ and $\restrp$.
+The type $\Xcomp{m}{n}[D={E_0,\ldots,E_{n-1}}]$ of $E_n$ represents a family. It can canonically presented into a form $\fullframe(E_0,\ldots,E_{n-1}) \rightarrow \HSet$ where $\fullframe$ collects all the dependencies of $E_n$. It is recursively defined in table~\ref{tab:frames}, using $\framep$, $\layer$ and $\painting$. A $\fullframe$ describes a boundary of a standard form (simplex, cube), which we decompose into $n$ $\layer$, one per dimension, each of them made of $\nu$ $\painting$, where a $\painting$ corresponds to a filled frame. Notice that the type $\layer$ relies on an operator of frame restriction $\restrf$ which is defined in table~\ref{tab:faces}, and this restriction operator is in turn defined using $\restrl$ and $\restrp$.
 
 \def\lab{tab:coind}
 \input{tab-coind.tex}
@@ -398,7 +398,7 @@ The price to pay for this conciseness is mixing the specification of the inducti
 
 The definition of $\framep[n+1][p]$ also depends, via $\layer[n][p-1]$, on $\painting[n][p-1]$. Both via $\painting[n][p-1]$ and $\restrf[n][p-1]$, it depends also on $\framep[n][p-1]$ by typing dependency. This requires us to assume $\framep[n][p-1]$ and $\painting[n][p-1]$. Moreover, the definition of $\framep[n+1][p]$ depends on $\framep[n+1][p-1]$, so $\framep[n][k]$, $\painting[n][k]$, and $\restrf[n][k]$, for $k < p$, need to be known.
 
-We abbreviate the collection of all $\framep[n][k]$ for $k < p$ as $\framep[n][\lbrack 0,p-1 \rbrack]$ and similarly for $\painting[n][\lbrack 0,p-1 \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$. Conversely, if $\framep[n][\lbrack 0,p \rbrack]$ is a non-empty sequence, we will write $\framep[n][\lbrack 0,p-1 \rbrack]$ for the immediate subsequence of length $p$ and $\framep[n][p]$ for the last component of the sequence. We may also write $\framep[n][]$ for $\framep[n][\lbrack 0,0-1 \rbrack]$.
+We abbreviate the collection of all $\framep[n][k]$ for $k < p$ as $\framep[n][\lbrack 0,p-1 \rbrack]$ and similarly for $\painting[n][\lbrack 0,p-1 \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$. Conversely, if $\framep[n][\lbrack 0,p \rbrack]$ is a non-empty sequence, we will write $\framep[n][\lbrack 0,p-1 \rbrack]$ for the immediate subsequence of length $p$ and $\framep[n][p]$ for the last component of the sequence. We may also write $\framep[n]$ for $\framep[n][\lbrack 0,0-1 \rbrack]$.
 
 Schematically, using dotted arrows for dependencies in the type and plain arrows for dependencies in the definition, this gives the following graph of dependencies for $p\leq n+1$.
 
@@ -854,7 +854,7 @@ where we use the ``equality over'' notation $t =_e u$ to mean $\overrightarrow{e
 
 \subsection{Defining frame coherence laws and specifying frame 2-dimensional coherence laws\label{sec:mkcohf}}
 
-With $\cohptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\cohf[n+1][\lbrack 0,p \rbrack]$ and $\cohttype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ from $\fulldepscohs[n]$. Due to reasoning in $\HSet$, we do not need to have $\cohf[n+1][\lbrack 0,p \rbrack]$ depending on a proof of $\cohttype[n][\lbrack 0,p-1 \rbrack]$ as the latter can be proved by uniqueness of identity proofs. Due to UIP, $\cohttype[n][\lbrack 0,p-1 \rbrack]$ only needs to be defined for $p$.
+With $\cohptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\cohf[n+1][\lbrack 0,p \rbrack]$ and $\cohttype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ from $\fulldepscohs[n]$. Due to reasoning in $\HSet$, we do not need to have $\cohf[n+1][\lbrack 0,p \rbrack]$ depending on a proof of $\cohttype[n][\lbrack 0,p-1 \rbrack]$ as the latter can be proved by uniqueness of identity proofs. Also, it is enough to consider $\cohttype[n][p]$ instead of $\cohttype[n][\lbrack 0,p-1 \rbrack]$.
 
 It is also convenient to build $\depscohs[n+1][\lbrack 0,p \rbrack]$ from $\depscoht[n][\lbrack 0,p-1 \rbrack]$, so that we can now build $\framep[n+3][p]$. We implicitly use in $\cohf[n+1][\lbrack 0,p \rbrack]$ that equalities in a $\Sigma$-type are equivalent to the $\Sigma$-type of the underlying equalities.
 
@@ -882,7 +882,7 @@ It is also convenient to build $\depscohs[n+1][\lbrack 0,p \rbrack]$ from $\deps
             \end{array}\right)                                                                                                                                                       \\
     \\
     \cohf[n+1][\lbrack 0,0 \rbrack]             &
-    \unitpoint                                  & \defeq                              & (\unitpoint,\lambda q.\lambda r. \lambda\epsilon. \lambda\omega.\lambda \_.\refl)                                           \\
+    \depscoht[n]                                & \defeq                              & (\unitpoint,\lambda q.\lambda r. \lambda\epsilon. \lambda\omega.\lambda \_.\refl)                                           \\
     \cohf[n+1][\lbrack 0,p+1 \rbrack]           &
     \depscoht[n][\lbrack 0,p \rbrack]           & \defeq                              &
     \left(\begin{array}{l}
@@ -974,14 +974,14 @@ to
 
 This is exactly the type of $\cohl[n][p][q][r][\epsilon][\omega]$ up to functional extensionality relative to $\theta$.
 
-It is also convenient to introduce a notion of full dependencies at the level of the coherence conditions of dimension $2$, that combines a full $\depscoht[n][\lbrack 0,n \rbrack]$ with an extra $E$ at level $n+3$.
+It is also convenient to introduce a notion of full dependencies at the level of the coherence conditions of dimension $2$, that combines a full $\depscoht[n][\lbrack 0,n \rbrack]$ with an extra $E''$ at level $n+3$.
 
 \begin{equation*}
   \smfontsize
   \fulldepscohttype[n] \defeq
   \left(\begin{array}{lll}
       \depscoht[n][\lbrack 0,n \rbrack] & : & \depscohttype[n][\lbrack 0,n \rbrack]                                                                         \\
-      E                                 & : & \framep[n+3][n+3](\overline{\deps}(\overline{\depscohs}(\depscoht[n][\lbrack 0,n \rbrack])))\rightarrow \HSet \\
+      E''                               & : & \framep[n+3][n+3](\overline{\deps}(\overline{\depscohs}(\depscoht[n][\lbrack 0,n \rbrack])))\rightarrow \HSet \\
     \end{array}\right)
 \end{equation*}
 
@@ -994,7 +994,7 @@ We can then extend $\overline{\depscohs}$ to build $\fulldepscohs$ from $\fullde
     \overline{\fulldepscohs} & \fulldepscoht[n] & \defeq & \left(
     \begin{array}{l}
         \overline{\depscohs}(\depscoht[n][\lbrack 0,n \rbrack]) \\
-        E                                                       \\
+        E''                                                     \\
       \end{array}\right)                       \\
   \end{array}
 \end{equation*}
