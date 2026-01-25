@@ -91,6 +91,7 @@
 
 % Universe, referred to as U
 \newcommandx{\HSet}[1][1=]{\ensuremath{\mathsf{\color{spanish-blue}{HSet}}_{#1}}}
+\newcommand{\HProp}{\ensuremath{\mathsf{\color{spanish-blue}{HProp}}}}
 \newcommandx{\HGpd}[1][1=]{\ensuremath{\mathsf{\color{spanish-blue}{HGpd}}_{#1}}}
 \newcommand{\Type}{\ensuremath{\mathsf{\color{spanish-blue}{Type}}}}
 \newcommand{\SProp}{\ensuremath{\mathsf{\color{spanish-blue}{SProp}}}}
@@ -120,7 +121,6 @@
 \newcommand{\pair}[2]{#1, #2}
 \newcommand{\Dom}{\textsf{Dom}}
 \newcommand{\UIP}{\textsf{UIP}}
-\newcommand{\HProp}{\ensuremath{\mathsf{HProp}}}
 
 \newcommand{\udensdash}[1]{%
     \tikz[baseline=(todotted.base)]{
@@ -394,7 +394,7 @@ The well-foundedness of the construction from tables~\ref{tab:coind} to~\ref{tab
   \end{array}
 \end{equation*}
 
-The price to pay for this conciseness is mixing the specification of the induction hypothesis and the construction of the induction step. On the outset, $\restrf$ depends on $\framep[n+1]$: it already depends on the ability of building the $\framep$ component of the structure at level $n+1$. There is an interdependency between specifying the structure assumed at level $n$ and defining from it the structure at level $n+1$. We have to proceed in a specific order: specifying $\framep[n]$, from which $\painting[n]$ can be specified, from which $\framep[n+1]$ can be built, from which $\restrf[n+1]$ can be specified. Now, the definition of $\framep[n+1][p]$, which proceeds by induction on $p$, itself depends on $\restrf[n][p-1]$ whose type depends in turn on $\framep[n+1][p-1]$. Hence, $\framep[n+1][p]$ and the type of $\restrf[n][p]$ have to be mutually defined.
+The price to pay for this conciseness is to mix the specification of the induction hypothesis with the construction of the induction step. On the outset, $\restrf$ depends on $\framep[n+1]$: it already depends on the ability of building the $\framep$ component of the structure at level $n+1$. There is an interdependency between specifying the structure assumed at level $n$ and defining from it the structure at level $n+1$. We have to proceed in a specific order: specifying $\framep[n]$, from which $\painting[n]$ can be specified, from which $\framep[n+1]$ can be built, from which $\restrf[n+1]$ can be specified. Now, the definition of $\framep[n+1][p]$, which proceeds by induction on $p$, itself depends on $\restrf[n][p-1]$ whose type depends in turn on $\framep[n+1][p-1]$. Hence, $\framep[n+1][p]$ and the type of $\restrf[n][p]$ have to be mutually defined.
 
 The definition of $\framep[n+1][p]$ also depends, via $\layer[n][p-1]$, on $\painting[n][p-1]$. Both via $\painting[n][p-1]$ and $\restrf[n][p-1]$. It depends also on $\framep[n][p-1]$ by typing dependency. This requires us to assume $\framep[n][p-1]$ and $\painting[n][p-1]$. Moreover, the definition of $\framep[n+1][p]$ depends on $\framep[n+1][p-1]$, so $\framep[n][k]$, $\painting[n][k]$, and $\restrf[n][k]$, for $k < p$, need to be known.
 
@@ -856,7 +856,7 @@ where we use the ``equality over'' notation $t =_e u$ to mean $\overrightarrow{e
 
 With $\cohptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\cohf[n+1][\lbrack 0,p \rbrack]$ and $\cohttype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ from $\fulldepscohs[n]$. Due to reasoning in $\HSet$, we do not need to have $\cohf[n+1][\lbrack 0,p \rbrack]$ depending on a proof of $\cohttype[n][\lbrack 0,p-1 \rbrack]$ as the latter can be proved by uniqueness of identity proofs. It is enough to consider $\cohttype[n][p]$ instead of $\cohttype[n][\lbrack 0,p-1 \rbrack]$.
 
-It is convenient to build $\depscohs[n+1][\lbrack 0,p \rbrack]$ from $\depscoht[n][\lbrack 0,p-1 \rbrack]$, so that we can now build $\framep[n+3][p]$. We implicitly use in $\cohf[n+1][\lbrack 0,p \rbrack]$ that equalities in a $\Sigma$-type are equivalent to the $\Sigma$-type of the underlying equalities.
+It is also convenient to build $\depscohs[n+1][\lbrack 0,p \rbrack]$ from $\depscoht[n][\lbrack 0,p-1 \rbrack]$, so that we can now build $\framep[n+3][p]$. We implicitly use in $\cohf[n+1][\lbrack 0,p \rbrack]$ that equalities in a $\Sigma$-type are equivalent to the $\Sigma$-type of the underlying equalities.
 
 \begin{equation*}
   \smfontsize
