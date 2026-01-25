@@ -394,7 +394,8 @@ The well-foundedness of the construction from tables~\ref{tab:coind} to~\ref{tab
 
 The price to pay for this conciseness is mixing the specification of the induction hypothesis and the construction of the induction step. On the outset, $\restrf$ depends on $\framep[n+1]$: it already depends on the ability of building the $\framep$ component of the structure at level $n+1$. There is an interdependency between specifying the structure assumed at level $n$ and defining from it the structure at level $n+1$. We have to proceed in a specific order: specifying $\framep[n]$, from which $\painting[n]$ can be specified, from which $\framep[n+1]$ can be built, from which $\restrf[n+1]$ can be specified. Now, the definition of $\framep[n+1][p]$, which proceeds by induction on $p$, itself depends on $\restrf[n][p-1]$ whose type depends in turn on $\framep[n+1][p-1]$. Hence, $\framep[n+1][p]$ and the type of $\restrf[n][p]$ have to be mutually defined.
 
-The definition of $\framep[n+1][p]$ also depends, via $\layer[n][p-1]$, on $\painting[n][p-1]$. Both via $\painting[n][p-1]$ and $\restrf[n][p-1]$, it depends also on $\framep[n][p-1]$ by typing dependency. This requires us to assume $\framep[n][p-1]$ and $\painting[n][p-1]$. Moreover, the definition of $\framep[n+1][p]$ depends on $\framep[n+1][p-1]$, so $\framep[n][k]$, $\painting[n][k]$, and $\restrf[n][k]$, for $k < p$, need to be known. We abbreviate the collection of all $\framep[n][k]$ for $k < p$ as $\framep[n][\lbrack 0,p-1 \rbrack]$ and similarly for $\painting[n][\lbrack 0,p-1 \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$. Schematically, using dotted arrows for dependencies in the type and plain arrows for dependencies in the definition, this gives the following graph of dependencies for $p\leq n+1$.
+The definition of $\framep[n+1][p]$ also depends, via $\layer[n][p-1]$, on $\painting[n][p-1]$. Both via $\painting[n][p-1]$ and $\restrf[n][p-1]$, it depends also on $\framep[n][p-1]$ by typing dependency. This requires us to assume $\framep[n][p-1]$ and $\painting[n][p-1]$. Moreover, the definition of $\framep[n+1][p]$ depends on $\framep[n+1][p-1]$, so $\framep[n][k]$, $\painting[n][k]$, and $\restrf[n][k]$, for $k < p$, need to be known. We abbreviate the collection of all $\framep[n][k]$ for $k < p$ as $\framep[n][\lbrack 0,p-1 \rbrack]$ and similarly for $\painting[n][\lbrack 0,p-1 \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$. Conversely, if $\framep[n][\lbrack 0,p \rbrack]$ is a non-empty sequence, we will write $\framep[n][\lbrack 0,p-1 \rbrack]$ for the immediate subsequence of length $p$ and $\framep[n][p]$ for the last component of the sequence.
+Schematically, using dotted arrows for dependencies in the type and plain arrows for dependencies in the definition, this gives the following graph of dependencies for $p\leq n+1$.
 
 \begin{center}
   \begin{tikzcd}
@@ -438,7 +439,29 @@ which can be reformulated using sequences for appropriate definitions of $\frame
   \end{array}
 \end{equation*}
 
-Types such as $\restrftype[n][\lbrack 0,p \rbrack]$ will be represented by iterated $\Sigma$-types since each $\restrf[n][p]$ may depend on the previous components of the sequence. In the case of $\framep$ and $\painting$, there is no dependency, so an ordinary product can be used to represent $\frametype[n][\lbrack 0,p \rbrack]$ and $\paintingtype[n][\lbrack 0,p \rbrack]$. In the following sections, we will write $\framep[n][\lbrack 0,p-1 \rbrack]$ for the immediate subsequence of length $p$ of $\framep[n][\lbrack 0,p \rbrack]$ and $\framep[n][p]$ for its last component.
+Types such as $\restrftype[n][\lbrack 0,p \rbrack]$ will be represented by iterated $\Sigma$-types since each $\restrf[n][p]$ may depend on the previous components of the sequence. In the case of $\framep$ and $\painting$, there is no dependency, so an ordinary product can be used to represent $\frametype[n][\lbrack 0,p \rbrack]$ and $\paintingtype[n][\lbrack 0,p \rbrack]$.
+
+Let us turn now to the specification of $\restrp[n][p]$. Since it depends on $\painting[n+1][p]$, we need first to define $\painting[n+1][p]$ but in addition to the type dependency in $\framep[n+1][p]$, this requires the definition of $\painting[n][p-1]$, $\framep[n][p-1]$ by typing dependency, and $\restrf[n][p-1]$. Since $\painting[n+1][p]$ also depends on $\painting[n+1][p+1]$ when $p < n+1$, these dependencies are actually between $\painting[n+1][\lbrack p,n+1 \rbrack]$, $\painting[n][\lbrack p,n \rbrack]$, $\framep[n+1][\lbrack p,n+1 \rbrack]$, $\framep[n][\lbrack p,n \rbrack]$, and $\restrf[n][\lbrack p,n \rbrack]$. For $p = n$, this requires the assumption of an inhabitant $E_n$ of $\Xcomp{m}{n}$. Finally, $\framep[n+1][\lbrack p,n+1 \rbrack]$ depends on $\framep[n+1][\lbrack 0,p-1 \rbrack]$, $\framep[n+1][\lbrack p,n \rbrack]$ on $\framep[n][\lbrack 0,p-1 \rbrack]$, and $\restrf[n][\lbrack p,n \rbrack]$ on $\restrf[n][\lbrack 0,p-1 \rbrack]$.
+
+\begin{center}
+  \begin{tikzcd}
+    & & \painting[n+1][\lbrack p,n+1 \rbrack] \arrow[dd, bend right=70] \arrow[dddr] \arrow[d, dotted]\\
+    \udensdash{\framep[n+1][\lbrack 0,p-1 \rbrack]} \arrow[d, dashed] \arrow[ddr, dashed] & &
+    \udensdash{\framep[n+1][\lbrack p,n+1 \rbrack]} \arrow[ll, dotted] \arrow[d, dashed] \arrow[ddr, dashed, shift right=2mm] \\
+    \painting[n][\lbrack 0,p-1 \rbrack] \arrow[d, dotted] & &
+    \painting[n][\lbrack p,n-1 \rbrack] \arrow[ll, dotted] \arrow[d, dotted] \\
+    \framep[n][\lbrack 0,p-1 \rbrack] &
+    \udensdash{\restrf[n][\lbrack 0,p-1 \rbrack]} \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm, hook'] &
+    \framep[n][\lbrack p,n \rbrack] \arrow[ll, dotted, bend left=15] &
+    \udensdash{\restrf[n+1][\lbrack p,n \rbrack]},X_n \arrow[ll, dotted, bend left=15] \arrow[l, dotted] \arrow[uul, dotted, hook'] \\
+  \end{tikzcd}
+\end{center}
+
+This is eventually enough to specify $\restrp[n][\lbrack 0,p \rbrack]$ so that we can focus on the specification of $\cohf[n][p]$. An analysis similar to the one done for $\restrf[n][p]$ leads to conclude that the specification of $\cohf[n][\lbrack 0,p \rbrack]$ should be done mutually with the definition of $\restrf[n][\lbrack 0,p \rbrack]$.
+
+Then, $\cohp[n][p]$ has to be specified, for which the same analysis done for specifying $\restrp[n][p]$ applies. In particular, it requires first to define $\restrp[n+1][\lbrack 0,p \rbrack]$.
+
+The specification of the six fields being complete, the induction step can be built. All of $\framep[n+1][\lbrack 0,p \rbrack]$, $\painting[n+1][\lbrack 0,p \rbrack]$, $\restrf[n+1][\lbrack 0,p \rbrack]$ and $\restrp[n+1][\lbrack 0,p \rbrack]$ have already been built, so only the construction of $\cohf[n+1][\lbrack 0,p \rbrack]$ and $\cohp[n+1][\lbrack 0,p \rbrack]$ remains to be done. The details follow.
 
 \subsection{Specifying frames}
 
@@ -553,22 +576,6 @@ Once a $\deps:\depstype$ is assumed, we freely refer to $\framep$, $\painting$, 
 \end{equation*}
 
 \subsection{Defining paintings\label{sec:mkpainting}}
-
-Defining $\painting[n+1][p]$ for $p \leq n+1$, in addition to the type dependency in $\framep[n+1][p]$, requires the definition of $\painting[n][p-1]$, $\framep[n][p-1]$ by typing dependency, and $\restrf[n][p-1]$. Since $\painting[n+1][p]$ also depends on $\painting[n+1][p+1]$ when $p < n+1$, these dependencies are actually between $\painting[n+1][\lbrack p,n+1 \rbrack]$, $\painting[n][\lbrack p,n \rbrack]$, $\framep[n+1][\lbrack p,n+1 \rbrack]$, $\framep[n][\lbrack p,n \rbrack]$, and $\restrf[n][\lbrack p,n \rbrack]$. For $p = n$, this requires the assumption of an inhabitant $E_n$ of $\Xcomp{m}{n}$. Finally, $\framep[n+1][\lbrack p,n+1 \rbrack]$ depends on $\framep[n+1][\lbrack 0,p-1 \rbrack]$, $\framep[n+1][\lbrack p,n \rbrack]$ on $\framep[n][\lbrack 0,p-1 \rbrack]$, and $\restrf[n][\lbrack p,n \rbrack]$ on $\restrf[n][\lbrack 0,p-1 \rbrack]$.  Below, we use dashed underline and dashed arrows for dependencies in subconstructions.
-
-\begin{center}
-  \begin{tikzcd}
-    & & \painting[n+1][\lbrack p,n+1 \rbrack] \arrow[dd, bend right=70] \arrow[dddr] \arrow[d, dotted]\\
-    \udensdash{\framep[n+1][\lbrack 0,p-1 \rbrack]} \arrow[d, dashed] \arrow[ddr, dashed] & &
-    \udensdash{\framep[n+1][\lbrack p,n+1 \rbrack]} \arrow[ll, dotted] \arrow[d, dashed] \arrow[ddr, dashed, shift right=2mm] \\
-    \painting[n][\lbrack 0,p-1 \rbrack] \arrow[d, dotted] & &
-    \painting[n][\lbrack p,n-1 \rbrack] \arrow[ll, dotted] \arrow[d, dotted] \\
-    \framep[n][\lbrack 0,p-1 \rbrack] &
-    \udensdash{\restrf[n][\lbrack 0,p-1 \rbrack]} \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm, hook'] &
-    \framep[n][\lbrack p,n \rbrack] \arrow[ll, dotted, bend left=15] &
-    \udensdash{\restrf[n+1][\lbrack p,n \rbrack]},X_n \arrow[ll, dotted, bend left=15] \arrow[l, dotted] \arrow[uul, dotted, hook']\\
-  \end{tikzcd}
-\end{center}
 
 Let us introduce another abbreviation to combine a full $\deps[n][\lbrack 0,n \rbrack]:\depstype[n][\lbrack 0,n \rbrack]$ with a family $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack])\rightarrow \U$. When $n$ is $0$, we write $E$ to denote an element of $\fulldepstype[0]$ where all other components are degenerate.
 
@@ -763,13 +770,13 @@ We can then extend $\overline{\deps}$ to build $\fulldeps$ from $\fulldepscohs$.
 
 \begin{equation*}
   \smfontsize
-  \begin{array}{lcl}
-    \overline{\fulldeps}(\fulldepscohs[n]) & :      & \fulldepstype[n+1] \\
-    \overline{\fulldeps}(\fulldepscohs[n]) & \defeq & \left(
+  \begin{array}{llcl}
+    \overline{\fulldeps} & \fulldepscohs[n] & :      & \fulldepstype[n+1] \\
+    \overline{\fulldeps} & \fulldepscohs[n] & \defeq & \left(
     \begin{array}{l}
         \overline{\deps}(\depscohs[n][\lbrack 0,n \rbrack]) \\
         E                                                   \\
-      \end{array}\right)                  \\
+      \end{array}\right)                   \\
   \end{array}
 \end{equation*}
 
@@ -908,24 +915,26 @@ It is also convenient to build $\depscohs[n+1][\lbrack 0,p \rbrack]$ from $\deps
 where $\cohttype[n][p]$ is:
 \begin{equation*}
   \smfontsize
-  \cohttype[n][p](\depscoht[n][\lbrack 0,p \rbrack]) \defeq
-  \left\{
-  \begin{array}{l}
-    \Pi q \leq n-p.\,\Pi r \leq q.\,\Pi \epsilon.\,\Pi \omega.\,\Pi \theta.\,\Pi d.                                                     \\
-    \cohf[n][p][r][0][\omega][\theta](\restrf[n+2][p][q+2][\epsilon](\overline{\depscohs}(\depscoht[n][\lbrack 0,p \rbrack]))(d)) \circ \\
-    \ap\restrf[n][p][r][\omega](\cohf[n+1][p][q+1][0][\epsilon][\theta]
-    (\depscoht[n][p])(d))
-    \circ                                                                                                                               \\
-    \cohf[n][p][q][r][\epsilon][\omega](\restrf[n+2][p][0][\theta](\overline{\depscohs}(\depscoht[n][\lbrack 0,p \rbrack]))(d)) =       \\
-    \ap\restrf[n][p][0][\theta](\cohf[n+1][p][q+1][r+1][\epsilon][\omega]
-    (\depscoht[n][p])(d))
-    \circ                                                                                                                               \\
-    \cohf[n][p][q][0][\epsilon][\theta](\restrf[n+2][p][r+1][\omega](\overline{\depscohs}(\depscoht[n][\lbrack 0,p \rbrack]))(d))
-    \circ                                                                                                                               \\
-    \ap\restrf[n][p][q][\epsilon](\cohf[n+1][p][r][0][\omega][\theta]
-    (\depscoht[n][p])(d))
+  \begin{array}{llcl}
+    \cohttype[n][p] & \depscoht[n][\lbrack 0,p \rbrack] & \defeq &
+    \left\{
+    \begin{array}{l}
+      \Pi q \leq n-p.\,\Pi r \leq q.\,\Pi \epsilon.\,\Pi \omega.\,\Pi \theta.\,\Pi d.                                                     \\
+      \cohf[n][p][r][0][\omega][\theta](\restrf[n+2][p][q+2][\epsilon](\overline{\depscohs}(\depscoht[n][\lbrack 0,p \rbrack]))(d)) \circ \\
+      \ap\restrf[n][p][r][\omega](\cohf[n+1][p][q+1][0][\epsilon][\theta]
+      (\depscoht[n][p])(d))
+      \circ                                                                                                                               \\
+      \cohf[n][p][q][r][\epsilon][\omega](\restrf[n+2][p][0][\theta](\overline{\depscohs}(\depscoht[n][\lbrack 0,p \rbrack]))(d)) =       \\
+      \ap\restrf[n][p][0][\theta](\cohf[n+1][p][q+1][r+1][\epsilon][\omega]
+      (\depscoht[n][p])(d))
+      \circ                                                                                                                               \\
+      \cohf[n][p][q][0][\epsilon][\theta](\restrf[n+2][p][r+1][\omega](\overline{\depscohs}(\depscoht[n][\lbrack 0,p \rbrack]))(d))
+      \circ                                                                                                                               \\
+      \ap\restrf[n][p][q][\epsilon](\cohf[n+1][p][r][0][\omega][\theta]
+      (\depscoht[n][p])(d))
+    \end{array}
+    \right.
   \end{array}
-  \right.
 \end{equation*}
 where the functoriality of equality and transport was used to go\footnote{omitting the $\framep$ argument} from:
 \begin{equation*}
@@ -978,13 +987,13 @@ We can then extend $\overline{\depscohs}$ to build $\fulldepscohs$ from $\fullde
 
 \begin{equation*}
   \smfontsize
-  \begin{array}{lcl}
-    \overline{\fulldepscohs}(\fulldepscoht[n]) & :      & \fulldepscohstype[n+1] \\
-    \overline{\fulldepscohs}(\fulldepscoht[n]) & \defeq & \left(
+  \begin{array}{llcl}
+    \overline{\fulldepscohs} & \fulldepscoht[n] & :      & \fulldepscohstype[n+1] \\
+    \overline{\fulldepscohs} & \fulldepscoht[n] & \defeq & \left(
     \begin{array}{l}
         \overline{\depscohs}(\depscoht[n][\lbrack 0,n \rbrack]) \\
         E                                                       \\
-      \end{array}\right)                      \\
+      \end{array}\right)                       \\
   \end{array}
 \end{equation*}
 
