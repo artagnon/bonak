@@ -174,6 +174,9 @@
 % Kerning for star
 \newcommand{\kstar}{{\star}}
 
+% The link arrow
+\newcommand{\linkarrow}{\texorpdfstring{$\hookrightarrow$}{↪}}
+
 % The eqntable environment
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 \NewEnviron{eqntable}[1]{
@@ -469,7 +472,7 @@ Then, $\cohp[n][p]$ has to be specified, for which the same analysis done for sp
 
 The specification of the six fields being complete, the induction step can be built. All of $\framep[n+1][\lbrack 0,p \rbrack]$, $\painting[n+1][\lbrack 0,p \rbrack]$, $\restrf[n+1][\lbrack 0,p \rbrack]$ and $\restrp[n+1][\lbrack 0,p \rbrack]$ have already been built, so only the construction of $\cohf[n+1][\lbrack 0,p \rbrack]$ and $\cohp[n+1][\lbrack 0,p \rbrack]$ remains to be done. The details follow.
 
-\subsection{Specifying frames\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkFrameTypes}{$\hookrightarrow$}}
+\subsection{Specifying frames\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkFrameTypes}{\linkarrow}}
 Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ only requires defining the type of frames, which are just $p$-ary products of $\HSet$.
 
 \begin{equation*}
@@ -481,7 +484,7 @@ Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ only requires defi
   \end{array}
 \end{equation*}
 
-\subsection{Specifying paintings\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkPaintingTypes}{$\hookrightarrow$}}
+\subsection{Specifying paintings\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkPaintingTypes}{\linkarrow}}
 
 The types $\paintingtype[n][\lbrack 0,p-1 \rbrack]$ of $\painting[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ are type families over frames, so $\framep[n][\lbrack 0,p-1 \rbrack]$ needs to be assumed.
 
@@ -494,7 +497,7 @@ The types $\paintingtype[n][\lbrack 0,p-1 \rbrack]$ of $\painting[n][\lbrack 0,p
   \end{array}
 \end{equation*}
 
-\subsection{Defining frames and specifying frame restrictions\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkRestrFrameTypesAndFrames}{$\hookrightarrow$}\label{sec:mkframe}}
+\subsection{Defining frames and specifying frame restrictions\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkRestrFrameTypesAndFrames}{\linkarrow}\label{sec:mkframe}}
 
 Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ and $\painting[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$, we can mutually define the types $\restrftype[n][\lbrack 0,p-1 \rbrack]$ together with $\framep[n+1][\lbrack 0,p \rbrack]$, as a function from $\restrf[n][\lbrack 0,p-1 \rbrack]$. We introduce the abbreviation $\depstype[n][\lbrack 0,p-1 \rbrack]$ for the combination of sequences of $\framep[n][\lbrack 0,p-1 \rbrack]$, $\painting[n][\lbrack 0,p-1 \rbrack]$ and $\restrf[n][\lbrack 0,p-1 \rbrack]$.
 
@@ -580,7 +583,7 @@ Once a $\deps: \depstype$ is assumed, we freely refer to $\framep$, $\painting$,
   \end{array}
 \end{equation*}
 
-\subsection{Defining paintings\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkPaintings}{$\hookrightarrow$}\label{sec:mkpainting}}
+\subsection{Defining paintings\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkPaintings}{\linkarrow}\label{sec:mkpainting}}
 
 Let us introduce another abbreviation to combine a full $\deps[n][\lbrack 0,n \rbrack]:\depstype[n][\lbrack 0,n \rbrack]$ with a family $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack])\rightarrow \HSet$.
 
@@ -626,7 +629,7 @@ From this, we can deduce $\painting[n+1][\lbrack 0,p-1 \rbrack]$ for $p \leq n+2
   \end{array}
 \end{equation*}
 
-\subsection{Specifying painting restrictions\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkRestrPaintingTypes}{$\hookrightarrow$}}
+\subsection{Specifying painting restrictions\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkRestrPaintingTypes}{\linkarrow}}
 
 Now, we are able to define $\framep[n+1][\lbrack 0,n+1 \rbrack]$, $\painting[n+1][\lbrack 0,n+1 \rbrack]$ and $\restrftype[n][\lbrack 0,n \rbrack]$ from $\deps[n][\lbrack 0,n \rbrack]$. To go further, we need to specify the sequence of types of painting restrictions, for $p \leq n+1$.
 
@@ -648,7 +651,7 @@ Now, we are able to define $\framep[n+1][\lbrack 0,n+1 \rbrack]$, $\painting[n+1
   \end{array}
 \end{equation*}
 
-\subsection{Defining frame restrictions and specifying frame coherence laws\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkCohFrameTypesAndRestrFrames}{$\hookrightarrow$}\label{sec:mkrestrf}}
+\subsection{Defining frame restrictions and specifying frame coherence laws\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkCohFrameTypesAndRestrFrames}{\linkarrow}\label{sec:mkrestrf}}
 
 Thanks to $\restrptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\restrf[n+1][\lbrack 0,p \rbrack]$ and specify $\cohftype[n][\lbrack 0,p-1 \rbrack]$ from $\framep[n][\lbrack 0,n \rbrack]$, $\painting[n][\lbrack 0,n \rbrack]$, $\restrf[n][\lbrack 0,n \rbrack]$, $\restrptype[n][\lbrack 0,p-1 \rbrack]$ and some $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow \HSet$, abbreviating these dependencies and the dependency in a $\cohf[n][\lbrack 0,p-1 \rbrack]$ as $\depscohstype[n][\lbrack 0,p-1 \rbrack]$, and using abbreviations in passing for $\restrl$ and $\restrltype$. It is convenient to build $\deps[n+1][\lbrack 0,p \rbrack]$ from $\depscohs[n][\lbrack 0,p-1 \rbrack]$, so that we can now build $\framep[n+2][p]$ one step further.
 
@@ -785,7 +788,7 @@ We can then extend $\overline{\deps}$ to build $\fulldeps$ from $\fulldepscohs$.
   \end{array}
 \end{equation*}
 
-\subsection{Defining painting restrictions\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkRestrPaintings}{$\hookrightarrow$}\label{sec:mkrestrp}}
+\subsection{Defining painting restrictions\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkRestrPaintings}{\linkarrow}\label{sec:mkrestrp}}
 
 Armed with $\restrf[n+1][\lbrack 0,p \rbrack]$ and $\cohftype[n][\lbrack 0,p-1 \rbrack]$, thus also with $\restrl[n][\lbrack 0,p-1 \rbrack]$, it is now possible to define $\restrp[n+1][p]$ for $p \leq n+1$ by recursion on $n-p$.
 
@@ -828,7 +831,7 @@ from which we can deduce $\restrp[n+1][\lbrack 0,p-1 \rbrack]$ for $p \leq n+2$ 
   \end{array}
 \end{equation*}
 
-\subsection{Specifying painting coherence laws\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkCohPaintingTypes}{$\hookrightarrow$}}
+\subsection{Specifying painting coherence laws\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkCohPaintingTypes}{\linkarrow}}
 
 To go further, we need to specify the type of painting coherence laws.
 
@@ -852,7 +855,7 @@ To go further, we need to specify the type of painting coherence laws.
 \end{equation*}
 where we use the ``equality over'' notation $t =_e u$ to mean $\overrightarrow{e}(t) = u$ whenever $t$ is of some type $P(a)$, $u$ of type $P(b)$ and $e$ a proof of $a = b$.
 
-\subsection{Defining frame coherence laws and specifying frame 2-dimensional coherence laws\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkCohFrames}{$\hookrightarrow$}\label{sec:mkcohf}}
+\subsection{Defining frame coherence laws and specifying frame 2-dimensional coherence laws\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkCohFrames}{\linkarrow}\label{sec:mkcohf}}
 
 With $\cohptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\cohf[n+1][\lbrack 0,p \rbrack]$ and $\cohttype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ from $\fulldepscohs[n]$. Due to reasoning in $\HSet$, we do not need to have $\cohf[n+1][\lbrack 0,p \rbrack]$ depending on a proof of $\cohttype[n][\lbrack 0,p-1 \rbrack]$ as the latter can be proved by uniqueness of identity proofs. It is enough to consider $\cohttype[n][p]$ instead of $\cohttype[n][\lbrack 0,p-1 \rbrack]$.
 
@@ -999,7 +1002,7 @@ We can then extend $\overline{\depscohs}$ to build $\fulldepscohs$ from $\fullde
   \end{array}
 \end{equation*}
 
-\subsection{Defining painting coherence laws\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkCohPaintings}{$\hookrightarrow$}\label{sec:mkcohp}}
+\subsection{Defining painting coherence laws\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkCohPaintings}{\linkarrow}\label{sec:mkcohp}}
 
 The final component of the construction is $\cohp[n+1][p]$ for $p \leq n+1$, defined by recursion on $n-p$:
 
@@ -1038,7 +1041,7 @@ From the latter, we can deduce $\cohp[n+1][\lbrack 0,p-1 \rbrack]$ for $p \leq n
   \end{array}
 \end{equation*}
 
-\subsection{Completing the construction by induction\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mk\%CE\%BDSet}{$\hookrightarrow$}}
+\subsection{Completing the construction by induction\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mk\%CE\%BDSet}{\linkarrow}}
 
 Armed with all the constructions, we are now able to specify the whole structure on which we can reason by induction, for $D:\Xto{m}{n}$ given:
 
