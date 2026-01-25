@@ -320,9 +320,9 @@ For $\nu$ an arity, $1$ in the case of predicates, families and augmented semi-s
 
 \section{High-level description of iterated parametricity in indexed form\label{sec:reminder}}
 
-We recall from the previous work how to formally define a type characterizing the sequences $E_0, E_1, \ldots$. The type theory we consider is with $\Sigma$ and $\Pi$ types, Martin-L\"of identity type $=$, universes $U_m$, a unit type $\unittype$, natural numbers, a definitionally proof-irrelevant inequality on natural numbers, streams, and function extensionality. The non-dependent variants of $\Pi$ and $\Sigma$ are written $\rightarrow$ and $\times$ respectively. The canonical inhabitant of $\unittype$ is written $\kstar$, and the subtype of types $T : U_m$ satisfying $\UIP : \Pi xy : T. \Pi pq : x = y. p = q$ is written $\HSet[m]$. The definitional proof-irrelevance of inequality is not essential, and can be replaced with propositional proof-irrelevance up to a few extra transports. Our use of function extensionality comes from representing $n$-tuples as functions, and can be avoided by representing $n$-tuples as lists.
+We recall from the previous work how to formally define a type characterizing the sequences $E_0, E_1, \ldots$. The type theory we consider is with $\Sigma$ and $\Pi$ types, Martin-L\"of identity type $=$, universes $U_m$, a unit type $\unittype$, natural numbers, a definitionally proof-irrelevant inequality on natural numbers, streams, and function extensionality. The non-dependent variants of $\Pi$ and $\Sigma$ are written $\rightarrow$ and $\times$ respectively. The canonical inhabitant of $\unittype$ is written $\kstar$, and the subtype of types $T : U_m$ satisfying $\UIP : \Pi xy : T. \Pi pq : x = y. p = q$ is written $\HSet[m]$. If $e$ is a proof of $x=y$ and $p$ a proof, we write $\overrightarrow{e}{p}$ for substituting $x$ with $y$ in the statement proved by $p$. The definitional proof-irrelevance of inequality is not essential, and can be replaced with propositional proof-irrelevance up to a few extra transports. Our use of function extensionality comes from representing $n$-tuples as functions, and can be avoided by representing $n$-tuples as lists.
 
-Let us sketch how to define iterated parametricity in indexed form. The dependency of $E_{n+1}$ into all $E_p$ for $p \leq n$ makes the family $E$ a \emph{very dependent function}~\cite{Hickey96}. The standard way to express it is as a stream whose $(n+1)$-th element $E_{n+1}$ is dependent on the bundle of all previous elements of the stream. We write $\Xto{m}{n}$ for the bundle of all $E_0, \ldots, E_{n-1}$, and we write $\Xfrom{m}{n}{D}$ for the residual stream $E_{n}, E_{n+1}, \ldots$, which is dependent on the bundle $E:\Xto{m}{n}$ of previous $E_0, \ldots, E_{n-1}$. The type of $E_n$, also dependent on a bundle $D:\Xto{m}{n}$, is denoted $\Xcomp{m}{n}[D=\D]$, as shown on tables~\ref{tab:coind} and~\ref{tab:core}. When $n = 0$, $\Xto{m}{0}$ is degenerated, and reduced to the unit type $\unittype$. Then, $\Xfrom{m}{0}{(\kstar)}$ represents the type of the full stream $E_0, \ldots, E_n$.
+Let us sketch how to define iterated parametricity in indexed form. The dependency of $E_{n+1}$ into all $E_p$ for $p \leq n$ makes the family $E$ a \emph{very dependent function}~\cite{Hickey96}. The standard way to express it is as a stream whose $(n+1)$-th element $E_{n+1}$ is dependent on the bundle of all previous elements of the stream. We write $\Xto{m}{n}$ for the bundle of all $E_0, \ldots, E_{n-1}$, and we write $\Xfrom{m}{n}{D}$ for the residual stream $E_{n}, E_{n+1}, \ldots$, which is dependent on the bundle $E:\Xto{m}{n}$ of previous $E_0, \ldots, E_{n-1}$. The type of $E_n$, also dependent on a bundle $D:\Xto{m}{n}$, is denoted $\Xcomp{m}{n}[D=\D]$, as shown on tables~\ref{tab:coind} and~\ref{tab:core}. When $n = 0$, $\Xto{m}{0}$ is degenerated, and reduced to the unit type $\unittype$. Then, $\Xfrom{m}{0}{(\kstar)}$ represents the type of the full stream.
 
 The type $\Xcomp{m}{n}[D={E_0,\ldots,E_{n-1}}]$ of $E_n$ represents a family. It can canonically presented into a form $\fullframe(E_0,\ldots,E_{n-1}) \rightarrow \HSet$ where $\fullframe$ collects all the dependencies of $E_n$. It is recursively defined in table~\ref{tab:frames}, using $\framep$, $\layer$ and $\painting$. A $\fullframe$ describes a boundary of a standard form (simplex, cube), which we decompose into $n$ $\layer$, one per dimension, each of them made of $\nu$ $\painting$ ($\nu=1, \nu=2, \ldots$), where a $\painting$ corresponds to a filled frame. Notice that the type $\layer$ relies on an operator of frame restriction $\restrf$ which is defined in table~\ref{tab:faces}, and this restriction operator is in turn defined using $\restrl$ and $\restrp$.
 
@@ -593,7 +593,7 @@ Let us introduce another abbreviation to combine a full $\deps[n][\lbrack 0,n \r
     \end{array}\right)
 \end{equation*}
 
-We can now define $\painting[n+1][p]$ for $p \leq n+1$ by recursion from the base case $n+1$, and down to $p$:
+We can now define $\painting[n+1][p]$ for $p \leq n+1$ by recursion from the base case $n+1$, and down to $p$.
 
 \begin{equation*}
   \smfontsize
@@ -610,7 +610,7 @@ We can now define $\painting[n+1][p]$ for $p \leq n+1$ by recursion from the bas
   \end{array}
 \end{equation*}
 
-From which we can deduce $\painting[n+1][\lbrack 0,p-1 \rbrack]$ for $p \leq n+2$ by a second recursion, this time on $p$:
+From this, we can deduce $\painting[n+1][\lbrack 0,p-1 \rbrack]$ for $p \leq n+2$ by a second recursion, this time on $p$.
 
 \begin{equation*}
   \smfontsize
@@ -700,8 +700,8 @@ Thanks to $\restrptype[n][\lbrack 0,p-1 \rbrack]$, we can mutually define $\rest
             \end{array}\right)    & :                                   & \HSet                                                                        \\
     \cohftype[n]                            &
     \left(\begin{array}{l}
-              E          \\
-              \unitpoint \\
+              \fulldeps[n] \\
+              \unitpoint   \\
             \end{array}\right)                  & \defeq                              &
     \unittype                                                                                                                                        \\
     \cohftype[n][\lbrack 0,p \rbrack]       &
@@ -787,7 +787,7 @@ We can then extend $\overline{\deps}$ to build $\fulldeps$ from $\fulldepscohs$.
 
 \subsection{Defining painting restrictions\label{sec:mkrestrp}}
 
-Armed with $\restrf$ and $\cohftype$, it is now possible to define $\restrp[n+1][p]$ for $p \leq n+1$ by recursion on $n-p$.
+Armed with $\restrf[n+1][\lbrack 0,p \rbrack]$ and $\cohftype[n][\lbrack 0,p-1 \rbrack]$, thus also with $\restrl[n][\lbrack 0,p-1 \rbrack]$, it is now possible to define $\restrp[n+1][p]$ for $p \leq n+1$ by recursion on $n-p$.
 
 \begin{equation*}
   \smfontsize
@@ -812,7 +812,6 @@ Armed with $\restrf$ and $\cohftype$, it is now possible to define $\restrp[n+1]
             \end{array}\right)          \\
   \end{array}
 \end{equation*}
-
 from which we can deduce $\restrp[n+1][\lbrack 0,p-1 \rbrack]$ for $p \leq n+2$ again by a second recursion, this time on $p$.
 
 \begin{equation*}
@@ -831,8 +830,7 @@ from which we can deduce $\restrp[n+1][\lbrack 0,p-1 \rbrack]$ for $p \leq n+2$ 
 
 \subsection{Specifying painting coherence laws}
 
-We can define $\restrf[n+1][\lbrack 0,p \rbrack]$, $\restrp[n+1][\lbrack 0,p \rbrack]$ and $\cohftype[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$
-from $\depscohs[n][\lbrack 0,p-1 \rbrack]$ at the previous level. To go further, we need to define the sequence $\cohptype[n][\lbrack 0,p-1 \rbrack]$ of types of painting coherence laws.
+To go further, we need to specify the type of painting coherence laws.
 
 \begin{equation*}
   \smfontsize
@@ -852,7 +850,6 @@ from $\depscohs[n][\lbrack 0,p-1 \rbrack]$ at the previous level. To go further,
     \right.}                                                                                                                       \\
   \end{array}
 \end{equation*}
-
 where we use the ``equality over'' notation $t =_e u$ to mean $\overrightarrow{e}(t) = u$ whenever $t$ is of some type $P(a)$, $u$ of type $P(b)$ and $e$ a proof of $a = b$.
 
 \subsection{Defining frame coherence laws and specifying frame 2-dimensional coherence laws\label{sec:mkcohf}}
@@ -941,7 +938,7 @@ where $\cohttype[n][p]$ is:
     \right.
   \end{array}
 \end{equation*}
-where the functoriality of equality and transport was used to go\footnote{omitting the $\framep$ argument} from:
+where the functoriality of equality and transport was used to go\footnote{omitting the $\framep$ argument} from
 \begin{equation*}
   \smfontsize
   \Pi \theta.\left(
@@ -958,7 +955,7 @@ where the functoriality of equality and transport was used to go\footnote{omitti
   \end{array}
   \right)
 \end{equation*}
-to:
+to
 \begin{equation*}
   \smfontsize
   \Pi \theta.\left(
