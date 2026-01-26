@@ -913,11 +913,10 @@ It is also convenient to build $\depscohs[n+1][\lbrack 0,p \rbrack]$ from $\deps
     \depscoht[n][\lbrack 0,p \rbrack]           & \defeq                              &
     \left\{\begin{array}{l}
              \lambda d. \lambda l. \lambda \theta. \overrightarrow{\coht[n][p][q][r][\epsilon][\omega][\theta](\fulldepscohs[n])(d)}                             \\
-             (\ap \overrightarrow{\cohf[n][p][r][0][\omega][\theta](\restrf[n+2][p][q+2][\epsilon](\overline{\depscohs}(\depscoht[n][\lbrack 0,p \rbrack]))(d))} \\ (\ap \overrightarrow{\cohf[n+1][p][q+1][0][\epsilon][\theta](\depscoht[n][\lbrack 0,p-1 \rbrack])(d)} \\(\cohp[n][p][q][r][\epsilon][\omega](l_\theta)))) \\
+             (\ap \overrightarrow{\cohf[n][p][r][0][\omega][\theta](\restrf[n+2][p][q+2][\epsilon](\overline{\depscohs}(\depscoht[n][\lbrack 0,p \rbrack]))(d))} \\ (\ap \overrightarrow{\ap\restrf[n][p][r][\omega](\cohf[n+1][p][q+1][0][\epsilon][\theta](\depscoht[n][\lbrack 0,p-1 \rbrack])(d))} \\(\cohp[n][p][q][r][\epsilon][\omega](l_\theta)))) \\
            \end{array}\right.
   \end{array}
 \end{equation*}
-
 where $\ap$ applies a function on both sides of an equality and $\cohttype[n][p]$ is:
 \begin{equation*}
   \smfontsize
@@ -942,41 +941,37 @@ where $\ap$ applies a function on both sides of an equality and $\cohttype[n][p]
     \right.
   \end{array}
 \end{equation*}
-where $\coht$ and a few groupoid properties of equality were used to go\footnote{omitting the $\framep$ and $\restrf$ arguments} from
+where a transport of $\coht$ on the left, functoriality of transport, transitivity of equality and functional extensionality relative to $\theta$ were used to go from the following type\footnote{omitting the $\framep$ argument} of $(\ap \overrightarrow{\cohf[n][p][r][0][\omega][\theta]\ldots}(\ap \overrightarrow{\ap\restrf[n][p][r][\omega](\cohf[n+1][p][q+1][0][\epsilon][\theta]\ldots)}(\cohp[n][p][q][r][\epsilon][\omega](l_\theta))))$
 \begin{equation*}
   \smfontsize
-  \Pi \theta.\left(
   \begin{array}{lcl}
     \begin{array}{l}
-      \overrightarrow{\cohf[n][p][q][0][\epsilon][\theta]}
-      \overrightarrow{\cohf[n+1][p][r][0][\omega][\theta]} \\
+      \overrightarrow{\cohf[n][p][r][0][\omega][\theta]}\overrightarrow{\ap\restrf[n][p][r][\omega](\cohf[n+1][p][q+1][0][\epsilon][\theta])} \\
+      \overrightarrow{\cohf[n][p][q][r][\epsilon][\omega]}
       (\restrp[n][p][q][\epsilon](\restrp[n+1][p][r][\omega](l_\theta)))
-    \end{array} & =_{\cohf[n+1][p][q+1][r+1][\epsilon][\omega]} &
+    \end{array} & = &
     \begin{array}{l}
-      \overrightarrow{\cohf[n][p][r][0][\omega][\theta]}\overrightarrow{\cohf[n+1][p][q+1][0][\epsilon][\theta]} \\
+      \overrightarrow{\cohf[n][p][r][0][\omega][\theta]}\overrightarrow{\ap\restrf[n][p][r][\omega](\cohf[n+1][p][q+1][0][\epsilon][\theta])} \\
       (\restrp[n][p][r][\omega](\restrp[n+1][p][q+1][\epsilon](l_\theta)))
     \end{array}
   \end{array}
-  \right)
 \end{equation*}
-to
+to this unfolding of the type of $\cohl[n][p][q][r][\epsilon][\omega]$
 \begin{equation*}
   \smfontsize
-  \Pi \theta.\left(
   \begin{array}{lcl}
-    \begin{array}{l}
+    \overrightarrow{\cohf[n+1][p][q+1][r+1][\epsilon][\omega]}\,\lambda \theta.\left(
+    \!\!\!\begin{array}{l}
       \overrightarrow{\cohf[n][p][q][0][\epsilon][\theta]}(\restrp[n][p][q][\epsilon] \\
       (\overrightarrow{\cohf[n+1][p][r][0][\omega][\theta]}(\restrp[n+1][p][r][\omega](l_\theta))))
-    \end{array} & =_{\cohf[n+1][p][q+1][r+1][\epsilon][\omega]} &
-    \begin{array}{l}
+    \end{array}\!\!\!\right) \, = \,
+    \,\lambda \theta.\left(
+    \!\!\!\begin{array}{l}
       \overrightarrow{\cohf[n][p][r][0][\omega][\theta]}(\restrp[n][p][r][\omega] \\
       (\overrightarrow{\cohf[n+1][p][q+1][0][\epsilon][\theta]}(\restrp[n+1][p][q+1][\epsilon](l_\theta))))
-    \end{array}
+    \end{array}\!\!\!\right)
   \end{array}
-  \right)
 \end{equation*}
-
-This is exactly the type of $\cohl[n][p][q][r][\epsilon][\omega]$ up to functional extensionality relative to $\theta$.
 
 It is convenient to introduce a notion of full dependencies at the level of the coherence conditions of dimension $2$, that combines a full $\depscoht[n][\lbrack 0,n \rbrack]$ with an extra $E''$ at level $n+3$.
 
