@@ -241,23 +241,23 @@ The internalisation of parametricity in unary indexed form was studied in~\cite{
 \begin{table}[H]
   \begin{tabularx}{\linewidth}{cYcYYc}
     \toprule
-    \makecell{arity}  & \makecell{style} & \makecell{iteration}               & \makecell{relevance}                   & \makecell{logical structure}             \\
+    \makecell{arity}  & \makecell{style}   & \makecell{iteration}    & \makecell{relevance}        & \makecell{logical structure}   \\
     \midrule
-    \makecell{unary}  & \makecell{indexed}      & \makecell{non-iterated} & \makecell{proof-irrelevant} & \makecell{predicate}          \\
-                      &                         & \makecell{non-iterated} & \makecell{relevant}         & \makecell{family}             \\
-                      &                         & \makecell{iterated}     & \makecell{relevant}         & \makecell{\emph{this work}}   \\
+    \makecell{unary}  & \makecell{indexed} & \makecell{non-iterated} & \makecell{proof-irrelevant} & \makecell{predicate}           \\
+                      &                    & \makecell{non-iterated} & \makecell{relevant}         & \makecell{family}              \\
+                      &                    & \makecell{iterated}     & \makecell{relevant}         & \makecell{\emph{this work}}    \\
     \midrule
-                      & \makecell{fibred}       & \makecell{non-iterated} & \makecell{proof-irrelevant} & \makecell{subobject}          \\
-                      &                         & \makecell{non-iterated} & \makecell{relevant}         & \makecell{fibration}          \\
-                      &                         & \makecell{iterated}     & \makecell{relevant}         & \makecell{augmented           \\ semi-simplicial set}   \\
+                      & \makecell{fibred}  & \makecell{non-iterated} & \makecell{proof-irrelevant} & \makecell{subobject}           \\
+                      &                    & \makecell{non-iterated} & \makecell{relevant}         & \makecell{fibration}           \\
+                      &                    & \makecell{iterated}     & \makecell{relevant}         & \makecell{augmented            \\ semi-simplicial set}   \\
     \midrule
-    \makecell{binary} & \makecell{indexed}      & \makecell{non-iterated} & \makecell{proof-irrelevant} & \makecell{relation}           \\
-                      &                         & \makecell{non-iterated} & \makecell{relevant}         & \makecell{correspondence}     \\
-                      &                         & \makecell{iterated}     & \makecell{relevant}         & \makecell{\emph{this work}}   \\
+    \makecell{binary} & \makecell{indexed} & \makecell{non-iterated} & \makecell{proof-irrelevant} & \makecell{relation}            \\
+                      &                    & \makecell{non-iterated} & \makecell{relevant}         & \makecell{correspondence}      \\
+                      &                    & \makecell{iterated}     & \makecell{relevant}         & \makecell{\emph{this work}}    \\
     \midrule
-                      & \makecell{fibred}       & \makecell{non-iterated} & \makecell{proof-irrelevant} & \makecell{fibred relation}    \\
-                      &                         & \makecell{non-iterated} & \makecell{relevant}         & span                        & \\
-                      &                         & \makecell{iterated}     & \makecell{relevant}         & \makecell{semi-cubical set}   \\
+                      & \makecell{fibred}  & \makecell{non-iterated} & \makecell{proof-irrelevant} & \makecell{fibred relation}     \\
+                      &                    & \makecell{non-iterated} & \makecell{relevant}         & span                         & \\
+                      &                    & \makecell{iterated}     & \makecell{relevant}         & \makecell{semi-cubical set}    \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -874,10 +874,10 @@ It is also convenient to build $\depscohs[n+1][\lbrack 0,p \rbrack]$ from $\deps
     \overline{\depscohs}                        & \depscoht[n][\lbrack 0,p-1 \rbrack] & :                                                                                 & \depscohstype[n+1][\lbrack 0,p \rbrack] \\
     \overline{\depscohs}                        & \depscoht[n][\lbrack 0,p-1 \rbrack] & \defeq                                                                            &
     \left(\begin{array}{l}
-              \overline{\fulldeps}(\fulldepscohs[n]) \\
-              \restrp[n+1][p](\fulldepscohs[n])                     \\
-              \cohf[n+1][p](\depscoht[n][\lbrack 0,p-1 \rbrack])    \\
-            \end{array}\right)                                                                                                                                                     \\
+              \overline{\fulldeps}(\fulldepscohs[n])             \\
+              \restrp[n+1][p](\fulldepscohs[n])                  \\
+              \cohf[n+1][p](\depscoht[n][\lbrack 0,p-1 \rbrack]) \\
+            \end{array}\right)                                                                                                                                                        \\
     \cohf[n+1][\lbrack 0,p \rbrack]             &
     \depscoht[n][\lbrack 0,p-1 \rbrack]         & :                                   & \cohftype[n+1][\lbrack 0,p \rbrack]
     \left(\begin{array}{l}
@@ -962,14 +962,14 @@ to the unfolding of the type of $\cohl[n][p][q][r][\epsilon][\omega]$ below
   \begin{array}{lcl}
     \overrightarrow{\cohf[n+1][p][q+1][r+1][\epsilon][\omega]}\,\lambda \theta.\!\left(
     \!\!\!\begin{array}{l}
-      \overrightarrow{\cohf[n][p][q][0][\epsilon][\theta]}(\restrp[n][p][q][\epsilon] \\
-      (\overrightarrow{\cohf[n+1][p][r][0][\omega][\theta]}(\restrp[n+1][p][r][\omega](l_\theta))))
-    \end{array}\!\!\!\right) \, = \,
+              \overrightarrow{\cohf[n][p][q][0][\epsilon][\theta]}(\restrp[n][p][q][\epsilon] \\
+              (\overrightarrow{\cohf[n+1][p][r][0][\omega][\theta]}(\restrp[n+1][p][r][\omega](l_\theta))))
+            \end{array}\!\!\!\right) \, = \,
     \,\lambda \theta.\!\left(
     \!\!\!\begin{array}{l}
-      \overrightarrow{\cohf[n][p][r][0][\omega][\theta]}(\restrp[n][p][r][\omega] \\
-      (\overrightarrow{\cohf[n+1][p][q+1][0][\epsilon][\theta]}(\restrp[n+1][p][q+1][\epsilon](l_\theta))))
-    \end{array}\!\!\!\right)
+              \overrightarrow{\cohf[n][p][r][0][\omega][\theta]}(\restrp[n][p][r][\omega] \\
+              (\overrightarrow{\cohf[n+1][p][q+1][0][\epsilon][\theta]}(\restrp[n+1][p][q+1][\epsilon](l_\theta))))
+            \end{array}\!\!\!\right)
   \end{array}
 \end{equation*}
 
