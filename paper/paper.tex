@@ -130,7 +130,7 @@
 }%
 
 % Adjust font size
-\newcommand{\smfontsize}{\fontsize{7.7}{11}\selectfont}
+\newcommand{\smfontsize}{\fontsize{8}{11}\selectfont}
 
 % These are renewed in tables, but let's define them now for in-document
 % typesetting
@@ -221,7 +221,7 @@
 
   In earlier work, equations were given describing the $n$-ary iterated parametricity translation of sets in indexed form. The construction was formalised in Rocq by induction on a large structure embedding equational reasoning.
 
-  The current work analyses the dependency structure of the earlier work leading to a presentation of the construction replacing equational reasoning with definitional reasoning. The new construction is very dependent, based on an induction interestingly requiring to interleave the specification of the induction hypothesis and the construction of the induction step. At the same time, the construction reduced to its computational essence and can be described in full detail, closely following the new machine-checked formalisation.
+  The current work analyses the dependency structure of the earlier work leading to a presentation of the construction replacing equational reasoning with definitional reasoning. The new construction is very dependent, based on an induction that requires interleaving the specification of the induction hypothesis and the construction of the induction step. At the same time, the construction reduced to its computational essence and can be described in full detail, closely following the new machine-checked formalisation.
 \end{abstract}
 
 \section{Introduction}
@@ -264,22 +264,24 @@ The internalisation of parametricity in unary indexed form was studied in~\cite{
 
 \paragraph*{Iterated parametricity in indexed form}
 
-An informal description of semi-simplicial sets in indexed form was given in~\cite{UFwiki2012}. Several formal definitions in type theory were later proposed~\cite{voevodsky12,herbelin15,part15,altenkirch16}. In the previous work, a notion of $\nu$-sets generalising augmented semi-simplicial and semi-cubical sets and reflecting $\nu$-ary iterated parametricity was given~\cite{hr25}, together with a construction of $\nu$-sets in \emph{indexed form}. As an example, for $\nu=2$, instead of semi-cubical sets in fibred form (below, on top), a family of relevant relations was used (below, on bottom).
+An informal description of semi-simplicial sets in indexed form was given in~\cite{UFwiki2012}. Several formal definitions in type theory were later proposed~\cite{voevodsky12,herbelin15,part15,altenkirch16}. In the previous work, a notion of $\nu$-sets generalising augmented semi-simplicial and semi-cubical sets and reflecting $\nu$-ary iterated parametricity was given~\cite{hr25}, together with a construction of $\nu$-sets in \emph{indexed form}. As an example, for $\nu=2$, instead of semi-cubical sets in fibred form, a family of relevant relations was used.
 
-\begin{equation*}
+\begin{equation}
+  \tag{fibred}
   \begin{tikzcd}
     X_0: \HSet & X_1: \HSet \arrow[l, "\partial^L" description, shift left=2] \arrow[l, "\partial^R" description, shift right=2] & X_2: \HSet \arrow[l, "\partial^{L\kstar}" description, shift left=6] \arrow[l, "\partial^{R\kstar}" description, shift left=2] \arrow[l, "\partial^{\kstar L}" description, shift right=2] \arrow[l, "\partial^{\kstar R}" description, shift right=6] & \ldots
   \end{tikzcd}
-\end{equation*}
+\end{equation}
 
-\begin{equation*}
+\begin{equation}
+  \tag{relevant relations}
   \begin{array}{lll}
     E_0 & :               \HSet                                                                          \\
     E_1 & :               E_0 \times E_0 \rightarrow  \HSet                                              \\
     E_2 & : \Pi a b c d.\,  E_1(a,b) \times E_1 (c,d) \times E_1(a,c) \times E_1 (b,d) \rightarrow \HSet \\
     \ldots
   \end{array}
-\end{equation*}
+\end{equation}
 
 % Abbreviated tables in this section
 %
@@ -320,7 +322,7 @@ An informal description of semi-simplicial sets in indexed form was given in~\ci
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][][][][][#9]}
 \renewcommandx{\cohp}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][][][][][#9]}
 
-Equations specifying $\nu$-sets in indexed form were given in the work with an accompanying formalisation in Rocq. The well-foundedness of the construction was by induction on large structure involving equational reasoning. The current work presents a refined construction which we consider expresses the computational recursive essence of the construction.
+Equations specifying $\nu$-sets in indexed form were given, and the well-foundedness of the construction was by induction on large structure involving equational reasoning, in the previous work. The current work presents a refined construction which expresses the computational recursive essence of the construction.
 
 \section{High-level description of iterated parametricity in indexed form\label{sec:reminder}}
 
@@ -470,7 +472,7 @@ This is eventually enough to specify the type $\restrptype[n][\lbrack 0,p \rbrac
 
 Then, $\cohp[n][p]$ has to be specified, for which the same analysis done for specifying $\restrp[n][p]$ applies. In particular, it requires first to define $\restrp[n+1][\lbrack 0,p \rbrack]$.
 
-The specification of the six fields being complete, the induction step can be built. All of $\framep[n+1][\lbrack 0,p \rbrack]$, $\painting[n+1][\lbrack 0,p \rbrack]$, $\restrf[n+1][\lbrack 0,p \rbrack]$ and $\restrp[n+1][\lbrack 0,p \rbrack]$ have already been built, so only the construction of $\cohf[n+1][\lbrack 0,p \rbrack]$ and $\cohp[n+1][\lbrack 0,p \rbrack]$ remains to be done. Details follow.
+The specification of the six fields being complete, the induction step can be built. All of $\framep[n+1][\lbrack 0,p \rbrack]$, $\painting[n+1][\lbrack 0,p \rbrack]$, $\restrf[n+1][\lbrack 0,p \rbrack]$ and $\restrp[n+1][\lbrack 0,p \rbrack]$ have already been built, so only the construction of $\cohf[n+1][\lbrack 0,p \rbrack]$ and $\cohp[n+1][\lbrack 0,p \rbrack]$ remain. Details follow.
 
 \subsection{Specifying frames\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkFrameTypes}{\linkicon}}
 Assuming $\framep[n][\lbrack 0,p-1 \rbrack]$ for $p \leq n+1$ only requires defining the type $\frametype[n][\lbrack 0,p-1 \rbrack]$ of frames, which is just a $p$-ary product of $\HSet$.
@@ -959,18 +961,16 @@ where $\coht$, commutativity of abstraction and application with transport, tran
 to the unfolding of the type of $\cohl[n][p][q][r][\epsilon][\omega]$ below
 \begin{equation*}
   \smfontsize
-  \begin{array}{lcl}
-    \overrightarrow{\cohf[n+1][p][q+1][r+1][\epsilon][\omega]}\,\lambda \theta.\!\left(
-    \!\!\!\begin{array}{l}
-              \overrightarrow{\cohf[n][p][q][0][\epsilon][\theta]}(\restrp[n][p][q][\epsilon] \\
-              (\overrightarrow{\cohf[n+1][p][r][0][\omega][\theta]}(\restrp[n+1][p][r][\omega](l_\theta))))
-            \end{array}\!\!\!\right) \, = \,
-    \,\lambda \theta.\!\left(
-    \!\!\!\begin{array}{l}
-              \overrightarrow{\cohf[n][p][r][0][\omega][\theta]}(\restrp[n][p][r][\omega] \\
-              (\overrightarrow{\cohf[n+1][p][q+1][0][\epsilon][\theta]}(\restrp[n+1][p][q+1][\epsilon](l_\theta))))
-            \end{array}\!\!\!\right)
-  \end{array}
+  \overrightarrow{\cohf[n+1][p][q+1][r+1][\epsilon][\omega]}\,\lambda \theta.\!\left(
+  \!\!\!\begin{array}{l}
+      \overrightarrow{\cohf[n][p][q][0][\epsilon][\theta]}(\restrp[n][p][q][\epsilon] \\
+      (\overrightarrow{\cohf[n+1][p][r][0][\omega][\theta]}(\restrp[n+1][p][r][\omega](l_\theta))))
+    \end{array}\!\!\!\right) \!\!=\!
+  \lambda \theta.\!\left(
+  \!\!\!\begin{array}{l}
+      \overrightarrow{\cohf[n][p][r][0][\omega][\theta]}(\restrp[n][p][r][\omega] \\
+      (\overrightarrow{\cohf[n+1][p][q+1][0][\epsilon][\theta]}(\restrp[n+1][p][q+1][\epsilon](l_\theta))))
+    \end{array}\!\!\!\right)
 \end{equation*}
 
 It is convenient to introduce a notion of full dependencies at the level of the coherence conditions of dimension $2$, that combines a full $\depscoht[n][\lbrack 0,n \rbrack]$ with an extra $E''$ at level $n+3$.
