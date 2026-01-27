@@ -221,7 +221,7 @@
 
   In earlier work, equations were given describing the $n$-ary iterated parametricity translation of sets in indexed form. The construction was formalised in Rocq by induction on a large structure embedding equational reasoning.
 
-  The current work analyses the dependency structure of the earlier work leading to a presentation of the construction replacing equational reasoning with definitional reasoning. The new construction is very dependent, based on an induction that requires interleaving the specification of the induction hypothesis and the construction of the induction step. At the same time, the construction reduced to its computational essence and can be described in full detail, closely following the new machine-checked formalisation.
+  The current work analyses the dependency structure of the earlier work leading to a presentation of the construction replacing equational reasoning with definitional reasoning. The new construction is very dependent, based on an induction that requires interleaving the specification of the induction hypothesis and the construction of the induction step. At the same time, the construction reduces to its computational essence and can be described in full detail, closely following the new machine-checked formalisation.
 \end{abstract}
 
 \section{Introduction}
@@ -322,7 +322,7 @@ An informal description of semi-simplicial sets in indexed form was given in~\ci
 \renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][][][][][#9]}
 \renewcommandx{\cohp}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][][][][][#9]}
 
-Equations specifying $\nu$-sets in indexed form were given, and the well-foundedness of the construction was by induction on large structure involving equational reasoning, in the previous work. The current work presents a refined construction which expresses the computational recursive essence of the construction.
+Equations specifying $\nu$-sets in indexed form were given, and the well-foundedness of the construction was by induction on a large structure involving equational reasoning. The current work presents a refined construction which expresses the computational essence of the construction.
 
 \section{High-level description of iterated parametricity in indexed form\label{sec:reminder}}
 
@@ -452,7 +452,7 @@ This can be reformulated using sequences for appropriate definitions of $\framet
 
 Types such as $\restrftype[n][\lbrack 0,p \rbrack]$ will be represented by iterated $\Sigma$-types since each $\restrf[n][p]$ may depend on the previous components of the sequence. In the case of $\framep$ and $\painting$, there is no dependency, so an ordinary product can be used to represent $\frametype[n][\lbrack 0,p \rbrack]$ and $\paintingtype[n][\lbrack 0,p \rbrack]$.
 
-Let us turn now to the specification of $\restrp[n][p]$. Since it depends on $\painting[n+1][p]$, we need first to define $\painting[n+1][p]$ but in addition to the type dependency in $\framep[n+1][p]$, this requires the definition of $\painting[n][p-1]$, $\framep[n][p-1]$ by typing dependency, and $\restrf[n][p-1]$. Since $\painting[n+1][p]$ also depends on $\painting[n+1][p+1]$ when $p < n+1$, these dependencies are actually between $\painting[n+1][\lbrack p,n+1 \rbrack]$, $\painting[n][\lbrack p,n \rbrack]$, $\framep[n+1][\lbrack p,n+1 \rbrack]$, $\framep[n][\lbrack p,n \rbrack]$, and $\restrf[n][\lbrack p,n \rbrack]$. For $p = n$, this requires the assumption of an inhabitant $E_n$ of $\Xcomp{m}{n}$. Finally, $\framep[n+1][\lbrack p,n+1 \rbrack]$ depends on $\framep[n+1][\lbrack 0,p-1 \rbrack]$, $\framep[n+1][\lbrack p,n \rbrack]$ on $\framep[n][\lbrack 0,p-1 \rbrack]$, and $\restrf[n][\lbrack p,n \rbrack]$ on $\restrf[n][\lbrack 0,p-1 \rbrack]$.
+Let us turn now to the specification of $\restrp[n][p]$. Since it depends on $\painting[n+1][p]$, we need first to define $\painting[n+1][p]$ but in addition to the type dependency in $\framep[n+1][p]$, this requires the definition of $\painting[n][p-1]$, $\framep[n][p-1]$ by typing dependency, and $\restrf[n][p-1]$. Since $\painting[n+1][p]$ also depends on $\painting[n+1][p+1]$ when $p < n+1$, these dependencies are actually between $\painting[n+1][\lbrack p,n+1 \rbrack]$, $\painting[n][\lbrack p,n \rbrack]$, $\framep[n+1][\lbrack p,n+1 \rbrack]$, $\framep[n][\lbrack p,n \rbrack]$, and $\restrf[n][\lbrack p,n \rbrack]$. For $p = n$, this requires the assumption of an inhabitant $E_n$ of $\Xcomp{m}{n}$. Finally, $\framep[n+1][\lbrack p,n+1 \rbrack]$ depends on $\framep[n+1][\lbrack 0,p-1 \rbrack]$, $\framep[n+1][\lbrack p,n \rbrack]$ on $\framep[n][\lbrack 0,p-1 \rbrack]$, and $\restrf[n][\lbrack p,n \rbrack]$ on $\restrf[n][\lbrack 0,p-1 \rbrack]$, leading to the following graph of dependencies where indirect dependencies in definitions are now dashed lines.
 
 \begin{center}
   \begin{tikzcd}
@@ -464,7 +464,7 @@ Let us turn now to the specification of $\restrp[n][p]$. Since it depends on $\p
     \framep[n][\lbrack 0,p-1 \rbrack] &
     \udensdash{\restrf[n][\lbrack 0,p-1 \rbrack]} \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm, hook'] &
     \framep[n][\lbrack p,n \rbrack] \arrow[ll, dotted, bend left=15] &
-    \udensdash{\restrf[n+1][\lbrack p,n \rbrack]},X_n \arrow[ll, dotted, bend left=15] \arrow[l, dotted] \arrow[uul, dotted, hook'] \\
+    \udensdash{\restrf[n+1][\lbrack p,n \rbrack]},E_n \arrow[ll, dotted, bend left=15] \arrow[l, dotted] \arrow[uul, dotted, hook'] \\
   \end{tikzcd}
 \end{center}
 
