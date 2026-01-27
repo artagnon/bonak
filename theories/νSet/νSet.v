@@ -10,7 +10,7 @@ Set Keyed Unification.
 Section νSet.
 Variable arity: HSet.
 
-(** The type of lists [frame(n,0);...;frame(n,p-1)] for arbitrary k := n-p
+(** The type of lists {frame(n,0);...;frame(n,p-1)} for arbitrary k := n-p
     (the non-mandatory dependency in k is useful for type inference) *)
 
 Fixpoint mkFrameTypes p k: Type :=
@@ -19,7 +19,7 @@ Fixpoint mkFrameTypes p k: Type :=
   | S p => { frames: mkFrameTypes p k.+1 &T HSet }
   end.
 
-(** The type of lists [painting(n,0);...;painting(n,p-1)] for n := k+p *)
+(** The type of lists {painting(n,0);...;painting(n,p-1)} for n := k+p *)
 
 Fixpoint mkPaintingTypes p k: mkFrameTypes p k -> Type :=
   match p with
@@ -37,29 +37,29 @@ Class RestrFrameTypeBlock p k := {
 }.
 
 (**
-For n and p<=n be given, and assuming [frame(n,0);...;frame(n,p)] and
-[painting(n,0);...;painting(n,p)], we build the list of pairs:
+For n and p<=n be given, and assuming {frame(n,0);...;frame(n,p)} and
+{painting(n,0);...;painting(n,p)}, we build the list of pairs:
 - of the types RestrFrameTypes(n,p) of the list
-  [restrFrame(n,0);...;restrFrame(n,p-1)]
+  {restrFrame(n,0);...;restrFrame(n,p-1)}
   (represented as an inhabitant of a sigma-type
    {R:RestrFrameTypes(n,0) & ... & RestrFrameTypes(n,p-1)})
-- and of the list [frame(n+1,0);...;frame(n+1,p)] in function of effective
+- and of the list {frame(n+1,0);...;frame(n+1,p)} in function of effective
   restrFrames of type RestrFrameTypes(n,p)
 
 That is, we build:
-  p = 0 : { RestrFrameTypes(n,0..0-1) := unit ;
+- p = 0 : { RestrFrameTypes(n,0..0-1) := unit ;
                   (which denotes the empty list of restrFrameTypes)
-            Frames(n+1,0..0)(restrFrames^n_{0..0-1}) := [unit]
+            Frames(n+1,0..0)(restrFrames^n_{0..0-1}) := {unit}
                   (representing lists by Sigma-types) }
-  p = 1 : { RestrFrameTypes(n,0..0) = {_:unit & restrFrameType(n,0)} ;
-                  (thus denoting the singleton list [restrFrameType(n,0])
+- p = 1 : { RestrFrameTypes(n,0..0) = {_:unit & restrFrameType(n,0)} ;
+                  (thus denoting the singleton list {restrFrameType(n,0})
             Frames(n+1,0..1)(restrFrames(n,0..0) :=
-                  [unit;{d:Frame(n,0)&Painting(n,0)(restrFrame(n,0)(d)}] }
-  ...
-  p     : { RestrFrameTypes(n,0..p-1) =
+                  {unit;{d:Frame(n,0)&Painting(n,0)(restrFrame(n,0)(d)}} }
+- ...
+- p     : { RestrFrameTypes(n,0..p-1) =
               {RestrFrameType(n,0) & ... & RestrFrameType(n,p-1)} ;
             Frames(n+1,0..p)(restrFrames(n,0..p-1)) :=
-              [frame(n+1,0);...;frame(n+1,p)] }
+              {frame(n+1,0);...;frame(n+1,p)} }
 
   In practise, it is convenient to work with the difference k := n-p
   rather than n itself. So, below, k is the difference.
@@ -145,7 +145,7 @@ Bind Scope extra_depsrestr_scope with DepsRestrExtension.
 Notation "( x ; y )" := (AddRestrDep x y)
   (at level 0, format "( x ; y )"): extra_depsrestr_scope.
 
-(* Example: if p := 0, extraDeps := ([],E) mkPainting:= [E] *)
+(* Example: if p := 0, extraDeps := ({},E) mkPainting:= {E} *)
 
 Generalizable Variables deps.
 
@@ -218,10 +218,10 @@ Definition mkRestrLayer `{extraDeps: DepsRestrExtension p.+1 k deps}
              restrPaintings.2 q Hq ε _ (l ω).
 
 (** Under previous assumptions, and, additionally:
-      [restrPainting(n,0);...;restrPainting(n,p-1)]
+    - {restrPainting(n,0);...;restrPainting(n,p-1)}
     we mutually build the pair of:
-    - the list of types for [cohFrame(n,0);...;cohFrame(n,p-1)]
-    - definitions of [restrFrame(n+1,0);...;restrFrame(n+1,p)] *)
+    - the list of types for {cohFrame(n,0);...;cohFrame(n,p-1)}
+    - definitions of {restrFrame(n+1,0);...;restrFrame(n+1,p)} *)
 
 Fixpoint mkCohFrameTypesAndRestrFrames {p k}:
   forall `{extraDeps: DepsRestrExtension p k deps}
@@ -248,8 +248,8 @@ Fixpoint mkCohFrameTypesAndRestrFrames {p k}:
     |}
   end.
 
-(* Example: if p := 0, extraDeps := ([],E)
-   mkCohFrameTypes := [] *)
+(* Example: if p := 0, extraDeps := ({},E)
+   mkCohFrameTypes := {} *)
 
 Definition mkCohFrameTypes `{extraDeps: DepsRestrExtension p k deps}
   (restrPaintings: mkRestrPaintingTypes extraDeps) :=
@@ -294,25 +294,25 @@ Definition mkRestrFrames `{depsCohs: DepsCohs p k} :=
     (that is restrFrames(n+1,p)) to build "dependencies" at the next
     level, that is a deps(n+1,p).
     That is, from:
-       [frame(n,0);...;frame(n,p-1)]
-       [painting(n,0);...;painting(n,p-1)]
-       [restrFrame(n,0);...;restrFrame(n,p-1)] for p<=n+1
+     - {frame(n,0);...;frame(n,p-1)}
+     - {painting(n,0);...;painting(n,p-1)}
+     - {restrFrame(n,0);...;restrFrame(n,p-1)} for p<=n+1
      (forming a "deps"), and
-       [frame(n,p);...;frame(n,n]
-       [painting(n,p);...;painting(n,n)]
-       [restrFrame(n,p);...;restrFrame(n,n)]
-       E:frame(n+1,n+1) -> HSet
+     - {frame(n,p);...;frame(n,n)}
+     - {painting(n,p);...;painting(n,n)}
+     - {restrFrame(n,p);...;restrFrame(n,n)}
+     - E:frame(n+1,n+1) -> HSet
      (forming an "extraDeps")
      we form:
-       [frame(n+1,0);...;frame(n+1,p)] (built by mkFrames)
-       [painting(n+1,0);...;painting(p+n,p)] (built by mkPaintings)
-       [restrFrame(n+1,0);...;restrFrame(n+1,p)] (built by mkRestrFrames)
+     - {frame(n+1,0);...;frame(n+1,p)} (built by mkFrames)
+     - {painting(n+1,0);...;painting(p+n,p)} (built by mkPaintings)
+     - {restrFrame(n+1,0);...;restrFrame(n+1,p)} (built by mkRestrFrames)
 
-   Example: if p := 0, extraDeps := ([],E), restrPaintings := [], cohs := []
-   then mkDepsRestr := {_frames'':=[unit];
-                        _paintings'':=[E]};
-                        _restrFrames':=[\qω().()]}
-   (where _restrFrames' is presented as a dependent pair, i.e. ((),\qω().()) *)
+   Example: if p := 0, extraDeps := ({},E), restrPaintings := {}, cohs := {}
+   then mkDepsRestr := {frames'':={unit};
+                        paintings'':={E};
+                        restrFrames':={λqω().()}}
+   (where restrFrames' is presented as a dependent pair, i.e. ((),λqω().()) *)
 
 Definition mkDepsRestr `{depsCohs: DepsCohs p k} :=
   toDepsRestr mkRestrFrames.
@@ -618,7 +618,7 @@ Class νSet p := {
   data: prefix -> νSetData p;
 }.
 
-(***************************************************)
+(** **********************************************)
 (** The construction of [νSet n+1] from [νSet n] *)
 
 (** Extending the initial prefix *)
@@ -660,7 +660,7 @@ Definition AugmentedSemiSimplicial := νSets hunit.
 Definition SemiSimplicial := νSetFrom hunit 1 (tt; fun _ => hunit).
 Definition SemiCubical := νSets hbool.
 
-(** Some examples *)
+(** Some example *)
 
 Example SemiSimplicial4 := Eval compute in (νSetAt hunit 4).(prefix _).
 Print SemiSimplicial4.
