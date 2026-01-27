@@ -351,27 +351,40 @@ Notation "( x ; y )" := (AddCohDep x y)
 Generalizable Variables depsCohs.
 
 Fixpoint mkExtraDeps `(extraDepsCohs: DepsCohsExtension p k depsCohs):
-  DepsRestrExtension p.+1 k mkDepsRestr.
-Proof.
-  destruct extraDepsCohs.
-  - now constructor.
-  - apply (AddRestrDep mkDepsRestr
-    (mkExtraDeps p.+1 k depsCohs extraDepsCohs)).
-Defined.
+  DepsRestrExtension p.+1 k mkDepsRestr :=
+  match extraDepsCohs with
+  | TopCohDep E => TopRestrDep E
+  | AddCohDep k d => (mkDepsRestr; mkExtraDeps d)
+  end.
 
 Fixpoint mkRestrPainting `(extraDepsCohs: DepsCohsExtension p k depsCohs):
-  mkRestrPaintingType (mkExtraDeps extraDepsCohs).
-Proof.
-  red; intros * (l, c); destruct q.
-  - now exact (l ε).
-  - destruct extraDepsCohs.
-    + exfalso; now apply leR_O_contra in Hq.
-    + unshelve esplit.
-      * now exact (mkRestrLayer depsCohs.(_restrPaintings) depsCohs.(_cohs)
-        q (⇓ Hq) ε d l).
-      * now exact (mkRestrPainting p.+1 k depsCohs extraDepsCohs
-        q (⇓ Hq) ε (d; l) c).
-Defined.
+  mkRestrPaintingType (mkExtraDeps extraDepsCohs) :=
+  fun q Hq ε d '(l; c) =>
+    match q
+    return
+      (forall Hq : q <= k,
+        mkDepsRestr.(_paintings).2 (mkDepsRestr.(_restrFrames).2 q Hq ε d))
+    with
+    | 0 => fun _ => l ε
+    | q'.+1 => fun Hq =>
+      match extraDepsCohs
+      in DepsCohsExtension _ k depsCohs
+      return
+        (forall
+          (Hq : q'.+1 <= k)
+          (d : mkFrame mkDepsRestr.(1))
+          (l : mkLayer mkDepsRestr.(_restrFrames) d),
+          mkPainting (mkExtraDeps extraDepsCohs) (d; l) ->
+          mkDepsRestr.(_paintings).2 (mkDepsRestr.(_restrFrames).2 q'.+1 Hq ε d))
+      with
+      | TopCohDep _ => fun Hq _ _ _ =>
+        SFalse_rect (fun _ => _) (leR_O_contra Hq)
+      | AddCohDep depsCohs extraDepsCohs => fun Hq d l c =>
+        let restrLayer := mkRestrLayer depsCohs.(_restrPaintings) depsCohs.(_cohs) q' (⇓ Hq) ε d l in
+        let restrPainting := mkRestrPainting extraDepsCohs q' (⇓ Hq) ε (d; l) c in
+        (restrLayer; restrPainting)
+      end Hq d l c
+    end Hq.
 
 Fixpoint mkRestrPaintingsPrefix {p k}:
   forall `(extraDepsCohs: DepsCohsExtension p k depsCohs),
