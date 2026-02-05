@@ -587,7 +587,7 @@ Once a $\deps: \depstype$ is assumed, we freely refer to $\framep$, $\painting$,
 
 \subsection{Defining paintings\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkPaintings}{\linkicon}\label{sec:mkpainting}}
 
-Let us introduce another abbreviation to combine a full $\deps[n][\lbrack 0,n \rbrack]:\depstype[n][\lbrack 0,n \rbrack]$ with a family $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack])\rightarrow \HSet$.
+To define $\painting[n+1][p]$, let us introduce another abbreviation that combines a full $\deps[n][\lbrack 0,n \rbrack]:\depstype[n][\lbrack 0,n \rbrack]$ with a family $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack])\rightarrow \HSet$.
 
 \begin{equation*}
   \smfontsize
@@ -598,7 +598,7 @@ Let us introduce another abbreviation to combine a full $\deps[n][\lbrack 0,n \r
     \end{array}\right)
 \end{equation*}
 
-We can now define $\painting[n+1][p]$ for $p \leq n+1$ by recursion from the base case $n+1$, and down to $p$.
+Then, $\painting[n+1][p]$ is defined for $p \leq n+1$ by recursion from the base case $n+1$, and down to $p$.
 
 \begin{equation*}
   \smfontsize
@@ -765,7 +765,9 @@ We can now mutually define $\restrf[n+1][\lbrack 0,p \rbrack]$ and specify $\coh
   \end{array}
 \end{equation*}
 
-We also need a notion of full dependencies at the level of coherence conditions, that combines a full $\depscohs[n][\lbrack 0,n \rbrack]$ with a set $E':\framep[n+2][n+2](\overline{\deps}(\depscohs[n][\lbrack 0,n \rbrack])) \rightarrow \HSet$.
+\subsection{Defining painting restrictions\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkRestrPaintings}{\linkicon}\label{sec:mkrestrp}}
+
+Armed with $\restrf[n+1][\lbrack 0,p \rbrack]$ and $\cohftype[n][\lbrack 0,p-1 \rbrack]$, thus also with $\restrl[n][\lbrack 0,p-1 \rbrack]$, it is possible to define $\restrp[n+1][p]$. First, we define a notion of full dependencies at the level of coherence conditions, that combines a full $\depscohs[n][\lbrack 0,n \rbrack]$ with a set $E':\framep[n+2][n+2](\overline{\deps}(\depscohs[n][\lbrack 0,n \rbrack])) \rightarrow \HSet$.
 
 \begin{equation*}
   \smfontsize
@@ -790,9 +792,7 @@ We can then extend $\overline{\deps}$ to build $\fulldeps$ from $\fulldepscohs$.
   \end{array}
 \end{equation*}
 
-\subsection{Defining painting restrictions\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkRestrPaintings}{\linkicon}\label{sec:mkrestrp}}
-
-Armed with $\restrf[n+1][\lbrack 0,p \rbrack]$ and $\cohftype[n][\lbrack 0,p-1 \rbrack]$, thus also with $\restrl[n][\lbrack 0,p-1 \rbrack]$, it is now possible to define $\restrp[n+1][p]$ for $p \leq n+1$ by recursion on $n-p$.
+Then we can define $\restrp[n+1][p]$ for $p \leq n+1$ by recursion on $n+1-p$.
 
 \begin{equation*}
   \smfontsize
@@ -973,6 +973,8 @@ to the unfolding of the type of $\cohl[n][p][q][r][\epsilon][\omega]$ below
     \end{array}\!\!\!\right)
 \end{equation*}
 
+\subsection{Defining painting coherence laws\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkCohPaintings}{\linkicon}\label{sec:mkcohp}}
+
 It is convenient to introduce a notion of full dependencies at the level of the coherence conditions of dimension $2$, that combines a full $\depscoht[n][\lbrack 0,n \rbrack]$ with an extra $E''$ at level $n+3$.
 
 \begin{equation*}
@@ -998,9 +1000,7 @@ We can then extend $\overline{\depscohs}$ to build $\fulldepscohs[n+1]$ from $\f
   \end{array}
 \end{equation*}
 
-\subsection{Defining painting coherence laws\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkCohPaintings}{\linkicon}\label{sec:mkcohp}}
-
-The final component of the construction is $\cohp[n+1][p]$ for $p \leq n+1$, defined by recursion on $n-p$:
+We are then ready to define the final component of the construction, namely $\cohp[n+1][p]$ for $p \leq n+1$, by recursion on $n+1-p$.
 
 \begin{equation*}
   \smfontsize
