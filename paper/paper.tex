@@ -452,7 +452,7 @@ This can be reformulated using sequences for appropriate definitions of $\framet
 
 Types such as $\restrftype[n][\lbrack 0,p \rbrack]$ will be represented by iterated $\Sigma$-types since each $\restrf[n][p]$ may depend on the previous components of the sequence. In the case of $\framep$ and $\painting$, there is no dependency, so an ordinary product can be used to represent $\frametype[n][\lbrack 0,p \rbrack]$ and $\paintingtype[n][\lbrack 0,p \rbrack]$.
 
-Let us turn now to the specification of $\restrp[n][p]$. Since it depends on $\painting[n+1][p]$, we need first to define $\painting[n+1][p]$ but in addition to the type dependency in $\framep[n+1][p]$, this requires the definition of $\painting[n][p-1]$, $\framep[n][p-1]$ by typing dependency, and $\restrf[n][p-1]$. Since $\painting[n+1][p]$ also depends on $\painting[n+1][p+1]$ when $p < n+1$, these dependencies are actually between $\painting[n+1][\lbrack p,n+1 \rbrack]$, $\painting[n][\lbrack p,n \rbrack]$, $\framep[n+1][\lbrack p,n+1 \rbrack]$, $\framep[n][\lbrack p,n \rbrack]$, and $\restrf[n][\lbrack p,n \rbrack]$. For $p = n$, this requires the assumption of an inhabitant $E_n$ of $\Xcomp{m}{n}$. Finally, $\framep[n+1][\lbrack p,n+1 \rbrack]$ depends on $\framep[n+1][\lbrack 0,p-1 \rbrack]$, $\framep[n+1][\lbrack p,n \rbrack]$ on $\framep[n][\lbrack 0,p-1 \rbrack]$, and $\restrf[n][\lbrack p,n \rbrack]$ on $\restrf[n][\lbrack 0,p-1 \rbrack]$, leading to the following graph of dependencies where indirect dependencies in definitions are now dashed lines.
+Let us turn now to the specification of $\restrp[n][p]$. Since it depends on $\painting[n+1][p]$, we need first to define $\painting[n+1][p]$ but in addition to the type dependency in $\framep[n+1][p]$, this requires the definition of $\painting[n][p-1]$, $\framep[n][p-1]$ by typing dependency, and $\restrf[n][p-1]$. Since $\painting[n+1][p]$ also depends on $\painting[n+1][p+1]$ when $p < n+1$, these dependencies are actually between $\painting[n+1][\lbrack p,n+1 \rbrack]$, $\painting[n][\lbrack p,n \rbrack]$, $\framep[n+1][\lbrack p,n+1 \rbrack]$, $\framep[n][\lbrack p,n \rbrack]$, and $\restrf[n][\lbrack p,n \rbrack]$. For $p = n$, this requires the assumption of an inhabitant $E_{n+1}$ of $\Xcomp{m}{n+1}$. Finally, $\framep[n+1][\lbrack p,n+1 \rbrack]$ depends on $\framep[n+1][\lbrack 0,p-1 \rbrack]$, $\framep[n+1][\lbrack p,n \rbrack]$ on $\framep[n][\lbrack 0,p-1 \rbrack]$, and $\restrf[n][\lbrack p,n \rbrack]$ on $\restrf[n][\lbrack 0,p-1 \rbrack]$, leading to the following graph of dependencies where indirect dependencies in definitions are now dashed lines.
 
 \begin{center}
   \begin{tikzcd}
@@ -460,11 +460,11 @@ Let us turn now to the specification of $\restrp[n][p]$. Since it depends on $\p
     \udensdash{\framep[n+1][\lbrack 0,p-1 \rbrack]} \arrow[d, dashed] \arrow[ddr, dashed] & &
     \udensdash{\framep[n+1][\lbrack p,n+1 \rbrack]} \arrow[ll, dotted] \arrow[d, dashed] \arrow[ddr, dashed, shift right=2mm] \\
     \painting[n][\lbrack 0,p-1 \rbrack] \arrow[d, dotted] & &
-    \painting[n][\lbrack p,n-1 \rbrack] \arrow[ll, dotted] \arrow[d, dotted] \\
+    \painting[n][\lbrack p,n \rbrack] \arrow[ll, dotted] \arrow[d, dotted] \\
     \framep[n][\lbrack 0,p-1 \rbrack] &
     \udensdash{\restrf[n][\lbrack 0,p-1 \rbrack]} \arrow[l, dotted] \arrow[uul, dotted, shift right=2mm, hook'] &
     \framep[n][\lbrack p,n \rbrack] \arrow[ll, dotted, bend left=15] &
-    \udensdash{\restrf[n+1][\lbrack p,n \rbrack]},E_n \arrow[ll, dotted, bend left=15] \arrow[l, dotted] \arrow[uul, dotted, hook'] \\
+    \udensdash{\restrf[n][\lbrack p,n \rbrack]},E_{n+1}\arrow[ll, dotted, bend left=15] \arrow[l, dotted] \arrow[uul, dotted, hook'] \\
   \end{tikzcd}
 \end{center}
 
@@ -554,8 +554,8 @@ Once a $\deps: \depstype$ is assumed, we freely refer to $\framep$, $\painting$,
              \Sigma \restrf[n][\lbrack 0,p-1 \rbrack]
              :\restrftype[n][\lbrack 0,p-1 \rbrack]
              \left(\begin{array}{l}
-                \framep[n+1][\lbrack 0,p-1 \rbrack]   \\
-                \painting[n+1][\lbrack 0,p-1 \rbrack] \\
+                \framep[n][\lbrack 0,p-1 \rbrack]   \\
+                \painting[n][\lbrack 0,p-1 \rbrack] \\
               \end{array}\right).         \\
              \Pi q \leq n-p.\,\Pi \epsilon.                      \\
              \framep[n+1][p]
@@ -655,7 +655,7 @@ To go further, we need to specify the type of sequences of painting restrictions
 
 \subsection{Defining frame restrictions and specifying frame coherence laws\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkCohFrameTypesAndRestrFrames}{\linkicon}\label{sec:mkrestrf}}
 
-We can now mutually define $\restrf[n+1][\lbrack 0,p \rbrack]$ and specify $\cohftype[n][\lbrack 0,p-1 \rbrack]$ from $\framep[n][\lbrack 0,n \rbrack]$, $\painting[n][\lbrack 0,n \rbrack]$, $\restrf[n][\lbrack 0,n \rbrack]$, $\restrptype[n][\lbrack 0,p-1 \rbrack]$ and some $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow \HSet$, abbreviating these dependencies and the dependency in $\cohf[n][\lbrack 0,p-1 \rbrack]$ as $\depscohstype[n][\lbrack 0,p-1 \rbrack]$, and using abbreviations in passing for $\restrl[n][p]$ and $\restrltype[n][p]$. It is convenient to build $\deps[n+1][\lbrack 0,p \rbrack]$ from $\depscohs[n][\lbrack 0,p-1 \rbrack]$, so that we can now build $\framep[n+2][p]$ one step further.
+We can now mutually define $\restrf[n+1][\lbrack 0,p \rbrack]$ and specify $\cohftype[n][\lbrack 0,p-1 \rbrack]$ from $\framep[n][\lbrack 0,n \rbrack]$, $\painting[n][\lbrack 0,n \rbrack]$, $\restrf[n][\lbrack 0,n \rbrack]$, $\restrp[n][\lbrack 0,p-1 \rbrack]$ and some $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow \HSet$, abbreviating these dependencies and the dependency in $\cohf[n][\lbrack 0,p-1 \rbrack]$ as $\depscohstype[n][\lbrack 0,p-1 \rbrack]$, and using abbreviations in passing for $\restrl[n][p]$ and $\restrltype[n][p]$. It is convenient to build $\deps[n+1][\lbrack 0,p \rbrack]$ from $\depscohs[n][\lbrack 0,p-1 \rbrack]$, so that we can now build $\framep[n+2][p]$ one step further.
 
 \begin{equation*}
   \smfontsize
@@ -686,7 +686,7 @@ We can now mutually define $\restrf[n+1][\lbrack 0,p \rbrack]$ and specify $\coh
               \painting[n+1][\lbrack 0,p \rbrack](\fulldeps[n])                \\
             \end{array}\right)                                                                           \\
     \restrf[n+1][\lbrack 0,0 \rbrack]       &
-    E
+    \depscohs[n]    
                                             & \defeq                              & (\unitpoint,\lambda q. \lambda\epsilon. \lambda \_.\unitpoint)   \\
     \restrf[n+1][\lbrack 0,p+1 \rbrack]     &
     \depscohs[n][\lbrack 0,p \rbrack]       & \defeq                              &
@@ -725,20 +725,20 @@ We can now mutually define $\restrf[n+1][\lbrack 0,p \rbrack]$ and specify $\coh
              \left(\overline{\deps}\left(\begin{array}{l}
                                         \fulldeps[n]                      \\
                                         \restrp[n][\lbrack 0,p-1 \rbrack] \\
-                                        \cohf[n][\lbrack 0,p \rbrack]
+                                        \cohf[n][\lbrack 0,p-1 \rbrack]
                                       \end{array}\right)\right)          . \\
              \\
              \restrf[n][p][q][\epsilon](\restrf[n+1][p][r][\omega]
              \left(\begin{array}{l}
                 \fulldeps[n]                      \\
                 \restrp[n][\lbrack 0,p-1 \rbrack] \\
-                \cohf[n][\lbrack 0,p \rbrack]
+                \cohf[n][\lbrack 0,p-1 \rbrack]
               \end{array}\right)(d)) =                          \\
              \restrf[n][p][r][\omega](\restrf[n+1][p][q+1][\epsilon]
              \left(\begin{array}{l}
                 \fulldeps[n]                      \\
                 \restrp[n][\lbrack 0,p-1 \rbrack] \\
-                \cohf[n][\lbrack 0,p \rbrack]
+                \cohf[n][\lbrack 0,p-1 \rbrack]
               \end{array}\right)(d))                          \\
            \end{array}\right.                                                                    \\
     \restrltype[n][p]                       &
@@ -836,7 +836,7 @@ From this, we can deduce $\restrp[n+1][\lbrack 0,p-1 \rbrack]$ for $p \leq n+2$ 
 
 \subsection{Specifying painting coherence laws\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#mkCohPaintingTypes}{\linkicon}}
 
-To go further, we need to specify the type $\cohptype[n][\lbrack 0,p-1 \rbrack]$ of painting coherence laws.
+To go further, we need to specify the type $\cohptype[n][\lbrack 0,p-1 \rbrack]$ of painting coherence laws, for $p \leq n+1$.
 
 \begin{equation*}
   \smfontsize
@@ -1039,7 +1039,7 @@ From the latter, we can deduce $\cohp[n+1][\lbrack 0,p-1 \rbrack]$ for $p \leq n
 
 \subsection{Completing the construction by induction\href{https://artagnon.github.io/bonak/docs/Bonak.\%CE\%BDSet.\%CE\%BDSet.html\#6d1cc800856804da9f9026c7c451927b}{\linkicon}}
 
-Armed with all the constructions, we are now able to specify the whole structure on which we can reason by induction, for $D:\Xto{m}{n}$ given:
+Armed with all the constructions, we are now able to specify the whole structure on which we can reason by induction, for $D:\Xto{m}{n+1}$ given:
 
 \begin{equation*}
   \smfontsize
@@ -1109,7 +1109,7 @@ To lift from level $n$ from level $n+1$, it is then enough to assume $E$ at leve
   \item $\cohp[n+1][\lbrack 0,n+1 \rbrack](E')(E'')$ comes from $\fulldepscoht[n](E)(E')(E'')$ (section~\ref{sec:mkcohp}).
 \end{itemize}
 
-Therefore, assuming a construction of $\framep[n][n]$ from $D:\Xto{m}{n}$, we are able to build a $\framep[n+1][n+1]$ from $D$ extended with some $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow \HSet$. This is enough to build $\Xcomp{m}{n}(D)$, for $D:\Xto{m}{n}$, and thus $\Xp{m}$, by starting with an empty $D$, since all fields of the structure are trivially inhabited by $\kstar$ when $n = 0$.
+Therefore, assuming a construction of $\framep[n][n]$ from $D:\Xto{m}{n+1}$, we are able to build a $\framep[n+1][n+1]$ from $D$ extended with some $E:\framep[n+1][n+1](\deps[n][\lbrack 0,n \rbrack]) \rightarrow \HSet$. This is enough to build $\Xcomp{m}{n+1}(D)$, for $D:\Xto{m}{n+1}$, and thus $\Xp{m}$, by starting with an empty $D$, since all fields of the structure are trivially inhabited by $\kstar$ when $n = 0$.
 
 \section{Differences between presentation and Rocq formalisation}
 \begin{itemize}
@@ -1121,7 +1121,7 @@ Therefore, assuming a construction of $\framep[n][n]$ from $D:\Xto{m}{n}$, we ar
 
 \section{Comparison with previous work\label{sec:previous-work}}
 
-To address the dependency of $\restrf[n][p]$ in $\framep[n+1][p]$, and that of $\cohf[n][p]$ in $\framep[n+2][p]$ and $\restrf[n+1][p]$ without having to mix the specification of the induction hypothesis and the construction of the next step, the previous work~\cite{hr25} was assuming all of $\framep[n][p]$, $\framep[n+1][p]$, $\framep[n+2][p]$, $\restrf[n][p]$, $\restrf[n+1][p]$, and $\cohf[n][p]$, together with propositional equations defining $\framep[n+1][p]$, $\framep[n+2][p]$, and $\restrf[n+1][p]$. The induction step then constructed $\framep[n+3][p]$, $\restrf[n+2][p]$ and $\cohf[n+1][p]$ and inherited $\framep[n+1][p]$, $\framep[n+2][p]$ and $\restrf[n+1][p]$ from the induction hypothesis. The current work can be seen as the result of analysing how dependencies are finely organised so that those propositional equations are replaced by definitions of $\framep[n+1][p]$, $\framep[n+2][p]$ and $\restrf[n+1][p]$. In other words, in the previous work, the induction hypothesis combines assumptions of the form $\framep[n+1][p] : \HSet$ with equations of the form $\framep[n+1][0] = \unittype$ and $\framep[n+1][p+1] = \Sigma d:\framep[n+1][p].\Pi \epsilon.\painting[n][p](\restrf[n][p][0][\epsilon])$. These are replaced by a \emph{definition} of $\framep[n+1][p]$. And similarly for $\framep[n+2][p]$, $\restrf[n+1][p]$, as well as for $\painting[n+1][p]$, $\painting[n+2][p]$, $\restrp[n+1][p]$, in the current work.
+To address the dependency of $\restrf[n][p]$ in $\framep[n+1][p]$, and that of $\cohf[n][p]$ in $\framep[n+2][p]$ and $\restrf[n+1][p]$ without having to mix the specification of the induction hypothesis and the construction of the next step, the previous work~\cite{hr25} was assuming all of $\framep[n][p]$, $\framep[n+1][p]$, $\framep[n+2][p]$, $\restrf[n][p]$, $\restrf[n+1][p]$, and $\cohf[n][p]$, together with propositional equations defining $\framep[n+1][p]$, $\framep[n+2][p]$, and $\restrf[n+1][p]$. The induction step then constructed $\framep[n+3][p]$, $\restrf[n+2][p]$ and $\cohf[n+1][p]$ and inherited $\framep[n+1][p]$, $\framep[n+2][p]$ and $\restrf[n+1][p]$ from the induction hypothesis. The current work can be seen as the result of analysing how dependencies are finely organised so that those propositional equations are replaced by definitions of $\framep[n+1][p]$, $\framep[n+2][p]$ and $\restrf[n+1][p]$. In other words, in the previous work, the induction hypothesis combines assumptions of the form $\framep[n+1][p] : \HSet$ with equations of the form $\framep[n+1][0] = \unittype$ and $\framep[n+1][p+1] = \Sigma d:\framep[n+1][p].\Pi \epsilon.\painting[n][p](\restrf[n][p][0][\epsilon](d))$. These are replaced by a \emph{definition} of $\framep[n+1][p]$. And similarly for $\framep[n+2][p]$, $\restrf[n+1][p]$, as well as for $\painting[n+1][p]$, $\painting[n+2][p]$, $\restrp[n+1][p]$, in the current work.
 
 \section{Perspectives}
 
