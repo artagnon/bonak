@@ -1,9 +1,9 @@
 \providecommand{\lab}{tab:core}
 \begin{eqntable}{Truncated $\nu$-sets, the core\label{\lab}}
-  \eqnline{\Xreflto{m}{n}}{}{:}{\HSet[m+1]}
-  \eqnline{\Xreflto{m}{0}}{}{\defeq}{\unittype}
-  \eqnline{\Xreflto{m}{n+1}}{}{\defeq}{\ensuremath{\Sigma}D:\Xreflto{m}{n}.\,\Xreflcomp{m}{n}[D=\D]}
+  \eqnline{\Xreflto{m}{n}}{\eqnarg{X}{D}{\Xto{m}{n}}}{:}{\HSet[m+1]}
+  \eqnline{\Xreflto{m}{0}}{\unitpoint}{\defeq}{\unittype}
+  \eqnline{\Xreflto{m}{n+1}}{(D,E)}{\defeq}{\ensuremath{\Sigma}D:\Xreflto{m}{n}[D=\D].\,\Xreflcomp{m}{n}[D=\D]}
   \midrule
-  \eqnline{\Xreflcomp{m}{n}}{\eqnarg{X}{D}{\Xreflto{m}{n}}}{:}{\HSet[m+1]}
-  \eqnline{\Xreflcomp{m}{n}}{D}{\defeq}{\fullframe[m][n][D=\D] \imp \HSet[m]}
+  \eqnline{\Xreflcomp{m}{n}}{\eqnarg{X}{D}{\Xto{m}{n}}}{\eqnarg{X}{L}{\Xreflto{m}{n}}}{:}{\HSet[m+1]}
+  \eqnline{\Xreflcomp{m}{n}}{((\D,\E,\E'),L)}{\defeq}{\Pi d:\fullframe[n](\D).\,\Pi c:\E(d).\,\E'(\reflf[n](L)(d),\lambda \epsilon.\,c)}
 \end{eqntable}

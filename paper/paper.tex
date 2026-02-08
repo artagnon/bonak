@@ -30,6 +30,16 @@
 \define@cmdkey[bonak]{restrpainting}{d}{(#1)}
 \define@cmdkey[bonak]{restrpainting}{c}{(#1)}
 
+\define@cmdkey[bonak]{reflframe}{D}{(#1)}
+\define@cmdkey[bonak]{reflframe}{d}{(#1)}
+\define@cmdkey[bonak]{refllayer}{D}{(#1)}
+\define@cmdkey[bonak]{refllayer}{d}{(#1)}
+\define@cmdkey[bonak]{refllayer}{l}{(#1)}
+\define@cmdkey[bonak]{reflpainting}{D}{(#1)}
+\define@cmdkey[bonak]{reflpainting}{E}{(#1)}
+\define@cmdkey[bonak]{reflpainting}{d}{(#1)}
+\define@cmdkey[bonak]{reflpainting}{c}{(#1)}
+
 \define@cmdkey[bonak]{cohframe}{D}{(#1)}
 \define@cmdkey[bonak]{cohframe}{d}{(#1)}
 \define@cmdkey[bonak]{cohlayer}{D}{(#1)}
@@ -64,6 +74,12 @@
   \ensuremath{\mathsf{\color{russian-green}{restr}}_{
     \joinargs[\mathsf{\color{indian-yellow}{#1}}][#2][#3][#4]}^{\joinargs[#5][#6][#7]}}
   \setkeys*[bonak]{restr#1}{#8}
+}
+
+\newcommandx{\refl}[8][2,3,4,5,6,7,8]{
+  \ensuremath{\mathsf{\color{russian-green}{refl}}_{
+    \joinargs[\mathsf{\color{indian-yellow}{#1}}][#2][#3][#4]}^{\joinargs[#5][#6][#7]}}
+  \setkeys*[bonak]{refl#1}{#8}
 }
 
 \newcommandx{\depsmacro}[5][4,5]{
@@ -108,7 +124,6 @@
 
 % Definitional and extensional equality
 \newcommand{\defeq}{\ensuremath{\triangleq}}
-\newcommand{\refl}{\ensuremath{\mathsf{refl}}}
 
 % Some abbreviations
 \newcommand{\tl}{\ensuremath{\mathsf{tl}}}
@@ -145,6 +160,9 @@
 \newcommandx{\restrf}[4][1,2,3,4]{\restr{frame}[][#3][#4][#1][#2][][]}
 \newcommandx{\restrl}[4][1,2,3,4]{\restr{layer}[][#3][#4][#1][#2][][]}
 \newcommandx{\restrp}[4][1,2,3,4]{\restr{painting}[][#3][#4][#1][#2][][]}
+\newcommandx{\reflf}[4][1,2,3,4]{\refl{frame}[][#3][#4][#1][#2][][]}
+\newcommandx{\refll}[4][1,2,3,4]{\refl{layer}[][#3][#4][#1][#2][][]}
+\newcommandx{\reflp}[4][1,2,3,4]{\refl{painting}[][#3][#4][#1][#2][][]}
 \newcommandx{\cohf}{\coh{frame}[][][][][][][][]}
 \newcommandx{\cohl}{\coh{layer}[][][][][][][][]}
 \newcommandx{\cohp}{\coh{painting}[][][][][][][][]}
