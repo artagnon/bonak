@@ -226,6 +226,92 @@
 \end{abstract}
 
 \section{Introduction}
+% Abbreviated tables in this section
+%
+% The rule for implicit arguments for each table:
+% show 1 explicit in first two parts
+% show E + 1 explicit in the third part
+\appendmask[bonak]{layer}[D]
+\appendmask[bonak]{painting}[D]
+\appendmask[bonak]{restrframe}[D]
+\appendmask[bonak]{restrlayer}[D, d]
+\appendmask[bonak]{restrpainting}[D, d]
+\appendmask[bonak]{cohframe}[D]
+\appendmask[bonak]{cohlayer}[D, d]
+\appendmask[bonak]{cohpainting}[D, d]
+
+% Truncated sets, otherwise referred to as X
+% Keep all arguments
+\newcommandx{\Xp}[1]{\X[#1][][]}
+\newcommandx{\Xto}[3][3=]{\X[#1][<#2][#3]}
+\newcommandx{\Xcomp}[3][3=]{\X[#1][=#2][#3]}
+\newcommandx{\Xfrom}[3][3=]{\X[#1][\geq#2][#3]}
+
+
+% Refl truncated sets.
+\newcommandx{\Xreflp}[1]{\Xrefl[#1][][]}
+\newcommandx{\Xreflto}[3][3=]{\Xrefl[#1][<#2][#3]}
+\newcommandx{\Xreflcomp}[3][3=]{\Xrefl[#1][=#2][#3]}
+\newcommandx{\Xreflfrom}[3][3=]{\Xrefl[#1][\geq#2][#3]}
+
+% Frame, layer, and painting
+% Drop the universe letter
+\renewcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[][#2][#3][#4][#5]}
+\renewcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[][#2][#3][#4][#5]}
+\renewcommandx{\painting}[5][1,2,3,4,5]{\prim{painting}[][#2][#3][#4][#5]}
+
+% Restriction for frame, layer, and painting
+% Drop the universe letter
+\renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]
+}
+\renewcommandx{\restrl}[7][1,2,3,4,5,6,7]{\restr{layer}[][#2][#3][#4][#5][#6][#7]
+}
+\renewcommandx{\restrp}[7][1,2,3,4,5,6,7]{\restr{painting}[][#2][#3][#4][#5][#6][
+    #7]}
+
+% Coherence conditions for frame, layer, and painting
+% Keep only ε, ω; n, p; proposition on n and p
+\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][][][#9]}
+\renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][][][][][#9]}
+\renewcommandx{\cohp}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][][][][][#9]}
+
+\def\lab{tab:coind}
+\input{tab-refl-coind.tex}
+
+% For just the second table, keep the universe letter in fullframe
+\renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[#1][#2][][][#3]}
+
+\def\lab{tab:core}
+\input{tab-refl-core.tex}
+
+\def\lab{tab:frames}
+\input{tab-refl-frames.tex}
+
+% The third table mentions cohframe; keep ε, ω in this instance
+\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][#6,#7][#8][#9]}
+
+\def\lab{tab:faces}
+\input{tab-refl-faces-ett.tex}
+
+% Restriction for frame, layer, and painting
+% Drop just the universe letter for the coh table
+\renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
+\renewcommandx{\restrl}[7][1,2,3,4,5,6,7]{\restr{layer}[][#2][#3][#4][#5][#6][#7]}
+\renewcommandx{\restrp}[7][1,2,3,4,5,6,7]{\restr{painting}[][#2][#3][#4][#5][#6][#7]}
+
+% Coherence conditions for frame, layer, and painting
+\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+\renewcommandx{\cohp}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
+
+\def\lab{tab:coh}
+\input{tab-refl-coh-ett.tex}
+
+\renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
+\renewcommandx{\cohl}{\coh{layer}[][][][][][][][]}
+\renewcommandx{\cohp}{\coh{painting}[][][][][][][][]}
+
+\section{Degeneracies}
 
 \begin{equation*}
   \begin{array}{cllccllll}
