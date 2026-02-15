@@ -7,8 +7,12 @@ Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.
 
-Section νSet.
-Variable arity: HSet.
+Module Type AritySig.
+  Parameter arity : HSet.
+End AritySig.
+
+Module νSet (A : AritySig).
+Import A.
 
 (** The type of lists {frame(n,0);...;frame(n,p-1)} for arbitrary k := n-p
     (the non-mandatory dependency in k is useful for type inference) *)
@@ -656,11 +660,22 @@ Definition νSets := νSetFrom 0 tt.
 
 End νSet.
 
-Definition AugmentedSemiSimplicial := νSets hunit.
-Definition SemiSimplicial := νSetFrom hunit 1 (tt; fun _ => hunit).
-Definition SemiCubical := νSets hbool.
+Module ArityUnit <: AritySig.
+  Definition arity := hunit.
+End ArityUnit.
+
+Module ArityBool <: AritySig.
+  Definition arity := hbool.
+End ArityBool.
+
+Module νSetUnit := νSet ArityUnit.
+Module νSetBool := νSet ArityBool.
+
+Definition AugmentedSemiSimplicial := νSetUnit.νSets.
+Definition SemiSimplicial := νSetUnit.νSetFrom 1 (tt; fun _ => hunit).
+Definition SemiCubical := νSetBool.νSets.
 
 (** Some example *)
 
-Example SemiSimplicial4 := Eval compute in (νSetAt hunit 4).(prefix _).
+Example SemiSimplicial4 := Eval compute in (νSetUnit.νSetAt 4).(νSetUnit.prefix _).
 Print SemiSimplicial4.
