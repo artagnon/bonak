@@ -34,9 +34,10 @@
 
 \define@cmdkey[bonak]{reflframe}{D}{(#1)}
 \define@cmdkey[bonak]{reflframe}{L}{(#1)}
-\define@cmdkey[bonak]{reflframeext}{D}{(#1)}
-\define@cmdkey[bonak]{reflframeext}{L}{(#1)}
 \define@cmdkey[bonak]{reflframe}{d}{(#1)}
+\define@cmdkey[bonak]{reflframeExt}{D}{(#1)}
+\define@cmdkey[bonak]{reflframeExt}{L}{(#1)}
+\define@cmdkey[bonak]{reflframeExt}{d}{(#1)}
 \define@cmdkey[bonak]{refllayer}{D}{(#1)}
 \define@cmdkey[bonak]{refllayer}{L}{(#1)}
 \define@cmdkey[bonak]{refllayer}{d}{(#1)}
@@ -85,7 +86,7 @@
 
 \newcommandx{\refl}[6][1,2,3,4,5,6]{
   \ensuremath{\mathsf{\color{russian-green}{refl}}^{
-    \joinargs[#2][#3]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#4][#5]}}
+    \joinargs[#2][#3][#4]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#5]}}
   \setkeys*[bonak]{refl#1}{#6}
 }
 
@@ -136,14 +137,15 @@
 \newcommand{\overright}[1]{\overrightarrow{#1}}
 \newcommand{\ap}{\mathsf{ap}\;}
 \renewcommand{\D}{D}
-\renewcommand{\L}{L}
 \newcommand{\hdD}{D.1}
 \newcommand{\tlD}{D.2}
+\renewcommand{\L}{L}
+\newcommand{\R}{R}
 \renewcommand{\d}{d}
 \renewcommand{\E}{E}
 \renewcommand{\l}{l}
 \renewcommand{\c}{c}
-\newcommand{\pair}[2]{#1, #2}
+\newcommand{\pair}[2]{(#1, #2)}
 \newcommand{\Dom}{\textsf{Dom}}
 \newcommand{\UIP}{\textsf{UIP}}
 
@@ -165,7 +167,7 @@
 \newcommandx{\restrf}[6][1,2,3,4,5,6]{\restr{frame}[#1][#2][#3][#4][#5][#6]}
 \newcommandx{\restrl}[6][1,2,3,4,5,6]{\restr{layer}[#1][#2][#3][#4][#5][#6]}
 \newcommandx{\restrp}[6][1,2,3,4,5,6]{\restr{painting}[#1][#2][#3][#4][#5][#6]}
-\newcommandx{\reflfext}[3][1,2,3]{\refl[frameExt][#1][#2][][][#3]}
+\newcommandx{\reflfext}[5][1,2,3,4,5]{\refl[frameExt][#1][#2][#3][#4][#5]}
 \newcommandx{\reflf}[5][1,2,3,4,5]{\refl[frame][#1][#2][#3][#4][#5]}
 \newcommandx{\refll}[5][1,2,3,4,5]{\refl[layer][#1][#2][#3][#4][#5]}
 \newcommandx{\reflp}[5][1,2,3,4,5]{\refl[painting][#1][#2][#3][#4][#5]}

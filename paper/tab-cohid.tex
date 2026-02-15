@@ -9,5 +9,5 @@
   \midrule
   \eqnline{\cohidp[n][p][r \leq q \leq n-p][q][r][\epsilon][\omega]}{\makecell{\eqnarg{cohpainting}{D}{\Xreflto{n+2}} \\ \eqnarg{cohpainting}{E}{\Xreflcomp{n+2}[D=\D]} \\ \eqnarg{cohpainting}{d}{\framep[n+2][p][][D=\D]} \\ \eqnarg{cohpainting}{c}{\painting[n+2][p][][D=\D, E=\E, d=\d]}}}{:}{\makecell{\restrp[n][p][][q][\epsilon][D=\hdD, E=\tlD, d={\restrf[r][\omega][n+1][p][][D=\D, d=\d]}, c={\restrp[n+1][p][][r][\omega][D=\D, E=\E, d=\d, c=\c]}] \\ = \restrp[n][p][][r][\omega][D=\hdD, E=\tlD, D={\restrf[q+1][\epsilon][n+1][p][][D=\D, d=\d]}, c={\restrp[n+1][p][][q+1][\epsilon][D=\D, E=\E, d=\d, c=\c]}]}}
   \eqnline{\cohidp[n][p][][q][0][\epsilon][\omega]}{\D~\E~\d~(\pair{\l}{\_})}{\defeq}{\refl(\restrp[n][p][][q][\epsilon][D=\hdD, E=\tlD, d={\restrf[\omega][0][n][p][][D=\D, d=\d]}, c={\l_\epsilon}])}
-  \eqnline{\cohidp[n][p][p<n][q+1][r+1][\epsilon][\omega]}{\D~\E~\d~(\pair{\l}{\c})}{\defeq}{(\pair{\cohidl[n-1][p][][q][r][\epsilon][\omega][D=\D, d=\d, l=\l]}{\cohidp[n][p+1][][q][r][\epsilon][\omega][D=\D, E=\E, d=\pair{d}{l}, c=\c]})}
+  \eqnline{\cohidp[n][p][p<n][q+1][r+1][\epsilon][\omega]}{\D~\E~\d~\pair{\l}{\c}}{\defeq}{\pair{\cohidl[n-1][p][][q][r][\epsilon][\omega][D=\D, d=\d, l=\l]}{\cohidp[n][p+1][][q][r][\epsilon][\omega][D=\D, E=\E, d=\pair{d}{l}, c=\c]}}
 \end{eqntable}
