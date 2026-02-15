@@ -102,6 +102,12 @@
   \setkeys*[bonak]{coh#1}{#9}
 }
 
+\newcommandx{\cohid}[9][2,3,4,5,6,7,8,9]{
+  \ensuremath{\mathsf{\color{chestnut}{coh}}^{
+    \joinargs[#2][#3][#4]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#5][#6][#7][#8]}}
+  \setkeys*[bonak]{coh#1}{#9}
+}
+
 \newcommandx{\cohtwo}[9][2,3,4,5,6,7,8,9]{
   \ensuremath{\mathsf{\color{chestnut}{coh2}}^{
     \joinargs[#2][#3][#4]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#5][#6][#7][#8]}}
@@ -172,6 +178,9 @@
 \newcommandx{\cohf}[8][1,2,3,4,5,6,7,8]{\coh{frame}[#1][#2][#3][#4][#5][#6][#7][#8]}
 \newcommandx{\cohl}[8][1,2,3,4,5,6,7,8]{\coh{layer}[#1][#2][#3][#4][#5][#6][#7][#8]}
 \newcommandx{\cohp}[8][1,2,3,4,5,6,7,8]{\coh{painting}[#1][#2][#3][#4][#5][#6][#7][#8]}
+\newcommandx{\cohidf}[8][1,2,3,4,5,6,7,8]{\cohid{frame}[#1][#2][#3][#4][#5][#6][#7][#8]}
+\newcommandx{\cohidl}[8][1,2,3,4,5,6,7,8]{\cohid{layer}[#1][#2][#3][#4][#5][#6][#7][#8]}
+\newcommandx{\cohidp}[8][1,2,3,4,5,6,7,8]{\cohid{painting}[#1][#2][#3][#4][#5][#6][#7][#8]}
 \newcommandx{\fullframe}[1][1]{\prim{fullframe}[#1]}
 
 \newcommandx{\frametype}[2][1,2]{\prim{FRAME}[#1][#2]}
@@ -344,7 +353,7 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
 \appendmask[bonak]{restrpainting}[D, d]
 \appendmask[bonak]{reflframe}[D]
 \appendmask[bonak]{refllayer}[D, d]
-\appendmask[bonak]{reflpainting}[D, d]
+\appendmask[bonak]{reflpainting}[D, E, L, d]
 \appendmask[bonak]{cohframe}[D]
 \appendmask[bonak]{cohlayer}[D, d]
 \appendmask[bonak]{cohpainting}[D, d]
@@ -362,19 +371,19 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
 \newcommandx{\Xreflfrom}[2][2]{\Xrefl[\geq#1][#2]}
 
 \def\lab{tab:coind}
-\input{tab-refl-coind.tex}
+\input{tab-coind.tex}
 
 \def\lab{tab:core}
-\input{tab-refl-core.tex}
+\input{tab-core.tex}
 
-\def\lab{tab:frames}
-\input{tab-refl-frames.tex}
+\def\lab{tab:refl}
+\input{tab-refl.tex}
 
-\def\lab{tab:cohid}
-\input{tab-refl-cohid-ett.tex}
+\def\lab{tab:idcoh}
+\input{tab-idcoh.tex}
 
 \def\lab{tab:coh}
-\input{tab-refl-coh-ett.tex}
+\input{tab-coh.tex}
 
 \renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
 \renewcommandx{\cohl}{\coh{layer}[][][][][][][][]}
