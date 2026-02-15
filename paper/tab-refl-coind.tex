@@ -1,8 +1,8 @@
 \providecommand{\lab}{tab:coind}
 \begin{eqntable}{Main definition\label{\lab}}
-  \eqnline{\Xreflp{m}}{}{:}{\HSet[m+1]}
-  \eqnline{\Xreflp{m}}{}{\defeq}{\Xreflfrom{m}{0}[D=\unitpoint]}
+  \eqnline{\Xrefl}{\eqnarg{X}{D}{\Xto{n}}}{:}{\HSet[m+1]}
+  \eqnline{\Xrefl}{X}{\defeq}{\Xreflfrom{0}[D=\unitpoint]}
   \midrule
-  \eqnline{\Xreflfrom{m}{n}}{\eqnarg{X}{D}{\Xreflto{m}{n}}}{:}{\HSet[m+1]}
-  \eqnline{\Xreflfrom{m}{n}}{D}{\defeq}{\Sigma E:\Xreflcomp{m}{n}[D=\D]. \Xreflfrom{m}{n+1}[D=\pair{D}{E}]}
+  \eqnline{\Xreflfrom{n}}{\eqnarg{X}{D}{\Xreflto{n}}}{:}{\HSet[m+1]}
+  \eqnline{\Xreflfrom{n}}{D}{\defeq}{\Sigma E:\Xreflcomp{n}[D=\D]. \Xreflfrom{n+1}[D=\pair{D}{E}]}
 \end{eqntable}

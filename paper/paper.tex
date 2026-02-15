@@ -11,6 +11,7 @@
 % Magic with xkeyval to go over the 9-argument limit of LaTeX
 \makeatletter
 \define@cmdkey[bonak]{X}{D}{(#1)}
+\define@cmdkey[bonak]{Xrefl}{L}{(#1)}
 
 \define@cmdkey[bonak]{frame}{D}{(#1)}
 \define@cmdkey[bonak]{layer}{D}{(#1)}
@@ -31,11 +32,16 @@
 \define@cmdkey[bonak]{restrpainting}{c}{(#1)}
 
 \define@cmdkey[bonak]{reflframe}{D}{(#1)}
+\define@cmdkey[bonak]{reflframe}{L}{(#1)}
+\define@cmdkey[bonak]{reflframeext}{D}{(#1)}
+\define@cmdkey[bonak]{reflframeext}{L}{(#1)}
 \define@cmdkey[bonak]{reflframe}{d}{(#1)}
 \define@cmdkey[bonak]{refllayer}{D}{(#1)}
+\define@cmdkey[bonak]{refllayer}{L}{(#1)}
 \define@cmdkey[bonak]{refllayer}{d}{(#1)}
 \define@cmdkey[bonak]{refllayer}{l}{(#1)}
 \define@cmdkey[bonak]{reflpainting}{D}{(#1)}
+\define@cmdkey[bonak]{reflpainting}{L}{(#1)}
 \define@cmdkey[bonak]{reflpainting}{E}{(#1)}
 \define@cmdkey[bonak]{reflpainting}{d}{(#1)}
 \define@cmdkey[bonak]{reflpainting}{c}{(#1)}
@@ -52,56 +58,53 @@
 \makeatother
 
 % Truncated sets, otherwise referred to as X: the general macro
-\newcommandx{\X}[3][1,2,3]{
-  \ensuremath{{\color{carolina}{\nu\textsf{Set}}}_{#1}^{#2}}
-  \setkeys*[bonak]{X}{#3}
+\newcommandx{\X}[2][1,2]{
+  \ensuremath{{\color{carolina}{\nu\textsf{Set}}}^{#1}}
+  \setkeys*[bonak]{X}{#2}
 }
 
-\newcommandx{\Xrefl}[3][1,2,3]{
-  \ensuremath{{\color{carolina}{\nu\textsf{reflSet}}}_{#1}^{#2}}
-  \setkeys*[bonak]{X}{#3}
+\newcommandx{\Xrefl}[3][1,3]{
+  \ensuremath{{\color{carolina}{\nu\textsf{reflSet}}}^{#1}}
+  \setkeys*[bonak]{Xrefl}{#2}
 }
 
 % Frame, layer, and painting: the general macro
-\newcommandx{\prim}[6][2,3,4,5,6]{
-  \ensuremath{\mathsf{\color{indian-yellow}{#1}}_{#2}^{
-    \joinargs[#3][#4][#5]}}
-  \setkeys*[bonak]{#1}{#6}
+\newcommandx{\prim}[5][2,3,4,5]{
+  \ensuremath{\mathsf{\color{indian-yellow}{#1}}^{
+    \joinargs[#2][#3][#4]}}
+  \setkeys*[bonak]{#1}{#5}
 }
 
 % Restriction for frame, layer, and painting: the general macro
 \newcommandx{\restr}[8][2,3,4,5,6,7,8]{
-  \ensuremath{\mathsf{\color{russian-green}{restr}}_{
-    \joinargs[\mathsf{\color{indian-yellow}{#1}}][#2][#3][#4]}^{\joinargs[#5][#6][#7]}}
+  \ensuremath{\mathsf{\color{russian-green}{restr}}^{
+    \joinargs[#2][#3]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#4][#5][#6][#7]}}
   \setkeys*[bonak]{restr#1}{#8}
 }
 
-\newcommandx{\refl}[8][2,3,4,5,6,7,8]{
-  \ensuremath{\mathsf{\color{russian-green}{refl}}_{
-    \joinargs[\mathsf{\color{indian-yellow}{#1}}][#2][#3][#4]}^{\joinargs[#5][#6][#7]}}
-  \setkeys*[bonak]{refl#1}{#8}
+\newcommandx{\refl}[6][2,3,4,5,6]{
+  \ensuremath{\mathsf{\color{russian-green}{refl}}^{
+    \joinargs[#2][#3]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#4][#5]}}
+  \setkeys*[bonak]{refl#1}{#6}
 }
 
 \newcommandx{\depsmacro}[5][4,5]{
-  \ensuremath{\mathsf{\color{strawberry}{#1}}_{
+  \ensuremath{\mathsf{\color{strawberry}{#1}}^{
     \joinargs[\mathsf{\color{#3}{#2}}]}^{\joinargs[#4][#5]}}
 }
 
 % Coherence conditions for frame, layer, and painting: the general macro
 
-% Hack: we'd like \coh to take 10 arguments, with the 10th being passed to
-% xkeyval, but this is not possible. The only possible compromise is to join
-% #7 and #8 by hand in usage of \coh: it's now #7 or '#6,#7' in \cohfoo commands
 \newcommandx{\coh}[9][2,3,4,5,6,7,8,9]{
-  \ensuremath{\mathsf{\color{chestnut}{coh}}_{
-    \joinargs[\mathsf{\color{indian-yellow}{#1}}][#2][#3][#4][#5][#6]}^{\joinargs[#7][#8]}}
+  \ensuremath{\mathsf{\color{chestnut}{coh}}^{
+    \joinargs[#2][#3][#4]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#5][#6][#7][#8]}}
   \setkeys*[bonak]{coh#1}{#9}
 }
 
 \newcommandx{\cohtwo}[9][2,3,4,5,6,7,8,9]{
-  \ensuremath{\mathsf{\color{chestnut}{coh2}}_{
-    \joinargs[\mathsf{\color{indian-yellow}{#1}}][#2][#3][#4][#5][#6]}^{\joinargs[#7][#8]}}
-  \setkeys*[bonak]{coh#1}{#9}
+  \ensuremath{\mathsf{\color{chestnut}{coh2}}^{
+    \joinargs[#2][#3][#4]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#5][#6][#7][#8]}}
+  \setkeys*[bonak]{coh2#1}{#9}
 }
 
 % Simplicial and Cubical sets
@@ -132,6 +135,7 @@
 \newcommand{\overright}[1]{\overrightarrow{#1}}
 \newcommand{\ap}{\mathsf{ap}\;}
 \renewcommand{\D}{D}
+\renewcommand{\L}{L}
 \newcommand{\hdD}{D.1}
 \newcommand{\tlD}{D.2}
 \renewcommand{\d}{d}
@@ -154,30 +158,31 @@
 
 % These are renewed in tables, but let's define them now for in-document
 % typesetting
-\newcommandx{\framep}[2][1,2]{\prim{frame}[][#1][#2][][]}
-\newcommandx{\layer}[2][1,2]{\prim{layer}[][#1][#2][][]}
-\newcommandx{\painting}[2][1,2]{\prim{painting}[][#1][#2][][]}
-\newcommandx{\restrf}[4][1,2,3,4]{\restr{frame}[][#3][#4][#1][#2][][]}
-\newcommandx{\restrl}[4][1,2,3,4]{\restr{layer}[][#3][#4][#1][#2][][]}
-\newcommandx{\restrp}[4][1,2,3,4]{\restr{painting}[][#3][#4][#1][#2][][]}
-\newcommandx{\reflf}[4][1,2,3,4]{\refl{frame}[][#3][#4][#1][#2][][]}
-\newcommandx{\refll}[4][1,2,3,4]{\refl{layer}[][#3][#4][#1][#2][][]}
-\newcommandx{\reflp}[4][1,2,3,4]{\refl{painting}[][#3][#4][#1][#2][][]}
-\newcommandx{\cohf}{\coh{frame}[][][][][][][][]}
-\newcommandx{\cohl}{\coh{layer}[][][][][][][][]}
-\newcommandx{\cohp}{\coh{painting}[][][][][][][][]}
-\newcommandx{\fullframe}[1][1]{\prim{fullframe}[][#1][][][]}
+\newcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[#1][#2][#3][#4][#5]}
+\newcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[#1][#2][#3][#4][#5]}
+\newcommandx{\painting}[5][1,2,3,4,5]{\prim{painting}[#1][#2][#3][#4][#5]}
+\newcommandx{\restrf}[6][1,2,3,4,5,6]{\restr{frame}[#1][#2][#3][#4][#5][#6]}
+\newcommandx{\restrl}[6][1,2,3,4,5,6]{\restr{layer}[#1][#2][#3][#4][#5][#6]}
+\newcommandx{\restrp}[6][1,2,3,4,5,6]{\restr{painting}[#1][#2][#3][#4][#5][#6]}
+\newcommandx{\reflfext}[3][1,2,3]{\refl{frameExt}[#1][#2][][][#3]}
+\newcommandx{\reflf}[5][1,2,3,4,5]{\refl{frame}[#1][#2][#3][#4][#5]}
+\newcommandx{\refll}[5][1,2,3,4,5]{\refl{layer}[#1][#2][#3][#4][#5]}
+\newcommandx{\reflp}[5][1,2,3,4,5]{\refl{painting}[#1][#2][#3][#4][#5]}
+\newcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[#1][#2][#3][#4][#5][#6][#7][#8][#9]}
+\newcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[#1][#2][#3][#4][#5][#6][#7][#8][#9]}
+\newcommandx{\cohp}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[#1][#2][#3][#4][#5][#6][#7][#8][#9]}
+\newcommandx{\fullframe}[1][1]{\prim{fullframe}[#1]}
 
-\newcommandx{\frametype}[2][1,2]{\prim{FRAME}[][#1][#2][][]}
-\newcommandx{\layertype}[2][1,2]{\prim{LAYER}[][#1][#2][][]}
-\newcommandx{\paintingtype}[2][1,2]{\prim{PAINTING}[][#1][#2][][]}
-\newcommandx{\restrftype}[2][1,2]{\restr{FRAME}[][][][#1][#2][][]}
-\newcommandx{\restrltype}[2][1,2]{\restr{LAYER}[][][][#1][#2][][]}
-\newcommandx{\restrptype}[2][1,2]{\restr{PAINTING}[][][][#1][#2][][]}
-\newcommandx{\cohftype}[2][1,2]{\coh{FRAME}[][][][][][#1][#2][]}
-\newcommandx{\cohltype}[2][1,2]{\coh{LAYER}[][][][][][#1][#2][]}
-\newcommandx{\cohptype}[2][1,2]{\coh{PAINTING}[][][][][][#1][#2][]}
-\newcommandx{\cohttype}[2][1,2]{\cohtwo{FRAME}[][][][][][#1][#2][]}
+\newcommandx{\frametype}[2][1,2]{\prim{FRAME}[#1][#2]}
+\newcommandx{\layertype}[2][1,2]{\prim{LAYER}[#1][#2]}
+\newcommandx{\paintingtype}[2][1,2]{\prim{PAINTING}[#1][#2]}
+\newcommandx{\restrftype}[2][1,2]{\restr{FRAME}[#1][#2]}
+\newcommandx{\restrltype}[2][1,2]{\restr{LAYER}[#1][#2]}
+\newcommandx{\restrptype}[2][1,2]{\restr{PAINTING}[#1][#2]}
+\newcommandx{\cohftype}[2][1,2]{\coh{FRAME}[#1][#2]}
+\newcommandx{\cohltype}[2][1,2]{\coh{LAYER}[#1][#2]}
+\newcommandx{\cohptype}[2][1,2]{\coh{PAINTING}[#1][#2]}
+\newcommandx{\cohttype}[2][1,2]{\cohtwo{FRAME}[#1][#2]}
 
 \newcommandx{\deps}[2][1,2]{\depsmacro{deps}{restr}{russian-green}[#1][#2]}
 \newcommandx{\fulldeps}[1][1]{\depsmacro{deps}{fullrestr}{russian-green}[#1]}
@@ -336,49 +341,27 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
 \appendmask[bonak]{restrframe}[D]
 \appendmask[bonak]{restrlayer}[D, d]
 \appendmask[bonak]{restrpainting}[D, d]
+\appendmask[bonak]{reflframe}[D]
+\appendmask[bonak]{refllayer}[D, d]
+\appendmask[bonak]{reflpainting}[D, d]
 \appendmask[bonak]{cohframe}[D]
 \appendmask[bonak]{cohlayer}[D, d]
 \appendmask[bonak]{cohpainting}[D, d]
 
 % Truncated sets, otherwise referred to as X
 % Keep all arguments
-\newcommandx{\Xp}[1]{\X[#1][][]}
-\newcommandx{\Xto}[3][3=]{\X[#1][<#2][#3]}
-\newcommandx{\Xcomp}[3][3=]{\X[#1][=#2][#3]}
-\newcommandx{\Xfrom}[3][3=]{\X[#1][\geq#2][#3]}
+\newcommandx{\Xto}[3][3]{\X[<#2][#3]}
+\newcommandx{\Xcomp}[3][3]{\X[=#2][#3]}
+\newcommandx{\Xfrom}[3][3]{\X[\geq#2][#3]}
 
 
 % Refl truncated sets.
-\newcommandx{\Xreflp}[1]{\Xrefl[#1][][]}
-\newcommandx{\Xreflto}[3][3=]{\Xrefl[#1][<#2][#3]}
-\newcommandx{\Xreflcomp}[3][3=]{\Xrefl[#1][=#2][#3]}
-\newcommandx{\Xreflfrom}[3][3=]{\Xrefl[#1][\geq#2][#3]}
-
-% Frame, layer, and painting
-% Drop the universe letter
-\renewcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[][#2][#3][#4][#5]}
-\renewcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[][#2][#3][#4][#5]}
-\renewcommandx{\painting}[5][1,2,3,4,5]{\prim{painting}[][#2][#3][#4][#5]}
-
-% Restriction for frame, layer, and painting
-% Drop the universe letter
-\renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]
-}
-\renewcommandx{\restrl}[7][1,2,3,4,5,6,7]{\restr{layer}[][#2][#3][#4][#5][#6][#7]
-}
-\renewcommandx{\restrp}[7][1,2,3,4,5,6,7]{\restr{painting}[][#2][#3][#4][#5][#6][#7]}
-
-% Coherence conditions for frame, layer, and painting
-% Keep only ε, ω; n, p; proposition on n and p
-\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][][][#9]}
-\renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][][][][][#9]}
-\renewcommandx{\cohp}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][][][][][#9]}
+\newcommandx{\Xreflto}[3][3]{\Xrefl[<#2][#3]}
+\newcommandx{\Xreflcomp}[3][3]{\Xrefl[=#2][#3]}
+\newcommandx{\Xreflfrom}[3][3]{\Xrefl[\geq#2][#3]}
 
 \def\lab{tab:coind}
 \input{tab-refl-coind.tex}
-
-% For just the second table, keep the universe letter in fullframe
-\renewcommandx{\fullframe}[3][1,2,3]{\prim{fullframe}[#1][#2][][][#3]}
 
 \def\lab{tab:core}
 \input{tab-refl-core.tex}
@@ -386,22 +369,8 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
 \def\lab{tab:frames}
 \input{tab-refl-frames.tex}
 
-% The third table mentions cohframe; keep ε, ω in this instance
-\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][][][#6,#7][#8][#9]}
-
 \def\lab{tab:faces}
 \input{tab-refl-faces-ett.tex}
-
-% Restriction for frame, layer, and painting
-% Drop just the universe letter for the coh table
-\renewcommandx{\restrf}[7][1,2,3,4,5,6,7]{\restr{frame}[][#2][#3][#4][#5][#6][#7]}
-\renewcommandx{\restrl}[7][1,2,3,4,5,6,7]{\restr{layer}[][#2][#3][#4][#5][#6][#7]}
-\renewcommandx{\restrp}[7][1,2,3,4,5,6,7]{\restr{painting}[][#2][#3][#4][#5][#6][#7]}
-
-% Coherence conditions for frame, layer, and painting
-\renewcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[][#2][#3][#4][#5][#6,#7][#8][#9]}
-\renewcommandx{\cohp}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[][#2][#3][#4][#5][#6,#7][#8][#9]}
 
 \def\lab{tab:coh}
 \input{tab-refl-coh-ett.tex}
