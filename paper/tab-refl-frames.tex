@@ -1,16 +1,17 @@
 \providecommand{\lab}{tab:frames}
-\begin{eqntable}{$\mathsf{frame}$, $\mathsf{layer}$, and $\mathsf{painting}$\label{\lab}}
-  \eqnline{\fullframe[n]}{\eqnarg{fullframe}{D}{\Xreflto{n}}}{:}{\HSet}
-  \eqnline{\fullframe[n]}{D}{\defeq}{\framep[n][n][][D=\D]}
+\begin{eqntable}{$q$-th degeneracies\label{\lab}}
+  \eqnline{\reflfext[n][p][q]}{\makecell{\eqnarg{fullframe}{D}{\Xto{n+1}} \\ \eqnarg{fullframe}{L}{\Xreflto{n}(D)} \\ \eqnarg{fullframe}{d}{\framep[n][p]} \\ \eqnarg{fullframe}{c}{\painting[n][p](d)}}}{:}{\fullframe[n+1](\D)}
+  \eqnline{\reflfext[n][0][q]}{DLdc}{\defeq}{(\reflf[n][p][q][D=\D](d),\lambda \epsilon.\,c)}
+  \eqnline{\reflfext[n][p+1][q]}{DL(d,l)c}{\defeq}{\reflfext[n][p][q+1][D=\D](d)(l,c)}
   \midrule
-  \eqnline{\framep[n][p][p \leq n]}{\eqnarg{frame}{D}{\Xreflto{n}}}{:}{\HSet}
-  \eqnline{\framep[n][0]}{D}{\defeq}{\unittype}
-  \eqnline{\framep[n][p+1]}{D}{\defeq}{\Sigma d:\framep[n][p][][D=\D].\,\layer[n-1][p][][D=\D, d=\d]}
+  \eqnline{\reflf[n][p][q][p \leq n]}{\makecell{\eqnarg{frame}{D}{\Xreflto{n}} \\ \eqnarg{fullframe}{L}{\Xreflto{n}(D)} \\ \eqnarg{frame}{d}{\framep[n][p]}}}{:}{\framep[n+1][p]}
+  \eqnline{\reflf[n][0][q]}{D L \unitpoint}{\defeq}{\unitpoint}
+  \eqnline{\reflf[n][p+1][q]}{D L (d,l)}{\defeq}{(\reflf[n][p][q+1][][D=\D, d=\d],\refll[n-1][p][][D=\D, d=\d, l=\l])}
   \midrule
-  \eqnline{\layer[n][p][p \leq n]}{\makecell{\eqnarg{layer}{D}{\Xreflto{n+1}} \\ \eqnarg{layer}{d}{\framep[n+1][p][][D=\D]}}}{:}{\HSet}
-  \eqnline{\layer[n][p]}{D~d}{\defeq}{\Pi \epsilon.\painting[n][p][][D=\hdD, E=\tlD, d={\restrf[p][\epsilon][n][p][][D=\D, d=\d]}]}
+  \eqnline{\refll[n][p][p \leq n]}{\makecell{\eqnarg{refll}{D}{\Xreflto{n+1}} \\ \eqnarg{fullframe}{L}{\Xreflto{n}(D)} \\ \eqnarg{refll}{d}{\reflf[n+1][p][][D=\D]} \\ \eqnarg{refll}{l}{\layer[n][p][][D=\D, d=\d]}}}{:}{\layer[n+1][p][][D=\hdD, d={\reflf[n+1][p][][q+1][D=\D, d=\d]}]}
+  \eqnline{\refll[n][p]}{D~d}{\defeq}{\lambda \omega.(\reflp[n][p][][q][D=\hdD, E=\tlD, d={\reflf[n][p][][0][\omega][D=\D, d=\d]}, c={\l_\omega}])}
   \midrule
-  \eqnline{\painting[n][p][p \leq n]}{\makecell{\eqnarg{filler}{D}{\Xreflto{n}} \\ \eqnarg{filler}{E}{\Xreflcomp{n}[D=\D]} \\ \eqnarg{filler}{d}{\framep[n][p][][D=\D]}}}{:}{\HSet}
-  \eqnline{\painting[n][p][p=n]}{\D~\E~\d}{\defeq}{\E(\d)}
-  \eqnline{\painting[n][p][p<n]}{\D~\E~\d}{\defeq}{\Sigma l:\layer[n-1][p][][D=\D, d=\d].\,\painting[n][p+1][][D=\D, E=\E, d=\pair{\d}{\l}]}
+  \eqnline{\reflp[n][p][p \leq n]}{\makecell{\eqnarg{filler}{D}{\Xreflto{n}} \\ \eqnarg{filler}{E}{\Xreflcomp{n}[D=\D]} \\ \eqnarg{fullframe}{L}{\Xreflto{n}(D)} \\ \eqnarg{fullframe}{R}{\Xreflcomp{n}(D)(L)} \\ \eqnarg{filler}{d}{\reflf[n][p][][D=\D]} \\ \eqnarg{fullframe}{c}{\painting[n][p](d)}}}{:}{\painting[n+1][p][][D=\hdD, E=\tlD, d={\reflf[n][p][][q][D=\D, d=\d]}]}
+  \eqnline{\reflp[n][p][p=n]}{\D~\E~L~R~\d~c}{\defeq}{R(\d)(c)}
+  \eqnline{\reflp[n][p][p<n]}{\D~\E~\d}{\defeq}{(\refll[n-1][p][][q][D=\D, d=\d, l=\l],\reflp[n][p+1][][q][D=\D, E=\E, d=\pair{d}{l}, c=\c])}
 \end{eqntable}
