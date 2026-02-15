@@ -63,7 +63,7 @@
   \setkeys*[bonak]{X}{#2}
 }
 
-\newcommandx{\Xrefl}[3][1,3]{
+\newcommandx{\Xrefl}[2][1,2]{
   \ensuremath{{\color{carolina}{\nu\textsf{reflSet}}}^{#1}}
   \setkeys*[bonak]{Xrefl}{#2}
 }
@@ -76,13 +76,13 @@
 }
 
 % Restriction for frame, layer, and painting: the general macro
-\newcommandx{\restr}[8][2,3,4,5,6,7,8]{
+\newcommandx{\restr}[7][2,3,4,5,6,7]{
   \ensuremath{\mathsf{\color{russian-green}{restr}}^{
-    \joinargs[#2][#3]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#4][#5][#6][#7]}}
-  \setkeys*[bonak]{restr#1}{#8}
+    \joinargs[#2][#3][#4]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#5][#6]}}
+  \setkeys*[bonak]{restr#1}{#7}
 }
 
-\newcommandx{\refl}[6][2,3,4,5,6]{
+\newcommandx{\refl}[6][1,2,3,4,5,6]{
   \ensuremath{\mathsf{\color{russian-green}{refl}}^{
     \joinargs[#2][#3]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#4][#5]}}
   \setkeys*[bonak]{refl#1}{#6}
@@ -158,19 +158,19 @@
 
 % These are renewed in tables, but let's define them now for in-document
 % typesetting
-\newcommandx{\framep}[5][1,2,3,4,5]{\prim{frame}[#1][#2][#3][#4][#5]}
-\newcommandx{\layer}[5][1,2,3,4,5]{\prim{layer}[#1][#2][#3][#4][#5]}
-\newcommandx{\painting}[5][1,2,3,4,5]{\prim{painting}[#1][#2][#3][#4][#5]}
+\newcommandx{\framep}[4][1,2,3,4]{\prim{frame}[#1][#2][#3][#4]}
+\newcommandx{\layer}[4][1,2,3,4]{\prim{layer}[#1][#2][#3][#4]}
+\newcommandx{\painting}[4][1,2,3,4]{\prim{painting}[#1][#2][#3][#4]}
 \newcommandx{\restrf}[6][1,2,3,4,5,6]{\restr{frame}[#1][#2][#3][#4][#5][#6]}
 \newcommandx{\restrl}[6][1,2,3,4,5,6]{\restr{layer}[#1][#2][#3][#4][#5][#6]}
 \newcommandx{\restrp}[6][1,2,3,4,5,6]{\restr{painting}[#1][#2][#3][#4][#5][#6]}
-\newcommandx{\reflfext}[3][1,2,3]{\refl{frameExt}[#1][#2][][][#3]}
-\newcommandx{\reflf}[5][1,2,3,4,5]{\refl{frame}[#1][#2][#3][#4][#5]}
-\newcommandx{\refll}[5][1,2,3,4,5]{\refl{layer}[#1][#2][#3][#4][#5]}
-\newcommandx{\reflp}[5][1,2,3,4,5]{\refl{painting}[#1][#2][#3][#4][#5]}
-\newcommandx{\cohf}[9][1,2,3,4,5,6,7,8,9]{\coh{frame}[#1][#2][#3][#4][#5][#6][#7][#8][#9]}
-\newcommandx{\cohl}[9][1,2,3,4,5,6,7,8,9]{\coh{layer}[#1][#2][#3][#4][#5][#6][#7][#8][#9]}
-\newcommandx{\cohp}[9][1,2,3,4,5,6,7,8,9]{\coh{painting}[#1][#2][#3][#4][#5][#6][#7][#8][#9]}
+\newcommandx{\reflfext}[3][1,2,3]{\refl[frameExt][#1][#2][][][#3]}
+\newcommandx{\reflf}[5][1,2,3,4,5]{\refl[frame][#1][#2][#3][#4][#5]}
+\newcommandx{\refll}[5][1,2,3,4,5]{\refl[layer][#1][#2][#3][#4][#5]}
+\newcommandx{\reflp}[5][1,2,3,4,5]{\refl[painting][#1][#2][#3][#4][#5]}
+\newcommandx{\cohf}[8][1,2,3,4,5,6,7,8]{\coh{frame}[#1][#2][#3][#4][#5][#6][#7][#8]}
+\newcommandx{\cohl}[8][1,2,3,4,5,6,7,8]{\coh{layer}[#1][#2][#3][#4][#5][#6][#7][#8]}
+\newcommandx{\cohp}[8][1,2,3,4,5,6,7,8]{\coh{painting}[#1][#2][#3][#4][#5][#6][#7][#8]}
 \newcommandx{\fullframe}[1][1]{\prim{fullframe}[#1]}
 
 \newcommandx{\frametype}[2][1,2]{\prim{FRAME}[#1][#2]}
@@ -197,7 +197,7 @@
 \newcommandx{\depscohttype}[2][1,2]{\depsmacro{DEPS}{coh2}{chestnut}[#1][#2]}
 \newcommandx{\fulldepscohttype}[1][1]{\depsmacro{DEPS}{fullcoh2}{chestnut}[#1]}
 
-\newcommandx{\coht}[7][1,2,3,4,5,6,7]{\cohtwo{frame}[#3][#4][#5][#6][#7][#1][#2][]}
+\newcommandx{\coht}[7][1,2,3,4,5,6,7]{\cohtwo{frame}[#1][#2][#3][#4][#5][#6][#7]}
 
 % Kerning for star
 \newcommand{\kstar}{{\star}}
@@ -350,15 +350,15 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
 
 % Truncated sets, otherwise referred to as X
 % Keep all arguments
-\newcommandx{\Xto}[3][3]{\X[<#2][#3]}
-\newcommandx{\Xcomp}[3][3]{\X[=#2][#3]}
-\newcommandx{\Xfrom}[3][3]{\X[\geq#2][#3]}
+\newcommandx{\Xto}[2][2]{\X[<#1][#2]}
+\newcommandx{\Xcomp}[2][2]{\X[=#1][#2]}
+\newcommandx{\Xfrom}[2][2]{\X[\geq#1][#2]}
 
 
 % Refl truncated sets.
-\newcommandx{\Xreflto}[3][3]{\Xrefl[<#2][#3]}
-\newcommandx{\Xreflcomp}[3][3]{\Xrefl[=#2][#3]}
-\newcommandx{\Xreflfrom}[3][3]{\Xrefl[\geq#2][#3]}
+\newcommandx{\Xreflto}[2][2]{\Xrefl[<#1][#2]}
+\newcommandx{\Xreflcomp}[2][2]{\Xrefl[=#1][#2]}
+\newcommandx{\Xreflfrom}[2][2]{\Xrefl[\geq#1][#2]}
 
 \def\lab{tab:coind}
 \input{tab-refl-coind.tex}

@@ -1,13 +1,13 @@
 \providecommand{\lab}{fulltab:faces}
 \begin{eqntable}{$q$-th projection of $\mathsf{restr}$, or faces\label{\lab}}
-  \eqnline{\restrf[m][q][\epsilon][n][p][q \leq n-p]}{\makecell{\eqnarg{restrframe}{D}{\Xreflto{m}{n+1}} \\ \eqnarg{restrframe}{d}{\framep[m][n+1][p][][D=\D]}}}{:}{\framep[m][n][p][][D=\hdD]}
-  \eqnline{\restrf[m][q][\epsilon][n][0]}{D~\unitpoint}{\defeq}{\unitpoint}
-  \eqnline{\restrf[m][q][\epsilon][n][p+1]}{D~(\pair{d}{l})}{\defeq}{(\restrf[m][q+1][\epsilon][n][p][][D=\D, d=\d],\restrl[m][q][\epsilon][n-1][p][][D=\D, d=\d, l=\l])}
+  \eqnline{\restrf[n][p][q \leq n-p][q][\epsilon]}{\makecell{\eqnarg{restrframe}{D}{\Xreflto{n+1}} \\ \eqnarg{restrframe}{d}{\framep[n+1][p][][D=\D]}}}{:}{\framep[n][p][][D=\hdD]}
+  \eqnline{\restrf[n][0][][q][\epsilon]}{D~\unitpoint}{\defeq}{\unitpoint}
+  \eqnline{\restrf[n][p+1][][q][\epsilon]}{D~(\pair{d}{l})}{\defeq}{(\restrf[q+1][\epsilon][n][p][][D=\D, d=\d],\restrl[q][\epsilon][n-1][p][][D=\D, d=\d, l=\l])}
   \midrule
-  \eqnline{\restrl[m][q][\epsilon][n][p][q \leq n-p]}{\makecell{\eqnarg{restrlayer}{D}{\Xreflto{m}{n+2}} \\ \eqnarg{restrlayer}{d}{\framep[m][n+2][p][][D=\D]} \\ \eqnarg{restrlayer}{l}{\layer[m][n+1][p][][D=\D, d=\d]}}}{:}{\layer[m][n][p][][D=\hdD, d={\restrf[m][q+1][\epsilon][n+1][p][][D=\D, d=\d]}]}
-  \eqnline{\restrl[m][q][\epsilon][n][p]}{\D~\d~\l}{\defeq}{\lambda \omega.(\restrp[m][q][\epsilon][n][p][][D=\hdD, E=\tlD, d={\restrf[m][\omega][0][n][p][][D=\D, d=\d]}, c={\l_\omega}])}
+  \eqnline{\restrl[n][p][q \leq n-p][q][\epsilon]}{\makecell{\eqnarg{restrlayer}{D}{\Xreflto{n+2}} \\ \eqnarg{restrlayer}{d}{\framep[n+2][p][][D=\D]} \\ \eqnarg{restrlayer}{l}{\layer[n+1][p][][D=\D, d=\d]}}}{:}{\layer[n][p][][D=\hdD, d={\restrf[n+1][p][][q+1][\epsilon][D=\D, d=\d]}]}
+  \eqnline{\restrl[n][p][][q][\epsilon]}{\D~\d~\l}{\defeq}{\lambda \omega.(\restrp[n][p][][q][\epsilon][D=\hdD, E=\tlD, d={\restrf[n][p][][0][\omega][D=\D, d=\d]}, c={\l_\omega}])}
   \midrule
-  \eqnline{\restrp[m][q][\epsilon][n][p][q \leq n-p]}{\makecell{\eqnarg{restrpainting}{D}{\Xreflto{m}{n+1}} \\ \eqnarg{restrpainting}{E}{\Xreflcomp{m}{n+1}[D=\D]} \\\eqnarg{restrpainting}{d}{\framep[m][n+1][p][][D=\D]} \\ \eqnarg{restrpainting}{c}{\painting[m][n+1][p][][D=\D, E=\E, d=\d]}}}{:}{\painting[m][n][p][][D=\hdD, E=\tlD, d={\restrf[m][q][\epsilon][n][p][][D=\D, d=\d]}]}
-  \eqnline{\restrp[m][0][\epsilon][n][p][]}{\D~\E~\d~(\pair{l}{\_})}{\defeq}{\l_\epsilon}
-  \eqnline{\restrp[m][q+1][\epsilon][n][p][p<n]}{\D~\E~\d~(\pair{l}{c})}{\defeq}{(\restrl[m][q][\epsilon][n-1][p][][D=\D, d=\d, l=\l],\restrp[m][q][\epsilon][n][p+1][][D=\D, E=\E, d=\pair{d}{l}, c=\c])}
+  \eqnline{\restrp[n][p][q \leq n-p][q][\epsilon]}{\makecell{\eqnarg{restrpainting}{D}{\Xreflto{n+1}} \\ \eqnarg{restrpainting}{E}{\Xreflcomp{n+1}[D=\D]} \\\eqnarg{restrpainting}{d}{\framep[n+1][p][][D=\D]} \\ \eqnarg{restrpainting}{c}{\painting[n+1][p][][D=\D, E=\E, d=\d]}}}{:}{\painting[n][p][][D=\hdD, E=\tlD, d={\restrf[n][p][][q][\epsilon][D=\D, d=\d]}]}
+  \eqnline{\restrp[n][p][][0][\epsilon]}{\D~\E~\d~(\pair{l}{\_})}{\defeq}{\l_\epsilon}
+  \eqnline{\restrp[n][p][p<n][q+1][\epsilon]}{\D~\E~\d~(\pair{l}{c})}{\defeq}{(\restrl[n-1][p][][q][\epsilon][D=\D, d=\d, l=\l],\restrp[n][p+1][][q][\epsilon][D=\D, E=\E, d=\pair{d}{l}, c=\c])}
 \end{eqntable}
