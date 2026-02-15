@@ -103,15 +103,9 @@
 }
 
 \newcommandx{\cohid}[9][2,3,4,5,6,7,8,9]{
-  \ensuremath{\mathsf{\color{chestnut}{coh}}^{
+  \ensuremath{\mathsf{\color{chestnut}{cohid}}^{
     \joinargs[#2][#3][#4]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#5][#6][#7][#8]}}
-  \setkeys*[bonak]{coh#1}{#9}
-}
-
-\newcommandx{\cohtwo}[9][2,3,4,5,6,7,8,9]{
-  \ensuremath{\mathsf{\color{chestnut}{coh2}}^{
-    \joinargs[#2][#3][#4]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#5][#6][#7][#8]}}
-  \setkeys*[bonak]{coh2#1}{#9}
+  \setkeys*[bonak]{cohid#1}{#9}
 }
 
 % Simplicial and Cubical sets
@@ -192,7 +186,6 @@
 \newcommandx{\cohftype}[2][1,2]{\coh{FRAME}[#1][#2]}
 \newcommandx{\cohltype}[2][1,2]{\coh{LAYER}[#1][#2]}
 \newcommandx{\cohptype}[2][1,2]{\coh{PAINTING}[#1][#2]}
-\newcommandx{\cohttype}[2][1,2]{\cohtwo{FRAME}[#1][#2]}
 
 \newcommandx{\deps}[2][1,2]{\depsmacro{deps}{restr}{russian-green}[#1][#2]}
 \newcommandx{\fulldeps}[1][1]{\depsmacro{deps}{fullrestr}{russian-green}[#1]}
@@ -207,7 +200,6 @@
 \newcommandx{\depscohttype}[2][1,2]{\depsmacro{DEPS}{coh2}{chestnut}[#1][#2]}
 \newcommandx{\fulldepscohttype}[1][1]{\depsmacro{DEPS}{fullcoh2}{chestnut}[#1]}
 
-\newcommandx{\coht}[7][1,2,3,4,5,6,7]{\cohtwo{frame}[#1][#2][#3][#4][#5][#6][#7]}
 
 % Kerning for star
 \newcommand{\kstar}{{\star}}
@@ -379,8 +371,8 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
 \def\lab{tab:refl}
 \input{tab-refl.tex}
 
-\def\lab{tab:idcoh}
-\input{tab-idcoh.tex}
+\def\lab{tab:cohid}
+\input{tab-cohid.tex}
 
 \def\lab{tab:coh}
 \input{tab-coh.tex}
