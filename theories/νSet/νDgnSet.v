@@ -72,7 +72,7 @@ Definition mkIdReflRestrFrameType {p k}
   forall ε (d: ReflFramePrev deps),
   restrFrame k leR_refl deps.(_deps) ε (reflFrame deps d) = d.
 
-Fixpoint mkIdReflRestrFrameTypes {p} :
+Fixpoint mkIdReflRestrFrameTypes {p}:
   forall {k} (deps: DepsReflRestr p k), Type :=
   match p with
   | 0 => fun _ _ => unit
@@ -86,7 +86,7 @@ Definition PaintingPrev {p k} (deps: DepsRestr p.+1 k):
   FramePrev deps -> Type :=
   deps.(_paintings).2.
 
-Definition PaintingBase {p k} (deps: DepsRestr p.+1 k) 
+Definition PaintingBase {p k} (deps: DepsRestr p.+1 k)
   (extraDeps: DepsRestrExtension p.+1 k deps): FrameBase deps -> Type :=
   (mkPaintings (deps; extraDeps)).2.
 
@@ -122,7 +122,7 @@ Class CohReflRestrFrameTypeBlock {p k} (deps: DepsRestr p k) := {
 }.
 
 #[local]
-Instance toDepsRefl {p k} 
+Instance toDepsRefl {p k}
   (depsCohs: DepsCohs p k)
   (reflFrames: mkReflFrameTypes depsCohs.(νSet._deps)): DepsReflRestr p k :=
   {| _deps := depsCohs.(νSet._deps);
@@ -155,9 +155,7 @@ Definition mkReflLayer {p k} (deps: DepsCohs p.+1 k)
       ε d) (l ε).
 
 Fixpoint mkCohReflRestrFrameTypesAndReflFrames {p k}:
-  forall
-    (deps: DepsCohs p k)
-    (reflFrames: mkReflFrameTypes deps.(νSet._deps))
+  forall (deps: DepsCohs p k) (reflFrames: mkReflFrameTypes deps.(νSet._deps))
     (reflPaintings: mkReflPaintingTypes (toDepsRefl deps reflFrames)
       deps.(_extraDeps)),
     CohReflRestrFrameTypeBlock (NextDepsRestr deps) :=
@@ -197,22 +195,20 @@ Definition mkIdReflRestrPaintingType {p k}
   (reflFrames: mkReflFrameTypes deps.(νSet._deps))
   (reflPaintings: mkReflPaintingTypes (toDepsRefl deps reflFrames)
     deps.(_extraDeps))
-  (idReflRestrFrames: mkIdReflRestrFrameTypes (toDepsRefl deps reflFrames)): Type :=
-  forall
-    (ε: arity)
-    (d: ReflFramePrev (toDepsRefl deps reflFrames))
+  (idReflRestrFrames: mkIdReflRestrFrameTypes (toDepsRefl deps reflFrames)):
+  Type :=
+  forall (ε: arity) (d: ReflFramePrev (toDepsRefl deps reflFrames))
     (c: ReflPaintingPrev (toDepsRefl deps reflFrames) d),
   rew [ReflPaintingPrev (toDepsRefl deps reflFrames)] idReflRestrFrames.2 ε d in
   deps.(_restrPaintings).2 k leR_refl ε (reflFrames.2 d) (reflPaintings.2 d c) = c.
 
-Fixpoint mkIdReflRestrPaintingTypes {p} :
-  forall {k}
-    (deps: DepsCohs p k)
+Fixpoint mkIdReflRestrPaintingTypes {p}:
+  forall {k} (deps: DepsCohs p k)
     (reflFrames: mkReflFrameTypes deps.(νSet._deps))
     (reflPaintings: mkReflPaintingTypes (toDepsRefl deps reflFrames)
       deps.(_extraDeps))
-    (idReflRestrFrames: mkIdReflRestrFrameTypes (toDepsRefl deps reflFrames)), 
-    Type :=
+    (idReflRestrFrames: mkIdReflRestrFrameTypes (toDepsRefl deps reflFrames)),
+  Type :=
   match p with
   | 0 => fun _ _ _ _ _ => unit
   | S p =>
@@ -310,7 +306,7 @@ Definition mkIdReflRestrLayer {p k}
   (deps: DepsReflCohs p.+1 k)
   (ε: arity)
   (d: ReflFrameBase (ReflOfReflCohs deps))
-  (l: mkLayer (RestrOfReflCohs deps).(_restrFrames) d) 
+  (l: mkLayer (RestrOfReflCohs deps).(_restrFrames) d)
   (prevIdReflRestrFrames: mkIdReflRestrFrameTypes (NextDepsRefl deps.(1))):
   rew [mkLayer _] prevIdReflRestrFrames.2 ε d in
   mkRestrLayer deps.(_depsCohs2).(_depsCohs).(_restrPaintings)
@@ -360,7 +356,7 @@ Definition mkIdReflRestrFrame {p k} (deps: DepsReflCohs p k):
 Definition HasRefl {p} (deps: DepsReflCohs p 0)
   (E: mkFrame (NextDepsRestr (CohsOfReflCohs deps)) -> HSet): Type :=
   forall (d: FramePrev (NextDepsRestr (CohsOfReflCohs deps)))
-         (c: PaintingPrev (NextDepsRestr (CohsOfReflCohs deps)) d),
+    (c: PaintingPrev (NextDepsRestr (CohsOfReflCohs deps)) d),
   let l ε := (rew <- mkIdReflRestrFrame deps ε d in c) in
   E (reflFrame (NextDepsRefl deps) d; l).
 
@@ -400,9 +396,7 @@ Proof.
 Defined.
 
 Fixpoint mkReflPaintingsPrefix {p k}:
-  forall
-    (deps: DepsReflCohs p k)
-    (extraDeps: DepsReflCohsExtension p k deps),
+  forall (deps: DepsReflCohs p k) (extraDeps: DepsReflCohsExtension p k deps),
   mkReflPaintingTypes
     ((NextDepsRefl deps).(1))
     (NextDepsRestr (CohsOfReflCohs deps);
@@ -416,9 +410,7 @@ Fixpoint mkReflPaintingsPrefix {p k}:
   end.
 
 Definition mkReflPaintings {p k}:
-  forall
-    (deps: DepsReflCohs p k)
-    (extraDeps: DepsReflCohsExtension p k deps),
+  forall (deps: DepsReflCohs p k) (extraDeps: DepsReflCohsExtension p k deps),
   mkReflPaintingTypes (NextDepsRefl deps)
     (mkExtraDeps (CohsExtOfReflCohs deps)) :=
   fun deps extraDeps =>
@@ -439,7 +431,7 @@ Definition mkCohReflRestrPaintingType {p k}
   mkRestrPainting (CohsExtOfReflCohs deps.(1)) i (↑ Hi) ε (reflFrame (NextDepsRefl deps.(1)) d)
     (mkReflPainting deps.(1) (deps; extraDeps) d c).
 
-Fixpoint mkCohReflRestrPaintingTypes {p} :
+Fixpoint mkCohReflRestrPaintingTypes {p}:
   forall {k} (deps: DepsReflCohs p k)
     (extraDeps: DepsReflCohsExtension p k deps), Type :=
   match p with
@@ -448,7 +440,7 @@ Fixpoint mkCohReflRestrPaintingTypes {p} :
     fun k deps extraDeps =>
     { _: mkCohReflRestrPaintingTypes deps.(1) (deps; extraDeps)
       &T mkCohReflRestrPaintingType deps extraDeps }
-  end. 
+  end.
 
 Fixpoint mkIdReflRestrPainting {p k}
   (deps: DepsReflCohs p k)
@@ -469,7 +461,7 @@ Proof.
     set (e := (mkIdReflRestrFrames _).2 ε d0).
     enough (eq_sym e • e = eq_refl) as ->. now trivial.
     now apply (mkFrame _).(UIP).
-  - unshelve eapply (eq_existT_curried_dep  
+  - unshelve eapply (eq_existT_curried_dep
       (Q := mkPainting deps .(_depsCohs2) .(_depsCohs) .(_extraDeps))).
     * now apply mkIdReflRestrLayer.
     * destruct c as [l c].
@@ -527,7 +519,8 @@ Definition CohsExtOfReflCohs2 {p k}
   depsCohs2.(_depsReflCohs).(_depsCohs2).(_extraDepsCohs).
 
 #[local]
-Instance proj1DepsReflCohs2 {p k} (depsCohs2: DepsReflCohs2 p.+1 k): DepsReflCohs2 p k.+1 :=
+Instance proj1DepsReflCohs2 {p k} (depsCohs2: DepsReflCohs2 p.+1 k):
+DepsReflCohs2 p k.+1 :=
 {|
   _depsReflCohs := depsCohs2.(_depsReflCohs).(1);
   _extraDepsCohs2 := (depsCohs2.(_depsReflCohs).(_depsCohs2);
@@ -550,8 +543,8 @@ Definition mkCohReflRestrLayer {p k}
     (mkReflFrames deps.(_depsReflCohs)))).(_deps).(1).(1)))
   (l: mkLayer (toDepsRefl
     (mkDepsCohs (Cohs2OfReflCohs2 deps))
-    (mkReflFrames deps.(_depsReflCohs))).(_deps).(1).(_restrFrames) d) 
-  (prevCohReflRestrFrames: 
+    (mkReflFrames deps.(_depsReflCohs))).(_deps).(1).(_restrFrames) d)
+  (prevCohReflRestrFrames:
     mkCohReflRestrFrameTypes (mkDepsCohs (Cohs2OfReflCohs2 deps).(1))
       (mkReflFrames deps.(_depsReflCohs).(1))
       (mkReflPaintings deps.(_depsReflCohs).(1) (deps.(_depsReflCohs); deps.(_extraDepsRefl)))):
@@ -598,7 +591,8 @@ Proof.
   rewrite <- (deps.(_cohReflRestrPaintings).2 ε i Hi d0 (l θ)).
   rewrite rew_map with
     (P := fun b => (NextDepsRestr (CohsOfReflCohs2 deps).(1)).(_paintings).2 b)
-    (f := fun x => (NextDepsRestr (CohsOfReflCohs2 deps).(1)).(_restrFrames).2 0 leR_O θ x).
+    (f := fun x => (NextDepsRestr (CohsOfReflCohs2 deps).(1)).(_restrFrames).2
+      0 leR_O θ x).
   rewrite rew_map with
     (P := fun rf => ReflPaintingBase _ _ rf)
     (f := fun d0 => reflFrame (toDepsRefl _ _) d0).
@@ -611,9 +605,8 @@ Proof.
   apply rew_swap with
     (P := fun b => (mkDepsCohs (Cohs2OfReflCohs2 deps)).(1).(
       νSet._deps).(_paintings).2 b).
-  rewrite rew_app_rl.
-  - reflexivity.
-  - apply (mkFrame (RestrOfReflCohs2 deps).(1)).(UIP).
+  rewrite rew_app_rl. now trivial.
+  now apply (mkFrame (RestrOfReflCohs2 deps).(1)).(UIP).
 Defined.
 
 Fixpoint mkCohReflRestrFrames {p k} (deps: DepsReflCohs2 p k):
@@ -672,7 +665,7 @@ Proof.
   destruct extraDeps.
   - now apply TopReflCohDep.
   - apply (AddReflCohDep (mkDepsReflCohs deps)).
-    exact (mkExtraReflCohs p.+1 k deps extraDeps).
+    now exact (mkExtraReflCohs p.+1 k deps extraDeps).
 Defined.
 
 Fixpoint mkCohReflRestrPainting {p k}
@@ -686,16 +679,16 @@ Proof.
   - destruct extraDeps, deps, _depsReflCohs0, _depsCohs3.
     + generalize dependent _extraDepsCohs0; intro.
       refine (match _extraDepsCohs0 with TopCohDep E => _ end).
-      intros.
-      reflexivity.
-    + reflexivity.
+      now intros.
+    + now trivial.
   - unfold ReflPaintingBase, PaintingBase, toDepsRefl; simpl.
     destruct extraDeps.
-    + contradiction.
+    + now contradiction.
     + unshelve eapply (eq_existT_curried_dep
         (Q := mkPainting (RestrExtOfReflCohs (mkDepsReflCohs deps.(1))))).
-      * apply (mkCohReflRestrLayer deps ε i (⇓ Hi) d l).
-      * exact (mkCohReflRestrPainting p.+1 k deps extraDeps ε i (⇓ Hi) (d; l) c).
+      * now apply (mkCohReflRestrLayer deps ε i (⇓ Hi) d l).
+      * now exact (mkCohReflRestrPainting p.+1 k deps extraDeps ε i (⇓ Hi)
+          (d; l) c).
 Defined.
 
 Fixpoint mkCohReflRestrPaintings {p k}
@@ -890,7 +883,8 @@ Definition mkνSetData0: νSetData 0 :=
   {|
     frames := (tt: mkFrameTypes 0 0);
     paintings := (tt: mkPaintingTypes 0 0 (tt: mkFrameTypes 0 0));
-    restrFrames := (tt: mkRestrFrameTypes (tt: mkPaintingTypes 0 0 (tt: mkFrameTypes 0 0)));
+    restrFrames :=
+      (tt: mkRestrFrameTypes (tt: mkPaintingTypes 0 0 (tt: mkFrameTypes 0 0)));
     restrPaintings := fun _ => tt;
     cohFrames := fun _ => tt;
     cohPaintings := fun _ _ => tt;
