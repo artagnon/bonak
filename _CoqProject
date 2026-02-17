@@ -1,7 +1,7 @@
 -R _build/default/theories Bonak
 theories/νSet/HSet.v
-theories/νSet/LeYoneda.v
 theories/νSet/Notation.v
 theories/νSet/RewLemmas.v
 theories/νSet/SigT.v
 theories/νSet/νSet.v
+theories/νSetDgn/νSetDgn.v
