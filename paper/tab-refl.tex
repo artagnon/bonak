@@ -8,6 +8,6 @@
   \eqnline{\refll[n][p]}{D~d}{\defeq}{\lambda \omega.(\reflp[n][p][][q][D=\hdD, E=\tlD, d={\reflf[n][p][][0][\omega][D=\D, d=\d]}, c={\l_\omega}])}
   \midrule
   \eqnline{\reflp[n][p][p < q \leq n]}{\makecell{\eqnarg{reflpainting}{D}{\Xreflto{n}} \\ \eqnarg{reflpainting}{E}{\Xreflcomp{n}[D=\D]} \\ \eqnarg{reflpainting}{L}{\Xreflto{n}(D)} \\ \eqnarg{reflpainting}{R}{\Xreflcomp{n}(D)(L)} \\ \eqnarg{reflpainting}{d}{\reflf[n][p][][][D=\D]} \\ \eqnarg{reflpainting}{c}{\painting[n][p](d)}}}{:}{\painting[n+1][p][][D=\hdD, E=\tlD, d={\reflf[n][p][][q][D=\D, d=\d]}]}
-  \eqnline{\reflp[n][p][p=q]}{\D~\E~L~R~\d~c}{\defeq}{R(\d)(c)}
-  \eqnline{\reflp[n][p][p<q]}{\D~\E~L~R~\d~\pair{l}{c}}{\defeq}{(\refll[n-1][p][][q][D=\D, d=\d, l=\l],\reflp[n][p+1][][q][D=\D, E=\E, d=\pair{d}{l}, c=\c])}
+  \eqnline{\reflp[n][p][p=q]}{\D~\E~L~R~\d~c}{\defeq}{\pair{\lambda \epsilon.\,c}{\reflpext[n][p+1][][q][D=\D, E=\E, d=\pair{d}{l}, c=\c]}}
+  \eqnline{\reflp[n][p][p<q]}{\D~\E~L~R~\d~\pair{l}{c}}{\defeq}{\pair{\refll[n-1][p][][q][D=\D, d=\d, l=\l]}{\reflp[n][p+1][][q][D=\D, E=\E, d=\pair{d}{l}, c=\c]}}
 \end{eqntable}
