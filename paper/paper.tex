@@ -42,11 +42,20 @@
 \define@cmdkey[bonak]{refllayer}{L}{(#1)}
 \define@cmdkey[bonak]{refllayer}{d}{(#1)}
 \define@cmdkey[bonak]{refllayer}{l}{(#1)}
+\define@cmdkey[bonak]{refllayerExt}{D}{(#1)}
+\define@cmdkey[bonak]{refllayerExt}{L}{(#1)}
+\define@cmdkey[bonak]{refllayerExt}{d}{(#1)}
+\define@cmdkey[bonak]{refllayerExt}{l}{(#1)}
 \define@cmdkey[bonak]{reflpainting}{D}{(#1)}
 \define@cmdkey[bonak]{reflpainting}{L}{(#1)}
 \define@cmdkey[bonak]{reflpainting}{E}{(#1)}
 \define@cmdkey[bonak]{reflpainting}{d}{(#1)}
 \define@cmdkey[bonak]{reflpainting}{c}{(#1)}
+\define@cmdkey[bonak]{reflpaintingExt}{D}{(#1)}
+\define@cmdkey[bonak]{reflpaintingExt}{L}{(#1)}
+\define@cmdkey[bonak]{reflpaintingExt}{E}{(#1)}
+\define@cmdkey[bonak]{reflpaintingExt}{d}{(#1)}
+\define@cmdkey[bonak]{reflpaintingExt}{c}{(#1)}
 
 \define@cmdkey[bonak]{cohframe}{D}{(#1)}
 \define@cmdkey[bonak]{cohframe}{d}{(#1)}
@@ -174,8 +183,11 @@
 \newcommandx{\reflp}[5][1,2,3,4,5]{\refl[painting][#1][#2][#3][#4][#5]}
 \newcommandx{\reflpext}[5][1,2,3,4,5]{\refl[paintingExt][#1][#2][#3][#4][#5]}
 \newcommandx{\cohf}[8][1,2,3,4,5,6,7,8]{\coh{frame}[#1][#2][#3][#4][#5][#6][#7][#8]}
+\newcommandx{\cohfext}[8][1,2,3,4,5,6,7,8]{\coh{frameExt}[#1][#2][#3][#4][#5][#6][#7][#8]}
 \newcommandx{\cohl}[8][1,2,3,4,5,6,7,8]{\coh{layer}[#1][#2][#3][#4][#5][#6][#7][#8]}
+\newcommandx{\cohlext}[8][1,2,3,4,5,6,7,8]{\coh{layerExt}[#1][#2][#3][#4][#5][#6][#7][#8]}
 \newcommandx{\cohp}[8][1,2,3,4,5,6,7,8]{\coh{painting}[#1][#2][#3][#4][#5][#6][#7][#8]}
+\newcommandx{\cohpext}[8][1,2,3,4,5,6,7,8]{\coh{paintingExt}[#1][#2][#3][#4][#5][#6][#7][#8]}
 \newcommandx{\cohidf}[8][1,2,3,4,5,6,7,8]{\cohid{frame}[#1][#2][#3][#4][#5][#6][#7][#8]}
 \newcommandx{\cohidl}[8][1,2,3,4,5,6,7,8]{\cohid{layer}[#1][#2][#3][#4][#5][#6][#7][#8]}
 \newcommandx{\cohidp}[8][1,2,3,4,5,6,7,8]{\cohid{painting}[#1][#2][#3][#4][#5][#6][#7][#8]}
@@ -374,6 +386,9 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
 
 \def\lab{tab:refl}
 \input{tab-refl.tex}
+
+\def\lab{tab:reflext}
+\input{tab-reflext.tex}
 
 \def\lab{tab:cohid}
 \input{tab-cohid.tex}
