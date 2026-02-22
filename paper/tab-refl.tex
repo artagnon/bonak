@@ -4,7 +4,7 @@
   \eqnline{\reflf[n][0][][q]}{D~L~\unitpoint}{\defeq}{\unitpoint}
   \eqnline{\reflf[n][p+1][][q]}{D~L~\pair{d}{l}}{\defeq}{(\reflf[n][p][][q+1][D=\D, d=\d],\refll[n-1][p][][][D=\D, d=\d, l=\l])}
   \midrule
-  \eqnline{\refll[n][p][p < q \leq n][q]}{\makecell{\eqnarg{refllayer}{D}{\Xreflto{n+1}} \\ \eqnarg{fullframe}{L}{\Xreflto{n}[D=\D]} \\ \eqnarg{refll}{d}{\framep[n+1][p][][D=\D]} \\ \eqnarg{refllayer}{l}{\layer[n][p][][D=\D, d=\d]}}}{:}{\layer[n+1][p][][D=\hdD, d={\reflf[n+1][p+1][][q+1][D=\D, d=\d]}]}
+  \eqnline{\refll[n][p][p < q \leq n][q]}{\makecell{\eqnarg{refllayer}{D}{\Xreflto{n+1}} \\ \eqnarg{fullframe}{L}{\Xreflto{n}[D=\D]} \\ \eqnarg{refll}{d}{\framep[n+1][p][][D=\D]} \\ \eqnarg{refllayer}{l}{\layer[n][p][][D=\D, d=\d]}}}{:}{\layer[n+1][p][][D=\hdD, d={\reflf[n][p][][q][D=\D, d=\d]}]}
   \eqnline{\refll[n][p][][q]}{D~d~l}{\defeq}{\lambda \omega.(\reflp[n][p][][q][D=\hdD, E=\tlD, d={\reflf[n][p][][0][\omega][D=\D, d=\d]}, c={\l_\omega}])}
   \midrule
   \eqnline{\reflp[n][p][p \leq q \leq n][q]}{\makecell{\eqnarg{reflpainting}{D}{\Xreflto{n}} \\ \eqnarg{reflpainting}{E}{\Xreflcomp{n}[D=\D]} \\ \eqnarg{reflpainting}{L}{\Xreflto{n}(D)} \\ \eqnarg{reflpainting}{R}{\Xreflcomp{n}(D)(L)} \\ \eqnarg{reflpainting}{d}{\framep[n][p][][D=\D]} \\ \eqnarg{reflpainting}{c}{\painting[n][p](d)}}}{:}{\painting[n+1][p][][D=\hdD, E=\tlD, d={\reflf[n][p][][q][D=\D, d=\d]}]}
