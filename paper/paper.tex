@@ -254,7 +254,9 @@
 \title{WIP: Degeneracies and permuatations}
 \author{Hugo Herbelin}{Université Paris Cité, Inria, CNRS, IRIF, Paris}{Hugo.Herbelin@inria.fr}{}{}
 \author{Ramkumar Ramachandra}{Unaffiliated}{r@artagnon.com}{}{}
-\authorrunning{H. Herbelin and R. Ramachandra}
+\author{Alice Laroche}{Unaffiliated}{r@artagnon.com}{}{}
+\author{Valerii Huhnin}{Unaffiliated}{r@artagnon.com}{}{}
+\authorrunning{H. Herbelin, R. Ramachandra, A. Laroche, and V. Huhnin}
 \keywords{Parametricity, Semi-simplicial sets, Semi-cubical sets, Formalization, Rocq, Indexed-fibred correspondence}
 \ccsdesc{10003752.10003790.10011740}
 \Copyright{Hugo Herbelin and Ramkumar Ramachandra}
@@ -372,7 +374,6 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
 \newcommandx{\Xcomp}[2][2]{\X[=#1][#2]}
 \newcommandx{\Xfrom}[2][2]{\X[\geq#1][#2]}
 
-
 % Refl truncated sets.
 \newcommandx{\Xreflto}[2][2]{\Xrefl[<#1][#2]}
 \newcommandx{\Xreflcomp}[2][2]{\Xrefl[=#1][#2]}
@@ -396,8 +397,11 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
 \def\lab{tab:cohext}
 \input{tab-cohext.tex}
 
-\def\lab{tab:coh}
-\input{tab-coh.tex}
+\def\lab{tab:cohqr}
+\input{tab-cohqr.tex}
+
+\def\lab{tab:cohrq}
+\input{tab-cohrq.tex}
 
 \renewcommandx{\cohf}{\coh{frame}[][][][][][][][]}
 \renewcommandx{\cohl}{\coh{layer}[][][][][][][][]}

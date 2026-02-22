@@ -1,0 +1,13 @@
+\providecommand{\lab}{tab:cohqr}
+\begin{eqntable}{Commutation of $q$-th projection and $r$-th degeneracy\label{\lab}}
+  \eqnline{\cohf[n][p][r \leq q \leq n-p][q][r][\epsilon][\omega]}{\makecell{\eqnarg{cohframe}{D}{\Xto{n+2}} \\ \eqnarg{cohframe}{L}{\Xreflto{n+2}(D)} \\ \eqnarg{cohframe}{d}{\framep[n+2][p][][D=\D]}}}{:}{\makecell{\restrf[q][\epsilon][n][p][][D=\hdD, d={\restrf[r][\omega][n+1][p][][D=\D, d=\d]}] \\ = \restrf[r][\omega][n][p][][D=\hdD, d={\restrf[q+1][\epsilon][n+1][p][][D=\D, d=\d]}]}}
+  \eqnline{\cohf[n][0][][q][r][\epsilon][\omega]}{\D~\unitpoint}{\defeq}{\refl(\unitpoint)}
+  \eqnline{\cohf[n][p+1][][q][r][\epsilon][\omega]}{\D~(\pair{\d}{\l})}{\defeq}{(\cohf[n][p][][q+1][r+1][\epsilon][\omega][D=\D, d=\d], \cohl[n-1][p][][q][r][\epsilon][\omega][D=\D, d=\d, l=\l])}
+  \midrule
+  \eqnline{\cohl[n][p][r \leq q \leq n-p][\epsilon][\omega][q][r]}{\makecell{\eqnarg{cohlayer}{D}{\Xto{n+3}} \\ \eqnarg{cohlayer}{L}{\Xreflto{n+3}(D)} \\ \eqnarg{cohlayer}{d}{\framep[n+3][p][][D=\D]} \\ \eqnarg{cohlayer}{l}{\layer[n+2][p][][D=\D, d=\d]}}}{:}{\makecell{\restrl[q][\epsilon][n][p][][D=\hdD, d={\restrf[r][\omega][n+1][p][][D=\D, d=\d]}](\restrl[n+1][p][][r][\omega][D=\D, d=\d, l=\l]) \\ = \restrl[r][\omega][n][p][][D=\hdD, d={\restrf[n+1][p][][q+1][][\epsilon][D=\D, d=\d]}, l={\restrl[q+1][\epsilon][n+1][p][][D=\D, d=\d, l=\l]}]}}
+  \eqnline{\cohl[n][p][][q][r][\epsilon][\omega]}{\D~\d~\l}{\defeq}{\makecell{\lambda \theta .\;\cohp[n][p][][q][r][\epsilon][\omega][E=\tlD, c=\l_\theta]}}
+  \midrule
+  \eqnline{\cohp[n][p][r \leq q \leq n-p][q][r][\epsilon][\omega]}{\makecell{\eqnarg{cohpainting}{D}{\Xto{n+2}} \\ \eqnarg{cohpainting}{L}{\Xreflto{n+2}} \\ \eqnarg{cohpainting}{E}{\Xreflcomp{n+2}[D=\D]} \\ \eqnarg{cohpainting}{d}{\framep[n+2][p][][D=\D]} \\ \eqnarg{cohpainting}{c}{\painting[n+2][p][][D=\D, E=\E, d=\d]}}}{:}{\makecell{\restrp[n][p][][q][\epsilon][D=\hdD, E=\tlD, d={\restrf[r][\omega][n+1][p][][D=\D, d=\d]}, c={\restrp[n+1][p][][r][\omega][D=\D, E=\E, d=\d, c=\c]}] \\ = \restrp[n][p][][r][\omega][D=\hdD, E=\tlD, D={\restrf[q+1][\epsilon][n+1][p][][D=\D, d=\d]}, c={\restrp[n+1][p][][q+1][\epsilon][D=\D, E=\E, d=\d, c=\c]}]}}
+  \eqnline{\cohp[n][p][][q][0][\epsilon][\omega]}{\D~\E~\d~\pair{\l}{\_}}{\defeq}{\refl(\restrp[n][p][][q][\epsilon][D=\hdD, E=\tlD, d={\restrf[\omega][0][n][p][][D=\D, d=\d]}, c={\l_\epsilon}])}
+  \eqnline{\cohp[n][p][p<n][q+1][r+1][\epsilon][\omega]}{\D~\E~\d~\pair{\l}{\c}}{\defeq}{\pair{\cohl[n-1][p][][q][r][\epsilon][\omega][D=\D, d=\d, l=\l]}{\cohp[n][p+1][][q][r][\epsilon][\omega][D=\D, E=\E, d=\pair{d}{l}, c=\c]}}
+\end{eqntable}

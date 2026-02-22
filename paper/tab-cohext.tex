@@ -1,5 +1,5 @@
 \providecommand{\lab}{tab:cohext}
-\begin{eqntable}{Commutation of $q$-th projection and $r$-th degeneracy for above\label{\lab}}
+\begin{eqntable}{Commutation of $r$-th projection and $q$-th degeneracy for Ext\label{\lab}}
   \eqnline{\cohfext[n][p][r \leq q \leq n-p][q][r][\epsilon][\omega]}{\makecell{\eqnarg{cohframe}{D}{\Xto{n+2}} \\ \eqnarg{cohframe}{L}{\Xreflto{n+2}(D)} \\ \eqnarg{cohframe}{d}{\framep[n+2][p][][D=\D]}}}{:}{\makecell{\restrf[q][\epsilon][n][p][][D=\hdD, d={\restrf[r][\omega][n+1][p][][D=\D, d=\d]}] \\ = \restrf[r][\omega][n][p][][D=\hdD, d={\restrf[q+1][\epsilon][n+1][p][][D=\D, d=\d]}]}}
   \eqnline{\cohfext[n][0][][q][r][\epsilon][\omega]}{\D~\unitpoint}{\defeq}{\refl(\unitpoint)}
   \eqnline{\cohfext[n][p+1][][q][r][\epsilon][\omega]}{\D~(\pair{\d}{\l})}{\defeq}{(\cohfext[n][p][][q+1][r+1][\epsilon][\omega][D=\D, d=\d], \cohlext[n-1][p][][q][r][\epsilon][\omega][D=\D, d=\d, l=\l])}
