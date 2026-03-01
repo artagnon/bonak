@@ -1,9 +1,9 @@
 \providecommand{\lab}{tab:core}
 \begin{eqntable}{Truncated $\nu$-sets degeneracies, the core\label{\lab}}
-  \eqnline{\Xreflto{n}}{\makecell{\eqnarg{X}{D}{\Xto{n+1}}}}{:}{\HSet[m+1]}
+  \eqnline{\Xreflto{n}}{\makecell{\eqnarg{Xreflto}{D}{\Xto{n+1}}}}{:}{\HSet[m+1]}
   \eqnline{\Xreflto{0}}{\unitpoint}{\defeq}{\unittype}
   \eqnline{\Xreflto{n+1}}{(D,E')}{\defeq}{\ensuremath{\Sigma}L:\Xreflto{n}[D=\D].\,\Xreflcomp{n}[D=\D, E'=\E', L=\L]}
   \midrule
-  \eqnline{\Xreflcomp{n}}{\makecell{\eqnarg{X}{D}{\Xto{n+1}} \\ \eqnarg{X}{E'}{\Xcomp{n+2}[D=\D]} \\ \eqnarg{X}{L}{\Xreflto{n}[D=\D]}}}{:}{\HSet[m+1]}
-  \eqnline{\Xreflcomp{n}}{\pair{\pair{\pair{\D}{\E}}{\E'}}{\L}}{\defeq}{\Pi p\leq n.\,\Pi d:\fullframe[n](\D).\,\Pi c:\E(d).\,\E'(\reflfext[n][p][][][D={\D, \E}, L=\L, d=\d],c)}
+  \eqnline{\Xreflcomp{n}}{\makecell{\eqnarg{Xreflcomp}{D}{\Xto{n+1}} \\ \eqnarg{Xreflcomp}{E'}{\Xcomp{n+1}[D=\D]} \\ \eqnarg{Xreflcomp}{L}{\Xreflto{n}[D=\D]}}}{:}{\HSet[m+1]}
+  \eqnline{\Xreflcomp{n}}{\pair{\D}{\E}~\E'~\L}{\defeq}{\Pi p\leq n.\,\Pi d:\fullframe[n](\D).\,\Pi c:\E(d).\,\E'(\reflfext[n][p][][][D={\D, \E}, L=\L, d=\d],c)}
 \end{eqntable}
