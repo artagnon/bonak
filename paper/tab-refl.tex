@@ -2,10 +2,10 @@
 \begin{eqntable}{$q$-th degeneracies below\label{\lab}}
   \eqnline{\reflf[n][p][p \leq q \leq n][q]}{\makecell{\eqnarg{reflframe}{D}{\Xreflto{n+1}} \\ \eqnarg{reflframe}{L}{\Xreflto{n}[D=\D]} \\ \eqnarg{reflframe}{d}{\framep[n][p][][D=\D]}}}{:}{\framep[n+1][p][][D=\D]}
   \eqnline{\reflf[n][0][][q][D=\D, d=\d]}{D~L~\unitpoint}{\defeq}{\unitpoint}
-  \eqnline{\reflf[n][p+1][][q][D=\D, d=\d]}{D~L~\pair{d}{l}}{\defeq}{(\reflf[n][p][][q+1][D=\D, d=\d],\refll[n][p][][q][D=\D, d=\d, l=\l])}
+  \eqnline{\reflf[n][p+1][][q][D=\D, d=\d]}{D~L~\pair{d}{l}}{\defeq}{(\reflf[n][p][][q][D=\D, d=\d],\refll[n][p][][q][D=\D, d=\d, l=\l])}
   \midrule
   \eqnline{\refll[n][p][p < q \leq n][q]}{\makecell{\eqnarg{refllayer}{D}{\Xreflto{n+1}} \\ \eqnarg{fullframe}{L}{\Xreflto{n}[D=\D]} \\ \eqnarg{refll}{d}{\framep[n][p][][D=\D]} \\ \eqnarg{refllayer}{l}{\layer[n][p][][D=\D, d=\d]}}}{:}{\layer[n+1][p][][D=\hdD, d={\reflf[n][p][][q][D=\D, d=\d]}]}
-  \eqnline{\refll[n][p][][q]}{D~d~l}{\defeq}{\lambda \omega.(\reflp[n-1][p][][q][D=\hdD, E=\tlD, d={\reflf[n][p][][0][\omega][D=\D, d=\d]}, c={\l_\omega}])}
+  \eqnline{\refll[n][p][][q]}{D~d~l}{\defeq}{\lambda \omega.(\reflp[n-1][p][][q-1][D=\hdD, E=\tlD, d={\reflf[n][p][][0][\omega][D=\D, d=\d]}, c={\l_\omega}])}
   \midrule
   \eqnline{\reflp[n][p][p \leq q \leq n][q]}{\makecell{\eqnarg{reflpainting}{D}{\Xreflto{n+1}} \\ \eqnarg{reflpainting}{E'}{\Xreflcomp{n+1}[D=\D]} \\ \eqnarg{reflpainting}{L}{\Xreflto{n}(D)} \\ \eqnarg{reflpainting}{R}{\Xreflcomp{n}[D=\D, L=\L]} \\ \eqnarg{reflpainting}{d}{\framep[n][p][][D=\D]} \\ \eqnarg{reflpainting}{c}{\painting[n][p][][D=\tlD, d=\d]}}}{:}{\painting[n+1][p][][D=\hdD, E=E', d={\reflf[n][p][][q][D=\D, d=\d]}]}
   \eqnline{\reflp[n][p][p=q][q]}{\D~\E~L~R~\d~c}{\defeq}{\pair{\lambda \epsilon.\,c}{\reflpext[n][p+1][][q][D=\D, E=\E, d=\pair{d}{l}, c=\c]}}
