@@ -5,7 +5,7 @@
   \eqnline{\reflfext[n][p+1][][q]}{D~L~\pair{\d}{\l}~c}{\defeq}{\pair{\reflfext[n][p][][q][D=\D, d=\d, c={\l,\c}]}{\refllext[n][p][][q][D=\D, L=\L, d=\d, c={\l,\c}]}}
   \midrule
   \eqnline{\refllext[n][p][q \leq p < n][q]}{\makecell{\eqnarg{refllayerExt}{D}{\Xreflto{n+1}} \\ \eqnarg{refllayerExt}{L}{\Xreflto{n}(D)} \\ \eqnarg{refllayerExt}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{refllayerExt}{c}{\painting[n][p][][D=\hdD, E=\tlD, d=\d]}}}{:}{\layer[n+1][p+1][][D=\hdD, d={\reflfext[n][p][][q][D=\D, L=\L,  d=\d, c=\c]}]}
-  \eqnline{\refllext[n][p][][q]}{D~d~\pair{l}{c}}{\defeq}{\lambda \omega.(\reflpext[n-1][p][][q][D=\hdD, E=\tlD, d={\reflfext[n][p][][0][\omega][D=\D, L=\L, d=\d, c=\c]}, R={\l.2}, c={\l_\omega}])}
+  \eqnline{\refllext[n][p][][q]}{D~d~\pair{l}{c}}{\defeq}{\lambda \omega.(\reflpext[n-1][p][][q][D=\hdD, E=\tlD, d={\reflfext[n][p][][0][\omega][D=\D, L=\L, d=\d, c=\c]}, R={\L.2}, c={\l_\omega}])}
   \midrule
   \eqnline{\reflpext[n][p][q \leq p \leq n][q]}{\makecell{\eqnarg{reflpaintingExt}{D}{\Xreflto{n+1}} \\ \eqnarg{reflpaintingExt}{E'}{\Xreflcomp{n+1}[D=\D]} \\ \eqnarg{reflpaintingExt}{L}{\Xreflto{n}(D)} \\ \eqnarg{reflpaintingExt}{R}{\Xreflcomp{n}[E'=\E',L=\L]} \\ \eqnarg{reflpaintingExt}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{reflpaintingExt}{c}{\painting[n][p][][D=\hdD, E=\tlD, d=\d]}}}{:}{\painting[n+1][p+1][][D=\hdD, E=\E', d={\reflfext[n][p][][q][D=\D, L=\L, d=\d, c=\c]}]}
   \eqnline{\reflpext[n][p][p=n][q]}{\D~\E~L~R~\d~c}{\defeq}{\R[q][d =\d, c=\c]}
