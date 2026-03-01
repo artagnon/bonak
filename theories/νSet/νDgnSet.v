@@ -664,6 +664,62 @@ Fixpoint mkCohReflRestrPaintingBelowInfTypes {p}:
       &T mkCohReflRestrPaintingBelowInfType deps extraDeps }
   end.
 
+Definition mkCohReflRestrPaintingBelowSupType {p k}
+  (deps: DepsReflCohs2 p.+1 k)
+  (extraDeps: DepsReflCohs2Extension p.+1 k deps)
+  (cohFramesBelowSup: mkCohReflRestrFrameBelowSupType deps.(_depsReflCohs)): Type :=
+  forall q r (Hq: q <= r) (Hr: r <= k) (ε: arity)
+    (d: FrameBase (RestrOfReflCohs2 deps))
+    (c: PaintingBase (RestrOfReflCohs2 deps) (RestrExtOfReflCohs2 deps) d),
+  rew [PaintingBase (RestrOfReflCohs2 deps) (RestrExtOfReflCohs2 deps)]
+    cohFramesBelowSup q r Hq Hr ε d in
+  deps.(_depsReflCohs).(_reflPaintingsBelow).2 q (Hq ↕ Hr)
+    ((RestrOfReflCohs2 deps).(_restrFrames).2 r Hr ε d)
+    ((CohsOfReflCohs2 deps).(_restrPaintings).2 r Hr ε d c) =
+  mkRestrPainting (CohsExtOfReflCohs2 deps.(1)) r.+1 (⇑ Hr) ε
+    (mkReflFrameBelow deps.(_depsReflCohs).(1) q (Hq ↕ ↑ Hr) d)
+    (mkReflPaintingBelow deps.(1) (deps; extraDeps) q (Hq ↕ ↑ Hr) d c).
+
+Fixpoint mkCohReflRestrPaintingBelowSupTypes {p}:
+  forall {k} (deps: DepsReflCohs2 p k)
+    (extraDeps: DepsReflCohs2Extension p k deps)
+    (cohFramesBelowSup: mkCohReflRestrFrameBelowSupTypes deps.(_depsReflCohs)),
+  Type :=
+  match p with
+  | 0 => fun _ _ _ _ => unit
+  | S p =>
+    fun k deps extraDeps cohFramesBelowSup =>
+    { _: mkCohReflRestrPaintingBelowSupTypes deps.(1) (deps; extraDeps)
+        cohFramesBelowSup.1
+      &T mkCohReflRestrPaintingBelowSupType deps extraDeps cohFramesBelowSup.2 }
+  end.
+
+Definition mkCohReflRestrPaintingAboveSupType {p k}
+  (deps: DepsReflCohs2 p.+1 k)
+  (extraDeps: DepsReflCohs2Extension p.+1 k deps): Type :=
+  forall q r (Hq: q <= p) (Hr: r <= k) (ε: arity)
+    (d: FrameBase (RestrOfReflCohs2 deps))
+    (c: PaintingBase (RestrOfReflCohs2 deps) (RestrExtOfReflCohs2 deps) d),
+  rew [mkPainting (RestrExtOfReflCohs2 deps)]
+    deps.(_cohReflRestrFramesAboveSup).2 q r Hq Hr ε d c in
+  deps.(_reflPaintingsAbove).2 q Hq _
+    ((CohsOfReflCohs2 deps).(_restrPaintings).2 r Hr ε d c) =
+  mkRestrPainting (CohsExtOfReflCohs2 deps) r Hr ε
+    (mkReflFrameAbove deps.(1) q Hq d c)
+    (mkReflPaintingAbove deps.(1) (deps; extraDeps) q Hq d c).
+
+Fixpoint mkCohReflRestrPaintingAboveSupTypes {p}:
+  forall {k}
+    (deps: DepsReflCohs2 p k)
+    (extraDeps: DepsReflCohs2Extension p k deps), Type :=
+  match p with
+  | 0 => fun _ _ _ => unit
+  | S p =>
+    fun k deps extraDeps =>
+    { _: mkCohReflRestrPaintingAboveSupTypes deps.(1) (deps; extraDeps)
+      &T mkCohReflRestrPaintingAboveSupType deps extraDeps }
+  end.
+
 Fixpoint mkIdReflRestrPaintingBelow {p k}
   (deps: DepsReflCohs2 p k)
   (extraDeps: DepsReflCohs2Extension p k deps):
@@ -699,57 +755,73 @@ Fixpoint mkIdReflRestrPaintingsBelow {p k}:
        mkIdReflRestrPaintingBelow deps extraDeps)
   end.
 
-(*
-
-Class DepsReflCohs2 p k := {
-  _depsReflCohs: DepsReflCohs p k;
-  _extraDepsCohs2: DepsCohs2Extension p k _depsReflCohs.(_depsCohs2);
-  _extraDepsRefl: DepsReflCohsExtension p k _depsReflCohs;
-  _cohReflRestrPaintings: mkCohReflRestrPaintingTypes _depsReflCohs _extraDepsRefl;
+Class DepsReflCohs3 p k := {
+  _depsReflCohs2: DepsReflCohs2 p k;
+  _extraDepsCohs2: DepsCohs2Extension p k (Cohs2OfReflCohs2 _depsReflCohs2);
+  _extraDepsReflCohs2: DepsReflCohs2Extension p k _depsReflCohs2;
+  _cohReflRestrFramesBelowSup:
+    mkCohReflRestrFrameBelowSupTypes _depsReflCohs2.(_depsReflCohs);
+  _cohReflRestrPaintingsBelowInf:
+    mkCohReflRestrPaintingBelowInfTypes _depsReflCohs2 _extraDepsReflCohs2;
+  _cohReflRestrPaintingsBelowSup:
+    mkCohReflRestrPaintingBelowSupTypes _depsReflCohs2 _extraDepsReflCohs2
+      _cohReflRestrFramesBelowSup;
+  _cohReflRestrPaintingsAboveSup:
+    mkCohReflRestrPaintingAboveSupTypes _depsReflCohs2 _extraDepsReflCohs2;
 }.
 
-Definition Cohs2OfReflCohs2 {p k}
-  (depsCohs2: DepsReflCohs2 p k): DepsCohs2 p k :=
-  depsCohs2.(_depsReflCohs).(_depsCohs2).
-
-Definition ReflBelowOfReflCohs2 {p k}
-  (depsCohs2: DepsReflCohs2 p k): DepsReflBelow p k :=
-  ReflBelowOfReflCohs (depsCohs2.(_depsReflCohs)).
-
-Definition RestrOfReflCohs2 {p k}
-  (depsCohs2: DepsReflCohs2 p k): DepsRestr p k :=
-  (ReflBelowOfReflCohs (depsCohs2.(_depsReflCohs))).(_deps).
-
-Definition CohsOfReflCohs2 {p k}
-  (depsCohs2: DepsReflCohs2 p k): DepsCohs p k :=
-  depsCohs2.(_depsReflCohs).(_depsCohs2).(_depsCohs).
-
-Definition RestrExtOfReflCohs2 {p k}
-  (depsCohs2: DepsReflCohs2 p k): DepsRestrExtension p k
-    (RestrOfReflCohs2 depsCohs2) :=
-  depsCohs2.(_depsReflCohs).(_depsCohs2).(_depsCohs).(_extraDeps).
-
-Definition CohsExtOfReflCohs2 {p k}
-  (depsCohs2: DepsReflCohs2 p k): DepsCohsExtension p k
-    (CohsOfReflCohs2 depsCohs2) :=
-  depsCohs2.(_depsReflCohs).(_depsCohs2).(_extraDepsCohs).
-
 #[local]
-Instance proj1DepsReflCohs2 {p k} (depsCohs2: DepsReflCohs2 p.+1 k):
-DepsReflCohs2 p k.+1 :=
+Instance proj1DepsReflCohs3 {p k} (depsCohs3: DepsReflCohs3 p.+1 k):
+DepsReflCohs3 p k.+1 :=
 {|
-  _depsReflCohs := depsCohs2.(_depsReflCohs).(1);
-  _extraDepsCohs2 := (depsCohs2.(_depsReflCohs).(_depsCohs2);
-    depsCohs2.(_extraDepsCohs2));
-  _extraDepsRefl := (depsCohs2.(_depsReflCohs); depsCohs2.(_extraDepsRefl));
-  _cohReflRestrPaintings := depsCohs2.(_cohReflRestrPaintings).1;
+  _depsReflCohs2 := depsCohs3.(_depsReflCohs2).(1);
+  _extraDepsCohs2 := (Cohs2OfReflCohs2 depsCohs3.(_depsReflCohs2);
+    depsCohs3.(_extraDepsCohs2));
+  _extraDepsReflCohs2 := (depsCohs3.(_depsReflCohs2);
+    depsCohs3.(_extraDepsReflCohs2));
+  _cohReflRestrFramesBelowSup :=
+    depsCohs3.(_cohReflRestrFramesBelowSup).1;
+  _cohReflRestrPaintingsBelowInf :=
+    depsCohs3.(_cohReflRestrPaintingsBelowInf).1;
+  _cohReflRestrPaintingsBelowSup :=
+    depsCohs3.(_cohReflRestrPaintingsBelowSup).1;
+  _cohReflRestrPaintingsAboveSup :=
+    depsCohs3.(_cohReflRestrPaintingsAboveSup).1;
 |}.
 
-Declare Scope depsreflcohs2_scope.
-Delimit Scope depsreflcohs2_scope with depsreflcohs2.
-Bind Scope depsreflcohs2_scope with DepsReflCohs2.
-Notation "x .(1)" := (proj1DepsReflCohs2 x%depsreflcohs2)
-  (at level 1, left associativity, format "x .(1)"): depsreflcohs2_scope.
+Declare Scope depsreflcohs3_scope.
+Delimit Scope depsreflcohs3_scope with depsreflcohs3.
+Bind Scope depsreflcohs3_scope with DepsReflCohs3.
+Notation "x .(1)" := (proj1DepsReflCohs3 x%depsreflcohs3)
+  (at level 1, left associativity, format "x .(1)"): depsreflcohs3_scope.
+
+Definition ReflBelowOfReflCohs3 {p k}
+  (depsCohs3: DepsReflCohs3 p k): DepsReflBelow p k :=
+  ReflBelowOfReflCohs2 depsCohs3.(_depsReflCohs2).
+
+Definition RestrOfReflCohs3 {p k}
+  (depsCohs3: DepsReflCohs3 p k): DepsRestr p k :=
+  RestrOfReflCohs2 depsCohs3.(_depsReflCohs2).
+
+Definition CohsOfReflCohs3 {p k}
+  (depsCohs3: DepsReflCohs3 p k): DepsCohs p k :=
+  CohsOfReflCohs2 depsCohs3.(_depsReflCohs2).
+
+Definition Cohs2OfReflCohs3 {p k}
+  (depsCohs3: DepsReflCohs3 p k): DepsCohs2 p k :=
+  Cohs2OfReflCohs2 depsCohs3.(_depsReflCohs2).
+
+Definition RestrExtOfReflCohs3 {p k}
+  (depsCohs3: DepsReflCohs3 p k): DepsRestrExtension p k
+    (RestrOfReflCohs3 depsCohs3) :=
+  RestrExtOfReflCohs2 depsCohs3.(_depsReflCohs2).
+
+Definition CohsExtOfReflCohs3 {p k}
+  (depsCohs3: DepsReflCohs3 p k): DepsCohsExtension p k
+    (CohsOfReflCohs3 depsCohs3) :=
+  CohsExtOfReflCohs2 depsCohs3.(_depsReflCohs2).
+
+(*
 
 Definition mkCohReflRestrLayer {p k}
   (deps: DepsReflCohs2 p.+1 k)
