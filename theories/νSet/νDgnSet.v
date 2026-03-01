@@ -469,6 +469,8 @@ Definition mkCohReflRestrFrameAboveSupTypes {p k}
 
 Class DepsReflCohs2 p k := {
   _depsReflCohs: DepsReflCohs p k;
+  _cohReflRestrFramesBelowSup:
+    mkCohReflRestrFrameBelowSupTypes _depsReflCohs;
   _reflPaintingsAbove: mkReflPaintingAboveTypes (AboveOfReflCohs _depsReflCohs);
   _cohReflRestrFramesAboveSup:
     mkCohReflRestrFrameAboveSupTypes _depsReflCohs _reflPaintingsAbove;
@@ -479,6 +481,7 @@ Instance proj1DepsReflCohs2 {p k} (depsCohs2: DepsReflCohs2 p.+1 k):
   DepsReflCohs2 p k.+1 :=
 {|
   _depsReflCohs := depsCohs2.(_depsReflCohs).(1)%depsreflcohs;
+  _cohReflRestrFramesBelowSup := depsCohs2.(_cohReflRestrFramesBelowSup).1;
   _reflPaintingsAbove := depsCohs2.(_reflPaintingsAbove).1;
   _cohReflRestrFramesAboveSup := depsCohs2.(_cohReflRestrFramesAboveSup).1;
 |}.
@@ -759,13 +762,11 @@ Class DepsReflCohs3 p k := {
   _depsReflCohs2: DepsReflCohs2 p k;
   _extraDepsCohs2: DepsCohs2Extension p k (Cohs2OfReflCohs2 _depsReflCohs2);
   _extraDepsReflCohs2: DepsReflCohs2Extension p k _depsReflCohs2;
-  _cohReflRestrFramesBelowSup:
-    mkCohReflRestrFrameBelowSupTypes _depsReflCohs2.(_depsReflCohs);
   _cohReflRestrPaintingsBelowInf:
     mkCohReflRestrPaintingBelowInfTypes _depsReflCohs2 _extraDepsReflCohs2;
   _cohReflRestrPaintingsBelowSup:
     mkCohReflRestrPaintingBelowSupTypes _depsReflCohs2 _extraDepsReflCohs2
-      _cohReflRestrFramesBelowSup;
+      _depsReflCohs2.(_cohReflRestrFramesBelowSup);
   _cohReflRestrPaintingsAboveSup:
     mkCohReflRestrPaintingAboveSupTypes _depsReflCohs2 _extraDepsReflCohs2;
 }.
@@ -779,8 +780,6 @@ DepsReflCohs3 p k.+1 :=
     depsCohs3.(_extraDepsCohs2));
   _extraDepsReflCohs2 := (depsCohs3.(_depsReflCohs2);
     depsCohs3.(_extraDepsReflCohs2));
-  _cohReflRestrFramesBelowSup :=
-    depsCohs3.(_cohReflRestrFramesBelowSup).1;
   _cohReflRestrPaintingsBelowInf :=
     depsCohs3.(_cohReflRestrPaintingsBelowInf).1;
   _cohReflRestrPaintingsBelowSup :=
