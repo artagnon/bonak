@@ -638,31 +638,30 @@ Definition mkReflPaintingsBelow {p k}:
   fun deps extraDeps =>
     (mkReflPaintingsBelowPrefix deps extraDeps; mkReflPaintingBelow deps extraDeps).
 
-(*
-Definition mkCohReflRestrPaintingType {p k}
-  (deps: DepsReflCohs p.+1 k)
-  (extraDeps: DepsReflCohsExtension p.+1 k deps): Type :=
-  forall (ε: arity) i (Hi: i <= k)
-    (d: ReflFrameBase (ReflBelowOfReflCohs deps))
-    (c: ReflPaintingBase (ReflBelowOfReflCohs deps) (RestrExtOfReflCohs deps) d),
-  rew [ReflPaintingBase
-        (toDepsReflBelow deps.(_depsCohs2).(_depsCohs) deps.(_reflFrameDeps))
-        deps.(_depsCohs2).(_depsCohs).(_extraDeps)]
-  deps.(_cohReflRestrFrames).2 i Hi ε d in
-  deps.(_reflPaintingDeps).2 ((RestrOfReflCohs deps).(_restrFrames).2 i Hi ε d)
-    ((CohsOfReflCohs deps).(_restrPaintings).2 i Hi ε d c) =
-  mkRestrPainting (CohsExtOfReflCohs deps.(1)) i (↑ Hi) ε (reflFrame (mkDepsReflBelow deps.(1)) d)
-    (mkReflPainting deps.(1) (deps; extraDeps) d c).
+Definition mkCohReflRestrPaintingBelowInfType {p k}
+  (deps: DepsReflCohs2 p.+1 k)
+  (extraDeps: DepsReflCohs2Extension p.+1 k deps): Type :=
+  forall q r (Hq: q <= k) (Hr: r <= q) (ε: arity)
+    (d: FrameBase (RestrOfReflCohs2 deps))
+    (c: PaintingBase (RestrOfReflCohs2 deps) (RestrExtOfReflCohs2 deps) d),
+  rew [PaintingBase (RestrOfReflCohs2 deps) (RestrExtOfReflCohs2 deps)]
+  deps.(_depsReflCohs).(_cohReflRestrFramesBelowInf).2 q r Hq Hr ε d in
+  deps.(_depsReflCohs).(_reflPaintingsBelow).2 q Hq
+    ((RestrOfReflCohs2 deps).(_restrFrames).2 r (Hr ↕ Hq) ε d)
+    ((CohsOfReflCohs2 deps).(_restrPaintings).2 r (Hr ↕ Hq) ε d c) =
+  mkRestrPainting (CohsExtOfReflCohs2 deps.(1)) r (Hr ↕ ↑ Hq) ε
+    (mkReflFrameBelow deps.(_depsReflCohs).(1) q.+1 (⇑ Hq) d)
+    (mkReflPaintingBelow deps.(1) (deps; extraDeps) q.+1 (⇑ Hq) d c).
 
-Fixpoint mkCohReflRestrPaintingTypes {p}:
-  forall {k} (deps: DepsReflCohs p k)
-    (extraDeps: DepsReflCohsExtension p k deps), Type :=
+Fixpoint mkCohReflRestrPaintingBelowInfTypes {p}:
+  forall {k} (deps: DepsReflCohs2 p k)
+    (extraDeps: DepsReflCohs2Extension p k deps), Type :=
   match p with
   | 0 => fun _ _ _ => unit
   | S p =>
     fun k deps extraDeps =>
-    { _: mkCohReflRestrPaintingTypes deps.(1) (deps; extraDeps)
-      &T mkCohReflRestrPaintingType deps extraDeps }
+    { _: mkCohReflRestrPaintingBelowInfTypes deps.(1) (deps; extraDeps)
+      &T mkCohReflRestrPaintingBelowInfType deps extraDeps }
   end.
 
 Fixpoint mkIdReflRestrPainting {p k}
