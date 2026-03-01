@@ -11,9 +11,21 @@
 % Magic with xkeyval to go over the 9-argument limit of LaTeX
 \makeatletter
 \define@cmdkey[bonak]{X}{D}{(#1)}
+\define@cmdkey[bonak]{Xcomp}{D}{(#1)}
+\define@cmdkey[bonak]{Xfrom}{D}{(#1)}
+\define@cmdkey[bonak]{Xto}{D}{(#1)}
 \define@cmdkey[bonak]{Xrefl}{D}{(#1)}
 \define@cmdkey[bonak]{Xrefl}{L}{(#1)}
 \define@cmdkey[bonak]{Xrefl}{M}{(#1)}
+\define@cmdkey[bonak]{Xreflcomp}{D}{(#1)}
+\define@cmdkey[bonak]{Xreflcomp}{L}{(#1)}
+\define@cmdkey[bonak]{Xreflcomp}{M}{(#1)}
+\define@cmdkey[bonak]{Xreflfrom}{D}{(#1)}
+\define@cmdkey[bonak]{Xreflfrom}{L}{(#1)}
+\define@cmdkey[bonak]{Xreflfrom}{M}{(#1)}
+\define@cmdkey[bonak]{Xreflto}{D}{(#1)}
+\define@cmdkey[bonak]{Xreflto}{L}{(#1)}
+\define@cmdkey[bonak]{Xreflto}{M}{(#1)}
 
 \define@cmdkey[bonak]{frame}{D}{(#1)}
 \define@cmdkey[bonak]{layer}{D}{(#1)}
@@ -70,14 +82,14 @@
 \makeatother
 
 % Truncated sets, otherwise referred to as X: the general macro
-\newcommandx{\X}[2][1,2]{
-  \ensuremath{{\color{carolina}{\nu\textsf{Set}}}^{#1}}
-  \setkeys*[bonak]{X}{#2}
+\newcommandx{\X}[3][1,2,3]{
+  \ensuremath{{\color{carolina}{\nu\textsf{Set}}}^{#2}}
+  \setkeys*[bonak]{X#1}{#3}
 }
 
-\newcommandx{\Xrefl}[2][1,2]{
-  \ensuremath{{\color{carolina}{\nu\textsf{reflSet}}}^{#1}}
-  \setkeys*[bonak]{Xrefl}{#2}
+\newcommandx{\Xrefl}[3][1,2,3]{
+  \ensuremath{{\color{carolina}{\nu\textsf{reflSet}}}^{#2}}
+  \setkeys*[bonak]{Xrefl#1}{#3}
 }
 
 % Frame, layer, and painting: the general macro
@@ -358,7 +370,7 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
 % The rule for implicit arguments for each table:
 % show 1 explicit in first two parts
 % show E + 1 explicit in the third part
-\appendmask[bonak]{Xrefl}[D]
+\appendmask[bonak]{Xreflfrom}[D]
 \appendmask[bonak]{layer}[D]
 \appendmask[bonak]{painting}[D]
 \appendmask[bonak]{restrframe}[D]
@@ -376,14 +388,14 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
 
 % Truncated sets, otherwise referred to as X
 % Keep all arguments
-\newcommandx{\Xto}[2][2]{\X[<#1][#2]}
-\newcommandx{\Xcomp}[2][2]{\X[=#1][#2]}
-\newcommandx{\Xfrom}[2][2]{\X[\geq#1][#2]}
+\newcommandx{\Xcomp}[2][2]{\X[comp][=#1][#2]}
+\newcommandx{\Xfrom}[2][2]{\X[from][\geq#1][#2]}
+\newcommandx{\Xto}[2][2]{\X[to][<#1][#2]}
 
 % Refl truncated sets.
-\newcommandx{\Xreflto}[2][2]{\Xrefl[<#1][#2]}
-\newcommandx{\Xreflcomp}[2][2]{\Xrefl[=#1][#2]}
-\newcommandx{\Xreflfrom}[2][2]{\Xrefl[\geq#1][#2]}
+\newcommandx{\Xreflcomp}[2][2]{\Xrefl[comp][=#1][#2]}
+\newcommandx{\Xreflto}[2][2]{\Xrefl[to][<#1][#2]}
+\newcommandx{\Xreflfrom}[2][2]{\Xrefl[from][\geq#1][#2]}
 
 \def\lab{tab:coind}
 \input{tab-coind.tex}
