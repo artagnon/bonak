@@ -5,8 +5,7 @@
   \eqnline{\cohidf[n][p+1][][q][\epsilon]}{\D~(\pair{\d}{\l})}{\defeq}{(\cohidf[n][p][][q+1][r+1][\epsilon][D=\D, d=\d], \cohidl[n-1][p][][q][\epsilon][D=\D, d=\d, l=\l])}
   \midrule
   \eqnline{\cohidl[n][p][p \leq q \leq n][\epsilon][q]}{\makecell{\eqnarg{cohlayer}{D}{\Xreflto{n+3}} \\ \eqnarg{cohlayer}{d}{\framep[n+3][p][][D=\D]} \\ \eqnarg{cohlayer}{l}{\layer[n+2][p][][D=\D, d=\d]}}}{:}{\restrl[q][n][p][][D=\hdD, d={\restrf[r][n+1][p][][D=\D, d=\d]}](\refll[n+1][p][][r][D=\D, d=\d, l=\l]) = \d}
-  \eqnline{\cohidl[n][p][][q][\epsilon]}{\D~\d~\l}{\defeq}{}
-  %{\lambda\theta .\;\cohidl[n-1][p][][q][\epsilon][D=\D, d=\d, l=\l]}
+  \eqnline{\cohidl[n][p][][q][\epsilon]}{\D~\d~\l}{\defeq}{\lambda\theta.\;\cohidl[n-1][p][][q][\epsilon][D=\D, d=\d, l=\l]}
   \midrule
   \eqnline{\cohidp[n][p][p \leq q \leq n][q][\epsilon]}{\makecell{\eqnarg{cohpainting}{D}{\Xreflto{n+2}} \\ \eqnarg{cohpainting}{E}{\Xreflcomp{n+2}[D=\D]} \\ \eqnarg{cohpainting}{d}{\framep[n+2][p][][D=\D]} \\ \eqnarg{cohpainting}{c}{\painting[n+2][p][][D=\D, E=\E, d=\d]}}}{:}{\restrp[n][p][][q][\epsilon][D=\hdD, E=\tlD, d={\restrf[r][n+1][p][][D=\D, d=\d]}, c={\reflp[n+1][p][][r][D=\D, E=\E, d=\d, c=\c]}] = \c}
   \eqnline{\cohidp[n][p][][q][\epsilon]}{\D~\E~\d~(\pair{\l}{\_})}{\defeq}{\refl(\restrp[n][p][][q][\epsilon][D=\hdD, E=\tlD, d={\restrf[0][n][p][][D=\D, d=\d]}, c={\l_\epsilon}])}

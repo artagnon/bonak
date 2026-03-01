@@ -278,7 +278,7 @@
 }
 
 % A block in the eqntable environment
-\NewDocumentCommand{\eqnline}{m m m m}{#1 & #2 & #3 & #4 \\}
+\NewDocumentCommand{\eqnline}{m m m m}{\ensuremath{#1} & \ensuremath{#2} & \ensuremath{#3} & \ensuremath{#4} \expandafter\\}
 \newcommandx*{\mc}[1]{\multicolumn{4}{c}{\emph{#1}} \\\\}
 
 % \eqnarg is slightly more involved: output ( ... ) if not in mask,
