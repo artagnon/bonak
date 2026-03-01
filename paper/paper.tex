@@ -84,6 +84,15 @@
 \define@cmdkey[bonak]{cohpainting}{E}{(#1)}
 \define@cmdkey[bonak]{cohpainting}{d}{(#1)}
 \define@cmdkey[bonak]{cohpainting}{c}{(#1)}
+\define@cmdkey[bonak]{cohidframe}{D}{(#1)}
+\define@cmdkey[bonak]{cohidframe}{d}{(#1)}
+\define@cmdkey[bonak]{cohidlayer}{D}{(#1)}
+\define@cmdkey[bonak]{cohidlayer}{d}{(#1)}
+\define@cmdkey[bonak]{cohidlayer}{l}{(#1)}
+\define@cmdkey[bonak]{cohidpainting}{D}{(#1)}
+\define@cmdkey[bonak]{cohidpainting}{E}{(#1)}
+\define@cmdkey[bonak]{cohidpainting}{d}{(#1)}
+\define@cmdkey[bonak]{cohidpainting}{c}{(#1)}
 
 \define@cmdkey[bonak]{R}{d}{(#1)}
 \define@cmdkey[bonak]{R}{c}{(#1)}
@@ -133,10 +142,10 @@
   \setkeys*[bonak]{coh#1}{#9}
 }
 
-\newcommandx{\cohid}[9][2,3,4,5,6,7,8,9]{
+\newcommandx{\cohid}[9][2,3,4,5,6,7,8]{
   \ensuremath{\mathsf{\color{chestnut}{cohid}}^{
-    \joinargs[#2][#3][#4]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#5][#6][#7][#8]}}
-  \setkeys*[bonak]{cohid#1}{#9}
+    \joinargs[#2][#3][#4]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#5][#6][#7]}}
+  \setkeys*[bonak]{cohid#1}{#8}
 }
 
 % Simplicial and Cubical sets
@@ -213,9 +222,9 @@
 \newcommandx{\cohlext}[8][1,2,3,4,5,6,7,8]{\coh{layerExt}[#1][#2][#3][#4][#5][#6][#7][#8]}
 \newcommandx{\cohp}[8][1,2,3,4,5,6,7,8]{\coh{painting}[#1][#2][#3][#4][#5][#6][#7][#8]}
 \newcommandx{\cohpext}[8][1,2,3,4,5,6,7,8]{\coh{paintingExt}[#1][#2][#3][#4][#5][#6][#7][#8]}
-\newcommandx{\cohidf}[8][1,2,3,4,5,6,7,8]{\cohid{frame}[#1][#2][#3][#4][#5][#6][#7][#8]}
-\newcommandx{\cohidl}[8][1,2,3,4,5,6,7,8]{\cohid{layer}[#1][#2][#3][#4][#5][#6][#7][#8]}
-\newcommandx{\cohidp}[8][1,2,3,4,5,6,7,8]{\cohid{painting}[#1][#2][#3][#4][#5][#6][#7][#8]}
+\newcommandx{\cohidf}[7][1,2,3,4,5,6,7]{\cohid{frame}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohidl}[7][1,2,3,4,5,6,7]{\cohid{layer}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohidp}[7][1,2,3,4,5,6,7]{\cohid{painting}[#1][#2][#3][#4][#5][#6][#7]}
 \newcommandx{\fullframe}[2][1,2]{\prim{fullframe}[#1][][][#2]}
 
 \newcommandx{\frametype}[2][1,2]{\prim{FRAME}[#1][#2]}
