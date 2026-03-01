@@ -9,5 +9,5 @@
   \midrule
   \eqnline{\reflpext[n][p][q \leq p \leq n][q]}{\makecell{\eqnarg{reflpaintingExt}{D}{\Xreflto{n+1}} \\ \eqnarg{reflpaintingExt}{E'}{\Xreflcomp{n+1}[D=\D]} \\ \eqnarg{reflpaintingExt}{L}{\Xreflto{n}(D)} \\ \eqnarg{reflpaintingExt}{R}{\Xreflcomp{n}[E'=\E',L=\L]} \\ \eqnarg{reflpaintingExt}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{reflpaintingExt}{c}{\painting[n][p][][D=\hdD, E=\tlD, d=\d]}}}{:}{\painting[n+1][p+1][][D=\hdD, E=\E', d={\reflfext[n][p][][q][D=\D, L=\L, d=\d, c=\c]}]}
   \eqnline{\reflpext[n][p][p=n][q]}{\D~\E~L~R~\d~c}{\defeq}{\R[q][d =\d, c=\c]}
-  \eqnline{\reflpext[n][p][p<n][q]}{\D~\E~L~R~\d~\pair{l}{c}}{\defeq}{\pair{\refllext[n][p][][q][D=\D, d=\d, l=\l]}{\reflpext[n][p+1][][q][D=\D, E=\E, d=\pair{d}{l}, c=\c]}}
+  \eqnline{\reflpext[n][p][p<n][q]}{\D~\E~L~R~\d~\pair{l}{c}}{\defeq}{\pair{\refllext[n][p][][q][D=\D, d=\d, l=\l, c=\c]}{\reflpext[n][p+1][][q][D=\D, E=\E, d=\pair{d}{l}, c=\c]}}
 \end{eqntable}
