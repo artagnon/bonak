@@ -664,44 +664,42 @@ Fixpoint mkCohReflRestrPaintingBelowInfTypes {p}:
       &T mkCohReflRestrPaintingBelowInfType deps extraDeps }
   end.
 
-Fixpoint mkIdReflRestrPainting {p k}
-  (deps: DepsReflCohs p k)
-  (extraDeps: DepsReflCohsExtension p k deps):
-  mkIdReflRestrPaintingType
-    (mkDepsCohs deps.(_depsCohs2))
-    (mkReflFrames deps)
-    (mkReflPaintings deps extraDeps)
-    (mkIdReflRestrFrames deps).
+Fixpoint mkIdReflRestrPaintingBelow {p k}
+  (deps: DepsReflCohs2 p k)
+  (extraDeps: DepsReflCohs2Extension p k deps):
+  mkIdReflRestrPaintingBelowType
+    (mkDepsCohs (Cohs2OfReflCohs2 deps))
+    (mkReflFramesBelow deps.(_depsReflCohs))
+    (mkReflPaintingsBelow deps extraDeps)
+    (mkIdReflRestrFramesBelow deps.(_depsReflCohs)).
 Proof.
-  intros ε d c.
-  destruct extraDeps.
-  - rewrite rew_compose.
-    set (e := (mkIdReflRestrFrames _).2 ε d).
-    enough (eq_sym e • e = eq_refl) as ->. now trivial.
-    now apply (mkFrame _).(UIP).
-  - unshelve eapply (eq_existT_curried_dep
-      (Q := mkPainting deps .(_depsCohs2) .(_depsCohs) .(_extraDeps))).
-    * now apply mkIdReflRestrLayer.
-    * destruct c as [l c].
-      now exact (mkIdReflRestrPainting p.+1 k deps extraDeps ε (d; l) c).
+  intros i Hi ε d c.
+  destruct i.
+  - now rewrite rew_compose, eq_trans_sym_inv_l.
+  - destruct extraDeps; [now contradiction |].
+    unshelve eapply (eq_existT_curried_dep (Q := mkPainting (RestrExtOfReflCohs2 deps))).
+    + now apply (mkIdReflRestrLayerBelow deps.(_depsReflCohs) i Hi ε).
+    + destruct c as [l c].
+      now exact (mkIdReflRestrPaintingBelow p.+1 k deps extraDeps i (⇓ Hi) ε (d; l) c).
 Defined.
 
-Fixpoint mkIdReflRestrPaintings {p k}
-  (deps: DepsReflCohs p k)
-  (extraDeps: DepsReflCohsExtension p k deps):
-  mkIdReflRestrPaintingTypes
-    (mkDepsCohs deps.(_depsCohs2))
-    (mkReflFrames deps)
-    (mkReflPaintings deps extraDeps)
-    (mkIdReflRestrFrames deps).
-Proof.
-  destruct p.
-  - unshelve econstructor. now exact tt. now apply mkIdReflRestrPainting.
-  - unshelve econstructor.
-    + now exact (mkIdReflRestrPaintings p k.+1 deps.(1)%depsreflcohs
-      (deps; extraDeps)%extradepsreflcohs).
-    + now apply mkIdReflRestrPainting.
-Defined.
+Fixpoint mkIdReflRestrPaintingsBelow {p k}:
+  forall (deps: DepsReflCohs2 p k) (extraDeps: DepsReflCohs2Extension p k deps),
+  mkIdReflRestrPaintingBelowTypes
+    (mkDepsCohs (Cohs2OfReflCohs2 deps))
+    (mkReflFramesBelow deps.(_depsReflCohs))
+    (mkReflPaintingsBelow deps extraDeps)
+    (mkIdReflRestrFramesBelow deps.(_depsReflCohs)) :=
+  match p with
+  | 0 => fun deps extraDeps =>
+      (tt; mkIdReflRestrPaintingBelow deps extraDeps)
+  | S p =>
+      fun deps extraDeps =>
+      (mkIdReflRestrPaintingsBelow deps.(1) (deps; extraDeps);
+       mkIdReflRestrPaintingBelow deps extraDeps)
+  end.
+
+(*
 
 Class DepsReflCohs2 p k := {
   _depsReflCohs: DepsReflCohs p k;
