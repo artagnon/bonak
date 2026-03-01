@@ -80,6 +80,9 @@
 \define@cmdkey[bonak]{cohpainting}{E}{(#1)}
 \define@cmdkey[bonak]{cohpainting}{d}{(#1)}
 \define@cmdkey[bonak]{cohpainting}{c}{(#1)}
+
+\define@cmdkey[bonak]{R}{d}{(#1)}
+\define@cmdkey[bonak]{R}{c}{(#1)}
 \makeatother
 
 % Truncated sets, otherwise referred to as X: the general macro
@@ -139,9 +142,9 @@
 \newcommand{\CSet}{\ensuremath{\mathsf{Set}_{\boldsymbol{\square}}}}
 
 % Universe, referred to as U
-\newcommandx{\HSet}[1][1=]{\ensuremath{\mathsf{\color{spanish-blue}{HSet}}_{#1}}}
+\newcommandx{\HSet}[1][1]{\ensuremath{\mathsf{\color{spanish-blue}{HSet}}_{#1}}}
 \newcommand{\HProp}{\ensuremath{\mathsf{\color{spanish-blue}{HProp}}}}
-\newcommandx{\HGpd}[1][1=]{\ensuremath{\mathsf{\color{spanish-blue}{HGpd}}_{#1}}}
+\newcommandx{\HGpd}[1][1]{\ensuremath{\mathsf{\color{spanish-blue}{HGpd}}_{#1}}}
 \newcommand{\Type}{\ensuremath{\mathsf{\color{spanish-blue}{Type}}}}
 \newcommand{\SProp}{\ensuremath{\mathsf{\color{spanish-blue}{SProp}}}}
 
@@ -164,7 +167,10 @@
 \newcommand{\tlD}{D.2}
 \renewcommand{\L}{L}
 \newcommand{\M}{M}
-\newcommand{\R}{R}
+\newcommandx{\R}[2][1,2]{
+  R_{#1}
+  \setkeys*[bonak]{R}{#2}
+}
 \renewcommand{\d}{d}
 \renewcommand{\E}{E}
 \renewcommand{\l}{l}
