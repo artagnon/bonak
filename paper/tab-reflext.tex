@@ -2,7 +2,7 @@
 \begin{eqntable}{$q$-th degeneracies above\label{\lab}}
   \eqnline{\reflfext[n][p][q \leq p \leq n][q]}{\makecell{\eqnarg{reflframeExt}{D}{\Xto{n+1}} \\ \eqnarg{reflframeExt}{L}{\Xreflto{n}[D=\D]} \\ \eqnarg{reflframeExt}{d}{\framep[n][p]} \\ \eqnarg{reflframeExt}{c}{\painting[n][p][][d=\d]}}}{:}{\framep[n+1][p+1][][D=\D]}
   \eqnline{\reflfext[n][q][][q]}{D~L~d~c}{\defeq}{(\reflf[n][p][][q][D=\D, d=\d],\lambda \epsilon.\,c)}
-  \eqnline{\reflfext[n][p+1][][q]}{D~L~\pair{d}{l}~c}{\defeq}{\pair{\reflfext[n][p][][q][D=\D, d=\d]\pair{l}{c}}{\refllext[n][p+1][][q][D=\D, d=\d]l}}
+  \eqnline{\reflfext[n][p+1][][q]}{D~L~\pair{d}{l}~c}{\defeq}{\pair{\reflfext[n][p][][q][D=\D, d=\d]\pair{l}{c}}{\refllext[n][p+1][][q][D=\D, L=\L, d=\d, l=\l]}}
   \midrule
   \eqnline{\refllext[n][p][q \leq p \leq n][q]}{\makecell{\eqnarg{refllayerExt}{D}{\Xreflto{n+1}} \\ \eqnarg{refllayerExt}{L}{\Xreflto{n}(D)} \\ \eqnarg{refllayerExt}{d}{\framep[n+1][p][][D=\D]} \\ \eqnarg{refllayerExt}{l}{\layer[n][p][][D=\D, d=\d]}}}{:}{\layer[n+1][p+1][][D=\hdD, d={\reflfext[n][p][][q][D=\D, d=\d]}]}
   \eqnline{\refllext[n][p][][q]}{D~d~l}{\defeq}{\lambda \omega.(\reflpext[n][p][][q][D=\hdD, E=\tlD, d={\reflfext[n][p][][0][\omega][D=\D, d=\d]}, c={\l_\omega}])}
