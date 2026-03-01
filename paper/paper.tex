@@ -13,6 +13,7 @@
 \define@cmdkey[bonak]{X}{D}{(#1)}
 \define@cmdkey[bonak]{Xrefl}{D}{(#1)}
 \define@cmdkey[bonak]{Xrefl}{L}{(#1)}
+\define@cmdkey[bonak]{Xrefl}{M}{(#1)}
 
 \define@cmdkey[bonak]{frame}{D}{(#1)}
 \define@cmdkey[bonak]{layer}{D}{(#1)}
@@ -149,6 +150,7 @@
 \newcommand{\hdD}{D.1}
 \newcommand{\tlD}{D.2}
 \renewcommand{\L}{L}
+\newcommand{\M}{M}
 \newcommand{\R}{R}
 \renewcommand{\d}{d}
 \renewcommand{\E}{E}
@@ -356,6 +358,7 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
 % The rule for implicit arguments for each table:
 % show 1 explicit in first two parts
 % show E + 1 explicit in the third part
+\appendmask[bonak]{Xrefl}[D]
 \appendmask[bonak]{layer}[D]
 \appendmask[bonak]{painting}[D]
 \appendmask[bonak]{restrframe}[D]
