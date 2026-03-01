@@ -84,6 +84,15 @@
 \define@cmdkey[bonak]{cohpainting}{E}{(#1)}
 \define@cmdkey[bonak]{cohpainting}{d}{(#1)}
 \define@cmdkey[bonak]{cohpainting}{c}{(#1)}
+\define@cmdkey[bonak]{cohframeExt}{D}{(#1)}
+\define@cmdkey[bonak]{cohframeExt}{d}{(#1)}
+\define@cmdkey[bonak]{cohlayerExt}{D}{(#1)}
+\define@cmdkey[bonak]{cohlayerExt}{d}{(#1)}
+\define@cmdkey[bonak]{cohlayerExt}{l}{(#1)}
+\define@cmdkey[bonak]{cohpaintingExt}{D}{(#1)}
+\define@cmdkey[bonak]{cohpaintingExt}{E}{(#1)}
+\define@cmdkey[bonak]{cohpaintingExt}{d}{(#1)}
+\define@cmdkey[bonak]{cohpaintingExt}{c}{(#1)}
 \define@cmdkey[bonak]{cohidframe}{D}{(#1)}
 \define@cmdkey[bonak]{cohidframe}{d}{(#1)}
 \define@cmdkey[bonak]{cohidlayer}{D}{(#1)}
@@ -403,9 +412,15 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
 \appendmask[bonak]{reflframeExt}[D, L, d]
 \appendmask[bonak]{refllayerExt}[D, E', L, d]
 \appendmask[bonak]{reflpaintingExt}[D, E', L, d]
-\appendmask[bonak]{cohframe}[D]
-\appendmask[bonak]{cohlayer}[D, d]
-\appendmask[bonak]{cohpainting}[D, d]
+\appendmask[bonak]{cohframe}[D, E', L]
+\appendmask[bonak]{cohlayer}[D, E', L, d]
+\appendmask[bonak]{cohpainting}[D, E', L, d]
+\appendmask[bonak]{cohframeExt}[D, E', L]
+\appendmask[bonak]{cohlayerExt}[D, E', L, d]
+\appendmask[bonak]{cohpaintingExt}[D, E', L, d]
+\appendmask[bonak]{cohidframe}[D, E', L]
+\appendmask[bonak]{cohidlayer}[D, E', L, d]
+\appendmask[bonak]{cohidpainting}[D, E', L, d]
 
 % Truncated sets, otherwise referred to as X
 % Keep all arguments
