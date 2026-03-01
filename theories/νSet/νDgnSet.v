@@ -811,6 +811,10 @@ Definition Cohs2OfReflCohs3 {p k}
   (depsCohs3: DepsReflCohs3 p k): DepsCohs2 p k :=
   Cohs2OfReflCohs2 depsCohs3.(_depsReflCohs2).
 
+Definition ReflCohsOfReflCohs3 {p k}
+  (depsCohs3: DepsReflCohs3 p k): DepsReflCohs p k :=
+  depsCohs3.(_depsReflCohs2).(_depsReflCohs).
+
 Definition RestrExtOfReflCohs3 {p k}
   (depsCohs3: DepsReflCohs3 p k): DepsRestrExtension p k
     (RestrOfReflCohs3 depsCohs3) :=
@@ -821,99 +825,110 @@ Definition CohsExtOfReflCohs3 {p k}
     (CohsOfReflCohs3 depsCohs3) :=
   CohsExtOfReflCohs2 depsCohs3.(_depsReflCohs2).
 
-(*
-
-Definition mkCohReflRestrLayer {p k}
-  (deps: DepsReflCohs2 p.+1 k)
-  (ε: arity) i (Hi: i <= k)
+Definition mkCohReflRestrLayerBelowInf {p k}
+  (deps: DepsReflCohs3 p.+1 k)
+  (ε: arity) q r (Hq: q <= k) (Hr: r <= q)
   (d: mkFrame (((toDepsReflBelow
-    (mkDepsCohs (Cohs2OfReflCohs2 deps))
-    (mkReflFrames deps.(_depsReflCohs)))).(_deps).(1).(1)))
+    (mkDepsCohs (Cohs2OfReflCohs3 deps))
+    (mkReflFramesBelow (ReflCohsOfReflCohs3 deps)))).(_depsRestr).(1).(1)))
   (l: mkLayer (toDepsReflBelow
-    (mkDepsCohs (Cohs2OfReflCohs2 deps))
-    (mkReflFrames deps.(_depsReflCohs))).(_deps).(1).(_restrFrames) d)
+    (mkDepsCohs (Cohs2OfReflCohs3 deps))
+    (mkReflFramesBelow (ReflCohsOfReflCohs3 deps))).(_depsRestr).(1).(_restrFrames) d)
   (prevCohReflRestrFrames:
-    mkCohReflRestrFrameTypes (mkDepsCohs (Cohs2OfReflCohs2 deps).(1))
-      (mkReflFrames deps.(_depsReflCohs).(1))
-      (mkReflPaintings deps.(_depsReflCohs).(1) (deps.(_depsReflCohs); deps.(_extraDepsRefl)))):
-  rew [mkLayer _] prevCohReflRestrFrames.2 i.+1 (⇑ Hi) ε d in
-  mkReflLayer
-      (CohsOfReflCohs2 deps) deps.(_depsReflCohs).(_reflFrameDeps)
-        deps.(_depsReflCohs).(_reflPaintingDeps) _
-        deps.(_depsReflCohs).(_cohReflRestrFrames) _
+    mkCohReflRestrFrameBelowInfTypes
+      (mkDepsCohs (Cohs2OfReflCohs3 deps).(1))
+      (mkReflFramesBelow (ReflCohsOfReflCohs3 deps)).1
+      (mkReflPaintingsBelow
+        deps.(_depsReflCohs2).(1)%depsreflcohs2
+        (deps.(_depsReflCohs2); deps.(_extraDepsReflCohs2))%extradepsreflcohs2)):
+  rew [mkLayer _] prevCohReflRestrFrames.2 q.+1 r.+1 (⇑ Hq) (⇑ Hr) ε d in
+  mkReflLayerBelow
+    (CohsOfReflCohs3 deps)
+    (ReflCohsOfReflCohs3 deps).(_reflFramesBelow')
+    (ReflCohsOfReflCohs3 deps).(_reflPaintingsBelow) _
+    (ReflCohsOfReflCohs3 deps).(_cohReflRestrFramesBelowInf)
+    q Hq _
     (mkRestrLayer
-      (CohsOfReflCohs2 deps).(_restrPaintings)
-      (CohsOfReflCohs2 deps).(_cohs) i Hi ε d l) =
+      (CohsOfReflCohs3 deps).(_restrPaintings)
+      (CohsOfReflCohs3 deps).(_cohs)
+      r (Hr ↕ Hq) ε d l) =
   mkRestrLayer
-      (mkDepsCohs (Cohs2OfReflCohs2 deps)).(1).(_restrPaintings)
-      (mkDepsCohs (Cohs2OfReflCohs2 deps)).(1).(_cohs) i (↑ Hi) ε _
-    (mkReflLayer
-      (mkDepsCohs (Cohs2OfReflCohs2 deps).(1))
-        (mkReflFrames deps.(_depsReflCohs).(1))
-        (mkReflPaintings deps.(_depsReflCohs).(1)
-        (deps.(_depsReflCohs); deps.(_extraDepsRefl))) _
-        prevCohReflRestrFrames d l).
+    (mkDepsCohs (Cohs2OfReflCohs3 deps)).(1).(_restrPaintings)
+    (mkDepsCohs (Cohs2OfReflCohs3 deps)).(1).(_cohs) r (Hr ↕ ↑ Hq) ε _
+    (mkReflLayerBelow
+      (mkDepsCohs (Cohs2OfReflCohs3 deps).(1))
+      (mkReflFramesBelow (ReflCohsOfReflCohs3 deps)).1
+      (mkReflPaintingsBelow
+        deps.(_depsReflCohs2).(1)%depsreflcohs2
+        (deps.(_depsReflCohs2); deps.(_extraDepsReflCohs2))%extradepsreflcohs2) _
+      prevCohReflRestrFrames
+      q.+1 (⇑ Hq) d l).
 Proof.
   apply functional_extensionality_dep.
   intros θ.
-  unfold mkRestrLayer, mkReflLayer.
+  unfold mkRestrLayer, mkReflLayerBelow.
   rewrite <- map_subst_app, <- !map_subst.
 
-  set (d0 := restrFrame 0 leR_O (toDepsReflBelow
-    (mkDepsCohs (Cohs2OfReflCohs2 deps).(1))
-    (mkReflFrames deps.(_depsReflCohs).(1))).(_deps) θ d).
+  set (d0 := mkRestrFrame (depsCohs := (CohsOfReflCohs3 deps).(1)) 0 leR_O θ d).
 
   assert (h :
-    (mkDepsCohs (Cohs2OfReflCohs2 deps)).(1).(_restrPaintings).2 i (↑ Hi) ε
-      (reflFrame (toDepsReflBelow
-        (mkDepsCohs (Cohs2OfReflCohs2 deps).(1))
-        (mkReflFrames deps.(_depsReflCohs).(1))) d0)
-      ((mkReflPaintings deps.(_depsReflCohs).(1)
-        (deps.(_depsReflCohs); deps.(_extraDepsRefl))).2 d0 (l θ)) =
-    mkRestrPainting (CohsExtOfReflCohs deps.(_depsReflCohs).(1)) i  (↑ Hi) ε
-      ((mkDepsReflBelow deps.(_depsReflCohs).(1)).(_reflFrames).2 d0)
-      (mkReflPainting deps.(_depsReflCohs).(1)
-         (deps.(_depsReflCohs); deps.(_extraDepsRefl)) d0 (l θ)))
+    (mkDepsCohs (Cohs2OfReflCohs3 deps)).(1).(_restrPaintings).2 r (Hr ↕ ↑ Hq) ε
+      (mkReflFrameBelow (ReflCohsOfReflCohs3 deps).(1) q.+1 (⇑ Hq) d0)
+      ((mkReflPaintingsBelow
+        deps.(_depsReflCohs2).(1)%depsreflcohs2
+        (deps.(_depsReflCohs2); deps.(_extraDepsReflCohs2))%extradepsreflcohs2).2
+          q.+1 (⇑ Hq) d0 (l θ)) =
+    mkRestrPainting (CohsExtOfReflCohs2 deps.(_depsReflCohs2).(1)) r (Hr ↕ ↑ Hq) ε
+      ((mkDepsReflBelow (ReflCohsOfReflCohs3 deps).(1)).(_reflFramesBelow).2
+        q.+1 (⇑ Hq) d0)
+      (mkReflPaintingBelow
+        deps.(_depsReflCohs2).(1)%depsreflcohs2
+        (deps.(_depsReflCohs2); deps.(_extraDepsReflCohs2))%extradepsreflcohs2
+        q.+1 (⇑ Hq) d0 (l θ)))
   by reflexivity; rewrite h; clear h.
 
-  rewrite <- (deps.(_cohReflRestrPaintings).2 ε i Hi d0 (l θ)).
+  rewrite <- (deps.(_cohReflRestrPaintingsBelowInf).2 q r Hq Hr ε d0 (l θ)).
   rewrite rew_map with
-    (P := fun b => (mkDepsRestr (CohsOfReflCohs2 deps).(1)).(_paintings).2 b)
-    (f := fun x => (mkDepsRestr (CohsOfReflCohs2 deps).(1)).(_restrFrames).2
+    (P := fun b => (mkDepsRestr (CohsOfReflCohs3 deps).(1)).(_paintings).2 b)
+    (f := fun x => (mkDepsRestr (CohsOfReflCohs3 deps).(1)).(_restrFrames).2
       0 leR_O θ x).
   rewrite rew_map with
-    (P := fun rf => ReflPaintingBase _ _ rf)
-    (f := fun d0 => reflFrame (toDepsReflBelow _ _) d0).
+    (f := fun d1 =>
+      (toDepsReflBelow
+        (ReflCohsOfReflCohs3 deps).(_depsCohs2).(_depsCohs)
+        (ReflCohsOfReflCohs3 deps).(_reflFramesBelow')).(_reflFramesBelow).2
+        q Hq d1).
   rewrite rew_map with
-    (P := fun b => (mkDepsCohs (Cohs2OfReflCohs2 deps)).(1).(
+    (P := fun b => (mkDepsCohs (Cohs2OfReflCohs3 deps)).(1).(
         _deps).(_paintings).2 b)
-    (f := fun d0 => (mkDepsCohs (Cohs2OfReflCohs2 deps)).(1).(
-      _deps).(_restrFrames).2 i (↑ Hi) ε d0).
+    (f := fun d0 => (mkDepsCohs (Cohs2OfReflCohs3 deps)).(1).(
+      _deps).(_restrFrames).2 r (Hr ↕ ↑ Hq) ε d0).
   rewrite 4 rew_compose.
   apply rew_swap with
-    (P := fun b => (mkDepsCohs (Cohs2OfReflCohs2 deps)).(1).(
+    (P := fun b => (mkDepsCohs (Cohs2OfReflCohs3 deps)).(1).(
       _deps).(_paintings).2 b).
   rewrite rew_app_rl. now trivial.
-  now apply (mkFrame (RestrOfReflCohs2 deps).(1)).(UIP).
+  now apply (mkFrame (RestrOfReflCohs3 deps).(1)).(UIP).
 Defined.
 
-Fixpoint mkCohReflRestrFrames {p k} (deps: DepsReflCohs2 p k):
-  mkCohReflRestrFrameTypes
-    (mkDepsCohs (Cohs2OfReflCohs2 deps))
-    (mkReflFrames deps.(_depsReflCohs))
-    (mkReflPaintings deps.(_depsReflCohs) deps.(_extraDepsRefl)).
+Fixpoint mkCohReflRestrFramesBelowInf {p k} (deps: DepsReflCohs3 p k):
+  mkCohReflRestrFrameBelowInfTypes
+    (mkDepsCohs (Cohs2OfReflCohs3 deps))
+    (mkReflFramesBelow (ReflCohsOfReflCohs3 deps))
+    (mkReflPaintingsBelow deps.(_depsReflCohs2) deps.(_extraDepsReflCohs2)).
 Proof.
   destruct p.
-  - unshelve econstructor. now exact tt. now intros i Hi ε [].
-  - set (h := mkCohReflRestrFrames p k.+1 deps.(1)%depsreflcohs2).
+  - unshelve econstructor. now exact tt. now intros q r Hq Hr ε [].
+  - set (h := mkCohReflRestrFramesBelowInf p k.+1 deps.(1)%depsreflcohs3).
     unshelve econstructor.
     + now apply h.
-    + intros i Hi ε [l c].
+    + intros q r Hq Hr ε [l c].
       unshelve eapply eq_existT_curried.
-      * now exact (h.2 i.+1 (⇑ Hi) ε l).
-      * now exact (mkCohReflRestrLayer deps ε i Hi l c h).
+      * now exact (h.2 q.+1 r.+1 (⇑ Hq) (⇑ Hr) ε l).
+      * now exact (mkCohReflRestrLayerBelowInf deps ε q r Hq Hr l c h).
 Defined.
 
+(*
 Instance mkDepsReflCohs {p k} (deps: DepsReflCohs2 p k): DepsReflCohs p.+1 k.
 Proof.
   unshelve econstructor.
