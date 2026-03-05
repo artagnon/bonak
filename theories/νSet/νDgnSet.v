@@ -1088,6 +1088,8 @@ Proof.
   by reflexivity; rewrite h; clear h.
 
   rewrite <- (deps.(_cohReflRestrPaintingsAboveSup).2 q r (⇓ Hq) Hr ε d0 c0).
+  Fail rewrite <- ((Cohs2OfReflCohs3 deps).(_cohPaintings).2 r Hr 0 leR_O ε θ d (l; (l'; c))).
+
   rewrite rew_map with
     (P := fun b =>
       (CohsOfReflCohs (mkDepsReflCohs deps)).(_deps).(_paintings).2 b)
@@ -1103,6 +1105,13 @@ Proof.
   rewrite 3 rew_compose.
   apply rew_swap with
     (P := fun x => mkPainting (RestrExtOfReflCohs2 deps.(_depsReflCohs2)) x).
+
+  lazymatch goal with
+  | |- ?e2 = rew <- [?P1] ?H1 in rew [?P2] ?H2 in ?e1 => 
+    set (H := H1); set (H' := H2)
+  end.
+
+  unfold d0, c0.
 
   Fail rewrite rew_app_rl.
   admit.
