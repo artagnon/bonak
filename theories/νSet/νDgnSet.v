@@ -1163,7 +1163,7 @@ Proof.
     intros q r Hq Hr ε [d l] [l' c].
     destruct q.
     + unshelve eapply eq_existT_curried.
-      * exact ((mkCohReflRestrFramesBelowSup deps).2 0 r leR_O Hr ε (d; l)).
+      * now exact ((mkCohReflRestrFramesBelowSup deps).2 0 r leR_O Hr ε (d; l)).
       * apply functional_extensionality_dep.
         intro θ.
         unfold mkRestrLayer.
@@ -1184,82 +1184,79 @@ Proof.
       * now exact (mkCohReflRestrLayerAboveSup deps ε q r Hq Hr d l l' c h).
 Defined.
 
-(*
-Instance mkDepsReflCohs {p k} (deps: DepsReflCohs2 p k): DepsReflCohs p.+1 k.
+Instance mkDepsReflCohs2 {p k} (deps: DepsReflCohs3 p k): DepsReflCohs2 p.+1 k.
 Proof.
   unshelve econstructor.
-  - unshelve econstructor.
-    + now exact (mkDepsCohs (Cohs2OfReflCohs2 deps)).
-    + now exact (mkExtraCohs deps.(_extraDepsCohs2)).
-    + now apply mkCohPaintings.
-  - now apply mkReflFrames.
-  - now exact (mkReflPaintings _ (deps.(_extraDepsRefl))).
-  - now apply mkIdReflRestrFrames.
-  - now apply mkIdReflRestrPaintings.
-  - now apply mkCohReflRestrFrames.
+  - now exact (mkReflPaintingsAbove _ deps.(_extraDepsReflCohs2)).
+  - now apply mkCohReflRestrFramesBelowSup.
+  - now apply mkCohReflRestrFramesAboveSup.
 Defined.
 
-Inductive DepsReflCohs2Extension p: forall k (deps: DepsReflCohs2 p k), Type :=
-| TopReflCohDep2 {deps: DepsReflCohs2 p 0}
+Inductive DepsReflCohs3Extension p: forall k (deps: DepsReflCohs3 p k), Type :=
+| TopReflCoh3Dep {deps: DepsReflCohs3 p 0}
   (L: HasRefl
-    (mkDepsReflCohs deps)
+    (mkDepsReflCohs2 deps)
     (mkPaintings (mkExtraDeps (CohsExtOfReflCohs (mkDepsReflCohs deps)))).2):
-  DepsReflCohs2Extension p 0 deps
-| AddReflCohDep2 {k} (deps: DepsReflCohs2 p.+1 k):
-  DepsReflCohs2Extension p.+1 k deps -> DepsReflCohs2Extension p k.+1 deps.(1)%depsreflcohs2.
+  DepsReflCohs3Extension p 0 deps
+| AddReflCoh3Dep {k} (deps: DepsReflCohs3 p.+1 k):
+  DepsReflCohs3Extension p.+1 k deps -> DepsReflCohs3Extension p k.+1 deps.(1)%depsreflcohs3.
 
-Arguments TopReflCohDep2 {p deps}.
-Arguments AddReflCohDep2 {p k}.
+Arguments TopReflCoh3Dep {p deps}.
+Arguments AddReflCoh3Dep {p k}.
 
-Declare Scope extra_depsreflcohs2_scope.
-Delimit Scope extra_depsreflcohs2_scope with extradepsreflcohs2.
-Bind Scope extra_depsreflcohs2_scope with DepsReflCohs2Extension.
-Notation "( x ; y )" := (AddReflCohDep2 x y)
-  (at level 0, format "( x ; y )"): extra_depsreflcohs2_scope.
+Declare Scope extra_depsreflcohs3_scope.
+Delimit Scope extra_depsreflcohs3_scope with extradepsreflcohs3.
+Bind Scope extra_depsreflcohs3_scope with DepsReflCohs3Extension.
+Notation "( x ; y )" := (AddReflCoh3Dep x y)
+  (at level 0, format "( x ; y )"): extra_depsreflcohs3_scope.
 
-Fixpoint mkExtraReflCohs {p k} (deps: DepsReflCohs2 p k)
-  (extraDeps: DepsReflCohs2Extension p k deps):
-  DepsReflCohsExtension p.+1 k (mkDepsReflCohs deps).
+Fixpoint mkExtraDepsReflCohs2 {p k} (deps: DepsReflCohs3 p k)
+  (extraDeps: DepsReflCohs3Extension p k deps):
+  DepsReflCohs2Extension p.+1 k (mkDepsReflCohs2 deps).
 Proof.
   destruct extraDeps.
-  - now apply TopReflCohDep.
-  - apply (AddReflCohDep (mkDepsReflCohs deps)).
-    now exact (mkExtraReflCohs p.+1 k deps extraDeps).
+  - now apply TopReflCoh2Dep.
+  - apply (AddReflCoh2Dep (mkDepsReflCohs2 deps)).
+    now exact (mkExtraDepsReflCohs2 p.+1 k deps extraDeps).
 Defined.
 
-Fixpoint mkCohReflRestrPainting {p k}
-  (deps: DepsReflCohs2 p k)
-  (extraDeps: DepsReflCohs2Extension p k deps):
-  mkCohReflRestrPaintingType (mkDepsReflCohs deps)
-    (mkExtraReflCohs deps extraDeps).
+Fixpoint mkCohReflRestrPaintingBelowInf {p k}
+  (deps: DepsReflCohs3 p k)
+  (extraDeps: DepsReflCohs3Extension p k deps):
+  mkCohReflRestrPaintingBelowInfType
+    (mkDepsReflCohs2 deps)
+    (mkExtraDepsReflCohs2 deps extraDeps).
 Proof.
-  intros ε i Hi d [l c].
-  destruct i.
+  intros q r Hq Hr ε d [l c].
+  destruct r.
   - now trivial.
-  - unfold ReflPaintingBase, PaintingBase, toDepsReflBelow; simpl.
-    destruct extraDeps.
-    + now contradiction.
-    + unshelve eapply (eq_existT_curried_dep
-        (Q := mkPainting (RestrExtOfReflCohs (mkDepsReflCohs deps.(1))))).
-      * now apply (mkCohReflRestrLayer deps ε i (⇓ Hi) d l).
-      * now exact (mkCohReflRestrPainting p.+1 k deps extraDeps ε i (⇓ Hi)
-          (d; l) c).
+  - destruct q; [now contradiction |].
+    destruct extraDeps; [now contradiction |].
+    unshelve eapply (eq_existT_curried_dep
+      (Q := mkPainting (RestrExtOfReflCohs2 (mkDepsReflCohs2 deps.(1))))).
+    + now exact (mkCohReflRestrLayerBelowInf deps ε q r (⇓ Hq) (⇓ Hr) d l
+        (mkCohReflRestrFramesBelowInf deps.(1))).
+    + now exact (mkCohReflRestrPaintingBelowInf p.+1 k deps extraDeps
+        q r Hq Hr ε (d; l) c).
 Defined.
 
-Fixpoint mkCohReflRestrPaintings {p k}
-  (deps: DepsReflCohs2 p k)
-  (extraDeps: DepsReflCohs2Extension p k deps):
-  mkCohReflRestrPaintingTypes (mkDepsReflCohs deps)
-    (mkExtraReflCohs deps extraDeps).
+Fixpoint mkCohReflRestrPaintingsBelowInf {p k}
+  (deps: DepsReflCohs3 p k)
+  (extraDeps: DepsReflCohs3Extension p k deps):
+  mkCohReflRestrPaintingBelowInfTypes
+    (mkDepsReflCohs2 deps)
+    (mkExtraDepsReflCohs2 deps extraDeps).
 Proof.
   destruct p.
-  - unshelve econstructor. now exact tt. now apply mkCohReflRestrPainting.
+  - unshelve econstructor. now exact tt.
+    now apply mkCohReflRestrPaintingBelowInf.
   - unshelve econstructor.
-    + now exact (mkCohReflRestrPaintings p k.+1 deps.(1)%depsreflcohs2
-      (deps; extraDeps)%extradepsreflcohs2).
-    + now apply mkCohReflRestrPainting.
+    + now exact (mkCohReflRestrPaintingsBelowInf p k.+1
+        deps.(1)%depsreflcohs3 (deps; extraDeps)%extradepsreflcohs3).
+    + now apply mkCohReflRestrPaintingBelowInf.
 Defined.
 
+(*
 Definition dgnDepsRestr {p} (C: νSetData p): DepsRestr p 0 :=
   toDepsRestr C.(restrFrames).
 
