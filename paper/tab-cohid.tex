@@ -5,7 +5,7 @@
   \eqnline{\cohidf[n][p+1][][q][\epsilon]}{\D~\pair{\d}{\l}}{\defeq}{\pair{\cohidf[n][p][][q][\epsilon][D=\hdD, L=\L, d=\d]}{\cohidl[n][p][][q][\epsilon][D=\D, L=\L, d=\d, l=\l]}}
   \midrule
   \eqnline{\cohidl[n][p][p < q \leq n][\epsilon][q]}{\makecell{\eqnarg{cohidlayer}{D}{\Xreflto{n+1}}  \\ \eqnarg{cohidpainting}{L}{\Xreflto{n}(D)}\\ \eqnarg{cohidlayer}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{cohidlayer}{l}{\layer[n][p][][D=\hdD, d=\d]}}}{:}{\restrl[n][p][][q][\epsilon][D=\hdD, d={\restrf[r][n+1][p][][D=\hdD, d=\d]}](\refll[n][p][][q][D=\hdD, L=\hdL, R=\tlL, d=\d, l=\l]) = \l}
-  \eqnline{\cohidl[n][p][][q][\epsilon]}{\D~\d~\l}{\defeq}{\lambda\theta.\;\cohidp[n-1][p][][q-1][\epsilon][D=\hdD, L=\hdL, R=\tlL, d=\d, l={\l_\theta}]}
+  \eqnline{\cohidl[n][p][][q][\epsilon]}{\D~\d~\l}{\defeq}{\lambda\theta.\;\cohidp[n-1][p][][q-1][\epsilon][D=\hdD, L=\hdL, R=\tlL, d=\d, c={\l_\theta}]}
   \midrule
   \eqnline{\cohidp[n][p][p \leq q \leq n][q][\epsilon]}{\makecell{\eqnarg{cohidpainting}{D}{\Xreflto{n+1}} \\ \eqnarg{cohidpainting}{E'}{\Xreflcomp{n+1}[D=\D]} \\ \eqnarg{cohidpainting}{L}{\Xreflto{n}(D)} \\ \eqnarg{cohidpainting}{R}{\Xreflcomp{n}[D=\D, E'=\E', L=\L]} \\ \eqnarg{cohidpainting}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{cohidpainting}{c}{\painting[n][p][][D=\hdD, E=\tlD, d=\d]}}}{:}{\restrp[n][p][][q][\epsilon][D=\D, E=\E, d={\restrf[r][n][p][][D=\D, d=\d]}, c={\reflp[n][p][][q][D=\D, E=\E, L=\L, R=\R, d=\d, c=\c]}] = \c}
   \eqnline{\cohidp[n][p][p = q][q][\epsilon]}{\D~\E~\d~\c}{\defeq}{\refl(\c)}
