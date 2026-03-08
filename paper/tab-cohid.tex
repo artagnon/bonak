@@ -1,13 +1,13 @@
 \providecommand{\lab}{fulltab:cohid}
 \begin{eqntable}{Identity for $q$-th projection and $q$-th degeneracy\label{\lab}}
-  \eqnline{\cohidf[n][p][p \leq q \leq n][q][\epsilon]}{\makecell{\eqnarg{cohidframe}{D}{\Xreflto{n+1}} \\ \eqnarg{cohidframe}{d}{\framep[n][p][][D=\hdD]}}}{:}{\restrf[n][p][][q][\epsilon][D=\hdD, d={\reflf[n][p][][q][D=\hdD, d=\d]}] = \d}
+  \eqnline{\cohidf[n][p][p \leq q \leq n][q][\epsilon]}{\makecell{\eqnarg{cohidframe}{D}{\Xreflto{n+1}} \\ \eqnarg{cohidpainting}{L}{\Xreflto{n}(D)} \\ \eqnarg{cohidframe}{d}{\framep[n][p][][D=\hdD]}}}{:}{\restrf[n][p][][q][\epsilon][D=\hdD, d={\reflf[n][p][][q][D=\hdD, d=\d]}] = \d}
   \eqnline{\cohidf[n][0][][q][\epsilon]}{\D~\unitpoint}{\defeq}{\refl(\unitpoint)}
-  \eqnline{\cohidf[n][p+1][][q][\epsilon]}{\D~\pair{\d}{\l}}{\defeq}{\pair{\cohidf[n][p][][q+1][\epsilon][D=\hdD, d=\d]}{\cohidl[n][p][][q][\epsilon][D=\D, d=\d, l=\l]}}
+  \eqnline{\cohidf[n][p+1][][q][\epsilon]}{\D~\pair{\d}{\l}}{\defeq}{\pair{\cohidf[n][p][][q][\epsilon][D=\hdD, L=\L, d=\d]}{\cohidl[n][p][][q][\epsilon][D=\D, L=\L, d=\d, l=\l]}}
   \midrule
-  \eqnline{\cohidl[n][p][p \leq q \leq n][\epsilon][q]}{\makecell{\eqnarg{cohidlayer}{D}{\Xreflto{n+1}} \\ \eqnarg{cohidlayer}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{cohidlayer}{l}{\layer[n][p][][D=\hdD, d=\d]}}}{:}{\restrl[n][p][][q][\epsilon][D=\hdD, d={\restrf[r][n+1][p][][D=\hdD, d=\d]}](\refll[n][p][][q][D=\hdD, d=\d, l=\l]) = \l}
-  \eqnline{\cohidl[n][p][][q][\epsilon]}{\D~\d~\l}{\defeq}{\lambda\theta.\;\cohidl[n-1][p][][q][\epsilon][D=\hdD, d=\d, l={\l_\theta}]}
+  \eqnline{\cohidl[n][p][p < q \leq n][\epsilon][q]}{\makecell{\eqnarg{cohidlayer}{D}{\Xreflto{n+1}}  \\ \eqnarg{cohidpainting}{L}{\Xreflto{n}(D)}\\ \eqnarg{cohidlayer}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{cohidlayer}{l}{\layer[n][p][][D=\hdD, d=\d]}}}{:}{\restrl[n][p][][q][\epsilon][D=\hdD, d={\restrf[r][n+1][p][][D=\hdD, d=\d]}](\refll[n][p][][q][D=\hdD, L=\hdL, R=\tlL, d=\d, l=\l]) = \l}
+  \eqnline{\cohidl[n][p][][q][\epsilon]}{\D~\d~\l}{\defeq}{\lambda\theta.\;\cohidp[n-1][p][][q-1][\epsilon][D=\hdD, L=\hdL, R=\tlL, d=\d, l={\l_\theta}]}
   \midrule
-  \eqnline{\cohidp[n][p][p \leq q \leq n][q][\epsilon]}{\makecell{\eqnarg{cohidpainting}{D}{\Xreflto{n+1}} \\ \eqnarg{cohidpainting}{E}{\Xreflcomp{n+1}[D=\D]} \\ \eqnarg{cohidpainting}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{cohidpainting}{c}{\painting[n][p][][D=\hdD, E=\tlD, d=\d]}}}{:}{\restrp[n][p][][q][\epsilon][D=\D, E=\E, d={\restrf[r][n][p][][D=\D, d=\d]}, c={\reflp[n][p][][q][D=\D, E=\E, d=\d, c=\c]}] = \c}
-  \eqnline{\cohidp[n][p][][q][\epsilon]}{\D~\E~\d~\pair{\l}{\_}}{\defeq}{\refl(\restrp[n][p][][q][\epsilon][D=\D, E=\E, d={\restrf[0][n][p][][D=\D, d=\d]}, c={\l_\epsilon}])}
-  \eqnline{\cohidp[n][p][p<n][q+1][\epsilon]}{\D~\E~\d~\pair{\l}{\c}}{\defeq}{\pair{\cohidl[n][p][][q][\epsilon][D=\D, E=\E, d=\d, l=\l]}{\cohidp[n][p+1][][q][\epsilon][D=\D, E=\E, d={d, l}, c=\c]}}
+  \eqnline{\cohidp[n][p][p \leq q \leq n][q][\epsilon]}{\makecell{\eqnarg{cohidpainting}{D}{\Xreflto{n+1}} \\ \eqnarg{cohidpainting}{E'}{\Xreflcomp{n+1}[D=\D]} \\ \eqnarg{cohidpainting}{L}{\Xreflto{n}(D)} \\ \eqnarg{cohidpainting}{R}{\Xreflcomp{n}[D=\D, E'=\E', L=\L]} \\ \eqnarg{cohidpainting}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{cohidpainting}{c}{\painting[n][p][][D=\hdD, E=\tlD, d=\d]}}}{:}{\restrp[n][p][][q][\epsilon][D=\D, E=\E, d={\restrf[r][n][p][][D=\D, d=\d]}, c={\reflp[n][p][][q][D=\D, E=\E, L=\L, R=\R, d=\d, c=\c]}] = \c}
+  \eqnline{\cohidp[n][p][p = q][q][\epsilon]}{\D~\E~\d~\c}{\defeq}{\refl(\c)}
+  \eqnline{\cohidp[n][p][p < q][q][\epsilon]}{\D~\E~\d~\pair{\l}{\c}}{\defeq}{\pair{\cohidl[n][p][][q][\epsilon][D=\D, L=\L, d=\d, l=\l]}{\cohidp[n][p+1][][q][\epsilon][D=\D, E=\E, L=\L, R=\R, d={d, l}, c=\c]}}
 \end{eqntable}
