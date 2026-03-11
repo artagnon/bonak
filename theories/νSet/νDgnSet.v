@@ -1255,7 +1255,23 @@ Fixpoint mkCohReflRestrPaintingAboveSup {p k}
     (mkDepsReflCohs2 deps)
     (mkExtraDepsReflCohs2 deps extraDeps).
 Proof.
-  admit.
+  intros q r Hq Hr ε d [l c].
+  destruct q.
+  - destruct extraDeps.
+    + destruct r; try contradiction.
+      simpl.
+      destruct deps as [deps2 extraDeps2 extraDepsRefl2 ? ? ?].
+      destruct (match_TopReflCoh2Dep extraDepsRefl2) as [L' ->].
+      destruct (match_TopCoh2Dep extraDeps2) as [E ->].
+      destruct deps2 as [depsReflCohs ? ? ?].
+      destruct depsReflCohs as [depsCohs2 ? ? ? ? ? ?].
+      destruct depsCohs2 as [depsCohs extraDepsCohs ?].
+      destruct (match_TopCohDep extraDepsCohs) as [E' ->].
+      now trivial.
+    + admit.
+  - destruct p; try contradiction.
+    destruct d as [d l'].
+    admit.
 Admitted.
 
 Fixpoint mkCohReflRestrPaintingsAboveSup {p k}
