@@ -1248,63 +1248,6 @@ Proof.
     + now apply mkCohReflRestrPaintingBelowInf.
 Defined.
 
-Fixpoint mkCohReflRestrPaintingBelowSup {p k}
-  (deps: DepsReflCohs3 p k)
-  (extraDeps: DepsReflCohs3Extension p k deps):
-  mkCohReflRestrPaintingBelowSupType
-    (mkDepsReflCohs2 deps)
-    (mkExtraDepsReflCohs2 deps extraDeps).
-Proof.
-  intros q r Hq Hr ε d [l c].
-  destruct q.
-  - destruct extraDeps.
-    + destruct r; try contradiction.
-      simpl.
-      admit.
-    + unshelve eapply (eq_existT_curried_dep
-        (Q := mkPainting (RestrExtOfReflCohs2 (mkDepsReflCohs2 deps.(1))))).
-      * apply functional_extensionality_dep.
-        intro θ.
-        unfold mkRestrLayer.
-        rewrite <- map_subst_app, <- !map_subst.
-        set (deps' := (CohsOfReflCohs2 (mkDepsReflCohs2 deps.(1))).(_deps)).
-        rewrite rew_map with
-          (P := fun b => deps'.(_paintings).2 b)
-          (f := fun x => deps'.(_restrFrames).2 0 leR_O θ x).
-        rewrite rew_map with
-          (P := fun b => deps'.(_paintings).2 b)
-          (f := fun d0 => deps'.(_restrFrames).2 r Hr ε d0).
-        rewrite 2 rew_compose.
-        apply rew_swap with (P := fun b => deps'.(_paintings).2 b).
-        rewrite rew_app_rl. now trivial.
-        now apply (deps'.(_frames).2.(UIP)).
-      * admit.
-  - destruct r; try contradiction.
-    destruct extraDeps; try contradiction.
-    unshelve eapply (eq_existT_curried_dep
-      (Q := mkPainting (RestrExtOfReflCohs2 (mkDepsReflCohs2 deps.(1))))).
-    + now exact (mkCohReflRestrLayerBelowSup deps ε q r (⇓ Hq) (⇓ Hr) d l
-        (mkCohReflRestrFramesBelowSup deps.(1))).
-    + now exact (mkCohReflRestrPaintingBelowSup p.+1 k deps extraDeps
-        q r Hq Hr ε (d; l) c).
-Admitted.
-
-Fixpoint mkCohReflRestrPaintingsBelowSup {p k}
-  (deps: DepsReflCohs3 p k)
-  (extraDeps: DepsReflCohs3Extension p k deps):
-  mkCohReflRestrPaintingBelowSupTypes
-    (mkDepsReflCohs2 deps)
-    (mkExtraDepsReflCohs2 deps extraDeps).
-Proof.
-  destruct p.
-  - unshelve econstructor. now exact tt.
-    now apply mkCohReflRestrPaintingBelowSup.
-  - unshelve econstructor.
-    + now exact (mkCohReflRestrPaintingsBelowSup p k.+1
-        deps.(1)%depsreflcohs3 (deps; extraDeps)%extradepsreflcohs3).
-    + now apply mkCohReflRestrPaintingBelowSup.
-Defined.
-
 Fixpoint mkCohReflRestrPaintingAboveSup {p k}
   (deps: DepsReflCohs3 p k)
   (extraDeps: DepsReflCohs3Extension p k deps):
@@ -1312,11 +1255,7 @@ Fixpoint mkCohReflRestrPaintingAboveSup {p k}
     (mkDepsReflCohs2 deps)
     (mkExtraDepsReflCohs2 deps extraDeps).
 Proof.
-  intros q r Hq Hr ε d [l c].
-  destruct extraDeps.
-  - destruct r; try contradiction.
-    admit.
-  - admit.
+  admit.
 Admitted.
 
 Fixpoint mkCohReflRestrPaintingsAboveSup {p k}
@@ -1335,6 +1274,105 @@ Proof.
     + now apply mkCohReflRestrPaintingAboveSup.
 Defined.
 
+Fixpoint mkCohReflRestrPaintingBelowSup {p k}
+  (deps: DepsReflCohs3 p k)
+  (extraDeps: DepsReflCohs3Extension p k deps):
+  mkCohReflRestrPaintingBelowSupType
+    (mkDepsReflCohs2 deps)
+    (mkExtraDepsReflCohs2 deps extraDeps).
+Proof.
+  intros q r Hq Hr ε d [l c].
+  destruct q.
+  - destruct extraDeps.
+    + destruct r; try contradiction.
+      destruct deps as [deps2 extraDeps2 extraDepsRefl2 ? ? ?].
+      destruct (match_TopReflCoh2Dep extraDepsRefl2) as [L' ->].
+      destruct (match_TopCoh2Dep extraDeps2) as [E ->].
+      destruct deps2 as [depsReflCohs ? ? ?].
+      destruct depsReflCohs as [depsCohs2 ? ? ? ? ? ?].
+      destruct depsCohs2 as [depsCohs extraDepsCohs ?].
+      destruct (match_TopCohDep extraDepsCohs) as [E' ->].
+      unshelve eapply (eq_existT_curried_dep (Q := E')).
+      * apply functional_extensionality_dep.
+        intro θ.
+        unfold mkRestrLayer.
+        rewrite <- map_subst_app, <- !map_subst.
+        set (deps' := mkDepsRestr depsCohs).
+        rewrite rew_map with
+          (P := fun b => deps'.(_paintings).2 b)
+          (f := fun x => deps'.(_restrFrames).2 0 leR_O θ x).
+        rewrite rew_map with
+          (P := fun b => deps'.(_paintings).2 b)
+          (f := fun d0 => deps'.(_restrFrames).2 0 Hr ε d0).
+        rewrite 2 rew_compose.
+        apply rew_swap with (P := fun b => deps'.(_paintings).2 b).
+        rewrite rew_app_rl. now trivial.
+        now apply (deps'.(_frames).2.(UIP)).
+      * destruct p.
+        -- destruct d.
+           enough (h : (=eq_refl; _) = eq_refl) by (now rewrite h).
+           now apply (mkFrame (mkDepsRestr depsCohs)).(UIP).
+        -- now trivial.
+    + unshelve eapply (eq_existT_curried_dep
+        (Q := mkPainting (RestrExtOfReflCohs2 (mkDepsReflCohs2 deps.(1))))).
+      * apply functional_extensionality_dep.
+        intro θ.
+        unfold mkRestrLayer.
+        rewrite <- map_subst_app, <- !map_subst.
+        set (deps' := (CohsOfReflCohs2 (mkDepsReflCohs2 deps.(1))).(_deps)).
+        rewrite rew_map with
+          (P := fun b => deps'.(_paintings).2 b)
+          (f := fun x => deps'.(_restrFrames).2 0 leR_O θ x).
+        rewrite rew_map with
+          (P := fun b => deps'.(_paintings).2 b)
+          (f := fun d0 => deps'.(_restrFrames).2 r Hr ε d0).
+        rewrite 2 rew_compose.
+        apply rew_swap with (P := fun b => deps'.(_paintings).2 b).
+        rewrite rew_app_rl. now trivial.
+        now apply (deps'.(_frames).2.(UIP)).
+      * destruct p.
+        -- destruct d.
+           eassert (h : (=eq_refl; _) = eq_refl).
+           now apply (mkFrame (RestrOfReflCohs2 (mkDepsReflCohs2 deps.(1)))).(UIP).
+           rewrite h; clear h.
+           destruct r.
+           ++ now trivial.
+           ++ destruct c as [l' c].
+              unshelve eapply eq_existT_curried.
+              ** rewrite <- (mkCohReflRestrLayerAboveSup deps ε 0 r (⇑ leR_O) Hr tt l l' c).
+                 now trivial.
+              ** rewrite <- (mkCohReflRestrPaintingAboveSup deps extraDeps 1 r (⇑ leR_O) Hr ε (tt; l) (l'; c)).
+                 set (deps' := RestrExtOfReflCohs2 (mkDepsReflCohs2 deps)).
+                 rewrite rew_map with (P := fun x => mkPainting deps' x).
+                 apply rew_swap with (P := fun x => mkPainting deps' x).
+                 rewrite rew_app_rl. now trivial.
+                 now apply (mkFrame (RestrOfReflCohs2 (mkDepsReflCohs2 deps))).(UIP).
+        -- now exact (mkCohReflRestrPaintingAboveSup deps.(1) (deps;extraDeps) 0 r leR_O Hr ε d (l; c)).
+  - destruct r; try contradiction.
+    destruct extraDeps; try contradiction.
+    unshelve eapply (eq_existT_curried_dep
+      (Q := mkPainting (RestrExtOfReflCohs2 (mkDepsReflCohs2 deps.(1))))).
+    + now exact (mkCohReflRestrLayerBelowSup deps ε q r (⇓ Hq) (⇓ Hr) d l
+        (mkCohReflRestrFramesBelowSup deps.(1))).
+    + now exact (mkCohReflRestrPaintingBelowSup p.+1 k deps extraDeps
+        q r Hq Hr ε (d; l) c).
+Defined.
+
+Fixpoint mkCohReflRestrPaintingsBelowSup {p k}
+  (deps: DepsReflCohs3 p k)
+  (extraDeps: DepsReflCohs3Extension p k deps):
+  mkCohReflRestrPaintingBelowSupTypes
+    (mkDepsReflCohs2 deps)
+    (mkExtraDepsReflCohs2 deps extraDeps).
+Proof.
+  destruct p.
+  - unshelve econstructor. now exact tt.
+    now apply mkCohReflRestrPaintingBelowSup.
+  - unshelve econstructor.
+    + now exact (mkCohReflRestrPaintingsBelowSup p k.+1
+        deps.(1)%depsreflcohs3 (deps; extraDeps)%extradepsreflcohs3).
+    + now apply mkCohReflRestrPaintingBelowSup.
+Defined.
 
 (*
 Definition dgnDepsRestr {p} (C: νSetData p): DepsRestr p 0 :=
