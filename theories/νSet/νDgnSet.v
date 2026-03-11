@@ -315,16 +315,15 @@ Proof.
   rewrite <- (deps.(_idReflRestrPaintingsBelow).2 i Hi ε _ (l θ)).
   rewrite <- map_subst_app, <- map_subst.
   unfold toDepsReflBelow, PaintingPrev, FramePrev, RestrOfReflCohs, mkFrame; simpl.
+  set (deps' := deps.(_depsCohs2).(_depsCohs).(_deps)).
   rewrite rew_map with
-    (P := fun x => deps.(_depsCohs2).(_depsCohs).(_deps).(_paintings).2 x)
-    (f := fun x => (deps.(_depsCohs2).(_depsCohs).(_deps).(_restrFrames).2 0 leR_O θ x)).
+    (P := fun x => deps'.(_paintings).2 x)
+    (f := fun x => deps'.(_restrFrames).2 0 leR_O θ x).
   rewrite rew_map with
-    (P := fun x => deps.(_depsCohs2).(_depsCohs).(_deps).(_paintings).2 x)
-    (f := fun x => ((deps.(_depsCohs2).(_depsCohs).(_deps).(
-      _restrFrames).2 i Hi ε x))).
+    (P := fun x => deps'.(_paintings).2 x)
+    (f := fun x => deps'.(_restrFrames).2 i Hi ε x).
   rewrite 2 rew_compose.
-  apply rew_swap with (P := fun x =>
-    deps.(_depsCohs2).(_depsCohs).(_deps).(_paintings).2 x).
+  apply rew_swap with (P := fun x => deps'.(_paintings).2 x).
   rewrite rew_app_rl. now trivial.
   now apply (RestrOfReflCohs deps).(_frames).2.(UIP).
 Defined.
