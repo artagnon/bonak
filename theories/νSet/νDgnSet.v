@@ -1348,22 +1348,10 @@ Proof.
         rewrite rew_app_rl. now trivial.
         now apply (deps'.(_frames).2.(UIP)).
       * destruct p.
-        -- destruct d.
-           eassert (h : (=eq_refl; _) = eq_refl).
+        -- rewrite <- (mkCohReflRestrPaintingAboveSup deps.(1) (deps;extraDeps) 0 r leR_O Hr ε d (l; c)).
+           destruct d.
+           enough (h : (=eq_refl; _) = eq_refl) by (now rewrite h).
            now apply (mkFrame (RestrOfReflCohs2 (mkDepsReflCohs2 deps.(1)))).(UIP).
-           rewrite h; clear h.
-           destruct r.
-           ++ now trivial.
-           ++ destruct c as [l' c].
-              unshelve eapply eq_existT_curried.
-              ** rewrite <- (mkCohReflRestrLayerAboveSup deps ε 0 r (⇑ leR_O) Hr tt l l' c).
-                 now trivial.
-              ** rewrite <- (mkCohReflRestrPaintingAboveSup deps extraDeps 1 r (⇑ leR_O) Hr ε (tt; l) (l'; c)).
-                 set (deps' := RestrExtOfReflCohs2 (mkDepsReflCohs2 deps)).
-                 rewrite rew_map with (P := fun x => mkPainting deps' x).
-                 apply rew_swap with (P := fun x => mkPainting deps' x).
-                 rewrite rew_app_rl. now trivial.
-                 now apply (mkFrame (RestrOfReflCohs2 (mkDepsReflCohs2 deps))).(UIP).
         -- now exact (mkCohReflRestrPaintingAboveSup deps.(1) (deps;extraDeps) 0 r leR_O Hr ε d (l; c)).
   - destruct r; try contradiction.
     destruct extraDeps; try contradiction.
