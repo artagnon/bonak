@@ -1256,23 +1256,24 @@ Fixpoint mkCohReflRestrPaintingAboveSup {p k}
     (mkExtraDepsReflCohs2 deps extraDeps).
 Proof.
   intros q r Hq Hr ε d [l c].
-  destruct q.
+  destruct r.
   - destruct extraDeps.
-    + destruct r; try contradiction.
-      simpl.
-      destruct deps as [deps2 extraDeps2 extraDepsRefl2 ? ? ?].
-      destruct (match_TopReflCoh2Dep extraDepsRefl2) as [L' ->].
+    + destruct deps as [deps2 extraDeps2 extraDepsRefl2 ? ? ?].
       destruct (match_TopCoh2Dep extraDeps2) as [E ->].
-      destruct deps2 as [depsReflCohs ? ? ?].
-      destruct depsReflCohs as [depsCohs2 ? ? ? ? ? ?].
-      destruct depsCohs2 as [depsCohs extraDepsCohs ?].
-      destruct (match_TopCohDep extraDepsCohs) as [E' ->].
       now trivial.
-    + admit.
-  - destruct p; try contradiction.
-    destruct d as [d l'].
-    admit.
-Admitted.
+    + now trivial.
+  - destruct extraDeps; try contradiction.
+    destruct c as [l' c].
+    set (Q := mkPainting (RestrExtOfReflCohs2 (mkDepsReflCohs2 deps))).
+    replace
+      (fun x => (mkPainting (RestrExtOfReflCohs2 (mkDepsReflCohs2 deps.(1))) x).(Dom)) with
+      (fun x => {a &T Q (x; a)}) by reflexivity.
+    unshelve eapply (eq_existT_curried_dep (Q := Q)).
+    + now exact (mkCohReflRestrLayerAboveSup deps ε q r Hq Hr d l l' c
+        (mkCohReflRestrFramesAboveSup deps.(1))).
+    + now exact (mkCohReflRestrPaintingAboveSup p.+1 k deps extraDeps
+        q.+1 r (⇑ Hq) Hr ε (d; l) (l'; c)).
+Defined.
 
 Fixpoint mkCohReflRestrPaintingsAboveSup {p k}
   (deps: DepsReflCohs3 p k)
