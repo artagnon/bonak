@@ -1296,11 +1296,8 @@ Proof.
     + now trivial.
   - destruct extraDeps; try contradiction.
     destruct c as [l' c].
-    set (Q := mkPainting (RestrExtOfReflCohs2 (mkDepsReflCohs2 deps))).
-    replace
-      (fun x => (mkPainting (RestrExtOfReflCohs2 (mkDepsReflCohs2 deps.(1))) x).(Dom)) with
-      (fun x => {a &T Q (x; a)}) by reflexivity.
-    unshelve eapply (eq_existT_curried_dep (Q := Q)).
+    unshelve eapply (eq_existT_curried_dep
+      (Q := mkPainting (RestrExtOfReflCohs2 (mkDepsReflCohs2 deps)))).
     + now exact (mkCohReflRestrLayerAboveSup deps ε q r Hq Hr d l l' c
         (mkCohReflRestrFramesAboveSup deps.(1))).
     + now exact (mkCohReflRestrPaintingAboveSup p.+1 k deps extraDeps
