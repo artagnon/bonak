@@ -1,8 +1,8 @@
 \providecommand{\lab}{fulltab:cohid}
 \begin{eqntable}{Identity for $q$-th projection and $q$-th degeneracy\label{\lab}}
   \eqnline{\cohidf[n][p][p \leq q \leq n][q][\epsilon]}{\makecell{\eqnarg{cohidframe}{D}{\Xreflto{n+1}} \\ \eqnarg{cohidpainting}{L}{\Xreflto{n}(D)} \\ \eqnarg{cohidframe}{d}{\framep[n][p][][D=\hdD]}}}{:}{\restrf[n][p][][q][\epsilon][D=\hdD, d={\reflf[n][p][][q][D=\hdD, d=\d]}] = \d}
-  \eqnline{\cohidf[n][0][][q][\epsilon]}{\D~\unitpoint}{\defeq}{\refl(\unitpoint)}
-  \eqnline{\cohidf[n][p+1][][q][\epsilon]}{\D~\pair{\d}{\l}}{\defeq}{\pair{\cohidf[n][p][][q][\epsilon][D=\hdD, L=\L, d=\d]}{\cohidl[n][p][][q][\epsilon][D=\D, L=\L, d=\d, l=\l]}}
+  \eqnline{\cohidf[n][0][][q][\epsilon]}{\D~\L~\unitpoint}{\defeq}{\refl(\unitpoint)}
+  \eqnline{\cohidf[n][p+1][][q][\epsilon]}{\D~\L~\pair{\d}{\l}}{\defeq}{\pair{\cohidf[n][p][][q][\epsilon][D=\hdD, L=\L, d=\d]}{\cohidl[n][p][][q][\epsilon][D=\D, L=\L, d=\d, l=\l]}}
   \midrule
   \eqnline{\cohidl[n][p][p < q \leq n][\epsilon][q]}{\makecell{\eqnarg{cohidlayer}{D}{\Xreflto{n+1}}  \\ \eqnarg{cohidpainting}{L}{\Xreflto{n}(D)}\\ \eqnarg{cohidlayer}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{cohidlayer}{l}{\layer[n][p][][D=\hdD, d=\d]}}}{:}{\restrl[n][p][][q][\epsilon][D=\hdD, d={\restrf[r][n+1][p][][D=\hdD, d=\d]}](\refll[n][p][][q][D=\hdD, L=\hdL, R=\tlL, d=\d, l=\l]) = \l}
   \eqnline{\cohidl[n][p][][q][\epsilon]}{\D~\L~\d~\l}{\defeq}{\lambda\theta.\;\cohidp[n-1][p][][q-1][\epsilon][D=\hdD, L=\hdL, R=\tlL, d=\d, c={\l_\theta}]}
