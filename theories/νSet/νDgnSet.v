@@ -1061,29 +1061,29 @@ Definition mkCohReflRestrLayerAboveSup {p k}
   (ε: arity) q r (Hq: q.+1 <= p.+1) (Hr: r <= k)
   (d: mkFrame ((RestrOfReflCohsInf (mkDepsReflCohsInf deps)).(1).(1)))
   (l: mkLayer (RestrOfReflCohsInf (mkDepsReflCohsInf deps)).(1).(_restrFrames) d)
-  (l': mkLayer (RestrOfReflCohsInf (mkDepsReflCohsInf deps)).(_restrFrames) (d; l))
-  (c: mkPainting (RestrExtOfReflCohsInf (mkDepsReflCohsInf deps)) ((d; l); l'))
+  (c: mkPainting
+        (mkDepsRestr (CohsOfReflCohs2 deps); mkExtraDeps (CohsExtOfReflCohs2 deps))
+        (d; l))
   (prevCohReflRestrFrames:
     mkCohReflRestrFrameAboveSupTypes
       (mkDepsReflCohsInf deps.(1)%depsreflcohs2)
       (mkReflPaintingsAbove deps.(1).(_depsReflCohsSup)
         deps.(1).(_extraDepsReflCohsSup))):
-  rew [mkLayer _] prevCohReflRestrFrames.2 q r.+1 Hq (⇑ Hr) ε d (l; (l'; c)) in
+  rew [mkLayer _] prevCohReflRestrFrames.2 q r.+1 Hq (⇑ Hr) ε d (l; c) in
   mkReflLayerAbove deps.(_depsReflCohsSup).(_depsReflCohsInf)
     deps.(_depsReflCohsSup).(_reflPaintingsAbove) _
     deps.(_depsReflCohsSup).(_cohReflRestrFramesAboveSup)
     q (⇓ Hq)
     ((CohsOfReflCohsInf (mkDepsReflCohsInf deps)).(_deps).(_restrFrames).2 r Hr ε (d; l)).1
     (((CohsOfReflCohsInf (mkDepsReflCohsInf deps)).(_deps).(_restrFrames).2 r Hr ε (d; l)).2;
-     (CohsOfReflCohsInf (mkDepsReflCohsInf deps)).(_restrPaintings).2 r Hr ε (d; l) (l'; c)) =
+     (CohsOfReflCohsInf (mkDepsReflCohsInf deps)).(_restrPaintings).2 r Hr ε (d; l) c) =
   mkRestrLayer
     (CohsOfReflCohsInf (mkDepsReflCohsInf deps)).(_restrPaintings)
     (CohsOfReflCohsInf (mkDepsReflCohsInf deps)).(_cohs)
     r Hr ε _
     (mkReflLayerAbove (mkDepsReflCohsInf deps).(1)
       (mkReflPaintingsAbove deps.(1).(_depsReflCohsSup) deps.(1).(_extraDepsReflCohsSup)) _
-      prevCohReflRestrFrames
-      q (⇓ Hq) d (l; (l'; c))).
+      prevCohReflRestrFrames q (⇓ Hq) d (l; c)).
 Proof.
   apply functional_extensionality_dep.
   intros θ.
@@ -1093,7 +1093,7 @@ Proof.
   set (d0 := (CohsOfReflCohsInf (mkDepsReflCohsInf deps).(1)).(_deps).(_restrFrames).2
     0 leR_O θ d).
   set (c0 := (CohsOfReflCohsInf (mkDepsReflCohsInf deps).(1)).(_restrPaintings).2
-    0 leR_O θ d (l; (l'; c))).
+    0 leR_O θ d (l; c)).
 
   assert (h :
     (CohsOfReflCohsInf (mkDepsReflCohsInf deps)).(_restrPaintings).2 r Hr ε
@@ -1133,7 +1133,7 @@ Proof.
       (((CohsOfReflCohsInf (mkDepsReflCohsInf deps)).(_deps).(_restrFrames).2
           r Hr ε (d; l)).2;
        (CohsOfReflCohsInf (mkDepsReflCohsInf deps)).(_restrPaintings).2
-         r Hr ε (d; l) (l'; c))) : D).
+         r Hr ε (d; l) c)) : D).
   set (Q := fun x : D =>
     mkPainting (AboveOfReflCohsInf deps.(_depsReflCohsSup).(_depsReflCohsInf)).(_extraDeps)
       ((AboveOfReflCohsInf deps.(_depsReflCohsSup).(_depsReflCohsInf)).(_reflFramesAbove').2
@@ -1142,7 +1142,7 @@ Proof.
   { unfold x0, xr.
     unshelve eapply eq_existT_curried.
     now exact ((CohsOfReflCohs2 deps).(_cohs).2 r Hr 0 leR_O ε θ d).
-    now exact ((Cohs2OfReflCohs2 deps).(_cohPaintings).2 r Hr 0 leR_O ε θ d (l; (l'; c))). }
+    now exact ((Cohs2OfReflCohs2 deps).(_cohPaintings).2 r Hr 0 leR_O ε θ d (l; c)). }
   assert (map_pair_eq :
     rew [Q] pair_eq in
       deps.(_depsReflCohsSup).(_reflPaintingsAbove).2 q (⇓ Hq) x0.1 x0.2 =
@@ -1184,7 +1184,7 @@ Proof.
   - unshelve econstructor. now exact tt. now intros q r Hq Hr ε [].
   - set (h := mkCohReflRestrFramesAboveSup p k.+1 deps.(1)%depsreflcohs2).
     unshelve econstructor. now exact h.
-    intros q r Hq Hr ε [d l] [l' c].
+    intros q r Hq Hr ε [d l] c.
     destruct q.
     + unshelve eapply eq_existT_curried.
       * now exact ((mkCohReflRestrFramesBelowSup deps).2 0 r leR_O Hr ε (d; l)).
@@ -1204,8 +1204,8 @@ Proof.
         rewrite rew_app_rl. now trivial.
         now apply (deps'.(_frames).2.(UIP)).
     + unshelve eapply eq_existT_curried.
-      * now exact (h.2 q r.+1 Hq (⇑ Hr) ε d (l; (l'; c))).
-      * now exact (mkCohReflRestrLayerAboveSup deps ε q r Hq Hr d l l' c h).
+      * now exact (h.2 q r.+1 Hq (⇑ Hr) ε d (l; c)).
+      * now exact (mkCohReflRestrLayerAboveSup deps ε q r Hq Hr d l c h).
 Defined.
 
 Instance mkDepsReflCohsSup {p k} (deps: DepsReflCohs2 p k): DepsReflCohsSup p.+1 k.
@@ -1295,13 +1295,12 @@ Proof.
       now trivial.
     + now trivial.
   - destruct extraDeps; try contradiction.
-    destruct c as [l' c].
     unshelve eapply (eq_existT_curried_dep
       (Q := mkPainting (RestrExtOfReflCohsSup (mkDepsReflCohsSup deps)))).
-    + now exact (mkCohReflRestrLayerAboveSup deps ε q r Hq Hr d l l' c
+    + now exact (mkCohReflRestrLayerAboveSup deps ε q r Hq Hr d l c
         (mkCohReflRestrFramesAboveSup deps.(1))).
     + now exact (mkCohReflRestrPaintingAboveSup p.+1 k deps extraDeps
-        q.+1 r (⇑ Hq) Hr ε (d; l) (l'; c)).
+        q.+1 r (⇑ Hq) Hr ε (d; l) c).
 Defined.
 
 Fixpoint mkCohReflRestrPaintingsAboveSup {p k}
