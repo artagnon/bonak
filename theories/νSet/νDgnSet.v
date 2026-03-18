@@ -453,12 +453,8 @@ Fixpoint mkIdReflRestrPainting {p k}
 Proof.
   intros ε d c.
   destruct extraDeps.
-  - destruct deps, _depsCohs3.
-    generalize dependent _extraDepsCohs0; intro.
-    refine (match _extraDepsCohs0 with TopCohDep E => _ end).
-    intros; simpl.
-    rewrite rew_compose.
-    set (e := (mkIdReflRestrFrames _).2 ε d0).
+  - rewrite rew_compose.
+    set (e := (mkIdReflRestrFrames _).2 ε d).
     enough (eq_sym e • e = eq_refl) as ->. now trivial.
     now apply (mkFrame _).(UIP).
   - unshelve eapply (eq_existT_curried_dep
@@ -676,11 +672,7 @@ Fixpoint mkCohReflRestrPainting {p k}
 Proof.
   intros ε i Hi d [l c].
   destruct i.
-  - destruct extraDeps, deps, _depsReflCohs0, _depsCohs3.
-    + generalize dependent _extraDepsCohs0; intro.
-      refine (match _extraDepsCohs0 with TopCohDep E => _ end).
-      now intros.
-    + now trivial.
+  - now trivial.
   - unfold ReflPaintingBase, PaintingBase, toDepsRefl; simpl.
     destruct extraDeps.
     + now contradiction.

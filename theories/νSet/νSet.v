@@ -363,19 +363,21 @@ Proof.
     (mkExtraDeps p.+1 k depsCohs extraDepsCohs)).
 Defined.
 
-Fixpoint mkRestrPainting `(extraDepsCohs: DepsCohsExtension p k depsCohs):
-  mkRestrPaintingType (mkExtraDeps extraDepsCohs).
-Proof.
-  red; intros * (l, c); destruct q.
-  - now exact (l ε).
-  - destruct extraDepsCohs.
-    + exfalso; now apply leR_O_contra in Hq.
-    + unshelve esplit.
-      * now exact (mkRestrLayer depsCohs.(_restrPaintings) depsCohs.(_cohs)
-        q (⇓ Hq) ε d l).
-      * now exact (mkRestrPainting p.+1 k depsCohs extraDepsCohs
-        q (⇓ Hq) ε (d; l) c).
-Defined.
+Fixpoint mkRestrPainting `(extraDepsCohs: DepsCohsExtension p k depsCohs)
+  q {struct q}:
+  forall (Hq: q <= k) ε (d: mkFrame mkDepsRestr.(1)),
+    (mkPaintings (mkDepsRestr; mkExtraDeps extraDepsCohs)).2 d ->
+    mkDepsRestr.(_paintings).2 (mkDepsRestr.(_restrFrames).2 q Hq ε d) :=
+  match q with
+  | 0 => fun _ ε _ '(l; _) => l ε
+  | q.+1 =>
+    match extraDepsCohs with
+    | TopCohDep E => fun Hq _ _ _ => match leR_O_contra Hq with end
+    | AddCohDep depsCohs extraDepsCohs => fun Hq ε d '(l; c) =>
+      (mkRestrLayer depsCohs.(_restrPaintings) depsCohs.(_cohs) q (⇓ Hq) ε d l;
+       mkRestrPainting extraDepsCohs q (⇓ Hq) ε (d; l) c)
+    end
+  end.
 
 Fixpoint mkRestrPaintingsPrefix {p k}:
   forall `(extraDepsCohs: DepsCohsExtension p k depsCohs),
@@ -558,10 +560,7 @@ Fixpoint mkCohPainting `{depsCohs2: DepsCohs2 p k}
 Proof.
   red; intros *. destruct c as (l, c), r.
   - (* r = 0 *)
-    destruct extraDepsCohs2, depsCohs2.
-    generalize dependent _extraDepsCohs0. intro.
-    now refine (match _extraDepsCohs0 with TopCohDep E => _ end).
-    now reflexivity.
+    now trivial.
   - (* r = r'+1, q is necessarily q'+1 and extraDepsCohs non empty *)
     destruct q.
     { exfalso; now apply leR_O_contra in Hr. }
