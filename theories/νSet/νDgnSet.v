@@ -1621,6 +1621,52 @@ Proof.
       * now exact (mkCohReflReflLayerAbove deps q r Hq Hr d l c h).
 Defined.
 
+Fixpoint mkCohReflReflPaintingAbove {p k} (deps: DepsReflCohs2 p k)
+  (extraDeps: DepsReflCohs2Extension p k deps):
+  mkCohReflReflPaintingAboveType
+    (mkDepsReflCohsSup deps)
+    (mkExtraDepsReflCohsSup deps extraDeps)
+    (mkCohReflReflFramesAbove deps).
+Proof.
+  intros q r Hq Hr d c.
+  destruct r.
+  - unshelve eapply (eq_existT_curried_dep (Q := mkPainting
+      (mkExtraDeps (CohsExtOfReflCohsSup (mkDepsReflCohsSup deps))))).
+    + apply functional_extensionality_dep; intro θ.
+      unfold mkReflLayerAbove, mkReflPaintingBelow1.
+      rewrite <- map_subst_app.
+      set (deps' := mkExtraDeps (CohsExtOfReflCohsSup deps.(_depsReflCohsSup))).
+      apply rew_swap with (P := fun b => mkPainting deps' b).
+      rewrite rew_map with
+        (P := fun b => mkPainting deps' b)
+        (f := fun x => (mkDepsRestr (CohsOfReflCohsInf
+          (mkDepsReflCohsSup deps).(_depsReflCohsInf))).(_restrFrames).2 0 leR_O θ x).
+      rewrite 2 rew_compose.
+      simpl.
+      eassert (id_pair_eq : (_;_) = (_;_)).
+      { unshelve eapply eq_existT_curried.
+        - exact (mkIdReflRestrFrameBelow (ReflCohsInfOfReflCohs2 deps) 0 leR_O θ d).
+        - exact (mkIdReflRestrPaintingBelow deps.(_depsReflCohsSup)
+            deps.(_extraDepsReflCohsSup) 0 leR_O θ d c). }
+      rewrite <- (map_subst (P := fun _ => unit) (fun x _ => mkReflPaintingAbove
+        deps.(_depsReflCohsSup) deps.(_extraDepsReflCohsSup) q Hq x.1 x.2) id_pair_eq tt).
+      rewrite rew_map with
+        (P := fun b => mkPainting deps' b)
+        (f := fun x => (mkReflFramesAbove deps.(_depsReflCohsSup)).2 q Hq x.1 x.2).
+      apply rew_swap with (P := fun b => mkPainting deps' b).
+      rewrite rew_app_rl. now trivial.
+      now apply (mkFrame _).(UIP).
+    + admit.
+  - destruct extraDeps; [now contradiction |].
+    destruct c as [l c].
+    unshelve eapply (eq_existT_curried_dep (Q := mkPainting
+      (mkExtraDeps (CohsExtOfReflCohsSup (mkDepsReflCohsSup deps.(1)))))).
+    + now exact (mkCohReflReflLayerAbove deps q r Hq Hr d l c
+        (mkCohReflReflFramesAbove deps.(1)%depsreflcohs2)).
+    + now exact (mkCohReflReflPaintingAbove p.+1 k deps extraDeps
+        q.+1 r Hq Hr (d; l) c). 
+Admitted.
+
 (*
 Definition dgnDepsRestr {p} (C: νSetData p): DepsRestr p 0 :=
   toDepsRestr C.(restrFrames).
