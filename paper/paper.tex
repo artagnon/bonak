@@ -472,20 +472,30 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
 
 \begin{center}
   \begin{tikzpicture}[scale=2]
-    \draw[spanish-blue, fill=spanish-blue] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-    \draw[spanish-blue, fill=spanish-blue, nearly transparent] (0.6, 1) -- (0.6, 1.6) -- (1.6, 1.6) -- (1.6, 0.6) -- (1, 0.6);
+    \filldraw[spanish-blue, pattern=dots] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
+    \filldraw[spanish-blue, pattern=dots] (0.6, 0.6) -- (1.6, 0.6) -- (1.6, 1.6) -- (0.6, 1.6) -- (0.6, 0.6);
+    \filldraw[spanish-blue] (0, 0) circle (1pt);
+    \filldraw[spanish-blue] (1, 0) circle (1pt);
+    \filldraw[spanish-blue] (1, 1) circle (1pt);
+    \filldraw[spanish-blue] (0, 1) circle (1pt);
+    \filldraw[spanish-blue] (0.6, 0.6) circle (1pt);
+    \filldraw[spanish-blue] (0.6, 1.6) circle (1pt);
+    \filldraw[spanish-blue] (1.6, 1.6) circle (1pt);
+    \filldraw[spanish-blue] (1.6, 0.6) circle (1pt);
   \end{tikzpicture}
   \;\;
   \begin{tikzpicture}[scale=2]
-    \draw[raspeberry, pattern=dots] (1.1, 1.1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1.1, 0.1) -- (1.1, 1.1);
-    \draw[raspeberry] (1.3, 1.3) -- (1.3, 0.3);
-    \draw[raspeberry, pattern=dots] (0.1, 1.1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0.1, 0.1) -- (0.1, 1.1);
-    \draw[raspeberry] (0.3, 0.3) -- (0.3, 1.3);
+    \draw[raspeberry] (1.1, 1.1) -- (1.5, 1.5);
+    \draw[raspeberry] (0.1, 1.1) -- (0.5, 1.5);
+    \draw[raspeberry] (1.5, 0.5) -- (1.1, 0.1);
+    \draw[raspeberry] (0.5, 0.5) -- (0.1, 0.1);
+    \fill[raspeberry, pattern=dots] (1.1, 1.1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1.1, 0.1) -- (1.1, 1.1);
+    \fill[raspeberry, pattern=dots] (0.1, 1.1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0.1, 0.1) -- (0.1, 1.1);
   \end{tikzpicture}
   \;\;
   \begin{tikzpicture}[scale=2]
-    \draw[russian-green, pattern=dots] (0.2, 1.1) -- (1.0, 1.1) -- (1.4, 1.5) -- (0.6, 1.5) -- (0.2, 1.1);
-    \draw[russian-green, pattern=dots] (0.2, 0.1) -- (1.0, 0.1) -- (1.4, 0.5) -- (0.6, 0.5) -- (0.2, 0.1);
+    \fill[russian-green, pattern=dots] (0.2, 1.1) -- (1.0, 1.1) -- (1.4, 1.5) -- (0.6, 1.5) -- (0.2, 1.1);
+    \fill[russian-green, pattern=dots] (0.2, 0.1) -- (1.0, 0.1) -- (1.4, 0.5) -- (0.6, 0.5) -- (0.2, 0.1);
   \end{tikzpicture}
 \end{center}
 
