@@ -547,7 +547,7 @@ Definition HasRefl {p} (deps: DepsReflCohsSup p 0)
 
 Inductive DepsReflCohsSupExtension p: forall k (deps: DepsReflCohsSup p k), Type :=
 | TopReflCohSupDep {deps: DepsReflCohsSup p 0}
-  (L: HasRefl deps (mkPaintings (mkExtraDeps (CohsExtOfReflCohsSup deps))).2):
+  (L: HasRefl deps (mkPainting (mkExtraDeps (CohsExtOfReflCohsSup deps)))):
   DepsReflCohsSupExtension p 0 deps
 | AddReflCohSupDep {k} (deps: DepsReflCohsSup p.+1 k):
   DepsReflCohsSupExtension p.+1 k deps -> DepsReflCohsSupExtension p k.+1 deps.(1).
@@ -1105,25 +1105,8 @@ Proof.
 
   set (d0 := mkRestrFrame (depsCohs := (CohsOfReflCohs2 deps).(1)) 0 leR_O θ d).
 
-  assert (h :
-    (mkDepsCohs (Cohs2OfReflCohs2 deps)).(1).(_restrPaintings).2
-      r.+1 (⇑ Hr) ε
-      (mkReflFrameBelow (ReflCohsInfOfReflCohs2 deps).(1) q (Hq ↕ ↑ Hr) d0)
-      ((mkReflPaintingsBelow
-        deps.(_depsReflCohsSup).(1)%depsreflcohssup
-        (deps.(_depsReflCohsSup); deps.(_extraDepsReflCohsSup))%extradepsreflcohssup).2
-        q (Hq ↕ ↑ Hr) d0 (l θ)) =
-    mkRestrPainting (CohsExtOfReflCohsSup deps.(_depsReflCohsSup).(1))
-      r.+1 (⇑ Hr) ε
-      ((mkDepsReflBelow (ReflCohsInfOfReflCohs2 deps).(1)).(_reflFramesBelow).2
-        q (Hq ↕ ↑ Hr) d0)
-      (mkReflPaintingBelow
-        deps.(_depsReflCohsSup).(1)%depsreflcohssup
-        (deps.(_depsReflCohsSup); deps.(_extraDepsReflCohsSup))%extradepsreflcohssup
-        q (Hq ↕ ↑ Hr) d0 (l θ)))
-  by reflexivity; rewrite h; clear h.
-
-  rewrite <- (deps.(_cohReflRestrPaintingsBelowSup).2 q r Hq Hr ε d0 (l θ)).
+  set (h := deps.(_cohReflRestrPaintingsBelowSup).2 q r Hq Hr ε d0 (l θ)).
+  simpl in h |- *; rewrite <- h; clear h.
 
   rewrite rew_map with
     (P := fun b => (mkDepsRestr (CohsOfReflCohs2 deps).(1)).(_paintings).2 b)
@@ -1281,7 +1264,7 @@ Inductive DepsReflCohs2Extension p: forall k (deps: DepsReflCohs2 p k), Type :=
 | TopReflCoh2Dep {deps: DepsReflCohs2 p 0}
   (L: HasRefl
     (mkDepsReflCohsSup deps)
-    (mkPaintings (mkExtraDeps (CohsExtOfReflCohsInf (mkDepsReflCohsInf deps)))).2):
+    (mkPainting (mkExtraDeps (CohsExtOfReflCohsInf (mkDepsReflCohsInf deps))))):
   DepsReflCohs2Extension p 0 deps
 | AddReflCoh2Dep {k} (deps: DepsReflCohs2 p.+1 k):
   DepsReflCohs2Extension p.+1 k deps -> DepsReflCohs2Extension p k.+1 deps.(1)%depsreflcohs2.
@@ -1474,9 +1457,7 @@ Proof.
   set (d0 := (CohsOfReflCohsInf (ReflCohsInfOfReflCohs2 deps)).(_deps)
     .(_restrFrames).2 0 leR_O θ d).
   set (deps' := mkDepsRestr (CohsOfReflCohsInf (mkDepsReflCohsInf deps).(1))).
-  set (deps'' := (toDepsReflBelow
-    (mkDepsReflCohsInf deps).(1).(_depsCohs2).(_depsCohs)
-    (mkDepsReflCohsInf deps).(1).(_reflFramesBelow'))).
+  set (deps'' := mkDepsReflCohsInf deps.(1)).
   simpl.
   rewrite <- (deps.(_cohReflReflPaintingsBelow).2 q r Hq Hr d0 (l θ)).
   rewrite rew_map with
@@ -1484,10 +1465,10 @@ Proof.
     (f := fun x => deps'.(1).(_restrFrames).2 0 leR_O θ x).
   rewrite rew_map with
     (P := fun b => deps'.(1).(_paintings).2 b)
-    (f := fun d0 => deps''.(_reflFramesBelow).2 q (Hq ↕ ↑ Hr) d0).
+    (f := fun d0 => deps''.(_reflFramesBelow').2 q (Hq ↕ ↑ Hr) d0).
   rewrite rew_map with
     (P := fun b => deps'.(1).(_paintings).2 b)
-    (f := fun d1 => deps''.(_reflFramesBelow).2 r.+1 (⇑ Hr) d1).
+    (f := fun d1 => deps''.(_reflFramesBelow').2 r.+1 (⇑ Hr) d1).
   rewrite 4 rew_compose.
   apply rew_swap with (P := fun b => deps'.(1).(_paintings).2 b).
   rewrite rew_app_rl. now trivial.
