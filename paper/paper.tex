@@ -326,8 +326,25 @@
 
 \section{Introduction}
 
-Iterated parametricity à la Reynolds has the property that it mechanically generates augmented simplicial sets in the unary case and cubical sets in the binary (relational) case (see~\cite{johann17} for the correspondence in the cubical case . This was exploited
-Simplicial sets are commonly represented as presheaves over the simplex category. In~\cite{IAS}, the idea was given to represent them instead as families of dependent families.
+Iterated parametricity à la Reynolds has the property that it mechanically generates augmented simplicial sets in the unary case and cubical sets in the binary (relational) case~\cite{johann17}. This was exploited in \cite{hr25} to describe in a uniform way a construction of both augmented semi-simplicial and cubical sets in indexed form. By \emph{indexed form} is meant that instead of representing simplicial sets (resp. cubical sets) as presheaves over the simplex category (resp. cube category), they are represented as families of dependent families, following an idea presented in~\cite{UFwiki2012}.
+
+\begin{equation*}
+  \begin{array}{cllccllll}
+    \multicolumn{3}{c}{\mbox{\emph{fibred form}}} & \quad\mathit{vs}\quad & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                     \\
+    \\
+    Y_0                                           & :                     & \HSet[l]                                       &  & X_0                                                                                & :                & \HSet[l]                                                           & \mbox{(points)}   \\
+    \uparrow\uparrow                                                                                                                                                                                                                                                                                                           \\
+    Y_1                                           & :                     & \HSet[l]                                       &  & X_1                                                                                & :                & X_0 \times X_0 \rightarrow \HSet[l]                                & \mbox{(segments)} \\
+    \uparrow\uparrow\uparrow\uparrow              &                       &                                                &  &                                                                                                                                                                                                \\
+    Y_2                                           & :                     & \HSet[l]                                       &  & X_2                                                                                & :                & \Pi (x^0_{LL},x^0_{LR}).\, \Pi x^1_{L*}:X_1 (x^0_{LL},x^0_{LR}).                       \\
+                                                  &                       &                                                &  &                                                                                    &                  & \Pi (x^0_{RL},x^0_{RR}).\, \Pi x^1_{R*}:X_1 (x^0_{RL},x^0_{RR}).\,                     \\
+    \multicolumn{3}{c}{\mbox{~+ coherences}}      &                       &                                                &  & X_1 (x^0_{LL},x^0_{RL}) \times X_1 (x^0_{LR},x^0_{RR}) \rightarrow \HSet[l] \qquad & \mbox{(squares)}                                                                                          \\
+                                                  &                       &                                                &  &                                                                                                                                                                                                \\
+    \vdots                                        &                       &                                                &  & \vdots                                                                                                                                                                                         \\
+  \end{array}
+\end{equation*}
+
+This paper describes an extension of the construction with degeneracies. On the cubical side, this corresponds to degeneracies in the usual sense of e.g. Grandis and Mauri~\cite{grandis03}. On the simplicial side, this corresponds not to a degeneracy in the usual sense of simplicial sets (such degeneracy would actually take the form of a unary connection, see~\ref{sec:todo}) but to a degeneracy in the senseof parametrici, as in~\cite{bernardy12,bernardy15}. Adding a degeneracy means extending the previous diagram as follows:t
 
 \begin{equation*}
   \begin{array}{cllccllll}
@@ -478,8 +495,11 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
   \begin{tabularx}{\linewidth}{c c c c c}
     \toprule
     \begin{tikzpicture}[scale=1.5]
-      \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-    \end{tikzpicture}                                                                                         &
+      \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$1$};
+      \draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$0$};
+    \end{tikzpicture}                                                                                                                         & \begin{tikzpicture}[scale=1.5]
+                                                                                                                                                  \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
+                                                                                                                                                \end{tikzpicture} &
     \begin{tikzpicture}[scale=1.5]
       \draw[spanish-blue] (0, 0) -- (0, 1);
       \draw[spanish-blue] (1, 1) -- (1, 0);
@@ -491,7 +511,12 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
     \begin{tikzpicture}[scale=1.5]
       \draw[raspberry] (0, 0) -- (1, 0);
       \draw[raspberry] (1, 1) -- (0, 1);
-    \end{tikzpicture}                                                                                                                                                          \\
+    \end{tikzpicture}                                                                                                                                                                                                           \\
+    \begin{tikzpicture}[scale=1.5]
+      \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$1$};
+      \draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$2$};
+      \draw[->, russian-green] (0, 0) -- (0.75, 0.75) node at (0.75, 0.95) {$0$};
+    \end{tikzpicture}                                                                                                              &
     \begin{tikzpicture}[scale=1.5]
       \draw[gray20] (0, 0) -- (1, 0);
       \draw[gray20] (1, 1) -- (0, 1);
@@ -542,7 +567,12 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
     \begin{tikzpicture}[scale=1.5]
       \fill[pattern=dots, pattern color=raspberry] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
       \fill[pattern=dots, pattern color=raspberry] (0, 0) -- (1, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
-    \end{tikzpicture}                                                                                        \\
+    \end{tikzpicture}                                                                                                                                         \\
+    \begin{tikzpicture}[scale=1.5]
+      \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$2$};
+      \draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$1$};
+      \draw[->, russian-green] (0, 0) -- (0.75, 0.75) node at (0.75, 0.95) {$0$};
+    \end{tikzpicture}                                                                                                              &
     \begin{tikzpicture}[scale=1.5]
       \draw[gray20] (0, 0) -- (1, 0);
       \draw[gray20] (1, 1) -- (0, 1);
@@ -589,7 +619,12 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
     \begin{tikzpicture}[scale=1.5]
       \fill[pattern=dots, pattern color=raspberry] (0, 1) -- (1.0, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
       \fill[pattern=dots, pattern color=raspberry] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
-    \end{tikzpicture}                                                                                      \\
+    \end{tikzpicture}                                                                                                                                       \\
+    \begin{tikzpicture}[scale=1.5]
+      \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$1$};
+      \draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$0$};
+      \draw[->, russian-green] (0, 0) -- (0.75, 0.75) node at (0.75, 0.95) {$2$};
+    \end{tikzpicture}                                                                                                              &
     \begin{tikzpicture}[scale=1.5]
       \draw[gray20] (0, 0) -- (1, 0);
       \draw[gray20] (1, 1) -- (0, 1);
@@ -636,7 +671,7 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
     \begin{tikzpicture}[scale=1.5]
       \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
       \fill[pattern=dots, pattern color=russian-green] (0.5, 0.5) -- (1.5, 0.5) -- (1.5, 1.5) -- (0.5, 1.5) -- (0.5, 0.5);
-    \end{tikzpicture}                                                                        \\
+    \end{tikzpicture}                                                                                                                         \\
     \bottomrule
   \end{tabularx}
 \end{table}
