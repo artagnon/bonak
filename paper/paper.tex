@@ -47,14 +47,14 @@
 \define@cmdkey[bonak]{restrpainting}{c}{(#1)}
 
 \define@cmdkey[bonak]{reflframe}{D}{(#1)}
-\define@cmdkey[bonak]{reflframe}{L}{(#1)}
+\define@cmdkey[bonak]{reflframe}{R}{(#1)}
 \define@cmdkey[bonak]{reflframe}{d}{(#1)}
 \define@cmdkey[bonak]{reflframeExt}{D}{(#1)}
-\define@cmdkey[bonak]{reflframeExt}{L}{(#1)}
+\define@cmdkey[bonak]{reflframeExt}{R}{(#1)}
 \define@cmdkey[bonak]{reflframeExt}{d}{(#1)}
 \define@cmdkey[bonak]{reflframeExt}{c}{(#1)}
 \define@cmdkey[bonak]{refllayer}{D}{(#1)}
-\define@cmdkey[bonak]{refllayer}{L}{(#1)}
+\define@cmdkey[bonak]{refllayer}{R}{(#1)}
 \define@cmdkey[bonak]{refllayer}{d}{(#1)}
 \define@cmdkey[bonak]{refllayer}{l}{(#1)}
 \define@cmdkey[bonak]{refllayer}{c}{(#1)}
@@ -86,10 +86,10 @@
 \define@cmdkey[bonak]{cohpainting}{d}{(#1)}
 \define@cmdkey[bonak]{cohpainting}{c}{(#1)}
 \define@cmdkey[bonak]{cohidframe}{D}{(#1)}
-\define@cmdkey[bonak]{cohidframe}{L}{(#1)}
+\define@cmdkey[bonak]{cohidframe}{R}{(#1)}
 \define@cmdkey[bonak]{cohidframe}{d}{(#1)}
 \define@cmdkey[bonak]{cohidlayer}{D}{(#1)}
-\define@cmdkey[bonak]{cohidlayer}{L}{(#1)}
+\define@cmdkey[bonak]{cohidlayer}{R}{(#1)}
 \define@cmdkey[bonak]{cohidlayer}{d}{(#1)}
 \define@cmdkey[bonak]{cohidlayer}{l}{(#1)}
 \define@cmdkey[bonak]{cohidpainting}{D}{(#1)}
@@ -99,11 +99,11 @@
 \define@cmdkey[bonak]{cohidpainting}{d}{(#1)}
 \define@cmdkey[bonak]{cohidpainting}{c}{(#1)}
 \define@cmdkey[bonak]{cohframeExt}{D}{(#1)}
-\define@cmdkey[bonak]{cohframeExt}{L}{(#1)}
+\define@cmdkey[bonak]{cohframeExt}{R}{(#1)}
 \define@cmdkey[bonak]{cohframeExt}{d}{(#1)}
 \define@cmdkey[bonak]{cohframeExt}{c}{(#1)}
 \define@cmdkey[bonak]{cohlayerExt}{D}{(#1)}
-\define@cmdkey[bonak]{cohlayerExt}{L}{(#1)}
+\define@cmdkey[bonak]{cohlayerExt}{R}{(#1)}
 \define@cmdkey[bonak]{cohlayerExt}{d}{(#1)}
 \define@cmdkey[bonak]{cohlayerExt}{l}{(#1)}
 \define@cmdkey[bonak]{cohlayerExt}{c}{(#1)}
@@ -113,9 +113,8 @@
 \define@cmdkey[bonak]{cohidpainting}{R}{(#1)}
 \define@cmdkey[bonak]{cohpaintingExt}{d}{(#1)}
 \define@cmdkey[bonak]{cohpaintingExt}{c}{(#1)}
-
-\define@cmdkey[bonak]{R}{d}{(#1)}
-\define@cmdkey[bonak]{R}{c}{(#1)}
+\define@cmdkey[bonak]{L}{d}{(#1)}
+\define@cmdkey[bonak]{L}{c}{(#1)}
 \makeatother
 
 % Truncated sets, otherwise referred to as X: the general macro
@@ -198,16 +197,16 @@
 \renewcommand{\D}{D}
 \newcommand{\hdD}{\D.1}
 \newcommand{\tlD}{\D.2}
-\renewcommand{\L}{L}
+\renewcommandx{\L}[2][1,2]{
+  L_{#1}
+  \setkeys*[bonak]{L}{#2}
+}
+\newcommand{\R}{R}
 \newcommand{\hdL}{\L.1}
 \newcommand{\tlL}{\L.2}
 \newcommand{\hdR}{\R.1}
 \newcommand{\tlR}{\R.2}
 \newcommand{\M}{M}
-\newcommandx{\R}[2][1,2]{
-  R_{#1}
-  \setkeys*[bonak]{R}{#2}
-}
 \renewcommand{\d}{d}
 \renewcommand{\E}{E}
 \renewcommand{\l}{l}
