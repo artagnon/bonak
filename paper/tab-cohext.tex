@@ -1,5 +1,5 @@
 \providecommand{\lab}{tab:cohext}
-\begin{eqntable}{Commutation of $q$-th degeneracy and $r$-th projection for Ext when $q \leq p \leq r$\label{\lab}}
+\begin{eqntable}{Commutation of $q$-th degeneracy and $r$-th projection for $q \leq p \leq r$\label{\lab}}
   \eqnline{\cohfext[n][p][q \leq p \leq r < n][q][r][\epsilon][]}{\makecell{\eqnarg{cohframeExt}{D}{\Xto{n+2}} \\ \eqnarg{cohframeExt}{R}{\Xreflto{n+2}(D)} \\ \eqnarg{cohframeExt}{d}{\framep[n+1][p][][D=\D]} \\ \eqnarg{reflframeExt}{c}{\painting[n+1][p][][D=\hdD, E=\tlD, d=\d]}}}{:}{\makecell{\restrf[n+1][p+1][][r+1][\epsilon][D=\hdD, d={\reflfext[n+1][p][][q][D=\D, d=\d, c=\c]}] \\ = \reflfext[n][p][][q][D=\hdD, d={\restrf[n][p][][r][\epsilon][D=\hdD, d=\d]}, c={\restrp[n][p][][r][\epsilon][D=\hdD, d=\d, c=\c]}]}}
   \eqnline{\cohfext[n][0][][q][r][\epsilon][\omega]}{\D~\R~\unitpoint~\c}{\defeq}{\refl(\unitpoint)}
   \eqnline{\cohfext[n][p+1][][q][r][\epsilon][\omega]}{\D~\R~\pair{\d}{\l}~\c}{\defeq}{\pair{\cohfext[n][p][][q+1][r+1][\epsilon][\omega][D=\D, d=\d, c={\l,\c}]}{\cohlext[n][p][][q][r][\epsilon][\omega][D=\D, d=\d, l=\l, c=\c]}}
@@ -9,5 +9,5 @@
   \midrule
   \eqnline{\cohpext[n][p][q \leq p \leq r < n][q][r][\epsilon][]}{\makecell{\eqnarg{cohpaintingExt}{D}{\Xto{n+2}} \\ \eqnarg{cohpaintingExt}{E}{\Xcomp{n+2}[D=\D]} \\ \eqnarg{cohpaintingExt}{R}{\Xreflto{n+1}(D)} \\ \eqnarg{cohidpainting}{L}{\Xreflcomp{n+1}[D=\D, E=\E, R=\R]} \\ \eqnarg{cohpaintingExt}{d}{\framep[n+1][p][][D=\hdD]} \\ \eqnarg{cohpaintingExt}{c}{\painting[n+1][p][][D=\hdD, E=\tlD, d=\d]}}}{:}{\makecell{\restrp[n+1][p+1][][r+1][\epsilon][D=\hdD, E=\tlD, d={\restrf[n+1][p][][r+1][\epsilon][D=\D, d=\d]}, c={\reflpext[n+1][p][][q][D=\D, E=\E, R=\R, L=\L, d=\d, c=\c]}] \\ = \reflpext[n][p][][q][D=\hdD, E=\tlD, R=\hdR, L=\tlR, D={\reflfext[n][p][][q][D=\D, d=\d]}, c={\restrp[n][p][][r][\epsilon][D=\D, E=\E, d=\d, c=\c]}]}}
   \eqnline{\cohpext[n][p][][q][0][\epsilon][\omega]}{\D~\E~\R~\L~\d~\pair{\l}{\_}}{\defeq}{\refl(\restrp[n][p][][q][\epsilon][D=\hdD, E=\tlD, d={\restrf[\omega][0][n][p][][D=\D, d=\d]}, c={\l_\epsilon}])}
-  \eqnline{\cohpext[n][p][p<n][q+1][r+1][\epsilon][\omega]}{\D~\E~\R~\L~\d~\pair{\l}{\c}}{\defeq}{\pair{\cohlext[n][p][][q][r][\epsilon][\omega][D=\D, d=\d, l=\l, c=\c]}{\cohpext[n][p+1][][q][r][\epsilon][\omega][D=\D, E=\E, d={\d, \l}, c=\c]}}
+  \eqnline{\cohpext[n][p][p<n][q+1][r+1][\epsilon][\omega]}{\D~\E~\R~\L~\d~\pair{\l}{\c}}{\defeq}{\pair{\cohlext[n][p][][q][r][\epsilon][\omega][D=\D, d=\d, l=\l, c=\c]}{\cohpext[n][p+1][][q][r][\epsilon][\omega][D=\D, E=\E, R=\R, L=\L, d={\d, \l}, c=\c]}}
 \end{eqntable}
