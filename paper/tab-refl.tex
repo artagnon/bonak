@@ -1,13 +1,13 @@
 \providecommand{\lab}{tab:refl}
 \begin{eqntable}{$q$-th degeneracies below\label{\lab}}
-  \eqnline{\reflf[n][p][p \leq q \leq n][q]}{\makecell{\eqnarg{reflframe}{D}{\Xreflto{n+1}} \\ \eqnarg{reflframe}{R}{\Xreflto{n}[D=\D]} \\ \eqnarg{reflframe}{d}{\framep[n][p][][D=\hdD]}}}{:}{\framep[n+1][p][][D=\D]}
+  \eqnline{\reflf[n][p][p \leq q \leq n][q]}{\makecell{\eqnarg{reflframe}{D}{\Xto{n+1}} \\ \eqnarg{reflframe}{R}{\Xreflto{n}[D=\D]} \\ \eqnarg{reflframe}{d}{\framep[n][p][][D=\hdD]}}}{:}{\framep[n+1][p][][D=\D]}
   \eqnline{\reflf[n][0][][q][D=\D, d=\d]}{D~R~\unitpoint}{\defeq}{\unitpoint}
   \eqnline{\reflf[n][p+1][][q][D=\D, d=\d]}{D~R~\pair{d}{l}}{\defeq}{(\reflf[n][p][][q][D=\D, d=\d],\refll[n][p][][q][D=\D, d=\d, l=\l])}
   \midrule
-  \eqnline{\refll[n][p][p < q \leq n][q]}{\makecell{\eqnarg{refllayer}{D}{\Xreflto{n+1}} \\ \eqnarg{refllayer}{R}{\Xreflto{n}[D=\D]} \\ \eqnarg{refllayer}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{refllayer}{l}{\layer[n][p][][D=\D, d=\d]}}}{:}{\layer[n+1][p][][D=\hdD, d={\reflf[n][p][][q][D=\hdD, d=\d]}]}
+  \eqnline{\refll[n][p][p < q \leq n][q]}{\makecell{\eqnarg{refllayer}{D}{\Xto{n+1}} \\ \eqnarg{refllayer}{R}{\Xreflto{n}[D=\D]} \\ \eqnarg{refllayer}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{refllayer}{l}{\layer[n][p][][D=\D, d=\d]}}}{:}{\layer[n+1][p][][D=\hdD, d={\reflf[n][p][][q][D=\hdD, d=\d]}]}
   \eqnline{\refll[n][p][][q]}{\D~\R~\d~\l}{\defeq}{\lambda \omega.(\reflp[n-1][p][][q-1][D=\hdD, E=\tlD, R=\hdR, L=\tlR, d={\reflf[n][p][][0][\omega][D=\D, d=\d]}, c={\l_\omega}])}
   \midrule
-  \eqnline{\reflp[n][p][p \leq q \leq n][q]}{\makecell{\eqnarg{reflpainting}{D}{\Xreflto{n+1}} \\ \eqnarg{reflpainting}{E}{\Xreflcomp{n+1}[D=\D]} \\ \eqnarg{reflpainting}{R}{\Xreflto{n}(D)} \\ \eqnarg{reflpainting}{R}{\Xreflcomp{n}[D=\D, E=\E, R=\R]} \\ \eqnarg{reflpainting}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{reflpainting}{c}{\painting[n][p][][D=\hdD, E=\tlD, d=\d]}}}{:}{\painting[n+1][p][][D=\hdD, E=\E, d={\reflf[n][p][][q][D=\hdD, d=\d]}]}
+  \eqnline{\reflp[n][p][p \leq q \leq n][q]}{\makecell{\eqnarg{reflpainting}{D}{\Xto{n+1}} \\ \eqnarg{reflpainting}{E}{\Xcomp{n+1}[D=\D]} \\ \eqnarg{reflpainting}{R}{\Xreflto{n}(D)} \\ \eqnarg{reflpainting}{L}{\Xreflcomp{n}[D=\D, E=\E, R=\R]} \\ \eqnarg{reflpainting}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{reflpainting}{c}{\painting[n][p][][D=\hdD, E=\tlD, d=\d]}}}{:}{\painting[n+1][p][][D=\hdD, E=\E, d={\reflf[n][p][][q][D=\hdD, d=\d]}]}
   \eqnline{\reflp[n][p][p=q][q]}{\D~\E~\R~\L~\d~\c}{\defeq}{\pair{\lambda \epsilon.\,c}{\reflpext[n][p+1][][q][D=\D, E=\E, R=\R, L=\L, d=\pair{d}{l}, c=\c]}}
   \eqnline{\reflp[n][p][p<q][q]}{\D~\E~\R~\L~\d~\pair{l}{c}}{\defeq}{\pair{\refll[n][p][][q][D=\D, d=\d, l=\l]}{\reflp[n][p+1][][q][D=\D, E=\E, R=\R, L=\L, d=\pair{d}{l}, c=\c]}}
 \end{eqntable}
