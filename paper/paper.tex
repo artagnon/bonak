@@ -201,6 +201,8 @@
 \renewcommand{\L}{L}
 \newcommand{\hdL}{\L.1}
 \newcommand{\tlL}{\L.2}
+\newcommand{\hdR}{\R.1}
+\newcommand{\tlR}{\R.2}
 \newcommand{\M}{M}
 \newcommandx{\R}[2][1,2]{
   R_{#1}
@@ -495,8 +497,8 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
   \begin{tabularx}{\linewidth}{c c c c c}
     \toprule
     \begin{tikzpicture}[scale=1.5]
-      \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$1$};
-      \draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$0$};
+      \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$0$};
+      \draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$1$};
     \end{tikzpicture}                                                                                                                         & \begin{tikzpicture}[scale=1.5]
                                                                                                                                                   \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
                                                                                                                                                 \end{tikzpicture} &
@@ -569,9 +571,9 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
       \fill[pattern=dots, pattern color=raspberry] (0, 0) -- (1, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
     \end{tikzpicture}                                                                                                                                         \\
     \begin{tikzpicture}[scale=1.5]
-      \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$2$};
-      \draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$1$};
-      \draw[->, russian-green] (0, 0) -- (0.75, 0.75) node at (0.75, 0.95) {$0$};
+      \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$0$};
+      \draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$2$};
+      \draw[->, russian-green] (0, 0) -- (0.75, 0.75) node at (0.75, 0.95) {$1$};
     \end{tikzpicture}                                                                                                              &
     \begin{tikzpicture}[scale=1.5]
       \draw[gray20] (0, 0) -- (1, 0);
@@ -621,8 +623,8 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
       \fill[pattern=dots, pattern color=raspberry] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
     \end{tikzpicture}                                                                                                                                       \\
     \begin{tikzpicture}[scale=1.5]
-      \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$1$};
-      \draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$0$};
+      \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$0$};
+      \draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$1$};
       \draw[->, russian-green] (0, 0) -- (0.75, 0.75) node at (0.75, 0.95) {$2$};
     \end{tikzpicture}                                                                                                              &
     \begin{tikzpicture}[scale=1.5]
