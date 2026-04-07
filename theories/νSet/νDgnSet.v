@@ -1765,7 +1765,9 @@ Proof.
       rewrite rew_app_rl. now trivial.
       now apply (deps'.(_frames).2.(UIP)).
     + destruct p.
-      * rewrite <- (mkCohReflRestrPaintingAboveSup deps extraDeps 0 r leR_O Hr ε d (l; c)).
+      * set (h := mkCohReflRestrPaintingAboveSup deps extraDeps 0 r leR_O Hr ε d (l; c)).
+        unfold mkRestrPainting in h |- *.
+        rewrite <- h; clear h.
         destruct d.
         enough (h: (=eq_refl; _) = eq_refl) by (now rewrite h).
         now apply (mkFrame (RestrOfReflCohsSup (mkDepsReflCohsSup deps))).(UIP).
@@ -1871,7 +1873,9 @@ Proof.
       now apply (mkFrame _).(UIP).
     + unfold mkReflPaintingBelow2; cbn [eq_rect].
       destruct p.
-      * rewrite <- (mkCohReflAboveAbovePainting deps extraDeps 0 q leR_O Hq d c).
+      * set (h := mkCohReflAboveAbovePainting deps extraDeps 0 q leR_O Hq d c).
+        unfold mkReflPaintingAbove in h |- *.
+        rewrite <- h; clear h.
         match goal with
         | |- rew [?P1'] ?H2' in rew [?P2'] ?H1' in ?y = ?x =>
           set (H2 := H2'); set (H1 := H1')
@@ -1879,7 +1883,9 @@ Proof.
         rewrite rew_compose.
         enough (HEq: H1 • H2 = eq_refl) by (now rewrite HEq).
         now apply (mkFrame (mkDepsRestr (CohsOfReflCohsSup (mkDepsReflCohsSup deps)))).(UIP).
-      * rewrite <- (mkCohReflAboveAbovePainting deps extraDeps 0 q leR_O Hq d c).
+      * set (h := mkCohReflAboveAbovePainting deps extraDeps 0 q leR_O Hq d c).
+        unfold mkReflPaintingAbove in h |- *.
+        rewrite <- h; clear h.
         match goal with
         | |- rew [?P1'] ?H2' in rew [?P2'] ?H1' in ?y = ?x =>
           set (H2 := H2'); set (H1 := H1')
