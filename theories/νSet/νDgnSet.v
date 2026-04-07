@@ -1978,15 +1978,14 @@ Proof.
     + now apply mkCohReflBelowBelowPainting.
 Defined.
 
-(*
 Definition dgnDepsRestr {p} (C: νSetData p): DepsRestr p 0 :=
   toDepsRestr C.(restrFrames).
 
-Definition dgnDepsRefl {p} (C: νSetData p)
-  (reflFrames: mkReflFrameTypes (dgnDepsRestr C)): DepsReflBelow p 0 :=
+Definition dgnDepsReflBelow {p} (C: νSetData p)
+  (reflFramesBelow: mkReflFrameBelowTypes (dgnDepsRestr C)): DepsReflBelow p 0 :=
   {|
-    _deps := dgnDepsRestr C;
-    _reflFrames := reflFrames;
+    _depsRestr := dgnDepsRestr C;
+    _reflFramesBelow := reflFramesBelow;
   |}.
 
 Definition dgnDepsCohs {p} (C: νSetData p)
@@ -2009,74 +2008,298 @@ Definition dgnDepsCohs2 {p} (C: νSetData p)
 Definition dgnDepsReflCohsInf {p} (C: νSetData p)
   (E: mkFrame (dgnDepsRestr C) -> HSet)
   (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
-  (reflFrames: mkReflFrameTypes (dgnDepsRestr C))
-  (reflPaintings: mkReflPaintingTypes
-    (dgnDepsRefl C reflFrames)
+  (reflFramesBelow: mkReflFrameBelowTypes (dgnDepsRestr C))
+  (reflFramesAbove: mkReflFrameAboveTypes (dgnDepsRestr C))
+  (reflPaintingsBelow: mkReflPaintingBelowTypes
+    (dgnDepsReflBelow C reflFramesBelow)
     (TopRestrDep (deps := dgnDepsRestr C) E))
-  (idReflRestrFrames: mkIdReflRestrFrameTypes (dgnDepsRefl C reflFrames))
-  (idReflRestrPaintings :
-    mkIdReflRestrPaintingTypes (dgnDepsCohs C E)
-      reflFrames reflPaintings idReflRestrFrames)
-  (cohRestrReflFrames :
-    mkCohReflRestrFrameTypes (dgnDepsCohs C E) reflFrames reflPaintings):
+  (idReflRestrFramesBelow:
+    mkIdReflRestrFrameBelowTypes (dgnDepsReflBelow C reflFramesBelow))
+  (idReflRestrPaintingsBelow:
+    mkIdReflRestrPaintingBelowTypes (dgnDepsCohs C E)
+      reflFramesBelow reflPaintingsBelow idReflRestrFramesBelow)
+  (cohReflRestrFramesBelowInf:
+    mkCohReflRestrFrameBelowInfTypes
+      (dgnDepsCohs C E) reflFramesBelow reflPaintingsBelow):
   DepsReflCohsInf p 0 :=
   {|
     _depsCohs2 := dgnDepsCohs2 C E E';
-    _reflFrameDeps := reflFrames;
-    _reflPaintingDeps := reflPaintings;
-    _idReflRestrFrames := idReflRestrFrames;
-    _idReflRestrPaintings := idReflRestrPaintings;
-    _cohReflRestrFrames := cohRestrReflFrames;
+    _reflFramesBelow' := reflFramesBelow;
+    _reflFramesAbove := reflFramesAbove;
+    _reflPaintingsBelow := reflPaintingsBelow;
+    _idReflRestrFramesBelow := idReflRestrFramesBelow;
+    _idReflRestrPaintingsBelow := idReflRestrPaintingsBelow;
+    _cohReflRestrFramesBelowInf := cohReflRestrFramesBelowInf;
+  |}.
+
+Definition dgnDepsReflCohsSup {p} (C: νSetData p)
+  (E: mkFrame (dgnDepsRestr C) -> HSet)
+  (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
+  (reflFramesBelow: mkReflFrameBelowTypes (dgnDepsRestr C))
+  (reflFramesAbove: mkReflFrameAboveTypes (dgnDepsRestr C))
+  (reflPaintingsBelow: mkReflPaintingBelowTypes
+    (dgnDepsReflBelow C reflFramesBelow)
+    (TopRestrDep (deps := dgnDepsRestr C) E))
+  (idReflRestrFramesBelow:
+    mkIdReflRestrFrameBelowTypes (dgnDepsReflBelow C reflFramesBelow))
+  (idReflRestrPaintingsBelow:
+    mkIdReflRestrPaintingBelowTypes (dgnDepsCohs C E)
+      reflFramesBelow reflPaintingsBelow idReflRestrFramesBelow)
+  (cohReflRestrFramesBelowInf:
+    mkCohReflRestrFrameBelowInfTypes
+      (dgnDepsCohs C E) reflFramesBelow reflPaintingsBelow)
+  (cohReflRestrFramesBelowSup:
+    mkCohReflRestrFrameBelowSupTypes
+      (dgnDepsReflCohsInf C E E'
+        reflFramesBelow reflFramesAbove reflPaintingsBelow
+        idReflRestrFramesBelow idReflRestrPaintingsBelow
+        cohReflRestrFramesBelowInf))
+  (reflPaintingsAbove:
+    mkReflPaintingAboveTypes
+      (AboveOfReflCohsInf
+        (dgnDepsReflCohsInf C E E'
+          reflFramesBelow reflFramesAbove reflPaintingsBelow
+          idReflRestrFramesBelow idReflRestrPaintingsBelow
+          cohReflRestrFramesBelowInf)))
+  (cohReflRestrFramesAboveSup:
+    mkCohReflRestrFrameAboveSupTypes
+      (dgnDepsReflCohsInf C E E'
+        reflFramesBelow reflFramesAbove reflPaintingsBelow
+        idReflRestrFramesBelow idReflRestrPaintingsBelow
+        cohReflRestrFramesBelowInf)
+      reflPaintingsAbove):
+  DepsReflCohsSup p 0 :=
+  {|
+    _depsReflCohsInf := dgnDepsReflCohsInf C E E'
+      reflFramesBelow reflFramesAbove reflPaintingsBelow
+      idReflRestrFramesBelow idReflRestrPaintingsBelow
+      cohReflRestrFramesBelowInf;
+    _cohReflRestrFramesBelowSup := cohReflRestrFramesBelowSup;
+    _reflPaintingsAbove := reflPaintingsAbove;
+    _cohReflRestrFramesAboveSup := cohReflRestrFramesAboveSup;
   |}.
 
 Definition dgnHasRefl {p} (C: νSetData p)
   (E: mkFrame (dgnDepsRestr C) -> HSet)
   (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
-  (reflFrames: mkReflFrameTypes (dgnDepsRestr C))
-  (reflPaintings :
-    mkReflPaintingTypes
-      (dgnDepsRefl C reflFrames)
-      (TopRestrDep (deps := dgnDepsRestr C) E))
-  (idReflRestrFrames: mkIdReflRestrFrameTypes (dgnDepsRefl C reflFrames))
-  (idReflRestrPaintings :
-    mkIdReflRestrPaintingTypes (dgnDepsCohs C E)
-      reflFrames reflPaintings idReflRestrFrames)
-  (cohRestrReflFrames :
-    mkCohReflRestrFrameTypes (dgnDepsCohs C E)
-      reflFrames reflPaintings): Type :=
+  (reflFramesBelow: mkReflFrameBelowTypes (dgnDepsRestr C))
+  (reflFramesAbove: mkReflFrameAboveTypes (dgnDepsRestr C))
+  (reflPaintingsBelow: mkReflPaintingBelowTypes
+    (dgnDepsReflBelow C reflFramesBelow)
+    (TopRestrDep (deps := dgnDepsRestr C) E))
+  (idReflRestrFramesBelow:
+    mkIdReflRestrFrameBelowTypes (dgnDepsReflBelow C reflFramesBelow))
+  (idReflRestrPaintingsBelow:
+    mkIdReflRestrPaintingBelowTypes (dgnDepsCohs C E)
+      reflFramesBelow reflPaintingsBelow idReflRestrFramesBelow)
+  (cohReflRestrFramesBelowInf:
+    mkCohReflRestrFrameBelowInfTypes
+      (dgnDepsCohs C E) reflFramesBelow reflPaintingsBelow)
+  (cohReflRestrFramesBelowSup:
+    mkCohReflRestrFrameBelowSupTypes
+      (dgnDepsReflCohsInf C E E'
+        reflFramesBelow reflFramesAbove reflPaintingsBelow
+        idReflRestrFramesBelow idReflRestrPaintingsBelow
+        cohReflRestrFramesBelowInf))
+  (reflPaintingsAbove:
+    mkReflPaintingAboveTypes
+      (AboveOfReflCohsInf
+        (dgnDepsReflCohsInf C E E'
+          reflFramesBelow reflFramesAbove reflPaintingsBelow
+          idReflRestrFramesBelow idReflRestrPaintingsBelow
+          cohReflRestrFramesBelowInf)))
+  (cohReflRestrFramesAboveSup:
+    mkCohReflRestrFrameAboveSupTypes
+      (dgnDepsReflCohsInf C E E'
+        reflFramesBelow reflFramesAbove reflPaintingsBelow
+        idReflRestrFramesBelow idReflRestrPaintingsBelow
+        cohReflRestrFramesBelowInf)
+      reflPaintingsAbove): Type :=
   HasRefl
-    (dgnDepsReflCohsInf C E E'
-      reflFrames reflPaintings
-      idReflRestrFrames idReflRestrPaintings
-      cohRestrReflFrames)
-    (mkPaintings
-      (mkExtraDeps
-        (CohsExtOfReflCohsInf
-          (dgnDepsReflCohsInf C E E'
-            reflFrames reflPaintings
-            idReflRestrFrames idReflRestrPaintings
-            cohRestrReflFrames)))).2.
+    (dgnDepsReflCohsSup C E E'
+      reflFramesBelow reflFramesAbove reflPaintingsBelow
+      idReflRestrFramesBelow idReflRestrPaintingsBelow
+      cohReflRestrFramesBelowInf
+      cohReflRestrFramesBelowSup
+      reflPaintingsAbove
+      cohReflRestrFramesAboveSup)
+    E'.
+
+Class DgnDataCore {p} (C: νSetData p)
+  (E: mkFrame (dgnDepsRestr C) -> HSet) := {
+  reflFramesBelow: mkReflFrameBelowTypes (dgnDepsRestr C);
+  reflFramesAbove: mkReflFrameAboveTypes (dgnDepsRestr C);
+  reflPaintingsBelow:
+    mkReflPaintingBelowTypes
+      (dgnDepsReflBelow C reflFramesBelow)
+      (TopRestrDep (deps := dgnDepsRestr C) E);
+  idReflRestrFramesBelow:
+    mkIdReflRestrFrameBelowTypes (dgnDepsReflBelow C reflFramesBelow);
+  idReflRestrPaintingsBelow:
+    mkIdReflRestrPaintingBelowTypes
+      (dgnDepsCohs C E)
+      reflFramesBelow reflPaintingsBelow idReflRestrFramesBelow;
+  cohReflRestrFramesBelowInf
+    (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet):
+    mkCohReflRestrFrameBelowInfTypes
+      (dgnDepsCohs C E) reflFramesBelow reflPaintingsBelow;
+  cohReflRestrFramesBelowSup
+    (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet):
+    mkCohReflRestrFrameBelowSupTypes
+      (dgnDepsReflCohsInf C E E'
+        reflFramesBelow reflFramesAbove reflPaintingsBelow
+        idReflRestrFramesBelow idReflRestrPaintingsBelow
+        (cohReflRestrFramesBelowInf E'));
+  reflPaintingsAbove
+    (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet):
+    mkReflPaintingAboveTypes
+      (AboveOfReflCohsInf
+        (dgnDepsReflCohsInf C E E'
+          reflFramesBelow reflFramesAbove reflPaintingsBelow
+          idReflRestrFramesBelow idReflRestrPaintingsBelow
+          (cohReflRestrFramesBelowInf E')));
+  cohReflRestrFramesAboveSup
+    (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet):
+    mkCohReflRestrFrameAboveSupTypes
+      (dgnDepsReflCohsInf C E E'
+        reflFramesBelow reflFramesAbove reflPaintingsBelow
+        idReflRestrFramesBelow idReflRestrPaintingsBelow
+        (cohReflRestrFramesBelowInf E'))
+      (reflPaintingsAbove E');
+  cohReflBelowBelowFrames
+    (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet):
+    mkCohReflBelowBelowFrameTypes
+      (dgnDepsReflCohsInf C E E'
+        reflFramesBelow reflFramesAbove reflPaintingsBelow
+        idReflRestrFramesBelow idReflRestrPaintingsBelow
+        (cohReflRestrFramesBelowInf E'));
+  cohReflAboveBelowFrames
+    (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet):
+    mkCohReflAboveBelowFrameTypes
+      (dgnDepsReflCohsSup C E E'
+        reflFramesBelow reflFramesAbove reflPaintingsBelow
+        idReflRestrFramesBelow idReflRestrPaintingsBelow
+        (cohReflRestrFramesBelowInf E')
+        (cohReflRestrFramesBelowSup E')
+        (reflPaintingsAbove E')
+        (cohReflRestrFramesAboveSup E'));
+  cohReflAboveAboveFrames
+    (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet):
+    mkCohReflAboveAboveFrameTypes
+      (dgnDepsReflCohsSup C E E'
+        reflFramesBelow reflFramesAbove reflPaintingsBelow
+        idReflRestrFramesBelow idReflRestrPaintingsBelow
+        (cohReflRestrFramesBelowInf E')
+        (cohReflRestrFramesBelowSup E')
+        (reflPaintingsAbove E')
+        (cohReflRestrFramesAboveSup E'));
+}.
+
+Definition dgnDepsReflCohsInfFromBase {p}
+  (C: νSetData p)
+  (E: mkFrame (dgnDepsRestr C) -> HSet)
+  (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
+  (D: DgnDataCore C E): DepsReflCohsInf p 0 :=
+  dgnDepsReflCohsInf C E E'
+    D.(reflFramesBelow) D.(reflFramesAbove)
+    D.(reflPaintingsBelow)
+    D.(idReflRestrFramesBelow) D.(idReflRestrPaintingsBelow)
+    (D.(cohReflRestrFramesBelowInf) E').
+
+Definition dgnDepsReflCohsSupFromBase {p}
+  (C: νSetData p)
+  (E: mkFrame (dgnDepsRestr C) -> HSet)
+  (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
+  (D: DgnDataCore C E): DepsReflCohsSup p 0 :=
+  {|
+    _depsReflCohsInf := dgnDepsReflCohsInfFromBase C E E' D;
+    _cohReflRestrFramesBelowSup := D.(cohReflRestrFramesBelowSup) E';
+    _reflPaintingsAbove := D.(reflPaintingsAbove) E';
+    _cohReflRestrFramesAboveSup := D.(cohReflRestrFramesAboveSup) E';
+  |}.
+
+Definition dgnHasReflFromBase {p}
+  (C: νSetData p)
+  (E: mkFrame (dgnDepsRestr C) -> HSet)
+  (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
+  (D: DgnDataCore C E): Type :=
+  dgnHasRefl C E E'
+    D.(reflFramesBelow) D.(reflFramesAbove)
+    D.(reflPaintingsBelow)
+    D.(idReflRestrFramesBelow) D.(idReflRestrPaintingsBelow)
+    (D.(cohReflRestrFramesBelowInf) E')
+    (D.(cohReflRestrFramesBelowSup) E')
+    (D.(reflPaintingsAbove) E')
+    (D.(cohReflRestrFramesAboveSup) E').
+
+Definition dgnExtraDepsReflCohsSupFromBase {p}
+  (C: νSetData p)
+  (E: mkFrame (dgnDepsRestr C) -> HSet)
+  (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
+  (D: DgnDataCore C E)
+  (L: dgnHasReflFromBase C E E' D):
+  DepsReflCohsSupExtension p 0 (dgnDepsReflCohsSupFromBase C E E' D) :=
+  TopReflCohSupDep (deps := dgnDepsReflCohsSupFromBase C E E' D) L.
+
+Definition dgnCohLFromBase {p}
+  (C: νSetData p)
+  (E: mkFrame (dgnDepsRestr C) -> HSet)
+  (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
+  (D: DgnDataCore C E)
+  (L: dgnHasReflFromBase C E E' D): Type :=
+  mkCohReflAboveAbovePaintingTypes
+    (dgnDepsReflCohsSupFromBase C E E' D)
+    (dgnExtraDepsReflCohsSupFromBase C E E' D L)
+    (D.(cohReflAboveAboveFrames) E').
 
 Class DgnData {p} (C: νSetData p)
   (E: mkFrame (dgnDepsRestr C) -> HSet) := {
-  reflFrames: mkReflFrameTypes (dgnDepsRestr C);
-  reflPaintings :
-    mkReflPaintingTypes
-      (dgnDepsRefl C reflFrames)
-      (TopRestrDep (deps := dgnDepsRestr C) E);
-  idReflRestrFrames: mkIdReflRestrFrameTypes (dgnDepsRefl C reflFrames);
-  idReflRestrPaintings :
-    mkIdReflRestrPaintingTypes
-      (dgnDepsCohs C E) reflFrames reflPaintings idReflRestrFrames;
-  cohRestrReflFrames (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet):
-    mkCohReflRestrFrameTypes (dgnDepsCohs C E) reflFrames reflPaintings;
-  cohReflRestrPaintings
+  dgnDataCore: DgnDataCore C E;
+  cohReflRestrPaintingsBelowInf
     (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
-    (L: dgnHasRefl C E E'
-      reflFrames reflPaintings
-      idReflRestrFrames idReflRestrPaintings
-      (cohRestrReflFrames E')):
-    mkCohReflRestrPaintingTypes _ (TopReflCohDep L);
+    (L: dgnHasReflFromBase C E E' dgnDataCore)
+    (cohL: dgnCohLFromBase C E E' dgnDataCore L):
+    mkCohReflRestrPaintingBelowInfTypes
+      (dgnDepsReflCohsSupFromBase C E E' dgnDataCore)
+      (dgnExtraDepsReflCohsSupFromBase C E E' dgnDataCore L);
+  cohReflRestrPaintingsBelowSup
+    (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
+    (L: dgnHasReflFromBase C E E' dgnDataCore)
+    (cohL: dgnCohLFromBase C E E' dgnDataCore L):
+    mkCohReflRestrPaintingBelowSupTypes
+      (dgnDepsReflCohsSupFromBase C E E' dgnDataCore)
+      (dgnExtraDepsReflCohsSupFromBase C E E' dgnDataCore L);
+  cohReflRestrPaintingsAboveSup
+    (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
+    (L: dgnHasReflFromBase C E E' dgnDataCore)
+    (cohL: dgnCohLFromBase C E E' dgnDataCore L):
+    mkCohReflRestrPaintingAboveSupTypes
+      (dgnDepsReflCohsSupFromBase C E E' dgnDataCore)
+      (dgnExtraDepsReflCohsSupFromBase C E E' dgnDataCore L);
+  cohReflBelowBelowPaintings
+    (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
+    (L: dgnHasReflFromBase C E E' dgnDataCore)
+    (cohL: dgnCohLFromBase C E E' dgnDataCore L):
+    mkCohReflBelowBelowPaintingTypes
+      (dgnDepsReflCohsSupFromBase C E E' dgnDataCore)
+      (dgnExtraDepsReflCohsSupFromBase C E E' dgnDataCore L)
+      (dgnDataCore.(cohReflBelowBelowFrames) E');
+  cohReflAboveBelowPaintings
+    (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
+    (L: dgnHasReflFromBase C E E' dgnDataCore)
+    (cohL: dgnCohLFromBase C E E' dgnDataCore L):
+    mkCohReflAboveBelowPaintingTypes
+      (dgnDepsReflCohsSupFromBase C E E' dgnDataCore)
+      (dgnExtraDepsReflCohsSupFromBase C E E' dgnDataCore L)
+      (dgnDataCore.(cohReflAboveBelowFrames) E');
+  cohReflAboveAbovePaintings
+    (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
+    (L: dgnHasReflFromBase C E E' dgnDataCore)
+    (cohL: dgnCohLFromBase C E E' dgnDataCore L):
+    mkCohReflAboveAbovePaintingTypes
+      (dgnDepsReflCohsSupFromBase C E E' dgnDataCore)
+      (dgnExtraDepsReflCohsSupFromBase C E E' dgnDataCore L)
+      (dgnDataCore.(cohReflAboveAboveFrames) E');
 }.
 
 Definition dgnDepsReflCohsInfFromData {p}
@@ -2084,63 +2307,110 @@ Definition dgnDepsReflCohsInfFromData {p}
   (E: mkFrame (dgnDepsRestr C) -> HSet)
   (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
   (D: DgnData C E): DepsReflCohsInf p 0 :=
-  dgnDepsReflCohsInf C E E'
-    D.(reflFrames) D.(reflPaintings)
-    D.(idReflRestrFrames) D.(idReflRestrPaintings)
-    (D.(cohRestrReflFrames) E').
+  dgnDepsReflCohsInfFromBase C E E' D.(dgnDataCore).
 
 Definition dgnHasReflFromData {p}
   (C: νSetData p)
   (E: mkFrame (dgnDepsRestr C) -> HSet)
   (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
   (D: DgnData C E): Type :=
-  dgnHasRefl C E E'
-    D.(reflFrames) D.(reflPaintings)
-    D.(idReflRestrFrames) D.(idReflRestrPaintings)
-    (D.(cohRestrReflFrames) E').
+  dgnHasReflFromBase C E E' D.(dgnDataCore).
 
 Definition dgnDepsReflCohsSupFromData {p}
   (C: νSetData p)
   (E: mkFrame (dgnDepsRestr C) -> HSet)
   (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
-  (E'': mkFrame (dgnDepsRestr (mkνSetData p.+1 (mkνSetData p C E) E')) -> HSet)
+  (D: DgnData C E):
+  DepsReflCohsSup p 0 :=
+  dgnDepsReflCohsSupFromBase C E E' D.(dgnDataCore).
+
+Definition dgnCohLFromData {p}
+  (C: νSetData p)
+  (E: mkFrame (dgnDepsRestr C) -> HSet)
+  (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
+  (D: DgnData C E)
+  (L: dgnHasReflFromData C E E' D): Type :=
+  dgnCohLFromBase C E E' D.(dgnDataCore) L.
+
+Definition dgnExtraDepsReflCohsSupFromData {p}
+  (C: νSetData p)
+  (E: mkFrame (dgnDepsRestr C) -> HSet)
+  (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
   (D: DgnData C E)
   (L: dgnHasReflFromData C E E' D):
-  DepsReflCohsSup p 0 :=
-  {|
-    _depsReflCohsInf := dgnDepsReflCohsInfFromData C E E' D;
-    _extraDepsCohs2 := TopCoh2Dep (depsCohs2 := dgnDepsCohs2 C E E') E'';
-    _extraDepsRefl := TopReflCohDep
-      (deps := dgnDepsReflCohsInfFromData C E E' D) L;
-    _cohReflRestrPaintings := D.(cohReflRestrPaintings) E' L;
-  |}.
+  DepsReflCohsSupExtension p 0 (dgnDepsReflCohsSupFromData C E E' D) :=
+  dgnExtraDepsReflCohsSupFromBase C E E' D.(dgnDataCore) L.
+
+Definition dgnDepsReflCohs2FromData {p}
+  (C: νSetData p)
+  (E: mkFrame (dgnDepsRestr C) -> HSet)
+  (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
+  (E'': mkFrame (dgnDepsRestr (mkνSetData p.+1 (mkνSetData p C E) E')) -> HSet)
+  (D: DgnData C E)
+  (L: dgnHasReflFromData C E E' D)
+  (cohL: dgnCohLFromData C E E' D L):
+  DepsReflCohs2 p 0 :=
+{|
+  _depsReflCohsSup := dgnDepsReflCohsSupFromData C E E' D;
+  _extraDepsCohs2 := TopCoh2Dep (depsCohs2 := dgnDepsCohs2 C E E') E'';
+  _extraDepsReflCohsSup := TopReflCohSupDep
+    (deps := dgnDepsReflCohsSupFromData C E E' D) L;
+  _cohReflRestrPaintingsBelowInf :=
+    D.(cohReflRestrPaintingsBelowInf) E' L cohL;
+  _cohReflRestrPaintingsBelowSup :=
+    D.(cohReflRestrPaintingsBelowSup) E' L cohL;
+  _cohReflRestrPaintingsAboveSup :=
+    D.(cohReflRestrPaintingsAboveSup) E' L cohL;
+  _cohReflBelowBelowFrames := D.(dgnDataCore).(cohReflBelowBelowFrames) E';
+  _cohReflBelowBelowPaintings :=
+    D.(cohReflBelowBelowPaintings) E' L cohL;
+  _cohReflAboveBelowFrames := D.(dgnDataCore).(cohReflAboveBelowFrames) E';
+  _cohReflAboveBelowPaintings :=
+    D.(cohReflAboveBelowPaintings) E' L cohL;
+  _cohReflAboveAboveFrames := D.(dgnDataCore).(cohReflAboveAboveFrames) E';
+  _cohReflAboveAbovePaintings :=
+    D.(cohReflAboveAbovePaintings) E' L cohL;
+|}.
 
 #[local]
 Instance mkDgnData {p} (C: νSetData p)
   (E: mkFrame (dgnDepsRestr C) -> HSet)
   (E': mkFrame (dgnDepsRestr (mkνSetData p C E)) -> HSet)
   (D: DgnData C E)
-  (L: dgnHasReflFromData C E E' D):
+  (L: dgnHasReflFromData C E E' D)
+  (cohL: dgnCohLFromData C E E' D L):
   DgnData (mkνSetData p C E) E' :=
-{|
-  reflFrames := (mkReflFrames (dgnDepsReflCohsInfFromData C E E' D):
-    mkReflFrameTypes (dgnDepsRestr (mkνSetData p C E)));
-  reflPaintings :=
-    mkReflPaintings
-      (dgnDepsReflCohsInfFromData C E E' D)
-      (TopReflCohDep (deps := dgnDepsReflCohsInfFromData C E E' D) L);
-  idReflRestrFrames := mkIdReflRestrFrames (dgnDepsReflCohsInfFromData C E E' D);
-  idReflRestrPaintings :=
-    mkIdReflRestrPaintings
-      (dgnDepsReflCohsInfFromData C E E' D)
-      (TopReflCohDep (deps := dgnDepsReflCohsInfFromData C E E' D) L);
-  cohRestrReflFrames := fun E'' =>
-    mkCohReflRestrFrames (dgnDepsReflCohsSupFromData C E E' E'' D L);
-  cohReflRestrPaintings := fun E'' L' =>
-    mkCohReflRestrPaintings
-      (dgnDepsReflCohsSupFromData C E E' E'' D L)
-      (TopReflCohDep2 (deps := dgnDepsReflCohsSupFromData C E E' E'' D L) L');
-|}.
+  let depsInf := dgnDepsReflCohsInfFromData C E E' D in
+  let depsSup := dgnDepsReflCohsSupFromData C E E' D in
+  let deps2 E'' := dgnDepsReflCohs2FromData C E E' E'' D L cohL in
+  let extraSup := dgnExtraDepsReflCohsSupFromData C E E' D L in
+  let base := @Build_DgnDataCore p.+1 (mkνSetData p C E) E'
+    (mkReflFramesBelow depsInf)
+    (mkReflFramesAbove depsSup)
+    (mkReflPaintingsBelow depsSup extraSup)
+    (mkIdReflRestrFramesBelow depsInf)
+    (mkIdReflRestrPaintingsBelow depsSup extraSup)
+    (fun E'' => mkCohReflRestrFramesBelowInf (deps2 E''))
+    (fun E'' => mkCohReflRestrFramesBelowSup (deps2 E''))
+    (fun _ => mkReflPaintingsAbove depsSup extraSup)
+    (fun E'' => mkCohReflRestrFramesAboveSup (deps2 E''))
+    (fun E'' => mkCohReflBelowBelowFrames (deps2 E''))
+    (fun E'' => mkCohReflAboveBelowFrames (deps2 E''))
+    (fun E'' => mkCohReflAboveAboveFrames (deps2 E'')) in
+  @Build_DgnData p.+1 (mkνSetData p C E) E'
+    base
+    (fun E'' L' cohL' => mkCohReflRestrPaintingsBelowInf (deps2 E'')
+      (TopReflCoh2Dep (deps := deps2 E'') L' cohL'.2))
+    (fun E'' L' cohL' => mkCohReflRestrPaintingsBelowSup (deps2 E'')
+      (TopReflCoh2Dep (deps := deps2 E'') L' cohL'.2))
+    (fun E'' L' cohL' => mkCohReflRestrPaintingsAboveSup (deps2 E'')
+      (TopReflCoh2Dep (deps := deps2 E'') L' cohL'.2))
+    (fun E'' L' cohL' => mkCohReflBelowBelowPaintings (deps2 E'')
+      (TopReflCoh2Dep (deps := deps2 E'') L' cohL'.2))
+    (fun E'' L' cohL' => mkCohReflAboveBelowPaintings (deps2 E'')
+      (TopReflCoh2Dep (deps := deps2 E'') L' cohL'.2))
+    (fun E'' L' cohL' => mkCohReflAboveAbovePaintings (deps2 E'')
+      (TopReflCoh2Dep (deps := deps2 E'') L' cohL'.2)).
 
 Class νDgnSet p (C: νSet p) := {
   dgnPrefix: (mkνSet C).(prefix) -> Type;
@@ -2150,7 +2420,10 @@ Class νDgnSet p (C: νSet p) := {
 Definition mkDgnPrefix p {C: νSet p} {D: νDgnSet p C}
   (X: (mkνSet (mkνSet C)).(prefix)): Type :=
   { L: D.(dgnPrefix) X.1 &T
-    dgnHasReflFromData (C.(data) X.1.1) X.1.2 X.2 (D.(dgnData) X.1 L) }.
+    { dgnL: dgnHasReflFromData
+        (C.(data) X.1.1) X.1.2 X.2 (D.(dgnData) X.1 L) &T
+      dgnCohLFromData
+        (C.(data) X.1.1) X.1.2 X.2 (D.(dgnData) X.1 L) dgnL } }.
 
 #[local]
 Definition mkνSetData0: νSetData 0 :=
@@ -2168,14 +2441,27 @@ Definition mkνSetData0: νSetData 0 :=
 Definition mkDgnData0
   (E: mkFrame (dgnDepsRestr mkνSetData0) -> HSet):
   DgnData mkνSetData0 E :=
-  {|
-    reflFrames := (tt: mkReflFrameTypes (dgnDepsRestr mkνSetData0));
-    reflPaintings := tt;
-    idReflRestrFrames := tt;
-    idReflRestrPaintings := tt;
-    cohRestrReflFrames := fun _ => tt;
-    cohReflRestrPaintings := fun _ _ => tt;
-  |}.
+  let base := @Build_DgnDataCore 0 mkνSetData0 E
+    (tt: mkReflFrameBelowTypes (dgnDepsRestr mkνSetData0))
+    (tt: mkReflFrameAboveTypes (dgnDepsRestr mkνSetData0))
+    tt
+    tt
+    tt
+    (fun _ => tt)
+    (fun _ => tt)
+    (fun _ => tt)
+    (fun _ => tt)
+    (fun _ => tt)
+    (fun _ => tt)
+    (fun _ => tt) in
+  @Build_DgnData 0 mkνSetData0 E
+    base
+    (fun _ _ _ => tt)
+    (fun _ _ _ => tt)
+    (fun _ _ _ => tt)
+    (fun _ _ _ => tt)
+    (fun _ _ _ => tt)
+    (fun _ _ _ => tt).
 
 #[local]
 Instance mkνDgnSet0: νDgnSet 0 mkνSet0 :=
@@ -2193,7 +2479,7 @@ Instance mkνDgnSetSn {p} (C: νSet p) (D: νDgnSet p C):
   {|
     dgnPrefix := fun X => mkDgnPrefix p (C := C) (D := D) X;
     dgnData := fun X L =>
-      mkDgnData (C.(data) X.1.1) X.1.2 X.2 (D.(dgnData) X.1 L.1) L.2;
+      mkDgnData (C.(data) X.1.1) X.1.2 X.2 (D.(dgnData) X.1 L.1) L.2.1 L.2.2;
   |}.
 
 Fixpoint νDgnSetAt n: νDgnSet n (νSetAt n) :=
@@ -2211,15 +2497,18 @@ CoInductive νDgnSetFrom n
     (this n X M)
     (this n.+1 (X; this n X M) (next n X M))
     ((νDgnSetAt n).(dgnData) (X; this n X M) L);
-  dgnNext: νDgnSetFrom n.+1 (X; this n X M) (next n X M) (L; dgn);
+  dgnCohL: dgnCohLFromData
+    ((νSetAt n).(data) X)
+    (this n X M)
+    (this n.+1 (X; this n X M) (next n X M))
+    ((νDgnSetAt n).(dgnData) (X; this n X M) L) dgn;
+  dgnNext: νDgnSetFrom n.+1 (X; this n X M) (next n X M) (L; (dgn; dgnCohL));
 }.
 
 Definition νDgnSets (X: νSets) := νDgnSetFrom 0 tt X tt.
-*)
 
 End νDgnSet.
 
-(*
 Module νDgnSetUnit := νDgnSet νSet.ArityUnit.
 Module νDgnSetBool := νDgnSet νSet.ArityBool.
 
@@ -2234,4 +2523,3 @@ Example Cubical1 :=
 
 Print Simplicial1.
 Print Cubical1.
-*)
