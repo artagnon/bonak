@@ -2509,10 +2509,9 @@ Definition Simplicial := νDgnSetUnit.νDgnSets.
 Definition Cubical := νDgnSetBool.νDgnSets.
 
 Example Simplicial1 :=
-  Eval lazy in (νDgnSetUnit.νDgnSetAt 1).(νDgnSetUnit.dgnPrefix).
+  Eval lazy -[leR] in (νDgnSetUnit.νDgnSetAt 1).(νDgnSetUnit.dgnPrefix).
 
 Example Cubical1 :=
-  Eval lazy in (νDgnSetBool.νDgnSetAt 1).(νDgnSetBool.dgnPrefix).
+  Eval lazy -[leR] in (νDgnSetBool.νDgnSetAt 1).(νDgnSetBool.dgnPrefix).
 
-Print Simplicial1.
 Print Cubical1.
