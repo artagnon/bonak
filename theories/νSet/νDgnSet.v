@@ -2412,11 +2412,11 @@ Class νDgnSet p (C: νSet p) := {
 
 Definition mkDgnPrefix p {C: νSet p} {D: νDgnSet p C}
   (X: (mkνSet (mkνSet C)).(prefix)): Type :=
-  { L: D.(dgnPrefix) X.1 &T
+  { R: D.(dgnPrefix) X.1 &T
     { dgnL: dgnHasReflFromData
-        (C.(data) X.1.1) X.1.2 X.2 (D.(dgnData) X.1 L) &T
+        (C.(data) X.1.1) X.1.2 X.2 (D.(dgnData) X.1 R) &T
       dgnCohLFromData
-        (C.(data) X.1.1) X.1.2 X.2 (D.(dgnData) X.1 L) dgnL } }.
+        (C.(data) X.1.1) X.1.2 X.2 (D.(dgnData) X.1 R) dgnL } }.
 
 #[local]
 Definition mkνSetData0: νSetData 0 :=
@@ -2484,18 +2484,18 @@ Fixpoint νDgnSetAt n: νDgnSet n (νSetAt n) :=
 CoInductive νDgnSetFrom n
   (X: (νSetAt n).(prefix))
   (M: νSetFrom n X)
-  (L: (νDgnSetAt n).(dgnPrefix) (X; this n X M)): Type := dcons {
-  dgn: dgnHasReflFromData
+  (R: (νDgnSetAt n).(dgnPrefix) (X; this n X M)): Type := dcons {
+  dgnL: dgnHasReflFromData
     ((νSetAt n).(data) X)
     (this n X M)
     (this n.+1 (X; this n X M) (next n X M))
-    ((νDgnSetAt n).(dgnData) (X; this n X M) L);
+    ((νDgnSetAt n).(dgnData) (X; this n X M) R);
   dgnCohL: dgnCohLFromData
     ((νSetAt n).(data) X)
     (this n X M)
     (this n.+1 (X; this n X M) (next n X M))
-    ((νDgnSetAt n).(dgnData) (X; this n X M) L) dgn;
-  dgnNext: νDgnSetFrom n.+1 (X; this n X M) (next n X M) (L; (dgn; dgnCohL));
+    ((νDgnSetAt n).(dgnData) (X; this n X M) R) dgnL;
+  dgnNext: νDgnSetFrom n.+1 (X; this n X M) (next n X M) (R; (dgnL; dgnCohL));
 }.
 
 Definition νDgnSets (X: νSets) := νDgnSetFrom 0 tt X tt.
