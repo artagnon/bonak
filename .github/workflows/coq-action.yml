@@ -9,7 +9,7 @@ on:
       - "**/dune"
       - ".github/workflows/coq-action.yml"
   pull_request:
-    types: [opened, reopened]
+    types: [opened, reopened, synchronize]
     paths:
       - "**.v"
       - "bonak.opam"
