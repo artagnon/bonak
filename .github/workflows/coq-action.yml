@@ -16,4 +16,4 @@ jobs:
         uses: "coq-community/docker-coq-action@v1"
         with:
           opam_file: "bonak.opam"
-          coq_version: "latest"
+          coq_version: "9.1.1"
