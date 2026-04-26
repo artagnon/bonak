@@ -2,9 +2,20 @@ name: coq-action
 
 on:
   push:
-    paths: "**.v"
+    paths:
+      - "**.v"
+      - "bonak.opam"
+      - "dune-project"
+      - "**/dune"
+      - ".github/workflows/coq-action.yml"
   pull_request:
     types: [opened, reopened]
+    paths:
+      - "**.v"
+      - "bonak.opam"
+      - "dune-project"
+      - "**/dune"
+      - ".github/workflows/coq-action.yml"
 jobs:
   build:
     runs-on: "ubuntu-latest"
