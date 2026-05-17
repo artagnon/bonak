@@ -1,18 +1,18 @@
-From Stdlib Require Import Logic.FunctionalExtensionality.
-
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT RewLemmas HSet Notation LeSProp.
+From Bonak Require Import SigT RewLemmas HSet HVec Notation LeSProp.
 
 Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.
 
 Module Type AritySig.
-  Parameter arity : HSet.
+  Parameter arityLength : nat.
 End AritySig.
 
 Module νSet (A : AritySig).
 Import A.
+
+Definition arity := Fin.t arityLength.
 
 (** The type of lists {frame(n,0);...;frame(n,p-1)} for arbitrary k := n-p
     (the non-mandatory dependency in k is useful for type inference) *)
@@ -80,7 +80,7 @@ Definition mkLayer `{paintings: mkPaintingTypes p.+1 k frames}
   {prev: RestrFrameTypeBlock p k.+1}
   (restrFrames: mkRestrFrameTypesStep frames prev)
   (d: (prev.(FrameDef) restrFrames.1).2) :=
-  hforall ε, paintings.2 (restrFrames.2 0 leR_O ε d).
+  hvec arityLength (fun ε => paintings.2 (restrFrames.2 0 leR_O ε d)).
 
 Fixpoint mkRestrFrameTypesAndFrames {p k}:
   forall `(paintings: mkPaintingTypes p k frames), RestrFrameTypeBlock p k :=
@@ -218,8 +218,9 @@ Definition mkRestrLayer `{extraDeps: DepsRestrExtension p.+1 k deps}
   (d: mkFrame (toDepsRestr (prev.(RestrFramesDef) cohFrames.1)).(1)):
   mkLayer (prev.(RestrFramesDef) cohFrames.1) d -> mkLayer deps.(_restrFrames)
     ((prev.(RestrFramesDef) cohFrames.1).2 q.+1 (⇑ Hq) ε d) :=
-  fun l ω => rew [deps.(_paintings).2] cohFrames.2 q Hq 0 leR_O ε ω d in
-             restrPaintings.2 q Hq ε _ (l ω).
+  fun l => hvec_map (fun ω c =>
+    rew [deps.(_paintings).2] cohFrames.2 q Hq 0 leR_O ε ω d in
+    restrPaintings.2 q Hq ε _ c) l.
 
 (** Under previous assumptions, and, additionally:
     - {restrPainting(n,0);...;restrPainting(n,p-1)}
@@ -369,7 +370,7 @@ Fixpoint mkRestrPainting `(extraDepsCohs: DepsCohsExtension p k depsCohs)
     (mkPaintings (mkDepsRestr; mkExtraDeps extraDepsCohs)).2 d ->
     mkDepsRestr.(_paintings).2 (mkDepsRestr.(_restrFrames).2 q Hq ε d) :=
   match q with
-  | 0 => fun _ ε _ '(l; _) => l ε
+  | 0 => fun _ ε _ '(l; _) => hvec_nth l ε
   | q.+1 =>
     match extraDepsCohs with
     | TopCohDep E => fun Hq _ _ _ => match leR_O_contra Hq with end
@@ -422,22 +423,21 @@ Lemma mkCoh2Frame `(extraDepsCohs: DepsCohsExtension p.+1 k depsCohs)
   (prevCohFrames: mkCohFrameTypes
      (extraDeps := (mkDepsRestr; mkExtraDeps extraDepsCohs))
      (mkRestrPaintings extraDepsCohs).1):
-  forall q (Hq: q <= k) r (Hr: r <= q) (ε ω: arity)
-  (d: mkFrame (mkDepsRestr (depsCohs := toDepsCohs prevCohFrames.1)).(1))
-  (𝛉: arity),
+  forall q (Hq: q <= k) r (Hr: r <= q) (ε ω θ: arity)
+  (d: mkFrame (mkDepsRestr (depsCohs := toDepsCohs prevCohFrames.1)).(1)),
   f_equal
     (fun x => depsCohs.(_deps).(_restrFrames).2 q _ ε x)
-    (prevCohFrames.2 r (Hr ↕ ↑ Hq) 0 leR_O ω 𝛉 d)
-  • (depsCohs.(_cohs).2 q Hq 0 leR_O ε 𝛉
+    (prevCohFrames.2 r (Hr ↕ ↑ Hq) 0 leR_O ω θ d)
+  • (depsCohs.(_cohs).2 q Hq 0 leR_O ε θ
       (mkRestrFrame r.+1 (⇑ (Hr ↕ ↑ Hq)) ω d)
   • f_equal
-      (fun x => depsCohs.(_deps).(_restrFrames).2 0 leR_O 𝛉 x)
+      (fun x => depsCohs.(_deps).(_restrFrames).2 0 leR_O θ x)
       (prevCohFrames.2 q.+1 (⇑ Hq) r.+1 (⇑ Hr) ε ω d)) =
-  depsCohs.(_cohs).2 q Hq r Hr ε ω (mkRestrFrame 0 leR_O 𝛉 d)
+  depsCohs.(_cohs).2 q Hq r Hr ε ω (mkRestrFrame 0 leR_O θ d)
   • (f_equal
       (fun x => depsCohs.(_deps).(_restrFrames).2 r _ ω x)
-      (prevCohFrames.2 q.+1 (⇑ Hq) 0 leR_O ε 𝛉 d)
-  • depsCohs.(_cohs).2 r (Hr ↕ Hq) 0 leR_O ω 𝛉
+      (prevCohFrames.2 q.+1 (⇑ Hq) 0 leR_O ε θ d)
+  • depsCohs.(_cohs).2 r (Hr ↕ Hq) 0 leR_O ω θ
       (mkRestrFrame q.+2 (⇑ (⇑ Hq)) ε d)).
 Proof.
   now intros; apply depsCohs.(_deps).(_frames).2.(UIP).
@@ -457,14 +457,16 @@ Definition mkCohLayer `{extraDepsCohs: DepsCohsExtension p.+1 k depsCohs}
     mkRestrLayer depsCohs.(_restrPaintings) depsCohs.(_cohs) r (Hr ↕ Hq) ω _
       (mkRestrLayer (mkRestrPaintings extraDepsCohs).1 _ q.+1 (⇑ Hq) ε d l).
 Proof.
-  apply functional_extensionality_dep; intros 𝛉.
-  rewrite <- map_subst_app. unfold mkRestrLayer; simpl.
+  apply hvec_ext; intros θ.
+  rewrite <- (map_subst (fun d0 l => hvec_nth l θ) (P := mkLayer _)).
+  rewrite !hvec_nth_map.
+  unfold mkRestrLayer; simpl.
   rewrite
     <- map_subst with (f := fun x => depsCohs.(_restrPaintings).2 q Hq ε x),
     <- map_subst with
         (f := fun x => depsCohs.(_restrPaintings).2 r (Hr ↕ Hq) ω x),
     -> rew_map with (P := fun x => depsCohs.(_deps).(_paintings).2 x)
-        (f := fun x => depsCohs.(_deps).(_restrFrames).2 O leR_O 𝛉 x),
+        (f := fun x => depsCohs.(_deps).(_restrFrames).2 O leR_O θ x),
     -> rew_map with (P := fun x => depsCohs.(_deps).(_paintings).2 x)
         (f := fun x => depsCohs.(_deps).(_restrFrames).2 r
           (Hr ↕ Hq) ω x),
@@ -560,7 +562,7 @@ Fixpoint mkCohPainting `{depsCohs2: DepsCohs2 p k}
 Proof.
   red; intros *. destruct c as (l, c), r.
   - (* r = 0 *)
-    now trivial.
+    cbn. now rewrite hvec_nth_map.
   - (* r = r'+1, q is necessarily q'+1 and extraDepsCohs non empty *)
     destruct q.
     { exfalso; now apply leR_O_contra in Hr. }
@@ -660,11 +662,11 @@ Definition νSets := νSetFrom 0 tt.
 End νSet.
 
 Module ArityUnit <: AritySig.
-  Definition arity := hunit.
+  Definition arityLength := 1.
 End ArityUnit.
 
 Module ArityBool <: AritySig.
-  Definition arity := hbool.
+  Definition arityLength := 2.
 End ArityBool.
 
 Module νSetUnit := νSet ArityUnit.
