@@ -22,12 +22,12 @@ Record HSet := {
 Lemma unit_UIP (x y: unit) (h g: x = y): h = g.
 Proof.
   destruct g, x; now apply UIP_refl_unit.
-Qed.
+Defined.
 
 Lemma bool_UIP (x y: bool) (h g: x = y): h = g.
 Proof.
   destruct g, x; now apply UIP_refl_bool.
-Qed.
+Defined.
 
 Definition hunit@{m}: HSet@{m} := {|
   Dom := unit;
