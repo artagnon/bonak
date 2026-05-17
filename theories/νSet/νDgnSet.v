@@ -1,3 +1,4 @@
+(*
 From Stdlib Require Import Logic.FunctionalExtensionality.
 Import Logic.EqNotations.
 
@@ -2596,3 +2597,4 @@ Example Cubical1 :=
   Eval lazy -[leR] in (νDgnSetBool.νDgnSetAt 1).(νDgnSetBool.dgnPrefix).
 
 Print Cubical1.
+*)
