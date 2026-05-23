@@ -31,6 +31,14 @@ Fixpoint hvec_map {n: nat}:
       (f Fin.F1 xs.1; hvec_map (fun i => f (Fin.FS i)) xs.2)
   end.
 
+Fixpoint hvec_of_fun {n: nat}:
+  forall {B: Fin.t n -> HSet}, (forall i, B i) -> hvec n B :=
+  match n return forall {B: Fin.t n -> HSet},
+    (forall i, B i) -> hvec n B with
+  | 0 => fun _ _ => tt
+  | S n => fun B f => (f Fin.F1; hvec_of_fun (fun i => f (Fin.FS i)))
+  end.
+
 Lemma hvec_nth_map {n: nat} {B C: Fin.t n -> HSet}
   (f: forall i, B i -> C i) (xs: hvec n B) (i: Fin.t n):
   hvec_nth (hvec_map f xs) i = f i (hvec_nth xs i).
@@ -43,6 +51,18 @@ Proof.
     + now reflexivity.
     + intro j. cbn.
       now exact (IH _ _ (fun i => f (Fin.FS i)) xs.2 j).
+Defined.
+
+Lemma hvec_nth_of_fun {n: nat} {B: Fin.t n -> HSet}
+  (f: forall i, B i) (i: Fin.t n):
+  hvec_nth (hvec_of_fun f) i = f i.
+Proof.
+  revert B f i. induction n as [|n IH].
+  - intros B f i. now apply Fin.case0 with (p := i).
+  - intros B f i.
+    apply (Fin.caseS' i (fun i => hvec_nth (hvec_of_fun f) i = f i)).
+    + now reflexivity.
+    + intro j. cbn. now exact (IH _ (fun i => f (Fin.FS i)) j).
 Defined.
 
 Lemma hvec_ext {n: nat} {B: Fin.t n -> HSet} (xs ys: hvec n B):
