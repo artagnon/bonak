@@ -1,12 +1,14 @@
 (** This file defines HSet and provides unit, sigT and forall on HSet *)
 
+Set Warnings "-stdlib-vector".
+From Stdlib Require Import Vectors.Fin.
 From Stdlib Require Import Logic.FunctionalExtensionality.
 From Stdlib Require Import Logic.Eqdep_dec. (* UIP_refl_unit *)
 
 Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT.
+From Bonak Require Import SigT Vec.
 
 Set Primitive Projections.
 Set Printing Projections.
@@ -77,6 +79,44 @@ Set Warnings "-notation-overridden".
 
 Notation "{ x & P }" := (hsigT (fun x => P%type)): type_scope.
 Notation "{ x : A & P }" := (hsigT (A := A) (fun x => P%type)): type_scope.
+
+(** Finite dependent tuples over [Fin.t n]. *)
+
+Unset Universe Polymorphism.
+
+Module HSetProduct <: FiniteProductSig.
+  Definition Obj := HSet.
+  Definition El (A: Obj) : Type := A.
+  Coercion El : Obj >-> Sortclass.
+
+  Definition unit_obj := hunit.
+  Definition unit_intro : unit_obj := tt.
+  Definition unit_ext (x y: unit_obj): x = y.
+  Proof.
+    now destruct x, y.
+  Defined.
+
+  Definition prod_obj (A B: Obj): Obj := hsigT (fun _ : A => B).
+  Definition pair {A B: Obj} (x: A) (y: B): prod_obj A B := (x; y).
+  Definition fst {A B: Obj} (x: prod_obj A B): A := x.1.
+  Definition snd {A B: Obj} (x: prod_obj A B): B := x.2.
+
+  Definition fst_pair {A B: Obj} (x: A) (y: B): fst (pair x y) = x :=
+    eq_refl.
+  Definition snd_pair {A B: Obj} (x: A) (y: B): snd (pair x y) = y :=
+    eq_refl.
+
+  Definition prod_ext {A B: Obj} (x y: prod_obj A B)
+    (H1: fst x = fst y) (H2: snd x = snd y): x = y.
+  Proof.
+    destruct x as [x1 x2], y as [y1 y2].
+    simpl in H1, H2. now destruct H1, H2.
+  Defined.
+End HSetProduct.
+
+Module HSetVec := FiniteVector(HSetProduct).
+
+Set Universe Polymorphism.
 
 (** [forall] defined over an [HSet] codomain *)
 

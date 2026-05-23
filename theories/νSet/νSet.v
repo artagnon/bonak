@@ -1,5 +1,5 @@
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT RewLemmas HSet HVec Notation LeSProp.
+From Bonak Require Import SigT RewLemmas HSet Notation LeSProp.
 
 Set Primitive Projections.
 Set Printing Projections.
@@ -80,7 +80,7 @@ Definition mkLayer `{paintings: mkPaintingTypes p.+1 k frames}
   {prev: RestrFrameTypeBlock p k.+1}
   (restrFrames: mkRestrFrameTypesStep frames prev)
   (d: (prev.(FrameDef) restrFrames.1).2) :=
-  hvec arityLength (fun ε => paintings.2 (restrFrames.2 0 leR_O ε d)).
+  HSetVec.vec arityLength (fun ε => paintings.2 (restrFrames.2 0 leR_O ε d)).
 
 Fixpoint mkRestrFrameTypesAndFrames {p k}:
   forall `(paintings: mkPaintingTypes p k frames), RestrFrameTypeBlock p k :=
@@ -218,9 +218,10 @@ Definition mkRestrLayer `{extraDeps: DepsRestrExtension p.+1 k deps}
   (d: mkFrame (toDepsRestr (prev.(RestrFramesDef) cohFrames.1)).(1)):
   mkLayer (prev.(RestrFramesDef) cohFrames.1) d -> mkLayer deps.(_restrFrames)
     ((prev.(RestrFramesDef) cohFrames.1).2 q.+1 (⇑ Hq) ε d) :=
-  fun l => hvec_map (fun ω c =>
-    rew [deps.(_paintings).2] cohFrames.2 q Hq 0 leR_O ε ω d in
-    restrPaintings.2 q Hq ε _ c) l.
+  fun l => HSetVec.vec_map (B := fun ω => (mkPaintings (deps; extraDeps)).2 _)
+    (fun ω c =>
+      rew [deps.(_paintings).2] cohFrames.2 q Hq 0 leR_O ε ω d in
+      restrPaintings.2 q Hq ε _ c) l.
 
 (** Under previous assumptions, and, additionally:
     - {restrPainting(n,0);...;restrPainting(n,p-1)}
@@ -370,7 +371,7 @@ Fixpoint mkRestrPainting `(extraDepsCohs: DepsCohsExtension p k depsCohs)
     (mkPaintings (mkDepsRestr; mkExtraDeps extraDepsCohs)).2 d ->
     mkDepsRestr.(_paintings).2 (mkDepsRestr.(_restrFrames).2 q Hq ε d) :=
   match q with
-  | 0 => fun _ ε _ '(l; _) => hvec_nth l ε
+  | 0 => fun _ ε _ '(l; _) => HSetVec.vec_nth l ε
   | q.+1 =>
     match extraDepsCohs with
     | TopCohDep E => fun Hq _ _ _ => match leR_O_contra Hq with end
@@ -457,9 +458,9 @@ Definition mkCohLayer `{extraDepsCohs: DepsCohsExtension p.+1 k depsCohs}
     mkRestrLayer depsCohs.(_restrPaintings) depsCohs.(_cohs) r (Hr ↕ Hq) ω _
       (mkRestrLayer (mkRestrPaintings extraDepsCohs).1 _ q.+1 (⇑ Hq) ε d l).
 Proof.
-  apply hvec_ext; intros θ.
-  rewrite <- (map_subst (fun d0 l => hvec_nth l θ) (P := mkLayer _)).
-  rewrite !hvec_nth_map.
+  apply HSetVec.vec_ext; intros θ.
+  rewrite <- (map_subst (fun d0 l => HSetVec.vec_nth l θ) (P := mkLayer _)).
+  rewrite !HSetVec.vec_nth_map.
   unfold mkRestrLayer; simpl.
   rewrite
     <- map_subst with (f := fun x => depsCohs.(_restrPaintings).2 q Hq ε x),
@@ -562,7 +563,7 @@ Fixpoint mkCohPainting `{depsCohs2: DepsCohs2 p k}
 Proof.
   red; intros *. destruct c as (l, c), r.
   - (* r = 0 *)
-    cbn. now rewrite hvec_nth_map.
+    cbn. now rewrite HSetVec.vec_nth_map.
   - (* r = r'+1, q is necessarily q'+1 and extraDepsCohs non empty *)
     destruct q.
     { exfalso; now apply leR_O_contra in Hr. }
