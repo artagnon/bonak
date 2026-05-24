@@ -60,4 +60,4 @@ Lemma eq_existT_curried_dep {A x} {P: A -> Type} {Q: {a &T P a} -> Type}
    rew [fun x => {a: P x &T Q (x; a)}] H in (u; v) = (u'; v').
 Proof.
    now destruct Hu, Hv, H.
-Qed.
+Defined.
