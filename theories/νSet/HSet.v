@@ -47,13 +47,13 @@ Lemma sigT_eq {A: Type} {B} {x y: {a: A &T B a}}:
   (x.1; x.2) = (y.1; y.2) -> x = y.
 Proof.
   now easy.
-Qed.
+Defined.
 
 Lemma sigT_decompose_eq {A: Type} {B} {x y: {a: A &T B a}} {p: x = y}:
   p = (= projT1_eq p; projT2_eq p).
 Proof.
   now destruct p, x.
-Qed.
+Defined.
 
 Lemma sigT_decompose {A: Type} {B: A -> Type} {u v: {a: A &T B a}} {p q: u = v}
   {alpha: projT1_eq p = projT1_eq q}
@@ -62,13 +62,13 @@ Lemma sigT_decompose {A: Type} {B: A -> Type} {u v: {a: A &T B a}} {p q: u = v}
 Proof.
   rewrite (sigT_decompose_eq (p := q)), (sigT_decompose_eq (p := p)).
   destruct u, v; simpl. now destruct beta, alpha.
-Qed.
+Defined.
 
 Lemma sigT_UIP {A: HSet} {B: A -> HSet} (x y: {a: A &T B a}) (p q: x = y):
   p = q.
 Proof.
   unshelve eapply sigT_decompose. now apply A. now apply (B y.1).
-Qed.
+Defined.
 
 Definition hsigT {A: HSet} (B: A -> HSet): HSet := {|
   Dom := {a: A &T B a};
