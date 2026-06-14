@@ -373,14 +373,14 @@ First, our degeneracy implies a distinguished point $r_{-1}(a)$ for any $a:X_{-1
 
 \begin{equation*}
   \begin{array}{lcccr}
-    \begin{tabular}{l}source\\ (over some $a:X_{-1}$)\end{tabular}       & b~~                                                               & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\[1mm]
-    \begin{tabular}{l}parametric\\ degeneracy\end{tabular}               & \begin{tikzcd}b \arrow[r, dash, "r_0(b)"] & r_{-1}(a)\end{tikzcd} &
+    \begin{tabular}{l}source\\ (over some $a:X_{-1}$)\end{tabular}         & b~~                                                               & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\[1mm]
+    \begin{tabular}{l}parametric\\ degeneracy\end{tabular}                 & \begin{tikzcd}b \arrow[r, dash, "r_0(b)"] & r_{-1}(a)\end{tikzcd} &
     \begin{tikzcd}
       & |[alias=F]|r_{-1}(a) \arrow[ddr, dash, "r_0(c)"] & \\\\
       b \arrow[rr, dash, "q"{name=T, below}]\arrow[uur, dash, "r_0(b)"] && c \\
       \arrow[rightarrow, from=F, to=T, phantom, "r_1(q)" description]
     \end{tikzcd}                                                                                                                         \\[-8mm]
-    \begin{tabular}{l}simplicial\\ degeneracy\end{tabular}               & \begin{tikzcd}b \arrow[r, dash, "s_0(b)"] & b\end{tikzcd}         &
+    \begin{tabular}{l}simplicial\\ degeneracy\end{tabular}                 & \begin{tikzcd}b \arrow[r, dash, "s_0(b)"] & b\end{tikzcd}         &
     \begin{tikzcd}
       & |[alias=F]|c \arrow[ddr, dash, "s_0(c)"] & \\\\
       b \arrow[rr, dash, "q"{name=T, below}]\arrow[uur, dash, "q"] && c \\
@@ -482,18 +482,6 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
 
 \def\lab{tab:refl}
 \input{tab-refl.tex}
-
-\def\lab{tab:cohid}
-\input{tab-cohid.tex}
-
-\def\lab{tab:cohext}
-\input{tab-cohext.tex}
-
-\def\lab{tab:cohqr}
-\input{tab-cohqr.tex}
-
-\def\lab{tab:cohrq}
-\input{tab-cohrq.tex}
 
 \begin{table}[H]
   \begin{tabularx}{\linewidth}{c c c c c}
@@ -682,5 +670,19 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
 
 \bibliographystyle{plainurl}
 \bibliography{paper}
+
+\appendix
+
+\def\lab{tab:cohid}
+\input{tab-cohid.tex}
+
+\def\lab{tab:cohext}
+\input{tab-cohext.tex}
+
+\def\lab{tab:cohqr}
+\input{tab-cohqr.tex}
+
+\def\lab{tab:cohrq}
+\input{tab-cohrq.tex}
 
 \end{document}
