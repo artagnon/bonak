@@ -2618,4 +2618,4 @@ Example Simplicial1 :=
 Example Cubical1 :=
   Eval lazy -[leR] in (νDgnSetBool.νDgnSetAt 1).(νDgnSetBool.dgnPrefix).
 
-(* Print Cubical1. *)
+Print Cubical1.
