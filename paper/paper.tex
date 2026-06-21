@@ -311,7 +311,7 @@
 % and { ... } if in mask
 \newcommandx*{\eqnarg}[3]{\ifinmask[bonak]{#1}[#2]{\{#2:#3\}}{(#2:#3)}}
 
-\title{WIP: Degeneracies and permutations}
+\title{An indexed construction of degeneracies in simplicial and cubical sets}
 \author{Hugo Herbelin}{Université Paris Cité, Inria, CNRS, IRIF, Paris}{Hugo.Herbelin@inria.fr}{}{}
 \author{Valerii Huhnin}{Université Paris Cité}{valerii.huhnin@etu.u-paris.fr}{}{}
 \author{Alice Laroche}{Université Paris Cité}{alice.laroche@etu.u-paris.fr}{}{}
@@ -319,14 +319,15 @@
 \authorrunning{H. Herbelin, V. Huhnin, A. Laroche, and R. Ramachandra}
 \keywords{Parametricity, Semi-simplicial sets, Semi-cubical sets, Formalization, Rocq, Indexed-fibred correspondence}
 \ccsdesc{10003752.10003790.10011740}
-\Copyright{Hugo Herbelin and Ramkumar Ramachandra}
+\Copyright{Hugo Herbelin, Valerii Huhnin, Alice Laroche, Ramkumar Ramachandra}
 %\nolinenumbers
 
 \begin{document}
 \maketitle
 \begin{abstract}
-  TODO
+  In an exploration of building simplicial and cubical set models in indexed form, we extend a previous construction of semi-simplicial and semi-cubical sets with degeneracies. The degeneracies we construct can be characterized as adding a new dimension, and coincide with usual degeneracies in the cubical set case. As necessitated by the construction, we refined the degeneracies and coherence conditions outlined in \cite{grandis03} to make it step-wise for partial constructions. Our work includes a mechanically checked formalization in Rocq.
 \end{abstract}
+
 
 \section{Introduction}
 
