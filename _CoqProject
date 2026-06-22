@@ -1,4 +1,5 @@
 -R _build/default/theories Bonak
+theories/νSet/Vec.v
 theories/νSet/HSet.v
 theories/νSet/Notation.v
 theories/νSet/RewLemmas.v
