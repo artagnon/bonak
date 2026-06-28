@@ -317,7 +317,7 @@
 \author{Alice Laroche}{Université Paris Cité}{alice.laroche@etu.u-paris.fr}{}{}
 \author{Ramkumar Ramachandra}{Unaffiliated}{r@artagnon.com}{}{}
 \authorrunning{H. Herbelin, V. Huhnin, A. Laroche, and R. Ramachandra}
-\keywords{Parametricity, Semi-simplicial sets, Semi-cubical sets, Formalization, Rocq, Indexed-fibred correspondence}
+\keywords{Parametricity, Simplicial sets, Cubical sets, Formalization, Rocq, Indexed-fibred correspondence}
 \ccsdesc{10003752.10003790.10011740}
 \Copyright{Hugo Herbelin, Valerii Huhnin, Alice Laroche, Ramkumar Ramachandra}
 %\nolinenumbers
@@ -325,12 +325,16 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-  In an exploration of building simplicial and cubical set models in indexed form, we extend a previous construction of semi-simplicial and semi-cubical sets with degeneracies. The degeneracies we construct can be characterized as adding a new dimension, and coincide with usual degeneracies in the cubical set case. As necessitated by the construction, we refined the degeneracies and coherence conditions outlined in \cite{grandis03} to make it step-wise for partial constructions. Our work includes a mechanically checked formalization in Rocq.
+  In an exploration of building simplicial and cubical set models in indexed form, we extend a previous construction of semi-simplicial and semi-cubical sets with degeneracies. The degeneracies we construct can be characterized as adding a new dimension, and coincide with usual degeneracies in the cubical set case. As necessitated by the construction, we refined the degeneracies and coherence conditions outlined in Grandis-Mauri\cite{grandis03} to make it step-wise for partial constructions. Our work includes a mechanically checked formalization in Rocq.
 \end{abstract}
 
 \section{Motivation}
 
 Simplicial and cubical sets are defined as presheaves over simplicial and cubical categories, which we term as \emph{fibred form}. Our construction, in contrast, experiments using the \emph{indexed form}, using the \emph{fibred-indexed correspondence}. It was originally suggested at Univalent Foundations IAS 2012~\cite{UFwiki2012}. The original motivation for the indexed construction is that it suggests that the open problem of constructing simplicial and cubical types could be solved with this approach, as it supplies more definitional equalities for tackling the combinatorial problem of solving coherence conditions~\footnote{It was originally postulated that the coherences would come for free with the indexed construction, but this turns out not to be the case.}. Another motivation is constructing simplicial and cubical set models, such as parametric type theory and cubical type theory with more definitional equalities.
+
+\section{Contributions}
+
+We previously exploited the observation that semi-simplicial and semi-cubical sets are naturally unary and binary cases of iterated parametricity~\cite{hr25}. In adding a new dimension to our construction, we observed the usual cubical degeneracies in the cubical case and \emph{connections} in the simplicial case. The coherence conditions we used to complete our construction made explicit the ones outlined in Grandis-Mauri~\cite{grandis03}.
 
 \section{Introduction}
 
