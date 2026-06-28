@@ -328,6 +328,9 @@
   In an exploration of building simplicial and cubical set models in indexed form, we extend a previous construction of semi-simplicial and semi-cubical sets with degeneracies. The degeneracies we construct can be characterized as adding a new dimension, and coincide with usual degeneracies in the cubical set case. As necessitated by the construction, we refined the degeneracies and coherence conditions outlined in \cite{grandis03} to make it step-wise for partial constructions. Our work includes a mechanically checked formalization in Rocq.
 \end{abstract}
 
+\section{Motivation}
+
+Simplicial and cubical sets are defined as presheaves over simplicial and cubical categories, which we term as \emph{fibred form}. Our construction, in contrast, experiments using the \emph{indexed form}, using the \emph{fibred-indexed correspondence}. It was originally suggested at Univalent Foundations IAS 2012~\cite{UFwiki2012}. The original motivation for the indexed construction is that it suggests that the open problem of constructing simplicial and cubical types could be solved with this approach, as it supplies more definitional equalities for tackling the combinatorial problem of solving coherence conditions~\footnote{It was originally postulated that the coherences would come for free with the indexed construction, but this turns out not to be the case.}. Another motivation is constructing simplicial and cubical set models, such as parametric type theory and cubical type theory with more definitional equalities.
 
 \section{Introduction}
 
@@ -433,7 +436,7 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
 \end{equation*}
 
 \section{Tables}
-% Abbreviated tables in this section
+% Abbreviated tables in this section†
 %
 % The rule for implicit arguments for each table:
 % show 1 explicit in first two parts
