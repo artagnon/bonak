@@ -328,18 +328,14 @@
   In an exploration of building simplicial and cubical set models in indexed form, we extend a previous construction of semi-simplicial and semi-cubical sets with degeneracies. The degeneracies we construct can be characterized as adding a new dimension, and coincide with usual degeneracies in the cubical set case. As necessitated by the construction, we refined the degeneracies and coherence conditions outlined in Grandis-Mauri~\cite{grandis03} to make it step-wise for partial constructions. Our work includes a mechanically checked formalization in Rocq.
 \end{abstract}
 
-\section{Motivation}
-
+\section{Introduction}
+\subsection{Motivation}
 Simplicial and cubical sets are defined as presheaves over simplicial and cubical categories, which we term as \emph{fibred form}. Our construction, in contrast, experiments using the \emph{indexed form}, using the \emph{fibred-indexed correspondence}. It was originally suggested at Univalent Foundations IAS 2012~\cite{UFwiki2012}. The original motivation for the indexed construction is that it suggests that the open problem of constructing simplicial and cubical types could be solved with this approach, as it supplies more definitional equalities for tackling the combinatorial problem of solving coherence conditions~\footnote{It was originally postulated that the coherences would come for free with the indexed construction, but this turns out not to be the case.}. Another motivation is constructing simplicial and cubical set models, such as parametric type theory and cubical type theory with more definitional equalities.
 
-\section{Contributions}
+\subsection{Contributions}
+We previously exploited the observation that semi-simplicial and semi-cubical sets are naturally unary and binary cases of iterated parametricity~\cite{hr25}. In adding a new dimension to our construction, we observed the usual cubical degeneracies in the cubical case and \emph{connections}~\cite{bernardy12,bernardy15} in the simplicial case. The coherence conditions we used to complete our construction made explicit the ones outlined in Grandis-Mauri~\cite{grandis03}. Our work includes a mechanically-checked formalization in Rocq: \href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak}.
 
-We previously exploited the observation that semi-simplicial and semi-cubical sets are naturally unary and binary cases of iterated parametricity~\cite{hr25}. In adding a new dimension to our construction, we observed the usual cubical degeneracies in the cubical case and \emph{connections} in the simplicial case. The coherence conditions we used to complete our construction made explicit the ones outlined in Grandis-Mauri~\cite{grandis03}. Our work includes a mechanically-checked formalization in Rocq: \href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak}.
-
-\section{Introduction}
-
-Iterated parametricity à la Reynolds has the property that it mechanically generates augmented simplicial sets in the unary case and cubical sets in the binary (relational) case~\cite{johann17}. This was exploited in \cite{hr25} to describe in a uniform way a construction of both augmented semi-simplicial and cubical sets in indexed form. By \emph{indexed form} is meant that instead of representing simplicial sets (resp. cubical sets) as presheaves over the simplex category (resp. cube category), they are represented as families of dependent families, following an idea presented in~\cite{UFwiki2012}.
-
+\subsection{Fibred-index correspondence}
 \begin{equation*}
   \begin{array}{cllccllll}
     \multicolumn{3}{c}{\mbox{\emph{fibred form}}} & \quad\mathit{vs}\quad & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                     \\
@@ -356,8 +352,7 @@ Iterated parametricity à la Reynolds has the property that it mechanically gene
   \end{array}
 \end{equation*}
 
-This paper describes an extension of the construction with degeneracies. On the cubical side, this corresponds to degeneracies in the usual sense of e.g. Grandis and Mauri~\cite{grandis03}. On the simplicial side, this corresponds not to a degeneracy in the usual sense of simplicial sets (such degeneracy would actually take the form of a unary connection, see~\ref{sec:todo}) but to a degeneracy in the senseof parametrici, as in~\cite{bernardy12,bernardy15}. Adding a degeneracy means extending the previous diagram as follows:t
-
+\subsection{Adding degeneracies}
 \begin{equation*}
   \begin{array}{cllccllll}
     \multicolumn{3}{c}{\mbox{\emph{fibred form}}} & \quad\mathit{vs}\quad & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                               \\
@@ -396,8 +391,6 @@ First, our degeneracy implies a distinguished point $r_{-1}(a)$ for any $a:X_{-1
     \end{tikzcd} & \begin{tabular}{l}actually\\ a 1-connection!\end{tabular}
   \end{array}
 \end{equation*}
-
-\section*{Adding a degeneracy}
 
 For any $(X_0,X_1,...): \X$, we define a stream of degeneracies:
 \begin{equation*}
