@@ -1754,7 +1754,7 @@ Proof.
     destruct d as [d l].
     unshelve eapply eq_existT_curried.
     + now exact (cohPrefix.2 q r Hq Hr d (l; c)).
-    + now exact (mkCohReflAboveAboveLayer deps q r (⇓ Hq) (⇓ Hr) d l c cohPrefix).
+    + now exact_no_check (mkCohReflAboveAboveLayer deps q r (⇓ Hq) (⇓ Hr) d l c cohPrefix).
 Defined.
 
 Fixpoint mkCohReflAboveAboveFramesPrefix {p k} (deps: DepsReflCohs2 p k):
@@ -1840,7 +1840,7 @@ Proof.
       (Q := mkPainting (RestrExtOfReflCohsSup (mkDepsReflCohsSup deps.(1))))).
     + now exact (mkCohReflRestrLayerBelowInf deps ε q r (⇓ Hq) (⇓ Hr) d l
         (mkCohReflRestrFramesBelowInf deps.(1))).
-    + now exact (mkCohReflRestrPaintingBelowInf p.+1 k deps extraDeps
+    + now exact_no_check (mkCohReflRestrPaintingBelowInf p.+1 k deps extraDeps
         q r Hq Hr ε (d; l) c).
 Defined.
 
@@ -1875,7 +1875,7 @@ Proof.
       (Q := mkPainting (RestrExtOfReflCohsSup (mkDepsReflCohsSup deps)))).
     + now exact (mkCohReflRestrLayerAboveSup deps ε q r Hq Hr d l c
         (mkCohReflRestrFramesAboveSup deps.(1))).
-    + now exact (mkCohReflRestrPaintingAboveSup p.+1 k deps extraDeps
+    + now exact_no_check (mkCohReflRestrPaintingAboveSup p.+1 k deps extraDeps
         q.+1 r (⇑ Hq) Hr ε (d; l) c).
 Defined.
 
@@ -1914,7 +1914,7 @@ Proof.
       (Q := mkPainting (RestrExtOfReflCohsSup (mkDepsReflCohsSup deps.(1))))).
     + now exact (mkCohReflRestrLayerBelowSup deps ε q r (⇓ Hq) (⇓ Hr) d l
         (mkCohReflRestrFramesBelowSup deps.(1))).
-    + now exact (mkCohReflRestrPaintingBelowSup p.+1 k deps extraDeps
+    + now exact_no_check (mkCohReflRestrPaintingBelowSup p.+1 k deps extraDeps
         q r Hq Hr ε (d; l) c).
 Defined.
 
@@ -1949,7 +1949,7 @@ Proof.
       (mkExtraDeps (CohsExtOfReflCohsSup (mkDepsReflCohsSup deps))))).
     + now exact (mkCohReflAboveAboveLayer deps q r Hq Hr d l c
         (mkCohReflAboveAboveFrames deps.(1)%depsreflcohs2)).
-    + now exact (mkCohReflAboveAbovePainting p.+1 k deps extraDeps
+    + now exact_no_check (mkCohReflAboveAbovePainting p.+1 k deps extraDeps
         q.+1 r.+1 (⇑ Hq) (⇑ Hr) (d; l) c).
 Defined.
 
@@ -1990,7 +1990,7 @@ Proof.
       (mkExtraDeps (CohsExtOfReflCohsSup (mkDepsReflCohsSup deps.(1)))))).
     + now exact (mkCohReflAboveBelowLayer deps q r Hq Hr d l c
         (mkCohReflAboveBelowFrames deps.(1)%depsreflcohs2)).
-    + now exact (mkCohReflAboveBelowPainting p.+1 k deps extraDeps
+    + now exact_no_check (mkCohReflAboveBelowPainting p.+1 k deps extraDeps
         q.+1 r Hq Hr (d; l) c).
 Defined.
 
@@ -2031,7 +2031,7 @@ Proof.
       (mkExtraDeps (CohsExtOfReflCohsSup (mkDepsReflCohsSup deps.(1)).(1))))).
     + now exact (mkCohReflBelowBelowLayer deps q r Hq Hr d l
         (mkCohReflBelowBelowFrames deps.(1)%depsreflcohs2)).
-    + now exact (mkCohReflBelowBelowPainting p.+1 k deps extraDeps
+    + now exact_no_check (mkCohReflBelowBelowPainting p.+1 k deps extraDeps
         q r Hq Hr (d; l) c).
 Defined.
 
