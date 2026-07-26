@@ -1480,7 +1480,7 @@ Proof.
         r Hr x.1)
     (G := fun x _ =>
       (mkDepsReflCohsInf deps).(_reflPaintingsBelow).2 r Hr x.1 x.2)
-    (* (C2 := coh_below_inf_pair_eq) *)
+    (C2 := coh_below_inf_pair_eq)
     (D2 := coh_above_sup_pair_eq)
     (aL := tt)
     (aR := tt)).
