@@ -1,0 +1,8 @@
+# Files that are not built by the "Rocq 9.2" CI job, one path per line,
+# relative to the repository root.  Blank lines and #-comments are ignored,
+# and a listed file that does not exist is an error.
+#
+# This is meant for files that only the patched Rocq can compile in reasonable
+# time; they are still built in full by the "Rocq master+bonak-patches" job.
+# The list has to be closed under dependency: no file left in the build may
+# Require a blacklisted one.
