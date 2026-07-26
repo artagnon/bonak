@@ -157,7 +157,6 @@
 }
 
 % Coherence conditions for frame, layer, and painting: the general macro
-
 \newcommandx{\coh}[9][2,3,4,5,6,7,8,9]{
   \ensuremath{\mathsf{\color{chestnut}{coh}}^{
     \joinargs[#2][#3][#4]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#5][#6][#7][#8]}}
@@ -335,7 +334,7 @@ Simplicial and cubical sets are defined as presheaves over simplicial and cubica
 \subsection{Contributions}
 We previously exploited the observation that semi-simplicial and semi-cubical sets are naturally unary and binary cases of iterated parametricity~\cite{hr25}. In adding a new dimension to our construction, we observed the usual cubical degeneracies in the cubical case and \emph{connections}~\cite{bernardy12,bernardy15} in the simplicial case. The coherence conditions we used to complete our construction made explicit the ones outlined in Grandis-Mauri~\cite{grandis03}. Our work includes a mechanically-checked formalization in Rocq: \href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak}.
 
-\subsection{Fibred-index correspondence}
+\subsection{Fibred-indexed correspondence}
 \begin{equation*}
   \begin{array}{cllccllll}
     \multicolumn{3}{c}{\mbox{\emph{fibred form}}} & \quad\mathit{vs}\quad & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                     \\
@@ -353,137 +352,6 @@ We previously exploited the observation that semi-simplicial and semi-cubical se
 \end{equation*}
 
 \subsection{Adding degeneracies}
-\begin{equation*}
-  \begin{array}{cllccllll}
-    \multicolumn{3}{c}{\mbox{\emph{fibred form}}} & \quad\mathit{vs}\quad & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                               \\
-    \\
-    Y_0                                           & :                     & \HSet[l]                                       &  & X_0                                                                                & :                & \HSet[l]                                                                     & \mbox{(points)}   \\
-    \uparrow\uparrow\!\downarrow                                                                                                                                                                                                                                                                                                         \\
-    Y_1                                           & :                     & \HSet[l]                                       &  & X_1                                                                                & :                & X_0 \times X_0 \rightarrow \HSet[l]                                          & \mbox{(segments)} \\
-    \uparrow\uparrow\uparrow\uparrow\!\downarrow  &                       &                                                &  & r_0                                                                                & :                & \Pi x_0:X_0.\,X_1(x_0,x_0)                                                                       \\
-    Y_2                                           & :                     & \HSet[l]                                       &  & X_2                                                                                & :                & \Pi (x^0_{LL},x^0_{LR}).\, \Pi x^1_{L*}:X_1 (x^0_{LL},x^0_{LR}).                                 \\
-                                                  &                       &                                                &  &                                                                                    &                  & \Pi (x^0_{RL},x^0_{RR}).\, \Pi x^1_{R*}:X_1 (x^0_{RL},x^0_{RR}).\,                               \\
-    \multicolumn{3}{c}{\mbox{~+ coherences}}      &                       &                                                &  & X_1 (x^0_{LL},x^0_{RL}) \times X_1 (x^0_{LR},x^0_{RR}) \rightarrow \HSet[l] \qquad & \mbox{(squares)}                                                                                                    \\
-                                                  &                       &                                                &  & r_1                                                                                & :                & \Pi (x^0_{L},x^0_{R}):(X_0 \times X_0).\,\Pi x^1:X_1(x^0_L,x^0_R).\,                             \\
-                                                  &                       &                                                &  &                                                                                    &                  & X_2((x^0_{L},x^0_{L}),r_0(x^0_{L}),(x^0_{R},x^0_{R}),r_0(x^0_{R}),(x^1,x^1))                     \\
-    \vdots                                        &                       &                                                &  & \vdots                                                                                                                                                                                                   \\
-  \end{array}
-\end{equation*}
-
-The added degeneracy is \emph{parametric}: in the binary case, it gives a standard cubical degeneracy; in the unary case, it gives a ParamTT-like degeneracy and \emph{not} a simplicial degeneracy.
-
-First, our degeneracy implies a distinguished point $r_{-1}(a)$ for any $a:X_{-1}$. Then:
-
-\begin{equation*}
-  \begin{array}{lcccr}
-    \begin{tabular}{l}source\\ (over some $a:X_{-1}$)\end{tabular}         & b~~                                                               & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\[1mm]
-    \begin{tabular}{l}parametric\\ degeneracy\end{tabular}                 & \begin{tikzcd}b \arrow[r, dash, "r_0(b)"] & r_{-1}(a)\end{tikzcd} &
-    \begin{tikzcd}
-      & |[alias=F]|r_{-1}(a) \arrow[ddr, dash, "r_0(c)"] & \\\\
-      b \arrow[rr, dash, "q"{name=T, below}]\arrow[uur, dash, "r_0(b)"] && c \\
-      \arrow[rightarrow, from=F, to=T, phantom, "r_1(q)" description]
-    \end{tikzcd}                                                                                                                         \\[-8mm]
-    \begin{tabular}{l}simplicial\\ degeneracy\end{tabular}                 & \begin{tikzcd}b \arrow[r, dash, "s_0(b)"] & b\end{tikzcd}         &
-    \begin{tikzcd}
-      & |[alias=F]|c \arrow[ddr, dash, "s_0(c)"] & \\\\
-      b \arrow[rr, dash, "q"{name=T, below}]\arrow[uur, dash, "q"] && c \\
-      \arrow[rightarrow, from=F, to=T, phantom, "s_1(q)" description]
-    \end{tikzcd} & \begin{tabular}{l}actually\\ a 1-connection!\end{tabular}
-  \end{array}
-\end{equation*}
-
-For any $(X_0,X_1,...): \X$, we define a stream of degeneracies:
-\begin{equation*}
-  \begin{array}{lll}
-    \Xrefl(X_0,X_1,...) ~~ \defeq                                                                                                                                                                                                                            \\
-    \quad \Sigma r_{0}:\Pi d:\mathsf{\color{indian-yellow}{fullframe}}^{0}.\,\Pi x:\textcolor{red}{X_0}(d).\,\textcolor{red}{X_1}(\mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^0(d),\lambda \epsilon.\,x).               \\
-    \quad \Sigma r_1:\Pi d:\mathsf{\color{indian-yellow}{fullframe}}^1(X_0).\,\Pi x:\textcolor{red}{X_1}(d).\,\textcolor{red}{X_2}(\mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^1(r_{0})(d),\lambda \epsilon.\,x).       \\
-    \quad \Sigma r_2:\Pi d:\mathsf{\color{indian-yellow}{fullframe}}^2(X_0,X_1).\,\Pi x:\textcolor{red}{X_2}(d).\,\textcolor{red}{X_3}(\mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^2(r_0,r_1)(d),\lambda \epsilon.\,x). \\
-    \quad ...
-  \end{array}
-\end{equation*}
-where
-\begin{equation*}
-  \mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^n(r_{-1},...,r_{n-1}):\mathsf{\color{indian-yellow}{fullframe}}^n(X_{-1},...,X_{n-1}) \rightarrow \mathsf{\color{indian-yellow}{frame}}^{n+1,n}(X_{-1},...,X_{n})
-\end{equation*}
-computes the $n$ first layers of the border of $r_{n}(d)(x)$, knowing that the last layer is made of $\nu$ times $x$ itself, so that
-
-\begin{equation*}
-  (\mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^n(r_{-1},...,r_{n-1})(d),\lambda \epsilon.\,x) : \mathsf{\color{indian-yellow}{frame}}^{n+1,n+1}(X_{-1},...,X_{n})
-\end{equation*}
-is a full frame.
-
-On the way, we need two coherence conditions:
-\begin{equation*}
-  \begin{array}{l}
-    \mathsf{\textcolor{chestnut}{idrestrrefl}}_{\textcolor{indian-yellow}{\mathsf{frame}},\epsilon}^n(r_{-1},...,r_{n-1})~(d:\mathsf{\color{indian-yellow}{fullframe}}^n(X_0,...,X_{n-1})):                          \\
-    ~~ \mathsf{\color{russian-green}{restr}}_{\mathsf{\color{indian-yellow}{frame}},\epsilon,n}^{n,n}(\mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^n(r_{-1},...,r_{n-1})(d)) = d \\
-    \\
-    \mathsf{\textcolor{chestnut}{cohrestrrefl}}_{\textcolor{indian-yellow}{\mathsf{frame}},\epsilon,p<n}^n(r_{-1},...,r_{n-1})~(d:\mathsf{\color{indian-yellow}{frame}}^{n,p}(X_0,...,X_{n-1})):                     \\
-    ~~\;\mathsf{\color{russian-green}{restr}}_{\mathsf{\color{indian-yellow}{frame}},\epsilon,p}^{n,p}(\mathsf{\color{russian-green}{refl}}^{n,p}_{\mathsf{\color{indian-yellow}{frame}}}(r_{-1},...,r_{n-1})(d)) = \mathsf{\color{russian-green}{refl}}^{n-1,p}_{\mathsf{\color{indian-yellow}{frame}}}(r_{-1},...,r_{n-2})(\mathsf{\color{russian-green}{restr}}_{\mathsf{\color{indian-yellow}{frame}},\epsilon,p}^{n-1,p}(d))
-  \end{array}
-\end{equation*}
-where
-$\mathsf{\color{russian-green}{refl}}^{n,p}_{\mathsf{\color{indian-yellow}{frame}}}$ generalises $\mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^{n}$
-to prefixes of
-$\mathsf{\color{indian-yellow}{fullframe}}^n$:
-
-\begin{equation*}
-  \mathsf{\color{russian-green}{refl}}^{n,p}_{\mathsf{\color{indian-yellow}{frame}}}(r_{-1},...,r_{n-1}):\mathsf{\color{indian-yellow}{frame}}^{n,p}(X_{-1},...,X_{n-1}) \rightarrow \mathsf{\color{indian-yellow}{frame}}^{n+1,p}(X_{-1},...,X_{n})
-\end{equation*}
-
-\section{Tables}
-% Abbreviated tables in this section†
-%
-% The rule for implicit arguments for each table:
-% show 1 explicit in first two parts
-% show E + 1 explicit in the third part
-\appendmask[bonak]{Xreflfrom}[D]
-\appendmask[bonak]{Xreflcomp}[D]
-\appendmask[bonak]{layer}[D]
-\appendmask[bonak]{painting}[D]
-\appendmask[bonak]{restrframe}[D]
-\appendmask[bonak]{restrlayer}[D, d]
-\appendmask[bonak]{restrpainting}[D, d]
-\appendmask[bonak]{reflframe}[D, R]
-\appendmask[bonak]{refllayer}[D, R, d]
-\appendmask[bonak]{reflpainting}[D, E, R, d]
-\appendmask[bonak]{reflframeExt}[D, R]
-\appendmask[bonak]{refllayerExt}[D, E, R, d]
-\appendmask[bonak]{reflpaintingExt}[D, E, R, d]
-\appendmask[bonak]{cohframe}[D, E, R]
-\appendmask[bonak]{cohlayer}[D, E, R, d]
-\appendmask[bonak]{cohpainting}[D, E, R, d]
-\appendmask[bonak]{cohidframe}[D, E, R]
-\appendmask[bonak]{cohidlayer}[D, E, R, d]
-\appendmask[bonak]{cohidpainting}[D, E, R, d]
-\appendmask[bonak]{cohframeExt}[D, E, R]
-\appendmask[bonak]{cohlayerExt}[D, E, R, d]
-\appendmask[bonak]{cohpaintingExt}[D, E, R, d]
-
-% Truncated sets, otherwise referred to as X
-% Keep all arguments
-\newcommandx{\Xcomp}[2][2]{\X[comp][=#1][#2]}
-\newcommandx{\Xfrom}[2][2]{\X[from][\geq#1][#2]}
-\newcommandx{\Xto}[2][2]{\X[to][<#1][#2]}
-
-% Refl truncated sets.
-\newcommandx{\Xreflcomp}[2][2]{\Xrefl[comp][=#1][#2]}
-\newcommandx{\Xreflto}[2][2]{\Xrefl[to][<#1][#2]}
-\newcommandx{\Xreflfrom}[2][2]{\Xrefl[from][\geq#1][#2]}
-
-\def\lab{tab:coind}
-\input{tab-coind.tex}
-
-\def\lab{tab:core}
-\input{tab-core.tex}
-
-\def\lab{tab:reflext}
-\input{tab-reflext.tex}
-
-\def\lab{tab:refl}
-\input{tab-refl.tex}
-
 \begin{table}[H]
   \begin{tabularx}{\linewidth}{c c c c c}
     \toprule
@@ -668,6 +536,137 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
     \bottomrule
   \end{tabularx}
 \end{table}
+
+\begin{equation*}
+  \begin{array}{cllccllll}
+    \multicolumn{3}{c}{\mbox{\emph{fibred form}}} & \quad\mathit{vs}\quad & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                               \\
+    \\
+    Y_0                                           & :                     & \HSet[l]                                       &  & X_0                                                                                & :                & \HSet[l]                                                                     & \mbox{(points)}   \\
+    \uparrow\uparrow\!\downarrow                                                                                                                                                                                                                                                                                                         \\
+    Y_1                                           & :                     & \HSet[l]                                       &  & X_1                                                                                & :                & X_0 \times X_0 \rightarrow \HSet[l]                                          & \mbox{(segments)} \\
+    \uparrow\uparrow\uparrow\uparrow\!\downarrow  &                       &                                                &  & r_0                                                                                & :                & \Pi x_0:X_0.\,X_1(x_0,x_0)                                                                       \\
+    Y_2                                           & :                     & \HSet[l]                                       &  & X_2                                                                                & :                & \Pi (x^0_{LL},x^0_{LR}).\, \Pi x^1_{L*}:X_1 (x^0_{LL},x^0_{LR}).                                 \\
+                                                  &                       &                                                &  &                                                                                    &                  & \Pi (x^0_{RL},x^0_{RR}).\, \Pi x^1_{R*}:X_1 (x^0_{RL},x^0_{RR}).\,                               \\
+    \multicolumn{3}{c}{\mbox{~+ coherences}}      &                       &                                                &  & X_1 (x^0_{LL},x^0_{RL}) \times X_1 (x^0_{LR},x^0_{RR}) \rightarrow \HSet[l] \qquad & \mbox{(squares)}                                                                                                    \\
+                                                  &                       &                                                &  & r_1                                                                                & :                & \Pi (x^0_{L},x^0_{R}):(X_0 \times X_0).\,\Pi x^1:X_1(x^0_L,x^0_R).\,                             \\
+                                                  &                       &                                                &  &                                                                                    &                  & X_2((x^0_{L},x^0_{L}),r_0(x^0_{L}),(x^0_{R},x^0_{R}),r_0(x^0_{R}),(x^1,x^1))                     \\
+    \vdots                                        &                       &                                                &  & \vdots                                                                                                                                                                                                   \\
+  \end{array}
+\end{equation*}
+
+The added degeneracy is \emph{parametric}: in the binary case, it gives a standard cubical degeneracy; in the unary case, it gives a ParamTT-like degeneracy and \emph{not} a simplicial degeneracy.
+
+First, our degeneracy implies a distinguished point $r_{-1}(a)$ for any $a:X_{-1}$. Then:
+
+\begin{equation*}
+  \begin{array}{lcccr}
+    \begin{tabular}{l}source\\ (over some $a:X_{-1}$)\end{tabular}         & b~~                                                               & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\[1mm]
+    \begin{tabular}{l}parametric\\ degeneracy\end{tabular}                 & \begin{tikzcd}b \arrow[r, dash, "r_0(b)"] & r_{-1}(a)\end{tikzcd} &
+    \begin{tikzcd}
+      & |[alias=F]|r_{-1}(a) \arrow[ddr, dash, "r_0(c)"] & \\\\
+      b \arrow[rr, dash, "q"{name=T, below}]\arrow[uur, dash, "r_0(b)"] && c \\
+      \arrow[rightarrow, from=F, to=T, phantom, "r_1(q)" description]
+    \end{tikzcd}                                                                                                                         \\[-8mm]
+    \begin{tabular}{l}simplicial\\ degeneracy\end{tabular}                 & \begin{tikzcd}b \arrow[r, dash, "s_0(b)"] & b\end{tikzcd}         &
+    \begin{tikzcd}
+      & |[alias=F]|c \arrow[ddr, dash, "s_0(c)"] & \\\\
+      b \arrow[rr, dash, "q"{name=T, below}]\arrow[uur, dash, "q"] && c \\
+      \arrow[rightarrow, from=F, to=T, phantom, "s_1(q)" description]
+    \end{tikzcd} & \begin{tabular}{l}actually\\ a 1-connection!\end{tabular}
+  \end{array}
+\end{equation*}
+
+For any $(X_0,X_1,...): \X$, we define a stream of degeneracies:
+\begin{equation*}
+  \begin{array}{lll}
+    \Xrefl(X_0,X_1,...) ~~ \defeq                                                                                                                                                                                                                            \\
+    \quad \Sigma r_{0}:\Pi d:\mathsf{\color{indian-yellow}{fullframe}}^{0}.\,\Pi x:\textcolor{red}{X_0}(d).\,\textcolor{red}{X_1}(\mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^0(d),\lambda \epsilon.\,x).               \\
+    \quad \Sigma r_1:\Pi d:\mathsf{\color{indian-yellow}{fullframe}}^1(X_0).\,\Pi x:\textcolor{red}{X_1}(d).\,\textcolor{red}{X_2}(\mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^1(r_{0})(d),\lambda \epsilon.\,x).       \\
+    \quad \Sigma r_2:\Pi d:\mathsf{\color{indian-yellow}{fullframe}}^2(X_0,X_1).\,\Pi x:\textcolor{red}{X_2}(d).\,\textcolor{red}{X_3}(\mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^2(r_0,r_1)(d),\lambda \epsilon.\,x). \\
+    \quad ...
+  \end{array}
+\end{equation*}
+where
+\begin{equation*}
+  \mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^n(r_{-1},...,r_{n-1}):\mathsf{\color{indian-yellow}{fullframe}}^n(X_{-1},...,X_{n-1}) \rightarrow \mathsf{\color{indian-yellow}{frame}}^{n+1,n}(X_{-1},...,X_{n})
+\end{equation*}
+computes the $n$ first layers of the border of $r_{n}(d)(x)$, knowing that the last layer is made of $\nu$ times $x$ itself, so that
+
+\begin{equation*}
+  (\mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^n(r_{-1},...,r_{n-1})(d),\lambda \epsilon.\,x) : \mathsf{\color{indian-yellow}{frame}}^{n+1,n+1}(X_{-1},...,X_{n})
+\end{equation*}
+is a full frame.
+
+On the way, we need two coherence conditions:
+\begin{equation*}
+  \begin{array}{l}
+    \mathsf{\textcolor{chestnut}{idrestrrefl}}_{\textcolor{indian-yellow}{\mathsf{frame}},\epsilon}^n(r_{-1},...,r_{n-1})~(d:\mathsf{\color{indian-yellow}{fullframe}}^n(X_0,...,X_{n-1})):                          \\
+    ~~ \mathsf{\color{russian-green}{restr}}_{\mathsf{\color{indian-yellow}{frame}},\epsilon,n}^{n,n}(\mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^n(r_{-1},...,r_{n-1})(d)) = d \\
+    \\
+    \mathsf{\textcolor{chestnut}{cohrestrrefl}}_{\textcolor{indian-yellow}{\mathsf{frame}},\epsilon,p<n}^n(r_{-1},...,r_{n-1})~(d:\mathsf{\color{indian-yellow}{frame}}^{n,p}(X_0,...,X_{n-1})):                     \\
+    ~~\;\mathsf{\color{russian-green}{restr}}_{\mathsf{\color{indian-yellow}{frame}},\epsilon,p}^{n,p}(\mathsf{\color{russian-green}{refl}}^{n,p}_{\mathsf{\color{indian-yellow}{frame}}}(r_{-1},...,r_{n-1})(d)) = \mathsf{\color{russian-green}{refl}}^{n-1,p}_{\mathsf{\color{indian-yellow}{frame}}}(r_{-1},...,r_{n-2})(\mathsf{\color{russian-green}{restr}}_{\mathsf{\color{indian-yellow}{frame}},\epsilon,p}^{n-1,p}(d))
+  \end{array}
+\end{equation*}
+where
+$\mathsf{\color{russian-green}{refl}}^{n,p}_{\mathsf{\color{indian-yellow}{frame}}}$ generalises $\mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^{n}$
+to prefixes of
+$\mathsf{\color{indian-yellow}{fullframe}}^n$:
+
+\begin{equation*}
+  \mathsf{\color{russian-green}{refl}}^{n,p}_{\mathsf{\color{indian-yellow}{frame}}}(r_{-1},...,r_{n-1}):\mathsf{\color{indian-yellow}{frame}}^{n,p}(X_{-1},...,X_{n-1}) \rightarrow \mathsf{\color{indian-yellow}{frame}}^{n+1,p}(X_{-1},...,X_{n})
+\end{equation*}
+
+\section{Tables}
+% Abbreviated tables in this section†
+%
+% The rule for implicit arguments for each table:
+% show 1 explicit in first two parts
+% show E + 1 explicit in the third part
+\appendmask[bonak]{Xreflfrom}[D]
+\appendmask[bonak]{Xreflcomp}[D]
+\appendmask[bonak]{layer}[D]
+\appendmask[bonak]{painting}[D]
+\appendmask[bonak]{restrframe}[D]
+\appendmask[bonak]{restrlayer}[D, d]
+\appendmask[bonak]{restrpainting}[D, d]
+\appendmask[bonak]{reflframe}[D, R]
+\appendmask[bonak]{refllayer}[D, R, d]
+\appendmask[bonak]{reflpainting}[D, E, R, d]
+\appendmask[bonak]{reflframeExt}[D, R]
+\appendmask[bonak]{refllayerExt}[D, E, R, d]
+\appendmask[bonak]{reflpaintingExt}[D, E, R, d]
+\appendmask[bonak]{cohframe}[D, E, R]
+\appendmask[bonak]{cohlayer}[D, E, R, d]
+\appendmask[bonak]{cohpainting}[D, E, R, d]
+\appendmask[bonak]{cohidframe}[D, E, R]
+\appendmask[bonak]{cohidlayer}[D, E, R, d]
+\appendmask[bonak]{cohidpainting}[D, E, R, d]
+\appendmask[bonak]{cohframeExt}[D, E, R]
+\appendmask[bonak]{cohlayerExt}[D, E, R, d]
+\appendmask[bonak]{cohpaintingExt}[D, E, R, d]
+
+% Truncated sets, otherwise referred to as X
+% Keep all arguments
+\newcommandx{\Xcomp}[2][2]{\X[comp][=#1][#2]}
+\newcommandx{\Xfrom}[2][2]{\X[from][\geq#1][#2]}
+\newcommandx{\Xto}[2][2]{\X[to][<#1][#2]}
+
+% Refl truncated sets.
+\newcommandx{\Xreflcomp}[2][2]{\Xrefl[comp][=#1][#2]}
+\newcommandx{\Xreflto}[2][2]{\Xrefl[to][<#1][#2]}
+\newcommandx{\Xreflfrom}[2][2]{\Xrefl[from][\geq#1][#2]}
+
+\def\lab{tab:coind}
+\input{tab-coind.tex}
+
+\def\lab{tab:core}
+\input{tab-core.tex}
+
+\def\lab{tab:reflext}
+\input{tab-reflext.tex}
+
+\def\lab{tab:refl}
+\input{tab-refl.tex}
 
 \bibliographystyle{plainurl}
 \bibliography{paper}
