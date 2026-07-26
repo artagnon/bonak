@@ -458,18 +458,13 @@ Definition mkCohLayer `{extraDepsCohs: DepsCohsExtension p.+1 k depsCohs}
       (mkRestrLayer (mkRestrPaintings extraDepsCohs).1 _ q.+1 (⇑ Hq) ε d l).
 Proof.
   apply functional_extensionality_dep; intros 𝛉.
-  rewrite <- map_subst_app. unfold mkRestrLayer; simpl.
-  rewrite
-    <- map_subst with (f := fun x => depsCohs.(_restrPaintings).2 q Hq ε x),
-    <- map_subst with
-        (f := fun x => depsCohs.(_restrPaintings).2 r (Hr ↕ Hq) ω x),
-    <- cohPaintings.2.
-  apply rew_chain33 with
+  eapply (rew_layer33
     (P := fun x => depsCohs.(_deps).(_paintings).2 x)
-    (f1 := fun x => depsCohs.(_deps).(_restrFrames).2 0 leR_O 𝛉 x)
-    (f2 := fun x => depsCohs.(_deps).(_restrFrames).2 q Hq ε x)
-    (g := fun x => depsCohs.(_deps).(_restrFrames).2 r (Hr ↕ Hq) ω x).
+    (rf0 := fun a x => depsCohs.(_deps).(_restrFrames).2 0 leR_O a x)
+    (F := fun m c => depsCohs.(_restrPaintings).2 q Hq ε m c)
+    (G := fun m c => depsCohs.(_restrPaintings).2 r (Hr ↕ Hq) ω m c)).
   now trivial.
+  now exact (cohPaintings.2 q Hq r Hr ε ω _ (l 𝛉)).
   now exact (mkCoh2Frame extraDepsCohs prevCohFrames q Hq r Hr ε ω d 𝛉).
 Defined.
 
