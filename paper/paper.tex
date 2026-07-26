@@ -335,23 +335,11 @@ Simplicial and cubical sets are defined as presheaves over simplicial and cubica
 We previously exploited the observation that semi-simplicial and semi-cubical sets are naturally unary and binary cases of iterated parametricity~\cite{hr25}. In adding a new dimension to our construction, we observed the usual cubical degeneracies in the cubical case and \emph{connections}~\cite{bernardy12,bernardy15} in the simplicial case. The coherence conditions we used to complete our construction made explicit the ones outlined in Grandis-Mauri~\cite{grandis03}. Our work includes a mechanically-checked formalization in Rocq: \href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak}.
 
 \subsection{Fibred-indexed correspondence}
-\begin{equation*}
-  \begin{array}{cllccllll}
-    \multicolumn{3}{c}{\mbox{\emph{fibred form}}} & \quad\mathit{vs}\quad & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                     \\
-    \\
-    Y_0                                           & :                     & \HSet[l]                                       &  & X_0                                                                                & :                & \HSet[l]                                                           & \mbox{(points)}   \\
-    \uparrow\uparrow                                                                                                                                                                                                                                                                                                           \\
-    Y_1                                           & :                     & \HSet[l]                                       &  & X_1                                                                                & :                & X_0 \times X_0 \rightarrow \HSet[l]                                & \mbox{(segments)} \\
-    \uparrow\uparrow\uparrow\uparrow              &                       &                                                &  &                                                                                                                                                                                                \\
-    Y_2                                           & :                     & \HSet[l]                                       &  & X_2                                                                                & :                & \Pi (x^0_{LL},x^0_{LR}).\, \Pi x^1_{L*}:X_1 (x^0_{LL},x^0_{LR}).                       \\
-                                                  &                       &                                                &  &                                                                                    &                  & \Pi (x^0_{RL},x^0_{RR}).\, \Pi x^1_{R*}:X_1 (x^0_{RL},x^0_{RR}).\,                     \\
-    \multicolumn{3}{c}{\mbox{~+ coherences}}      &                       &                                                &  & X_1 (x^0_{LL},x^0_{RL}) \times X_1 (x^0_{LR},x^0_{RR}) \rightarrow \HSet[l] \qquad & \mbox{(squares)}                                                                                          \\
-                                                  &                       &                                                &  &                                                                                                                                                                                                \\
-    \vdots                                        &                       &                                                &  & \vdots                                                                                                                                                                                         \\
-  \end{array}
-\end{equation*}
 
-\subsection{Adding degeneracies}
+Semi-simplicial sets and semi-cubical sets can be expressed directly in terms of presheaves over a direct category using morphisms, termed as the \emph{fibered form}, or alternatively, we can ``currify'' the presentation using dependent products, termed as the \emph{indexed form}. The indexed variant can also be given for presheaves over a generalised Reedy category, covering the case of simplicial and cubical sets.
+
+In this paper, we focus on simplicial sets equipped with faces and a \emph{cubical-like} form of degeneracy and on cubical sets with faces and degeneracies.
+
 \begin{table}[H]
   \begin{tabularx}{\linewidth}{c c c c c}
     \toprule
@@ -536,6 +524,24 @@ We previously exploited the observation that semi-simplicial and semi-cubical se
     \bottomrule
   \end{tabularx}
 \end{table}
+
+\begin{equation*}
+  \begin{array}{cllccllll}
+    \multicolumn{3}{c}{\mbox{\emph{fibred form}}} & \quad\mathit{vs}\quad & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                     \\
+    \\
+    Y_0                                           & :                     & \HSet[l]                                       &  & X_0                                                                                & :                & \HSet[l]                                                           & \mbox{(points)}   \\
+    \uparrow\uparrow                                                                                                                                                                                                                                                                                                           \\
+    Y_1                                           & :                     & \HSet[l]                                       &  & X_1                                                                                & :                & X_0 \times X_0 \rightarrow \HSet[l]                                & \mbox{(segments)} \\
+    \uparrow\uparrow\uparrow\uparrow              &                       &                                                &  &                                                                                                                                                                                                \\
+    Y_2                                           & :                     & \HSet[l]                                       &  & X_2                                                                                & :                & \Pi (x^0_{LL},x^0_{LR}).\, \Pi x^1_{L*}:X_1 (x^0_{LL},x^0_{LR}).                       \\
+                                                  &                       &                                                &  &                                                                                    &                  & \Pi (x^0_{RL},x^0_{RR}).\, \Pi x^1_{R*}:X_1 (x^0_{RL},x^0_{RR}).\,                     \\
+    \multicolumn{3}{c}{\mbox{~+ coherences}}      &                       &                                                &  & X_1 (x^0_{LL},x^0_{RL}) \times X_1 (x^0_{LR},x^0_{RR}) \rightarrow \HSet[l] \qquad & \mbox{(squares)}                                                                                          \\
+                                                  &                       &                                                &  &                                                                                                                                                                                                \\
+    \vdots                                        &                       &                                                &  & \vdots                                                                                                                                                                                         \\
+  \end{array}
+\end{equation*}
+
+\subsection{Adding degeneracies}
 
 \begin{equation*}
   \begin{array}{cllccllll}
