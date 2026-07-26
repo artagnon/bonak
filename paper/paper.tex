@@ -359,7 +359,24 @@ Both definitions are provably equivalent using univalence~\cite{Laroche} and thi
 
 Presheaves over a generalised Reedy category can also be expressed in the indexed form, thus covering the case of simplicial and cubical sets.
 
-In this paper, we focus on an indexed definition of simplicial sets equipped with faces and a \emph{cubical-like} form of degeneracy and on cubical sets with faces and degeneracies. While faces are part of the indexed infrastructure and coherences between faces are necessitated by faces meeting at common edges, degeneracies are postulated explicitly as shown below:
+In this paper, we focus on an indexed definition of simplicial sets equipped with faces and a \emph{cubical-like} form of degeneracy and on cubical sets with faces and degeneracies. While faces are part of the indexed infrastructure and coherences between faces are necessitated by faces meeting at common edges, degeneracies and their coherences are postulated explicitly as shown below:
+
+\begin{equation*}
+  \begin{array}{cllccllll}
+    \multicolumn{3}{c}{\mbox{\emph{fibred form}}} & \quad\mathit{vs}\quad & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                               \\
+    \\
+    Y_0                                           & :                     & \HSet[l]                                       &  & X_0                                                                                & :                & \HSet[l]                                                                     & \mbox{(points)}   \\
+    \uparrow\uparrow\!\downarrow                                                                                                                                                                                                                                                                                                         \\
+    Y_1                                           & :                     & \HSet[l]                                       &  & X_1                                                                                & :                & X_0 \times X_0 \rightarrow \HSet[l]                                          & \mbox{(segments)} \\
+    \uparrow\uparrow\uparrow\uparrow\!\downarrow  &                       &                                                &  & r_0                                                                                & :                & \Pi x_0:X_0.\,X_1(x_0,x_0)                                                                       \\
+    Y_2                                           & :                     & \HSet[l]                                       &  & X_2                                                                                & :                & \Pi (x^0_{LL},x^0_{LR}).\, \Pi x^1_{L*}:X_1 (x^0_{LL},x^0_{LR}).                                 \\
+                                                  &                       &                                                &  &                                                                                    &                  & \Pi (x^0_{RL},x^0_{RR}).\, \Pi x^1_{R*}:X_1 (x^0_{RL},x^0_{RR}).\,                               \\
+    \multicolumn{3}{c}{\mbox{~+ coherences}}      &                       &                                                &  & X_1 (x^0_{LL},x^0_{RL}) \times X_1 (x^0_{LR},x^0_{RR}) \rightarrow \HSet[l] \qquad & \mbox{(squares)}                                                                                                    \\
+                                                  &                       &                                                &  & r_1                                                                                & :                & \Pi (x^0_{L},x^0_{R}):(X_0 \times X_0).\,\Pi x^1:X_1(x^0_L,x^0_R).\,                             \\
+                                                  &                       &                                                &  &                                                                                    &                  & X_2((x^0_{L},x^0_{L}),r_0(x^0_{L}),(x^0_{R},x^0_{R}),r_0(x^0_{R}),(x^1,x^1))                     \\
+    \vdots                                        &                       &                                                &  & \vdots                                                                                                                                                                                                   \\
+  \end{array}
+\end{equation*}
 
 \begin{table}[H]
   \begin{tabularx}{\linewidth}{c c c c c}
@@ -547,23 +564,6 @@ In this paper, we focus on an indexed definition of simplicial sets equipped wit
 \end{table}
 
 \subsection{Adding degeneracies}
-
-\begin{equation*}
-  \begin{array}{cllccllll}
-    \multicolumn{3}{c}{\mbox{\emph{fibred form}}} & \quad\mathit{vs}\quad & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                               \\
-    \\
-    Y_0                                           & :                     & \HSet[l]                                       &  & X_0                                                                                & :                & \HSet[l]                                                                     & \mbox{(points)}   \\
-    \uparrow\uparrow\!\downarrow                                                                                                                                                                                                                                                                                                         \\
-    Y_1                                           & :                     & \HSet[l]                                       &  & X_1                                                                                & :                & X_0 \times X_0 \rightarrow \HSet[l]                                          & \mbox{(segments)} \\
-    \uparrow\uparrow\uparrow\uparrow\!\downarrow  &                       &                                                &  & r_0                                                                                & :                & \Pi x_0:X_0.\,X_1(x_0,x_0)                                                                       \\
-    Y_2                                           & :                     & \HSet[l]                                       &  & X_2                                                                                & :                & \Pi (x^0_{LL},x^0_{LR}).\, \Pi x^1_{L*}:X_1 (x^0_{LL},x^0_{LR}).                                 \\
-                                                  &                       &                                                &  &                                                                                    &                  & \Pi (x^0_{RL},x^0_{RR}).\, \Pi x^1_{R*}:X_1 (x^0_{RL},x^0_{RR}).\,                               \\
-    \multicolumn{3}{c}{\mbox{~+ coherences}}      &                       &                                                &  & X_1 (x^0_{LL},x^0_{RL}) \times X_1 (x^0_{LR},x^0_{RR}) \rightarrow \HSet[l] \qquad & \mbox{(squares)}                                                                                                    \\
-                                                  &                       &                                                &  & r_1                                                                                & :                & \Pi (x^0_{L},x^0_{R}):(X_0 \times X_0).\,\Pi x^1:X_1(x^0_L,x^0_R).\,                             \\
-                                                  &                       &                                                &  &                                                                                    &                  & X_2((x^0_{L},x^0_{L}),r_0(x^0_{L}),(x^0_{R},x^0_{R}),r_0(x^0_{R}),(x^1,x^1))                     \\
-    \vdots                                        &                       &                                                &  & \vdots                                                                                                                                                                                                   \\
-  \end{array}
-\end{equation*}
 
 The added degeneracy is \emph{parametric}: in the binary case, it gives a standard cubical degeneracy; in the unary case, it gives a ParamTT-like degeneracy and \emph{not} a simplicial degeneracy.
 
