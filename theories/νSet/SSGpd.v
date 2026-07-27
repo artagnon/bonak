@@ -983,13 +983,6 @@ Proof.
     destruct extraDepsCohs3; [now contradiction |].
     destruct c as [l c].
     unfold mkCoh2PaintingInstanceType; cbv zeta.
-    set (Q := mkCoh2PaintingEndpointType _ _ q.+1 Hq r.+1 Hr s.+1 Hs d (l; c)).
-    set (H := (mkDepsCohs2 depsCohs3.(1)).(_coh2Frames).2 q.+1 Hq r.+1 Hr s.+1 Hs d).
-    cbn [mkDepsCohs2 _cohPaintings mkCohPaintings projT2].
-    unfold mkCohPainting; cbn [nat_ind].
-    change (depsCohs3.(1).(_extraDepsCohs2)) with
-      (AddCoh2Dep depsCohs3.(_depsCohs2) depsCohs3.(_extraDepsCohs2)).
-    lazy beta iota.
     unshelve eapply (eq_existT_curried_dep_hex
       (A0 := ((mkRestrFrameTypesAndFrames
           (mkDepsCohs2 depsCohs3.(1)).(_depsCohs).(_deps).(_paintings).1)
