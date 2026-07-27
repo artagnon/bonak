@@ -7,6 +7,7 @@ on:
       - "bonak.opam"
       - "dune-project"
       - "**/dune"
+      - ".github/rocq-9.2-blacklist.txt"
       - ".github/workflows/coq-action.yml"
   pull_request:
     types: [opened, reopened, synchronize]
@@ -15,14 +16,20 @@ on:
       - "bonak.opam"
       - "dune-project"
       - "**/dune"
+      - ".github/rocq-9.2-blacklist.txt"
       - ".github/workflows/coq-action.yml"
 jobs:
-  build:
+  # Builds the project with the latest Rocq release, minus the files listed in
+  # .github/rocq-9.2-blacklist.txt.
+  rocq-release:
+    name: "Rocq 9.2"
     runs-on: "ubuntu-latest"
     steps:
       - uses: "actions/checkout@v4"
         with:
           submodules: "true"
+      - name: "Apply the blacklist"
+        run: xargs -r rm -- < .github/rocq-9.2-blacklist.txt
       - name: "Docker Rocq action"
         uses: "coq-community/docker-coq-action@v1"
         with:
@@ -44,3 +51,55 @@ jobs:
               opam update -y default
               opam install --confirm-level=unsafe-yes -j 2 $PACKAGE --deps-only
             endGroup
+
+  # Builds the whole project with our patched Rocq, which carries the fixpoint
+  # refolding and conversion-cache patches the heavier files rely on.
+  rocq-patched:
+    name: "Rocq master+bonak-patches"
+    runs-on: "ubuntu-latest"
+    timeout-minutes: 120
+    env:
+      ROCQ_REPO: "https://github.com/olympichek/rocq.git"
+      ROCQ_BRANCH: "master+bonak-patches"
+      # Rocq's stdlib lives in its own repository; this is the revision the
+      # patched branch is developed against.
+      STDLIB_REPO: "https://github.com/rocq-prover/stdlib.git"
+      STDLIB_REV: "b89635f66d5d5fe3c91a5755b389a30846411888"
+      OCAML_COMPILER: "5.3"
+    steps:
+      - uses: "actions/checkout@v4"
+        with:
+          submodules: "true"
+      - name: "Resolve the patched Rocq revision"
+        id: "rocq"
+        run: |
+          sha=$(git ls-remote "$ROCQ_REPO" "refs/heads/$ROCQ_BRANCH" | cut -f1)
+          test -n "$sha"
+          echo "Building against $ROCQ_BRANCH at $sha"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+      - uses: "ocaml/setup-ocaml@v3"
+        with:
+          ocaml-compiler: ${{ env.OCAML_COMPILER }}
+          opam-pin: false
+      # The opam switch holding the patched Rocq is cached: rebuilding it from
+      # source costs about five minutes.  The key pins the exact Rocq and
+      # stdlib revisions, so moving either one invalidates the cache.
+      - name: "Restore the opam switch"
+        id: "switch"
+        uses: "actions/cache@v4"
+        with:
+          path: "_opam"
+          key: "rocq-patched-${{ runner.os }}-ocaml-${{ env.OCAML_COMPILER }}-${{ steps.rocq.outputs.sha }}-${{ env.STDLIB_REV }}"
+      - name: "Build the patched Rocq"
+        if: steps.switch.outputs.cache-hit != 'true'
+        run: |
+          opam pin add -y -n rocq-runtime "git+$ROCQ_REPO#$ROCQ_BRANCH"
+          opam pin add -y -n rocq-core "git+$ROCQ_REPO#$ROCQ_BRANCH"
+          opam pin add -y -n rocq-stdlib "git+$STDLIB_REPO#$STDLIB_REV"
+          opam install -y -j "$(nproc)" rocq-core rocq-stdlib
+      - name: "Install the remaining dependencies"
+        run: opam install -y -j "$(nproc)" ./bonak.opam --deps-only
+      - name: "Build"
+        run: |
+          opam exec -- rocq --version
+          opam exec -- dune build
