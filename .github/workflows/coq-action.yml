@@ -29,28 +29,7 @@ jobs:
         with:
           submodules: "true"
       - name: "Apply the blacklist"
-        run: |
-          set -eu
-          blacklist=".github/rocq-9.2-blacklist.txt"
-          if [ ! -f "$blacklist" ]; then
-            echo "No $blacklist: building every file."
-            exit 0
-          fi
-          count=0
-          while IFS= read -r line || [ -n "$line" ]; do
-            file="${line%%#*}"
-            file="${file#"${file%%[![:space:]]*}"}"
-            file="${file%"${file##*[![:space:]]}"}"
-            [ -n "$file" ] || continue
-            if [ ! -f "$file" ]; then
-              echo "::error file=$blacklist::blacklisted file '$file' does not exist"
-              exit 1
-            fi
-            echo "Excluding $file"
-            rm -- "$file"
-            count=$((count + 1))
-          done < "$blacklist"
-          echo "$count file(s) excluded from the Rocq 9.2 build."
+        run: xargs -r rm -- < .github/rocq-9.2-blacklist.txt
       - name: "Docker Rocq action"
         uses: "coq-community/docker-coq-action@v1"
         with:
@@ -94,7 +73,6 @@ jobs:
       - name: "Resolve the patched Rocq revision"
         id: "rocq"
         run: |
-          set -eu
           sha=$(git ls-remote "$ROCQ_REPO" "refs/heads/$ROCQ_BRANCH" | cut -f1)
           test -n "$sha"
           echo "Building against $ROCQ_BRANCH at $sha"
@@ -115,7 +93,6 @@ jobs:
       - name: "Build the patched Rocq"
         if: steps.switch.outputs.cache-hit != 'true'
         run: |
-          set -eu
           opam pin add -y -n rocq-runtime "git+$ROCQ_REPO#$ROCQ_BRANCH"
           opam pin add -y -n rocq-core "git+$ROCQ_REPO#$ROCQ_BRANCH"
           opam pin add -y -n rocq-stdlib "git+$STDLIB_REPO#$STDLIB_REV"
@@ -124,6 +101,5 @@ jobs:
         run: opam install -y -j "$(nproc)" ./bonak.opam --deps-only
       - name: "Build"
         run: |
-          set -eu
           opam exec -- rocq --version
           opam exec -- dune build
