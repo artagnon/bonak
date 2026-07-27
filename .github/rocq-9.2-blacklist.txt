@@ -1,1 +1,0 @@
-theories/νSet/SSGpd.v
