@@ -621,6 +621,7 @@ Definition mkPrefix p {C: νSet p}: Type :=
 
 #[local]
 Instance mkνSet0: νSet 0.
+Proof.
   unshelve esplit.
   - now exact hunit.
   - unshelve esplit; try now trivial.
