@@ -20,14 +20,17 @@ Proof.
 Qed.
 
 Lemma leR_O_contra {n}: leR n.+1 O -> SFalse.
+Proof.
   now auto.
 Qed.
 
 Lemma leR_O {n}: leR O n.
+Proof.
   now auto.
 Qed.
 
 Lemma leR_trans {n m p} (Hnm: leR n m) (Hmp: leR m p): leR n p.
+Proof.
   revert n p Hnm Hmp. induction m, n, p. all: try now auto. simpl.
   now apply IHm.
 Qed.
@@ -35,6 +38,7 @@ Qed.
 Infix "↕" := leR_trans (at level 45).
 
 Lemma leR_up {n m} (Hnm: leR n m): leR n m.+1.
+Proof.
   revert m Hnm. induction n. now auto. destruct m. intros H.
   now apply leR_O_contra in H. now apply IHn.
 Qed.
@@ -42,6 +46,7 @@ Qed.
 Notation "↑ h" := (leR_up h) (at level 40).
 
 Lemma leR_down {n m} (Hnm: leR n.+1 m): leR n m.
+Proof.
   revert m Hnm. induction n. now auto. destruct m. intros H.
   now apply leR_O_contra in H. now apply IHn.
 Qed.
@@ -49,12 +54,14 @@ Qed.
 Notation "↓ p" := (leR_down p) (at level 40).
 
 Lemma leR_lower_both {n m} (Hnm: leR n.+1 m.+1): leR n m.
+Proof.
   now auto.
 Qed.
 
 Notation "⇓ p" := (leR_lower_both p) (at level 40).
 
 Lemma leR_raise_both {n m} (Hnm: leR n m): leR n.+1 m.+1.
+Proof.
   now auto.
 Qed.
 

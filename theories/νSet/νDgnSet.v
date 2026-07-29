@@ -325,6 +325,7 @@ Defined.
 
 Fixpoint mkIdRestrReflFramesBelow {p k} (deps: DepsReflCohsInf p k):
   mkIdRestrReflFrameBelowTypes (mkDepsReflBelow deps).
+Proof.
   destruct p.
   - unshelve econstructor.
     now exact tt.
