@@ -1,7 +1,5 @@
 (** A few rewriting lemmas not in the standard library *)
 
-From Stdlib Require Import Logic.FunctionalExtensionality.
-
 Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
@@ -33,30 +31,14 @@ Proof.
   now destruct H.
 Defined.
 
-(** The pointwise-to-layer bridge: a layer is a dependent function over the
-    arity, so transporting a layer along a path in the frame is determined
-    pointwise ([functional_extensionality_dep] followed by
-    [map_subst_app]). *)
-
-Lemma layer_rew_eq {A T X: Type} {P: X -> Type} {rf0: A -> T -> X}
-  {d1 d2: T} {E1: d1 = d2}
-  {l: forall ω, P (rf0 ω d1)} {l': forall ω, P (rf0 ω d2)}:
-  (forall ω, rew [fun d => P (rf0 ω d)] E1 in l ω = l' ω) ->
-  rew [fun d => forall ω, P (rf0 ω d)] E1 in l = l'.
-Proof.
-  intro H. apply functional_extensionality_dep; intro ω.
-  rewrite <- (map_subst_app E1 (fun ω d => P (rf0 ω d)) l).
-  now exact (H ω).
-Defined.
-
 (** Fused transport-chain lemmas for layer coherence proofs
 
-    [rew_cohLayer<NM>] closes a layer coherence goal in one step, once
-    [layer_rew_eq] has taken the pointwise step: it equates two chains of
-    transports, N on the left-hand side and M on the right, whose starting
-    elements are identified by the painting coherence. A call site supplies
-    only the two premises: the painting coherence and the 2-dimensional frame
-    coherence ([UIP] in HSet development). *)
+    [rew_cohLayer<NM>] closes a layer coherence goal in one step, once a bridge
+    (Layer.v) has taken the pointwise step: it equates two chains of transports,
+    N on the left-hand side and M on the right, whose starting elements are
+    identified by the painting coherence. A call site supplies only the two
+    premises: the painting coherence and the 2-dimensional frame coherence
+    ([UIP] in HSet development). *)
 
 Lemma rew_cohLayer33 {T1 T2 T3 X: Type} {P: X -> Type}
   {S2: T2 -> Type} {S3: T3 -> Type}
