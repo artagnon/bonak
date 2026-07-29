@@ -31,6 +31,17 @@ Proof.
   now destruct H.
 Defined.
 
+Lemma f_equal_id {A} {x y: A} (e: x = y): f_equal (fun x => x) e = e.
+Proof.
+  now destruct e.
+Defined.
+
+Lemma eq_trans_sym_cancel_l {A: Type} {x y z: A} (e: x = y) (h: y = z):
+  eq_sym e • (e • h) = h.
+Proof.
+  now destruct e, h.
+Defined.
+
 (** Fused transport-chain lemmas for layer coherence proofs
 
     [rew_cohLayer<NM>] closes a layer coherence goal in one step, once a bridge
