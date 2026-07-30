@@ -1,5 +1,3 @@
-From Stdlib Require Import Logic.FunctionalExtensionality.
-
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT RewLemmas HSet Notation LeSProp.
 
@@ -457,13 +455,15 @@ Definition mkCohLayer `{extraDepsCohs: DepsCohsExtension p.+1 k depsCohs}
     mkRestrLayer depsCohs.(_restrPaintings) depsCohs.(_cohs) r (Hr ↕ Hq) ω _
       (mkRestrLayer (mkRestrPaintings extraDepsCohs).1 _ q.+1 (⇑ Hq) ε d l).
 Proof.
-  apply functional_extensionality_dep; intros 𝛉.
-  eapply (rew_layer33
+  apply (layer_rew_eq
     (P := fun x => depsCohs.(_deps).(_paintings).2 x)
-    (rf0 := fun a x => depsCohs.(_deps).(_restrFrames).2 0 leR_O a x)
+    (rf0 := fun a x => depsCohs.(_deps).(_restrFrames).2 0 leR_O a x));
+    intros 𝛉.
+  eapply (rew_cohLayer33
+    (P := fun x => depsCohs.(_deps).(_paintings).2 x)
+    (rf0 := fun x => depsCohs.(_deps).(_restrFrames).2 0 leR_O 𝛉 x)
     (F := fun m c => depsCohs.(_restrPaintings).2 q Hq ε m c)
     (G := fun m c => depsCohs.(_restrPaintings).2 r (Hr ↕ Hq) ω m c)).
-  now trivial.
   now exact (cohPaintings.2 q Hq r Hr ε ω _ (l 𝛉)).
   now exact (mkCoh2Frame extraDepsCohs prevCohFrames q Hq r Hr ε ω d 𝛉).
 Defined.

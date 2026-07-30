@@ -1,5 +1,5 @@
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT HSet HGpd Notation LeSProp SSGpdLemmas.
+From Bonak Require Import SigT HSet HGpd Notation LeSProp RewLemmas SSGpdLemmas.
 
 Set Primitive Projections.
 Set Printing Projections.
@@ -469,11 +469,11 @@ Definition mkCohLayer `{extraDepsCohs: DepsCohsExtension p.+1 k depsCohs}
   mkCohLayerType q Hq r Hr d l.
 Proof.
   unfold mkCohLayerType, mkRestrLayer, mkLayer.
-  eapply rew_cohLayer with
+  eapply (rew_cohLayer33
     (P := fun x => depsCohs.(_deps).(_paintings).2 x)
     (rf0 := fun x => depsCohs.(_deps).(_restrFrames).2 0 leR_O x)
     (F := depsCohs.(_restrPaintings).2 q Hq)
-    (G := depsCohs.(_restrPaintings).2 r (Hr ↕ Hq)).
+    (G := depsCohs.(_restrPaintings).2 r (Hr ↕ Hq))).
   - now exact (cohPainting q Hq r Hr
       (((mkCohFrameTypesAndRestrFrames (mkRestrPaintings extraDepsCohs).1.1)
         .(RestrFramesDef) prevCohFrames.1).2 0 leR_O d) l).
