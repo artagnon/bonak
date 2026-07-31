@@ -420,22 +420,21 @@ Lemma mkCoh2Frame `(extraDepsCohs: DepsCohsExtension p.+1 k depsCohs)
   (prevCohFrames: mkCohFrameTypes
      (extraDeps := (mkDepsRestr; mkExtraDeps extraDepsCohs))
      (mkRestrPaintings extraDepsCohs).1):
-  forall q (Hq: q <= k) r (Hr: r <= q) (ε ω: arity)
-  (d: mkFrame (mkDepsRestr (depsCohs := toDepsCohs prevCohFrames.1)).(1))
-  (𝛉: arity),
+  forall q (Hq: q <= k) r (Hr: r <= q) (ε ω θ: arity)
+  (d: mkFrame (mkDepsRestr (depsCohs := toDepsCohs prevCohFrames.1)).(1)),
   f_equal
     (fun x => depsCohs.(_deps).(_restrFrames).2 q _ ε x)
-    (prevCohFrames.2 r (Hr ↕ ↑ Hq) 0 leR_O ω 𝛉 d)
-  • (depsCohs.(_cohs).2 q Hq 0 leR_O ε 𝛉
+    (prevCohFrames.2 r (Hr ↕ ↑ Hq) 0 leR_O ω θ d)
+  • (depsCohs.(_cohs).2 q Hq 0 leR_O ε θ
       (mkRestrFrame r.+1 (⇑ (Hr ↕ ↑ Hq)) ω d)
   • f_equal
-      (fun x => depsCohs.(_deps).(_restrFrames).2 0 leR_O 𝛉 x)
+      (fun x => depsCohs.(_deps).(_restrFrames).2 0 leR_O θ x)
       (prevCohFrames.2 q.+1 (⇑ Hq) r.+1 (⇑ Hr) ε ω d)) =
-  depsCohs.(_cohs).2 q Hq r Hr ε ω (mkRestrFrame 0 leR_O 𝛉 d)
+  depsCohs.(_cohs).2 q Hq r Hr ε ω (mkRestrFrame 0 leR_O θ d)
   • (f_equal
       (fun x => depsCohs.(_deps).(_restrFrames).2 r _ ω x)
-      (prevCohFrames.2 q.+1 (⇑ Hq) 0 leR_O ε 𝛉 d)
-  • depsCohs.(_cohs).2 r (Hr ↕ Hq) 0 leR_O ω 𝛉
+      (prevCohFrames.2 q.+1 (⇑ Hq) 0 leR_O ε θ d)
+  • depsCohs.(_cohs).2 r (Hr ↕ Hq) 0 leR_O ω θ
       (mkRestrFrame q.+2 (⇑ (⇑ Hq)) ε d)).
 Proof.
   now intros; apply depsCohs.(_deps).(_frames).2.(UIP).
@@ -458,14 +457,14 @@ Proof.
   apply (layer_rew_eq
     (P := fun x => depsCohs.(_deps).(_paintings).2 x)
     (rf0 := fun a x => depsCohs.(_deps).(_restrFrames).2 0 leR_O a x));
-    intros 𝛉.
+    intros θ.
   eapply (rew_cohLayer33
     (P := fun x => depsCohs.(_deps).(_paintings).2 x)
-    (rf0 := fun x => depsCohs.(_deps).(_restrFrames).2 0 leR_O 𝛉 x)
+    (rf0 := fun x => depsCohs.(_deps).(_restrFrames).2 0 leR_O θ x)
     (F := fun m c => depsCohs.(_restrPaintings).2 q Hq ε m c)
     (G := fun m c => depsCohs.(_restrPaintings).2 r (Hr ↕ Hq) ω m c)).
-  now exact (cohPaintings.2 q Hq r Hr ε ω _ (l 𝛉)).
-  now exact (mkCoh2Frame extraDepsCohs prevCohFrames q Hq r Hr ε ω d 𝛉).
+  now exact (cohPaintings.2 q Hq r Hr ε ω _ (l θ)).
+  now exact (mkCoh2Frame extraDepsCohs prevCohFrames q Hq r Hr ε ω θ d).
 Defined.
 
 Fixpoint mkCohFrames `{extraDepsCohs: DepsCohsExtension p k depsCohs}
