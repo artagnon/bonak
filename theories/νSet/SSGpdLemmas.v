@@ -1,7 +1,10 @@
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT Notation.
+From Bonak Require Import SigT Notation RewLemmas.
 
 Set Keyed Unification.
+
+Local Arguments rew_cohLayer33 {T1 T2 T3 X} P {S2 S3} rf0 {rfF rfG} F G
+  {d1 d2} E1 {m1 m2} C2 {n1 n2} D2 C1 D1 K aL aR _ _.
 
 Lemma eq_existT_curried_hex {A1 A2 A3 B: Type}
   {P1: A1 -> Type} {P2: A2 -> Type} {P3: A3 -> Type} {Q: B -> Type}
@@ -138,31 +141,6 @@ Proof.
   intros HHv'; now exact HHv'.
 Defined.
 
-Lemma rew_cohLayer {T1 T2 T3 X: Type} (P: X -> Type)
-  {S2: T2 -> Type} {S3: T3 -> Type}
-  (rf0: T1 -> X) {rfF: T2 -> X} {rfG: T3 -> X}
-  (F: forall m, S2 m -> P (rfF m))
-  (G: forall n, S3 n -> P (rfG n))
-  {d1 d2: T1} (E1: d1 = d2)
-  {m1 m2: T2} (C2: m1 = m2)
-  {n1 n2: T3} (D2: n1 = n2)
-  (C1: rfF m2 = rf0 d1) (D1: rfG n2 = rf0 d2)
-  (K: rfF m1 = rfG n1)
-  (aL: S2 m1) (aR: S3 n1):
-  rew [P] K in F m1 aL = G n1 aR ->
-  f_equal rfF C2 • (C1 • f_equal rf0 E1) =
-  K • (f_equal rfG D2 • D1) ->
-  rew [fun d => P (rf0 d)] E1 in rew [P] C1 in F m2 (rew [S2] C2 in aL)
-  = rew [P] D1 in G n2 (rew [S3] D2 in aR).
-Proof.
-  intros HC Hpath.
-  rewrite <- (map_subst F C2 aL), <- (map_subst G D2 aR).
-  rewrite <- HC.
-  rewrite (rew_map P rf0 E1), (rew_map P rfF C2), (rew_map P rfG D2).
-  rewrite 4 rew_compose.
-  now exact (f_equal (fun h => rew [P] h in F m1 aL) Hpath).
-Defined.
-
 Lemma rew_coh2Painting_restr0 {Tp Td: Type} {S: Tp -> Type} (P: Td -> Type)
   (rf0: Tp -> Td) {rfF rfG: Tp -> Td}
   (F: forall m, S m -> P (rfF m))
@@ -179,7 +157,7 @@ Lemma rew_coh2Painting_restr0 {Tp Td: Type} {S: Tp -> Type} (P: Td -> Type)
   (R0: {a: Tp &T P (rf0 a)} -> Type)
   {v0: R0 (d1; rew [P] C1 in F m2 (rew [S] C2 in aL))}
   {v1: R0 (d2; rew [P] D1 in G n2 (rew [S] D2 in aR))}
-  (Hv: rew [R0] (= E1; rew_cohLayer P rf0 F G E1 C2 D2 C1 D1 K aL aR HK HH)
+  (Hv: rew [R0] (= E1; rew_cohLayer33 P rf0 F G E1 C2 D2 C1 D1 K aL aR HK HH)
     in v0 = v1):
   rew [fun π: rfF m1 = rf0 d2 =>
       rew [P] π in F m1 aL = rew [P] D1 in G n2 (rew [S] D2 in aR)] HH in
@@ -189,12 +167,12 @@ Lemma rew_coh2Painting_restr0 {Tp Td: Type} {S: Tp -> Type} (P: Td -> Type)
       ⊙ sigT_map_eq (P := fun a => {u: P (rf0 a) &T R0 (a; u)}) (Q := P)
           (f := rf0) (fun a uv => uv.1)
           (eq_existT_curried_dep (Q := R0) (H := E1)
-            (Hu := rew_cohLayer P rf0 F G E1 C2 D2 C1 D1 K aL aR HK HH)
+            (Hu := rew_cohLayer33 P rf0 F G E1 C2 D2 C1 D1 K aL aR HK HH)
             (Hv := Hv)))) =
   HK ⊙ (sigT_map_eq (Q := P) G (eq_refl (x := rew [S] D2 in aR)) ⊙ eq_refl).
 Proof.
   rewrite (sigT_map_eq_existT_curried_dep_fst rf0 (fun a u => u) E1
-    (rew_cohLayer P rf0 F G E1 C2 D2 C1 D1 K aL aR HK HH) Hv).
+    (rew_cohLayer33 P rf0 F G E1 C2 D2 C1 D1 K aL aR HK HH) Hv).
   cbn [projT1].
   clear Hv v0 v1 R0.
   destruct E1, C2, D2.
@@ -372,19 +350,19 @@ Lemma rew_coh2Layer
         Fs (g0 dd23) (rew [S0] D13 in Rr1 m3 (rew [S1] b3 in a3))]
     HHs in
   (sigT_map_eq (fun x v => rew [PA] gq x in Fq (g0 x) v)
-     (rew_cohLayer S0 g0 Rr Rs E11 b1 b2 C11 D11 KB1 a1 a2 HKB1 HHB1)
-   ⊙ (rew_cohLayer PA f0 Fq Fs E12 D11 C13 (gq dd21) (gs dd13) (KA2 m2)
+     (rew_cohLayer33 S0 g0 Rr Rs E11 b1 b2 C11 D11 KB1 a1 a2 HKB1 HHB1)
+   ⊙ (rew_cohLayer33 PA f0 Fq Fs E12 D11 C13 (gq dd21) (gs dd13) (KA2 m2)
         (Rs m2 (rew [S1] b2 in a2)) (Rq1 m2 (rew [S1] b2 in a2))
         (HKA2 m2 (rew [S1] b2 in a2)) HH2
       ⊙ sigT_map_eq (fun x v => rew [PA] gs x in Fs (g0 x) v)
-          (rew_cohLayer S0 g0 Rq1 Rr1 E13 b2 b3 C13 D13 KB3 a2 a3
+          (rew_cohLayer33 S0 g0 Rq1 Rr1 E13 b2 b3 C13 D13 KB3 a2 a3
              HKB3 HHB3))) =
-  rew_cohLayer PA f0 Fq Fr E14 C11 C15 (gq dd11) (gr dd15) (KA4 m1)
+  rew_cohLayer33 PA f0 Fq Fr E14 C11 C15 (gq dd11) (gr dd15) (KA4 m1)
     (Rr m1 (rew [S1] b1 in a1)) (Rq1 m1 (rew [S1] b1 in a1))
     (HKA4 m1 (rew [S1] b1 in a1)) HH4
   ⊙ (sigT_map_eq (fun x v => rew [PA] gr x in Fr (g0 x) v)
-       (rew_cohLayer S0 g0 Rq1 Rs E15 b1 b3 C15 D15 KB5 a1 a3 HKB5 HHB5)
-     ⊙ rew_cohLayer PA f0 Fr Fs E16 D15 D13 (gr dd25) (gs dd23) (KA6 m3)
+       (rew_cohLayer33 S0 g0 Rq1 Rs E15 b1 b3 C15 D15 KB5 a1 a3 HKB5 HHB5)
+     ⊙ rew_cohLayer33 PA f0 Fr Fs E16 D15 D13 (gr dd25) (gs dd23) (KA6 m3)
          (Rs m3 (rew [S1] b3 in a3)) (Rr1 m3 (rew [S1] b3 in a3))
          (HKA6 m3 (rew [S1] b3 in a3)) HH6).
 Proof.

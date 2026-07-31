@@ -1,4 +1,3 @@
-From Stdlib Require Import Logic.FunctionalExtensionality.
 Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
@@ -310,15 +309,17 @@ Definition mkIdRestrReflLayerBelow {p k}
         ((ReflBelowOfReflCohsInf deps).(_reflFramesBelow)) deps.(_reflPaintingsBelow) _
           deps.(_cohReflRestrFramesBelowInf) i Hi d l).
 Proof.
-  apply functional_extensionality_dep.
-  intros θ.
-  eapply (rew_layer13
+  apply (layer_rew_eq
     (P := fun x => deps.(_depsCohs2).(_depsCohs).(_deps).(_paintings).2 x)
     (rf0 := fun a x =>
-      deps.(_depsCohs2).(_depsCohs).(_deps).(_restrFrames).2 0 leR_O a x)
+      deps.(_depsCohs2).(_depsCohs).(_deps).(_restrFrames).2 0 leR_O a x));
+    intros θ.
+  eapply (rew_cohLayer13
+    (P := fun x => deps.(_depsCohs2).(_depsCohs).(_deps).(_paintings).2 x)
+    (rf0 := fun x =>
+      deps.(_depsCohs2).(_depsCohs).(_deps).(_restrFrames).2 0 leR_O θ x)
     (G := fun m c =>
       deps.(_depsCohs2).(_depsCohs).(_restrPaintings).2 i Hi ε m c)).
-  now trivial.
   now exact (deps.(_idRestrReflPaintingsBelow).2 i Hi ε _ (l θ)).
   now apply (deps.(_depsCohs2).(_depsCohs).(_deps).(_frames).2.(UIP)).
 Defined.
@@ -1108,18 +1109,20 @@ Definition mkCohReflRestrLayerBelowInf {p k}
       prevCohReflRestrFrames
       q.+1 (⇑ Hq) d l).
 Proof.
-  apply functional_extensionality_dep.
-  intros θ.
-  eapply (rew_layer33
+  apply (layer_rew_eq
     (P := fun b => (mkDepsRestr (CohsOfReflCohs2 deps).(1)).(_paintings).2 b)
     (rf0 := fun a x =>
-      mkRestrFrame (depsCohs := (CohsOfReflCohs2 deps).(1)) 0 leR_O a x)
+      mkRestrFrame (depsCohs := (CohsOfReflCohs2 deps).(1)) 0 leR_O a x));
+    intros θ.
+  eapply (rew_cohLayer33
+    (P := fun b => (mkDepsRestr (CohsOfReflCohs2 deps).(1)).(_paintings).2 b)
+    (rf0 := fun x =>
+      mkRestrFrame (depsCohs := (CohsOfReflCohs2 deps).(1)) 0 leR_O θ x)
     (F := fun m c =>
       (ReflCohsInfOfReflCohs2 deps).(_reflPaintingsBelow).2 q Hq m c)
     (G := fun m c =>
       (mkDepsCohs (Cohs2OfReflCohs2 deps)).(1).(_restrPaintings).2
         r (Hr ↕ ↑ Hq) ε m c)).
-  now trivial.
   now exact (deps.(_cohReflRestrPaintingsBelowInf).2 q r Hq Hr ε _ (l θ)).
   now apply ((mkFrame (RestrOfReflCohs2 deps).(1)).(UIP)).
 Defined.
@@ -1188,18 +1191,20 @@ Definition mkCohReflRestrLayerBelowSup {p k}
       (mkDepsReflCohsInf deps).(1).(_cohReflRestrFramesBelowInf)
       q (Hq ↕ ↑ Hr) d l).
 Proof.
-  apply functional_extensionality_dep.
-  intros θ.
-  eapply (rew_layer33
+  apply (layer_rew_eq
     (P := fun b => (mkDepsRestr (CohsOfReflCohs2 deps).(1)).(_paintings).2 b)
     (rf0 := fun a x =>
-      mkRestrFrame (depsCohs := (CohsOfReflCohs2 deps).(1)) 0 leR_O a x)
+      mkRestrFrame (depsCohs := (CohsOfReflCohs2 deps).(1)) 0 leR_O a x));
+    intros θ.
+  eapply (rew_cohLayer33
+    (P := fun b => (mkDepsRestr (CohsOfReflCohs2 deps).(1)).(_paintings).2 b)
+    (rf0 := fun x =>
+      mkRestrFrame (depsCohs := (CohsOfReflCohs2 deps).(1)) 0 leR_O θ x)
     (F := fun m c =>
       (ReflCohsInfOfReflCohs2 deps).(_reflPaintingsBelow).2 q (Hq ↕ Hr) m c)
     (G := fun m c =>
       (CohsOfReflCohsInf (mkDepsReflCohsInf deps).(1)).(_restrPaintings).2
         r.+1 (⇑ Hr) ε m c)).
-  now trivial.
   now exact (deps.(_cohReflRestrPaintingsBelowSup).2 q r Hq Hr ε _ (l θ)).
   now apply ((mkFrame (RestrOfReflCohs2 deps).(1)).(UIP)).
 Defined.
@@ -1249,16 +1254,19 @@ Definition mkCohReflRestrLayerAboveSup {p k}
       (mkReflPaintingsAbove deps.(1).(_depsReflCohsSup) deps.(1).(_extraDepsReflCohsSup)) _
       prevCohReflRestrFrames q Hq d (l; c)).
 Proof.
-  apply functional_extensionality_dep.
-  intros θ.
+  apply (layer_rew_eq
+    (P := fun x => mkPainting (RestrExtOfReflCohs2 deps) x)
+    (rf0 := fun a x =>
+      mkRestrFrame (depsCohs := CohsOfReflCohs2 deps) 0 leR_O a x));
+    intros θ.
   eassert (coh_pair_eq: (_;_) = (_;_)).
   { unshelve eapply eq_existT_curried.
     now exact ((CohsOfReflCohs2 deps).(_cohs).2 r Hr 0 leR_O ε θ d).
     now exact ((Cohs2OfReflCohs2 deps).(_cohPaintings).2 r Hr 0 leR_O ε θ d (l; c)). }
-  eapply (rew_layer33
+  eapply (rew_cohLayer33
     (P := fun x => mkPainting (RestrExtOfReflCohs2 deps) x)
-    (rf0 := fun a x =>
-      mkRestrFrame (depsCohs := CohsOfReflCohs2 deps) 0 leR_O a x)
+    (rf0 := fun x =>
+      mkRestrFrame (depsCohs := CohsOfReflCohs2 deps) 0 leR_O θ x)
     (S2 := fun _ => unit)
     (rfF := fun x =>
       (ReflCohsInfOfReflCohs2 deps).(_reflFramesAbove).2 q Hq x.1 x.2)
@@ -1269,7 +1277,6 @@ Proof.
         r Hr ε m c')
     (C2 := coh_pair_eq)
     (aL := tt)).
-  now trivial.
   now exact (deps.(_cohReflRestrPaintingsAboveSup).2 q r Hq Hr ε _ _).
   now apply ((mkFrame (RestrOfReflCohsSup deps.(_depsReflCohsSup))).(UIP)).
 Defined.
@@ -1289,17 +1296,22 @@ Definition mkCohReflRestrLayerAboveSup0 {p k}
     (mkReflFrameAbove0 (mkDepsReflCohsInf deps).(1) d c).1
     (mkReflFrameAbove0 (mkDepsReflCohsInf deps).(1) d c).2.
 Proof.
-  apply functional_extensionality_dep; intro θ.
-  eapply (rew_layer22
+  apply (layer_rew_eq
     (P := fun b =>
       (CohsOfReflCohsInf (mkDepsReflCohsInf deps)).(_deps).(_paintings).2 b)
     (rf0 := fun a x =>
       (CohsOfReflCohsInf (mkDepsReflCohsInf deps)).(_deps).(_restrFrames).2
-        0 leR_O a x)
+        0 leR_O a x));
+    intro θ.
+  eapply (rew_cohLayer22
+    (P := fun b =>
+      (CohsOfReflCohsInf (mkDepsReflCohsInf deps)).(_deps).(_paintings).2 b)
+    (rf0 := fun x =>
+      (CohsOfReflCohsInf (mkDepsReflCohsInf deps)).(_deps).(_restrFrames).2
+        0 leR_O θ x)
     (G := fun m c =>
       (mkDepsReflCohsInf deps).(_depsCohs2).(_depsCohs).(_restrPaintings).2
         r Hr ε m c)).
-  now trivial.
   now trivial.
   now apply
     ((CohsOfReflCohsInf (mkDepsReflCohsInf deps)).(_deps).(_frames).2.(UIP)).
@@ -1389,20 +1401,25 @@ Definition mkCohReflBelowBelowLayer {p k}
       (ReflCohsInfOfReflCohs2 deps).(_cohReflRestrFramesBelowInf)
       q (Hq ↕ Hr) d l).
 Proof.
-  apply functional_extensionality_dep.
-  intro θ.
-  eapply (rew_layer33
+  apply (layer_rew_eq
     (P := fun b =>
       (mkDepsRestr (CohsOfReflCohsInf (mkDepsReflCohsInf deps).(1)))
         .(1).(_paintings).2 b)
     (rf0 := fun a x =>
       (mkDepsRestr (CohsOfReflCohsInf (mkDepsReflCohsInf deps).(1)))
-        .(1).(_restrFrames).2 0 leR_O a x)
+        .(1).(_restrFrames).2 0 leR_O a x));
+    intro θ.
+  eapply (rew_cohLayer33
+    (P := fun b =>
+      (mkDepsRestr (CohsOfReflCohsInf (mkDepsReflCohsInf deps).(1)))
+        .(1).(_paintings).2 b)
+    (rf0 := fun x =>
+      (mkDepsRestr (CohsOfReflCohsInf (mkDepsReflCohsInf deps).(1)))
+        .(1).(_restrFrames).2 0 leR_O θ x)
     (F := fun m c =>
       (mkDepsReflCohsInf deps).(1).(_reflPaintingsBelow).2 q (Hq ↕ ↑ Hr) m c)
     (G := fun m c =>
       (mkDepsReflCohsInf deps).(1).(_reflPaintingsBelow).2 r.+1 (⇑ Hr) m c)).
-  now trivial.
   now exact (deps.(_cohReflBelowBelowPaintings).2 q r Hq Hr _ (l θ)).
   now apply
     ((mkDepsRestr (CohsOfReflCohsInf (mkDepsReflCohsInf deps).(1)))
@@ -1450,8 +1467,15 @@ Definition mkCohReflAboveBelowLayer {p k}
     ((mkDepsReflCohsInf deps).(_reflFramesAbove).2 q.+1 (⇑ Hq) (d; l) c).1
     ((mkDepsReflCohsInf deps).(_reflFramesAbove).2 q.+1 (⇑ Hq) (d; l) c).2.
 Proof.
-  apply functional_extensionality_dep.
-  intro θ.
+  apply (layer_rew_eq
+    (P := fun b =>
+      (mkDepsRestr (CohsOfReflCohsInf
+        (mkDepsReflCohsSup deps).(1).(_depsReflCohsInf))).(_paintings).2 b)
+    (rf0 := fun a x =>
+      (mkDepsRestr (CohsOfReflCohsInf
+        (mkDepsReflCohsSup deps).(1).(_depsReflCohsInf))).(_restrFrames).2
+        0 leR_O a x));
+    intro θ.
   eassert (coh_below_inf_pair_eq: (_;_) = (_;_)).
   { unshelve eapply eq_existT_curried.
     - now exact ((ReflCohsInfOfReflCohs2 deps).(_cohReflRestrFramesBelowInf).2 r 0 Hr leR_O θ d).
@@ -1460,14 +1484,14 @@ Proof.
   { unshelve eapply eq_existT_curried.
     - now exact (deps.(_depsReflCohsSup).(_cohReflRestrFramesAboveSup).2 q 0 Hq leR_O θ d (l; c)).
     - now exact (deps.(_cohReflRestrPaintingsAboveSup).2 q 0 Hq leR_O θ d (l; c)). }
-  eapply (rew_layer33
+  eapply (rew_cohLayer33
     (P := fun b =>
       (mkDepsRestr (CohsOfReflCohsInf
         (mkDepsReflCohsSup deps).(1).(_depsReflCohsInf))).(_paintings).2 b)
-    (rf0 := fun a x =>
+    (rf0 := fun x =>
       (mkDepsRestr (CohsOfReflCohsInf
         (mkDepsReflCohsSup deps).(1).(_depsReflCohsInf))).(_restrFrames).2
-        0 leR_O a x)
+        0 leR_O θ x)
     (S2 := fun _ => unit)
     (rfF := fun x =>
       (mkDepsReflCohsSup deps).(1).(_depsReflCohsInf).(_reflFramesAbove).2
@@ -1485,7 +1509,6 @@ Proof.
     (D2 := coh_above_sup_pair_eq)
     (aL := tt)
     (aR := tt)).
-  now trivial.
   now exact (deps.(_cohReflAboveBelowPaintings).2 q r Hq Hr _ _).
   now apply
     ((mkDepsRestr (CohsOfReflCohsInf
@@ -1509,17 +1532,23 @@ Definition mkCohReflAboveBelowLayer0 {p k}
     ((mkDepsReflCohsInf deps).(_reflFramesAbove).2 0 leR_O d c).1
     ((mkDepsReflCohsInf deps).(_reflFramesAbove).2 0 leR_O d c).2.
 Proof.
-  apply functional_extensionality_dep; intro θ.
-  eapply (rew_layer22
+  apply (layer_rew_eq
     (P := fun b =>
       (mkDepsRestr (CohsOfReflCohsSup (mkDepsReflCohsSup deps).(1)))
         .(_paintings).2 b)
     (rf0 := fun a x =>
       (mkDepsRestr (CohsOfReflCohsSup (mkDepsReflCohsSup deps).(1)))
-        .(_restrFrames).2 0 leR_O a x)
+        .(_restrFrames).2 0 leR_O a x));
+    intro θ.
+  eapply (rew_cohLayer22
+    (P := fun b =>
+      (mkDepsRestr (CohsOfReflCohsSup (mkDepsReflCohsSup deps).(1)))
+        .(_paintings).2 b)
+    (rf0 := fun x =>
+      (mkDepsRestr (CohsOfReflCohsSup (mkDepsReflCohsSup deps).(1)))
+        .(_restrFrames).2 0 leR_O θ x)
     (G := fun m c =>
       (mkDepsReflCohsInf deps).(_reflPaintingsBelow).2 r Hr m c)).
-  now trivial.
   now trivial.
   now apply
     ((mkDepsRestr (CohsOfReflCohsSup (mkDepsReflCohsSup deps).(1)))
@@ -1586,8 +1615,14 @@ Definition mkCohReflAboveAboveLayer {p k}
     (((mkDepsReflCohsInf deps).(_reflFramesAbove).2 r.+1 (⇑ Hr) (d; l) c).2;
      (mkDepsReflCohsSup deps).(_reflPaintingsAbove).2 r.+1 (⇑ Hr) (d; l) c).
 Proof.
-  apply functional_extensionality_dep.
-  intro θ.
+  apply (layer_rew_eq
+    (P := fun x =>
+      (mkDepsRestr (CohsOfReflCohsInf (mkDepsReflCohsInf deps)))
+        .(_paintings).2 x)
+    (rf0 := fun a x =>
+      (mkDepsRestr (CohsOfReflCohsInf (mkDepsReflCohsInf deps)))
+        .(_restrFrames).2 0 leR_O a x));
+    intro θ.
   eassert (coh_above_sup_r_pair_eq: (_;_) = (_;_)).
   { unshelve eapply eq_existT_curried.
     - now exact (deps.(_depsReflCohsSup).(_cohReflRestrFramesAboveSup).2 r 0 Hr leR_O θ d (l; c)).
@@ -1596,13 +1631,13 @@ Proof.
   { unshelve eapply eq_existT_curried.
     - now exact (deps.(_depsReflCohsSup).(_cohReflRestrFramesAboveSup).2 q 0 (Hq ↕ Hr) leR_O θ d (l; c)).
     - now exact (deps.(_cohReflRestrPaintingsAboveSup).2 q 0 (Hq ↕ Hr) leR_O θ d (l; c)). }
-  eapply (rew_layer33
+  eapply (rew_cohLayer33
     (P := fun x =>
       (mkDepsRestr (CohsOfReflCohsInf (mkDepsReflCohsInf deps)))
         .(_paintings).2 x)
-    (rf0 := fun a x =>
+    (rf0 := fun x =>
       (mkDepsRestr (CohsOfReflCohsInf (mkDepsReflCohsInf deps)))
-        .(_restrFrames).2 0 leR_O a x)
+        .(_restrFrames).2 0 leR_O θ x)
     (S2 := fun _ => unit)
     (rfF := fun x =>
       (mkReflFramesAbove deps.(_depsReflCohsSup)).2 r.+1 (⇑ Hr) x.1 x.2)
@@ -1617,7 +1652,6 @@ Proof.
     (D2 := coh_above_sup_r_pair_eq)
     (aL := tt)
     (aR := tt)).
-  now trivial.
   now exact (deps.(_cohReflAboveAbovePaintings).2 q r Hq Hr _ _).
   now apply
     ((mkDepsRestr (CohsOfReflCohsInf (mkDepsReflCohsInf deps)))
@@ -1641,19 +1675,26 @@ Definition mkCohReflAboveAboveLayer0 {p k}
     ((mkDepsReflCohsInf deps).(_reflFramesAbove).2 r Hr d c)
     ((mkDepsReflCohsSup deps).(_reflPaintingsAbove).2 r Hr d c).
 Proof.
-  apply functional_extensionality_dep; intro θ.
-  eassert (coh_id_pair_eq: (_;_) = (_;_)).
-  { unshelve eapply eq_existT_curried.
-    - now exact (mkIdRestrReflFrameBelow (ReflCohsInfOfReflCohs2 deps) 0 leR_O θ d).
-    - now exact (mkIdRestrReflPaintingBelow deps.(_depsReflCohsSup)
-        deps.(_extraDepsReflCohsSup) 0 leR_O θ d c). }
-  eapply (rew_layer31
+  apply (layer_rew_eq
     (P := fun b =>
       (mkDepsRestr (CohsOfReflCohsSup (mkDepsReflCohsSup deps)))
         .(_paintings).2 b)
     (rf0 := fun a x =>
       (mkDepsRestr (CohsOfReflCohsSup (mkDepsReflCohsSup deps)))
-        .(_restrFrames).2 0 leR_O a x)
+        .(_restrFrames).2 0 leR_O a x));
+    intro θ.
+  eassert (coh_id_pair_eq: (_;_) = (_;_)).
+  { unshelve eapply eq_existT_curried.
+    - now exact (mkIdRestrReflFrameBelow (ReflCohsInfOfReflCohs2 deps) 0 leR_O θ d).
+    - now exact (mkIdRestrReflPaintingBelow deps.(_depsReflCohsSup)
+        deps.(_extraDepsReflCohsSup) 0 leR_O θ d c). }
+  eapply (rew_cohLayer31
+    (P := fun b =>
+      (mkDepsRestr (CohsOfReflCohsSup (mkDepsReflCohsSup deps)))
+        .(_paintings).2 b)
+    (rf0 := fun x =>
+      (mkDepsRestr (CohsOfReflCohsSup (mkDepsReflCohsSup deps)))
+        .(_restrFrames).2 0 leR_O θ x)
     (S2 := fun _ => unit)
     (rfF := fun x =>
       (mkReflFramesAbove deps.(_depsReflCohsSup)).2 r Hr x.1 x.2)
@@ -1661,7 +1702,6 @@ Proof.
       deps.(_depsReflCohsSup) deps.(_extraDepsReflCohsSup) r Hr x.1 x.2)
     (C2 := coh_id_pair_eq)
     (aL := tt)).
-  now trivial.
   now trivial.
   now apply
     ((mkDepsRestr (CohsOfReflCohsSup (mkDepsReflCohsSup deps)))
