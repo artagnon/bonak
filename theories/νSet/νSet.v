@@ -1,16 +1,13 @@
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT RewLemmas HSet Notation LeSProp.
+From Bonak Require Import SigT νSet.Layer RewLemmas HSet Notation LeSProp.
 
 Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.
 
-Module Type AritySig.
-  Parameter arity : HSet.
-End AritySig.
-
-Module νSet (A : AritySig).
+Module νSet (A : LayerSig).
 Import A.
+Module Export LT := LayerTheory A.
 
 (** The type of lists {frame(n,0);...;frame(n,p-1)} for arbitrary k := n-p
     (the non-mandatory dependency in k is useful for type inference) *)
@@ -78,7 +75,7 @@ Definition mkLayer `{paintings: mkPaintingTypes p.+1 k frames}
   {prev: RestrFrameTypeBlock p k.+1}
   (restrFrames: mkRestrFrameTypesStep frames prev)
   (d: (prev.(FrameDef) restrFrames.1).2) :=
-  hforall ε, paintings.2 (restrFrames.2 0 leR_O ε d).
+  Layer (fun ε => paintings.2 (restrFrames.2 0 leR_O ε d)).
 
 Fixpoint mkRestrFrameTypesAndFrames {p k}:
   forall `(paintings: mkPaintingTypes p k frames), RestrFrameTypeBlock p k :=
@@ -216,8 +213,9 @@ Definition mkRestrLayer `{extraDeps: DepsRestrExtension p.+1 k deps}
   (d: mkFrame (toDepsRestr (prev.(RestrFramesDef) cohFrames.1)).(1)):
   mkLayer (prev.(RestrFramesDef) cohFrames.1) d -> mkLayer deps.(_restrFrames)
     ((prev.(RestrFramesDef) cohFrames.1).2 q.+1 (⇑ Hq) ε d) :=
-  fun l ω => rew [deps.(_paintings).2] cohFrames.2 q Hq 0 leR_O ε ω d in
-             restrPaintings.2 q Hq ε _ (l ω).
+  lmap (fun ω c =>
+    rew [deps.(_paintings).2] cohFrames.2 q Hq 0 leR_O ε ω d in
+    restrPaintings.2 q Hq ε _ c).
 
 (** Under previous assumptions, and, additionally:
     - {restrPainting(n,0);...;restrPainting(n,p-1)}
@@ -367,7 +365,7 @@ Fixpoint mkRestrPainting `(extraDepsCohs: DepsCohsExtension p k depsCohs)
     (mkPaintings (mkDepsRestr; mkExtraDeps extraDepsCohs)).2 d ->
     mkDepsRestr.(_paintings).2 (mkDepsRestr.(_restrFrames).2 q Hq ε d) :=
   match q with
-  | 0 => fun _ ε _ '(l; _) => l ε
+  | 0 => fun _ ε _ '(l; _) => nth l ε
   | q.+1 =>
     match extraDepsCohs with
     | TopCohDep E => fun Hq _ _ _ => match leR_O_contra Hq with end
@@ -454,7 +452,7 @@ Definition mkCohLayer `{extraDepsCohs: DepsCohsExtension p.+1 k depsCohs}
     mkRestrLayer depsCohs.(_restrPaintings) depsCohs.(_cohs) r (Hr ↕ Hq) ω _
       (mkRestrLayer (mkRestrPaintings extraDepsCohs).1 _ q.+1 (⇑ Hq) ε d l).
 Proof.
-  apply (layer_rew_eq
+  apply (lmap2_rew_eq
     (P := fun x => depsCohs.(_deps).(_paintings).2 x)
     (rf0 := fun a x => depsCohs.(_deps).(_restrFrames).2 0 leR_O a x));
     intros θ.
@@ -463,7 +461,7 @@ Proof.
     (rf0 := fun x => depsCohs.(_deps).(_restrFrames).2 0 leR_O θ x)
     (F := fun m c => depsCohs.(_restrPaintings).2 q Hq ε m c)
     (G := fun m c => depsCohs.(_restrPaintings).2 r (Hr ↕ Hq) ω m c)).
-  now exact (cohPaintings.2 q Hq r Hr ε ω _ (l θ)).
+  now exact (cohPaintings.2 q Hq r Hr ε ω _ (nth l θ)).
   now exact (mkCoh2Frame extraDepsCohs prevCohFrames q Hq r Hr ε ω θ d).
 Defined.
 
@@ -550,7 +548,7 @@ Fixpoint mkCohPainting `{depsCohs2: DepsCohs2 p k}
 Proof.
   red; intros *. destruct c as (l, c), r.
   - (* r = 0 *)
-    now trivial.
+    simpl. now rewrite nth_lmap.
   - (* r = r'+1, q is necessarily q'+1 and extraDepsCohs non empty *)
     destruct q.
     { exfalso; now apply leR_O_contra in Hr. }
@@ -650,22 +648,14 @@ Definition νSets := νSetFrom 0 tt.
 
 End νSet.
 
-Module ArityUnit <: AritySig.
-  Definition arity := hunit.
-End ArityUnit.
+Module νSetSimplicial := νSet SimplicialLayer.
+Module νSetCubical := νSet CubicalLayer.
 
-Module ArityBool <: AritySig.
-  Definition arity := hbool.
-End ArityBool.
-
-Module νSetUnit := νSet ArityUnit.
-Module νSetBool := νSet ArityBool.
-
-Definition AugmentedSemiSimplicial := νSetUnit.νSets.
-Definition SemiSimplicial := νSetUnit.νSetFrom 1 (tt; fun _ => hunit).
-Definition SemiCubical := νSetBool.νSets.
+Definition AugmentedSemiSimplicial := νSetSimplicial.νSets.
+Definition SemiSimplicial := νSetSimplicial.νSetFrom 1 (tt; fun _ => hunit).
+Definition SemiCubical := νSetCubical.νSets.
 
 (** Some example *)
 
-Example SemiSimplicial4 := Eval compute in (νSetUnit.νSetAt 4).(νSetUnit.prefix _).
+Example SemiSimplicial4 := Eval compute in (νSetSimplicial.νSetAt 4).(νSetSimplicial.prefix _).
 Print SemiSimplicial4.

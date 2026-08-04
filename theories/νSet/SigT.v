@@ -103,13 +103,6 @@ Proof.
   now destruct q, p.
 Defined.
 
-Lemma sigT_map_eq_id_refl {A B: Type} {Q: B -> Type} (f: A -> B)
-  {x: A} {u v: Q (f x)} (q: u = v):
-  @sigT_map_eq A B (fun a => Q (f a)) Q f (fun a u => u) x x u v eq_refl q = q.
-Proof.
-  now destruct q.
-Defined.
-
 Lemma sigT_map_eq_refl {A B: Type} {P: A -> Type} {Q: B -> Type}
   {f: A -> B} (g: forall a, P a -> Q (f a))
   {x: A} {u v: P x} (q: u = v):
@@ -126,23 +119,6 @@ Lemma f_equal_eq_existT_curried {A B: Type} {P: A -> Type} {Q: B -> Type}
   (= f_equal f p; sigT_map_eq g q).
 Proof.
   now destruct q, p.
-Defined.
-
-Lemma sigT_map_eq_existT_curried_dep_fst {A B: Type} {P: A -> Type}
-  {P': B -> Type} {Q: {a: A &T P a} -> Type}
-  (f: A -> B) (g: forall a, P a -> P' (f a))
-  {x y: A} {u: P x} {v: Q (x; u)}
-  {u': P y} {v': Q (y; u')}
-  (H: x = y) (Hu: rew [P] H in u = u')
-  (Hv: rew [Q] (=H; Hu) in v = v'):
-  sigT_map_eq
-    (P := fun a => {u: P a &T Q (a; u)})
-    (Q := P')
-    (fun a uv => g a uv.1)
-    (eq_existT_curried_dep (H := H) (Hu := Hu) (Hv := Hv)) =
-  sigT_map_eq g Hu.
-Proof.
-  now destruct Hv, Hu, H.
 Defined.
 
 Lemma sigT_map_eq_existT_curried_dep_curried {A B: Type} {P: A -> Type}
