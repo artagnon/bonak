@@ -3,6 +3,7 @@ theories/νSet/SigT.v
 theories/νSet/Notation.v
 theories/νSet/LeSProp.v
 theories/νSet/HSet.v
+theories/νSet/Chain.v
 theories/νSet/RewLemmas.v
 theories/νSet/Layer.v
 theories/νSet/νSet.v
