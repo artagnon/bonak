@@ -60,18 +60,63 @@ Proof.
   now destruct p.
 Defined.
 
+(** Layer-expression syntax — the reflection of the {[lam], [lmap]}
+    spellings of a layer. [interpL] is the layer an expression denotes; [nthE]
+    computes its components directly from layer expressions, without using
+    [nth_lam]. [nth_interpL] relates the two. *)
+
+Inductive LExp: (arity -> HSet) -> Type :=
+| LVar {B: arity -> HSet}: Layer B -> LExp B
+| LLam {B: arity -> HSet}: (forall ω, B ω) -> LExp B
+| LMap {B C: arity -> HSet}:
+    (forall ω, B ω -> C ω) -> LExp B -> LExp C.
+
+Fixpoint interpL {B} (E: LExp B): Layer B :=
+  match E with
+  | LVar l => l
+  | LLam f => lam f
+  | LMap G E => lmap G (interpL E)
+  end.
+
+Fixpoint nthE {B} (E: LExp B) (ω: arity): B ω :=
+  match E with
+  | LVar l => nth l ω
+  | LLam f => f ω
+  | LMap G E => G ω (nthE E ω)
+  end.
+
+Lemma nth_interpL {B} (E: LExp B) ω: nth (interpL E) ω = nthE E ω.
+Proof.
+  induction E; cbn.
+  - reflexivity.
+  - now apply nth_lam.
+  - rewrite nth_lmap. now rewrite IHE.
+Defined.
+
 Section Bridges.
 Context {T X: Type} {P: X -> HSet} {rf0: arity -> T -> X}
         {d1 d2: T} {E1: d1 = d2}.
+
+(** A single bridge lemma for layer expressions; every bridge lemma below is
+    an instance by conversion, since [interpL] and [nthE] compute on canonical
+    syntax. *)
+Lemma layer_exp_rew_eq {LE: LExp (fun ω => P (rf0 ω d1))}
+  {RE: LExp (fun ω => P (rf0 ω d2))}:
+  (forall ω, rew [fun d => P (rf0 ω d)] E1 in nthE LE ω = nthE RE ω) ->
+  rew [fun d => Layer (fun ω => P (rf0 ω d))] E1 in
+  interpL LE = interpL RE.
+Proof.
+  intro H. apply ext; intro ω.
+  rewrite (nth_rew (B := fun d ω => P (rf0 ω d)) E1).
+  rewrite 2 nth_interpL. now exact (H ω).
+Defined.
 
 Lemma layer_rew_eq {l: Layer (fun ω => P (rf0 ω d1))}
   {l': Layer (fun ω => P (rf0 ω d2))}:
   (forall ω, rew [fun d => P (rf0 ω d)] E1 in nth l ω = nth l' ω) ->
   rew [fun d => Layer (fun ω => P (rf0 ω d))] E1 in l = l'.
 Proof.
-  intro H. apply ext; intro ω.
-  rewrite (nth_rew (B := fun d ω => P (rf0 ω d)) E1).
-  now exact (H ω).
+  now exact (layer_exp_rew_eq (LE := LVar l) (RE := LVar l')).
 Defined.
 
 Lemma lam_rew_eq {f: forall ω, P (rf0 ω d1)} {g: forall ω, P (rf0 ω d2)}:
@@ -79,8 +124,7 @@ Lemma lam_rew_eq {f: forall ω, P (rf0 ω d1)} {g: forall ω, P (rf0 ω d2)}:
   rew [fun d => Layer (fun ω => P (rf0 ω d))] E1 in
   lam f = lam g.
 Proof.
-  intro H. apply layer_rew_eq; intro ω.
-  rewrite 2 nth_lam. now exact (H ω).
+  now exact (layer_exp_rew_eq (LE := LLam f) (RE := LLam g)).
 Defined.
 
 Lemma lam_lmap_rew_eq {B: arity -> HSet} {f: forall ω, P (rf0 ω d1)}
@@ -89,8 +133,7 @@ Lemma lam_lmap_rew_eq {B: arity -> HSet} {f: forall ω, P (rf0 ω d1)}
   rew [fun d => Layer (fun ω => P (rf0 ω d))] E1 in
   lam f = lmap G l.
 Proof.
-  intro H. apply layer_rew_eq; intro ω.
-  rewrite nth_lam, nth_lmap. now exact (H ω).
+  now exact (layer_exp_rew_eq (LE := LLam f) (RE := LMap G (LVar l))).
 Defined.
 
 Lemma lam_lmap_lam_rew_eq {C: arity -> HSet} {f: forall ω, P (rf0 ω d1)}
@@ -99,8 +142,7 @@ Lemma lam_lmap_lam_rew_eq {C: arity -> HSet} {f: forall ω, P (rf0 ω d1)}
   rew [fun d => Layer (fun ω => P (rf0 ω d))] E1 in
   lam f = lmap G (lam g).
 Proof.
-  intro H. apply layer_rew_eq; intro ω.
-  rewrite nth_lmap, 2 nth_lam. now exact (H ω).
+  now exact (layer_exp_rew_eq (LE := LLam f) (RE := LMap G (LLam g))).
 Defined.
 
 Lemma layer_lmap2_rew_eq {B1: arity -> HSet} {l: Layer (fun ω => P (rf0 ω d1))}
@@ -110,8 +152,8 @@ Lemma layer_lmap2_rew_eq {B1: arity -> HSet} {l: Layer (fun ω => P (rf0 ω d1))
   rew [fun d => Layer (fun ω => P (rf0 ω d))] E1 in
   l = lmap G2 (lmap G1 l).
 Proof.
-  intro H. apply layer_rew_eq; intro ω.
-  rewrite 2 nth_lmap. now exact (H ω).
+  now exact (layer_exp_rew_eq (LE := LVar l)
+    (RE := LMap G2 (LMap G1 (LVar l)))).
 Defined.
 
 Lemma lmap2_rew_eq {B B1 B2: arity -> HSet} {l: Layer B}
@@ -122,8 +164,9 @@ Lemma lmap2_rew_eq {B B1 B2: arity -> HSet} {l: Layer B}
   rew [fun d => Layer (fun ω => P (rf0 ω d))] E1 in
   lmap F2 (lmap F1 l) = lmap G2 (lmap G1 l).
 Proof.
-  intro H. apply layer_rew_eq; intro ω.
-  rewrite 4 nth_lmap. now exact (H ω).
+  now exact (layer_exp_rew_eq
+    (LE := LMap F2 (LMap F1 (LVar l)))
+    (RE := LMap G2 (LMap G1 (LVar l)))).
 Defined.
 
 End Bridges.
