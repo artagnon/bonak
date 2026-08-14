@@ -203,3 +203,11 @@ Lemma sigT_trans_eq_existT_curried_dep {A: Type} {P: A -> Type}
 Proof.
   now destruct Hv', Hu', H', Hv, Hu, H.
 Defined.
+
+Lemma rew_sigT_fst_const {A B: Type} {Q: A -> B -> Type} {x y: A}
+  (E: x = y) (b: B) (q: Q x b):
+  rew [fun a => {b0: B &T Q a b0}] E in (b; q) =
+  (b; rew [fun a => Q a b] E in q).
+Proof.
+  now destruct E.
+Defined.

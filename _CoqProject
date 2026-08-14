@@ -1,9 +1,13 @@
 -R _build/default/theories Bonak
-theories/νSet/SigT.v
-theories/νSet/Notation.v
-theories/νSet/LeSProp.v
-theories/νSet/HSet.v
-theories/νSet/RewLemmas.v
+theories/νSet/Lib/SigT.v
+theories/νSet/Lib/Notation.v
+theories/νSet/Lib/LeSProp.v
+theories/νSet/Lib/HSet.v
+theories/νSet/Lib/RewLemmas.v
+theories/νSet/Lib/NatLemmas.v
+theories/νSet/Lib/Equiv.v
+theories/νSet/Lib/Funext.v
+theories/νSet/Lib/Univalence.v
 theories/νSet/Layer.v
 theories/νSet/νSet.v
 theories/νSet/νDgnSet.v
@@ -11,3 +15,12 @@ theories/νSet/νGpd/HGpd.v
 theories/νSet/νGpd/Layer.v
 theories/νSet/νGpd/Lemmas.v
 theories/νSet/νGpd.v
+theories/νSet/Presheaf.v
+theories/νSet/Equiv/PresheafEquiv.v
+theories/νSet/Equiv/νSetEquiv.v
+theories/νSet/Equiv/Face.v
+theories/νSet/Equiv/νSetOfPresheaf.v
+theories/νSet/Equiv/PresheafOfνSet.v
+theories/νSet/Equiv/νSetRoundtrip.v
+theories/νSet/Equiv/PresheafRoundtrip.v
+theories/νSet/Equiv/Correspondence.v
