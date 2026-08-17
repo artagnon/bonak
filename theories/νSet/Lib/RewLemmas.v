@@ -42,10 +42,48 @@ Proof.
   now destruct e, h.
 Defined.
 
+Lemma eq_trans_shift_l {A} {x y z: A} (p: x = y) (q: y = z) (r: x = z):
+  p • q = r -> q = eq_sym p • r.
+Proof.
+  destruct p, q. intro H. now destruct H.
+Qed.
+
+Lemma eq_trans_nat_id {A} {f: A -> A} (α: forall a, f a = a) {x y: A}
+  (p: x = y): α x • p = f_equal f p • α y.
+Proof.
+  destruct p. symmetry. apply eq_trans_refl_l.
+Qed.
+
+Lemma rew_align {A: Type} {P: A -> Type} {x x' y: A}
+  {e: x = y} {e': x' = y} (b: x = x') {v: P x} {v': P x'}
+  (Hv: rew [P] b in v = v') (Hcoh: e = b • e'):
+  rew [P] e in v = rew [P] e' in v'.
+Proof.
+  destruct Hv, b. now rewrite Hcoh, eq_trans_refl_l.
+Qed.
+
+Lemma rew_sym_cancel {A: Type} {P: A -> Type} {x y: A} (e: x = y) (a: P x):
+  rew [P] (eq_sym e) in rew [P] e in a = a.
+Proof.
+  now destruct e.
+Qed.
+
+Lemma rew_sym_cancel_r {A: Type} {P: A -> Type} {x y: A} (e: x = y)
+  (b: P y): rew [P] e in rew [P] (eq_sym e) in b = b.
+Proof.
+  now destruct e.
+Qed.
+
+Lemma eq_sym_f_equal {A B: Type} (f: A -> B) {x y: A} (e: x = y):
+  eq_sym (f_equal f e) = f_equal f (eq_sym e).
+Proof.
+  now destruct e.
+Qed.
+
 (** Fused transport-chain lemmas for layer coherence proofs
 
-    [rew_cohLayer<NM>] closes a layer coherence goal in one step, once a bridge
-    (Layer.v) has taken the pointwise step: it equates two chains of transports,
+    [rew_cohLayer<NM>] closes a layer coherence goal after a lemma from
+    [Layer.v] proves the pointwise equality. It equates two transport chains,
     N on the left-hand side and M on the right, whose starting elements are
     identified by the painting coherence. A call site supplies only the two
     premises: the painting coherence and the 2-dimensional frame coherence

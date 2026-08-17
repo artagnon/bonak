@@ -34,6 +34,11 @@ Definition hunit@{m}: HSet@{m} := {|
   UIP := unit_UIP;
 |}.
 
+Lemma hunit_ext (x y: hunit): x = y.
+Proof.
+  now destruct x, y.
+Defined.
+
 Definition hbool@{m}: HSet@{m} := {|
   Dom := bool;
   UIP := bool_UIP;
@@ -106,3 +111,14 @@ Notation "'hforall' x .. y , P" :=
   (hpiT (fun x => .. (hpiT (fun y => P%type)) ..))
   (at level 10, x binder, y binder, P at level 200,
   format "'[  ' '[  ' 'hforall'  x  ..  y ']' ,  '/' P ']'"): type_scope.
+
+(** [eq] over an [HSet], as an [HSet]  *)
+
+Definition eq_hprop_UIP {A: Type} (h: forall x y: A, x = y) {x y: A}
+  (p q: x = y): p = q :=
+  eq_proofs_unicity_on (fun y => or_introl (h x y)) p q.
+
+Definition hEq {A: HSet} (x y: A): HSet := {|
+  Dom := x = y;
+  UIP := fun p q α β => eq_hprop_UIP (fun p q => A.(UIP)) α β;
+|}.

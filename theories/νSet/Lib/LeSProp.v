@@ -67,3 +67,24 @@ Qed.
 
 Notation "⇑ p" := (leR_raise_both p) (at level 40).
 Infix "<=" := leR: nat_scope.
+
+Definition leR_eq {a b n: nat} (e: a = b): a <= n -> b <= n :=
+  match e with eq_refl => fun H => H end.
+
+Definition leR_eq_r {a n n': nat} (e: n = n'): a <= n -> a <= n' :=
+  match e with eq_refl => fun H => H end.
+
+Definition leR_add_shift {q p n: nat}: q + p.+1 <= n -> q.+1 + p <= n :=
+  leR_eq (eq_sym (plus_n_Sm q p)).
+
+Fixpoint leR_add_l (q: nat) {p: nat}: p <= q + p :=
+  match q with
+  | 0 => leR_refl
+  | S q => ↑ (leR_add_l q)
+  end.
+
+Fixpoint leR_add_r (p L: nat) {struct L}: p <= p + L :=
+  match L with
+  | 0 => leR_eq_r (plus_n_O p) leR_refl
+  | S L => leR_eq_r (plus_n_Sm p L) (↑ (leR_add_r p L))
+  end.
