@@ -1,8 +1,14 @@
-(** The translation side of the backward round trip [f ∘ g] of the
-    correspondence: [fg: νSetFromEquiv trTower0 (f (g X)) X].
+(** The indexed side of the backward round trip [f ∘ g] of the
+    correspondence: [fg: νSetFromEquiv rel0 (f (g X)) X].
 
-    This file constructs the translation-equipped chains, filler
-    equivalences, and level identifications used by the coinductive proof. *)
+    The bisimulation is built level by level. At each level the cells of the
+    presheaf [g X] in the ambient dimension are identified with the total
+    space of the position reached in [X] (the descent witness [Desc]), and
+    the candidate fillers of [f (g X)] over a frame transported along the
+    prefix equality contract onto the fillers of [X] ([fillerEquivOf]). The
+    frame identification carried along the corecursion states that the
+    candidate frame of a transported cell is the transport of its frame; it
+    steps by [νFaceEq], every face of the two frames agreeing. *)
 
 Import Logic.EqNotations.
 
@@ -20,103 +26,14 @@ Import A.
 
 Module Export PresheafOfνSet := PresheafOfνSet.PresheafOfνSet A.
 
-(** The face maps commute with the translations
-
-    Chains of translation-equipped stages map to [DepsCohsChain]s on both
-    sides. Along these chains, [getFrame] and [getPainting] compute on
-    translated frames and paintings, and [νFace] commutes with the
-    translations. This supplies the face equalities used by the [f ∘ g]
-    frame identification. *)
-
-Inductive TrCohsChain {P K} (TCTop: TrDepsCohs P K):
-  forall {p k}, TrDepsCohs p k -> Type :=
-| TrCohsChainNil: TrCohsChain TCTop TCTop
-| TrCohsChainCons {p k} {TC: TrDepsCohs p.+1 k}:
-    TrCohsChain TCTop TC -> TrCohsChain TCTop (proj1TrDepsCohs TC).
-
-Arguments TrCohsChainNil {P K TCTop}.
-Arguments TrCohsChainCons {P K TCTop p k TC} _.
-
-Fixpoint trCohsChainA {P K} {TCTop: TrDepsCohs P K}
-  {p k} {TC: TrDepsCohs p k} (C: TrCohsChain TCTop TC):
-  DepsCohsChain (trDepsCohsA TCTop) (trDepsCohsA TC) :=
-  match C with
-  | TrCohsChainNil => DepsCohsChainNil
-  | TrCohsChainCons C' => DepsCohsChainCons (trCohsChainA C')
-  end.
-
-Fixpoint trCohsChainB {P K} {TCTop: TrDepsCohs P K}
-  {p k} {TC: TrDepsCohs p k} (C: TrCohsChain TCTop TC):
-  DepsCohsChain (trDepsCohsB TCTop) (trDepsCohsB TC) :=
-  match C with
-  | TrCohsChainNil => DepsCohsChainNil
-  | TrCohsChainCons C' => DepsCohsChainCons (trCohsChainB C')
-  end.
-
-Lemma trGetFrame {P K} {TCTop: TrDepsCohs P K}
-  {p k} {TC: TrDepsCohs p k} (C: TrCohsChain TCTop TC)
-  (d: mkFrame (mkDepsRestr (depsCohs := trDepsCohsB TCTop))):
-  getFrame (cohsChainNext (trCohsChainA C))
-    (mkFrameEqv (mkTrDepsRestr TCTop) d) =
-  mkFrameEqv (mkTrDepsRestr TC)
-    (getFrame (cohsChainNext (trCohsChainB C)) d).
-Proof.
-  induction C; cbn; [now reflexivity | now rewrite IHC].
-Qed.
-
-Lemma trGetPainting {P K} {TCTop: TrDepsCohs P K}
-  {p k} {TC: TrDepsCohs p k} (C: TrCohsChain TCTop TC)
-  (d: mkFrame TC.(_trDeps).(_depsB))
-  (cp: mkPainting TC.(_tExtB) d):
-  getPainting (cohsChainExt (trCohsChainA C))
-    (mkFrameEqv TC.(_trDeps) d) (mkPaintingEqv TC.(_trExt) d cp) =
-  (mkFrameEqv TCTop.(_trDeps)
-     (getPainting (cohsChainExt (trCohsChainB C)) d cp).1;
-   mkPaintingEqv TCTop.(_trExt)
-     (getPainting (cohsChainExt (trCohsChainB C)) d cp).1
-     (getPainting (cohsChainExt (trCohsChainB C)) d cp).2).
-Proof.
-  revert d cp; induction C; intros d cp.
-  - now reflexivity.
-  - now exact (IHC (d; cp.1) cp.2).
-Qed.
-
-(** [νFace] on a translated frame is the translated [νFace]: one
-    cancellation of the diagonal translation coherence against the
-    layer's transport, then the painting round trip. *)
-
-Lemma νFaceTr {P K} {TCTop: TrDepsCohs P K}
-  {p k} {TC: TrDepsCohs p k} (C: TrCohsChain TCTop TC) (ε: arity)
-  (d: mkFrame (mkDepsRestr (depsCohs := trDepsCohsB TCTop))):
-  νFace (trCohsChainA C) ε (mkFrameEqv (mkTrDepsRestr TCTop) d) =
-  (mkFrameEqv TCTop.(_trDeps) (νFace (trCohsChainB C) ε d).1;
-   mkPaintingEqv TCTop.(_trExt) (νFace (trCohsChainB C) ε d).1
-     (νFace (trCohsChainB C) ε d).2).
-Proof.
-  unfold νFace.
-  rewrite trGetFrame.
-  rewrite (trLayerEqvNth (mkPaintingEqvs TC.(_trExt))
-    (mkTrRestrFrames TC) _ _ ε).
-  refine (f_equal
-    (fun z: {d0: mkFrame TC.(_trDeps).(_depsA) &T
-       mkPainting TC.(_tExtA) d0} =>
-     getPainting (cohsChainExt (trCohsChainA C)) z.1 z.2)
-    (eq_existT_curried
-      (eq_sym ((mkTrRestrFrames TC).2 0 leR_O ε
-        (getFrame (cohsChainNext (trCohsChainB C)) d).1))
-      (rew_sym_cancel _ _)) • _).
-  now exact (trGetPainting C _ _).
-Qed.
-
 (** Lifting arbitrary chains to equipped chains
 
     [νFaceEq]'s hypothesis quantifies over *arbitrary* [DepsCohsChain]s
-    from the shared top. Both equipped chain types — [PshCohsChain] on the
-    presheaf side, [TrCohsChain] on the translation side — step by
-    [proj1DepsCohs] on their [DepsCohs] images, so every chain is the
-    image of an equipped one; the identification is carried as a
-    sigma-package equality (the result type of [νFace] does not depend on
-    the endpoint, so packages can be rewritten wholesale). *)
+    from the shared top. On the presheaf side the equipped chains
+    ([PshCohsChain]) step by [proj1DepsCohs] on their [DepsCohs] images, so
+    every chain is the image of an equipped one; the identification is
+    carried as a sigma-package equality (the result type of [νFace] does
+    not depend on the endpoint, so packages can be rewritten wholesale). *)
 
 Lemma cohsChainStage {P K} {dcTop: DepsCohs P K} {p k} {dc: DepsCohs p k}
   (c: DepsCohsChain dcTop dc): p + cohsChainLen c = P.
@@ -145,31 +62,12 @@ Proof.
           DepsCohsChain (pshDepsCohs psh PCTop) dc0})) e').
 Qed.
 
-Lemma trChainLift {P K} (TCTop: TrDepsCohs P K)
-  {p k} {dc: DepsCohs p k}
-  (c0: DepsCohsChain (trDepsCohsA TCTop) dc):
-  {TC: TrDepsCohs p k &T {C: TrCohsChain TCTop TC &T
-    ((dc; c0): {dc0: DepsCohs p k &T
-       DepsCohsChain (trDepsCohsA TCTop) dc0}) =
-    (trDepsCohsA TC; trCohsChainA C)}}.
-Proof.
-  induction c0 as [|p k dc' c0' IH].
-  - now exact (TCTop; (TrCohsChainNil; eq_refl)).
-  - destruct IH as (TC', (C', e')).
-    refine (proj1TrDepsCohs TC'; (TrCohsChainCons C'; _)).
-    now exact (f_equal (fun s: {dc0: DepsCohs p.+1 k &T
-        DepsCohsChain (trDepsCohsA TCTop) dc0} =>
-      ((proj1DepsCohs s.1; DepsCohsChainCons s.2):
-        {dc0: DepsCohs p k.+1 &T
-          DepsCohsChain (trDepsCohsA TCTop) dc0})) e').
-Qed.
-
 (** Normal forms of chain packages
 
-    The [B]-side of the round trip compares [g]'s fuel-synthesized chains
-    with the [B]-images of lifted translation chains; both are iterated
-    [dcStep]s of the nil package, reconnected through length/stage
-    arithmetic alone. *)
+    The original-tower side of the round trip compares [g]'s
+    fuel-synthesized chains with arbitrary chains from the position's top;
+    both are iterated [dcStep]s of the nil package, reconnected through
+    length/stage arithmetic alone. *)
 
 Fixpoint dcStepIter {P K} {dcTop: DepsCohs P K} (j: nat)
   (s: DCPack dcTop): DCPack dcTop :=
@@ -187,33 +85,45 @@ Proof.
   - now rewrite dc2PackDepsStep, IHj.
 Qed.
 
-Fixpoint trCohsChainLen {P K} {TCTop: TrDepsCohs P K}
-  {p k} {TC: TrDepsCohs p k} (C: TrCohsChain TCTop TC): nat :=
-  match C with
-  | TrCohsChainNil => 0
-  | TrCohsChainCons C' => (trCohsChainLen C').+1
-  end.
-
-Lemma trCohsChainStage {P K} {TCTop: TrDepsCohs P K}
-  {p k} {TC: TrDepsCohs p k} (C: TrCohsChain TCTop TC):
-  p + trCohsChainLen C = P.
+Lemma chainPackNF {P K} {dcTop: DepsCohs P K} {p k} {dc: DepsCohs p k}
+  (c: DepsCohsChain dcTop dc):
+  ((p; (k; (dc; c))): DCPack dcTop) =
+  dcStepIter (cohsChainLen c) (P; (K; (dcTop; DepsCohsChainNil))).
 Proof.
-  induction C as [|p k TC C IH]; cbn [trCohsChainLen].
-  - now symmetry; apply plus_n_O.
-  - rewrite <- plus_n_Sm. now exact IH.
-Qed.
-
-Lemma trChainPackB {P K} {TCTop: TrDepsCohs P K}
-  {p k} {TC: TrDepsCohs p k} (C: TrCohsChain TCTop TC):
-  ((p; (k; (trDepsCohsB TC; trCohsChainB C))): DCPack (trDepsCohsB TCTop)) =
-  dcStepIter (trCohsChainLen C)
-    (P; (K; (trDepsCohsB TCTop; DepsCohsChainNil))).
-Proof.
-  induction C as [|p k TC C IH]; cbn [trCohsChainLen dcStepIter].
+  induction c as [|p k dc c IH]; cbn [cohsChainLen dcStepIter].
   - now reflexivity.
   - now rewrite <- IH.
 Qed.
 
+(** The face maps commute with prefix transport
+
+    At a prefix [Xp] one level up, the input frame of [νFace] is [νFrame Xp]
+    and its output is the total space [νTotalType Xp]; both are functors of
+    the prefix, and the chains from [prefixDepsCohs Xp] to a fixed endpoint
+    form a third one. So [νFace] commutes with wholesale transport along an
+    equality of prefixes, by path induction. The [Nil] case is stated
+    separately: transporting the empty chain lands on the empty chain of the
+    other prefix. *)
+
+Lemma νFaceRewPrefix {n} {XpA XpB: (νSetAt n.+1).(prefix)} (e: XpA = XpB)
+  {p k} {dc: DepsCohs p k} (cA: DepsCohsChain (prefixDepsCohs XpA) dc)
+  (ε: arity) (d: νFrameDom XpB):
+  νFace cA ε (rew <- [νFrameDom] e in d) =
+  rew <- [νTotalType] e in
+    νFace (rew [fun Xp => DepsCohsChain (prefixDepsCohs Xp) dc] e in cA) ε d.
+Proof.
+  now destruct e.
+Qed.
+
+Lemma νFaceRewPrefixNil {n} {XpA XpB: (νSetAt n.+1).(prefix)} (e: XpA = XpB)
+  (ε: arity) (d: νFrameDom XpB):
+  νFace (dcTop := prefixDepsCohs XpA) DepsCohsChainNil ε
+    (rew <- [νFrameDom] e in d) =
+  rew <- [νTotalType] e in
+    νFace (dcTop := prefixDepsCohs XpB) DepsCohsChainNil ε d.
+Proof.
+  now destruct e.
+Qed.
 
 (** The candidate-filler contraction: given a frame
     translation [tr], an identification [HF] of the cells with the total
@@ -368,75 +278,71 @@ Qed.
 
 (** The carried frame identification: the candidate
     frame of a cell transported from the position's total space is the
-    translated frame. Stated in the exact shape [fillerEquivOf] consumes. *)
+    backward transport of its frame along the prefix equality. Stated in
+    the exact shape [fillerEquivOf] consumes. *)
 
-Definition FrtInv {m} {XpreA XpreB: (νSetAt m.+1).(prefix)}
-  (T: PshTower (g X) m XpreA) (SB: νSetFrom m.+1 XpreB)
-  (HD: Desc SB) (W: TrTower m.+1 XpreA XpreB): Type :=
-  forall (D: mkFrame (νTowerDeps XpreB)) (c: SB.(this _ _) D),
+Definition FrtInv {m} {XpA XpB: (νSetAt m.+1).(prefix)}
+  (r: PrefixRel m.+1 XpA XpB)
+  (T: PshTower (g X) m XpA) (SB: νSetFrom m.+1 XpB) (HD: Desc SB): Type :=
+  forall (D: mkFrame (νTowerDeps XpB)) (c: SB.(this _ _) D),
   mkPshFrame (g X) (towerPshDeps (g X) T)
     (rew [Dom] (eq_sym (descTotal HD)) in
-      ((D; c): ({D0: mkFrame (νTowerDeps XpreB) & SB.(this _ _) D0}: HSet)))
-  = mkFrameEqv (towerTrDeps W) D.
+      ((D; c): ({D0: mkFrame (νTowerDeps XpB) & SB.(this _ _) D0}: HSet)))
+  = rew <- [νFrameDom] (prefixEq r) in D.
 
-(** The filler equivalence of the round trip at a level: the inverse of
-    the candidate-filler contraction over the frame identification. *)
+(** The filler equivalence of the round trip at a level: the
+    candidate-filler contraction over the frame identification, in the
+    direction the prefix relation stores it — from the candidate fillers
+    over the transported frame to the fillers of the position. *)
 
-Definition fgThis {m} {XpreA XpreB: (νSetAt m.+1).(prefix)}
-  (T: PshTower (g X) m XpreA) (SB: νSetFrom m.+1 XpreB)
-  (HD: Desc SB) (W: TrTower m.+1 XpreA XpreB) (FRT: FrtInv T SB HD W):
-  forall D: mkFrame (νTowerDeps XpreB),
-  Equiv (SB.(this _ _) D)
-    (mkPshFiller (g X) (towerPshDeps (g X) T) (mkFrameEqv (towerTrDeps W) D))
-  := fun D => symEquiv (fillerEquivOf (mkFrameEqv (towerTrDeps W))
-       (descTotal HD) (mkPshFrame (g X) (towerPshDeps (g X) T)) FRT D).
+Definition fgThis {m} {XpA XpB: (νSetAt m.+1).(prefix)}
+  (r: PrefixRel m.+1 XpA XpB)
+  (T: PshTower (g X) m XpA) (SB: νSetFrom m.+1 XpB) (HD: Desc SB)
+  (FRT: FrtInv r T SB HD):
+  νFillerEqvType (prefixEq r)
+    (mkPshFiller (g X) (towerPshDeps (g X) T)) (SB.(this _ _)) :=
+  fun D => fillerEquivOf (rewEquiv νFrameDom (eq_sym (prefixEq r)))
+    (descTotal HD) (mkPshFrame (g X) (towerPshDeps (g X) T)) FRT D.
 
-(** The bottom face of [g X] at the position, as [νFace] along the
-    [B]-image of a lifted translation chain: the fuel-synthesized package
-    and the image package are both [dcStep]-iterations of the nil package,
-    of the same length by the stage equation. *)
+(** The bottom face of [g X] at the position, as [νFace] along an
+    arbitrary chain from the position's top: the fuel-synthesized package
+    and the chain's own package are both [dcStep]-iterations of the nil
+    package, of the same length by the stage equation. *)
 
-Lemma fgFaceB {m} {XpreA XpreB: (νSetAt m.+1).(prefix)}
-  (W: TrTower m.+1 XpreA XpreB) (SB: νSetFrom m.+1 XpreB)
-  {EA: mkFrame (νTowerDeps XpreA) -> HSet}
-  (fEqv: forall d, Equiv (SB.(this _ _) d)
-    (EA (mkFrameEqv (towerTrDeps W) d)))
-  (rp: mkTrRestrPaintingTypes (towerTrDeps W)
-    (TopTrDep (T := towerTrDeps W) fEqv)
-    ((νDataAt XpreA).(restrPaintings) EA)
-    ((νDataAt XpreB).(restrPaintings) (SB.(this _ _))))
-  {p k} {TC: TrDepsCohs p k}
-  (C: TrCohsChain (trTowerDepsCohs W fEqv rp) TC)
+Lemma fgFaceB {m} {Xpre: (νSetAt m.+1).(prefix)} (SB: νSetFrom m.+1 Xpre)
+  {p k} {dc: DepsCohs p k} (cB: DepsCohsChain (νDepsCohsAt SB) dc)
   (Hp: p <= m.+1) (ε: arity) (t: νTotal (SB.(next _ _))):
-  gFace SB 0 p Hp ε t = νFace (trCohsChainB C) ε t.1.
+  gFace SB 0 p Hp ε t = νFace cB ε t.1.
 Proof.
-  change (νFaceFuel SB (m.+1 - p) ε t = νFace (trCohsChainB C) ε t.1).
+  change (νFaceFuel SB (m.+1 - p) ε t = νFace cB ε t.1).
   unfold νFaceFuel.
-  rewrite (f_equal (fun z => z - p) (eq_sym (trCohsChainStage C))
-    • addSubCancelL p (trCohsChainLen C)).
+  rewrite (f_equal (fun z => z - p) (eq_sym (cohsChainStage cB))
+    • addSubCancelL p (cohsChainLen cB)).
   now exact (f_equal
     (fun s: DCPack (νDepsCohsAt SB) => νFace s.2.2.2 ε t.1)
-    (chain2DownIter (νDepsCohs2At SB) (trCohsChainLen C)
-      • eq_sym (trChainPackB C))).
+    (chain2DownIter (νDepsCohs2At SB) (cohsChainLen cB)
+      • eq_sym (chainPackNF cB))).
 Qed.
 
 (** The step of the frame identification, by [νFaceEq]: every face of the
-    two frames agrees. Lift the arbitrary chain to the two equipped sides,
-    rewrite [νFace] with [pshνFace] and [νFaceTr], identify the transported
-    face with the face at the position using [descFace] and [fgFaceB], and
-    apply the current identification through [fillerEquivOfWhole]. *)
+    two frames agrees. Lift the arbitrary chain to the presheaf side and
+    rewrite [νFace] with [pshνFace]; on the original-tower side push the
+    prefix transport through [νFace] ([νFaceRewPrefix]) and compute it on
+    the resulting cell ([prefixEqRewTotal]); identify the two faces with the
+    face at the position using [descFace] and [fgFaceB]; and apply the
+    current identification through [fillerEquivOfWhole].
 
-Lemma fgFrameStep {m} {XpreA XpreB: (νSetAt m.+1).(prefix)}
-  (T: PshTower (g X) m XpreA) (rpPsh: PshTowerRestrPaintings (g X) T)
-  (SB: νSetFrom m.+1 XpreB) (HD: Desc SB)
-  (W: TrTower m.+1 XpreA XpreB) (FRT: FrtInv T SB HD W)
-  (rpTr: mkTrRestrPaintingTypes (towerTrDeps W)
-    (TopTrDep (T := towerTrDeps W) (fgThis T SB HD W FRT))
-    ((νDataAt XpreA).(restrPaintings)
-      (mkPshFiller (g X) (towerPshDeps (g X) T)))
-    ((νDataAt XpreB).(restrPaintings) (SB.(this _ _)))):
-  FrtInv (towerStep (g X) T rpPsh) (SB.(next _ _)) (DescS HD)
-    (trTowerStep W (fgThis T SB HD W FRT) rpTr).
+    The top of the arbitrary chain is retyped as [prefixDepsCohs] of the
+    stepped prefix before the transport is pushed through: the two forms
+    are convertible, but only the [prefixDepsCohs] one exposes the prefix
+    as an argument for the transport motive to abstract. *)
+
+Lemma fgFrameStep {m} {XpA XpB: (νSetAt m.+1).(prefix)}
+  (r: PrefixRel m.+1 XpA XpB)
+  (T: PshTower (g X) m XpA) (rpPsh: PshTowerRestrPaintings (g X) T)
+  (SB: νSetFrom m.+1 XpB) (HD: Desc SB) (FRT: FrtInv r T SB HD):
+  FrtInv (relStep r (fgThis r T SB HD FRT))
+    (towerStep (g X) T rpPsh) (SB.(next _ _)) (DescS HD).
 Proof.
   intros D c.
   refine (νFaceEq
@@ -444,24 +350,26 @@ Proof.
   intros p k dc c0 ε.
   destruct (pshChainLift (g X) (towerPshDepsCohs (g X) T rpPsh) c0)
     as (PC, (Cpsh, ePsh)).
-  destruct (trChainLift (trTowerDepsCohs W (fgThis T SB HD W FRT) rpTr) c0)
-    as (TC, (Ctr, eTr)).
-  pose (Hp := leR_eq_r (trCohsChainStage Ctr)
-    (leR_add_r p (trCohsChainLen Ctr))).
+  pose (Hp := leR_eq_r (cohsChainStage c0) (leR_add_r p (cohsChainLen c0))).
   refine (f_equal (fun s: {dc0: DepsCohs p k &T
       DepsCohsChain (pshDepsCohs (g X) (towerPshDepsCohs (g X) T rpPsh)) dc0}
     => νFace s.2 ε _) ePsh • _).
-  refine (_ • eq_sym (f_equal (fun s: {dc0: DepsCohs p k &T
-      DepsCohsChain (pshDepsCohs (g X) (towerPshDepsCohs (g X) T rpPsh)) dc0}
-    => νFace s.2 ε _) eTr)).
   rewrite (pshνFace (g X) Cpsh Hp ε).
-  rewrite (νFaceTr Ctr ε D).
+  change (DepsCohsChain (prefixDepsCohs
+    ((XpA; mkPshFiller (g X) (towerPshDeps (g X) T)):
+      (νSetAt m.+2).(prefix))) dc) in (type of c0).
+  rewrite (νFaceRewPrefix
+    (prefixEq (relStep r (fgThis r T SB HD FRT))) c0 ε D).
+  set (cB0 := rew [fun Xp => DepsCohsChain (prefixDepsCohs Xp) dc]
+    (prefixEq (relStep r (fgThis r T SB HD FRT))) in c0).
+  rewrite (prefixEqRewTotal (relStep r (fgThis r T SB HD FRT))
+    (νFace cB0 ε D)).
   rewrite (descTotalS HD).
   rewrite (descFace HD 0 p Hp Hp ε (D; c)).
-  rewrite (fgFaceB W SB (fgThis T SB HD W FRT) rpTr Ctr Hp ε (D; c)).
-  now exact (fillerEquivOfWhole (mkFrameEqv (towerTrDeps W)) (descTotal HD)
-    (mkPshFrame (g X) (towerPshDeps (g X) T)) FRT
-    (νFace (trCohsChainB Ctr) ε D).1 (νFace (trCohsChainB Ctr) ε D).2).
+  rewrite (fgFaceB SB cB0 Hp ε (D; c)).
+  now exact (fillerEquivOfWhole (rewEquiv νFrameDom (eq_sym (prefixEq r)))
+    (descTotal HD) (mkPshFrame (g X) (towerPshDeps (g X) T)) FRT
+    (νFace cB0 ε D).1 (νFace cB0 ε D).2).
 Qed.
 
 (** Base case of the frame identification. At level 0, the frame is
@@ -476,36 +384,34 @@ Definition frt0 (D: mkFrame (νTowerDeps (tt: (νSetAt 0).(prefix))))
   pshF0A (rew [Dom] (eq_sym (descTotal DescZ)) in
     ((D; c): ({D0: mkFrame (νTowerDeps (tt: (νSetAt 0).(prefix))) &
        X.(this _ _) D0}: HSet)))
-  = mkFrameEqv (towerTrDeps trTower0) D :=
-  hunit_ext tt (mkFrameEqv (towerTrDeps trTower0) D).
+  = rew <- [νFrameDom] (prefixEq rel0) in D :=
+  hunit_ext tt (rew <- [νFrameDom] (prefixEq rel0) in D).
 
 Definition fgThis0:
-  forall D: mkFrame (νTowerDeps (tt: (νSetAt 0).(prefix))),
-  Equiv (X.(this _ _) D)
-    (pshFiller0 (g X) (mkFrameEqv (towerTrDeps trTower0) D)) :=
-  fun D => symEquiv (fillerEquivOf (mkFrameEqv (towerTrDeps trTower0))
-    (descTotal DescZ) pshF0A frt0 D).
+  νFillerEqvType (prefixEq rel0) (pshFiller0 (g X)) (X.(this _ _)) :=
+  fun D => fillerEquivOf (rewEquiv νFrameDom (eq_sym (prefixEq rel0)))
+    (descTotal DescZ) pshF0A frt0 D.
 
 (** The level-1 base case of [fgFrameStep]. The only chain from stage 0 is
     empty, so both applications of [νFace] reduce by conversion. *)
 
 Lemma fgFrameStep0:
-  FrtInv (tower1 (g X)) (X.(next _ _)) (DescS DescZ)
-    (trTowerStep trTower0 fgThis0 tt).
+  FrtInv (relStep rel0 fgThis0) (tower1 (g X)) (X.(next _ _)) (DescS DescZ).
 Proof.
   intros D c.
-  refine (νFaceEq
-    (dcTop := trDepsCohsA (trTowerDepsCohs trTower0 fgThis0 tt)) _ _ _).
+  refine (νFaceEq (dcTop := prefixDepsCohs
+    ((tt; pshFiller0 (g X)): (νSetAt 1).(prefix))) _ _ _).
   intros p k dc c0 ε.
   destruct c0 as [|p k dc' c0'].
   2: { pose proof (cohsChainStage c0') as HS. now discriminate HS. }
-  rewrite (νFaceTr (TCTop := trTowerDepsCohs trTower0 fgThis0 tt)
-    TrCohsChainNil ε D).
+  rewrite (νFaceRewPrefixNil (prefixEq (relStep rel0 fgThis0)) ε D).
+  rewrite (prefixEqRewTotal (relStep rel0 fgThis0)
+    (νFace (dcTop := νDepsCohsAt X) DepsCohsChainNil ε D)).
   unfold νFace.
   rewrite nth_lam.
   rewrite (descTotalS DescZ).
   rewrite (descFace DescZ 0 0 leR_O leR_O ε (D; c)).
-  now exact (fillerEquivOfWhole (mkFrameEqv (towerTrDeps trTower0))
+  now exact (fillerEquivOfWhole (rewEquiv νFrameDom (eq_sym (prefixEq rel0)))
     (descTotal DescZ) pshF0A frt0
     (νFace (dcTop := νDepsCohsAt X) DepsCohsChainNil ε D).1
     (νFace (dcTop := νDepsCohsAt X) DepsCohsChainNil ε D).2).
@@ -513,46 +419,30 @@ Qed.
 
 (** The corecursion
 
-    The state is the pair of tower states with the descent witness, the
-    frame identification, and the restr-painting commutations at the
-    filler equivalence it induces; every component steps by its own step
-    lemma, and the filler equivalence is the contraction. *)
+    The state is the tower state of the presheaf side with the descent
+    witness, the prefix relation reached so far, and the frame
+    identification; every component steps by its own step lemma, and the
+    filler equivalence stored at each level is the contraction. *)
 
-CoFixpoint fgGen {m} {XpreA XpreB: (νSetAt m.+1).(prefix)}
-  (T: PshTower (g X) m XpreA) (rpPsh: PshTowerRestrPaintings (g X) T)
-  (SB: νSetFrom m.+1 XpreB) (HD: Desc SB)
-  (W: TrTower m.+1 XpreA XpreB) (FRT: FrtInv T SB HD W)
-  (rpTr: mkTrRestrPaintingTypes (towerTrDeps W)
-    (TopTrDep (T := towerTrDeps W) (fgThis T SB HD W FRT))
-    ((νDataAt XpreA).(restrPaintings)
-      (mkPshFiller (g X) (towerPshDeps (g X) T)))
-    ((νDataAt XpreB).(restrPaintings) (SB.(this _ _)))):
-  νSetFromEquiv W (pshNext (g X) m XpreA T rpPsh) SB :=
-  trCons _ _ _ W (pshNext (g X) m XpreA T rpPsh) SB
-    (fgThis T SB HD W FRT)
-    rpTr
-    (fgGen (towerStep (g X) T rpPsh) (towerStepRestrPaintings (g X) T rpPsh)
+CoFixpoint fgGen {m} {XpA XpB: (νSetAt m.+1).(prefix)}
+  (r: PrefixRel m.+1 XpA XpB)
+  (T: PshTower (g X) m XpA) (rpPsh: PshTowerRestrPaintings (g X) T)
+  (SB: νSetFrom m.+1 XpB) (HD: Desc SB) (FRT: FrtInv r T SB HD):
+  νSetFromEquiv r (pshNext (g X) m XpA T rpPsh) SB :=
+  trCons _ _ _ r (pshNext (g X) m XpA T rpPsh) SB
+    (fgThis r T SB HD FRT)
+    (fgGen (relStep r (fgThis r T SB HD FRT))
+      (towerStep (g X) T rpPsh) (towerStepRestrPaintings (g X) T rpPsh)
       (SB.(next _ _)) (DescS HD)
-      (trTowerStep W (fgThis T SB HD W FRT) rpTr)
-      (fgFrameStep T rpPsh SB HD W FRT rpTr)
-      (mkTrRestrPaintings (TopTrCohDep
-        (TC := trTowerDepsCohs W (fgThis T SB HD W FRT) rpTr)
-        (fgThis (towerStep (g X) T rpPsh) (SB.(next _ _)) (DescS HD)
-          (trTowerStep W (fgThis T SB HD W FRT) rpTr)
-          (fgFrameStep T rpPsh SB HD W FRT rpTr))))).
+      (fgFrameStep r T rpPsh SB HD FRT)).
 
-Definition fg: νSetFromEquiv trTower0 (f (g X)) X :=
-  trCons _ _ _ trTower0 (f (g X)) X
+Definition fg: νSetFromEquiv rel0 (f (g X)) X :=
+  trCons _ _ _ rel0 (f (g X)) X
     fgThis0
-    tt
-    (fgGen (tower1 (g X)) (tower1RestrPaintings (g X))
+    (fgGen (relStep rel0 fgThis0)
+      (tower1 (g X)) (tower1RestrPaintings (g X))
       (X.(next _ _)) (DescS DescZ)
-      (trTowerStep trTower0 fgThis0 tt)
-      fgFrameStep0
-      (mkTrRestrPaintings (TopTrCohDep
-        (TC := trTowerDepsCohs trTower0 fgThis0 tt)
-        (fgThis (tower1 (g X)) (X.(next _ _)) (DescS DescZ)
-          (trTowerStep trTower0 fgThis0 tt) fgFrameStep0)))).
+      fgFrameStep0).
 
 End FG.
 
