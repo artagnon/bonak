@@ -2504,24 +2504,24 @@ Fixpoint νDgnSetAt n: νDgnSet n (νSetAt n) :=
   | n.+1 => mkνDgnSetSn (νSetAt n) (νDgnSetAt n)
   end.
 
-CoInductive νDgnSetFrom n
-  (X: (νSetAt n).(prefix))
-  (M: νSetFrom n X)
-  (R: (νDgnSetAt n).(dgnPrefix) (X; this n X M)): Type := dcons {
-  dgnL: dgnHasReflFromData
-    ((νSetAt n).(data) X)
-    (this n X M)
-    (this n.+1 (X; this n X M) (next n X M))
-    ((νDgnSetAt n).(dgnData) (X; this n X M) R);
-  dgnCohL: dgnCohLFromData
-    ((νSetAt n).(data) X)
-    (this n X M)
-    (this n.+1 (X; this n X M) (next n X M))
-    ((νDgnSetAt n).(dgnData) (X; this n X M) R) dgnL;
-  dgnNext: νDgnSetFrom n.+1 (X; this n X M) (next n X M) (R; (dgnL; dgnCohL));
+(** A νSet prefix paired with the degeneracy prefix over it. *)
+Definition DgnPrefix (l: nat): Type :=
+  { X: (νSetAt l.+1).(prefix) &T (νDgnSetAt l).(dgnPrefix) X }.
+
+CoInductive νDgnSetsFrom n (Y: DgnPrefix n): Type := dgncons {
+  dgnFiller: mkFrame
+    (toDepsRestr ((νSetAt n.+1).(data) Y.1).(restrFrames)) -> HSet;
+  dgnReflL: dgnHasReflFromData
+    ((νSetAt n).(data) Y.1.1) Y.1.2 dgnFiller
+    ((νDgnSetAt n).(dgnData) Y.1 Y.2);
+  dgnReflCohL: dgnCohLFromData
+    ((νSetAt n).(data) Y.1.1) Y.1.2 dgnFiller
+    ((νDgnSetAt n).(dgnData) Y.1 Y.2) dgnReflL;
+  dgnNext: νDgnSetsFrom n.+1
+    ((Y.1; dgnFiller); (Y.2; (dgnReflL; dgnReflCohL)));
 }.
 
-Definition νDgnSets (X: νSets) := νDgnSetFrom 0 tt X tt.
+Definition νDgnSets := { Y: DgnPrefix 0 &T νDgnSetsFrom 0 Y }.
 
 End νDgnSet.
 
@@ -2532,9 +2532,9 @@ Definition Simplicial := νDgnSetSimplicial.νDgnSets.
 Definition Cubical := νDgnSetCubical.νDgnSets.
 
 Example Simplicial1 :=
-  Eval lazy -[leR] in (νDgnSetSimplicial.νDgnSetAt 1).(νDgnSetSimplicial.dgnPrefix).
+  Eval lazy -[leR] in νDgnSetSimplicial.DgnPrefix 1.
 
 Example Cubical1 :=
-  Eval lazy -[leR] in (νDgnSetCubical.νDgnSetAt 1).(νDgnSetCubical.dgnPrefix).
+  Eval lazy -[leR] in νDgnSetCubical.DgnPrefix 1.
 
 Print Cubical1.
