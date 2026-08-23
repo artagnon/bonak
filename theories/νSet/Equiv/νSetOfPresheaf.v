@@ -11,8 +11,7 @@
 Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
-From Stdlib Require Import Logic.Eqdep_dec Arith.Peano_dec.
-From Bonak Require Import SigT RewLemmas HSet LeSProp NatLemmas Notation νSet.Layer
+From Bonak Require Import SigT RewLemmas HSet LeSProp Notation νSet.Layer
   νSet Face PresheafEquiv.
 
 Set Primitive Projections.
