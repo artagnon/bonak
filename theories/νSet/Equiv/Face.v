@@ -14,7 +14,7 @@
 Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT RewLemmas HSet LeSProp Notation νSet.Layer νSet.
+From Bonak Require Import SigT HSet LeSProp Notation νSet.Layer νSet.
 From Bonak Require νSetEquiv.
 
 Set Primitive Projections.
@@ -224,25 +224,6 @@ Fixpoint cohsChainLe {P K} {dcTop: DepsCohs P K} {p k} {dc: DepsCohs p k}
   | DepsCohsChainCons c' => ⇑ (cohsChainLe c')
   end.
 
-(** Pushing a second-order extension down a chain, and the induced
-    painting chain one level up. *)
-
-Fixpoint cohsChainExtend {P K} {dcTop: DepsCohs P K} {p k} {dc: DepsCohs p k}
-  (c: DepsCohsChain dcTop dc) (X: DepsCohsExtension P K dcTop):
-  DepsCohsExtension p k dc :=
-  match c with
-  | DepsCohsChainNil => X
-  | DepsCohsChainCons c' => AddCohDep _ (cohsChainExtend c' X)
-  end.
-
-Fixpoint cohsChainNextExt {P K} {dcTop: DepsCohs P K} {p k} {dc: DepsCohs p k}
-  (c: DepsCohsChain dcTop dc) (X: DepsCohsExtension P K dcTop):
-  ExtChain (mkExtraDeps X) (mkExtraDeps (cohsChainExtend c X)) :=
-  match c with
-  | DepsCohsChainNil => ExtChainNil
-  | DepsCohsChainCons c' => ExtChainCons (cohsChainNextExt c' X)
-  end.
-
 (** The face maps of the indexed construction
 
     Given a full frame [d] one level up, project it down to
@@ -274,33 +255,6 @@ Proof.
   induction c.
   - now reflexivity.
   - cbn. now rewrite IHc.
-Defined.
-
-(** Reading the ε-layer after climbing to stage q+1 equals climbing the
-    ε-restricted painting from stage p. *)
-
-Lemma getPaintingRestr {P K} {dcTop: DepsCohs P K}
-  {P' K'} {depsTopN: DepsRestr P' K'}
-  {extTopN: DepsRestrExtension P' K' depsTopN}
-  (cQ: ExtChain extTopN dcTop.(_extraDeps))
-  (X: DepsCohsExtension P K dcTop)
-  {p k} {dc: DepsCohs p k} (c: DepsCohsChain dcTop dc) (ε: arity):
-  forall (d: mkFrame (mkDepsRestr (depsCohs := dc)).(1))
-  (cp: mkPainting (AddRestrDep (mkDepsRestr (depsCohs := dc))
-         (mkExtraDeps (cohsChainExtend c X))) d),
-  getPainting cQ
-    (mkRestrFrame (depsCohs := dcTop) 0 leR_O ε
-      ((getPainting (ExtChainCons (cohsChainNextExt c X)) d cp).1).1)
-    (nth
-      ((getPainting (ExtChainCons (cohsChainNextExt c X)) d cp).1).2 ε) =
-  getPainting (extChainCompose cQ (cohsChainExt c))
-    (mkRestrFrame (depsCohs := dc) (cohsChainLen c) (cohsChainLe c) ε d)
-    (mkRestrPainting (cohsChainExtend c X)
-      (cohsChainLen c) (cohsChainLe c) ε d cp).
-Proof.
-  induction c; intros d cp.
-  - now reflexivity.
-  - now exact (IHc (d; cp.1) cp.2).
 Defined.
 
 (** The exchange law for the face maps
@@ -420,8 +374,9 @@ Proof.
   destruct e. now reflexivity.
 Defined.
 
-(** The two-level specialization of [getPaintingRestr]; all index
-    equalities hold by conversion. *)
+(** Reading the ε-layer after climbing a [DepsCohs2] chain equals climbing
+    the ε-restricted painting from the bottom stage; all index equalities
+    hold by conversion. *)
 
 Lemma getPaintingRestr2 {P K} {dc2Top: DepsCohs2 P K}
   {P' K'} {depsTopN: DepsRestr P' K'}
