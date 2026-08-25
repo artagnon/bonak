@@ -9,6 +9,7 @@ theories/νSet/Lib/Equiv.v
 theories/νSet/Lib/Funext.v
 theories/νSet/Lib/Univalence.v
 theories/νSet/Layer.v
+theories/νSet/Limit.v
 theories/νSet/νSet.v
 theories/νSet/νDgnSet.v
 theories/νSet/νGpd/HGpd.v

@@ -80,6 +80,25 @@ Proof.
   now destruct e.
 Qed.
 
+(** Transport in a family of path types between two maps: the
+    transported path is the conjugate by the images of the base path. *)
+Lemma rew_between {T U: Type} (f g: T -> U) {x y: T} (e: x = y)
+  (q: f x = g x):
+  rew [fun a => f a = g a] e in q =
+  eq_sym (f_equal f e) • (q • f_equal g e).
+Proof.
+  destruct e; cbn. now rewrite eq_trans_refl_l.
+Qed.
+
+(** The case of [rew_between] where the right map is constant, so only the
+    left image contributes. *)
+Lemma rew_between_const_r {T U: Type} (f: T -> U) {x y: T} (e: x = y) {u: U}
+  (q: f x = u):
+  rew [fun a => f a = u] e in q = eq_sym (f_equal f e) • q.
+Proof.
+  destruct e; cbn. now rewrite eq_trans_refl_l.
+Qed.
+
 (** Fused transport-chain lemmas for layer coherence proofs
 
     [rew_cohLayer<NM>] closes a layer coherence goal after a lemma from
