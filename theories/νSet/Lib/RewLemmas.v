@@ -48,6 +48,24 @@ Proof.
   destruct p, q. intro H. now destruct H.
 Qed.
 
+(** Cancelling a common prefix under an inversion *)
+Lemma eq_trans_sym_cancel_common {A: Type} {x y z w: A} (a: x = y) (o: y = z)
+  (p: y = w):
+  eq_sym (a • o) • (a • p) = eq_sym o • p.
+Proof.
+  now destruct a, o, p.
+Qed.
+
+(** Conjugating by a composite is conjugating twice: writing [c u v r] for
+    [eq_sym u • (r • v)], this states [c aA aB P • sB = sA • c (aA • sA)
+    (aB • sB) P], the form in which the two halves are met. *)
+Lemma eq_trans_conj_comp {A: Type} {x0 x1 x2 y0 y1 y2: A}
+  (aA: x0 = x1) (sA: x1 = x2) (P: x0 = y0) (aB: y0 = y1) (sB: y1 = y2):
+  (eq_sym aA • (P • aB)) • sB = sA • (eq_sym (aA • sA) • (P • (aB • sB))).
+Proof.
+  now destruct aA, sA, P, aB, sB.
+Qed.
+
 Lemma eq_trans_nat_id {A} {f: A -> A} (α: forall a, f a = a) {x y: A}
   (p: x = y): α x • p = f_equal f p • α y.
 Proof.

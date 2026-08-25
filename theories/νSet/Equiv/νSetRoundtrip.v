@@ -1,14 +1,15 @@
 (** The indexed side of the backward round trip [f ∘ g] of the
-    correspondence: [fg: νSetFromEquiv rel0 (f (g X)) X].
+    correspondence: [fg: νSetsEquiv (f (g X)) X].
 
-    The bisimulation is built level by level. At each level the cells of the
-    presheaf [g X] in the ambient dimension are identified with the total
-    space of the position reached in [X] (the descent witness [Desc]), and
-    the candidate fillers of [f (g X)] over a frame transported along the
-    prefix equality contract onto the fillers of [X] ([fillerEquivOf]). The
-    frame identification carried along the corecursion states that the
-    candidate frame of a transported cell is the transport of its frame; it
-    steps by [νFaceEq], every face of the two frames agreeing. *)
+    The levelwise equivalence is built level by level. At each level the
+    cells of the presheaf [g X] in the ambient dimension are identified with
+    the total space of the position reached in [X] (the descent witness
+    [Desc]), and the candidate fillers of [f (g X)] over a frame transported
+    along the prefix equality contract onto the fillers of [X]
+    ([fillerEquivOf]). The frame identification carried along the chain
+    states that the candidate frame of a transported cell is the transport
+    of its frame; it steps by [νFaceEq], every face of the two frames
+    agreeing. *)
 
 Import Logic.EqNotations.
 
@@ -193,7 +194,7 @@ Qed.
 
 (** The descent identification
 
-    The corecursive body of [fg] must, at an abstract level, identify the
+    The level step of [fg] must, at an abstract level, identify the
     cells of [g X] with the total spaces of the carried [X]-position.
     Induction on [Desc] proves this identification, with [plus_n_Sm]-style
     equalities on the relative index at each successor step. *)
@@ -220,7 +221,7 @@ Fixpoint descF0 {n} {Xpre: (νSetAt n).(prefix)} {S0: νSetFrom n Xpre}
   end.
 
 (** At [k := 0], the cells of [g X] at the position's level are the
-    total space of the position — the corecursive state's cell
+    total space of the position — the level state's cell
     identification. *)
 
 Definition descTotal {n} {Xpre: (νSetAt n).(prefix)} {S0: νSetFrom n Xpre}
@@ -419,34 +420,110 @@ Proof.
     (νFace (dcTop := νDepsCohsAt X) DepsCohsChainNil ε D).2).
 Qed.
 
-(** The corecursion
+(** The round trip as a levelwise equivalence
 
-    The state is the target tower position with its descent witness, the
-    prefix relation reached so far, and the frame identification; every
-    component steps by its own step lemma, and the filler equivalence
-    stored at each level is the contraction. The presheaf side runs along
-    [pshChain], whose stepping is definitional: [pshTw (g X) m.+1] is
-    [towerStep (g X) (pshTw (g X) m) (pshTwRp (g X) m)], and
-    [next (pshFrom (g X) m.+1)] is [pshFrom (g X) m.+2]. *)
+    [νSetsEquiv] asks for a chain of prefix relations bonded by first
+    projection. The relations are produced level by level by a chain
+    fixpoint whose state carries what the next level needs: the frame
+    identification, and the identification of the presheaf-side
+    approximation with the one [νSetPack] reaches.
 
-CoFixpoint fgGen (m: nat) {XpB: (νSetAt m.+1).(prefix)}
-  (r: PrefixRel m.+1 (pshApprox (g X) m.+1) XpB)
-  (SB: νSetFrom m.+1 XpB) (HD: Desc SB)
-  (FRT: FrtInv r (pshTw (g X) m) SB HD):
-  νSetFromEquiv r (pshFrom (g X) m.+1) SB :=
-  trCons _ _ _ r (pshFrom (g X) m.+1) SB
-    (fgThis r (pshTw (g X) m) SB HD FRT)
-    (fgGen m.+1 (relStep r (fgThis r (pshTw (g X) m) SB HD FRT))
-      (next SB) (DescS HD)
-      (fgFrameStep r (pshTw (g X) m) (pshTwRp (g X) m) SB HD FRT)).
+    [νSetPack m (f (g X))] and [(pshApprox (g X) m; pshFrom (g X) m)] are
+    two recursions on [m] that agree, but neither reduces at a variable
+    level, so the state also carries their identification. It is [eq_refl]
+    at every level: once the two agree at [m], the [νSetPack] step is the
+    presheaf step by conversion, because [pshApprox] bonds by [eq_refl].
+    The presheaf-side state steps definitionally in the same way,
+    [pshTw (g X) m.+1] being
+    [towerStep (g X) (pshTw (g X) m) (pshTwRp (g X) m)]. *)
 
-Definition fg: νSetFromEquiv rel0 (f (g X)) X :=
-  trCons _ _ _ rel0 (f (g X)) X
-    fgThis0
-    (fgGen 0 (relStep rel0 fgThis0)
-      (next X) (DescS DescZ)
-      fgFrameStep0).
+Fixpoint descAt (m: nat): Desc ((νSetPack m X).2) :=
+  match m with
+  | 0 => DescZ
+  | S m => DescS (descAt m)
+  end.
 
+Definition FgState (m: nat)
+  (P: {Xp: (νSetAt m.+1).(prefix) &T νSetFrom m.+1 Xp})
+  (r: PrefixRel m.+1 P.1 ((νSetPack m.+1 X).1)): Type :=
+  { HP: (pshApprox (g X) m.+1; pshFrom (g X) m.+1) = P &T
+    FrtInv (rew <- [fun Q: {Xp: (νSetAt m.+1).(prefix) &T νSetFrom m.+1 Xp}
+                      => PrefixRel m.+1 Q.1 ((νSetPack m.+1 X).1)] HP in r)
+      (pshTw (g X) m) ((νSetPack m.+1 X).2) (descAt m.+1) }.
+
+Definition FgChainState (m: nat):
+  PrefixRel m (νSetPack m (f (g X))).1 ((νSetPack m X).1) -> Type :=
+  match m return PrefixRel m (νSetPack m (f (g X))).1 ((νSetPack m X).1) ->
+    Type with
+  | 0 => fun _ => unit
+  | S m => fun r => FgState m (νSetPack m.+1 (f (g X))) r
+  end.
+
+(** The level step at a positive level: it emits the level's filler
+    equivalence and rebuilds the state one level up, with the
+    identification of the two approximations consumed first so that the
+    filler equivalence is the presheaf-side one. *)
+
+Lemma fgStep (m: nat)
+  (P: {Xp: (νSetAt m.+1).(prefix) &T νSetFrom m.+1 Xp})
+  (r: PrefixRel m.+1 P.1 ((νSetPack m.+1 X).1)) (s: FgState m P r):
+  { E: νFillerEqvType (prefixEq r) (this P.2) (this ((νSetPack m.+1 X).2)) &T
+    FgState m.+1 ((P.1; this P.2); next P.2) (relStep r E) }.
+Proof.
+  destruct s as (HP, s); revert r s; destruct HP; intros r s; cbn in s |- *.
+  now exact
+    (fgThis r (pshTw (g X) m) ((νSetPack m.+1 X).2) (descAt m.+1) s;
+     (eq_refl;
+      fgFrameStep r (pshTw (g X) m) (pshTwRp (g X) m)
+        ((νSetPack m.+1 X).2) (descAt m.+1) s)).
+Defined.
+
+(** The level step at level 0: the prefix relation there is [unit], so it
+    is the canonical one and the level data is the base case. *)
+
+Lemma fgStep0
+  (r: PrefixRel 0 (νSetPack 0 (f (g X))).1 ((νSetPack 0 X).1))
+  (s: FgChainState 0 r):
+  { E: νFillerEqvType (prefixEq r)
+         (this ((νSetPack 0 (f (g X))).2)) (this ((νSetPack 0 X).2)) &T
+    FgChainState 1 (relStep r E) }.
+Proof.
+  destruct r.
+  now exact (fgThis0; (eq_refl; fgFrameStep0)).
+Defined.
+
+Definition fgExtend (m: nat):
+  forall r: PrefixRel m (νSetPack m (f (g X))).1 ((νSetPack m X).1),
+  FgChainState m r ->
+  { E: νFillerEqvType (prefixEq r)
+         (this ((νSetPack m (f (g X))).2)) (this ((νSetPack m X).2)) &T
+    FgChainState m.+1 (relStep r E) } :=
+  match m return forall r: PrefixRel m (νSetPack m (f (g X))).1
+      ((νSetPack m X).1), FgChainState m r ->
+    { E: νFillerEqvType (prefixEq r)
+           (this ((νSetPack m (f (g X))).2)) (this ((νSetPack m X).2)) &T
+      FgChainState m.+1 (relStep r E) } with
+  | 0 => fgStep0
+  | S m => fun r s => fgStep m (νSetPack m.+1 (f (g X))) r s
+  end.
+
+Fixpoint fgChain (m: nat):
+  {r: PrefixRel m (νSetPack m (f (g X))).1 ((νSetPack m X).1) &T
+   FgChainState m r} :=
+  match m with
+  | 0 => (tt; tt)
+  | S m =>
+    let s := fgChain m in
+    let e := fgExtend m s.1 s.2 in
+    ((s.1; e.1); e.2)
+  end.
+
+(** The chain is bonded by conversion: the relation at [m.+1] is the
+    relation at [m] paired with the emitted filler equivalence. *)
+
+Definition fg: νSetsEquiv (f (g X)) X :=
+  limit (eqvTel (f (g X)) X) 0 tt
+    (fun m _ => (fgChain m).1) eq_refl (fun m _ _ => eq_refl).
 End FG.
 
 End νSetRoundtrip.
