@@ -17,6 +17,8 @@ From Bonak Require Import SigT RewLemmas HSet LeSProp NatLemmas Notation νSet.L
   νSet Face Presheaf νSetOfPresheaf PresheafOfνSet.
 From Bonak.νSet.Lib Require Import Equiv.
 
+From Bonak Require Import Limit.
+
 Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.
@@ -204,7 +206,7 @@ Inductive Desc: forall {n} {Xpre: (νSetAt n).(prefix)},
   νSetFrom n Xpre -> Type :=
 | DescZ: Desc X
 | DescS {n} {Xpre: (νSetAt n).(prefix)} {S0: νSetFrom n Xpre}:
-    Desc S0 -> Desc (S0.(next _ _)).
+    Desc S0 -> Desc (next S0).
 
 (** Indexing by [k + n] makes the use sites instantiate [k := 0]. The
     branches supply the required [plus_n_O] and [plus_n_Sm] equalities. *)
@@ -284,10 +286,10 @@ Qed.
 Definition FrtInv {m} {XpA XpB: (νSetAt m.+1).(prefix)}
   (r: PrefixRel m.+1 XpA XpB)
   (T: PshTower (g X) m XpA) (SB: νSetFrom m.+1 XpB) (HD: Desc SB): Type :=
-  forall (D: mkFrame (νTowerDeps XpB)) (c: SB.(this _ _) D),
+  forall (D: mkFrame (νTowerDeps XpB)) (c: this SB D),
   mkPshFrame (g X) (towerPshDeps (g X) T)
     (rew [Dom] (eq_sym (descTotal HD)) in
-      ((D; c): ({D0: mkFrame (νTowerDeps XpB) & SB.(this _ _) D0}: HSet)))
+      ((D; c): ({D0: mkFrame (νTowerDeps XpB) & this SB D0}: HSet)))
   = rew <- [νFrameDom] (prefixEq r) in D.
 
 (** The filler equivalence of the round trip at a level: the
@@ -300,7 +302,7 @@ Definition fgThis {m} {XpA XpB: (νSetAt m.+1).(prefix)}
   (T: PshTower (g X) m XpA) (SB: νSetFrom m.+1 XpB) (HD: Desc SB)
   (FRT: FrtInv r T SB HD):
   νFillerEqvType (prefixEq r)
-    (mkPshFiller (g X) (towerPshDeps (g X) T)) (SB.(this _ _)) :=
+    (mkPshFiller (g X) (towerPshDeps (g X) T)) (this SB) :=
   fun D => fillerEquivOf (rewEquiv νFrameDom (eq_sym (prefixEq r)))
     (descTotal HD) (mkPshFrame (g X) (towerPshDeps (g X) T)) FRT D.
 
@@ -311,7 +313,7 @@ Definition fgThis {m} {XpA XpB: (νSetAt m.+1).(prefix)}
 
 Lemma fgFaceB {m} {Xpre: (νSetAt m.+1).(prefix)} (SB: νSetFrom m.+1 Xpre)
   {p k} {dc: DepsCohs p k} (cB: DepsCohsChain (νDepsCohsAt SB) dc)
-  (Hp: p <= m.+1) (ε: arity) (t: νTotal (SB.(next _ _))):
+  (Hp: p <= m.+1) (ε: arity) (t: νTotal (next SB)):
   gFace SB 0 p Hp ε t = νFace cB ε t.1.
 Proof.
   change (νFaceFuel SB (m.+1 - p) ε t = νFace cB ε t.1).
@@ -342,7 +344,7 @@ Lemma fgFrameStep {m} {XpA XpB: (νSetAt m.+1).(prefix)}
   (T: PshTower (g X) m XpA) (rpPsh: PshTowerRestrPaintings (g X) T)
   (SB: νSetFrom m.+1 XpB) (HD: Desc SB) (FRT: FrtInv r T SB HD):
   FrtInv (relStep r (fgThis r T SB HD FRT))
-    (towerStep (g X) T rpPsh) (SB.(next _ _)) (DescS HD).
+    (towerStep (g X) T rpPsh) (next SB) (DescS HD).
 Proof.
   intros D c.
   refine (νFaceEq
@@ -380,15 +382,15 @@ Definition pshF0A: gF0 X 0 ->
   mkFrame (νTowerDeps (tt: (νSetAt 0).(prefix))) := fun _ => tt.
 
 Definition frt0 (D: mkFrame (νTowerDeps (tt: (νSetAt 0).(prefix))))
-  (c: X.(this _ _) D):
+  (c: this X D):
   pshF0A (rew [Dom] (eq_sym (descTotal DescZ)) in
     ((D; c): ({D0: mkFrame (νTowerDeps (tt: (νSetAt 0).(prefix))) &
-       X.(this _ _) D0}: HSet)))
+       this X D0}: HSet)))
   = rew <- [νFrameDom] (prefixEq rel0) in D :=
   hunit_ext tt (rew <- [νFrameDom] (prefixEq rel0) in D).
 
 Definition fgThis0:
-  νFillerEqvType (prefixEq rel0) (pshFiller0 (g X)) (X.(this _ _)) :=
+  νFillerEqvType (prefixEq rel0) (pshFiller0 (g X)) (this X) :=
   fun D => fillerEquivOf (rewEquiv νFrameDom (eq_sym (prefixEq rel0)))
     (descTotal DescZ) pshF0A frt0 D.
 
@@ -396,7 +398,7 @@ Definition fgThis0:
     empty, so both applications of [νFace] reduce by conversion. *)
 
 Lemma fgFrameStep0:
-  FrtInv (relStep rel0 fgThis0) (tower1 (g X)) (X.(next _ _)) (DescS DescZ).
+  FrtInv (relStep rel0 fgThis0) (tower1 (g X)) (next X) (DescS DescZ).
 Proof.
   intros D c.
   refine (νFaceEq (dcTop := prefixDepsCohs
@@ -419,29 +421,30 @@ Qed.
 
 (** The corecursion
 
-    The state is the tower state of the presheaf side with the descent
-    witness, the prefix relation reached so far, and the frame
-    identification; every component steps by its own step lemma, and the
-    filler equivalence stored at each level is the contraction. *)
+    The state is the target tower position with its descent witness, the
+    prefix relation reached so far, and the frame identification; every
+    component steps by its own step lemma, and the filler equivalence
+    stored at each level is the contraction. The presheaf side runs along
+    [pshChain], whose stepping is definitional: [pshTw (g X) m.+1] is
+    [towerStep (g X) (pshTw (g X) m) (pshTwRp (g X) m)], and
+    [next (pshFrom (g X) m.+1)] is [pshFrom (g X) m.+2]. *)
 
-CoFixpoint fgGen {m} {XpA XpB: (νSetAt m.+1).(prefix)}
-  (r: PrefixRel m.+1 XpA XpB)
-  (T: PshTower (g X) m XpA) (rpPsh: PshTowerRestrPaintings (g X) T)
-  (SB: νSetFrom m.+1 XpB) (HD: Desc SB) (FRT: FrtInv r T SB HD):
-  νSetFromEquiv r (pshNext (g X) m XpA T rpPsh) SB :=
-  trCons _ _ _ r (pshNext (g X) m XpA T rpPsh) SB
-    (fgThis r T SB HD FRT)
-    (fgGen (relStep r (fgThis r T SB HD FRT))
-      (towerStep (g X) T rpPsh) (towerStepRestrPaintings (g X) T rpPsh)
-      (SB.(next _ _)) (DescS HD)
-      (fgFrameStep r T rpPsh SB HD FRT)).
+CoFixpoint fgGen (m: nat) {XpB: (νSetAt m.+1).(prefix)}
+  (r: PrefixRel m.+1 (pshApprox (g X) m.+1) XpB)
+  (SB: νSetFrom m.+1 XpB) (HD: Desc SB)
+  (FRT: FrtInv r (pshTw (g X) m) SB HD):
+  νSetFromEquiv r (pshFrom (g X) m.+1) SB :=
+  trCons _ _ _ r (pshFrom (g X) m.+1) SB
+    (fgThis r (pshTw (g X) m) SB HD FRT)
+    (fgGen m.+1 (relStep r (fgThis r (pshTw (g X) m) SB HD FRT))
+      (next SB) (DescS HD)
+      (fgFrameStep r (pshTw (g X) m) (pshTwRp (g X) m) SB HD FRT)).
 
 Definition fg: νSetFromEquiv rel0 (f (g X)) X :=
   trCons _ _ _ rel0 (f (g X)) X
     fgThis0
-    (fgGen (relStep rel0 fgThis0)
-      (tower1 (g X)) (tower1RestrPaintings (g X))
-      (X.(next _ _)) (DescS DescZ)
+    (fgGen 0 (relStep rel0 fgThis0)
+      (next X) (DescS DescZ)
       fgFrameStep0).
 
 End FG.

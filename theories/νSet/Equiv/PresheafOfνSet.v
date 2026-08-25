@@ -3,7 +3,7 @@
     [g: νSets -> Presheaf].
 
     The presheaf reads off the tower directly: the total spaces of the
-    coinductive tower as [F0], [νFace] as the face maps, and [νFaceCoh]
+    ω-limit tower as [F0], [νFace] as the face maps, and [νFaceCoh]
     as the exchange law. *)
 
 Import Logic.EqNotations.
@@ -11,6 +11,8 @@ Import Logic.EqNotations.
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT HSet LeSProp NatLemmas Notation νSet.Layer
   νSet Face Presheaf νSetOfPresheaf.
+
+From Bonak Require Import Limit.
 
 Set Primitive Projections.
 Set Printing Projections.
@@ -21,7 +23,7 @@ Import A.
 
 Module Export νSetOfPresheaf := νSetOfPresheaf.νSetOfPresheaf A.
 
-(** The tower data at a coinductive position
+(** The tower data at a position
 
     [νSetFrom m Xpre] holds the fillers of all levels [>= m] over the prefix
     [Xpre]. The [νSetData] at the position ([νDataAt], from [νSetEquiv.v]),
@@ -32,22 +34,22 @@ Module Export νSetOfPresheaf := νSetOfPresheaf.νSetOfPresheaf A.
 Definition νDepsCohsAt {m} {Xpre: (νSetAt m).(prefix)}
   (X: νSetFrom m Xpre): DepsCohs m 0 := {|
   _deps := toDepsRestr (νDataAt Xpre).(restrFrames);
-  _extraDeps := TopRestrDep (X.(this _ _));
-  _restrPaintings := (νDataAt Xpre).(restrPaintings) (X.(this _ _));
-  _cohs := (νDataAt Xpre).(cohFrames) (X.(this _ _));
+  _extraDeps := TopRestrDep (this X);
+  _restrPaintings := (νDataAt Xpre).(restrPaintings) (this X);
+  _cohs := (νDataAt Xpre).(cohFrames) (this X);
 |}.
 
 Definition νDepsCohs2At {m} {Xpre: (νSetAt m).(prefix)}
   (X: νSetFrom m Xpre): DepsCohs2 m 0 := {|
   _depsCohs := νDepsCohsAt X;
-  _extraDepsCohs := TopCohDep (X.(next _ _).(this _ _));
-  _cohPaintings := (νDataAt Xpre).(cohPaintings) (X.(this _ _))
-    (X.(next _ _).(this _ _));
+  _extraDepsCohs := TopCohDep (this (next X));
+  _cohPaintings := (νDataAt Xpre).(cohPaintings) (this X)
+    (this (next X));
 |}.
 
 Definition νTotal {m} {Xpre: (νSetAt m).(prefix)} (X: νSetFrom m Xpre):
   HSet :=
-  {D: mkFrame (toDepsRestr (νDataAt Xpre).(restrFrames)) & X.(this _ _) D}.
+  {D: mkFrame (toDepsRestr (νDataAt Xpre).(restrFrames)) & (this X) D}.
 
 (** [F0]: the total spaces down the tower *)
 
@@ -55,7 +57,7 @@ Fixpoint gF0 {m} {Xpre: (νSetAt m).(prefix)} (X: νSetFrom m Xpre)
   (n: nat): HSet :=
   match n with
   | 0 => νTotal X
-  | S n => gF0 (X.(next _ _)) n
+  | S n => gF0 (next X) n
   end.
 
 (** Chain synthesis
@@ -116,7 +118,7 @@ Definition dc2PackCohs {P K} {T: DepsCohs2 P K} (s: Chain2Pack T):
     depend on the chain's endpoint. Erases dimension [m - j]. *)
 
 Definition νFaceFuel {m} {Xpre: (νSetAt m).(prefix)} (X: νSetFrom m Xpre)
-  (j: nat) (ε: arity) (d: νTotal (X.(next _ _))): νTotal X :=
+  (j: nat) (ε: arity) (d: νTotal (next X)): νTotal X :=
   νFace ((dc2PackDeps (chain2Down (νDepsCohs2At X) j)).2.2.2) ε d.1.
 
 (** The face maps: relative descent, then [νFaceFuel] *)
@@ -128,7 +130,7 @@ Fixpoint gFace {m} {Xpre: (νSetAt m).(prefix)} (X: νSetFrom m Xpre)
     forall (dim: nat), dim <= n + m -> arity -> gF0 X n.+1 -> gF0 X n with
   | 0 => fun dim Hdim ε d => νFaceFuel X (m - dim) ε d
   | S n => fun dim Hdim ε d =>
-      gFace (X.(next _ _)) n dim (leR_eq_r (plus_n_Sm n m) Hdim) ε d
+      gFace (next X) n dim (leR_eq_r (plus_n_Sm n m) Hdim) ε d
   end.
 
 (** The exchange law
@@ -189,7 +191,7 @@ Qed.
 
 Lemma packLevelCross {m} {Xpre: (νSetAt m).(prefix)} (X: νSetFrom m Xpre)
   (j: nat) (Hj: j <= m):
-  dc2PackDeps (chain2Down (νDepsCohs2At (X.(next _ _))) j) =
+  dc2PackDeps (chain2Down (νDepsCohs2At (next X)) j) =
   dc2PackCohs (chain2Down (νDepsCohs2At X) j).
 Proof.
   revert Hj; induction j; intro Hj.
@@ -205,9 +207,9 @@ Qed.
 
 Lemma νFaceFuelCoh {m} {Xpre: (νSetAt m).(prefix)} (X: νSetFrom m Xpre)
   (q: nat) (Hq: q <= m) (r: nat) (Hr: r <= q) (ε ω: arity)
-  (d: νTotal (X.(next _ _).(next _ _))):
-  νFaceFuel X (m - q) ε (νFaceFuel (X.(next _ _)) (m.+1 - r) ω d) =
-  νFaceFuel X (m - r) ω (νFaceFuel (X.(next _ _)) (m - q) ε d).
+  (d: νTotal (next (next X))):
+  νFaceFuel X (m - q) ε (νFaceFuel (next X) (m.+1 - r) ω d) =
+  νFaceFuel X (m - r) ω (νFaceFuel (next X) (m - q) ε d).
 Proof.
   unfold νFaceFuel.
   rewrite (subSuccL (Hr ↕ Hq)).
@@ -238,7 +240,7 @@ Fixpoint gFaceCoh {m} {Xpre: (νSetAt m).(prefix)} (X: νSetFrom m Xpre)
     gFace X n r (Hr ↕ Hq) ω (gFace X n.+1 q.+1 (⇑ Hq) ε d) with
   | 0 => fun q Hq r Hr ε ω d => νFaceFuelCoh X q Hq r Hr ε ω d
   | S n => fun q Hq r Hr ε ω d =>
-      gFaceCoh (X.(next _ _)) n q (leR_eq_r (plus_n_Sm n m) Hq) r Hr ε ω d
+      gFaceCoh (next X) n q (leR_eq_r (plus_n_Sm n m) Hq) r Hr ε ω d
   end.
 
 (** The presheaf of a ν-set *)

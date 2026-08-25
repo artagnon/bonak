@@ -14,6 +14,8 @@ Set Warnings "-notation-overridden".
 From Bonak Require Import SigT RewLemmas HSet LeSProp Notation νSet.Layer
   νSet Face PresheafEquiv.
 
+From Bonak Require Import Limit.
+
 Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.
@@ -571,16 +573,10 @@ Qed.
 
 (** The tower and the final construction
 
-    The corecursive state at tower level [m.+1], along the
-    candidate-filler prefix [X]: the presheaf-side data over the tower's
-    own dependencies — the [_pdeps] of the assembled [PshDepsRestr]
-    ([towerPshDeps]) is pinned *by construction* to [νSetAt]'s, so the
-    candidate filler has exactly the type the [this] field of [νSetFrom]
-    expects. The restr-painting coherences (stated against the assembled
-    [PshDepsRestr], hence carried separately) complete the state to a
-    [PshDepsCohs] at the candidate extension ([towerPshDepsCohs]), from
-    which the presheaf-side block and coherence layer above rebuild the
-    entire state one level up ([towerStep], corresponding to [mkνSetData]). *)
+    [PshTower] stores the presheaf-side data over the dependencies of a
+    level-[m.+1] prefix. [PshTowerRestrPaintings] supplies the coherence
+    needed by [towerPshDepsCohs], and [towerStep] constructs the state at
+    the candidate extension. *)
 
 Definition mkTowerDeps {m} (X: (νSetAt m.+1).(prefix)): DepsRestr m.+1 0 :=
   toDepsRestr ((νSetAt m.+1).(data) X).(restrFrames).
@@ -635,15 +631,9 @@ Definition towerStepRestrPaintings {m X} (T: PshTower m X)
   PshTowerRestrPaintings (towerStep T rp) :=
   mkPshRestrPaintings (TopPshCohDep (PC := towerPshDepsCohs T rp)).
 
-CoFixpoint pshNext (m: nat) (X: (νSetAt m.+1).(prefix))
-  (T: PshTower m X) (rp: PshTowerRestrPaintings T): νSetFrom m.+1 X :=
-  cons m.+1 X (mkPshFiller (towerPshDeps T))
-    (pshNext m.+1 (X; mkPshFiller (towerPshDeps T))
-      (towerStep T rp) (towerStepRestrPaintings T rp)).
-
-(** Initial data for [pshNext]. At level 0, the candidate filler pairs a
-    point with an identification in the [unit] frame. The level-1 state
-    consists of [unit] prefixes and constant frame maps. *)
+(** At level 0, the candidate filler pairs a point with an
+    identification in the [unit] frame. The level-1 state consists of
+    [unit] prefixes and constant frame maps. *)
 
 Definition pshFiller0:
   mkFrame (toDepsRestr ((νSetAt 0).(data) tt).(restrFrames)) -> HSet :=
@@ -666,8 +656,57 @@ Proof.
     + now destruct (leR_O_contra Hq).
 Defined.
 
-Definition f: νSets :=
-  cons 0 tt pshFiller0 (pshNext 0 (tt; pshFiller0) tower1 tower1RestrPaintings).
+(** Closing the tower
+
+    [pshChain] recursively pairs each prefix with the state that produces
+    its next extension. Its bonding equations hold by conversion, so
+    [this] and [next] of the resulting tower compute to the candidate
+    filler and to the tower one level up. *)
+
+Definition PshState (l: nat): (νSetAt l).(prefix) -> Type :=
+  match l with
+  | 0 => fun _ => unit
+  | l.+1 => fun X => {T: PshTower l X &T PshTowerRestrPaintings T}
+  end.
+
+Definition pshExtend (l: nat):
+  forall (X: (νSetAt l).(prefix)), PshState l X ->
+  {E: mkExtensionType X &T PshState l.+1 (X; E)} :=
+  match l return forall X: (νSetAt l).(prefix), PshState l X ->
+    {E: mkExtensionType X &T PshState l.+1 (X; E)} with
+  | 0 => fun X =>
+    match X as X0 return PshState 0 X0 ->
+      {E: mkExtensionType (X0: (νSetAt 0).(prefix)) &T
+       PshState 1 ((X0: (νSetAt 0).(prefix)); E)} with
+    | tt => fun _ => (pshFiller0; (tower1; tower1RestrPaintings))
+    end
+  | l.+1 => fun X s => (mkPshFiller (towerPshDeps s.1);
+      (towerStep s.1 s.2; towerStepRestrPaintings s.1 s.2))
+  end.
+
+Fixpoint pshChain (l: nat): {X: (νSetAt l).(prefix) &T PshState l X} :=
+  match l with
+  | 0 => (tt; tt)
+  | l.+1 =>
+    let s := pshChain l in
+    let e := pshExtend l s.1 s.2 in
+    ((s.1; e.1); e.2)
+  end.
+
+Definition pshApprox (l: nat): (νSetAt l).(prefix) := (pshChain l).1.
+
+Definition pshTw (m: nat): PshTower m (pshApprox m.+1) := (pshChain m.+1).2.1.
+
+Definition pshTwRp (m: nat): PshTowerRestrPaintings (pshTw m) :=
+  (pshChain m.+1).2.2.
+
+(** [pshApprox] is definitionally coherent, so its bonding proof is
+    reflexivity. *)
+
+Definition pshFrom (n: nat): νSetFrom n (pshApprox n) :=
+  ofChain (T := νSetTel) pshApprox (fun _ => eq_refl) n.
+
+Definition f: νSets := pshFrom 0.
 
 End νSetOfPresheaf.
 

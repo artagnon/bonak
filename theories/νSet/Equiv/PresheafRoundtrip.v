@@ -11,6 +11,8 @@ From Bonak Require Import SigT HSet LeSProp NatLemmas Notation νSet.Layer
   νSet Face Presheaf νSetOfPresheaf PresheafOfνSet νSetRoundtrip.
 From Bonak.νSet.Lib Require Import Equiv.
 
+From Bonak Require Import Limit.
+
 Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.
@@ -76,10 +78,10 @@ Proof.
   destruct s as (p, (k, (PC, C))). now destruct p.
 Qed.
 
-Lemma gfChainAlign {m} {Xpre: (νSetAt m.+1).(prefix)}
-  (T: PshTower psh m Xpre) (rp: PshTowerRestrPaintings psh T) (j: nat):
-  dc2PackDeps (chain2Down (νDepsCohs2At (pshNext psh m Xpre T rp)) j) =
-  pshPackDC (pshChain2Down (towerPshDepsCohs psh T rp) j).
+Lemma gfChainAlign (m j: nat):
+  dc2PackDeps (chain2Down (νDepsCohs2At (pshFrom psh m.+1)) j) =
+  pshPackDC (pshChain2Down (towerPshDepsCohs psh (pshTw psh m)
+    (pshTwRp psh m)) j).
 Proof.
   induction j.
   - now reflexivity.
@@ -91,28 +93,28 @@ Qed.
     The face of a candidate-filled cell projects to the [psh]-face of its
     cell: align the chain, apply [pshνFace], fix the dimension. *)
 
-Lemma gfFaceBottom {m} {Xpre: (νSetAt m.+1).(prefix)}
-  (T: PshTower psh m Xpre) (rp: PshTowerRestrPaintings psh T)
+Lemma gfFaceBottom (m: nat)
   (dim: nat) (Hdim: dim <= m.+1) (ε: arity)
-  (x: νTotal ((pshNext psh m Xpre T rp).(next _ _))):
-  (νFaceFuel (pshNext psh m Xpre T rp) (m.+1 - dim) ε x).2.1 =
+  (x: νTotal (next (pshFrom psh m.+1))):
+  (νFaceFuel (pshFrom psh m.+1) (m.+1 - dim) ε x).2.1 =
   psh.(Face) m.+1 dim Hdim ε x.2.1.
 Proof.
   destruct x as (D, (d, e)).
   unfold νFaceFuel.
   rewrite e.
-  rewrite (gfChainAlign T rp (m.+1 - dim)).
-  assert (SE: (pshChain2Down (towerPshDepsCohs psh T rp) (m.+1 - dim)).1
-    = dim).
+  rewrite (gfChainAlign m (m.+1 - dim)).
+  assert (SE: (pshChain2Down (towerPshDepsCohs psh (pshTw psh m)
+    (pshTwRp psh m)) (m.+1 - dim)).1 = dim).
   { rewrite pshChain2DownStage. now exact (subSubCancel Hdim). }
   rewrite (pshνFace psh
-    ((pshChain2Down (towerPshDepsCohs psh T rp) (m.+1 - dim)).2.2.2)
+    ((pshChain2Down (towerPshDepsCohs psh (pshTw psh m) (pshTwRp psh m))
+      (m.+1 - dim)).2.2.2)
     (leR_eq (eq_sym SE) Hdim) ε d).
   now exact (pshFaceDimIrr psh SE ε d).
 Qed.
 
 Lemma gfFaceBottom0 (dim: nat) (Hdim: dim <= 0) (ε: arity)
-  (x: νTotal ((f psh).(next _ _))):
+  (x: νTotal (next (f psh))):
   (νFaceFuel (f psh) (0 - dim) ε x).2.1 = psh.(Face) 0 dim Hdim ε x.2.1.
 Proof.
   destruct dim. 2: destruct (leR_O_contra Hdim).
@@ -129,43 +131,34 @@ Qed.
     equation at the base case, leaving the equivalences independent of
     transports along the descent. *)
 
-Fixpoint gfEquiv {m} {Xpre: (νSetAt m.+1).(prefix)}
-  (T: PshTower psh m Xpre) (rp: PshTowerRestrPaintings psh T)
-  (n: nat) {struct n}:
+Fixpoint gfEquiv (m n: nat) {struct n}:
   forall (L: nat), L = n + m.+1 ->
-  Equiv (gF0 (pshNext psh m Xpre T rp) n) (psh.(F0) L) :=
+  Equiv (gF0 (pshFrom psh m.+1) n) (psh.(F0) L) :=
   match n return forall (L: nat), L = n + m.+1 ->
-    Equiv (gF0 (pshNext psh m Xpre T rp) n) (psh.(F0) L) with
+    Equiv (gF0 (pshFrom psh m.+1) n) (psh.(F0) L) with
   | 0 => fun L HL =>
-      rew [fun l => Equiv (νTotal (pshNext psh m Xpre T rp)) (psh.(F0) l)]
+      rew [fun l => Equiv (νTotal (pshFrom psh m.+1)) (psh.(F0) l)]
         (eq_sym HL) in
-      fillerEquiv (mkPshFrame psh (towerPshDeps psh T))
-  | S n => fun L HL =>
-      gfEquiv (towerStep psh T rp) (towerStepRestrPaintings psh T rp) n L
-        (HL • plus_n_Sm n m.+1)
+      fillerEquiv (mkPshFrame psh (towerPshDeps psh (pshTw psh m)))
+  | S n => fun L HL => gfEquiv m.+1 n L (HL • plus_n_Sm n m.+1)
   end.
 
 (** The threaded level equation is proof-irrelevant ([natUIP]), and the
     successor case of [gfEquiv] unfolds definitionally. These are the two
     facts used by the descent proofs on the folded fixpoint. *)
 
-Lemma gfEquivIrr {m} {Xpre: (νSetAt m.+1).(prefix)}
-  (T: PshTower psh m Xpre) (rp: PshTowerRestrPaintings psh T)
-  (n L: nat) (HL HL': L = n + m.+1):
-  gfEquiv T rp n L HL = gfEquiv T rp n L HL'.
+Lemma gfEquivIrr (m n L: nat) (HL HL': L = n + m.+1):
+  gfEquiv m n L HL = gfEquiv m n L HL'.
 Proof.
   now rewrite (natUIP HL HL').
 Qed.
 
-Fixpoint gfFaceEquiv {m} {Xpre: (νSetAt m.+1).(prefix)}
-  (T: PshTower psh m Xpre) (rp: PshTowerRestrPaintings psh T)
-  (n: nat) {struct n}:
+Fixpoint gfFaceEquiv (m n: nat) {struct n}:
   forall (L: nat) (HL: L = n + m.+1) (HL2: L.+1 = n.+1 + m.+1)
     (dim: nat) (Hd: dim <= n + m.+1) (Hd': dim <= L) (ε: arity)
-    (x: gF0 (pshNext psh m Xpre T rp) n.+1),
-  gfEquiv T rp n L HL
-    (gFace (pshNext psh m Xpre T rp) n dim Hd ε x) =
-  psh.(Face) L dim Hd' ε (gfEquiv T rp n.+1 L.+1 HL2 x).
+    (x: gF0 (pshFrom psh m.+1) n.+1),
+  gfEquiv m n L HL (gFace (pshFrom psh m.+1) n dim Hd ε x) =
+  psh.(Face) L dim Hd' ε (gfEquiv m n.+1 L.+1 HL2 x).
 Proof.
   destruct n; intros.
   - set (HLs := eq_sym HL).
@@ -174,9 +167,8 @@ Proof.
     destruct HLs.
     cbn [gfEquiv].
     rewrite (natUIP (HL2 • plus_n_Sm 0 m.+1) eq_refl).
-    now exact (gfFaceBottom T rp dim Hd' ε x).
-  - now exact (gfFaceEquiv _ _
-      (towerStep psh T rp) (towerStepRestrPaintings psh T rp) n L
+    now exact (gfFaceBottom m dim Hd' ε x).
+  - now exact (gfFaceEquiv m.+1 n L
       (HL • plus_n_Sm n m.+1)
       (HL2 • plus_n_Sm n.+1 m.+1)
       dim (leR_eq_r (plus_n_Sm n m.+1) Hd) Hd' ε x).
@@ -189,7 +181,7 @@ Definition gfF0Equiv (n: nat): Equiv (gF0 (f psh) n) (psh.(F0) n) :=
   | 0 => fillerEquiv
       (B := mkFrame (toDepsRestr ((νSetAt 0).(data) tt).(restrFrames)))
       (fun _: psh.(F0) 0 => tt)
-  | S n => gfEquiv (tower1 psh) (tower1RestrPaintings psh) n n.+1
+  | S n => gfEquiv 0 n n.+1
       (f_equal S (plus_n_O n) • plus_n_Sm n 0)
   end.
 
@@ -200,10 +192,10 @@ Lemma gfFaceEquivTop (n q: nat) (Hq: q <= n) (ε: arity)
 Proof.
   destruct n.
   - unfold gfF0Equiv.
-    rewrite (gfEquivIrr _ _ 0 _
+    rewrite (gfEquivIrr 0 0 _
       (f_equal S (plus_n_O 0) • plus_n_Sm 0 0) eq_refl).
     now exact (gfFaceBottom0 q Hq ε x).
-  - now exact (gfFaceEquiv (tower1 psh) (tower1RestrPaintings psh) n n.+1
+  - now exact (gfFaceEquiv 0 n n.+1
       (f_equal S (plus_n_O n) • plus_n_Sm n 0)
       (f_equal S (plus_n_O n.+1) • plus_n_Sm n.+1 0)
       q (leR_eq_r (f_equal S (plus_n_O n) • plus_n_Sm n 0) Hq)

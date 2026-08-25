@@ -24,6 +24,8 @@ From Bonak Require Import SigT RewLemmas HSet LeSProp Notation Univalence
   νSet.Layer νSet.
 From Bonak.νSet.Lib Require Import Equiv.
 
+From Bonak Require Import Limit.
+
 Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.
@@ -231,9 +233,9 @@ Qed.
 CoInductive νSetFromEquiv {n} {XA XB: (νSetAt n).(prefix)}
   (r: PrefixRel n XA XB)
   (SA: νSetFrom n XA) (SB: νSetFrom n XB): Type := trCons {
-  thisEquiv: νFillerEqvType (prefixEq r) (SA.(this _ _)) (SB.(this _ _));
+  thisEquiv: νFillerEqvType (prefixEq r) (this SA) (this SB);
   nextEquiv: νSetFromEquiv (relStep r thisEquiv)
-    (SA.(next _ _)) (SB.(next _ _));
+    (next SA) (next SB);
 }.
 
 End νSetEquiv.
