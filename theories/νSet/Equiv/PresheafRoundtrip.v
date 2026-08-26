@@ -8,10 +8,8 @@ Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT HSet LeSProp NatLemmas Notation νSet.Layer
-  νSet Face Presheaf νSetOfPresheaf PresheafOfνSet νSetRoundtrip.
+  νSet Face Presheaf νSetOfPresheaf PresheafOfνSet νSetRoundtrip Limit.
 From Bonak.νSet.Lib Require Import Equiv.
-
-From Bonak Require Import Limit.
 
 Set Primitive Projections.
 Set Printing Projections.
