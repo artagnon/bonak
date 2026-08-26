@@ -2428,18 +2428,36 @@ Instance mkDgnData {p} (C: νSetData p)
     (fun E'' L' cohL' => mkCohReflAboveAbovePaintings (deps2 E'')
       (TopReflCoh2Dep (deps := deps2 E'') L' cohL'.2)).
 
+(** The degeneracy structure over a [νSet] truncated at dimension [p].
+
+    A degeneracy layer relates two consecutive fillers, so it cannot be
+    formed from the fillers a prefix [X] records alone. The class therefore
+    keeps the topmost layer abstracted over the filler extending [X]:
+    [dgnStepType X R E] is the type of the layer relating the top filler of
+    [X] to [E], and [dgnStepData] turns such a layer into the degeneracy
+    data over the extended prefix. [dgnPrefix] is then indexed by a prefix
+    at dimension [p], carrying one layer for each of its [p] fillers. *)
+
 Class νDgnSet p (C: νSet p) := {
-  dgnPrefix: (mkνSet C).(prefix) -> Type;
-  dgnData (X: (mkνSet C).(prefix)): dgnPrefix X -> DgnData (C.(data) X.1) X.2;
+  dgnPrefix: C.(prefix) -> Type;
+  dgnStepType (X: C.(prefix)) (R: dgnPrefix X)
+    (E: mkFrame (dgnDepsRestr (C.(data) X)) -> HSet): Type;
+  dgnStepData (X: C.(prefix)) (R: dgnPrefix X)
+    (E: mkFrame (dgnDepsRestr (C.(data) X)) -> HSet):
+    dgnStepType X R E -> DgnData (C.(data) X) E;
 }.
 
 Definition mkDgnPrefix p {C: νSet p} {D: νDgnSet p C}
-  (X: (mkνSet (mkνSet C)).(prefix)): Type :=
-  { R: D.(dgnPrefix) X.1 &T
-    { dgnL: dgnHasReflFromData
-        (C.(data) X.1.1) X.1.2 X.2 (D.(dgnData) X.1 R) &T
-      dgnCohLFromData
-        (C.(data) X.1.1) X.1.2 X.2 (D.(dgnData) X.1 R) dgnL } }.
+  (X: (mkνSet C).(prefix)): Type :=
+  { R: D.(dgnPrefix) X.1 &T D.(dgnStepType) X.1 R X.2 }.
+
+Definition mkDgnStepType p {C: νSet p} {D: νDgnSet p C}
+  (X: (mkνSet C).(prefix)) (R: mkDgnPrefix p X)
+  (E: mkFrame (dgnDepsRestr ((mkνSet C).(data) X)) -> HSet): Type :=
+  { dgnL: dgnHasReflFromData
+      (C.(data) X.1) X.2 E (D.(dgnStepData) X.1 R.1 X.2 R.2) &T
+    dgnCohLFromData
+      (C.(data) X.1) X.2 E (D.(dgnStepData) X.1 R.1 X.2 R.2) dgnL }.
 
 #[local]
 Definition mkνSetData0: νSetData 0 :=
@@ -2483,9 +2501,10 @@ Definition mkDgnData0
 Instance mkνDgnSet0: νDgnSet 0 mkνSet0 :=
   {|
     dgnPrefix := fun _ => unit;
-    dgnData := fun (X: (mkνSet mkνSet0).(prefix)) _ =>
-      match X.1 as X0 return DgnData (mkνSet0.(data) X0) X.2 with
-      | tt => mkDgnData0 X.2
+    dgnStepType := fun _ _ _ => unit;
+    dgnStepData := fun (X: mkνSet0.(prefix)) _ E _ =>
+      match X as X0 return DgnData (mkνSet0.(data) X0) E with
+      | tt => mkDgnData0 E
       end;
   |}.
 
@@ -2494,8 +2513,10 @@ Instance mkνDgnSetSn {p} (C: νSet p) (D: νDgnSet p C):
   νDgnSet p.+1 (mkνSet C) :=
   {|
     dgnPrefix := fun X => mkDgnPrefix p (C := C) (D := D) X;
-    dgnData := fun X L =>
-      mkDgnData (C.(data) X.1.1) X.1.2 X.2 (D.(dgnData) X.1 L.1) L.2.1 L.2.2;
+    dgnStepType := fun X R E => mkDgnStepType p (C := C) (D := D) X R E;
+    dgnStepData := fun X R E L =>
+      mkDgnData (C.(data) X.1) X.2 E
+        (D.(dgnStepData) X.1 R.1 X.2 R.2) L.1 L.2;
   |}.
 
 Fixpoint νDgnSetAt n: νDgnSet n (νSetAt n) :=
@@ -2504,24 +2525,28 @@ Fixpoint νDgnSetAt n: νDgnSet n (νSetAt n) :=
   | n.+1 => mkνDgnSetSn (νSetAt n) (νDgnSetAt n)
   end.
 
-(** A νSet prefix paired with the degeneracy prefix over it. *)
+(** A νSet prefix paired with the degeneracy prefix over it, both at the
+    same dimension. [DgnPrefix 0] is then contractible, and moving one
+    dimension up adds exactly one filler and one layer. *)
 Definition DgnPrefix (l: nat): Type :=
-  { X: (νSetAt l.+1).(prefix) &T (νDgnSetAt l).(dgnPrefix) X }.
+  { X: (νSetAt l).(prefix) &T (νDgnSetAt l).(dgnPrefix) X }.
+
+(** Moving one dimension up: a filler and the layer relating it to the one
+    below. Both components of [DgnPrefix l.+1] are Σ-types over those of
+    [DgnPrefix l], so this is uniform in [l], with no case on the
+    dimension. *)
+Definition dgnConsPrefix {l} (Y: DgnPrefix l)
+  (E: mkFrame (dgnDepsRestr ((νSetAt l).(data) Y.1)) -> HSet)
+  (L: (νDgnSetAt l).(dgnStepType) Y.1 Y.2 E): DgnPrefix l.+1 :=
+  ((Y.1; E); (Y.2; L)).
 
 CoInductive νDgnSetsFrom n (Y: DgnPrefix n): Type := dgncons {
-  dgnFiller: mkFrame
-    (toDepsRestr ((νSetAt n.+1).(data) Y.1).(restrFrames)) -> HSet;
-  dgnReflL: dgnHasReflFromData
-    ((νSetAt n).(data) Y.1.1) Y.1.2 dgnFiller
-    ((νDgnSetAt n).(dgnData) Y.1 Y.2);
-  dgnReflCohL: dgnCohLFromData
-    ((νSetAt n).(data) Y.1.1) Y.1.2 dgnFiller
-    ((νDgnSetAt n).(dgnData) Y.1 Y.2) dgnReflL;
-  dgnNext: νDgnSetsFrom n.+1
-    ((Y.1; dgnFiller); (Y.2; (dgnReflL; dgnReflCohL)));
+  dgnFiller: mkFrame (dgnDepsRestr ((νSetAt n).(data) Y.1)) -> HSet;
+  dgnStep: (νDgnSetAt n).(dgnStepType) Y.1 Y.2 dgnFiller;
+  dgnNext: νDgnSetsFrom n.+1 (dgnConsPrefix Y dgnFiller dgnStep);
 }.
 
-Definition νDgnSets := { Y: DgnPrefix 0 &T νDgnSetsFrom 0 Y }.
+Definition νDgnSets := νDgnSetsFrom 0 (tt; tt).
 
 End νDgnSet.
 
@@ -2531,10 +2556,10 @@ Module νDgnSetCubical := νDgnSet CubicalLayer.
 Definition Simplicial := νDgnSetSimplicial.νDgnSets.
 Definition Cubical := νDgnSetCubical.νDgnSets.
 
-Example Simplicial1 :=
-  Eval lazy -[leR] in νDgnSetSimplicial.DgnPrefix 1.
+Example Simplicial2 :=
+  Eval lazy -[leR] in νDgnSetSimplicial.DgnPrefix 2.
 
-Example Cubical1 :=
-  Eval lazy -[leR] in νDgnSetCubical.DgnPrefix 1.
+Example Cubical2 :=
+  Eval lazy -[leR] in νDgnSetCubical.DgnPrefix 2.
 
-Print Cubical1.
+Print Cubical2.
