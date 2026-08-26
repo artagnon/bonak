@@ -6,17 +6,17 @@
 
     This file is a thin wrapper on top of the two round trips:
     - [gf: PresheafEquiv (g (f psh)) psh] from [PresheafRoundtrip.v]
-    - [fg: νSetFromEquiv rel0 (f (g X)) X] from [νSetRoundtrip.v]
-    It combines them into an actual [Equiv] between the type of presheaves and
-    the type of νSets. The axioms enter where each side's notion of sameness is
-    turned into an equality — [presheafEquivEq] from [PresheafEquiv.v] on the
-    fibred side (a theorem, from univalence and funext), [νSetFromEquivEq] below
-    on the indexed side (an axiom, coinductive extensionality). *)
+    - [fg: νSetsEquiv (f (g X)) X] from [νSetRoundtrip.v]
+    It combines them into an [Equiv] between the type of presheaves and the
+    type of νSets. Each side's notion of sameness is turned into an equality
+    by a theorem assuming univalence and functional extensionality:
+    [presheafEquivEq] from [PresheafEquiv.v] on the fibred side,
+    [νSetsEquivEq] from [Extensionality.v] on the indexed side. *)
 
 Set Warnings "-notation-overridden".
 From Bonak Require Import HSet Notation νSet.Layer Univalence
   νSet Face PresheafEquiv νSetOfPresheaf PresheafOfνSet
-  νSetRoundtrip PresheafRoundtrip.
+  νSetRoundtrip PresheafRoundtrip Limit.
 From Bonak.νSet.Lib Require Import Equiv.
 
 Set Primitive Projections.
@@ -28,33 +28,23 @@ Import A.
 
 Module Export PresheafRoundtrip := PresheafRoundtrip.PresheafRoundtrip A.
 
-(** Extensionality for the coinductive ν-set tower
+(** Extensionality for the ν-set tower
 
-    [νSetFromEquiv rel0 SA SB] relates [SA] and [SB] level by level. At each
-    level it contains an equivalence between their filler fibres over the
-    equality of the prefixes reached so far, and a corresponding relation
-    between the tails over the extended prefix equality. All restriction and
-    coherence data at a level is computed from the prefix, so transport along
-    that equality supplies its compatibility.
+    [νSetsEquiv SA SB] relates [SA] and [SB] level by level: at each level
+    an equivalence between their filler fibres over the equality of the
+    prefixes reached so far, the levels tied together into a chain of prefix
+    relations. All restriction and coherence data at a level is computed
+    from the prefix, so transport along that equality supplies its
+    compatibility.
 
     The round trip [fg X] constructs this relation between [f (g X)] and [X].
-    The axiom below converts it into equality of the two coinductive towers.
-
-    Rocq's rules for primitive coinductive records do not provide this
-    extensionality principle. The intensional-stream model of Boulier, Pédrot,
-    and Tabareau, "The Next 700 Syntactical Models of Type Theory", Theorem 13,
-    separates bisimilarity from identity by adding state that identity observes
-    and the coinductive projections do not. The translation leaves universes
-    unchanged, so the separation is compatible with an assumed univalence
-    axiom. *)
-
-Axiom νSetFromEquivEq: forall SA SB: νSets,
-  νSetFromEquiv rel0 SA SB -> SA = SB.
+    [νSetsEquivEq] converts it into equality of the two towers by turning
+    each level's relation into a path between the finite prefixes. *)
 
 Definition presheafνSetsEquiv: Equiv Presheaf νSets :=
   qinvEquiv f g
     (fun psh => presheafEquivEq (gf psh))
-    (fun X => νSetFromEquivEq (f (g X)) X (fg X)).
+    (fun X => νSetsEquivEq (fg X)).
 
 Definition presheafEqνSets: Presheaf = νSets := ua presheafνSetsEquiv.
 

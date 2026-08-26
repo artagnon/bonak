@@ -1,5 +1,6 @@
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT νSet.Layer RewLemmas HSet Notation LeSProp.
+From Bonak Require Import SigT νSet.Layer RewLemmas HSet Notation LeSProp
+  Limit.
 
 Set Primitive Projections.
 Set Printing Projections.
@@ -638,10 +639,27 @@ Fixpoint νSetAt n: νSet n :=
   | n.+1 => mkνSet (νSetAt n)
   end.
 
-CoInductive νSetFrom n (X: (νSetAt n).(prefix)): Type := cons {
-  this: mkFrame (toDepsRestr ((νSetAt n).(data) X).(restrFrames)) -> HSet;
-  next: νSetFrom n.+1 (X; this);
-}.
+(** The ω-limit tower
+
+    Prefixes form a telescope: a prefix one level up is definitionally a
+    Σ-type over the one below, so extending is pairing and the bonding map
+    and the head are its two projections. A νSet is a limit of it. *)
+
+Definition mkExtensionType {p} {C: νSet p} (D: C.(prefix)): Type :=
+  mkFrame (toDepsRestr (C.(data) D).(restrFrames)) -> HSet.
+
+Definition νSetTel: Telescope := {|
+  stage l := (νSetAt l).(prefix);
+  datum l X := mkExtensionType X;
+  extend l X E := ((X; E): (νSetAt l.+1).(prefix));
+  bond l Y := Y.1;
+  head l Y := Y.2;
+  bondExtend l X E := eq_refl;
+  extendHead l Y := eq_refl;
+  bondExtendHead _ _ := eq_refl;
+|}.
+
+Definition νSetFrom n (X: (νSetAt n).(prefix)): Type := Limit νSetTel n X.
 
 (** The final construction *)
 Definition νSets := νSetFrom 0 tt.
@@ -659,3 +677,10 @@ Definition SemiCubical := νSetCubical.νSets.
 
 Example SemiSimplicial4 := Eval compute in (νSetSimplicial.νSetAt 4).(νSetSimplicial.prefix _).
 Print SemiSimplicial4.
+
+Example TrivialAugmentedSemiSimplicial: AugmentedSemiSimplicial :=
+  ana (T := νSetSimplicial.νSetTel) tt (fun n X _ => hunit).
+
+Example TrivialSemiSimplicial2 := Eval compute in
+  (approx TrivialAugmentedSemiSimplicial 2 leR_O).
+Print TrivialSemiSimplicial2.

@@ -1,7 +1,8 @@
 Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT νSet.Layer RewLemmas HSet LeSProp Notation νSet.
+From Bonak Require Import SigT νSet.Layer RewLemmas HSet LeSProp Notation
+  Limit νSet.
 
 Set Primitive Projections.
 Set Printing Projections.
@@ -2525,27 +2526,49 @@ Fixpoint νDgnSetAt n: νDgnSet n (νSetAt n) :=
   | n.+1 => mkνDgnSetSn (νSetAt n) (νDgnSetAt n)
   end.
 
-(** A νSet prefix paired with the degeneracy prefix over it, both at the
-    same dimension. [DgnPrefix 0] is then contractible, and moving one
-    dimension up adds exactly one filler and one layer. *)
+(** The ω-limit tower over the combined telescope
+
+    A stage pairs a νSet prefix with the degeneracy prefix over it, both at
+    the same dimension: a stage carries as many layers as fillers, so the
+    base stage is contractible and a step adds exactly one filler and one
+    layer. Both components are definitionally Σ-types over the stage below,
+    so the bonding map is a pair of first projections and the head a pair of
+    second ones, mutually inverse to extension by Σ-eta. The νSet chain
+    underlying a degeneracy tower [S] is one of its components,
+    [fun l Hl => (S.(dgnApprox) l Hl).1]. *)
+
 Definition DgnPrefix (l: nat): Type :=
   { X: (νSetAt l).(prefix) &T (νDgnSetAt l).(dgnPrefix) X }.
 
-(** Moving one dimension up: a filler and the layer relating it to the one
-    below. Both components of [DgnPrefix l.+1] are Σ-types over those of
-    [DgnPrefix l], so this is uniform in [l], with no case on the
-    dimension. *)
-Definition dgnConsPrefix {l} (Y: DgnPrefix l)
-  (E: mkFrame (dgnDepsRestr ((νSetAt l).(data) Y.1)) -> HSet)
-  (L: (νDgnSetAt l).(dgnStepType) Y.1 Y.2 E): DgnPrefix l.+1 :=
-  ((Y.1; E); (Y.2; L)).
+(** The datum at a stage: the next νSet filler together with the layer
+    relating it to the filler below. *)
+Definition dgnIncrType {n} (Y: DgnPrefix n): Type :=
+  { E: mkFrame (dgnDepsRestr ((νSetAt n).(data) Y.1)) -> HSet &T
+    (νDgnSetAt n).(dgnStepType) Y.1 Y.2 E }.
 
-CoInductive νDgnSetsFrom n (Y: DgnPrefix n): Type := dgncons {
-  dgnFiller: mkFrame (dgnDepsRestr ((νSetAt n).(data) Y.1)) -> HSet;
-  dgnStep: (νDgnSetAt n).(dgnStepType) Y.1 Y.2 dgnFiller;
-  dgnNext: νDgnSetsFrom n.+1 (dgnConsPrefix Y dgnFiller dgnStep);
-}.
+Definition dgnExtend {n} (Y: DgnPrefix n) (h: dgnIncrType Y): DgnPrefix n.+1 :=
+  ((Y.1; h.1); (Y.2; h.2)).
 
+Definition dgnBond {n} (Z: DgnPrefix n.+1): DgnPrefix n := (Z.1.1; Z.2.1).
+
+Definition dgnHead {n} (Z: DgnPrefix n.+1): dgnIncrType (dgnBond Z) :=
+  (Z.1.2; Z.2.2).
+
+Definition dgnTel: Telescope := {|
+  stage := DgnPrefix;
+  datum l Y := dgnIncrType Y;
+  extend l Y h := dgnExtend Y h;
+  bond l Z := dgnBond Z;
+  head l Z := dgnHead Z;
+  bondExtend l Y h := eq_refl;
+  extendHead l Z := eq_refl;
+  bondExtendHead _ _ := eq_refl;
+|}.
+
+Definition νDgnSetsFrom n (Y: DgnPrefix n): Type := Limit dgnTel n Y.
+
+(** The base stage is a Σ of two copies of [unit], so the construction is
+    the tower over its unique inhabitant. *)
 Definition νDgnSets := νDgnSetsFrom 0 (tt; tt).
 
 End νDgnSet.

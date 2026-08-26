@@ -1,5 +1,5 @@
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT RewLemmas HSet Notation LeSProp.
+From Bonak Require Import SigT RewLemmas HSet Notation LeSProp Limit.
 From Bonak Require Import νGpd.HGpd νGpd.Layer νGpd.Lemmas.
 
 Set Primitive Projections.
@@ -1160,10 +1160,27 @@ Fixpoint νGpdAt n: νGpd n :=
   | n.+1 => mkνGpd (νGpdAt n)
   end.
 
-CoInductive νGpdFrom n (X: (νGpdAt n).(prefix)): Type := cons {
-  this: mkFrame (toDepsRestr ((νGpdAt n).(data) X).(restrFrames)) -> HGpd;
-  next: νGpdFrom n.+1 (X; this);
-}.
+(** The ω-limit tower
+
+    Prefixes form a telescope: a prefix one level up is definitionally a
+    Σ-type over the one below, so extending is pairing and the bonding map
+    and the head are its two projections. A νGpd is a limit of it. *)
+
+Definition mkExtensionType {p} {C: νGpd p} (D: C.(prefix)): Type :=
+  mkFrame (toDepsRestr (C.(data) D).(restrFrames)) -> HGpd.
+
+Definition νGpdTel: Telescope := {|
+  stage l := (νGpdAt l).(prefix);
+  datum l X := mkExtensionType X;
+  extend l X E := ((X; E): (νGpdAt l.+1).(prefix));
+  bond l Y := Y.1;
+  head l Y := Y.2;
+  bondExtend l X E := eq_refl;
+  extendHead l Y := eq_refl;
+  bondExtendHead _ _ := eq_refl;
+|}.
+
+Definition νGpdFrom n (X: (νGpdAt n).(prefix)): Type := Limit νGpdTel n X.
 
 (** The final construction *)
 Definition νGpds := νGpdFrom 0 tt.

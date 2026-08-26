@@ -1,20 +1,21 @@
 (** The indexed side of the backward round trip [f ∘ g] of the
-    correspondence: [fg: νSetFromEquiv rel0 (f (g X)) X].
+    correspondence: [fg: νSetsEquiv (f (g X)) X].
 
-    The bisimulation is built level by level. At each level the cells of the
-    presheaf [g X] in the ambient dimension are identified with the total
-    space of the position reached in [X] (the descent witness [Desc]), and
-    the candidate fillers of [f (g X)] over a frame transported along the
-    prefix equality contract onto the fillers of [X] ([fillerEquivOf]). The
-    frame identification carried along the corecursion states that the
-    candidate frame of a transported cell is the transport of its frame; it
-    steps by [νFaceEq], every face of the two frames agreeing. *)
+    The levelwise equivalence is built level by level. At each level the
+    cells of the presheaf [g X] in the ambient dimension are identified with
+    the total space of the position reached in [X] (the descent witness
+    [Desc]), and the candidate fillers of [f (g X)] over a frame transported
+    along the prefix equality contract onto the fillers of [X]
+    ([fillerEquivOf]). The frame identification carried along the chain
+    states that the candidate frame of a transported cell is the transport
+    of its frame; it steps by [νFaceEq], every face of the two frames
+    agreeing. *)
 
 Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT RewLemmas HSet LeSProp NatLemmas Notation νSet.Layer
-  νSet Face Presheaf νSetOfPresheaf PresheafOfνSet.
+  νSet Face Presheaf νSetOfPresheaf PresheafOfνSet Limit.
 From Bonak.νSet.Lib Require Import Equiv.
 
 Set Primitive Projections.
@@ -191,7 +192,7 @@ Qed.
 
 (** The descent identification
 
-    The corecursive body of [fg] must, at an abstract level, identify the
+    The level step of [fg] must, at an abstract level, identify the
     cells of [g X] with the total spaces of the carried [X]-position.
     Induction on [Desc] proves this identification, with [plus_n_Sm]-style
     equalities on the relative index at each successor step. *)
@@ -204,7 +205,7 @@ Inductive Desc: forall {n} {Xpre: (νSetAt n).(prefix)},
   νSetFrom n Xpre -> Type :=
 | DescZ: Desc X
 | DescS {n} {Xpre: (νSetAt n).(prefix)} {S0: νSetFrom n Xpre}:
-    Desc S0 -> Desc (S0.(next _ _)).
+    Desc S0 -> Desc (next S0).
 
 (** Indexing by [k + n] makes the use sites instantiate [k := 0]. The
     branches supply the required [plus_n_O] and [plus_n_Sm] equalities. *)
@@ -218,7 +219,7 @@ Fixpoint descF0 {n} {Xpre: (νSetAt n).(prefix)} {S0: νSetFrom n Xpre}
   end.
 
 (** At [k := 0], the cells of [g X] at the position's level are the
-    total space of the position — the corecursive state's cell
+    total space of the position — the level state's cell
     identification. *)
 
 Definition descTotal {n} {Xpre: (νSetAt n).(prefix)} {S0: νSetFrom n Xpre}
@@ -284,10 +285,10 @@ Qed.
 Definition FrtInv {m} {XpA XpB: (νSetAt m.+1).(prefix)}
   (r: PrefixRel m.+1 XpA XpB)
   (T: PshTower (g X) m XpA) (SB: νSetFrom m.+1 XpB) (HD: Desc SB): Type :=
-  forall (D: mkFrame (νTowerDeps XpB)) (c: SB.(this _ _) D),
+  forall (D: mkFrame (νTowerDeps XpB)) (c: this SB D),
   mkPshFrame (g X) (towerPshDeps (g X) T)
     (rew [Dom] (eq_sym (descTotal HD)) in
-      ((D; c): ({D0: mkFrame (νTowerDeps XpB) & SB.(this _ _) D0}: HSet)))
+      ((D; c): ({D0: mkFrame (νTowerDeps XpB) & this SB D0}: HSet)))
   = rew <- [νFrameDom] (prefixEq r) in D.
 
 (** The filler equivalence of the round trip at a level: the
@@ -300,7 +301,7 @@ Definition fgThis {m} {XpA XpB: (νSetAt m.+1).(prefix)}
   (T: PshTower (g X) m XpA) (SB: νSetFrom m.+1 XpB) (HD: Desc SB)
   (FRT: FrtInv r T SB HD):
   νFillerEqvType (prefixEq r)
-    (mkPshFiller (g X) (towerPshDeps (g X) T)) (SB.(this _ _)) :=
+    (mkPshFiller (g X) (towerPshDeps (g X) T)) (this SB) :=
   fun D => fillerEquivOf (rewEquiv νFrameDom (eq_sym (prefixEq r)))
     (descTotal HD) (mkPshFrame (g X) (towerPshDeps (g X) T)) FRT D.
 
@@ -311,7 +312,7 @@ Definition fgThis {m} {XpA XpB: (νSetAt m.+1).(prefix)}
 
 Lemma fgFaceB {m} {Xpre: (νSetAt m.+1).(prefix)} (SB: νSetFrom m.+1 Xpre)
   {p k} {dc: DepsCohs p k} (cB: DepsCohsChain (νDepsCohsAt SB) dc)
-  (Hp: p <= m.+1) (ε: arity) (t: νTotal (SB.(next _ _))):
+  (Hp: p <= m.+1) (ε: arity) (t: νTotal (next SB)):
   gFace SB 0 p Hp ε t = νFace cB ε t.1.
 Proof.
   change (νFaceFuel SB (m.+1 - p) ε t = νFace cB ε t.1).
@@ -342,7 +343,7 @@ Lemma fgFrameStep {m} {XpA XpB: (νSetAt m.+1).(prefix)}
   (T: PshTower (g X) m XpA) (rpPsh: PshTowerRestrPaintings (g X) T)
   (SB: νSetFrom m.+1 XpB) (HD: Desc SB) (FRT: FrtInv r T SB HD):
   FrtInv (relStep r (fgThis r T SB HD FRT))
-    (towerStep (g X) T rpPsh) (SB.(next _ _)) (DescS HD).
+    (towerStep (g X) T rpPsh) (next SB) (DescS HD).
 Proof.
   intros D c.
   refine (νFaceEq
@@ -380,15 +381,15 @@ Definition pshF0A: gF0 X 0 ->
   mkFrame (νTowerDeps (tt: (νSetAt 0).(prefix))) := fun _ => tt.
 
 Definition frt0 (D: mkFrame (νTowerDeps (tt: (νSetAt 0).(prefix))))
-  (c: X.(this _ _) D):
+  (c: this X D):
   pshF0A (rew [Dom] (eq_sym (descTotal DescZ)) in
     ((D; c): ({D0: mkFrame (νTowerDeps (tt: (νSetAt 0).(prefix))) &
-       X.(this _ _) D0}: HSet)))
+       this X D0}: HSet)))
   = rew <- [νFrameDom] (prefixEq rel0) in D :=
   hunit_ext tt (rew <- [νFrameDom] (prefixEq rel0) in D).
 
 Definition fgThis0:
-  νFillerEqvType (prefixEq rel0) (pshFiller0 (g X)) (X.(this _ _)) :=
+  νFillerEqvType (prefixEq rel0) (pshFiller0 (g X)) (this X) :=
   fun D => fillerEquivOf (rewEquiv νFrameDom (eq_sym (prefixEq rel0)))
     (descTotal DescZ) pshF0A frt0 D.
 
@@ -396,7 +397,7 @@ Definition fgThis0:
     empty, so both applications of [νFace] reduce by conversion. *)
 
 Lemma fgFrameStep0:
-  FrtInv (relStep rel0 fgThis0) (tower1 (g X)) (X.(next _ _)) (DescS DescZ).
+  FrtInv (relStep rel0 fgThis0) (tower1 (g X)) (next X) (DescS DescZ).
 Proof.
   intros D c.
   refine (νFaceEq (dcTop := prefixDepsCohs
@@ -417,33 +418,110 @@ Proof.
     (νFace (dcTop := νDepsCohsAt X) DepsCohsChainNil ε D).2).
 Qed.
 
-(** The corecursion
+(** The round trip as a levelwise equivalence
 
-    The state is the tower state of the presheaf side with the descent
-    witness, the prefix relation reached so far, and the frame
-    identification; every component steps by its own step lemma, and the
-    filler equivalence stored at each level is the contraction. *)
+    [νSetsEquiv] asks for a chain of prefix relations bonded by first
+    projection. The relations are produced level by level by a chain
+    fixpoint whose state carries what the next level needs: the frame
+    identification, and the identification of the presheaf-side
+    approximation with the one [νSetPack] reaches.
 
-CoFixpoint fgGen {m} {XpA XpB: (νSetAt m.+1).(prefix)}
-  (r: PrefixRel m.+1 XpA XpB)
-  (T: PshTower (g X) m XpA) (rpPsh: PshTowerRestrPaintings (g X) T)
-  (SB: νSetFrom m.+1 XpB) (HD: Desc SB) (FRT: FrtInv r T SB HD):
-  νSetFromEquiv r (pshNext (g X) m XpA T rpPsh) SB :=
-  trCons _ _ _ r (pshNext (g X) m XpA T rpPsh) SB
-    (fgThis r T SB HD FRT)
-    (fgGen (relStep r (fgThis r T SB HD FRT))
-      (towerStep (g X) T rpPsh) (towerStepRestrPaintings (g X) T rpPsh)
-      (SB.(next _ _)) (DescS HD)
-      (fgFrameStep r T rpPsh SB HD FRT)).
+    [νSetPack m (f (g X))] and [(pshApprox (g X) m; pshFrom (g X) m)] are
+    two recursions on [m] that agree, but neither reduces at a variable
+    level, so the state also carries their identification. It is [eq_refl]
+    at every level: once the two agree at [m], the [νSetPack] step is the
+    presheaf step by conversion, because [pshApprox] bonds by [eq_refl].
+    The presheaf-side state steps definitionally in the same way,
+    [pshTw (g X) m.+1] being
+    [towerStep (g X) (pshTw (g X) m) (pshTwRp (g X) m)]. *)
 
-Definition fg: νSetFromEquiv rel0 (f (g X)) X :=
-  trCons _ _ _ rel0 (f (g X)) X
-    fgThis0
-    (fgGen (relStep rel0 fgThis0)
-      (tower1 (g X)) (tower1RestrPaintings (g X))
-      (X.(next _ _)) (DescS DescZ)
-      fgFrameStep0).
+Fixpoint descAt (m: nat): Desc ((νSetPack m X).2) :=
+  match m with
+  | 0 => DescZ
+  | S m => DescS (descAt m)
+  end.
 
+Definition FgState (m: nat)
+  (P: {Xp: (νSetAt m.+1).(prefix) &T νSetFrom m.+1 Xp})
+  (r: PrefixRel m.+1 P.1 ((νSetPack m.+1 X).1)): Type :=
+  { HP: (pshApprox (g X) m.+1; pshFrom (g X) m.+1) = P &T
+    FrtInv (rew <- [fun Q: {Xp: (νSetAt m.+1).(prefix) &T νSetFrom m.+1 Xp}
+                      => PrefixRel m.+1 Q.1 ((νSetPack m.+1 X).1)] HP in r)
+      (pshTw (g X) m) ((νSetPack m.+1 X).2) (descAt m.+1) }.
+
+Definition FgChainState (m: nat):
+  PrefixRel m (νSetPack m (f (g X))).1 ((νSetPack m X).1) -> Type :=
+  match m return PrefixRel m (νSetPack m (f (g X))).1 ((νSetPack m X).1) ->
+    Type with
+  | 0 => fun _ => unit
+  | S m => fun r => FgState m (νSetPack m.+1 (f (g X))) r
+  end.
+
+(** The level step at a positive level: it emits the level's filler
+    equivalence and rebuilds the state one level up, with the
+    identification of the two approximations consumed first so that the
+    filler equivalence is the presheaf-side one. *)
+
+Lemma fgStep (m: nat)
+  (P: {Xp: (νSetAt m.+1).(prefix) &T νSetFrom m.+1 Xp})
+  (r: PrefixRel m.+1 P.1 ((νSetPack m.+1 X).1)) (s: FgState m P r):
+  { E: νFillerEqvType (prefixEq r) (this P.2) (this ((νSetPack m.+1 X).2)) &T
+    FgState m.+1 ((P.1; this P.2); next P.2) (relStep r E) }.
+Proof.
+  destruct s as (HP, s); revert r s; destruct HP; intros r s; cbn in s |- *.
+  now exact
+    (fgThis r (pshTw (g X) m) ((νSetPack m.+1 X).2) (descAt m.+1) s;
+     (eq_refl;
+      fgFrameStep r (pshTw (g X) m) (pshTwRp (g X) m)
+        ((νSetPack m.+1 X).2) (descAt m.+1) s)).
+Defined.
+
+(** The level step at level 0: the prefix relation there is [unit], so it
+    is the canonical one and the level data is the base case. *)
+
+Lemma fgStep0
+  (r: PrefixRel 0 (νSetPack 0 (f (g X))).1 ((νSetPack 0 X).1))
+  (s: FgChainState 0 r):
+  { E: νFillerEqvType (prefixEq r)
+         (this ((νSetPack 0 (f (g X))).2)) (this ((νSetPack 0 X).2)) &T
+    FgChainState 1 (relStep r E) }.
+Proof.
+  destruct r.
+  now exact (fgThis0; (eq_refl; fgFrameStep0)).
+Defined.
+
+Definition fgExtend (m: nat):
+  forall r: PrefixRel m (νSetPack m (f (g X))).1 ((νSetPack m X).1),
+  FgChainState m r ->
+  { E: νFillerEqvType (prefixEq r)
+         (this ((νSetPack m (f (g X))).2)) (this ((νSetPack m X).2)) &T
+    FgChainState m.+1 (relStep r E) } :=
+  match m return forall r: PrefixRel m (νSetPack m (f (g X))).1
+      ((νSetPack m X).1), FgChainState m r ->
+    { E: νFillerEqvType (prefixEq r)
+           (this ((νSetPack m (f (g X))).2)) (this ((νSetPack m X).2)) &T
+      FgChainState m.+1 (relStep r E) } with
+  | 0 => fgStep0
+  | S m => fun r s => fgStep m (νSetPack m.+1 (f (g X))) r s
+  end.
+
+Fixpoint fgChain (m: nat):
+  {r: PrefixRel m (νSetPack m (f (g X))).1 ((νSetPack m X).1) &T
+   FgChainState m r} :=
+  match m with
+  | 0 => (tt; tt)
+  | S m =>
+    let s := fgChain m in
+    let e := fgExtend m s.1 s.2 in
+    ((s.1; e.1); e.2)
+  end.
+
+(** The chain is bonded by conversion: the relation at [m.+1] is the
+    relation at [m] paired with the emitted filler equivalence. *)
+
+Definition fg: νSetsEquiv (f (g X)) X :=
+  limit (eqvTel (f (g X)) X) 0 tt
+    (fun m _ => (fgChain m).1) eq_refl (fun m _ _ => eq_refl).
 End FG.
 
 End νSetRoundtrip.
