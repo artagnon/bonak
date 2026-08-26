@@ -17,8 +17,6 @@ Set Warnings "-notation-overridden".
 From Bonak Require Import SigT HSet LeSProp Notation νSet.Layer νSet.
 From Bonak Require νSetEquiv.
 
-From Bonak Require Import Limit.
-
 Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.

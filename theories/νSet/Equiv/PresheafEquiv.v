@@ -13,8 +13,6 @@ From Bonak Require Import RewLemmas HSet LeSProp Notation νSet.Layer
   Funext Univalence Presheaf.
 From Bonak.νSet.Lib Require Import Equiv.
 
-From Bonak Require Import Limit.
-
 Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.
