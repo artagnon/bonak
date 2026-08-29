@@ -1731,12 +1731,12 @@ Definition cohReflAboveAboveL {p} (deps: DepsReflCohs2 p 0)
     (mkCohReflAboveAboveFrames deps).
 
 (*
-  L q (Hq ↕ ↑ Hr)
-    ((mkReflFramesAbove _depsReflCohsSup).2 r Hr d c)
-    (L' r Hr d c) =
   L r.+1 (⇑ Hr)
     ((mkReflFramesAbove _depsReflCohsSup).2 q (Hq ↕ Hr) d c)
-    (L' q (Hq ↕ Hr) d c)
+    (L' q (Hq ↕ Hr) d c) =
+  L q (Hq ↕ ↑ Hr)
+    ((mkReflFramesAbove _depsReflCohsSup).2 r Hr d c)
+    (L' r Hr d c)
 *)
 
 Inductive DepsReflCohs2Extension p: forall k (deps: DepsReflCohs2 p k), Type :=
