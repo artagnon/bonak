@@ -355,6 +355,30 @@ The semi-simplicial and semi-cubical categories are instances of the more genera
 
 In particular $1$-semi-shape category presents the semi-simplicial category while the $2$-semi-shape category presents the semi-cubical category (note that this also relates to unary and binary parametricity~\cite{reynolds83,bernardy15}).
 
+Degeneracies can be added to the $\nu$-semi-shape category in different ways. We here focus on cubical-style degeneracies, as e.g. in Grandis~\cite{grandis03} and their adaptation to the unary case as done in \cite{bernardy15}. A morphism from $p$ to $n$ in the $\nu$-shape category is the composition of a $q$-long degeneracy from $p$ to $p-q$ followed by a face map from $p-q$ to $n$.
+
+\begin{definition}[$\hexagon_d$]
+  The definition of $\nu$-shape category extends the $\nu$-shape category with degeneracies:
+  \begin{align*}
+    \Obj_{\hexagon_d}       & := \Nat                                                                                       \\
+    \Hom_{\hexagon_d}(p, n) & := \{(q,l) \mid l \in (\nu \sqcup \{\kstar\})^n \mid \text{number of $\kstar$ in $l = p-q$}\} \\
+    (0,g) \circ (q,f)       & := \left(q,
+    \begin{cases}
+      f                & \text{if $g = \epsilon$}                                                   \\
+      a\,(g' \circ f)  & \text{if $g = a\,g'$}, \text{where $a \in \nu$}                            \\
+      a\,(g' \circ f') & \text{if $g = \kstar\,g'$, $f = a\,f'$, where $a \in \nu$ or $a = \kstar$} \\
+    \end{cases}\right)                         \\
+    (r+1,g) \circ (q,f)     & :=
+    \begin{cases}
+      f                & \text{if $g = \epsilon$}                                                   \\
+      a\,(g' \circ f)  & \text{if $g = a\,g'$}, \text{where $a \in \nu$}                            \\
+      a\,(g' \circ f') & \text{if $g = \kstar\,g'$, $f = a\,f'$, where $a \in \nu$ or $a = \kstar$} \\
+    \end{cases}                         \\
+    \\
+    \id                     & := \kstar \ldots \kstar \text{ $n$ times for $\id \in \Hom_{\hexagon_d}(n, n)$}
+  \end{align*}
+\end{definition}
+
 \subsection{Fibred-indexed correspondence}
 
 Semi-cubical sets can be expressed directly in terms of presheaves over a direct category using morphisms or alternatively using families, by iterating the standard equivalence between maps and families:
