@@ -332,7 +332,7 @@
 Semi-simplicial sets are usually defined as presheaves from the semi-simplicial category, termed as the \emph{fibered} form~\cite{?}. In our previous work, we proposed a uniform construction of semi-simplicial and semi-cubical sets using iterated parametericity, termed as the \emph{indexed} form~\cite{hr25}, using the \emph{fibred-indexed correspondence}. It was originally suggested at Univalent Foundations IAS 2012~\cite{UFwiki2012} that the open problem of constructing semi-simplicial \emph{types} could be solved with the indexed construction, as it supplies more definitional equalities for tackling the combinatorial problem of solving coherence conditions~\footnote{It was originally postulated that the coherences would come for free with the indexed construction, but this turns out not to be the case.}.
 
 \subsection{Contributions}
-We previously exploited the observation that semi-simplicial and semi-cubical sets are naturally unary and binary cases of iterated parametricity~\cite{hr25}. In adding a new dimension to our construction, we observed the usual cubical degeneracies in the cubical case and \emph{connections}~\cite{bernardy12,bernardy15} in the simplicial case. The coherence conditions we used to complete our construction made explicit the ones outlined in Grandis-Mauri~\cite{grandis03}. Our work includes a mechanically-checked formalization in Rocq~\href{https://github.com/artagnon/bonak}{\linkicon}.
+We previously exploited the observation that semi-simplicial and semi-cubical sets are naturally unary and binary cases of iterated parametricity~\cite{hr25}. In adding a new dimension to our construction, we observed the usual cubical degeneracies in the cubical case and \emph{connections}~\cite{bernardy15,bernardy12} in the simplicial case. The coherence conditions we used to complete our construction made explicit the ones outlined in Grandis-Mauri~\cite{grandis03}. Our work includes a mechanically-checked formalization in Rocq~\href{https://github.com/artagnon/bonak}{\linkicon}.
 
 \subsection{\texorpdfstring{$\nu$}{nu}-shape sets}
 
@@ -353,27 +353,27 @@ The semi-simplicial and semi-cubical categories are instances of the more genera
   \end{align*}
 \end{definition}
 
-In particular $1$-semi-shape category presents the semi-simplicial category while the $2$-semi-shape category presents the semi-cubical category (note that this also relates to unary and binary parametricity~\cite{reynolds83,bernardy15}).
+In particular $1$-semi-shape category presents the semi-simplicial category while the $2$-semi-shape category presents the semi-cubical category (note that this also relates to unary and binary parametricity~\cite{bernardy15, reynolds83}).
 
-Degeneracies can be added to the $\nu$-semi-shape category in different ways. We here focus on cubical-style degeneracies, as e.g. in Grandis~\cite{grandis03} and their adaptation to the unary case as done in \cite{bernardy15}. A morphism from $p$ to $n$ in the $\nu$-shape category is the composition of a $q$-long degeneracy from $p$ to $p-q$ followed by a face map from $p-q$ to $n$.
+Degeneracies can be added to the $\nu$-semi-shape category in different ways. We here focus on cubical-style degeneracies as in Grandis~\cite{grandis03} and their adaptation to the unary case as in \cite{bernardy15}. A morphism from $p$ to $n$ in the $\nu$-shape category is the composition of a $q$-long degeneracy from $p$ to $p-q$ followed by a face map from $p-q$ to $n$.
 
 \begin{definition}[$\hexagon_d$]
   The definition of $\nu$-shape category extends the $\nu$-shape category with degeneracies:
   \begin{align*}
-    \Obj_{\hexagon_d}       & := \Nat                                                                                       \\
-    \Hom_{\hexagon_d}(p, n) & := \{(q,l) \mid l \in (\nu \sqcup \{\kstar\})^n \mid \text{number of $\kstar$ in $l = p-q$}\} \\
+    \Obj_{\hexagon_d}       & := \Nat                                                                                                                           \\
+    \Hom_{\hexagon_d}(p, n) & := \{(q,r,l) \mid r \in \{\kstar,\bullet\}^q \wedge l \in (\nu \sqcup \{\kstar\})^n \wedge \text{number of $\kstar$ in $l = q$}\} \\
     (0,g) \circ (q,f)       & := \left(q,
     \begin{cases}
       f                & \text{if $g = \epsilon$}                                                   \\
       a\,(g' \circ f)  & \text{if $g = a\,g'$}, \text{where $a \in \nu$}                            \\
       a\,(g' \circ f') & \text{if $g = \kstar\,g'$, $f = a\,f'$, where $a \in \nu$ or $a = \kstar$} \\
-    \end{cases}\right)                         \\
+    \end{cases}\right)                                                             \\
     (r+1,g) \circ (q,f)     & :=
     \begin{cases}
-      f                & \text{if $g = \epsilon$}                                                   \\
+      (q+r+1,g)        & \text{if $f = \epsilon$}                                                   \\
       a\,(g' \circ f)  & \text{if $g = a\,g'$}, \text{where $a \in \nu$}                            \\
       a\,(g' \circ f') & \text{if $g = \kstar\,g'$, $f = a\,f'$, where $a \in \nu$ or $a = \kstar$} \\
-    \end{cases}                         \\
+    \end{cases}                                                             \\
     \\
     \id                     & := \kstar \ldots \kstar \text{ $n$ times for $\id \in \Hom_{\hexagon_d}(n, n)$}
   \end{align*}
