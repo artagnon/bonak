@@ -49,6 +49,8 @@
 \define@cmdkey[bonak]{reflframe}{D}{(#1)}
 \define@cmdkey[bonak]{reflframe}{R}{(#1)}
 \define@cmdkey[bonak]{reflframe}{d}{(#1)}
+\define@cmdkey[bonak]{reflfullframe}{D}{(#1)}
+\define@cmdkey[bonak]{reflfullframe}{d}{(#1)}
 \define@cmdkey[bonak]{reflframeExt}{D}{(#1)}
 \define@cmdkey[bonak]{reflframeExt}{R}{(#1)}
 \define@cmdkey[bonak]{reflframeExt}{d}{(#1)}
@@ -235,6 +237,7 @@
 \newcommandx{\restrf}[6][1,2,3,4,5,6]{\restr{frame}[#1][#2][#3][#4][#5][#6]}
 \newcommandx{\restrl}[6][1,2,3,4,5,6]{\restr{layer}[#1][#2][#3][#4][#5][#6]}
 \newcommandx{\restrp}[6][1,2,3,4,5,6]{\restr{painting}[#1][#2][#3][#4][#5][#6]}
+\newcommandx{\reflff}[2][1,2]{\refl[fullframe][#1][][][][#2]}
 \newcommandx{\reflf}[5][1,2,3,4,5]{\refl[frame][#1][#2][#3][#4][#5]}
 \newcommandx{\reflfext}[5][1,2,3,4,5]{\refl[frameExt][#1][#2][#3][#4][#5]}
 \newcommandx{\refll}[5][1,2,3,4,5]{\refl[layer][#1][#2][#3][#4][#5]}
@@ -637,44 +640,42 @@ First, our degeneracy implies a distinguished point $r_{-1}(a)$ for any $a:X_{-1
   \end{array}
 \end{equation*}
 
-For any $(X_0,X_1,...): \X$, we define a stream of degeneracies:
+For any $(X_0,X_1,\ldots): \X$, we define a stream of degeneracies:
 \begin{equation*}
   \begin{array}{lll}
-    \Xrefl(X_0,X_1,...) ~~ \defeq                                                                                                                                                                                                                            \\
-    \quad \Sigma r_{0}:\Pi d:\mathsf{\color{indian-yellow}{fullframe}}^{0}.\,\Pi x:\textcolor{red}{X_0}(d).\,\textcolor{red}{X_1}(\mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^0(d),\lambda \epsilon.\,x).               \\
-    \quad \Sigma r_1:\Pi d:\mathsf{\color{indian-yellow}{fullframe}}^1(X_0).\,\Pi x:\textcolor{red}{X_1}(d).\,\textcolor{red}{X_2}(\mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^1(r_{0})(d),\lambda \epsilon.\,x).       \\
-    \quad \Sigma r_2:\Pi d:\mathsf{\color{indian-yellow}{fullframe}}^2(X_0,X_1).\,\Pi x:\textcolor{red}{X_2}(d).\,\textcolor{red}{X_3}(\mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^2(r_0,r_1)(d),\lambda \epsilon.\,x). \\
-    \quad ...
+    \Xrefl(X_0,X_1,\ldots) \defeq                                                                                             \\
+    \quad \Sigma r_{0}:\Pi d:\fullframe[0].\Pi x:X_0(d).X_1(\reflff[0][d=\d],\lambda \epsilon.x).                             \\
+    \quad \Sigma r_1:\Pi d:\fullframe[1][D={X_0}].\,\Pi x:X_1(d).X_2(\reflff[1][D={r_0}, d=\d],\lambda \epsilon.x).           \\
+    \quad \Sigma r_2:\Pi d:\fullframe[2][D={X_0,X_1}].\,\Pi x:X_2(d).X_3(\reflff[2][D={r_0,r_1}, d=\d],\lambda \epsilon.\,x). \\
+    \quad \ldots
   \end{array}
 \end{equation*}
 where
 \begin{equation*}
-  \mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^n(r_{-1},...,r_{n-1}):\mathsf{\color{indian-yellow}{fullframe}}^n(X_{-1},...,X_{n-1}) \rightarrow \mathsf{\color{indian-yellow}{frame}}^{n+1,n}(X_{-1},...,X_{n})
+  \reflff[n][D={r_{-1},\ldots,r_{n-1}}]:\fullframe[n][D={X_{-1},\ldots,X_{n-1}}] \rightarrow \framep[n+1][n][][D={X_{-1},\ldots,X_{n}}]
 \end{equation*}
 computes the $n$ first layers of the border of $r_{n}(d)(x)$, knowing that the last layer is made of $\nu$ times $x$ itself, so that
 
 \begin{equation*}
-  (\mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^n(r_{-1},...,r_{n-1})(d),\lambda \epsilon.\,x) : \mathsf{\color{indian-yellow}{frame}}^{n+1,n+1}(X_{-1},...,X_{n})
+  (\reflff[n][D={r_{-1},\ldots,r_{n-1}},d=\d],\lambda \epsilon.\,x): \framep[n+1][n+1][][D={X_{-1},\ldots,X_{n}}]
 \end{equation*}
 is a full frame.
 
 On the way, we need two coherence conditions:
 \begin{equation*}
   \begin{array}{l}
-    \mathsf{\textcolor{chestnut}{idrestrrefl}}_{\textcolor{indian-yellow}{\mathsf{frame}},\epsilon}^n(r_{-1},...,r_{n-1})~(d:\mathsf{\color{indian-yellow}{fullframe}}^n(X_0,...,X_{n-1})):                          \\
-    ~~ \mathsf{\color{russian-green}{restr}}_{\mathsf{\color{indian-yellow}{frame}},\epsilon,n}^{n,n}(\mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^n(r_{-1},...,r_{n-1})(d)) = d \\
+    \mathsf{\textcolor{chestnut}{idrestrrefl}}_{\textcolor{indian-yellow}{\mathsf{frame}},\epsilon}^n(r_{-1},\ldots,r_{n-1})(d:\fullframe[n][D={X_0,\ldots,X_{n-1}}]):        \\
+    ~~ \restrf[n][n][][][][d={\reflff[n][D={r_{-1},\ldots,r_{n-1}},d=\d]}] = d                                                                                                \\
     \\
-    \mathsf{\textcolor{chestnut}{cohrestrrefl}}_{\textcolor{indian-yellow}{\mathsf{frame}},\epsilon,p<n}^n(r_{-1},...,r_{n-1})~(d:\mathsf{\color{indian-yellow}{frame}}^{n,p}(X_0,...,X_{n-1})):                     \\
-    ~~\;\mathsf{\color{russian-green}{restr}}_{\mathsf{\color{indian-yellow}{frame}},\epsilon,p}^{n,p}(\mathsf{\color{russian-green}{refl}}^{n,p}_{\mathsf{\color{indian-yellow}{frame}}}(r_{-1},...,r_{n-1})(d)) = \mathsf{\color{russian-green}{refl}}^{n-1,p}_{\mathsf{\color{indian-yellow}{frame}}}(r_{-1},...,r_{n-2})(\mathsf{\color{russian-green}{restr}}_{\mathsf{\color{indian-yellow}{frame}},\epsilon,p}^{n-1,p}(d))
+    \mathsf{\textcolor{chestnut}{cohrestrrefl}}_{\textcolor{indian-yellow}{\mathsf{frame}},\epsilon,p<n}^n(r_{-1},\ldots,r_{n-1})(d:\framep[n][][p][D={X_0,\ldots,X_{n-1}}]): \\
+    ~~\restrf[n][p](\mathsf{\color{russian-green}{refl}}^{n,p}_{\mathsf{\color{indian-yellow}{frame}}}(r_{-1},\ldots,r_{n-1})(d)) = \reflf[n-1][p][][][D={r_{-1},\ldots,r_{n-2}},d={\restrf[n-1][p][][\epsilon][p][d=\d]}]
   \end{array}
 \end{equation*}
 where
-$\mathsf{\color{russian-green}{refl}}^{n,p}_{\mathsf{\color{indian-yellow}{frame}}}$ generalises $\mathsf{\color{russian-green}{refl}}_{\mathsf{\color{indian-yellow}{fullframe}}}^{n}$
-to prefixes of
-$\mathsf{\color{indian-yellow}{fullframe}}^n$:
+$\reflf[n][p]$ generalises $\reflff[n]$ prefixes of $\fullframe[n]$:
 
 \begin{equation*}
-  \mathsf{\color{russian-green}{refl}}^{n,p}_{\mathsf{\color{indian-yellow}{frame}}}(r_{-1},...,r_{n-1}):\mathsf{\color{indian-yellow}{frame}}^{n,p}(X_{-1},...,X_{n-1}) \rightarrow \mathsf{\color{indian-yellow}{frame}}^{n+1,p}(X_{-1},...,X_{n})
+  \reflf[n][p][][][D={r_{-1},\ldots,r_{n-1}}]:\framep[n][p][][D={X_{-1},\ldots,X_{n-1}}] \rightarrow \framep[n+1][p][][D={X_{-1},\ldots,X_{n}}]
 \end{equation*}
 
 \subsection{Detailed construction}
