@@ -324,19 +324,19 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-  In an exploration of building simplicial and cubical set models in indexed form, we extend a previous construction of semi-simplicial and semi-cubical sets with degeneracies. The degeneracies we construct can be characterized as adding a new dimension, and coincide with usual degeneracies in the cubical set case. As necessitated by the construction, we refined the degeneracies and coherence conditions outlined in Grandis-Mauri~\cite{grandis03} to make it step-wise for partial constructions. Our work includes a mechanically checked formalization in Rocq.
+  In an exploration of building simplicial and cubical set models in indexed form, we extend a previous construction of semi-simplicial and semi-cubical sets with degeneracies. The degeneracies we construct can be characterized as adding a new dimension, and coincide with usual degeneracies in the cubical set case. As necessitated by the construction, we refined the degeneracies and coherence conditions outlined in Grandis-Mauri~\cite{grandis03} to make it step-wise. Our work includes a mechanically checked formalization in Rocq.
 \end{abstract}
 
 \section{Introduction}
 \subsection{Motivation}
-Simplicial and cubical sets are defined as presheaves over simplicial and cubical categories, which we term as \emph{fibred form}. Our construction, in contrast, experiments using the \emph{indexed form}, using the \emph{fibred-indexed correspondence}. It was originally suggested at Univalent Foundations IAS 2012~\cite{UFwiki2012}. The original motivation for the indexed construction is that it suggests that the open problem of constructing simplicial and cubical types could be solved with this approach, as it supplies more definitional equalities for tackling the combinatorial problem of solving coherence conditions~\footnote{It was originally postulated that the coherences would come for free with the indexed construction, but this turns out not to be the case.}. Another motivation is constructing simplicial and cubical set models, such as parametric type theory and cubical type theory with more definitional equalities.
+Semi-simplicial sets are usually defined as presheaves from the semi-simplicial category, termed as the \emph{fibered} form~\cite{?}. In our previous work, we proposed a uniform construction of semi-simplicial and semi-cubical sets using iterated parametericity, termed as the \emph{indexed} form~\cite{hr25}, using the \emph{fibred-indexed correspondence}. It was originally suggested at Univalent Foundations IAS 2012~\cite{UFwiki2012} that the open problem of constructing semi-simplicial \emph{types} could be solved with the indexed construction, as it supplies more definitional equalities for tackling the combinatorial problem of solving coherence conditions~\footnote{It was originally postulated that the coherences would come for free with the indexed construction, but this turns out not to be the case.}.
 
 \subsection{Contributions}
-We previously exploited the observation that semi-simplicial and semi-cubical sets are naturally unary and binary cases of iterated parametricity~\cite{hr25}. In adding a new dimension to our construction, we observed the usual cubical degeneracies in the cubical case and \emph{connections}~\cite{bernardy12,bernardy15} in the simplicial case. The coherence conditions we used to complete our construction made explicit the ones outlined in Grandis-Mauri~\cite{grandis03}. Our work includes a mechanically-checked formalization in Rocq: \href{https://github.com/artagnon/bonak}{github.com/artagnon/bonak}.
+We previously exploited the observation that semi-simplicial and semi-cubical sets are naturally unary and binary cases of iterated parametricity~\cite{hr25}. In adding a new dimension to our construction, we observed the usual cubical degeneracies in the cubical case and \emph{connections}~\cite{bernardy12,bernardy15} in the simplicial case. The coherence conditions we used to complete our construction made explicit the ones outlined in Grandis-Mauri~\cite{grandis03}. Our work includes a mechanically-checked formalization in Rocq~\href{https://github.com/artagnon/bonak}{\linkicon}.
 
 \subsection{Fibred-indexed correspondence}
 
-Semi-simplicial sets and semi-cubical sets can be expressed directly in terms of presheaves over a direct category using morphisms or alternatively using families, by iterating the standard equivalence between maps and families:
+Semi-cubical sets can be expressed directly in terms of presheaves over a direct category using morphisms or alternatively using families, by iterating the standard equivalence between maps and families:
 $(\Sigma A : Set. A \rightarrow B) \equiv (B \rightarrow Set)$.
 
 \begin{equation*}
@@ -355,9 +355,7 @@ $(\Sigma A : Set. A \rightarrow B) \equiv (B \rightarrow Set)$.
   \end{array}
 \end{equation*}
 
-Both definitions are provably equivalent using univalence~\cite{Laroche} and this is yet another instance of the \emph{Grothendieck construction}, which we refer to as the fibred-indexed correspondence.
-
-Presheaves over a generalised Reedy category can also be expressed in the indexed form, thus covering the case of simplicial and cubical sets.
+Both definitions are provably equivalent using univalence~\href{https://github.com/artagnon/bonak/tree/master/theories/νSet/Equiv}{\linkicon}, and this is yet another instance of the \emph{Grothendieck construction}, which we refer to as the fibred-indexed correspondence.
 
 In this paper, we focus on an indexed definition of simplicial sets equipped with faces and a \emph{cubical-like} form of degeneracy and on cubical sets with faces and degeneracies. While faces are part of the indexed infrastructure and coherences between faces are necessitated by faces meeting at common edges, degeneracies and their coherences are postulated explicitly as shown below:
 
@@ -385,6 +383,8 @@ In this paper, we focus on an indexed definition of simplicial sets equipped wit
   \end{array}
 \end{equation*}
 
+\section{Our construction}
+\subsection{Intuition for our construction}
 \begin{table}[H]
   \begin{tabularx}{\linewidth}{c c c c c}
     \toprule
@@ -570,8 +570,6 @@ In this paper, we focus on an indexed definition of simplicial sets equipped wit
   \end{tabularx}
 \end{table}
 
-\subsection{Adding degeneracies}
-
 The added degeneracy is \emph{parametric}: in the binary case, it gives a standard cubical degeneracy; in the unary case, it gives a ParamTT-like degeneracy and \emph{not} a simplicial degeneracy.
 
 First, our degeneracy implies a distinguished point $r_{-1}(a)$ for any $a:X_{-1}$. Then:
@@ -634,7 +632,7 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
   \mathsf{\color{russian-green}{refl}}^{n,p}_{\mathsf{\color{indian-yellow}{frame}}}(r_{-1},...,r_{n-1}):\mathsf{\color{indian-yellow}{frame}}^{n,p}(X_{-1},...,X_{n-1}) \rightarrow \mathsf{\color{indian-yellow}{frame}}^{n+1,p}(X_{-1},...,X_{n})
 \end{equation*}
 
-\section{Tables}
+\subsection{Detailed construction}
 % Abbreviated tables in this section†
 %
 % The rule for implicit arguments for each table:
@@ -685,6 +683,8 @@ $\mathsf{\color{indian-yellow}{fullframe}}^n$:
 
 \def\lab{tab:refl}
 \input{tab-refl.tex}
+
+\section{Conclusion and future work}
 
 \bibliographystyle{plainurl}
 \bibliography{paper}
