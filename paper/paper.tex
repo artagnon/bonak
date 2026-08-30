@@ -1,6 +1,6 @@
 \documentclass{lipics-v2021}
 
-\usepackage{amsmath, amssymb, mathrsfs, tikz, tikz-cd, mathpazo, anyfontsize, xargs, environ, tabularx, booktabs, makecell, colortbl, float, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
+\usepackage{amsmath, amssymb, mathrsfs, wasysym, tikz, tikz-cd, lmodern, mathpazo, anyfontsize, xargs, environ, multirow, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
 \usepackage[utf8]{inputenc}
 \usepackage[OT1]{fontenc}
 \usepackage[prefix=bonak]{art.cls/xkeymask}
@@ -333,6 +333,27 @@ Semi-simplicial sets are usually defined as presheaves from the semi-simplicial 
 
 \subsection{Contributions}
 We previously exploited the observation that semi-simplicial and semi-cubical sets are naturally unary and binary cases of iterated parametricity~\cite{hr25}. In adding a new dimension to our construction, we observed the usual cubical degeneracies in the cubical case and \emph{connections}~\cite{bernardy12,bernardy15} in the simplicial case. The coherence conditions we used to complete our construction made explicit the ones outlined in Grandis-Mauri~\cite{grandis03}. Our work includes a mechanically-checked formalization in Rocq~\href{https://github.com/artagnon/bonak}{\linkicon}.
+
+\subsection{\texorpdfstring{$\nu$}{nu}-shape sets}
+
+The semi-simplicial and semi-cubical categories are instances of the more general notion of $\nu$-semi-shape category.
+
+\begin{definition}[$\hexagon$]
+  The definition of $\nu$-semi-shape category is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than or equal to that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
+  \begin{align*}
+    \Obj_{\hexagon}       & := \Nat                                                                          \\
+    \Hom_{\hexagon}(p, n) & := \{l \in (\nu \sqcup \{\kstar\})^n \mid \text{number of $\kstar$ in $l = p$}\} \\
+    g \circ f             & :=
+    \begin{cases}
+      f                & \text{if $g = \epsilon$}                                                   \\
+      a\,(g' \circ f)  & \text{if $g = a\,g'$}, \text{where $a \in \nu$}                            \\
+      a\,(g' \circ f') & \text{if $g = \kstar\,g'$, $f = a\,f'$, where $a \in \nu$ or $a = \kstar$} \\
+    \end{cases}          \\
+    \id                   & := \kstar \ldots \kstar \text{ $n$ times for $\id \in \Hom_{\hexagon}(n, n)$}
+  \end{align*}
+\end{definition}
+
+In particular $1$-semi-shape category presents the semi-simplicial category while the $2$-semi-shape category presents the semi-cubical category (note that this also relates to unary and binary parametricity~\cite{reynolds83,bernardy15}).
 
 \subsection{Fibred-indexed correspondence}
 
