@@ -11,7 +11,7 @@ Set Warnings "-notation-overridden".
 From Stdlib Require Import Logic.FunctionalExtensionality.
 From Bonak Require Import RewLemmas HSet LeSProp Notation νSet.Layer
   Funext Univalence Presheaf.
-From Bonak.νSet.Lib Require Import Equiv.
+From Bonak.Lib Require Import Equiv.
 
 Set Primitive Projections.
 Set Printing Projections.

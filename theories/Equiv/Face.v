@@ -24,7 +24,7 @@ Set Keyed Unification.
 Module Face (A: LayerSig).
 Import A.
 
-Module Export νSetEquiv := Bonak.νSet.Equiv.νSetEquiv.νSetEquiv A.
+Module Export νSetEquiv := Bonak.Equiv.νSetEquiv.νSetEquiv A.
 
 (** Chains of projections between frame stages *)
 
