@@ -46,34 +46,37 @@
 \define@cmdkey[bonak]{reflframe}{D}{(#1)}
 \define@cmdkey[bonak]{reflframe}{R}{(#1)}
 \define@cmdkey[bonak]{reflframe}{d}{(#1)}
+\define@cmdkey[bonak]{reflframeBelow}{D}{(#1)}
+\define@cmdkey[bonak]{reflframeBelow}{R}{(#1)}
+\define@cmdkey[bonak]{reflframeBelow}{d}{(#1)}
 \define@cmdkey[bonak]{reflfullframe}{D}{(#1)}
 \define@cmdkey[bonak]{reflfullframe}{d}{(#1)}
-\define@cmdkey[bonak]{reflframeExt}{D}{(#1)}
-\define@cmdkey[bonak]{reflframeExt}{R}{(#1)}
-\define@cmdkey[bonak]{reflframeExt}{d}{(#1)}
-\define@cmdkey[bonak]{reflframeExt}{c}{(#1)}
-\define@cmdkey[bonak]{refllayer}{D}{(#1)}
-\define@cmdkey[bonak]{refllayer}{R}{(#1)}
-\define@cmdkey[bonak]{refllayer}{d}{(#1)}
-\define@cmdkey[bonak]{refllayer}{l}{(#1)}
-\define@cmdkey[bonak]{refllayer}{c}{(#1)}
-\define@cmdkey[bonak]{refllayerExt}{D}{(#1)}
-\define@cmdkey[bonak]{refllayerExt}{L}{(#1)}
-\define@cmdkey[bonak]{refllayerExt}{d}{(#1)}
-\define@cmdkey[bonak]{refllayerExt}{l}{(#1)}
-\define@cmdkey[bonak]{refllayerExt}{c}{(#1)}
-\define@cmdkey[bonak]{reflpainting}{D}{(#1)}
-\define@cmdkey[bonak]{reflpainting}{E}{(#1)}
-\define@cmdkey[bonak]{reflpainting}{L}{(#1)}
-\define@cmdkey[bonak]{reflpainting}{R}{(#1)}
-\define@cmdkey[bonak]{reflpainting}{d}{(#1)}
-\define@cmdkey[bonak]{reflpainting}{c}{(#1)}
-\define@cmdkey[bonak]{reflpaintingExt}{D}{(#1)}
-\define@cmdkey[bonak]{reflpaintingExt}{E}{(#1)}
-\define@cmdkey[bonak]{reflpaintingExt}{L}{(#1)}
-\define@cmdkey[bonak]{reflpaintingExt}{R}{(#1)}
-\define@cmdkey[bonak]{reflpaintingExt}{d}{(#1)}
-\define@cmdkey[bonak]{reflpaintingExt}{c}{(#1)}
+\define@cmdkey[bonak]{reflframeAbove}{D}{(#1)}
+\define@cmdkey[bonak]{reflframeAbove}{R}{(#1)}
+\define@cmdkey[bonak]{reflframeAbove}{d}{(#1)}
+\define@cmdkey[bonak]{reflframeAbove}{c}{(#1)}
+\define@cmdkey[bonak]{refllayerBelow}{D}{(#1)}
+\define@cmdkey[bonak]{refllayerBelow}{R}{(#1)}
+\define@cmdkey[bonak]{refllayerBelow}{d}{(#1)}
+\define@cmdkey[bonak]{refllayerBelow}{l}{(#1)}
+\define@cmdkey[bonak]{refllayerBelow}{c}{(#1)}
+\define@cmdkey[bonak]{refllayerAbove}{D}{(#1)}
+\define@cmdkey[bonak]{refllayerAbove}{L}{(#1)}
+\define@cmdkey[bonak]{refllayerAbove}{d}{(#1)}
+\define@cmdkey[bonak]{refllayerAbove}{l}{(#1)}
+\define@cmdkey[bonak]{refllayerAbove}{c}{(#1)}
+\define@cmdkey[bonak]{reflpaintingBelow}{D}{(#1)}
+\define@cmdkey[bonak]{reflpaintingBelow}{E}{(#1)}
+\define@cmdkey[bonak]{reflpaintingBelow}{L}{(#1)}
+\define@cmdkey[bonak]{reflpaintingBelow}{R}{(#1)}
+\define@cmdkey[bonak]{reflpaintingBelow}{d}{(#1)}
+\define@cmdkey[bonak]{reflpaintingBelow}{c}{(#1)}
+\define@cmdkey[bonak]{reflpaintingAbove}{D}{(#1)}
+\define@cmdkey[bonak]{reflpaintingAbove}{E}{(#1)}
+\define@cmdkey[bonak]{reflpaintingAbove}{L}{(#1)}
+\define@cmdkey[bonak]{reflpaintingAbove}{R}{(#1)}
+\define@cmdkey[bonak]{reflpaintingAbove}{d}{(#1)}
+\define@cmdkey[bonak]{reflpaintingAbove}{c}{(#1)}
 
 \define@cmdkey[bonak]{cohframe}{D}{(#1)}
 \define@cmdkey[bonak]{cohframe}{d}{(#1)}
@@ -121,10 +124,18 @@
   \setkeys*[bonak]{restr#1}{#7}
 }
 
-\newcommandx{\refl}[6][1,2,3,4,5,6]{
-  \ensuremath{\mathsf{\color{russian-green}{refl}}^{
-    \joinargs[#2][#3][#4]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#5]}}
-  \setkeys*[bonak]{refl#1}{#6}
+% Zone of a degeneracy or coherence: Below (the prefix has not reached the
+% degenerate direction) or Above (it has), rendered as a down or up arrow
+\newcommand{\zoneBelow}{\downarrow}
+\newcommand{\zoneAbove}{\uparrow}
+\newcommand{\zone}[1]{\if\relax\detokenize{#1}\relax\else{\csname zone#1\endcsname}\fi}
+
+% Degeneracies for frame, layer, and painting: the general macro.
+% #1 is the zone (Below or Above), #2 the kind (frame, layer or painting)
+\newcommandx{\refl}[7][1,2,3,4,5,6,7]{
+  \ensuremath{\mathsf{\color{russian-green}{refl}}{\color{russian-green}\zone{#1}}^{
+    \joinargs[#3][#4][#5]}_{\joinargs[\mathsf{\color{indian-yellow}{#2}}][#6]}}
+  \setkeys*[bonak]{refl#2#1}{#7}
 }
 
 \newcommandx{\depsmacro}[5][4,5]{
@@ -133,8 +144,9 @@
 }
 
 % Coherence conditions for frame, layer, and painting: the general macro
+\newcommand{\cohmark}{}
 \newcommandx{\coh}[9][2,3,4,5,6,7,8,9]{
-  \ensuremath{\mathsf{\color{chestnut}{coh}}^{
+  \ensuremath{\mathsf{\color{chestnut}{coh}}{\color{chestnut}\cohmark}^{
     \joinargs[#2][#3][#4]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#5][#6][#7][#8]}}
   \setkeys*[bonak]{coh#1}{#9}
 }
@@ -211,19 +223,23 @@
 \newcommandx{\restrf}[6][1,2,3,4,5,6]{\restr{frame}[#1][#2][#3][#4][#5][#6]}
 \newcommandx{\restrl}[6][1,2,3,4,5,6]{\restr{layer}[#1][#2][#3][#4][#5][#6]}
 \newcommandx{\restrp}[6][1,2,3,4,5,6]{\restr{painting}[#1][#2][#3][#4][#5][#6]}
-\newcommandx{\reflff}[2][1,2]{\refl[fullframe][#1][][][][#2]}
-\newcommandx{\reflf}[5][1,2,3,4,5]{\refl[frame][#1][#2][#3][#4][#5]}
-\newcommandx{\reflfext}[5][1,2,3,4,5]{\refl[frameExt][#1][#2][#3][#4][#5]}
-\newcommandx{\refll}[5][1,2,3,4,5]{\refl[layer][#1][#2][#3][#4][#5]}
-\newcommandx{\refllext}[5][1,2,3,4,5]{\refl[layerExt][#1][#2][#3][#4][#5]}
-\newcommandx{\reflp}[5][1,2,3,4,5]{\refl[painting][#1][#2][#3][#4][#5]}
-\newcommandx{\reflpext}[5][1,2,3,4,5]{\refl[paintingExt][#1][#2][#3][#4][#5]}
+\newcommandx{\reflff}[2][1,2]{\refl[][fullframe][#1][][][][#2]}
+\newcommandx{\reflf}[5][1,2,3,4,5]{\refl[][frame][#1][#2][#3][#4][#5]}
+\newcommandx{\reflfbelow}[5][1,2,3,4,5]{\refl[Below][frame][#1][#2][#3][#4][#5]}
+\newcommandx{\reflfabove}[5][1,2,3,4,5]{\refl[Above][frame][#1][#2][#3][#4][#5]}
+\newcommandx{\refllbelow}[5][1,2,3,4,5]{\refl[Below][layer][#1][#2][#3][#4][#5]}
+\newcommandx{\refllabove}[5][1,2,3,4,5]{\refl[Above][layer][#1][#2][#3][#4][#5]}
+\newcommandx{\reflpbelow}[5][1,2,3,4,5]{\refl[Below][painting][#1][#2][#3][#4][#5]}
+\newcommandx{\reflpabove}[5][1,2,3,4,5]{\refl[Above][painting][#1][#2][#3][#4][#5]}
 \newcommandx{\cohf}[8][1,2,3,4,5,6,7,8]{\coh{frame}[#1][#2][#3][#4][#5][#6][#7][#8]}
-\newcommandx{\cohfext}[8][1,2,3,4,5,6,7,8]{\coh{frameExt}[#1][#2][#3][#4][#5][#6][#7][#8]}
+\newcommandx{\cohfbelow}[8][1,2,3,4,5,6,7,8]{{\renewcommand{\cohmark}{\zoneBelow}\coh{frame}[#1][#2][#3][#4][#5][#6][#7][#8]}}
+\newcommandx{\cohfabove}[8][1,2,3,4,5,6,7,8]{{\renewcommand{\cohmark}{\zoneAbove}\coh{frame}[#1][#2][#3][#4][#5][#6][#7][#8]}}
 \newcommandx{\cohl}[8][1,2,3,4,5,6,7,8]{\coh{layer}[#1][#2][#3][#4][#5][#6][#7][#8]}
-\newcommandx{\cohlext}[8][1,2,3,4,5,6,7,8]{\coh{layerExt}[#1][#2][#3][#4][#5][#6][#7][#8]}
+\newcommandx{\cohlbelow}[8][1,2,3,4,5,6,7,8]{{\renewcommand{\cohmark}{\zoneBelow}\coh{layer}[#1][#2][#3][#4][#5][#6][#7][#8]}}
+\newcommandx{\cohlabove}[8][1,2,3,4,5,6,7,8]{{\renewcommand{\cohmark}{\zoneAbove}\coh{layer}[#1][#2][#3][#4][#5][#6][#7][#8]}}
 \newcommandx{\cohp}[8][1,2,3,4,5,6,7,8]{\coh{painting}[#1][#2][#3][#4][#5][#6][#7][#8]}
-\newcommandx{\cohpext}[8][1,2,3,4,5,6,7,8]{\coh{paintingExt}[#1][#2][#3][#4][#5][#6][#7][#8]}
+\newcommandx{\cohpbelow}[8][1,2,3,4,5,6,7,8]{{\renewcommand{\cohmark}{\zoneBelow}\coh{painting}[#1][#2][#3][#4][#5][#6][#7][#8]}}
+\newcommandx{\cohpabove}[8][1,2,3,4,5,6,7,8]{{\renewcommand{\cohmark}{\zoneAbove}\coh{painting}[#1][#2][#3][#4][#5][#6][#7][#8]}}
 \newcommandx{\cohzone}[7][1,2,3,4,5,6,7]{\cohz{restr-refl-id}[#1][#2][#3][#4][#5][#6][#7]}
 \newcommandx{\cohztwo}[7][1,2,3,4,5,6,7]{\cohz{restr-refl-inf}[#1][#2][#3][#4][#5][#6][#7]}
 \newcommandx{\cohzthree}[7][1,2,3,4,5,6,7]{\cohz{restr-refl0-sup}[#1][#2][#3][#4][#5][#6][#7]}
@@ -733,12 +749,12 @@ is a full frame.
 \appendmask[bonak]{restrframe}[D]
 \appendmask[bonak]{restrlayer}[D, d]
 \appendmask[bonak]{restrpainting}[D, d]
-\appendmask[bonak]{reflframe}[D, R]
-\appendmask[bonak]{refllayer}[D, R, d]
-\appendmask[bonak]{reflpainting}[D, E, R, d]
-\appendmask[bonak]{reflframeExt}[D, R]
-\appendmask[bonak]{refllayerExt}[D, E, R, d]
-\appendmask[bonak]{reflpaintingExt}[D, E, R, d]
+\appendmask[bonak]{reflframeBelow}[D, R]
+\appendmask[bonak]{refllayerBelow}[D, R, d]
+\appendmask[bonak]{reflpaintingBelow}[D, E, R, d]
+\appendmask[bonak]{reflframeAbove}[D, R]
+\appendmask[bonak]{refllayerAbove}[D, E, R, d]
+\appendmask[bonak]{reflpaintingAbove}[D, E, R, d]
 
 % Truncated sets, otherwise referred to as X
 % Keep all arguments
@@ -757,11 +773,11 @@ is a full frame.
 \def\lab{tab:core}
 \input{tab-core.tex}
 
-\def\lab{tab:reflext}
-\input{tab-reflext.tex}
+\def\lab{tab:reflabove}
+\input{tab-reflabove.tex}
 
-\def\lab{tab:refl}
-\input{tab-refl.tex}
+\def\lab{tab:reflbelow}
+\input{tab-reflbelow.tex}
 
 \subsubsection{Coherence conditions}
 
