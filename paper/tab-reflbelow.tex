@@ -5,7 +5,7 @@
   \eqnline{\reflfbelow[n][p+1][][q][D=\D, d=\d]}{D~R~\pair{d}{l}}{\defeq}{(\reflfbelow[n][p][][q][D=\D, d=\d],\refllbelow[n][p][][q][D=\D, d=\d, l=\l])}
   \midrule
   \eqnline{\refllbelow[n][p][p < q \leq n][q]}{\makecell{\eqnarg{refllayerBelow}{D}{\Xto{n+1}} \\ \eqnarg{refllayerBelow}{R}{\Xreflto{n}[D=\D]} \\ \eqnarg{refllayerBelow}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{refllayerBelow}{l}{\layer[n][p][][D=\D, d=\d]}}}{:}{\layer[n+1][p][][D=\hdD, d={\reflfbelow[n][p][][q][D=\hdD, d=\d]}]}
-  \eqnline{\refllbelow[n][p][][q]}{\D~\R~\d~\l}{\defeq}{\lambda \omega.(\reflpbelow[n-1][p][][q-1][D=\hdD, E=\tlD, R=\hdR, L=\tlR, d={\reflfbelow[n][p][][0][\omega][D=\D, d=\d]}, c={\l_\omega}])}
+  \eqnline{\refllbelow[n][p][][q]}{\D~\R~\d~\l}{\defeq}{\lambda \omega.(\reflpbelow[n-1][p][][q-1][D=\hdD, E=\tlD, R=\hdR, L=\tlR, d={\restrf[n][p][][0][\omega][D=\D, d=\d]}, c={\l_\omega}])}
   \midrule
   \eqnline{\reflpbelow[n][p][p \leq q \leq n][q]}{\makecell{\eqnarg{reflpaintingBelow}{D}{\Xto{n+1}} \\ \eqnarg{reflpaintingBelow}{E}{\Xcomp{n+1}[D=\D]} \\ \eqnarg{reflpaintingBelow}{R}{\Xreflto{n}(D)} \\ \eqnarg{reflpaintingBelow}{L}{\Xreflcomp{n}[D=\D, E=\E, R=\R]} \\ \eqnarg{reflpaintingBelow}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{reflpaintingBelow}{c}{\painting[n][p][][D=\hdD, E=\tlD, d=\d]}}}{:}{\painting[n+1][p][][D=\hdD, E=\E, d={\reflfbelow[n][p][][q][D=\hdD, d=\d]}]}
   \eqnline{\reflpbelow[n][p][p=q][q]}{\D~\E~\R~\L~\d~\c}{\defeq}{\pair{\lambda \epsilon.\,c}{\reflpabove[n][p+1][][q][D=\D, E=\E, R=\R, L=\L, d=\pair{d}{l}, c=\c]}}
