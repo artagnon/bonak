@@ -1,1 +1,1 @@
-theories/νSet/νGpd.v
+theories/νGpd/νGpd.v

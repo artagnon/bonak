@@ -9,7 +9,7 @@ Import Logic.EqNotations.
 Set Warnings "-notation-overridden".
 From Stdlib Require Import Logic.FunctionalExtensionality.
 From Bonak Require Import Notation HSet RewLemmas.
-From Bonak.νSet.Lib Require Import Equiv.
+From Bonak.Lib Require Import Equiv.
 
 Polymorphic Definition idToEquiv {A B: Type} (e: A = B): Equiv A B :=
   rew [Equiv A] e in idEquiv.
