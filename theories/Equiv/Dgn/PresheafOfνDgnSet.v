@@ -3,6 +3,7 @@
 Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
+From Bonak.Presheaf Require Import Presentation.
 From Bonak Require Import SigT HSet LeSProp NatLemmas Notation νSet.Layer
   νDgnSet Equiv.PresheafOfνSet Equiv.PresheafRoundtrip Equiv.Dgn.PresheafEquiv Limit.
 
@@ -58,7 +59,7 @@ Definition dgnFace (X: νDgnSets) n i (Hi: i <= n) (ε: arity):
   dgnF0 X n.+1 -> dgnF0 X n :=
   νFaceFuel (underlyingFrom X n) (n - i) ε.
 
-Definition underlyingPresheaf (X: νDgnSets): PshEq.Psh.Presheaf := {|
+Definition underlyingPresheaf (X: νDgnSets): Presentation.Presheaf A.arity := {|
   F0 := dgnF0 X;
   Face := dgnFace X;
   FaceCoh := fun n q Hq r Hr ε ω d =>

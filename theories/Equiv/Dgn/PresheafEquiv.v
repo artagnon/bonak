@@ -3,6 +3,7 @@
 Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
+From Bonak.Presheaf Require Import Presentation.
 From Stdlib Require Import Logic.FunctionalExtensionality.
 From Bonak Require Import SigT RewLemmas HSet LeSProp Notation νSet.Layer
   Funext Univalence Equiv.PresheafEquiv.
@@ -21,7 +22,7 @@ Import A.
 
 Module Export PshEq := E.
 
-Definition Presheaf: Type := { psh: PshEq.Psh.Presheaf &T PresheafDgn psh }.
+Definition Presheaf: Type := { psh: Presentation.Presheaf A.arity &T PresheafDgn psh }.
 
 Record PresheafEquiv (X Y: Presheaf) := {
   underlyingEquiv: PshEq.PresheafEquiv X.1 Y.1;
@@ -30,7 +31,7 @@ Record PresheafEquiv (X Y: Presheaf) := {
     Y.2.(Dgn _) n i Hi (underlyingEquiv.(F0Equiv _ _) n x)
 }.
 
-Lemma structureEqIntro {psh: PshEq.Psh.Presheaf} (R S: PresheafDgn psh)
+Lemma structureEqIntro {psh: Presentation.Presheaf A.arity} (R S: PresheafDgn psh)
   (e: R.(Dgn _) = S.(Dgn _)): R = S.
 Proof.
   destruct R as [d ri rid rs rr], S as [d' si sid ss sr]; cbn in e.

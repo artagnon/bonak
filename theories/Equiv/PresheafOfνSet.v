@@ -6,11 +6,11 @@
     ω-limit tower as [F0], [νFace] as the face maps, and [νFaceCoh]
     as the exchange law. *)
 
-Import Logic.EqNotations.
-
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT HSet LeSProp NatLemmas Notation νSet.Layer
-  νSet Face Presheaf Equiv.νSetOfPresheaf Limit.
+  νSet Face Presheaf.Presentation Equiv.νSetOfPresheaf Limit.
+
+From Bonak.νSet Require Import νSet.
 
 Set Primitive Projections.
 Set Printing Projections.
@@ -243,7 +243,7 @@ Fixpoint gFaceCoh {m} {Xpre: (νSetAt m).(prefix)} (X: νSetFrom m Xpre)
 
 (** The presheaf of a ν-set *)
 
-Definition g (X: νSets): Presheaf := {|
+Definition g (X: νSets): Presheaf arity := {|
   F0 := gF0 X;
   Face := fun n q Hq ε => gFace X n q (leR_eq_r (plus_n_O n) Hq) ε;
   FaceCoh := fun n q Hq r Hr ε ω d =>

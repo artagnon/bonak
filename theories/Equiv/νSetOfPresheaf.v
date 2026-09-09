@@ -8,11 +8,11 @@
     explicit parameter; SProp bounds relate construction stages to [m], and
     proof irrelevance removes dependence on the bound witnesses. *)
 
-Import Logic.EqNotations.
-
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT RewLemmas HSet LeSProp Notation νSet.Layer
-  νSet Face Equiv.PresheafEquiv Limit.
+  νSet Face Presheaf.Presentation Equiv.PresheafEquiv Limit.
+
+From Bonak.νSet Require Import νSet.
 
 Set Primitive Projections.
 Set Printing Projections.
@@ -25,7 +25,7 @@ Module Export Face := Face.FaceOn A S.
 Module Export PshEq := PresheafEquiv.PresheafEquiv A.
 
 Section νSetOfPresheaf.
-Variable psh: Presheaf.
+Variable psh: Presheaf arity.
 
 (** Presheaf-side lists over the staged dependency construction *)
 

@@ -21,21 +21,6 @@ Definition hpaths {A: HGpd} (x y: A): HSet := {|
   UIP := @GUIP A x y;
 |}.
 
-Lemma retract_eq {A B: Type} (f: A -> B) (g: B -> A)
-  (H: forall x, g (f x) = x) {x y: A} (p: x = y):
-  p = eq_trans (eq_sym (H x)) (eq_trans (f_equal g (f_equal f p)) (H y)).
-Proof.
-  destruct p; simpl. destruct (H x). reflexivity.
-Defined.
-
-Lemma retract_UIP {A: Type} {B: HSet} (f: A -> B) (g: B -> A)
-  (H: forall x, g (f x) = x) (x y: A) (p q: x = y): p = q.
-Proof.
-  rewrite (retract_eq f g H p).
-  rewrite (retract_eq f g H q).
-  now rewrite (@UIP B (f x) (f y) (f_equal f p) (f_equal f q)).
-Defined.
-
 (** A transparent copy of Stdlib's [Eqdep_dec.UIP_dec] (Hedberg's
     theorem): the stdlib proof chain is [Qed]-opaque, which would leave
     normal forms of groupoid-level coherences stuck on it. *)

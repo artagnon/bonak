@@ -3,6 +3,7 @@
 Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
+From Bonak.Presheaf Require Import Presentation.
 From Bonak Require Import SigT HSet LeSProp NatLemmas Notation νSet.Layer
   Equiv.Dgn.PresheafOfνDgnSet Limit.
 From Bonak.Lib Require Import Equiv.
@@ -16,7 +17,7 @@ Import A.
 Module Export Backward := Bonak.Equiv.Dgn.PresheafOfνDgnSet.PresheafOfνDgnSet A.
 
 Section Forward.
-Variable psh: PshEq.Psh.Presheaf.
+Variable psh: Presentation.Presheaf A.arity.
 Variable dgn: PresheafDgn psh.
 
 Definition pshTotal (n: nat): HSet := νTotal (pshFrom psh n).

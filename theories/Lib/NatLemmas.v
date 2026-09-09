@@ -1,7 +1,7 @@
 (** Arithmetic between [nat] using the SProp order [leR]. *)
 
 Set Warnings "-notation-overridden".
-From Stdlib Require Import Logic.Eqdep_dec Arith.Peano_dec.
+From Stdlib Require Import Logic.Eqdep_dec Arith.PeanoNat.
 From Bonak Require Import Notation LeSProp.
 
 Set Keyed Unification.
@@ -110,3 +110,41 @@ Proof.
     rewrite (subSuccL (sub_leR L dim)).
     now rewrite (IHdim L H).
 Qed.
+
+(** Boolean equality tests under strict-proposition bounds.
+    The proofs remain transparent for dependent case analysis on the test. *)
+
+Fixpoint natEqbRefl (n: nat): Nat.eqb n n = true :=
+  match n with 0 => eq_refl | S n => natEqbRefl n end.
+
+Lemma natEqbEq: forall q n, Nat.eqb q n = true -> q = n.
+Proof.
+  induction q as [|q IHq]; intros [|n] E; simpl in E.
+  - now reflexivity.
+  - now discriminate E.
+  - now discriminate E.
+  - now exact (f_equal S (IHq n E)).
+Defined.
+
+Lemma leR0Eq {q}: q <= 0 -> q = 0.
+Proof.
+  destruct q as [|q]. now reflexivity. intro H. now destruct H.
+Defined.
+
+Lemma leRNeqS: forall q n, q <= n -> Nat.eqb q (S n) = false.
+Proof.
+  induction q as [|q IHq]; intros [|n] H; simpl.
+  - now reflexivity.
+  - now reflexivity.
+  - now destruct H.
+  - now exact (IHq n H).
+Defined.
+
+Lemma leRDown: forall q n, q <= S n -> Nat.eqb q (S n) = false -> q <= n.
+Proof.
+  induction q as [|q IHq]; intros [|n] H E.
+  - now exact leR_O.
+  - now exact leR_O.
+  - simpl in E. rewrite (leR0Eq H) in E. now discriminate E.
+  - now exact (IHq n H E).
+Defined.
