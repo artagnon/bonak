@@ -113,3 +113,23 @@ Proof.
 Defined.
 
 End Generators.
+
+(** A map preserving the faces preserves the action of every word.
+    The proof composes the image of the top-face square with the recursive
+    comparison, so its constructor equations hold by conversion. *)
+
+Lemma applyWMap {A: HSet} (m: nat): forall n (w: Word A n m)
+  (P Q: FaceStr A) (T: forall n, P.(S0) n -> Q.(S0) n)
+  (H: forall n q Hq a x,
+     Q.(SFace) n q Hq a (T (S n) x) = T n (P.(SFace) n q Hq a x)) x,
+  applyW m w Q (T m x) = T n (applyW m w P x).
+Proof.
+  induction m as [|m IH]; intros n w P Q T H x.
+  - destruct n as [|n]; [destruct w; reflexivity|destruct w].
+  - destruct w as [[a w]|w].
+    + exact (f_equal (applyW m w Q) (H m m leR_refl a x)
+        • IH n w P Q T H (sTop P m a x)).
+    + destruct n as [|n]; [destruct w|].
+      exact (IH n w (shiftStr P) (shiftStr Q) (fun n => T (S n))
+        (fun n q Hq a x => H (S n) q (↑ Hq) a x) x).
+Defined.

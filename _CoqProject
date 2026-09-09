@@ -35,3 +35,10 @@ theories/Presheaf/Presentation.v
 theories/Presheaf/Roundtrip.v
 theories/Presheaf/WordAction.v
 theories/Presheaf/νSemiShape.v
+theories/Presheaf/Dgn/νShape.v
+theories/Presheaf/Dgn/Presentation.v
+theories/Presheaf/Dgn/Generators.v
+theories/Presheaf/Dgn/MaskAction.v
+theories/Presheaf/Dgn/Functor.v
+theories/Presheaf/Dgn/Roundtrip.v
+theories/Presheaf/Dgn/Correspondence.v
