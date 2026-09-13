@@ -1,7 +1,7 @@
 (** The correspondence theorem
 
     The top-level result: the two presentations of ν-sets — the fibred one
-    ([Presheaf]) and the indexed one ([νSets]) — are equivalent, and, upgraded
+    ([νSetPresentation]) and the indexed one ([νSets]) — are equivalent, and, upgraded
     by univalence, equal.
 
     This file is a thin wrapper on top of the two round trips:
@@ -43,12 +43,12 @@ Module Export PresheafRoundtrip := PresheafRoundtrip.PresheafRoundtripOn A S.
     [νSetsEquivEq] converts it into equality of the two towers by turning
     each level's relation into a path between the finite prefixes. *)
 
-Definition presheafνSetsEquiv: Equiv (Presheaf arity) νSets :=
+Definition presheafνSetsEquiv: Equiv (νSetPresentation arity) νSets :=
   qinvEquiv f g
     (fun psh => presheafEquivEq (gf psh))
     (fun X => νSetsEquivEq (fg X)).
 
-Definition presheafEqνSets: Presheaf arity = νSets := ua presheafνSetsEquiv.
+Definition presheafEqνSets: νSetPresentation arity = νSets := ua presheafνSetsEquiv.
 
 End CorrespondenceOn.
 

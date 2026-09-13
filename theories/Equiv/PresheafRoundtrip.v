@@ -1,5 +1,5 @@
 (** The forward round trip [g ∘ f] of the correspondence between the
-    fibred presentation ([Presheaf]) and the indexed construction
+    fibred presentation ([νSetPresentation]) and the indexed construction
     ([νSet]): [gf: PresheafEquiv (g (f psh)) psh]. Levelwise, projecting a
     candidate-filled cell to its [psh]-cell is an equivalence, and it
     commutes with the face maps by [pshνFace]. *)
@@ -22,7 +22,7 @@ Module Export νSetRoundtrip := νSetRoundtrip.νSetRoundtripOn A S.
 
 Section RoundTripGF.
 
-Variable psh: Presheaf arity.
+Variable psh: νSetPresentation arity.
 
 (** Aligning [g]'s synthesized chains with the presheaf-equipped ones
 

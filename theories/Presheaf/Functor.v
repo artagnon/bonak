@@ -10,7 +10,7 @@ From Bonak.Presheaf Require Export Presentation.
 Set Primitive Projections.
 Set Printing Projections.
 
-Definition pshStr {A: HSet} (P: Presheaf A): FaceStr A := {|
+Definition pshStr {A: HSet} (P: νSetPresentation A): FaceStr A := {|
   S0 n := P.(F0) n;
   SFace := P.(Face);
 |}.
@@ -20,7 +20,7 @@ Context (A: HSet).
 
 (** Interpreting faces along words *)
 
-Definition toFunctor (P: Presheaf A): Functor (Op (νSemiShape A)) HSetCat :=
+Definition toFunctor (P: νSetPresentation A): Functor (Op (νSemiShape A)) HSetCat :=
   Build_Functor (Op (νSemiShape A)) HSetCat (fun n => P.(F0) n)
     (fun a b w => applyW a w (pshStr P))
     (fun a => functional_extensionality_dep _ _
@@ -45,8 +45,8 @@ Proof.
        (wgen (S n) (S q) ε) (wgen n r ω))).
 Defined.
 
-Definition ofFunctor (F: Functor (Op (νSemiShape A)) HSetCat): Presheaf A :=
-  Build_Presheaf A (fun n => F.(fobj) n)
+Definition ofFunctor (F: Functor (Op (νSemiShape A)) HSetCat): νSetPresentation A :=
+  Build_νSetPresentation A (fun n => F.(fobj) n)
     (fun n q Hq ε => F.(fhom) (a := S n) (b := n) (wgen n q ε))
     (ofFunctorCoh F).
 

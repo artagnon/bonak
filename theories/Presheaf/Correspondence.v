@@ -14,7 +14,7 @@ Section Correspondence.
 Context (A: HSet).
 
 Definition pshEquivFunctor:
-  Equiv (Presheaf A) (Functor (Op (νSemiShape A)) HSetCat) :=
+  Equiv (νSetPresentation A) (Functor (Op (νSemiShape A)) HSetCat) :=
   qinvEquiv (toFunctor A) (ofFunctor A) (ofToFunctor A) (toOfFunctor A).
 
 End Correspondence.
@@ -22,16 +22,16 @@ End Correspondence.
 (** The set-level correspondence as an equality of types, by univalence. *)
 
 Definition pshEqFunctor (A: HSet):
-  Presheaf A = Functor (Op (νSemiShape A)) HSetCat :=
+  νSetPresentation A = Functor (Op (νSemiShape A)) HSetCat :=
   ua (pshEquivFunctor A).
 
 (** The correspondence at the augmented semi-simplicial and semi-cubical
     arities, as equalities of types. *)
 
 Definition simplicialPresheafEqFunctor:
-  AugmentedSemiSimplicialPresheaf = Functor (Op (νSemiShape hunit)) HSetCat :=
+  AugmentedSemiSimplicialPresentation = Functor (Op (νSemiShape hunit)) HSetCat :=
   pshEqFunctor hunit.
 
 Definition cubicalPresheafEqFunctor:
-  SemiCubicalPresheaf = Functor (Op (νSemiShape hbool)) HSetCat :=
+  SemiCubicalPresentation = Functor (Op (νSemiShape hbool)) HSetCat :=
   pshEqFunctor hbool.

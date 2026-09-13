@@ -59,7 +59,7 @@ Definition dgnFace (X: νDgnSets) n i (Hi: i <= n) (ε: arity):
   dgnF0 X n.+1 -> dgnF0 X n :=
   νFaceFuel (underlyingFrom X n) (n - i) ε.
 
-Definition underlyingPresheaf (X: νDgnSets): Presentation.Presheaf A.arity := {|
+Definition underlyingPresheaf (X: νDgnSets): Presentation.νSetPresentation A.arity := {|
   F0 := dgnF0 X;
   Face := dgnFace X;
   FaceCoh := fun n q Hq r Hr ε ω d =>
@@ -372,11 +372,11 @@ Proof.
     (subAntitone Hji) (sub_leR n j) x).
 Qed.
 
-Definition gStructure (X: νDgnSets): PresheafDgn (underlyingPresheaf X) :=
-  Build_PresheafDgn (underlyingPresheaf X) (dgnMap X)
+Definition gStructure (X: νDgnSets): νDgnStructure (underlyingPresheaf X) :=
+  Build_νDgnStructure (underlyingPresheaf X) (dgnMap X)
     (dgnFaceDgnInf X) (dgnFaceDgnId X) (dgnFaceDgnSup X) (dgnMapDgnMap X).
 
-Definition g (X: νDgnSets): Presheaf :=
+Definition g (X: νDgnSets): νDgnSetPresentation arity :=
   (underlyingPresheaf X; gStructure X).
 
 End PresheafOfνDgnSet.

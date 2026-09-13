@@ -44,7 +44,7 @@ Proof.
   - rewrite <- plus_n_Sm. now exact IH.
 Qed.
 
-Lemma pshChainLift (psh: Presheaf arity) {M P K} (PCTop: PshDepsCohs psh M P K)
+Lemma pshChainLift (psh: νSetPresentation arity) {M P K} (PCTop: PshDepsCohs psh M P K)
   {p k} {dc: DepsCohs p k}
   (c0: DepsCohsChain (pshDepsCohs psh PCTop) dc):
   {PC: PshDepsCohs psh M p k &T {C: PshCohsChain psh PCTop PC &T

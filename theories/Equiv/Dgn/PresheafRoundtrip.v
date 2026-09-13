@@ -23,8 +23,8 @@ Proof.
 Defined.
 
 Section Roundtrip.
-Variable psh: Presentation.Presheaf A.arity.
-Variable dgn: PresheafDgn psh.
+Variable psh: Presentation.νSetPresentation A.arity.
+Variable dgn: νDgnStructure psh.
 
 Definition candidateEquiv n:
   Equiv (dgnPositionTotal n (pshDgnPosition psh dgn n)) (psh.(F0) n).

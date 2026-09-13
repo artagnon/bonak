@@ -19,7 +19,7 @@ Module PresheafEquiv (A: LayerSig).
 Import A.
 
 (** Equivalence of presheaves *)
-Record PresheafEquiv (psh psh': Presheaf arity) := {
+Record PresheafEquiv (psh psh': νSetPresentation arity) := {
   F0Equiv n: Equiv (psh.(F0) n) (psh'.(F0) n);
   FaceEquiv n q (Hq: q <= n) (ε: arity) (X: psh.(F0) n.+1):
     F0Equiv n (psh.(Face) n q Hq ε X) =
@@ -56,7 +56,7 @@ Qed.
     [funExtBetaHSet]); and transport along [hsetEq] is the equivalence
     ([hsetEqRew]). *)
 
-Lemma presheafFaceEquivEq {psh1 psh2: Presheaf arity} (E: PresheafEquiv psh1 psh2):
+Lemma presheafFaceEquivEq {psh1 psh2: νSetPresentation arity} (E: PresheafEquiv psh1 psh2):
   rew [fun F0: nat -> HSet =>
     forall n q (Hq: q <= n) (ε: arity), F0 n.+1 -> F0 n]
     (functional_extensionality_dep_good _ _
@@ -78,7 +78,7 @@ Proof.
   now exact (f_equal (psh2.(Face) n q Hq ε) (secEq (F0Equiv _ _ E n.+1) Y)).
 Qed.
 
-Lemma presheafEquivEq {psh1 psh2: Presheaf arity} (E: PresheafEquiv psh1 psh2):
+Lemma presheafEquivEq {psh1 psh2: νSetPresentation arity} (E: PresheafEquiv psh1 psh2):
   psh1 = psh2.
 Proof.
   exact (presheafEqIntro psh1 psh2 _ (presheafFaceEquivEq E)).

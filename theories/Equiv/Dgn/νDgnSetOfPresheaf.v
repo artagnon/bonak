@@ -17,8 +17,8 @@ Import A.
 Module Export Backward := Bonak.Equiv.Dgn.PresheafOfνDgnSet.PresheafOfνDgnSet A.
 
 Section Forward.
-Variable psh: Presentation.Presheaf A.arity.
-Variable dgn: PresheafDgn psh.
+Variable psh: Presentation.νSetPresentation A.arity.
+Variable dgn: νDgnStructure psh.
 
 Definition pshTotal (n: nat): HSet := νTotal (pshFrom psh n).
 

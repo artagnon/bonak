@@ -17,7 +17,7 @@ Context (A: HSet).
 
 (** The round trip on records *)
 
-Lemma ofToFunctor (P: Presheaf A): ofFunctor A (toFunctor A P) = P.
+Lemma ofToFunctor (P: νSetPresentation A): ofFunctor A (toFunctor A P) = P.
 Proof.
   refine (presheafEqIntro (ofFunctor A (toFunctor A P)) P eq_refl _); simpl.
   apply functional_extensionality_dep; intro n.

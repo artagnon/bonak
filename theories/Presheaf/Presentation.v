@@ -8,7 +8,7 @@
     formalization of semi-simplicial and semi-cubical sets". *)
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import HSet Notation LeSProp.
+From Bonak Require Import SigT HSet Notation LeSProp.
 
 From Bonak.Lib Require Import Funext.
 From Stdlib Require Import Logic.FunctionalExtensionality.
@@ -21,7 +21,7 @@ Set Printing Projections.
     deleting [r] first shifts the higher position [q.+1] to [q]; deleting
     [q.+1] first leaves [r] unchanged. *)
 
-Record Presheaf (arity: HSet) := {
+Record νSetPresentation (arity: HSet) := {
   F0: nat -> HSet;
   Face n q (Hq: q <= n) (ε: arity): F0 n.+1 -> F0 n;
   FaceCoh n q (Hq: q <= n) r (Hr: r <= q) (ε ω: arity) (X: F0 n.+2):
@@ -33,7 +33,7 @@ Arguments F0 {arity} _ _.
 Arguments Face {arity} _ _ _ _ _.
 Arguments FaceCoh {arity} _ _ _ _ _ _ _ _ _.
 
-Record PresheafDgn {arity: HSet} (psh: Presheaf arity): Type := {
+Record νDgnStructure {arity: HSet} (psh: νSetPresentation arity): Type := {
   Dgn n q (Hq: q <= n): psh.(F0) n -> psh.(F0) n.+1;
   FaceDgnInf n r q (Hr: r <= q) (Hq: q <= n) (ε: arity) (X: psh.(F0) n.+1):
     psh.(Face) n.+1 r (Hr ↕ (↑ Hq)) ε (Dgn n.+1 q.+1 (⇑ Hq) X) =
@@ -48,20 +48,23 @@ Record PresheafDgn {arity: HSet} (psh: Presheaf arity): Type := {
     Dgn n.+1 q.+1 (⇑ Hq) (Dgn n r (Hr ↕ Hq) X)
 }.
 
-Arguments Build_PresheafDgn {arity} _ _ _ _ _ _.
+Arguments Build_νDgnStructure {arity} _ _ _ _ _ _.
 Arguments Dgn {arity} _ _ _ _ _.
 Arguments FaceDgnInf {arity} _ _ _ _ _ _ _ _ _.
 Arguments FaceDgnId {arity} _ _ _ _ _ _ _.
 Arguments FaceDgnSup {arity} _ _ _ _ _ _ _ _ _.
 Arguments DgnDgn {arity} _ _ _ _ _ _ _ _.
 
-Definition AugmentedSemiSimplicialPresheaf := Presheaf hunit.
-Definition SemiCubicalPresheaf := Presheaf hbool.
+Definition νDgnSetPresentation (arity: HSet): Type :=
+  { P: νSetPresentation arity &T νDgnStructure P }.
 
-(** The levels and faces determine a presheaf: the exchange law is an
+Definition AugmentedSemiSimplicialPresentation := νSetPresentation hunit.
+Definition SemiCubicalPresentation := νSetPresentation hbool.
+
+(** The levels and faces determine a presentation: the exchange law is an
     equality in an [HSet], so its proofs agree. *)
 
-Lemma presheafEqIntro {arity: HSet} (psh1 psh2: Presheaf arity)
+Lemma presheafEqIntro {arity: HSet} (psh1 psh2: νSetPresentation arity)
   (e0: psh1.(F0) = psh2.(F0))
   (e1: rew [fun F0: nat -> HSet =>
          forall n q (Hq: q <= n) (ε: arity), F0 n.+1 -> F0 n] e0 in
