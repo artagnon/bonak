@@ -666,6 +666,10 @@ Definition νSets := νSetFrom 0 tt.
 
 End νSet.
 
+(** Each application of [νSet] generates fresh inductive types, even with
+    the same layer argument. This signature lets module functors accept an
+    existing [νSet] module as a parameter, preserving the identity of its types
+    when several constructions share it. *)
 Module Type νSetSig (A: LayerSig).
 Include νSet A.
 End νSetSig.
