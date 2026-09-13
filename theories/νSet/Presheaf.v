@@ -29,6 +29,21 @@ Record Presheaf := {
     Face n r (Hr ↕ Hq) ω (Face n.+1 q.+1 (⇑ Hq) ε X)
 }.
 
+Record PresheafDgn (psh: Presheaf): Type := {
+  Dgn n q (Hq: q <= n): psh.(F0) n -> psh.(F0) n.+1;
+  FaceDgnInf n r q (Hr: r <= q) (Hq: q <= n) (ε: arity) (X: psh.(F0) n.+1):
+    psh.(Face) n.+1 r (Hr ↕ (↑ Hq)) ε (Dgn n.+1 q.+1 (⇑ Hq) X) =
+    Dgn n q Hq (psh.(Face) n r (Hr ↕ Hq) ε X);
+  FaceDgnId n q (Hq: q <= n) (ε: arity) (X: psh.(F0) n):
+    psh.(Face) n q Hq ε (Dgn n q Hq X) = X;
+  FaceDgnSup n q (Hq: q <= n) r (Hr: r <= q) (ε: arity) (X: psh.(F0) n.+1):
+    psh.(Face) n.+1 q.+1 (⇑ Hq) ε (Dgn n.+1 r (Hr ↕ (↑ Hq)) X) =
+    Dgn n r (Hr ↕ Hq) (psh.(Face) n q Hq ε X);
+  DgnDgn n r q (Hr: r <= q) (Hq: q <= n) (X: psh.(F0) n):
+    Dgn n.+1 r (Hr ↕ (↑ Hq)) (Dgn n q Hq X) =
+    Dgn n.+1 q.+1 (⇑ Hq) (Dgn n r (Hr ↕ Hq) X)
+}.
+
 End Presheaf.
 
 Module PresheafSimplicial := Presheaf SimplicialLayer.

@@ -33,10 +33,10 @@ Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.
 
-Module νSetEquiv (A: LayerSig).
+Module νSetEquivOn (A: LayerSig) (S: νSetSig A).
 Import A.
 
-Module Export νSet := νSet.νSet A.
+Module Export νSet := S.
 
 Definition νDataAt {m} (Xpre: (νSetAt m).(prefix)): νSetData m :=
   (νSetAt m).(data) Xpre.
@@ -208,13 +208,8 @@ Qed.
     The [m]-step unfolding of a νSet: the reached prefix, packed with the
     remaining tower so the recursion needs no arithmetic. *)
 
-Fixpoint νSetPack (m: nat) (S: νSets):
-  {Xp: (νSetAt m).(prefix) &T νSetFrom m Xp} :=
-  match m with
-  | 0 => (tt; S)
-  | S m => (((νSetPack m S).1; this ((νSetPack m S).2));
-            next ((νSetPack m S).2))
-  end.
+Definition νSetPack (m: nat) (S: νSets):
+  {Xp: (νSetAt m).(prefix) &T νSetFrom m Xp} := limitPack m S.
 
 (** The levelwise equivalence
 
@@ -247,58 +242,15 @@ Definition νSetsEquiv (SA SB: νSets): Type := Limit (eqvTel SA SB) 0 tt.
     destructors. [packPath] identifies that prefix with level [m] of the
     tower's stored chain. *)
 
-Fixpoint packApprox (m: nat) (S: νSets) (l: nat) {struct m}:
-  forall Hl: m <= l, ((νSetPack m S).2).(approx) l Hl = S.(approx) l leR_O :=
-  match m return forall Hl: m <= l,
-    ((νSetPack m S).2).(approx) l Hl = S.(approx) l leR_O with
-  | 0 => fun _ => eq_refl
-  | m.+1 => fun Hl => packApprox m S l (↓ Hl)
-  end.
-
 Definition packPath (m: nat) (S: νSets):
-  (νSetPack m S).1 = S.(approx) m leR_O :=
-  eq_sym ((νSetPack m S).2).(approxO)
-  • packApprox m S m leR_refl.
-
-(** Reading it off is compatible with the bonding equations:
-    [νSetPack]'s own bonding equation is [eq_refl] (its prefix at [m.+1]
-    is literally a pair over its prefix at [m]), the tower's is
-    [approxS]. *)
-
-Lemma packApproxS (m: nat) (S: νSets) (l: nat) (Hl: m <= l) (HSl: m <= l.+1):
-  f_equal (fun Y: (νSetAt l.+1).(prefix) => Y.1) (packApprox m S l.+1 HSl)
-    • S.(approxS) l leR_O leR_O
-  = ((νSetPack m S).2).(approxS) l Hl HSl • packApprox m S l Hl.
-Proof.
-  revert l Hl HSl; induction m as [|m IH]; intros l Hl HSl.
-  - cbn. now rewrite ?eq_trans_refl_l, ?eq_trans_refl_r.
-  - exact (IH l (↓ Hl) (↓ HSl)).
-Qed.
-
-(** The generic truncation law at this telescope: its [bondExtend] is
-    [eq_refl], so the trailing composite disappears and [bondApproxEta]
-    reads as the first projection of the Σ-equality [approxEta] is built
-    from. *)
-
-Definition approxEtaProj {n} {X: (νSetAt n).(prefix)} (ν: νSetFrom n X):
-  f_equal (fun Y: (νSetAt n.+1).(prefix) => Y.1) (approxEta ν)
-  = ν.(approxS) n leR_refl (↑ leR_refl) • ν.(approxO) :=
-  bondApproxEta ν.
+  (νSetPack m S).1 = S.(approx) m leR_O := limitPackPath m S.
 
 Lemma packPathS (m: nat) (S: νSets):
   f_equal (fun Y: (νSetAt m.+1).(prefix) => Y.1) (packPath m.+1 S)
     • S.(approxS) m leR_O leR_O = packPath m S.
 Proof.
-  unfold packPath.
-  change ((νSetPack m.+1 S).2).(approxO)
-    with (approxEta ((νSetPack m S).2)).
-  change (packApprox m.+1 S m.+1 leR_refl)
-    with (packApprox m S m.+1 (↓ leR_refl)).
-  rewrite eq_trans_map_distr, <- eq_sym_map_distr.
-  rewrite (approxEtaProj ((νSetPack m S).2)).
-  rewrite <- eq_trans_assoc.
-  rewrite (packApproxS m S m leR_refl (↓ leR_refl)).
-  apply eq_trans_sym_cancel_common.
+  pose proof (limitPackPathS m S) as H.
+  now rewrite eq_trans_refl_l in H.
 Qed.
 
 (** From coherent prefix paths to tower equality
@@ -362,6 +314,11 @@ Definition νSetsEquivEq {SA SB: νSets} (E: νSetsEquiv SA SB): SA = SB :=
       • f_equal (@prefixEq m (νSetPack m SA).1 (νSetPack m SB).1)
           (E.(approxS) m leR_O leR_O)).
 
+End νSetEquivOn.
+
+Module νSetEquiv (A: LayerSig).
+Module Base := νSet.νSet A.
+Include νSetEquivOn A Base.
 End νSetEquiv.
 
 Module νSetEquivSimplicial := νSetEquiv SimplicialLayer.

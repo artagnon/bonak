@@ -10,16 +10,16 @@ Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT HSet LeSProp NatLemmas Notation νSet.Layer
-  νSet Face Presheaf νSetOfPresheaf Limit.
+  νSet Face Presheaf Equiv.νSetOfPresheaf Limit.
 
 Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.
 
-Module PresheafOfνSet (A: LayerSig).
+Module PresheafOfνSetOn (A: LayerSig) (S: νSetSig A).
 Import A.
 
-Module Export νSetOfPresheaf := νSetOfPresheaf.νSetOfPresheaf A.
+Module Export νSetOfPresheaf := νSetOfPresheaf.νSetOfPresheafOn A S.
 
 (** The tower data at a position
 
@@ -250,6 +250,11 @@ Definition g (X: νSets): Presheaf := {|
     gFaceCoh X n q (leR_eq_r (plus_n_O n) Hq) r Hr ε ω d;
 |}.
 
+End PresheafOfνSetOn.
+
+Module PresheafOfνSet (A: LayerSig).
+Module Base := νSet.νSet A.
+Include PresheafOfνSetOn A Base.
 End PresheafOfνSet.
 
 Module PresheafOfνSetSimplicial := PresheafOfνSet SimplicialLayer.

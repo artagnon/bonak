@@ -6,6 +6,27 @@ From Bonak Require Import Notation LeSProp.
 
 Set Keyed Unification.
 
+Inductive NatOrder (i j: nat): Type :=
+| NatOrderLt: i.+1 <= j -> NatOrder i j
+| NatOrderEq: i = j -> NatOrder i j
+| NatOrderGt: j.+1 <= i -> NatOrder i j.
+
+Arguments NatOrderLt {i j} _.
+Arguments NatOrderEq {i j} _.
+Arguments NatOrderGt {i j} _.
+
+Fixpoint natOrder (i j: nat) {struct i}: NatOrder i j.
+Proof.
+  destruct i as [|i], j as [|j].
+  - exact (NatOrderEq eq_refl).
+  - exact (@NatOrderLt 0 j.+1 (@leR_O j)).
+  - exact (@NatOrderGt i.+1 0 (@leR_O i)).
+  - destruct (natOrder i j) as [H|e|H].
+    + exact (@NatOrderLt i.+1 j.+1 H).
+    + exact (NatOrderEq (f_equal S e)).
+    + exact (@NatOrderGt i.+1 j.+1 H).
+Defined.
+
 Definition natUIP {a b: nat} (e e': a = b): e = e' :=
   UIP_dec PeanoNat.Nat.eq_dec e e'.
 
@@ -61,6 +82,17 @@ Qed.
 Lemma subDiag (a: nat): a - a = 0.
 Proof.
   induction a. reflexivity. now exact IHa.
+Qed.
+
+Lemma subAntitone {i j n: nat}: i <= j -> n - j <= n - i.
+Proof.
+  revert i j; induction n; intros i j H.
+  - now exact leR_refl.
+  - destruct i as [|i], j as [|j].
+    + exact leR_refl.
+    + exact (↑ (sub_leR n j)).
+    + now destruct (leR_O_contra H).
+    + now exact (IHn i j H).
 Qed.
 
 Lemma addSubCancelL (a b: nat): (a + b) - a = b.

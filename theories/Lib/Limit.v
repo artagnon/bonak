@@ -129,6 +129,64 @@ Definition next {T n s} (L: Limit T n s):
   approxS l Hl HSl := L.(approxS) l (↓ Hl) (↓ HSl);
 |}.
 
+(** Finite unfoldings
+
+    Iterating [this] and [next] gives a stage and its remaining limit.
+    The resulting stage agrees with the stored approximation, and these
+    paths respect the bonding equations. *)
+
+Section FiniteUnfoldings.
+Local Set Keyed Unification.
+
+Fixpoint limitPack {T s} (m: nat) (L: Limit T 0 s):
+  {t: T.(stage) m &T Limit T m t} :=
+  match m with
+  | 0 => (s; L)
+  | m.+1 =>
+      let p := limitPack m L in (extend p.1 (this p.2); next p.2)
+  end.
+
+Fixpoint limitPackApprox {T s} (m: nat) (L: Limit T 0 s) l:
+  forall Hl: m <= l, (limitPack m L).2.(approx) l Hl = L.(approx) l leR_O :=
+  match m return forall Hl: m <= l,
+    (limitPack m L).2.(approx) l Hl = L.(approx) l leR_O with
+  | 0 => fun _ => eq_refl
+  | m.+1 => fun Hl => limitPackApprox m L l (↓ Hl)
+  end.
+
+Definition limitPackPath {T s} m (L: Limit T 0 s):
+  (limitPack m L).1 = L.(approx) m leR_O :=
+  eq_sym (limitPack m L).2.(approxO) • limitPackApprox m L m leR_refl.
+
+Lemma limitPackApproxS {T s} m (L: Limit T 0 s) l
+  (Hl: m <= l) (HSl: m <= l.+1):
+  f_equal (@bond T l) (limitPackApprox m L l.+1 HSl) •
+    L.(approxS) l leR_O leR_O =
+  (limitPack m L).2.(approxS) l Hl HSl • limitPackApprox m L l Hl.
+Proof.
+  revert l Hl HSl; induction m; intros l Hl HSl.
+  - cbn. now rewrite ?eq_trans_refl_l, ?eq_trans_refl_r.
+  - exact (IHm l (↓ Hl) (↓ HSl)).
+Qed.
+
+Lemma limitPackPathS {T s} m (L: Limit T 0 s):
+  f_equal (@bond T m) (limitPackPath m.+1 L) • L.(approxS) m leR_O leR_O =
+  T.(bondExtend) m (limitPack m L).1 (this (limitPack m L).2) • limitPackPath m L.
+Proof.
+  unfold limitPackPath.
+  change (limitPack m.+1 L).2.(approxO) with (approxEta (limitPack m L).2).
+  change (limitPackApprox m.+1 L m.+1 leR_refl)
+    with (limitPackApprox m L m.+1 (↓ leR_refl)).
+  rewrite eq_trans_map_distr, <- eq_sym_map_distr, <- eq_trans_assoc.
+  rewrite (limitPackApproxS m L m leR_refl (↓ leR_refl)).
+  symmetry. apply eq_trans_shift_l.
+  rewrite eq_trans_assoc, (bondApproxEta (limitPack m L).2), <- eq_trans_assoc.
+  apply f_equal.
+  now rewrite eq_trans_assoc, eq_trans_sym_inv_r, eq_trans_refl_l.
+Qed.
+
+End FiniteUnfoldings.
+
 (** Building limits
 
     [ofChain] restricts a globally coherent family to the levels at or

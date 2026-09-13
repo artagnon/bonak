@@ -88,12 +88,12 @@ Qed.
     [funExtBetaHSet]); and transport along [hsetEq] is the equivalence
     ([hsetEqRew]). *)
 
-Lemma presheafEquivEq {psh1 psh2: Presheaf} (E: PresheafEquiv psh1 psh2):
-  psh1 = psh2.
-Proof.
-  apply (presheafEqIntro psh1 psh2
+Lemma presheafFaceEquivEq {psh1 psh2: Presheaf} (E: PresheafEquiv psh1 psh2):
+  rew [fun F0: nat -> HSet =>
+    forall n q (Hq: q <= n) (ε: arity), F0 n.+1 -> F0 n]
     (functional_extensionality_dep_good _ _
-      (fun n => hsetEq (F0Equiv _ _ E n)))).
+      (fun n => hsetEq (F0Equiv _ _ E n))) in psh1.(Face) = psh2.(Face).
+Proof.
   apply functional_extensionality_dep_good; intro n.
   apply functional_extensionality_dep_good; intro q.
   apply spropFunext; intro Hq.
@@ -108,6 +108,12 @@ Proof.
   rewrite hsetEqRew, hsetEqRewSym.
   refine (FaceEquiv _ _ E n q Hq ε (invEq (F0Equiv _ _ E n.+1) Y) • _).
   now exact (f_equal (psh2.(Face) n q Hq ε) (secEq (F0Equiv _ _ E n.+1) Y)).
+Qed.
+
+Lemma presheafEquivEq {psh1 psh2: Presheaf} (E: PresheafEquiv psh1 psh2):
+  psh1 = psh2.
+Proof.
+  exact (presheafEqIntro psh1 psh2 _ (presheafFaceEquivEq E)).
 Qed.
 
 End PresheafEquiv.

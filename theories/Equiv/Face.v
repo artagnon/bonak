@@ -15,16 +15,16 @@ Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT HSet LeSProp Notation νSet.Layer νSet.
-From Bonak Require νSetEquiv.
+From Bonak Require Equiv.νSetEquiv.
 
 Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.
 
-Module Face (A: LayerSig).
+Module FaceOn (A: LayerSig) (S: νSetSig A).
 Import A.
 
-Module Export νSetEquiv := Bonak.Equiv.νSetEquiv.νSetEquiv A.
+Module Export νSetEquiv := Bonak.Equiv.νSetEquiv.νSetEquivOn A S.
 
 (** Chains of projections between frame stages *)
 
@@ -107,6 +107,20 @@ Fixpoint extChainCompose {P K} {depsTop: DepsRestr P K}
   | ExtChainNil => c1
   | ExtChainCons c2' => ExtChainCons (extChainCompose c1 c2')
   end.
+
+Lemma getPaintingCompose {P K} {depsTop: DepsRestr P K}
+  {extTop: DepsRestrExtension P K depsTop}
+  {p k} {depsMid: DepsRestr p k} {extMid: DepsRestrExtension p k depsMid}
+  {p' k'} {deps: DepsRestr p' k'} {ext: DepsRestrExtension p' k' deps}
+  (a: ExtChain extTop extMid) (b: ExtChain extMid ext)
+  (d: mkFrame deps) (cp: mkPainting ext d):
+  getPainting (extChainCompose a b) d cp =
+  getPainting a (getPainting b d cp).1 (getPainting b d cp).2.
+Proof.
+  revert d cp; induction b; intros d cp.
+  - reflexivity.
+  - exact (IHb (d; cp.1) cp.2).
+Defined.
 
 (** The frame chain underlying a painting chain. *)
 
@@ -316,6 +330,20 @@ Lemma cohsChainNextCompose {P K} {dcTop: DepsCohs P K}
   chainCompose (cohsChainNext a) (cohsChainNext b).
 Proof.
   induction b; cbn; [now reflexivity | now rewrite IHb].
+Defined.
+
+Lemma νFaceCompose {P K} {dcTop: DepsCohs P K}
+  {p k} {dcMid: DepsCohs p k} {p' k'} {dc: DepsCohs p' k'}
+  (a: DepsCohsChain dcTop dcMid) (b: DepsCohsChain dcMid dc)
+  (ε: arity) (d: mkFrame (mkDepsRestr (depsCohs := dcTop))):
+  νFace (cohsChainCompose a b) ε d =
+  getPainting (cohsChainExt a)
+    (νFace b ε (getFrame (cohsChainNext a) d)).1
+    (νFace b ε (getFrame (cohsChainNext a) d)).2.
+Proof.
+  unfold νFace.
+  rewrite cohsChainExtCompose, cohsChainNextCompose, <- getFrameCompose.
+  apply getPaintingCompose.
 Defined.
 
 Lemma extChainDepsExt {P K} {dcTop: DepsCohs P K} {p k} {dc: DepsCohs p k}
@@ -576,6 +604,11 @@ Proof.
   now exact (hunit_ext _ _).
 Qed.
 
+End FaceOn.
+
+Module Face (A: LayerSig).
+Module Base := νSet.νSet A.
+Include FaceOn A Base.
 End Face.
 
 Module FaceSimplicial := Face SimplicialLayer.

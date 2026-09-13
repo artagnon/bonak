@@ -15,17 +15,17 @@ Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT RewLemmas HSet LeSProp NatLemmas Notation νSet.Layer
-  νSet Face Presheaf νSetOfPresheaf PresheafOfνSet Limit.
+  νSet Face Presheaf Equiv.νSetOfPresheaf Equiv.PresheafOfνSet Limit.
 From Bonak.Lib Require Import Equiv.
 
 Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.
 
-Module νSetRoundtrip (A: LayerSig).
+Module νSetRoundtripOn (A: LayerSig) (S: νSetSig A).
 Import A.
 
-Module Export PresheafOfνSet := PresheafOfνSet.PresheafOfνSet A.
+Module Export PresheafOfνSet := PresheafOfνSet.PresheafOfνSetOn A S.
 
 (** Lifting arbitrary chains to equipped chains
 
@@ -524,6 +524,11 @@ Definition fg: νSetsEquiv (f (g X)) X :=
     (fun m _ => (fgChain m).1) eq_refl (fun m _ _ => eq_refl).
 End FG.
 
+End νSetRoundtripOn.
+
+Module νSetRoundtrip (A: LayerSig).
+Module Base := νSet.νSet A.
+Include νSetRoundtripOn A Base.
 End νSetRoundtrip.
 
 Module νSetRoundtripSimplicial := νSetRoundtrip SimplicialLayer.

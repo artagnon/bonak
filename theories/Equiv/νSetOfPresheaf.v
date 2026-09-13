@@ -12,16 +12,16 @@ Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT RewLemmas HSet LeSProp Notation νSet.Layer
-  νSet Face PresheafEquiv Limit.
+  νSet Face Equiv.PresheafEquiv Limit.
 
 Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.
 
-Module νSetOfPresheaf (A: LayerSig).
+Module νSetOfPresheafOn (A: LayerSig) (S: νSetSig A).
 Import A.
 
-Module Export Face := Face.Face A.
+Module Export Face := Face.FaceOn A S.
 Module Export PshEq := PresheafEquiv.PresheafEquiv A.
 
 Section νSetOfPresheaf.
@@ -711,6 +711,11 @@ End νSetOfPresheaf.
 Arguments PshCohsChainNil {psh m P K PCTop}.
 Arguments PshCohsChainCons {psh m P K PCTop p k PC} _.
 
+End νSetOfPresheafOn.
+
+Module νSetOfPresheaf (A: LayerSig).
+Module Base := νSet.νSet A.
+Include νSetOfPresheafOn A Base.
 End νSetOfPresheaf.
 
 Module νSetOfPresheafSimplicial := νSetOfPresheaf SimplicialLayer.

@@ -8,17 +8,17 @@ Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT HSet LeSProp NatLemmas Notation νSet.Layer
-  νSet Face Presheaf νSetOfPresheaf PresheafOfνSet νSetRoundtrip Limit.
+  νSet Face Presheaf Equiv.νSetOfPresheaf Equiv.PresheafOfνSet Equiv.νSetRoundtrip Limit.
 From Bonak.Lib Require Import Equiv.
 
 Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.
 
-Module PresheafRoundtrip (A: LayerSig).
+Module PresheafRoundtripOn (A: LayerSig) (S: νSetSig A).
 Import A.
 
-Module Export νSetRoundtrip := νSetRoundtrip.νSetRoundtrip A.
+Module Export νSetRoundtrip := νSetRoundtrip.νSetRoundtripOn A S.
 
 Section RoundTripGF.
 
@@ -205,6 +205,11 @@ Definition gf: PresheafEquiv (g (f psh)) psh :=
 
 End RoundTripGF.
 
+End PresheafRoundtripOn.
+
+Module PresheafRoundtrip (A: LayerSig).
+Module Base := νSet.νSet A.
+Include PresheafRoundtripOn A Base.
 End PresheafRoundtrip.
 
 Module PresheafRoundtripSimplicial := PresheafRoundtrip SimplicialLayer.

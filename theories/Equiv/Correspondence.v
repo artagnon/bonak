@@ -15,18 +15,18 @@
 
 Set Warnings "-notation-overridden".
 From Bonak Require Import HSet Notation νSet.Layer Univalence
-  νSet Face PresheafEquiv νSetOfPresheaf PresheafOfνSet
-  νSetRoundtrip PresheafRoundtrip Limit.
+  νSet Face Equiv.PresheafEquiv Equiv.νSetOfPresheaf Equiv.PresheafOfνSet
+  Equiv.νSetRoundtrip Equiv.PresheafRoundtrip Limit.
 From Bonak.Lib Require Import Equiv.
 
 Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.
 
-Module Correspondence (A: LayerSig).
+Module CorrespondenceOn (A: LayerSig) (S: νSetSig A).
 Import A.
 
-Module Export PresheafRoundtrip := PresheafRoundtrip.PresheafRoundtrip A.
+Module Export PresheafRoundtrip := PresheafRoundtrip.PresheafRoundtripOn A S.
 
 (** Extensionality for the ν-set tower
 
@@ -48,6 +48,11 @@ Definition presheafνSetsEquiv: Equiv Presheaf νSets :=
 
 Definition presheafEqνSets: Presheaf = νSets := ua presheafνSetsEquiv.
 
+End CorrespondenceOn.
+
+Module Correspondence (A: LayerSig).
+Module Base := νSet.νSet A.
+Include CorrespondenceOn A Base.
 End Correspondence.
 
 Module CorrespondenceSimplicial := Correspondence SimplicialLayer.
