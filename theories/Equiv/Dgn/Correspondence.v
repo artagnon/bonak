@@ -3,6 +3,7 @@
     round trips give an equivalence, and univalence gives a type equality. *)
 
 Set Warnings "-notation-overridden".
+From Bonak.Presheaf Require Import Presentation.
 From Bonak Require Import SigT νSet.Layer Univalence Equiv.Dgn.νDgnSetRoundtrip.
 From Bonak.Lib Require Import Equiv.
 
@@ -14,12 +15,12 @@ Module Correspondence (A: LayerSig).
 Module Export Roundtrip := Bonak.Equiv.Dgn.νDgnSetRoundtrip.νDgnSetRoundtrip A.
 
 Definition νDgnSetsPresheafEquiv:
-  Equiv νDgnSets {psh: PshEq.Psh.Presheaf &T PresheafDgn psh} :=
+  Equiv νDgnSets (νDgnSetPresentation A.arity) :=
   qinvEquiv g (fun P => f P.1 P.2) fg
     (fun P => gfEq P.1 P.2).
 
 Definition νDgnSetsEqPresheaf:
-  νDgnSets = {psh: PshEq.Psh.Presheaf &T PresheafDgn psh} :=
+  νDgnSets = νDgnSetPresentation A.arity :=
   ua νDgnSetsPresheafEquiv.
 
 End Correspondence.

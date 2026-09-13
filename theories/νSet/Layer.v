@@ -25,7 +25,7 @@ Set Printing Projections.
       so eta is definitional and [ext] is provable without an axiom. *)
 
 Module Type LayerSig.
-  Parameter arity: Type.
+  Parameter arity: HSet.
   Parameter Layer: forall (B: arity -> HSet), HSet.
   Parameter nth: forall {B: arity -> HSet}, Layer B -> forall ε, B ε.
   Parameter lam: forall {B: arity -> HSet}, (forall ε, B ε) -> Layer B.
@@ -175,7 +175,7 @@ End LayerTheory.
 
 (** The simplicial layer: no wrapper at all *)
 Module SimplicialLayer <: LayerSig.
-  Definition arity: Type := unit.
+  Definition arity: HSet := hunit.
   Definition Layer (B: arity -> HSet): HSet := B tt.
   Definition nth {B: arity -> HSet} (l: Layer B) (ε: arity): B ε :=
     match ε with tt => l end.
@@ -195,7 +195,7 @@ End SimplicialLayer.
 
 (** The cubical layer: a pair [sigT], comes with definitional eta *)
 Module CubicalLayer <: LayerSig.
-  Definition arity: Type := bool.
+  Definition arity: HSet := hbool.
   Definition Layer (B: arity -> HSet): HSet :=
     hsigT (A := B false) (fun _ => B true).
 

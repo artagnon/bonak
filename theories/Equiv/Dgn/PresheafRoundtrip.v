@@ -3,6 +3,7 @@
 Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
+From Bonak.Presheaf Require Import Presentation.
 From Bonak Require Import SigT HSet LeSProp NatLemmas Notation νSet.Layer
   Equiv.Dgn.νDgnSetOfPresheaf Limit.
 From Bonak.Lib Require Import Equiv.
@@ -22,8 +23,8 @@ Proof.
 Defined.
 
 Section Roundtrip.
-Variable psh: PshEq.Psh.Presheaf.
-Variable dgn: PresheafDgn psh.
+Variable psh: Presentation.νSetPresentation A.arity.
+Variable dgn: νDgnStructure psh.
 
 Definition candidateEquiv n:
   Equiv (dgnPositionTotal n (pshDgnPosition psh dgn n)) (psh.(F0) n).

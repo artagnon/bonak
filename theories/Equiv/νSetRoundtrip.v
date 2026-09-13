@@ -11,12 +11,12 @@
     of its frame; it steps by [νFaceEq], every face of the two frames
     agreeing. *)
 
-Import Logic.EqNotations.
-
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT RewLemmas HSet LeSProp NatLemmas Notation νSet.Layer
-  νSet Face Presheaf Equiv.νSetOfPresheaf Equiv.PresheafOfνSet Limit.
+  νSet Face Presheaf.Presentation Equiv.νSetOfPresheaf Equiv.PresheafOfνSet Limit.
 From Bonak.Lib Require Import Equiv.
+
+From Bonak.νSet Require Import νSet.
 
 Set Primitive Projections.
 Set Printing Projections.
@@ -44,7 +44,7 @@ Proof.
   - rewrite <- plus_n_Sm. now exact IH.
 Qed.
 
-Lemma pshChainLift (psh: Presheaf) {M P K} (PCTop: PshDepsCohs psh M P K)
+Lemma pshChainLift (psh: νSetPresentation arity) {M P K} (PCTop: PshDepsCohs psh M P K)
   {p k} {dc: DepsCohs p k}
   (c0: DepsCohsChain (pshDepsCohs psh PCTop) dc):
   {PC: PshDepsCohs psh M p k &T {C: PshCohsChain psh PCTop PC &T

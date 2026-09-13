@@ -12,7 +12,6 @@ theories/Lib/Limit.v
 theories/νSet/Layer.v
 theories/νSet/νSet.v
 theories/νSet/νDgnSet.v
-theories/νSet/Presheaf.v
 theories/νGpd/HGpd.v
 theories/νGpd/Layer.v
 theories/νGpd/Lemmas.v
@@ -25,3 +24,14 @@ theories/Equiv/PresheafOfνSet.v
 theories/Equiv/νSetRoundtrip.v
 theories/Equiv/PresheafRoundtrip.v
 theories/Equiv/Correspondence.v
+paper/depstream.v
+theories/Category/Category.v
+theories/Category/CategoryEq.v
+theories/Category/HSetCat.v
+theories/Presheaf/Correspondence.v
+theories/Presheaf/FaceStructure.v
+theories/Presheaf/Functor.v
+theories/Presheaf/Presentation.v
+theories/Presheaf/Roundtrip.v
+theories/Presheaf/WordAction.v
+theories/Presheaf/νSemiShape.v

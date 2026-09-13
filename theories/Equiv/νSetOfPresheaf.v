@@ -1,6 +1,6 @@
 (** The forward direction of the correspondence between the fibred
-    presentation ([Presheaf]) and the indexed construction ([νSet]):
-    [f: Presheaf -> νSets].
+    presentation ([νSetPresentation]) and the indexed construction ([νSet]):
+    [f: νSetPresentation -> νSets].
 
     The definitions are organized by dependency stage. Each [Psh*] record
     augments the corresponding construction record with presheaf frame maps,
@@ -8,11 +8,11 @@
     explicit parameter; SProp bounds relate construction stages to [m], and
     proof irrelevance removes dependence on the bound witnesses. *)
 
-Import Logic.EqNotations.
-
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT RewLemmas HSet LeSProp Notation νSet.Layer
-  νSet Face Equiv.PresheafEquiv Limit.
+  νSet Face Presheaf.Presentation Equiv.PresheafEquiv Limit.
+
+From Bonak.νSet Require Import νSet.
 
 Set Primitive Projections.
 Set Printing Projections.
@@ -25,9 +25,9 @@ Module Export Face := Face.FaceOn A S.
 Module Export PshEq := PresheafEquiv.PresheafEquiv A.
 
 Section νSetOfPresheaf.
-Variable psh: Presheaf.
+Variable psh: νSetPresentation arity.
 
-(** Presheaf-side lists over the staged dependency construction *)
+(** Presentation-side lists over the staged dependency construction *)
 
 Fixpoint mkPshFrameTypes (m: nat) {p k}: mkFrameTypes p k -> Type :=
   match p with
@@ -116,7 +116,7 @@ Fixpoint mkPshRestrTypesAndFrames (m: nat) {p k}:
                     mkPshLayer pshPaintings Q (⇓ Hp) d)))
   end.
 
-(** Presheaf data for [DepsRestr] *)
+(** Presentation data for [DepsRestr] *)
 
 Class PshDepsRestr (m: nat) (p k: nat) := {
   _pdeps: DepsRestr p k;
@@ -152,7 +152,7 @@ Definition mkPshFiller {m p} (P: PshDepsRestr m p 0):
   mkFrame P.(_pdeps) -> HSet :=
   fun D => {d': psh.(F0) m.+1 & hEq D (mkPshFrame P d')}.
 
-(** Presheaf data for [DepsRestrExtension]
+(** Presentation data for [DepsRestrExtension]
 
     The top constructor uses the candidate filler definitionally. *)
 
@@ -199,7 +199,7 @@ Definition mkPshPaintings {m p k} {P: PshDepsRestr m p k}
   mkPshPaintingTypes m.+1 (mkPshFrames P) (mkPaintings X) :=
   (mkPshPaintingsPrefix PX; mkPshPainting PX).
 
-(** Presheaf coherence data for [DepsCohs]
+(** Presentation coherence data for [DepsCohs]
 
     The remaining presheaf-side data: the coherences stating that the
     presheaf paintings commute with the construction's restr paintings,
@@ -383,7 +383,7 @@ Instance mkPshDepsRestr {m p k} (PC: PshDepsCohs m p k):
   _pshRestrs := mkPshRestrFrames PC;
 |}.
 
-(** Presheaf data for [DepsCohsExtension]
+(** Presentation data for [DepsCohsExtension]
 
     The top extension is the candidate filler at the next level.
     [mkPshExtraDeps] supplies the presheaf data corresponding to

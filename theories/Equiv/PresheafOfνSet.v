@@ -1,16 +1,16 @@
 (** The backward direction of the correspondence between the fibred
-    presentation ([Presheaf]) and the indexed construction ([νSet]):
-    [g: νSets -> Presheaf].
+    presentation ([νSetPresentation]) and the indexed construction ([νSet]):
+    [g: νSets -> νSetPresentation].
 
     The presheaf reads off the tower directly: the total spaces of the
     ω-limit tower as [F0], [νFace] as the face maps, and [νFaceCoh]
     as the exchange law. *)
 
-Import Logic.EqNotations.
-
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT HSet LeSProp NatLemmas Notation νSet.Layer
-  νSet Face Presheaf Equiv.νSetOfPresheaf Limit.
+  νSet Face Presheaf.Presentation Equiv.νSetOfPresheaf Limit.
+
+From Bonak.νSet Require Import νSet.
 
 Set Primitive Projections.
 Set Printing Projections.
@@ -61,7 +61,7 @@ Fixpoint gF0 {m} {Xpre: (νSetAt m).(prefix)} (X: νSetFrom m Xpre)
 (** Chain synthesis
 
     [Face.v]'s operations take chains, which carry the number of stages to
-    descend. The [Presheaf] interface supplies only an SProp bound [q <= n], and
+    descend. The [νSetPresentation] interface supplies only an SProp bound [q <= n], and
     nothing can be extracted from it. So [g] synthesizes the chains from the
     fuel [level - dim]: [chain2Down] descends a [DepsCohs2Chain] from a top
     [DepsCohs2] by [j] stages (stalling at stage 0), packaged with its endpoint. *)
@@ -243,7 +243,7 @@ Fixpoint gFaceCoh {m} {Xpre: (νSetAt m).(prefix)} (X: νSetFrom m Xpre)
 
 (** The presheaf of a ν-set *)
 
-Definition g (X: νSets): Presheaf := {|
+Definition g (X: νSets): νSetPresentation arity := {|
   F0 := gF0 X;
   Face := fun n q Hq ε => gFace X n q (leR_eq_r (plus_n_O n) Hq) ε;
   FaceCoh := fun n q Hq r Hr ε ω d =>

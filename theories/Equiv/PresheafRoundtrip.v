@@ -1,15 +1,15 @@
 (** The forward round trip [g ∘ f] of the correspondence between the
-    fibred presentation ([Presheaf]) and the indexed construction
+    fibred presentation ([νSetPresentation]) and the indexed construction
     ([νSet]): [gf: PresheafEquiv (g (f psh)) psh]. Levelwise, projecting a
     candidate-filled cell to its [psh]-cell is an equivalence, and it
     commutes with the face maps by [pshνFace]. *)
 
-Import Logic.EqNotations.
-
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT HSet LeSProp NatLemmas Notation νSet.Layer
-  νSet Face Presheaf Equiv.νSetOfPresheaf Equiv.PresheafOfνSet Equiv.νSetRoundtrip Limit.
+  νSet Face Presheaf.Presentation Equiv.νSetOfPresheaf Equiv.PresheafOfνSet Equiv.νSetRoundtrip Limit.
 From Bonak.Lib Require Import Equiv.
+
+From Bonak.νSet Require Import νSet.
 
 Set Primitive Projections.
 Set Printing Projections.
@@ -22,7 +22,7 @@ Module Export νSetRoundtrip := νSetRoundtrip.νSetRoundtripOn A S.
 
 Section RoundTripGF.
 
-Variable psh: Presheaf.
+Variable psh: νSetPresentation arity.
 
 (** Aligning [g]'s synthesized chains with the presheaf-equipped ones
 

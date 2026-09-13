@@ -122,3 +122,51 @@ Definition hEq {A: HSet} (x y: A): HSet := {|
   Dom := x = y;
   UIP := fun p q α β => eq_hprop_UIP (fun p q => A.(UIP)) α β;
 |}.
+
+(** Retracts of h-sets. *)
+
+Lemma retract_eq {A B: Type} (f: A -> B) (g: B -> A)
+  (H: forall x, g (f x) = x) {x y: A} (p: x = y):
+  p = eq_trans (eq_sym (H x)) (eq_trans (f_equal g (f_equal f p)) (H y)).
+Proof.
+  destruct p; simpl. destruct (H x). reflexivity.
+Defined.
+
+Lemma retract_UIP {A: Type} {B: HSet} (f: A -> B) (g: B -> A)
+  (H: forall x, g (f x) = x) (x y: A) (p q: x = y): p = q.
+Proof.
+  rewrite (retract_eq f g H p).
+  rewrite (retract_eq f g H q).
+  now rewrite (@UIP B (f x) (f y) (f_equal f p) (f_equal f q)).
+Defined.
+
+(** The empty type, products and sums. *)
+
+Unset Universe Minimization ToSet.
+
+Definition hEmpty: HSet := {|
+  Dom := Empty_set;
+  UIP x y h g := match x with end;
+|}.
+
+Lemma prodUIP {X Y: HSet} (x y: X * Y) (h g: x = y): h = g.
+Proof.
+  unshelve eapply (retract_UIP (B := hsigT (A := X) (fun _ => Y))).
+  - intro s. now exact (fst s; snd s).
+  - intro s. now exact (s.1, s.2).
+  - now intros [a b].
+Defined.
+
+Lemma sumUIP {X Y: HSet} (x y: X + Y) (h g: x = y): h = g.
+Proof.
+  unshelve eapply (retract_UIP
+    (B := hsigT (A := hbool) (fun b: hbool => if b then X else Y))).
+  - intros [a|b]. now exact (true; a). now exact (false; b).
+  - intro s. now exact (match s.1 as b return (if b then X else Y) -> X + Y
+                        with true => fun a => inl a | false => fun b => inr b
+                        end s.2).
+  - now intros [a|b].
+Defined.
+
+Definition prodSet (X Y: HSet): HSet :=
+  {| Dom := X * Y; UIP := prodUIP |}.
