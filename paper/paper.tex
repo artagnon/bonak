@@ -83,41 +83,18 @@
 \define@cmdkey[bonak]{cohlayer}{D}{(#1)}
 \define@cmdkey[bonak]{cohlayer}{d}{(#1)}
 \define@cmdkey[bonak]{cohlayer}{l}{(#1)}
-\define@cmdkey[bonak]{cohidframe}{D}{(#1)}
-\define@cmdkey[bonak]{cohidframe}{R}{(#1)}
-\define@cmdkey[bonak]{cohidframe}{d}{(#1)}
-\define@cmdkey[bonak]{cohidlayer}{D}{(#1)}
-\define@cmdkey[bonak]{cohidlayer}{R}{(#1)}
-\define@cmdkey[bonak]{cohidlayer}{d}{(#1)}
-\define@cmdkey[bonak]{cohidlayer}{l}{(#1)}
-\define@cmdkey[bonak]{cohframeExt}{D}{(#1)}
-\define@cmdkey[bonak]{cohframeExt}{R}{(#1)}
-\define@cmdkey[bonak]{cohframeExt}{d}{(#1)}
-\define@cmdkey[bonak]{cohframeExt}{c}{(#1)}
-\define@cmdkey[bonak]{cohlayerExt}{D}{(#1)}
-\define@cmdkey[bonak]{cohlayerExt}{R}{(#1)}
-\define@cmdkey[bonak]{cohlayerExt}{d}{(#1)}
-\define@cmdkey[bonak]{cohlayerExt}{l}{(#1)}
-\define@cmdkey[bonak]{cohlayerExt}{c}{(#1)}
-
 \define@cmdkey[bonak]{cohpainting}{D}{(#1)}
 \define@cmdkey[bonak]{cohpainting}{E}{(#1)}
 \define@cmdkey[bonak]{cohpainting}{d}{(#1)}
 \define@cmdkey[bonak]{cohpainting}{c}{(#1)}
 \define@cmdkey[bonak]{cohpainting}{L}{(#1)}
 \define@cmdkey[bonak]{cohpainting}{R}{(#1)}
-\define@cmdkey[bonak]{cohidpainting}{D}{(#1)}
-\define@cmdkey[bonak]{cohidpainting}{E}{(#1)}
-\define@cmdkey[bonak]{cohidpainting}{d}{(#1)}
-\define@cmdkey[bonak]{cohidpainting}{c}{(#1)}
-\define@cmdkey[bonak]{cohidpainting}{L}{(#1)}
-\define@cmdkey[bonak]{cohidpainting}{R}{(#1)}
-\define@cmdkey[bonak]{cohpaintingExt}{D}{(#1)}
-\define@cmdkey[bonak]{cohpaintingExt}{E}{(#1)}
-\define@cmdkey[bonak]{cohpaintingExt}{d}{(#1)}
-\define@cmdkey[bonak]{cohpaintingExt}{c}{(#1)}
-\define@cmdkey[bonak]{cohpaintingExt}{L}{(#1)}
-\define@cmdkey[bonak]{cohpaintingExt}{R}{(#1)}
+
+\define@cmdkey[bonak]{cohz}{D}{(#1)}
+\define@cmdkey[bonak]{cohz}{R}{(#1)}
+\define@cmdkey[bonak]{cohz}{d}{(#1)}
+\define@cmdkey[bonak]{cohz}{l}{(#1)}
+
 \define@cmdkey[bonak]{L}{d}{(#1)}
 \define@cmdkey[bonak]{L}{c}{(#1)}
 \makeatother
@@ -165,10 +142,10 @@
   \setkeys*[bonak]{coh#1}{#9}
 }
 
-\newcommandx{\cohid}[7][2,3,4,5,6,7]{
-  \ensuremath{\mathsf{\color{chestnut}{cohid}}^{
-    \joinargs[#2][#3][#4]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#5][#6]}}
-  \setkeys*[bonak]{cohid#1}{#7}
+\newcommandx{\cohz}[8][2,3,4,5,6,7,8]{
+  \ensuremath{\textsf{\color{chestnut}{#1}}^{
+    \joinargs[#2][#3][#4]}_{\joinargs[#5][#6][#7]}}
+  \setkeys*[bonak]{cohz}{#8}
 }
 
 % Simplicial and Cubical sets
@@ -250,9 +227,14 @@
 \newcommandx{\cohlext}[8][1,2,3,4,5,6,7,8]{\coh{layerExt}[#1][#2][#3][#4][#5][#6][#7][#8]}
 \newcommandx{\cohp}[8][1,2,3,4,5,6,7,8]{\coh{painting}[#1][#2][#3][#4][#5][#6][#7][#8]}
 \newcommandx{\cohpext}[8][1,2,3,4,5,6,7,8]{\coh{paintingExt}[#1][#2][#3][#4][#5][#6][#7][#8]}
-\newcommandx{\cohidf}[7][1,2,3,4,5,6,7]{\cohid{frame}[#1][#2][#3][#4][#5][#6]}
-\newcommandx{\cohidl}[7][1,2,3,4,5,6,7]{\cohid{layer}[#1][#2][#3][#4][#5][#6]}
-\newcommandx{\cohidp}[7][1,2,3,4,5,6,7]{\cohid{painting}[#1][#2][#3][#4][#5][#6]}
+\newcommandx{\cohzone}[7][1,2,3,4,5,6,7]{\cohz{restr-refl-id}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohztwo}[7][1,2,3,4,5,6,7]{\cohz{restr-refl-inf}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohzthree}[7][1,2,3,4,5,6,7]{\cohz{restr-refl0-sup}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohzfour}[7][1,2,3,4,5,6,7]{\cohz{restr-refl1-sup}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohzfive}[7][1,2,3,4,5,6,7]{\cohz{refl0-refl0}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohzsix}[7][1,2,3,4,5,6,7]{\cohz{refl0-refl1}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohzseven}[7][1,2,3,4,5,6,7]{\cohz{refl1-refl1}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohzeight}[7][1,2,3,4,5,6,7]{\cohz{restr-restr}[#1][#2][#3][#4][#5][#6][#7]}
 \newcommandx{\fullframe}[2][1,2]{\prim{fullframe}[#1][][][#2]}
 
 \newcommandx{\frametype}[2][1,2]{\prim{FRAME}[#1][#2]}
@@ -363,22 +345,16 @@ Degeneracies can be added to the $\nu$-semi-shape category in different ways. We
 \begin{definition}[$\hexagon_d$]
   The definition of $\nu$-shape category extends the $\nu$-shape category with degeneracies:
   \begin{align*}
-    \Obj_{\hexagon_d}       & := \Nat                                                                                                                           \\
-    \Hom_{\hexagon_d}(p, n) & := \{(q,r,l) \mid r \in \{\kstar,\bullet\}^q \wedge l \in (\nu \sqcup \{\kstar\})^n \wedge \text{number of $\kstar$ in $l = q$}\} \\
-    (0,g) \circ (q,f)       & := \left(q,
-    \begin{cases}
-      f                & \text{if $g = \epsilon$}                                                   \\
-      a\,(g' \circ f)  & \text{if $g = a\,g'$}, \text{where $a \in \nu$}                            \\
-      a\,(g' \circ f') & \text{if $g = \kstar\,g'$, $f = a\,f'$, where $a \in \nu$ or $a = \kstar$} \\
-    \end{cases}\right)                                                             \\
-    (r+1,g) \circ (q,f)     & :=
-    \begin{cases}
-      (q+r+1,g)        & \text{if $f = \epsilon$}                                                   \\
-      a\,(g' \circ f)  & \text{if $g = a\,g'$}, \text{where $a \in \nu$}                            \\
-      a\,(g' \circ f') & \text{if $g = \kstar\,g'$, $f = a\,f'$, where $a \in \nu$ or $a = \kstar$} \\
-    \end{cases}                                                             \\
-    \\
-    \id                     & := \kstar \ldots \kstar \text{ $n$ times for $\id \in \Hom_{\hexagon_d}(n, n)$}
+    \Obj_{\hexagon_d}                             & := \Nat                                                                                                                                                                         \\
+    \Hom_{\hexagon_d}(p, n)                       & := \{(r,f) \mid \exists q\,(r \in \{\kstar,\bullet\}^p \wedge f \in (\nu \sqcup \{\kstar\})^n \wedge \text{number of $\kstar$ in $r$} = \text{number of $\kstar$ in $f$} = q)\} \\
+    (\epsilon,g) \circ_{\hexagon_d} (r,f)         & := (r,g \circ_{\hexagon} )f)                                                                                                                                                    \\
+    (s,g) \circ_{\hexagon_d} (r,\epsilon)         & := \text{impossible}                                                                                                                                                            \\
+    (\kstar s,g) \circ_{\hexagon_d} (r,\kstar f)  & := (s,g) \circ_{\hexagon_d} (r,f)                                                                                                                                               \\
+    (\bullet s,g) \circ_{\hexagon_d} (r,a f)      & := (s,g) \circ_{\hexagon_d} (r,f), \text{where $a \in \nu$}                                                                                                                     \\
+    (\kstar s,g) \circ_{\hexagon_d} (r,a f)       & := (\kstar t,h) \text{where $(t,h) = (s,g) \circ_{\hexagon_d} (r,f)
+                                                                      $}                                                                                                              \\
+    (\bullet s,g) \circ_{\hexagon_d} (r,\kstar f) & := (t,\kstar h) \text{where $(t,h) = (s,g) \circ_{\hexagon_d} (r,f)$}                                                                                                           \\
+    \id                                           & := (\kstar \ldots \kstar, \kstar \ldots \kstar) \text{ $n$ times each for $\id \in \Hom_{\hexagon_d}(n, n)$}
   \end{align*}
 \end{definition}
 
@@ -730,23 +706,24 @@ $\reflf[n][p]$ generalises $\reflff[n]$ prefixes of $\fullframe[n]$:
 \def\lab{tab:refl}
 \input{tab-refl.tex}
 
+Coherence conditions
+
+\begin{align*}
+  \cohzone   \\
+  \cohztwo   \\
+  \cohzthree \\
+  \cohzfour  \\
+  \cohzfive  \\
+  \cohzsix   \\
+  \cohzseven \\
+  \cohzeight \\
+\end{align*}
+
 \section{Conclusion and future work}
 
 \bibliographystyle{plainurl}
 \bibliography{paper}
 
 \appendix
-
-\def\lab{tab:cohid}
-\input{tab-cohid.tex}
-
-\def\lab{tab:cohext}
-\input{tab-cohext.tex}
-
-\def\lab{tab:cohqr}
-\input{tab-cohqr.tex}
-
-\def\lab{tab:cohrq}
-\input{tab-cohrq.tex}
 
 \end{document}
