@@ -51,7 +51,7 @@ Proof.
       now exact (f_equal (fun v => F.(fhom) (a := S m) (b := n) v x)
         (wgenSkip ε w)).
     + destruct n as [|n]; [now destruct w|].
-      now exact (IHm n w (compFunctor (νSemiShapeShift A) F)
+      now exact (IHm n w (νSemiShapeShift A ⨟ᶠ F)
         (fun k q Hq ε => SF (S k) q (↑ Hq) ε)
         (fun k q Hq ε x => HSF (S k) q (↑ Hq) ε x
            • f_equal (fun v => F.(fhom) (a := S (S k)) (b := S k) v x)

@@ -93,7 +93,7 @@ Defined.
 (** Restrict a functor to the generating cofaces and coordinate deletions. *)
 
 Definition ofDgnUnderlying (F: Functor (Op (νShape A)) HSetCat): νSetPresentation A :=
-  Bonak.Presheaf.Functor.ofFunctor A (compFunctor semiShapeOpInclusion F).
+  ofFunctor A (semiShapeOpInclusion ⨟ᶠ F).
 
 Definition ofDgnStructure (F: Functor (Op (νShape A)) HSetCat):
   νDgnStructure (ofDgnUnderlying F).

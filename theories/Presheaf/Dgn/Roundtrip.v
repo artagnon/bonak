@@ -66,7 +66,7 @@ Proof.
       now rewrite shapeMaskSkip.
     + destruct k as [|k]; [destruct d|].
       exact (IH k d (shiftPresheaf P) (shiftDgn R)
-        (toFunctorOn (compFunctor shapeShift (ofFunctorOn Z)))
+        (toFunctorOn (shapeShift ⨟ᶠ ofFunctorOn Z))
         (fun n q Hq x => Hgen (S n) q (↑ Hq) x
           • f_equal (fun s => (ofFunctorOn Z).(fhom) s x) (shapeCodegeneracyLift Hq)) x).
 Qed.
@@ -78,7 +78,7 @@ Proof.
   destruct s as [k [r f]]. unfold applyShape; cbn.
   rewrite (applyMaskFhom p k r (ofDgnUnderlying F) (ofDgnStructure F)
     (toFunctorOn F) (fun n q Hq x => eq_refl)).
-  rewrite (applyWfhom A n k f (compFunctor semiShapeOpInclusion F)
+  rewrite (applyWfhom A n k f (semiShapeOpInclusion ⨟ᶠ F)
     (ofDgnUnderlying F).(Face) (fun n q Hq a x => eq_refl)).
   change (F.(fhom) (shapeMask r) (F.(fhom) (shapeFace f) x) = F.(fhom) (k; (r, f)) x).
   rewrite fhomCompPt.
@@ -95,11 +95,10 @@ Qed.
 
 (** Restriction along the semi-shape inclusion recovers the face functor. *)
 Lemma restrictDgnFunctor (P: νDgnSetPresentation A):
-  compFunctor semiShapeOpInclusion (toDgnFunctor P)
-  = Bonak.Presheaf.Functor.toFunctor A P.1.
+  semiShapeOpInclusion ⨟ᶠ toDgnFunctor P = toFunctor A P.1.
 Proof.
-  refine (functorEq (compFunctor semiShapeOpInclusion (toDgnFunctor P))
-    (Bonak.Presheaf.Functor.toFunctor A P.1) eq_refl _); intros a b f.
+  refine (functorEq (semiShapeOpInclusion ⨟ᶠ toDgnFunctor P)
+    (toFunctor A P.1) eq_refl _); intros a b f.
   apply functional_extensionality_dep; intro x. exact (applyShapeFace P.2 f x).
 Qed.
 
