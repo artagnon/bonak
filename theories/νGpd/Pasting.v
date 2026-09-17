@@ -115,6 +115,119 @@ Proof.
   now rewrite HH, KK.
 Defined.
 
+(** Dependent paths respect vertical square pasting. *)
+Lemma square_stack_dep {X: Type} (P: X -> Type) {x0 x1 y0 y1 z0 z1: X}
+  {a: x0 = x1} {c: y0 = y1} {d: z0 = z1}
+  {p: x0 = y0} {q: x1 = y1} {r: y0 = z0} {s: y1 = z1}
+  (H: p • c = a • q) (K: r • d = c • s)
+  {u0: P x0} {u1: P x1} {v0: P y0} {v1: P y1} {w0: P z0} {w1: P z1}
+  (ha: rew [P] a in u0 = u1) (hc: rew [P] c in v0 = v1)
+  (hd: rew [P] d in w0 = w1)
+  (hp: rew [P] p in u0 = v0) (hq: rew [P] q in u1 = v1)
+  (hr: rew [P] r in v0 = w0) (hs: rew [P] s in v1 = w1)
+  (HH: rew [fun e => rew [P] e in u0 = v1] H in (hp ⊙ hc) = ha ⊙ hq)
+  (KK: rew [fun e => rew [P] e in v0 = w1] K in (hr ⊙ hd) = hc ⊙ hs):
+  rew [fun e => rew [P] e in u0 = w1] square_stack H K in
+    ((hp ⊙ hr) ⊙ hd) = ha ⊙ (hq ⊙ hs).
+Proof.
+  destruct p, q, r, s, hp, hq, hr, hs. cbn in H, K.
+  destruct H, K, d.
+  cbn [square_stack whisker_l whisker_r eq_trans_assoc f_equal eq_sym eq_trans eq_rect] in *.
+  rewrite 2 sigT_trans_eq_refl, eq_trans_refl_l in HH, KK.
+  rewrite 4 sigT_trans_eq_refl, eq_trans_refl_l.
+  now exact (KK • HH).
+Defined.
+
+(** A dependent map sends a lifted square to the lift of its image. *)
+Lemma square_map_dep {X Y: Type} {P: X -> Type} {Q: Y -> Type}
+  (f: X -> Y) (F: forall x, P x -> Q (f x)) {x0 x1 y0 y1: X}
+  {a: x0 = x1} {b: y0 = y1} {p: x0 = y0} {q: x1 = y1}
+  (H: p • b = a • q)
+  {u0: P x0} {u1: P x1} {v0: P y0} {v1: P y1}
+  (ha: rew [P] a in u0 = u1) (hb: rew [P] b in v0 = v1)
+  (hp: rew [P] p in u0 = v0) (hq: rew [P] q in u1 = v1)
+  (HH: rew [fun e => rew [P] e in u0 = v1] H in (hp ⊙ hb) = ha ⊙ hq):
+  rew [fun e => rew [Q] e in F x0 u0 = F y1 v1] square_map f H in
+    (sigT_map_eq F hp ⊙ sigT_map_eq F hb) =
+  sigT_map_eq F ha ⊙ sigT_map_eq F hq.
+Proof.
+  destruct p, q, hp, hq. cbn in H. destruct H, b.
+  cbn [square_map eq_trans_map_distr f_equal eq_sym eq_trans eq_rect] in *.
+  rewrite 2 sigT_trans_eq_refl, eq_trans_refl_l in HH.
+  rewrite eq_trans_refl_r in HH. subst ha.
+  rewrite 2 sigT_trans_eq_refl.
+  cbn [sigT_map_eq]. now rewrite eq_trans_refl_l.
+Defined.
+
+(** A dependent homotopy lifts the naturality square of its base homotopy. *)
+Lemma f_equal_naturality_dep {A B C D: Type}
+  {PA: A -> Type} {PB: B -> Type} {PC: C -> Type} {PD: D -> Type}
+  (u: A -> B) (v: A -> C) (f: B -> D) (g: C -> D)
+  (U: forall x, PA x -> PB (u x)) (V: forall x, PA x -> PC (v x))
+  (F: forall x, PB x -> PD (f x)) (G: forall x, PC x -> PD (g x))
+  (K: forall x, f (u x) = g (v x))
+  (HK: forall x a, rew [PD] K x in F (u x) (U x a) = G (v x) (V x a))
+  {x y: A} (p: x = y) {a: PA x} {b: PA y} (h: rew [PA] p in a = b):
+  rew [fun e => rew [PD] e in F (u x) (U x a) = G (v y) (V y b)]
+    f_equal_naturality u v f g K p in
+    (sigT_map_eq F (sigT_map_eq U h) ⊙ HK y b) =
+  HK x a ⊙ sigT_map_eq G (sigT_map_eq V h).
+Proof.
+  destruct p, h. cbn [f_equal_naturality f_equal sigT_map_eq eq_rect].
+  generalize (HK x a).
+  generalize (K x), (G (v x) (V x a)).
+  generalize (g (v x)).
+  intros z k w hk. now destruct hk, k.
+Defined.
+
+(** Replace the vertical sides of a square by equal paths. *)
+Definition square_change_sides {X: Type} {x0 x1 y0 y1: X}
+  {a: x0 = x1} {b: y0 = y1} {p p': x0 = y0} {q q': x1 = y1}
+  (Hp: p' = p) (H: p • b = a • q) (Hq: q' = q):
+  p' • b = a • q' :=
+  whisker_r Hp b • (H • eq_sym (whisker_l a Hq)).
+
+Lemma square_change_sides_dep {X: Type} (P: X -> Type) {x0 x1 y0 y1: X}
+  {a: x0 = x1} {b: y0 = y1} {p p': x0 = y0} {q q': x1 = y1}
+  (Hp: p' = p) (H: p • b = a • q) (Hq: q' = q)
+  {u0: P x0} {u1: P x1} {v0: P y0} {v1: P y1}
+  (ha: rew [P] a in u0 = u1) (hb: rew [P] b in v0 = v1)
+  (hp: rew [P] p in u0 = v0) (hp': rew [P] p' in u0 = v0)
+  (hq: rew [P] q in u1 = v1) (hq': rew [P] q' in u1 = v1)
+  (HHp: rew [fun e => rew [P] e in u0 = v0] Hp in hp' = hp)
+  (HH: rew [fun e => rew [P] e in u0 = v1] H in (hp ⊙ hb) = ha ⊙ hq)
+  (HHq: rew [fun e => rew [P] e in u1 = v1] Hq in hq' = hq):
+  rew [fun e => rew [P] e in u0 = v1] square_change_sides Hp H Hq in
+    (hp' ⊙ hb) = ha ⊙ hq'.
+Proof.
+  subst p' q'. cbn [eq_rect] in HHp, HHq. subst hp' hq'.
+  unfold square_change_sides; cbn [whisker_l whisker_r f_equal eq_sym].
+  rewrite eq_trans_refl_l, eq_trans_refl_r. now exact HH.
+Defined.
+
+(** Expand a mapped composite and associate it with a following path. *)
+Definition map_compose_tail {X Y: Type} (f: X -> Y)
+  {x y z: X} (p: x = y) (q: y = z) {w: Y} (r: f z = w):
+  f_equal f (p • q) • r = f_equal f p • (f_equal f q • r) :=
+  whisker_r (eq_trans_map_distr f p q) r • eq_sym (eq_trans_assoc _ _ _).
+
+Lemma map_compose_tail_dep {X Y: Type} {P: X -> Type} {Q: Y -> Type}
+  (f: X -> Y) (F: forall x, P x -> Q (f x))
+  {x y z: X} {p: x = y} {q: y = z} {w: Y} {r: f z = w}
+  {u: P x} {v: P y} {s: P z} {t: Q w}
+  (hp: rew [P] p in u = v) (hq: rew [P] q in v = s)
+  (hr: rew [Q] r in F z s = t):
+  rew [fun e => rew [Q] e in F x u = t] map_compose_tail f p q r in
+    (sigT_map_eq F (hp ⊙ hq) ⊙ hr) =
+  sigT_map_eq F hp ⊙ (sigT_map_eq F hq ⊙ hr).
+Proof.
+  unfold map_compose_tail, whisker_r.
+  rewrite <- (rew_compose (fun e => rew [Q] e in F x u = t)).
+  rewrite <- (rew_map _ (fun e => e • r) _ _).
+  rewrite (rew_sigT_trans_eq_l (P := Q)), sigT_map_eq_comp.
+  now apply sigT_trans_eq_assoc.
+Defined.
+
 (** A commuting cube transfers a dependent equality between opposite edges.
     Its base coherence compares the two pastings around the cube. *)
 Lemma square_cube_dep {X: Type} (P: X -> Type) {x0 x1 y0 y1: X}
@@ -213,6 +326,29 @@ Proof.
   now exact E.
 Defined.
 
+(** The layer-coherence path fills its defining square. *)
+Lemma layer_square {V V' W X: Type} {S: V -> Type} {S': V' -> Type} {P: X -> Type}
+  (f: V -> X) (g: V' -> X) (d: W -> X)
+  (F: forall v, S v -> P (f v)) (G: forall v, S' v -> P (g v))
+  {m1 m2: V} {n1 n2: V'} (l: m1 = m2) (r: n1 = n2)
+  {w1 w2: W} (e: w1 = w2)
+  (c: f m2 = d w1) (c': g n2 = d w2) (k: f m1 = g n1)
+  {a: S m1} {b: S' n1} (h: rew [P] k in F m1 a = G n1 b)
+  (H: f_equal f l • (c • f_equal d e) = k • (f_equal g r • c')):
+  rew [fun e => rew [P] e in F m1 a = rew [P] c' in G n2 (rew [S'] r in b)]
+    (eq_sym (eq_trans_assoc _ _ _) • H) in
+    ((sigT_map_eq F (p := l) (u := a) eq_refl ⊙ eq_refl) ⊙
+      sigT_map_eq (Q := P) (fun _ u => u)
+       (rew_cohLayer_hex (P := P) (rf0 := d) (F := F) (G := G) (E1 := e)
+         (C2 := l) (D2 := r) (C1 := c) (D1 := c') h H)) =
+    h ⊙ (sigT_map_eq G (p := r) (u := b) eq_refl ⊙ eq_refl).
+Proof.
+  rewrite (sigT_map_eq_id (P := P) d).
+  unfold rew_cohLayer_hex.
+  rewrite eq_trans_sym_cancel_l.
+  now apply sigT_square_fill_boundary.
+Defined.
+
 (** Map a layer-coherence cell, then use the naturality of [α] to identify
     its transported endpoints. *)
 Definition layer_square_map
@@ -254,43 +390,16 @@ Lemma layer_square_map_dep
   sigT_map_eq F h ⊙
     (sigT_map_eq F (sigT_map_eq R (p := q) (u := b) eq_refl ⊙ eq_refl) ⊙ eq_refl).
 Proof.
-  destruct p, q, e.
-  cbn [eq_rect f_equal] in H |- *.
   unfold layer_square_map.
-  unfold rew_cohLayer_hex.
-  cbn.
-  rewrite 2 sigT_map_eq_refl.
-  revert H h.
-  generalize (L m a), (R n b).
-  revert k v w.
-  generalize (α d).
-  generalize (j (g d)).
-  generalize (r d), (s m), (t n).
-  intros z x y z' γ k v w u v' H h.
-  destruct w, v. cbn in H. now destruct H, h, γ.
-Defined.
-
-(** The layer-coherence path fills its defining square. *)
-Lemma layer_square {V W X: Type} {S: V -> Type} {P: X -> Type}
-  (f g: V -> X) (d: W -> X)
-  (F: forall v, S v -> P (f v)) (G: forall v, S v -> P (g v))
-  {m1 m2 n1 n2: V} (l: m1 = m2) (r: n1 = n2)
-  {w1 w2: W} (e: w1 = w2)
-  (c: f m2 = d w1) (c': g n2 = d w2) (k: f m1 = g n1)
-  {a: S m1} {b: S n1} (h: rew [P] k in F m1 a = G n1 b)
-  (H: f_equal f l • (c • f_equal d e) = k • (f_equal g r • c')):
-  rew [fun e => rew [P] e in F m1 a = rew [P] c' in G n2 (rew [S] r in b)]
-    (eq_sym (eq_trans_assoc _ _ _) • H) in
-    ((sigT_map_eq F (p := l) (u := a) eq_refl ⊙ eq_refl) ⊙
-      sigT_map_eq (Q := P) (fun _ u => u)
-       (rew_cohLayer_hex (P := P) (rf0 := d) (F := F) (G := G) (E1 := e)
-         (C2 := l) (D2 := r) (C1 := c) (D1 := c') h H)) =
-    h ⊙ (sigT_map_eq G (p := r) (u := b) eq_refl ⊙ eq_refl).
-Proof.
-  rewrite (sigT_map_eq_id (P := P) d).
-  unfold rew_cohLayer_hex.
-  rewrite eq_trans_sym_cancel_l.
-  now apply sigT_square_fill_boundary.
+  eapply square_stack_dep.
+  - eapply square_map_dep.
+    now exact (layer_square s t r L R p q e v w k h H).
+  - pose proof (f_equal_naturality_dep r g f j
+      (fun _ u => u) (fun dd x => rew [Q] α dd in F (r dd) x)
+      F (fun _ u => u) α (fun _ _ => eq_refl) e
+      (rew_cohLayer_hex (P := P) (rf0 := r) (F := L) (G := R)
+        (E1 := e) (C2 := p) (D2 := q) (C1 := v) (D1 := w) h H)) as Hlift.
+    rewrite <- Hlift. now exact (rew_opp_l _ _ _).
 Defined.
 
 (** Extend a layer-coherence cell along a path in its source, using the
@@ -307,13 +416,9 @@ Definition layer_square_nat {Z V W X: Type}
   (f_equal f (f_equal L p • l) • c) • f_equal d e =
     k z1 • (f_equal g (f_equal R p • r) • c').
 Proof.
-  refine (f_equal (fun h => (h • c) • f_equal d e)
-    (eq_trans_map_distr f _ _) • _).
-  refine (whisker_r (eq_sym (eq_trans_assoc _ _ _)) (f_equal d e) • _).
-  refine (square_stack Hnat (eq_sym (eq_trans_assoc _ _ _) • H) • _).
-  refine (whisker_l (k z1) _).
-  refine (eq_trans_assoc _ _ _ • _).
-  now exact (whisker_r (eq_sym (eq_trans_map_distr g _ _)) c').
+  now exact (square_change_sides (map_compose_tail f (f_equal L p) l c)
+    (square_stack Hnat (eq_sym (eq_trans_assoc _ _ _) • H))
+    (map_compose_tail g (f_equal R p) r c')).
 Defined.
 
 Lemma layer_square_nat_dep {Z V W X: Type}
@@ -345,17 +450,14 @@ Lemma layer_square_nat_dep {Z V W X: Type}
         (sigT_map_eq RR (p := p) (u := a) eq_refl ⊙
           (eq_refl: rew [Q] r in RR z2 (rew [S] p in a) = _)) ⊙ eq_refl).
 Proof.
-  destruct p, l, r.
-  refine (_ • layer_square f g d F G eq_refl eq_refl e c c' (k z1) (hk z1 a) H).
-  apply f_equal.
-  unfold layer_square_nat, f_equal_naturality, square_stack.
-  cbn in H |- *.
-  generalize H; clear H.
-  generalize (k z1), c, c', (f_equal d e).
-  generalize (f (L z1)), (g (R z1)), (d w1), (d w2).
-  intros x y z t K C C' E H0.
-  destruct C, C', E; cbn in H0.
-  now destruct H0.
+  unfold layer_square_nat.
+  eapply square_change_sides_dep.
+  - now apply map_compose_tail_dep.
+  - eapply square_stack_dep.
+    + now exact (f_equal_naturality_dep L R f g RL RR F G k hk p eq_refl).
+    + now exact (layer_square f g d F G l r e c c' (k z2)
+        (hk z2 (rew [S] p in a)) H).
+  - now apply map_compose_tail_dep.
 Defined.
 
 (** Changing the endpoints of a dependent path. Each correction goes from
