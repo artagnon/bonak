@@ -337,9 +337,8 @@ Lemma rew_coh2Painting_restr0 {TU TL: Type}
          • rew_cohLayer_hex P r0 F G E1 e2 e5 pQ pR KA aL aR HK κ))) =
   HK ⊙ (sigT_map_eq (Q := P) G (p := e5) (u := aR) eq_refl ⊙ eq_refl).
 Proof.
-  unfold rew_cohLayer_hex.
-  rewrite eq_trans_sym_cancel_l.
-  rewrite sigT_trans_eq_rew_l, eq_trans_sym_cancel_l.
-  rewrite sigT_trans_eq_inv_l_cancel.
-  now exact (rew_opp_r _ κ _).
+  rewrite <- sigT_trans_eq_assoc.
+  rewrite rew_compose.
+  rewrite <- (sigT_map_eq_id (P := P) r0).
+  now exact (layer_square rq rr r0 F G e2 e5 E1 pQ pR KA HK κ).
 Defined.

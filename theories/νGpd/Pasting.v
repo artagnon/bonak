@@ -287,16 +287,10 @@ Lemma layer_square {V W X: Type} {S: V -> Type} {P: X -> Type}
          (C2 := l) (D2 := r) (C1 := c) (D1 := c') h H)) =
     h ⊙ (sigT_map_eq G (p := r) (u := b) eq_refl ⊙ eq_refl).
 Proof.
-  rewrite <- (rew_compose
-    (fun e => rew [P] e in F m1 a = rew [P] c' in G n2 (rew [S] r in b))
-    (eq_sym (eq_trans_assoc _ _ _)) H _).
-  rewrite sigT_trans_eq_assoc.
-  rewrite sigT_map_eq_id.
+  rewrite (sigT_map_eq_id (P := P) d).
   unfold rew_cohLayer_hex.
   rewrite eq_trans_sym_cancel_l.
-  rewrite sigT_trans_eq_rew_l, eq_trans_sym_cancel_l.
-  rewrite sigT_trans_eq_inv_l_cancel.
-  now exact (rew_opp_r _ H _).
+  now apply sigT_square_fill_boundary.
 Defined.
 
 (** Extend a layer-coherence cell along a path in its source, using the

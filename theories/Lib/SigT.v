@@ -217,6 +217,34 @@ Proof.
   now destruct q, p, r, h.
 Defined.
 
+(** Fill the remaining dependent edge of a commuting square. *)
+Definition sigT_square_fill {X: Type} {P: X -> Type}
+  {x0 x1 y0 y1: X}
+  {a: x0 = x1} {c: y0 = y1} {p: x0 = y0} {q: x1 = y1}
+  (H: p • c = a • q)
+  {u0: P x0} {u1: P x1} {v0: P y0} {v1: P y1}
+  (hp: rew [P] p in u0 = v0) (ha: rew [P] a in u0 = u1)
+  (hq: rew [P] q in u1 = v1):
+  rew [P] c in v0 = v1 :=
+  sigT_trans_eq_inv_l hp
+    (rew [fun e => rew [P] e in u0 = v1] (eq_sym H) in (ha ⊙ hq)).
+
+(** The filled edge satisfies the square's dependent boundary equation. *)
+Lemma sigT_square_fill_boundary {X: Type} {P: X -> Type}
+  {x0 x1 y0 y1: X}
+  {a: x0 = x1} {c: y0 = y1} {p: x0 = y0} {q: x1 = y1}
+  (H: p • c = a • q)
+  {u0: P x0} {u1: P x1} {v0: P y0} {v1: P y1}
+  (hp: rew [P] p in u0 = v0) (ha: rew [P] a in u0 = u1)
+  (hq: rew [P] q in u1 = v1):
+  rew [fun e => rew [P] e in u0 = v1] H in
+    (hp ⊙ sigT_square_fill H hp ha hq) = ha ⊙ hq.
+Proof.
+  unfold sigT_square_fill.
+  rewrite sigT_trans_eq_inv_l_cancel.
+  now exact (rew_opp_r _ H _).
+Defined.
+
 (** Naturality of dependent path composition in each argument. *)
 Lemma rew_sigT_trans_eq_l {A: Type} {P: A -> Type}
   {x y z: A} {u: P x} {v: P y} {w: P z}

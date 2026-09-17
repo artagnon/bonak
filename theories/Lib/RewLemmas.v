@@ -162,24 +162,11 @@ Lemma rew_cohLayer_hex {T1 T2 T3 X: Type} {P: X -> Type}
   rew [fun d => P (rf0 d)] E1 in rew [P] C1 in F m2 (rew [S2] C2 in aL)
   = rew [P] D1 in G n2 (rew [S3] D2 in aR).
 Proof.
-(** The proof below makes path composition explicit, simplifying higher
-    coherence proofs that depend on the structure of its proof term.
-    An alternative proof is:
-
-  intros HC Hpath.
-  rewrite <- (map_subst F C2 aL), <- (map_subst G D2 aR), <- HC.
-  destruct E1, C2, D2. cbn in Hpath |- *.
-  rewrite rew_compose.
-  rewrite 2 eq_trans_refl_l in Hpath.
-  now rewrite Hpath.
-*)
   intros HC Hpath.
   refine (rew_map P rf0 E1 _ • _).
-  (** Combine the base transports, then cancel the mapped left edge. *)
-  refine (rew_compose P C1 (f_equal rf0 E1) _ • _).
-  refine (sigT_trans_eq_inv_l (sigT_map_eq (Q := P) F (p := C2) (u := aL) eq_refl) _).
-  rewrite Hpath.
-  now exact (HC ⊙ (sigT_map_eq (Q := P) G (p := D2) (u := aR) eq_refl ⊙ eq_refl)).
+  now exact (sigT_square_fill (eq_sym (eq_trans_assoc _ _ _) • Hpath)
+    (sigT_map_eq (Q := P) F (p := C2) (u := aL) eq_refl ⊙ eq_refl)
+    HC (sigT_map_eq (Q := P) G (p := D2) (u := aR) eq_refl ⊙ eq_refl)).
 Defined.
 
 (** The [rew_cohLayer*] lemmas for square-shaped coherences can be considered an
@@ -199,11 +186,9 @@ Lemma rew_cohLayer_sq_13 {T1 T3 X: Type} {P: X -> Type} {S3: T3 -> Type}
   = rew [P] D1 in G n2 (rew [S3] D2 in aR).
 Proof.
   intros HC Hpath.
-  eapply (rew_cohLayer_hex (P := P) (S2 := P) (rf0 := rf0)
-    (rfF := fun x => x) (F := fun _ a => a)
-    (C2 := eq_refl) (C1 := eq_refl) (K := K) (aL := aL)).
-  now exact HC.
-  now rewrite 2 eq_trans_refl_l.
+  refine (rew_map P rf0 E1 _ • _).
+  now exact (sigT_square_fill (eq_trans_refl_l _ • Hpath) eq_refl
+    HC (sigT_map_eq (Q := P) G (p := D2) (u := aR) eq_refl ⊙ eq_refl)).
 Defined.
 
 Lemma rew_cohLayer_sq_22 {T1 T3 X: Type} {P: X -> Type} {S3: T3 -> Type}
@@ -220,11 +205,9 @@ Lemma rew_cohLayer_sq_22 {T1 T3 X: Type} {P: X -> Type} {S3: T3 -> Type}
   = rew [P] D1 in G n2 (rew [S3] D2 in aR).
 Proof.
   intros HC Hpath.
-  eapply (rew_cohLayer_hex (P := P) (S2 := P) (rf0 := rf0)
-    (rfF := fun x => x) (F := fun _ a => a)
-    (C2 := eq_refl) (C1 := E0) (K := eq_refl) (aL := aL)).
-  now exact HC.
-  now rewrite 2 eq_trans_refl_l.
+  refine (rew_map P rf0 E1 _ • _).
+  now exact (sigT_square_fill (Hpath • eq_sym (eq_trans_refl_l _)) eq_refl
+    HC (sigT_map_eq (Q := P) G (p := D2) (u := aR) eq_refl ⊙ eq_refl)).
 Defined.
 
 Lemma rew_cohLayer_sq_31 {T1 T2 X: Type} {P: X -> Type} {S2: T2 -> Type}
@@ -241,9 +224,8 @@ Lemma rew_cohLayer_sq_31 {T1 T2 X: Type} {P: X -> Type} {S2: T2 -> Type}
   = rew [P] D1 in aR.
 Proof.
   intros HC Hpath.
-  eapply (rew_cohLayer_hex (P := P) (S3 := P) (rf0 := rf0)
-    (rfF := rfF) (rfG := fun x => x) (G := fun _ a => a)
-    (m1 := m1) (D2 := eq_refl) (D1 := D1) (K := eq_refl) (aR := aR)).
-  now exact HC.
-  now rewrite 2 eq_trans_refl_l.
+  refine (rew_map P rf0 E1 _ • _).
+  now exact (sigT_square_fill
+    (eq_sym (eq_trans_assoc _ _ _) • (Hpath • eq_sym (eq_trans_refl_l _)))
+    (sigT_map_eq (Q := P) F (p := C2) (u := aL) eq_refl ⊙ eq_refl) HC eq_refl).
 Defined.
