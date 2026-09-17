@@ -1,10 +1,11 @@
 Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT HSet νGpd.HGpd Notation RewLemmas.
+From Bonak Require Import SigT HSet νGpd.HGpd Notation RewLemmas νGpd.Pasting.
 
 Set Primitive Projections.
 Set Printing Projections.
+Local Set Keyed Unification.
 
 (** The layer former over [HGpd], for [νGpd]
 
@@ -54,11 +55,13 @@ Section Bridges.
 Context {T X: Type} {P: X -> HGpd} {rf0: arity -> T -> X}
         {d1 d2: T} {E1: d1 = d2}.
 
+(** The component homotopy is supplied for every input, allowing it to be
+    evaluated at the components of any layer. *)
 Definition lmap2_chain {B B1 B2: arity -> HGpd} {l: Layer B}
   {F1: forall ω, B ω -> B1 ω} {F2: forall ω, B1 ω -> P (rf0 ω d1)}
   {G1: forall ω, B ω -> B2 ω} {G2: forall ω, B2 ω -> P (rf0 ω d2)}
-  (H: forall ω, rew [fun d => P (rf0 ω d)] E1 in F2 ω (F1 ω (nth l ω))
-                = G2 ω (G1 ω (nth l ω))) ω:
+  (H: forall ω (a: B ω), rew [fun d => P (rf0 ω d)] E1 in F2 ω (F1 ω a)
+                = G2 ω (G1 ω a)) ω:
   nth (rew [fun d => Layer (fun ω => P (rf0 ω d))] E1 in lmap F2 (lmap F1 l)) ω
   = nth (lmap G2 (lmap G1 l)) ω :=
   nth_rew (B := fun d ω => P (rf0 ω d)) E1 (lmap F2 (lmap F1 l)) ω
@@ -66,15 +69,15 @@ Definition lmap2_chain {B B1 B2: arity -> HGpd} {l: Layer B}
        (nth_lmap F2 (lmap F1 l) ω)
      • (f_equal (fun x => rew [fun d => P (rf0 ω d)] E1 in F2 ω x)
           (nth_lmap F1 l ω)
-        • (H ω
+        • (H ω (nth l ω)
            • (eq_sym (f_equal (G2 ω) (nth_lmap G1 l ω))
               • eq_sym (nth_lmap G2 (lmap G1 l) ω))))).
 
 Definition lmap2_rew_eq {B B1 B2: arity -> HGpd} {l: Layer B}
   {F1: forall ω, B ω -> B1 ω} {F2: forall ω, B1 ω -> P (rf0 ω d1)}
   {G1: forall ω, B ω -> B2 ω} {G2: forall ω, B2 ω -> P (rf0 ω d2)}
-  (H: forall ω, rew [fun d => P (rf0 ω d)] E1 in F2 ω (F1 ω (nth l ω))
-                = G2 ω (G1 ω (nth l ω))):
+  (H: forall ω (a: B ω), rew [fun d => P (rf0 ω d)] E1 in F2 ω (F1 ω a)
+                = G2 ω (G1 ω a)):
   rew [fun d => Layer (fun ω => P (rf0 ω d))] E1 in lmap F2 (lmap F1 l)
   = lmap G2 (lmap G1 l) :=
   ext _ _ (lmap2_chain (B := B) (B1 := B1) (B2 := B2) (l := l)
@@ -91,6 +94,15 @@ Definition nth_dpath {T} {Bd: T -> arity -> HGpd} {d1 d2} {p: d1 = d2}
   rew [fun d => Bd d ω] p in nth l ω = nth l' ω :=
   eq_sym (nth_rew p l ω) • ap_nth q ω.
 
+(** Component evaluation is a dependent map over the frame type. *)
+Lemma nth_dpath_map {T} {Bd: T -> arity -> HGpd} {d1 d2: T} {p: d1 = d2}
+  {l: Layer (Bd d1)} {l': Layer (Bd d2)}
+  (q: rew [fun d => Layer (Bd d)] p in l = l') ω:
+  nth_dpath q ω = dpath_map (fun d l => nth l ω) q.
+Proof.
+  destruct p. now unfold nth_dpath, dpath_map.
+Defined.
+
 (** [nth_dpath] undoes [lmap2_rew_eq]: the components of the bridge's output
     are the components it was given, conjugated by the four [nth_lmap]
     corrections that peel the two layer maps on each side. *)
@@ -98,23 +110,23 @@ Lemma nth_dpath_lmap2_rew_eq {T X: Type} {P: X -> HGpd} {rf0: arity -> T -> X}
   {d1 d2: T} {E1: d1 = d2} {B B1 B2: arity -> HGpd} {l: Layer B}
   {F1: forall ω, B ω -> B1 ω} {F2: forall ω, B1 ω -> P (rf0 ω d1)}
   {G1: forall ω, B ω -> B2 ω} {G2: forall ω, B2 ω -> P (rf0 ω d2)}
-  (H: forall ω, rew [fun d => P (rf0 ω d)] E1 in F2 ω (F1 ω (nth l ω))
-                = G2 ω (G1 ω (nth l ω))) ω:
+  (H: forall ω (a: B ω), rew [fun d => P (rf0 ω d)] E1 in F2 ω (F1 ω a)
+                = G2 ω (G1 ω a)) ω:
   nth_dpath (Bd := fun d ω => P (rf0 ω d))
     (lmap2_rew_eq (P := P) (rf0 := rf0) (E1 := E1) H) ω
-  = f_equal (fun x => rew [fun d => P (rf0 ω d)] E1 in x)
-      (nth_lmap F2 (lmap F1 l) ω)
-    • (f_equal (fun x => rew [fun d => P (rf0 ω d)] E1 in F2 ω x)
-         (nth_lmap F1 l ω)
-       • (H ω
-          • (eq_sym (f_equal (G2 ω) (nth_lmap G1 l ω))
-             • eq_sym (nth_lmap G2 (lmap G1 l) ω)))).
+  = dpath_change (P := fun d => GDom (P (rf0 ω d))) (nth_lmap F2 (lmap F1 l) ω)
+      (dpath_change (P := fun d => GDom (P (rf0 ω d)))
+        (f_equal (F2 ω) (nth_lmap F1 l ω))
+        (H ω (nth l ω)) (f_equal (G2 ω) (nth_lmap G1 l ω)))
+      (nth_lmap G2 (lmap G1 l) ω).
 Proof.
   unfold nth_dpath, lmap2_rew_eq.
   rewrite ap_nth_ext.
   unfold lmap2_chain.
-  now exact (eq_trans_sym_cancel_l
-    (nth_rew (B := fun d ω => P (rf0 ω d)) E1 (lmap F2 (lmap F1 l)) ω) _).
+  rewrite eq_trans_sym_cancel_l.
+  unfold dpath_change.
+  rewrite f_equal_compose.
+  now rewrite <- 2 eq_trans_assoc.
 Defined.
 
 (** [nth_dpath] is functorial for the dependent composition [⊙]. *)
@@ -143,16 +155,18 @@ Lemma nth_dpath_sigT_map_eq {T T': Type}
     (sigT_map_eq (P := fun d => GDom (Layer (Bd d)))
                  (Q := fun d => GDom (Layer (Bd' d)))
                  (fun a l => lmap (G a) l) q) ω
-  = f_equal (fun x => rew [fun d => GDom (Bd' d ω)] f_equal f p in x)
-      (nth_lmap (G d1) l ω)
-    • (sigT_map_eq (P := fun d => GDom (Bd d ω))
-                   (Q := fun d => GDom (Bd' d ω))
-                   (fun a x => G a ω x) (nth_dpath q ω)
-       • eq_sym (nth_lmap (G d2) l' ω)).
+  = dpath_change (P := fun d => GDom (Bd' d ω)) (nth_lmap (G d1) l ω)
+      (sigT_map_eq (P := fun d => GDom (Bd d ω))
+        (Q := fun d => GDom (Bd' d ω)) (fun a x => G a ω x) (nth_dpath q ω))
+      (nth_lmap (G d2) l' ω).
 Proof.
-  destruct p; destruct q; cbn.
-  unfold nth_dpath; cbn.
-  now destruct (nth_lmap (G d1) l ω).
+  rewrite 2 nth_dpath_map.
+  now exact (dpath_map_square (P := fun d => GDom (Layer (Bd d)))
+    (P' := fun d => GDom (Bd d ω))
+    (Q := fun d => GDom (Layer (Bd' d))) (Q' := fun d => GDom (Bd' d ω))
+    (fun d l => nth l ω) (fun d l => nth l ω)
+    (fun a l => lmap (G a) l) (fun a x => G a ω x)
+    (fun a l => nth_lmap (G a) l ω) q).
 Defined.
 
 (** [nth_dpath] of the first projection of a dependent pair path: projecting
@@ -183,42 +197,89 @@ Proof.
   now unfold nth_dpath; cbn.
 Defined.
 
-Lemma sigT_fst_lmap2_rew_eq {T X: Type} {P: X -> HGpd} {rf0: arity -> T -> X}
-  {θ: arity}
-  {R: forall d, Layer (fun ω => P (rf0 ω d)) -> HGpd}
-  {d1 d2: T} {H: d1 = d2}
-  {B B1 B2: arity -> HGpd} {l: Layer B}
-  {F1: forall ω, B ω -> B1 ω} {F2: forall ω, B1 ω -> P (rf0 ω d1)}
-  {G1: forall ω, B ω -> B2 ω} {G2: forall ω, B2 ω -> P (rf0 ω d2)}
-  {HL: forall ω, rew [fun d => P (rf0 ω d)] H in F2 ω (F1 ω (nth l ω))
-                 = G2 ω (G1 ω (nth l ω))}
-  {v1: R d1 (lmap F2 (lmap F1 l))} {v2: R d2 (lmap G2 (lmap G1 l))}
-  (Hv: rew [fun z: {d: T &T Layer (fun ω => P (rf0 ω d))} => (R z.1 z.2).(GDom)]
-    (= H; lmap2_rew_eq (P := P) (rf0 := rf0) (E1 := H) HL) in
-    (v1: (fun z: {d: T &T Layer (fun ω => P (rf0 ω d))} => (R z.1 z.2).(GDom))
-      (d1; lmap F2 (lmap F1 l))) = v2):
-  sigT_map_eq
-    (P := fun d => {a: Layer (fun ω => P (rf0 ω d)) &T R d a})
-    (Q := fun x => (P x).(GDom)) (f := fun d => rf0 θ d)
-    (fun d X => nth X.1 θ)
-    (eq_existT_curried_dep
-       (Q := fun z: {d: T &T Layer (fun ω => P (rf0 ω d))} => (R z.1 z.2).(GDom))
-       (H := H) (Hu := lmap2_rew_eq (P := P) (rf0 := rf0) (E1 := H) HL)
-       (Hv := Hv))
-  = eq_sym (rew_map P (rf0 θ) H (nth (lmap F2 (lmap F1 l)) θ))
-    • (f_equal (fun x => rew [fun d => P (rf0 θ d)] H in x)
-         (nth_lmap F2 (lmap F1 l) θ)
-       • (f_equal (fun x => rew [fun d => P (rf0 θ d)] H in F2 θ x)
-            (nth_lmap F1 l θ)
-          • (HL θ
-             • (eq_sym (f_equal (G2 θ) (nth_lmap G1 l θ))
-                • eq_sym (nth_lmap G2 (lmap G1 l) θ))))).
+(** Lift a component triangle through two layer maps. The component
+    computation paths cancel at the shared vertices. *)
+Lemma sigT_fst_lmap2_rew_eq {TU TL: Type}
+  {P: TL -> HGpd} {S: TU -> HGpd} {r0: arity -> TU -> TL} {rq rr: TU -> TL}
+  {F: forall m, S m -> P (rq m)} {G: forall n, S n -> P (rr n)}
+  {θ: arity} {B: arity -> HGpd} {l: Layer B}
+  {d1 d2: TU} {E1: d1 = d2}
+  {m1 m2 n1 n2: arity -> TU}
+  {e2: forall ω, m1 ω = m2 ω} {e5: forall ω, n1 ω = n2 ω}
+  {pQ: forall ω, rq (m2 ω) = r0 ω d1} {pR: forall ω, rr (n2 ω) = r0 ω d2}
+  {AR: forall ω, B ω -> S (m1 ω)} {AQ: forall ω, B ω -> S (n1 ω)}
+  {HL: forall ω a,
+    rew [fun d => P (r0 ω d)] E1 in rew [P] pQ ω in F (m2 ω) (rew [S] e2 ω in AR ω a) =
+    rew [P] pR ω in G (n2 ω) (rew [S] e5 ω in AQ ω a)}
+  {R: forall d, Layer (fun ω => P (r0 ω d)) -> HGpd}
+  {v1: R d1 (lmap (fun ω a => rew [P] pQ ω in F (m2 ω) a)
+    (lmap (fun ω a => rew [S] e2 ω in AR ω a) l))}
+  {v2: R d2 (lmap (fun ω a => rew [P] pR ω in G (n2 ω) a)
+    (lmap (fun ω a => rew [S] e5 ω in AQ ω a) l))}
+  {Hv: rew [fun z: {d: TU &T Layer (fun ω => P (r0 ω d))} => GDom (R z.1 z.2)]
+    (= E1; lmap2_rew_eq (P := P) (rf0 := r0) (E1 := E1) HL) in
+    (v1: (fun z: {d: TU &T Layer (fun ω => P (r0 ω d))} => GDom (R z.1 z.2))
+      (d1; lmap (fun ω a => rew [P] pQ ω in F (m2 ω) a)
+        (lmap (fun ω a => rew [S] e2 ω in AR ω a) l))) = v2}
+  {KA: rq (m1 θ) = rr (n1 θ)}
+  (HK: rew [P] KA in F (m1 θ) (AR θ (nth l θ)) = G (n1 θ) (AQ θ (nth l θ)))
+  (κ: f_equal rq (e2 θ) • (pQ θ • f_equal (r0 θ) E1) = KA • (f_equal rr (e5 θ) • pR θ)):
+  rew [fun π => rew [P] π in F (m1 θ) (AR θ (nth l θ)) =
+    rew [P] pR θ in G (n2 θ) (rew [S] e5 θ in AQ θ (nth l θ))] κ in
+    (sigT_map_eq (P := fun x => GDom (S x)) (Q := fun x => GDom (P x)) F (p := e2 θ) eq_refl
+     ⊙[fun x => GDom (P x)] (eq_refl ⊙[fun x => GDom (P x)]
+       (eq_sym (rew_map P (r0 θ) E1 _) • HL θ (nth l θ)))) =
+    HK ⊙[fun x => GDom (P x)]
+      (sigT_map_eq (P := fun x => GDom (S x)) (Q := fun x => GDom (P x)) G (p := e5 θ) eq_refl
+       ⊙[fun x => GDom (P x)] eq_refl) ->
+  rew [fun π => rew [P] π in F (m1 θ) (AR θ (nth l θ)) =
+    nth (lmap (fun ω a => rew [P] pR ω in G (n2 ω) a)
+      (lmap (fun ω a => rew [S] e5 ω in AQ ω a) l)) θ] κ in
+    (sigT_map_eq (P := fun x => GDom (S x)) (Q := fun x => GDom (P x)) F
+       (eq_sym (nth_lmap (fun ω a => rew [S] e2 ω in AR ω a) l θ))
+     ⊙[fun x => GDom (P x)]
+       (eq_sym (nth_lmap (fun ω a => rew [P] pQ ω in F (m2 ω) a)
+          (lmap (fun ω a => rew [S] e2 ω in AR ω a) l) θ)
+        ⊙[fun x => GDom (P x)]
+          sigT_map_eq
+            (P := fun d => {a: Layer (fun ω => P (r0 ω d)) &T R d a})
+            (Q := fun x => GDom (P x)) (f := r0 θ) (fun d z => nth z.1 θ)
+            (eq_existT_curried_dep
+              (Q := fun z: {d: TU &T Layer (fun ω => P (r0 ω d))} => GDom (R z.1 z.2))
+              (H := E1) (Hu := lmap2_rew_eq (P := P) (rf0 := r0) (E1 := E1) HL)
+              (Hv := Hv)))) =
+    HK ⊙[fun x => GDom (P x)]
+      (sigT_map_eq (P := fun x => GDom (S x)) (Q := fun x => GDom (P x)) G
+         (eq_sym (nth_lmap (fun ω a => rew [S] e5 ω in AQ ω a) l θ))
+       ⊙[fun x => GDom (P x)]
+         eq_sym (nth_lmap (fun ω a => rew [P] pR ω in G (n2 ω) a)
+           (lmap (fun ω a => rew [S] e5 ω in AQ ω a) l) θ)).
 Proof.
-  rewrite (nth_dpath_sigT_fst (l1 := lmap F2 (lmap F1 l))
-    (l2 := lmap G2 (lmap G1 l))
-    (Hu := lmap2_rew_eq (P := P) (rf0 := rf0) (E1 := H) HL)
-    (v1 := v1) (v2 := v2)).
-  now rewrite nth_dpath_lmap2_rew_eq.
+  intro HC.
+  rewrite (nth_dpath_sigT_fst (P := P) (rf0 := r0) Hv).
+  cbn [projT1].
+  clear Hv v1 v2 R.
+  set (F1 := fun ω a => rew [S] e2 ω in AR ω a) in *.
+  set (G1 := fun ω a => rew [S] e5 ω in AQ ω a) in *.
+  set (F2 := fun ω a => rew [P] pQ ω in F (m2 ω) a) in *.
+  set (G2 := fun ω a => rew [P] pR ω in G (n2 ω) a) in *.
+  rewrite <- (sigT_map_eq_id (P := fun x => GDom (P x)) (r0 θ)).
+  rewrite nth_dpath_lmap2_rew_eq, dpath_change_nest.
+  rewrite <- (dpath_change_refl (P := fun x => GDom (S x)) (e2 θ)
+    (AR θ (nth l θ)) (nth_lmap F1 l θ)).
+  rewrite <- (dpath_change_refl (P := fun x => GDom (S x)) (e5 θ)
+    (AQ θ (nth l θ)) (nth_lmap G1 l θ)).
+  rewrite <- (dpath_change_transport (P := fun x => GDom (P x)) (pQ θ)
+    (f_equal (F (m2 θ)) (nth_lmap F1 l θ)) (nth_lmap F2 (lmap F1 l) θ)).
+  rewrite <- (dpath_change_transport (P := fun x => GDom (P x)) (pR θ)
+    (f_equal (G (n2 θ)) (nth_lmap G1 l θ)) (nth_lmap G2 (lmap G1 l) θ)).
+  rewrite 3 dpath_change_map, 2 f_equal_id, 2 f_equal_compose.
+  cbn [f_equal].
+  rewrite <- (dpath_change_id (P := fun x => GDom (P x)) HK).
+  (** Only the two exterior endpoint corrections survive the pasting. *)
+  rewrite 4 dpath_change_comp.
+  apply (dpath_change_cell (P := fun x => GDom (P x))).
+  now rewrite (sigT_map_eq_id (P := fun x => GDom (P x)) (r0 θ)).
 Defined.
 
 (** [ext2] restated over [nth_dpath]: two parallel dependent layer paths are
@@ -259,93 +320,39 @@ Context {TU T XU X: Type}
         {NA: forall dd ω, S (uf0 ω dd) -> P (rf0 ω (fA dd))}
         {NB: forall dd ω, S (uf0 ω dd) -> P (rf0 ω (fB dd))}
         {NC: forall dd ω, S (uf0 ω dd) -> P (rf0 ω (fC dd))}
-        {H1: forall ω, rew [fun dd => S (uf0 ω dd)] eU1 in
-               P1 ω (P2 ω (nth l ω)) = Q1 ω (Q2 ω (nth l ω))}
-        {H3: forall ω, rew [fun dd => S (uf0 ω dd)] eU2 in
-               R1 ω (Q2 ω (nth l ω)) = R1' ω (R2 ω (nth l ω))}
-        {H5: forall ω, rew [fun dd => S (uf0 ω dd)] eU3 in
-               W1 ω (P2 ω (nth l ω)) = W1' ω (R2 ω (nth l ω))}
-        {H2: forall ω, rew [fun dd => P (rf0 ω dd)] e2 in
-               NA u1 ω (Q1 ω (nth (lmap Q2 l) ω))
-               = NB u2 ω (R1 ω (nth (lmap Q2 l) ω))}
-        {H4: forall ω, rew [fun dd => P (rf0 ω dd)] e4 in
-               NA u0 ω (P1 ω (nth (lmap P2 l) ω))
-               = NC u4 ω (W1 ω (nth (lmap P2 l) ω))}
-        {H6: forall ω, rew [fun dd => P (rf0 ω dd)] e6 in
-               NC u5 ω (W1' ω (nth (lmap R2 l) ω))
-               = NB u3 ω (R1' ω (nth (lmap R2 l) ω))}
+        {H1: forall ω (a: B ω), rew [fun dd => S (uf0 ω dd)] eU1 in
+               P1 ω (P2 ω a) = Q1 ω (Q2 ω a)}
+        {H3: forall ω (a: B ω), rew [fun dd => S (uf0 ω dd)] eU2 in
+               R1 ω (Q2 ω a) = R1' ω (R2 ω a)}
+        {H5: forall ω (a: B ω), rew [fun dd => S (uf0 ω dd)] eU3 in
+               W1 ω (P2 ω a) = W1' ω (R2 ω a)}
+        {H2: forall ω (a: BQ ω), rew [fun dd => P (rf0 ω dd)] e2 in
+               NA u1 ω (Q1 ω a)
+               = NB u2 ω (R1 ω a)}
+        {H4: forall ω (a: BP ω), rew [fun dd => P (rf0 ω dd)] e4 in
+               NA u0 ω (P1 ω a)
+               = NC u4 ω (W1 ω a)}
+        {H6: forall ω (a: BR ω), rew [fun dd => P (rf0 ω dd)] e6 in
+               NC u5 ω (W1' ω a)
+               = NB u3 ω (R1' ω a)}
         {κ: f_equal fA eU1 • (e2 • f_equal fB eU2)
             = e4 • (f_equal fC eU3 • e6)}.
 
 Definition lmap2_hex_pointwise ζ: Type :=
   rew [fun e: fA u0 = fB u3 =>
-       rew [fun dd => P (rf0 ζ dd)] e in
-       nth (lmap (NA u0) (lmap P1 (lmap P2 l))) ζ
-       = nth (lmap (NB u3) (lmap R1' (lmap R2 l))) ζ] κ in
-  (f_equal (fun x => rew [fun dd => P (rf0 ζ dd)] f_equal fA eU1 in x)
-     (nth_lmap (NA u0) (lmap P1 (lmap P2 l)) ζ)
-   • (sigT_map_eq (P := fun a => (S (uf0 ζ a)).(GDom))
-        (Q := fun x => (P (rf0 ζ x)).(GDom)) (f := fA) (fun a x => NA a ζ x)
-        (f_equal (fun x => rew [fun dd => S (uf0 ζ dd)] eU1 in x)
-           (nth_lmap P1 (lmap P2 l) ζ)
-         • (f_equal (fun x => rew [fun dd => S (uf0 ζ dd)] eU1 in P1 ζ x)
-              (nth_lmap P2 l ζ)
-            • (H1 ζ
-               • (eq_sym (f_equal (Q1 ζ) (nth_lmap Q2 l ζ))
-                  • eq_sym (nth_lmap Q1 (lmap Q2 l) ζ)))))
-      • eq_sym (nth_lmap (NA u1) (lmap Q1 (lmap Q2 l)) ζ))
-   ⊙[fun dd => (P (rf0 ζ dd)).(GDom)]
-     (f_equal (fun x => rew [fun dd => P (rf0 ζ dd)] e2 in x)
-        (nth_lmap (NA u1) (lmap Q1 (lmap Q2 l)) ζ)
-      • (f_equal (fun x => rew [fun dd => P (rf0 ζ dd)] e2 in NA u1 ζ x)
-           (nth_lmap Q1 (lmap Q2 l) ζ)
-         • (H2 ζ
-            • (eq_sym (f_equal (NB u2 ζ) (nth_lmap R1 (lmap Q2 l) ζ))
-               • eq_sym (nth_lmap (NB u2) (lmap R1 (lmap Q2 l)) ζ))))
-      ⊙[fun dd => (P (rf0 ζ dd)).(GDom)]
-        (f_equal (fun x => rew [fun dd => P (rf0 ζ dd)] f_equal fB eU2 in x)
-           (nth_lmap (NB u2) (lmap R1 (lmap Q2 l)) ζ)
-         • (sigT_map_eq (P := fun a => (S (uf0 ζ a)).(GDom))
-              (Q := fun x => (P (rf0 ζ x)).(GDom)) (f := fB)
-              (fun a x => NB a ζ x)
-              (f_equal (fun x => rew [fun dd => S (uf0 ζ dd)] eU2 in x)
-                 (nth_lmap R1 (lmap Q2 l) ζ)
-               • (f_equal
-                    (fun x => rew [fun dd => S (uf0 ζ dd)] eU2 in R1 ζ x)
-                    (nth_lmap Q2 l ζ)
-                  • (H3 ζ
-                     • (eq_sym (f_equal (R1' ζ) (nth_lmap R2 l ζ))
-                        • eq_sym (nth_lmap R1' (lmap R2 l) ζ)))))
-            • eq_sym (nth_lmap (NB u3) (lmap R1' (lmap R2 l)) ζ))))) =
-  f_equal (fun x => rew [fun dd => P (rf0 ζ dd)] e4 in x)
-    (nth_lmap (NA u0) (lmap P1 (lmap P2 l)) ζ)
-  • (f_equal (fun x => rew [fun dd => P (rf0 ζ dd)] e4 in NA u0 ζ x)
-       (nth_lmap P1 (lmap P2 l) ζ)
-     • (H4 ζ
-        • (eq_sym (f_equal (NC u4 ζ) (nth_lmap W1 (lmap P2 l) ζ))
-           • eq_sym (nth_lmap (NC u4) (lmap W1 (lmap P2 l)) ζ))))
-  ⊙[fun dd => (P (rf0 ζ dd)).(GDom)]
-    (f_equal (fun x => rew [fun dd => P (rf0 ζ dd)] f_equal fC eU3 in x)
-       (nth_lmap (NC u4) (lmap W1 (lmap P2 l)) ζ)
-     • (sigT_map_eq (P := fun a => (S (uf0 ζ a)).(GDom))
-          (Q := fun x => (P (rf0 ζ x)).(GDom)) (f := fC)
-          (fun a x => NC a ζ x)
-          (f_equal (fun x => rew [fun dd => S (uf0 ζ dd)] eU3 in x)
-             (nth_lmap W1 (lmap P2 l) ζ)
-           • (f_equal (fun x => rew [fun dd => S (uf0 ζ dd)] eU3 in W1 ζ x)
-                (nth_lmap P2 l ζ)
-              • (H5 ζ
-                 • (eq_sym (f_equal (W1' ζ) (nth_lmap R2 l ζ))
-                    • eq_sym (nth_lmap W1' (lmap R2 l) ζ)))))
-        • eq_sym (nth_lmap (NC u5) (lmap W1' (lmap R2 l)) ζ))
-     ⊙[fun dd => (P (rf0 ζ dd)).(GDom)]
-       (f_equal (fun x => rew [fun dd => P (rf0 ζ dd)] e6 in x)
-          (nth_lmap (NC u5) (lmap W1' (lmap R2 l)) ζ)
-        • (f_equal (fun x => rew [fun dd => P (rf0 ζ dd)] e6 in NC u5 ζ x)
-             (nth_lmap W1' (lmap R2 l) ζ)
-           • (H6 ζ
-              • (eq_sym (f_equal (NB u3 ζ) (nth_lmap R1' (lmap R2 l) ζ))
-                 • eq_sym (nth_lmap (NB u3) (lmap R1' (lmap R2 l)) ζ)))))).
+       rew [fun dd => P (rf0 ζ dd)] e in NA u0 ζ (P1 ζ (P2 ζ (nth l ζ)))
+       = NB u3 ζ (R1' ζ (R2 ζ (nth l ζ)))] κ in
+  (sigT_map_eq (P := fun dd => GDom (S (uf0 ζ dd)))
+      (Q := fun dd => GDom (P (rf0 ζ dd))) (fun dd x => NA dd ζ x) (H1 ζ (nth l ζ))
+   ⊙[fun dd => GDom (P (rf0 ζ dd))] (H2 ζ (Q2 ζ (nth l ζ))
+      ⊙[fun dd => GDom (P (rf0 ζ dd))]
+        sigT_map_eq (P := fun dd => GDom (S (uf0 ζ dd)))
+          (Q := fun dd => GDom (P (rf0 ζ dd)))
+          (fun dd x => NB dd ζ x) (H3 ζ (nth l ζ)))) =
+  H4 ζ (P2 ζ (nth l ζ))
+  ⊙[fun dd => GDom (P (rf0 ζ dd))] (sigT_map_eq (P := fun dd => GDom (S (uf0 ζ dd)))
+        (Q := fun dd => GDom (P (rf0 ζ dd))) (fun dd x => NC dd ζ x) (H5 ζ (nth l ζ))
+     ⊙[fun dd => GDom (P (rf0 ζ dd))] H6 ζ (R2 ζ (nth l ζ))).
 
 Lemma lmap2_hex_rew_eq:
   (forall ζ, lmap2_hex_pointwise ζ) ->
@@ -384,7 +391,19 @@ Proof.
   rewrite 3 (nth_dpath_sigT_map_eq (Bd := fun dd ω => S (uf0 ω dd))
     (Bd' := fun dd ω => P (rf0 ω dd))).
   rewrite 6 nth_dpath_lmap2_rew_eq.
-  now exact (Hpointwise ζ).
+  specialize (Hpointwise ζ).
+  rewrite <- (dpath_change_natural (P := fun dd => GDom (P (rf0 ζ dd)))
+    _ _ (H2 ζ) (nth_lmap Q2 l ζ)).
+  rewrite <- (dpath_change_natural (P := fun dd => GDom (P (rf0 ζ dd)))
+    _ _ (H4 ζ) (nth_lmap P2 l ζ)).
+  rewrite <- (dpath_change_natural (P := fun dd => GDom (P (rf0 ζ dd)))
+    _ _ (H6 ζ) (nth_lmap R2 l ζ)).
+  (** Move the computation paths to the six vertices and compose them there. *)
+  rewrite 6 dpath_change_map, 12 dpath_change_nest.
+  rewrite 6 f_equal_compose, <- 12 eq_trans_assoc.
+  (** Only the two exterior endpoint corrections survive the pasting. *)
+  rewrite 4 dpath_change_comp.
+  now apply (dpath_change_cell (P := fun dd => GDom (P (rf0 ζ dd)))).
 Defined.
 
 End Hexagon.
