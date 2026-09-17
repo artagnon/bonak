@@ -175,6 +175,15 @@ Proof.
   now destruct q', q.
 Defined.
 
+(** Prefixing a dependent path by a pure transport combines the base paths. *)
+Lemma sigT_trans_eq_rew_l {A: Type} {P: A -> Type}
+  {x y z: A} (p: x = y) (r: y = z) (u: P x) {w: P z}
+  (h: rew [P] r in rew [P] p in u = w):
+  eq_refl ⊙ h = eq_sym (rew_compose P p r u) • h.
+Proof.
+  now destruct p, r, h.
+Defined.
+
 (** Solve for the second dependent path in a composite with a fixed first path. *)
 Definition sigT_trans_eq_inv_l {A: Type} {P: A -> Type}
   {x y z: A} {u: P x} {v: P y} {w: P z}
@@ -183,6 +192,26 @@ Definition sigT_trans_eq_inv_l {A: Type} {P: A -> Type}
   rew [P] r in v = w :=
   eq_sym (f_equal (fun v => rew [P] r in v) q)
   • (rew_compose P p r u • h).
+
+(** Composing the recovered second path with the first recovers the given composite. *)
+Lemma sigT_trans_eq_inv_l_cancel {A: Type} {P: A -> Type}
+  {x y z: A} {u: P x} {v: P y} {w: P z}
+  {p: x = y} {r: y = z}
+  (q: rew [P] p in u = v) (h: rew [P] (p • r) in u = w):
+  q ⊙ sigT_trans_eq_inv_l q h = h.
+Proof.
+  now destruct q, p, r, h.
+Defined.
+
+Lemma rew_sigT_trans_eq_r {A: Type} {P: A -> Type}
+  {x y z: A} {u: P x} {v: P y} {w: P z}
+  {p: x = y} {r r': y = z} (e: r = r')
+  (q: rew [P] p in u = v) (s: rew [P] r in v = w):
+  rew [fun r => rew [P] (p • r) in u = w] e in (q ⊙ s) =
+  q ⊙ (rew [fun r => rew [P] r in v = w] e in s).
+Proof.
+  now exact (map_subst (fun r (s: rew [P] r in v = w) => q ⊙ s) e s).
+Defined.
 
 Lemma eq_trans_eq_existT_curried {A: Type} {P: A -> Type}
   {x y z: A} {u: P x} {v: P y} {w: P z}
@@ -221,4 +250,42 @@ Lemma rew_sigT_fst_const {A B: Type} {Q: A -> B -> Type} {x y: A}
   (b; rew [fun a => Q a b] E in q).
 Proof.
   now destruct E.
+Defined.
+
+Lemma sigT_map_eq_comp {X Y: Type} {P: X -> Type} {Q: Y -> Type}
+  {f: X -> Y} (g: forall x, P x -> Q (f x))
+  {x y z: X} {p: x = y} {q: y = z} {u: P x} {v: P y} {w: P z}
+  (h: rew [P] p in u = v) (k: rew [P] q in v = w):
+  rew [fun e => rew [Q] e in g x u = g z w] (eq_trans_map_distr f p q) in
+    sigT_map_eq g (h ⊙ k) = sigT_map_eq g h ⊙ sigT_map_eq g k.
+Proof.
+  now destruct p, q, h, k.
+Defined.
+
+Lemma sigT_trans_eq_assoc {X: Type} {P: X -> Type}
+  {x y z t: X} {p: x = y} {q: y = z} {r: z = t}
+  {a: P x} {b: P y} {c: P z} {d: P t}
+  (h: rew [P] p in a = b) (j: rew [P] q in b = c) (k: rew [P] r in c = d):
+  rew [fun e => rew [P] e in a = d] (eq_sym (eq_trans_assoc p q r)) in
+    ((h ⊙ j) ⊙ k) = h ⊙ (j ⊙ k).
+Proof.
+  now destruct p, q, r, h, j, k.
+Defined.
+
+Lemma sigT_map_eq_id {X Y: Type} {P: X -> Type} (f: Y -> X)
+  {x y: Y} {p: x = y} {u: P (f x)} {v: P (f y)}
+  (h: rew [fun y => P (f y)] p in u = v):
+  sigT_map_eq (Q := P) (fun _ u => u) h = eq_sym (rew_map P f p u) • h.
+Proof.
+  now destruct p, h.
+Defined.
+
+Lemma sigT_map_eq_id_inj {X Y: Type} (f: Y -> X) (P: X -> Type)
+  {x y: Y} {p: x = y} {u: P (f x)} {v: P (f y)}
+  (h k: rew [fun y => P (f y)] p in u = v):
+  sigT_map_eq (Q := P) (fun _ u => u) h =
+  sigT_map_eq (Q := P) (fun _ u => u) k -> h = k.
+Proof.
+  destruct p. rewrite 2 sigT_map_eq_id.
+  cbn [rew_map eq_sym]. now rewrite 2 eq_trans_refl_l.
 Defined.
