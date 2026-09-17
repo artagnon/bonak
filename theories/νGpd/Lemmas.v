@@ -1,5 +1,5 @@
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT Notation RewLemmas.
+From Bonak Require Import SigT Notation RewLemmas νGpd.Pasting.
 
 Set Keyed Unification.
 
@@ -32,11 +32,55 @@ Lemma eq_existT_curried_hex {A1 A2 A3 B: Type}
   • (f_equal (fun z: {a: A2 &T P2 a} => (f2 z.1; g2 z.1 z.2)) (= K2; W2)
      • (= H3'; U3')).
 Proof.
-  rewrite 3 f_equal_eq_existT_curried.
-  rewrite 4 eq_trans_eq_existT_curried.
-  now exact (eq_existT_curried_eq HH HHu).
+  (** The proof below makes path composition explicit, simplifying higher
+      coherence proofs that depend on the structure of its proof term.
+      An alternative proof is:
+
+    rewrite 3 f_equal_eq_existT_curried.
+    rewrite 4 eq_trans_eq_existT_curried.
+    now exact (eq_existT_curried_eq HH HHu).
+  *)
+  refine (_ • (eq_existT_curried_eq HH HHu • eq_sym _)).
+  - refine (_ • eq_trans_eq_existT_curried
+      (f_equal f1 K1) (sigT_map_eq g1 W1)
+      (H2 • f_equal f3 K3) (U2 ⊙ sigT_map_eq g3 W3)).
+    refine (whisker_r (f_equal_eq_existT_curried f1 g1 K1 W1) _ • _).
+    refine (whisker_l _ _).
+    refine (whisker_l _ (f_equal_eq_existT_curried f3 g3 K3 W3) • _).
+    now exact (eq_trans_eq_existT_curried H2 U2 (f_equal f3 K3) (sigT_map_eq g3 W3)).
+  - refine (_ • eq_trans_eq_existT_curried
+      H1' U1' (f_equal f2 K2 • H3') (sigT_map_eq g2 W2 ⊙ U3')).
+    refine (whisker_l _ _).
+    refine (whisker_r (f_equal_eq_existT_curried f2 g2 K2 W2) _ • _).
+    now exact (eq_trans_eq_existT_curried (f_equal f2 K2) (sigT_map_eq g2 W2) H3' U3').
 Defined.
 
+(** The two nested instances needed for a right-associated three-edge path. *)
+Local Lemma rew_sigT_trans_eq_rr {A: Type} {P: A -> Type}
+  {x y z w: A} {u: P x} {v: P y} {s: P z} {t: P w}
+  {p: x = y} {q: y = z} {r r': z = w} (e: r = r')
+  (U: rew [P] p in u = v) (V: rew [P] q in v = s)
+  (W: rew [P] r in s = t):
+  rew [fun r => rew [P] (p • (q • r)) in u = t] e in (U ⊙ (V ⊙ W)) =
+  U ⊙ (V ⊙ rew [fun r => rew [P] r in s = t] e in W).
+Proof.
+  now exact (map_subst (fun r (W: rew [P] r in s = t) => U ⊙ (V ⊙ W)) e W).
+Defined.
+
+Local Lemma rew_sigT_trans_eq_rl {A: Type} {P: A -> Type}
+  {x y z w: A} {u: P x} {v: P y} {s: P z} {t: P w}
+  {p: x = y} {q q': y = z} {r: z = w} (e: q = q')
+  (U: rew [P] p in u = v) (V: rew [P] q in v = s)
+  (W: rew [P] r in s = t):
+  rew [fun q => rew [P] (p • (q • r)) in u = t] e in (U ⊙ (V ⊙ W)) =
+  U ⊙ ((rew [fun q => rew [P] q in v = s] e in V) ⊙ W).
+Proof.
+  now exact (map_subst (fun q (V: rew [P] q in v = s) => U ⊙ (V ⊙ W)) e V).
+Defined.
+
+(** The hexagon first normalizes the left route, compares the resulting
+    pair paths, and reverses the right normalization. Its dependent lift
+    transports both routes to their normal forms. *)
 Lemma eq_existT_curried_dep_hex
   {A0 B: Type} {P0: A0 -> Type} {R0: forall a, P0 a -> Type}
   {P': B -> Type} {R': forall b, P' b -> Type}
@@ -117,28 +161,17 @@ Proof.
   refine (eq_existT_curried_dep_eq (Q := fun z => R' z.1 z.2) HH HHu _).
   unfold eq_existT_curried_hex in HHv.
   cbn [projT1 projT2] in HHv |- *.
-  revert HHv.
-  generalize (eq_existT_curried_eq HH HHu).
-  do 4 lazymatch goal with
-  | |- context [ @eq_trans_eq_existT_curried ?A ?P ?x ?y ?z ?u ?v ?w
-        ?p ?q ?p' ?q' ] =>
-      generalize (@eq_trans_eq_existT_curried A P x y z u v w p q p' q')
-  end.
-  generalize (f_equal_eq_existT_curried f2 g2 H2' Hu2').
-  generalize (f_equal_eq_existT_curried f3 g3 H3 Hu3).
-  generalize (f_equal_eq_existT_curried f1 g1 H1 Hu1).
-  generalize (= f_equal f1 H1; sigT_map_eq g1 Hu1).
-  generalize (= f_equal f3 H3; sigT_map_eq g3 Hu3).
-  generalize (= f_equal f2 H2'; sigT_map_eq g2 Hu2').
-  generalize (= H2 • f_equal f3 H3; Hu2 ⊙ sigT_map_eq g3 Hu3).
-  generalize (= f_equal f2 H2' • H3'; sigT_map_eq g2 Hu2' ⊙ Hu3').
-  generalize (= f_equal f1 H1 • (H2 • f_equal f3 H3);
-    sigT_map_eq g1 Hu1 ⊙ (Hu2 ⊙ sigT_map_eq g3 Hu3)).
-  generalize (= H1' • (f_equal f2 H2' • H3');
-    Hu1' ⊙ (sigT_map_eq g2 Hu2' ⊙ Hu3')).
-  intros qR qL q23' q23 q2' q3 q1 e e0 e1 e2 e3 e4 e5 e6.
-  destruct e, e0, e1, e2, e3, e4, e5.
-  intros HHv'; now exact HHv'.
+  pose (R := fun z: {a: B &T P' a} => R' z.1 z.2).
+  apply (rew_conjugate (fun p: (f1 x0; g1 x0 u0) = (f3 x3; g3 x3 u3) =>
+    @eq_rect _ (f1 x0; g1 x0 u0) R
+      (h1 x0 u0 v0) (f3 x3; g3 x3 u3) p = h3 x3 u3 v3)) in HHv.
+  rewrite <- 3 rew_compose,
+    <- (rew_map _ (fun p => p • _) _ _), <- (rew_map _ (fun p => _ • p) _ _),
+    <- rew_compose, <- 2 (rew_map _ (fun p => _ • p) _ _),
+    <- rew_compose, <- (rew_map _ (fun p => p • _) _ _) in HHv.
+  rewrite (rew_sigT_trans_eq_l (P := R)), (rew_sigT_trans_eq_rr (P := R)),
+    (rew_sigT_trans_eq_rl (P := R)), 2 (rew_sigT_trans_eq_r (P := R)) in HHv.
+  now exact HHv.
 Defined.
 
 

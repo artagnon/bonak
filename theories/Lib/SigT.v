@@ -203,6 +203,17 @@ Proof.
   now destruct q, p, r, h.
 Defined.
 
+(** Naturality of dependent path composition in each argument. *)
+Lemma rew_sigT_trans_eq_l {A: Type} {P: A -> Type}
+  {x y z: A} {u: P x} {v: P y} {w: P z}
+  {p p': x = y} (e: p = p') {r: y = z}
+  (q: rew [P] p in u = v) (s: rew [P] r in v = w):
+  rew [fun p => rew [P] (p • r) in u = w] e in (q ⊙ s) =
+  (rew [fun p => rew [P] p in u = v] e in q) ⊙ s.
+Proof.
+  now exact (map_subst (fun p (q: rew [P] p in u = v) => q ⊙ s) e q).
+Defined.
+
 Lemma rew_sigT_trans_eq_r {A: Type} {P: A -> Type}
   {x y z: A} {u: P x} {v: P y} {w: P z}
   {p: x = y} {r r': y = z} (e: r = r')

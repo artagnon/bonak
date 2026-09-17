@@ -16,6 +16,19 @@ Proof.
   now destruct H'.
 Defined.
 
+(** Transport along [p • (h • eq_sym q)] is equivalent to transporting
+    both endpoints along [p] and [q] before comparing them over [h]. *)
+Lemma rew_conjugate {A: Type} (P: A -> Type)
+  {x x' y y': A} (p: x = x') (h: x' = y') (q: y = y')
+  (u: P x) (v: P y):
+  rew [P] (p • (h • eq_sym q)) in u = v ->
+  rew [P] h in rew [P] p in u = rew [P] q in v.
+Proof.
+  intro H; rewrite <- 2 rew_compose in H.
+  refine (eq_sym (rew_opp_r P q _) • _).
+  now exact (f_equal (fun v => rew [P] q in v) H).
+Defined.
+
 Lemma rew_swap: forall A (P: A -> Type) a b (H: a = b) (x: P a) (y: P b),
   x = rew <- H in y <-> rew H in x = y.
 Proof.
