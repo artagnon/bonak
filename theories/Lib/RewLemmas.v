@@ -3,11 +3,15 @@
 Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import HSet Notation.
+From Bonak Require Import SigT Notation.
 
-Lemma rew_permute_ll_hset: forall (A: Type) (P Q: A -> HSet) (x y: A)
-  (H: forall z: A, P z = Q z) (H': x = y) (a: P x),
-  rew [Dom] H y in rew [P] H' in a = rew [Q] H' in rew [Dom] H x in a.
+(** Transport along a pointwise equality commutes with transport in the
+    indexing type, for any family [El] over the common codomain. *)
+Lemma rew_permute_ll {S: Type} (El: S -> Type)
+  (A: Type) (P Q: A -> S) (x y: A)
+  (H: forall z: A, P z = Q z) (H': x = y) (a: El (P x)):
+  rew [El] H y in rew [fun z => El (P z)] H' in a =
+  rew [fun z => El (Q z)] H' in rew [El] H x in a.
 Proof.
   now destruct H'.
 Defined.
