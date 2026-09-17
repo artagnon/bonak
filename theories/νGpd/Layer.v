@@ -138,8 +138,9 @@ Lemma nth_dpath_trans {T} {Bd: T -> arity -> HGpd} {d1 d2 d3: T}
   nth_dpath (q ⊙[fun d => GDom (Layer (Bd d))] q') ω
   = nth_dpath q ω ⊙[fun d => GDom (Bd d ω)] nth_dpath q' ω.
 Proof.
-  destruct p; destruct q; destruct p'; destruct q'; cbn.
-  now unfold nth_dpath; cbn.
+  rewrite 3 nth_dpath_map.
+  now exact (dpath_map_comp (P := fun d => GDom (Layer (Bd d)))
+    (Q := fun d => GDom (Bd d ω)) (fun d l => nth l ω) q q').
 Defined.
 
 (** [nth_dpath] of a mapped dependent path: [sigT_map_eq] along a layer map
@@ -193,8 +194,11 @@ Lemma nth_dpath_sigT_fst {T X: Type} {P: X -> HGpd} {rf0: arity -> T -> X}
   = eq_sym (rew_map P (rf0 θ) H (nth l1 θ))
     • nth_dpath (Bd := fun d ω => P (rf0 ω d)) Hu θ.
 Proof.
-  destruct H, Hu, Hv; cbn.
-  now unfold nth_dpath; cbn.
+  rewrite (sigT_map_eq_fst
+    (P := fun d => GDom (Layer (fun ω => P (rf0 ω d))))
+    (Q := fun x => GDom (P x)) (R := fun d l => GDom (R d l))
+    (f := rf0 θ) (fun d l => nth l θ) Hv).
+  now rewrite sigT_map_eq_dpath_map, nth_dpath_map.
 Defined.
 
 (** Lift a component triangle through two layer maps. The component
@@ -292,10 +296,13 @@ Lemma layer_dpath2_eq {T} {Bd: T -> arity -> HGpd} {d1 d2: T} {e1 e2: d1 = d2}
              nth_dpath u ω = nth_dpath v ω) ->
   rew [fun e => rew [fun d => Layer (Bd d)] e in l = l'] κ in u = v.
 Proof.
-  destruct κ; cbn. intro H. apply ext2; intro ω.
-  specialize (H ω). unfold nth_dpath in H.
-  revert H. destruct (nth_rew e1 l ω).
-  now rewrite 2 eq_trans_refl_l.
+  intro H. apply ext2. intro ω.
+  pose proof (eq_sym (map_subst (fun e q => @nth_dpath T Bd d1 d2 e l l' q ω)
+    κ u) • H ω) as E.
+  unfold nth_dpath in E.
+  now exact (eq_sym (eq_trans_sym_cancel_l _ _) •
+    (f_equal (fun h => eq_sym (eq_sym (nth_rew e2 l ω)) • h) E •
+      eq_trans_sym_cancel_l _ _)).
 Defined.
 
 Section Hexagon.

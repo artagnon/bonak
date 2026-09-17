@@ -113,6 +113,20 @@ Proof.
   now destruct q.
 Defined.
 
+(** Mapping the first component of a dependent pair path forgets its second component. *)
+Lemma sigT_map_eq_fst {X Y: Type} {P: X -> Type} {Q: Y -> Type}
+  {R: forall x, P x -> Type} {f: X -> Y} (g: forall x, P x -> Q (f x))
+  {x y: X} {p: x = y} {a: P x} {b: P y}
+  {h: rew [P] p in a = b} {v: R x a} {w: R y b}
+  (k: rew [fun z: {x: X &T P x} => R z.1 z.2] (= p; h) in
+    (v: (fun z: {x: X &T P x} => R z.1 z.2) (x; a)) = w):
+  sigT_map_eq (P := fun x => {a: P x &T R x a}) (fun x z => g x z.1)
+    (eq_existT_curried_dep (Q := fun z => R z.1 z.2) (H := p) (Hu := h) (Hv := k)) =
+  sigT_map_eq g h.
+Proof.
+  now destruct p, h, k.
+Defined.
+
 Lemma f_equal_eq_existT_curried {A B: Type} {P: A -> Type} {Q: B -> Type}
   (f: A -> B) (g: forall a, P a -> Q (f a))
   {x y: A} {u: P x} {v: P y}
