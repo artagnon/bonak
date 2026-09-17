@@ -339,83 +339,24 @@ Lemma rew_coh2Layer_perm4
          (Rs zq2 (rew [S2] pIq in aQ)) (Rr1 zq2 (rew [S2] pIq in aQ))
          (HKA6 zq2 (rew [S2] pIq in aQ)) HH6).
 Proof.
-  unfold permutahedral_coherence, layer_square_nat, layer_square_map,
-    f_equal_naturality, square_compose_map, square_compose, square_stack,
-    square_map, whisker_l, whisker_r in Hcoh3Frame.
-  cbn [f_equal eq_sym eq_trans].
-  destruct pIs, pIr, pIq, eU1, eU2, eU3.
-  change (rew [S2] eq_refl in aS) with aS.
-  change (rew [S2] eq_refl in aR) with aR.
-  change (rew [S2] eq_refl in aQ) with aQ.
-  cbn in HH1, HH3, HH5, κ, Hcoh3Frame.
-  rewrite 3 sigT_map_eq_refl.
-  cbv beta.
-  unfold rew_cohLayer_hex, sigT_trans_eq_inv_l.
-  cbn [sigT_map_eq rew_map rew_compose].
-  revert K1 K3 K5 pV1 pV3 pV5 pV0 pV2 pV4 HH1 HH3 HH5 HK1 HK3 HK5
-    e6 e2 e4 κ HH2 HH4 HH6 HHA Hcoh3Frame Hcoh2Painting.
-  generalize (HKA2 zr1 aR). generalize (HKA4 zs1 aS).
-  generalize (HKA6 zq1 aQ).
-  generalize (KA2 zr1). generalize (KA4 zs1). generalize (KA6 zq1).
-  generalize (gq u0). generalize (gs u2). generalize (gr u4).
-  cbn.
-  generalize (Rr zs1 aS). generalize (Rs zr1 aR).
-  generalize (Rq1 zr1 aR). generalize (Rr1 zq1 aQ).
-  generalize (Rq1 zs1 aS). generalize (Rs zq1 aQ).
-  generalize (fA u0). generalize (fB u2). generalize (fC u4).
-  generalize (uf0 u0). generalize (uf0 u2). generalize (uf0 u4).
-  generalize (rur zs1). generalize (rus zr1). generalize (ruq1 zr1).
-  generalize (rur1 zq1). generalize (ruq1 zs1). generalize (rus zq1).
-  intros t t0 t1 t2 t3 t4 t5 t6 t7 t8 t9 t10 s s0 s1 s2 s3 s4 ge gs0 gq0
-    k6 k4 k2 hk6 hk4 hk2
-    K1 K3 K5 pV1 pV3 pV5 pV0 pV2 pV4 HH1 HH3 HH5 HK1 HK3 HK5
-    e6 e2 e4 κ HH2 HH4 HH6 HHA Hcoh3Frame Hcoh2Painting.
-  revert ge gs0 gq0 pV0 pV2 pV4 HH1 HH3 HH5 HK1 HK3 HK5 e6 e2 e4
-    κ k2 k4 k6 hk2 hk4 hk6 HH2 HH4 HH6 HHA Hcoh3Frame Hcoh2Painting.
-  destruct pV1, pV3, pV5.
-  intros ge gs0 gq0 pV0 pV2 pV4 HH1 HH3 HH5.
-  cbn in HH1, HH3, HH5.
-  destruct HH1, HH3, HH5.
-  intros HK1 HK3 HK5.
-  destruct HK1, HK3, HK5.
-  revert ge gs0 gq0.
-  destruct pV0, pV2, pV4.
-  intros ge gs0 gq0 e6 e2 e4 κ.
-  revert e2 e4 κ ge gs0 gq0.
-  destruct e6.
-  destruct e2.
-  intros e4 κ. cbn in κ. destruct κ.
-  intros ge gs0 gq0.
-  cbn.
-  generalize (Fq t4 s4). generalize (Fs t2 s2). generalize (Fr t0 s0).
-  revert gq0 gs0 ge.
-  generalize (rfq t4). generalize (rfs t2). generalize (rfr t0).
-  intros x x0 x1 gq0 gs0 ge p0 p2 p4 k2 k4 k6 hk2 hk4 hk6
-    HH2 HH4 HH6 HHA Hcoh3Frame Hcoh2Painting.
-  rewrite 3 sigT_trans_eq_refl.
-  revert Hcoh2Painting. revert Hcoh3Frame. revert HH2 HH4 HH6. revert HHA.
-  revert hk2 hk4 hk6. revert k2 k4 k6. revert p0 p2 p4. revert gs0 ge gq0.
-  generalize (rf0 t10).
-  destruct gs0.
-  destruct ge.
-  destruct gq0.
-  intros p0 p2 p4 k2 k4 k6 hk2 hk4 hk6 HHA HH2 HH4 HH6 Hcoh3Frame Hcoh2Painting.
-  cbn in HH2, HH4, HH6.
-  revert hk2 hk4 hk6 HHA Hcoh3Frame Hcoh2Painting.
-  destruct HH2, HH4, HH6.
-  intros hk2 hk4.
-  destruct hk2, hk4.
-  intros hk6 HHA Hcoh3Frame Hcoh2Painting.
-  cbn in hk6, HHA, Hcoh3Frame, Hcoh2Painting |- *.
-  rewrite eq_trans_refl_l, f_equal_id in Hcoh3Frame.
-  rewrite Hcoh3Frame in Hcoh2Painting.
-  cbn in Hcoh2Painting.
-  rewrite 2 sigT_trans_eq_refl in Hcoh2Painting.
-  change (eq_ind p4 (fun p: S0 x1 => p4 = p) eq_refl p4 hk6)
-    with (eq_refl • hk6).
-  rewrite 5 eq_trans_refl_l.
-  rewrite 2 eq_trans_refl_l in Hcoh2Painting.
-  now rewrite <- Hcoh2Painting.
+  refine (square_cube_map_dep rf0 S0 _ _ κ HHA Hcoh3Frame
+    _ _ _ _ _ _ _ _ Hcoh2Painting).
+  - eapply square_compose_map_dep.
+    + now exact (layer_square_map_dep uf0 rur rus rfq fA rf0 gq S1 S0 S2 S2
+        Fq Rr Rs eU1 pIs pIr pV0 pV1 K1 HH1 HK1).
+    + eapply square_compose_map_dep.
+      * now exact (layer_square_nat_dep rus ruq1 rfq rfs rf0 Rs Rq1 Fq Fs KA2 HKA2
+          pIr pV1 pV2 e2 (gq u1) (gs u2) HH2 aR).
+      * now exact (layer_square_map_dep uf0 ruq1 rur1 rfs fB rf0 gs S1 S0 S2 S2
+          Fs Rq1 Rr1 eU2 pIr pIq pV2 pV3 K3 HH3 HK3).
+  - eapply square_compose_map_dep.
+    + now exact (layer_square_nat_dep rur ruq1 rfq rfr rf0 Rr Rq1 Fq Fr KA4 HKA4
+        pIs pV0 pV4 e4 (gq u0) (gr u4) HH4 aS).
+    + eapply square_compose_map_dep.
+      * now exact (layer_square_map_dep uf0 ruq1 rus rfr fC rf0 gr S1 S0 S2 S2
+          Fr Rq1 Rs eU3 pIs pIq pV4 pV5 K5 HH5 HK5).
+      * now exact (layer_square_nat_dep rus rur1 rfr rfs rf0 Rs Rr1 Fr Fs KA6 HKA6
+          pIq pV5 pV3 e6 (gr u5) (gs u3) HH6 aQ).
 Defined.
 
 End Coh2Layer.
