@@ -123,14 +123,15 @@ Qed.
 
 (** Fused transport-chain lemmas for layer coherence proofs
 
-    [rew_cohLayer<NM>] closes a layer coherence goal after a lemma from
-    [Layer.v] proves the pointwise equality. It equates two transport chains,
-    N on the left-hand side and M on the right, whose starting elements are
-    identified by the painting coherence. A call site supplies only the two
-    premises: the painting coherence and the 2-dimensional frame coherence
-    ([UIP] in HSet development). *)
+    [rew_cohLayer_hex] equates two chains of three transport steps, whose
+    starting elements are identified by the painting coherence. The three
+    square variants [rew_cohLayer_sq_13], [rew_cohLayer_sq_31], and
+    [rew_cohLayer_sq_22] split the four transport steps between the two
+    sides as 1 = 3, 3 = 1, and 2 = 2, respectively.
+    A call site supplies only the two premises: the painting coherence and
+    the 2-dimensional frame coherence ([UIP] in the HSet development). *)
 
-Lemma rew_cohLayer33 {T1 T2 T3 X: Type} {P: X -> Type}
+Lemma rew_cohLayer_hex {T1 T2 T3 X: Type} {P: X -> Type}
   {S2: T2 -> Type} {S3: T3 -> Type}
   {rf0: T1 -> X} {rfF: T2 -> X} {rfG: T3 -> X}
   {F: forall m, S2 m -> P (rfF m)}
@@ -159,7 +160,7 @@ Defined.
 (** The [rew_cohLayer*] lemmas for square-shaped coherences can be considered an
     instance of the hexagon-shaped one, with 2 arrows trivial. *)
 
-Lemma rew_cohLayer13 {T1 T3 X: Type} {P: X -> Type} {S3: T3 -> Type}
+Lemma rew_cohLayer_sq_13 {T1 T3 X: Type} {P: X -> Type} {S3: T3 -> Type}
   {rf0: T1 -> X} {rfG: T3 -> X}
   {G: forall n, S3 n -> P (rfG n)}
   {d1 d2: T1} {E1: d1 = d2}
@@ -173,14 +174,14 @@ Lemma rew_cohLayer13 {T1 T3 X: Type} {P: X -> Type} {S3: T3 -> Type}
   = rew [P] D1 in G n2 (rew [S3] D2 in aR).
 Proof.
   intros HC Hpath.
-  eapply (rew_cohLayer33 (P := P) (S2 := P) (rf0 := rf0)
+  eapply (rew_cohLayer_hex (P := P) (S2 := P) (rf0 := rf0)
     (rfF := fun x => x) (F := fun _ a => a)
     (C2 := eq_refl) (C1 := eq_refl) (K := K) (aL := aL)).
   now exact HC.
   now rewrite 2 eq_trans_refl_l.
 Defined.
 
-Lemma rew_cohLayer22 {T1 T3 X: Type} {P: X -> Type} {S3: T3 -> Type}
+Lemma rew_cohLayer_sq_22 {T1 T3 X: Type} {P: X -> Type} {S3: T3 -> Type}
   {rf0: T1 -> X} {rfG: T3 -> X}
   {G: forall n, S3 n -> P (rfG n)}
   {d1 d2: T1} {E1: d1 = d2}
@@ -194,14 +195,14 @@ Lemma rew_cohLayer22 {T1 T3 X: Type} {P: X -> Type} {S3: T3 -> Type}
   = rew [P] D1 in G n2 (rew [S3] D2 in aR).
 Proof.
   intros HC Hpath.
-  eapply (rew_cohLayer33 (P := P) (S2 := P) (rf0 := rf0)
+  eapply (rew_cohLayer_hex (P := P) (S2 := P) (rf0 := rf0)
     (rfF := fun x => x) (F := fun _ a => a)
     (C2 := eq_refl) (C1 := E0) (K := eq_refl) (aL := aL)).
   now exact HC.
   now rewrite 2 eq_trans_refl_l.
 Defined.
 
-Lemma rew_cohLayer31 {T1 T2 X: Type} {P: X -> Type} {S2: T2 -> Type}
+Lemma rew_cohLayer_sq_31 {T1 T2 X: Type} {P: X -> Type} {S2: T2 -> Type}
   {rf0: T1 -> X} {rfF: T2 -> X}
   {F: forall m, S2 m -> P (rfF m)}
   {d1 d2: T1} {E1: d1 = d2}
@@ -215,7 +216,7 @@ Lemma rew_cohLayer31 {T1 T2 X: Type} {P: X -> Type} {S2: T2 -> Type}
   = rew [P] D1 in aR.
 Proof.
   intros HC Hpath.
-  eapply (rew_cohLayer33 (P := P) (S3 := P) (rf0 := rf0)
+  eapply (rew_cohLayer_hex (P := P) (S3 := P) (rf0 := rf0)
     (rfF := rfF) (rfG := fun x => x) (G := fun _ a => a)
     (m1 := m1) (D2 := eq_refl) (D1 := D1) (K := eq_refl) (aR := aR)).
   now exact HC.

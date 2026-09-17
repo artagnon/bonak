@@ -479,7 +479,7 @@ Proof.
     (P := fun x => depsCohs.(_deps).(_paintings).2 x)
     (rf0 := fun a x => depsCohs.(_deps).(_restrFrames).2 0 leR_O a x));
     intro θ.
-  eapply (rew_cohLayer33
+  eapply (rew_cohLayer_hex
     (P := fun x => depsCohs.(_deps).(_paintings).2 x)
     (rf0 := fun x => depsCohs.(_deps).(_restrFrames).2 0 leR_O θ x)
     (F := depsCohs.(_restrPaintings).2 q Hq ε)

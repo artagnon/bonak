@@ -3,7 +3,7 @@ From Bonak Require Import SigT Notation RewLemmas.
 
 Set Keyed Unification.
 
-Local Arguments rew_cohLayer33 {T1 T2 T3 X} P {S2 S3} rf0 {rfF rfG} F G
+Local Arguments rew_cohLayer_hex {T1 T2 T3 X} P {S2 S3} rf0 {rfF rfG} F G
   {d1 d2} E1 {m1 m2} C2 {n1 n2} D2 C1 D1 K aL aR _ _.
 
 Lemma eq_existT_curried_hex {A1 A2 A3 B: Type}
@@ -312,7 +312,7 @@ Lemma rew_coh2Layer
         (f_equal (fun x => rew [fun dd => S1 (uf0 dd)] eU1 in x) kbP
          • (f_equal (fun x =>
               rew [fun dd => S1 (uf0 dd)] eU1 in rew [S1] pV0 in Rr zs2 x) kP
-            • (rew_cohLayer33 S1 uf0 Rr Rs eU1 pIs pIr pV0 pV1 K1
+            • (rew_cohLayer_hex S1 uf0 Rr Rs eU1 pIs pIr pV0 pV1 K1
                  (FIs a) (FIr a) HK1 HH1
                • (eq_sym (f_equal (fun x => rew [S1] pV1 in Rs zr2 x) kQ)
                   • eq_sym kbQ))))
@@ -321,7 +321,7 @@ Lemma rew_coh2Layer
      (f_equal (fun x => rew [fun dd => S0 (rf0 dd)] e2 in x) kc1
       • (f_equal (fun x => rew [fun dd => S0 (rf0 dd)] e2 in
            rew [S0] gq u1 in Fq (uf0 u1) x) kbQ
-         • (rew_cohLayer33 S0 rf0 Fq Fs e2 pV1 pV2 (gq u1) (gs u2) (KA2 zr2)
+         • (rew_cohLayer_hex S0 rf0 Fq Fs e2 pV1 pV2 (gq u1) (gs u2) (KA2 zr2)
               (Rs zr2 aQ) (Rq1 zr2 aQ) (HKA2 zr2 aQ) HH2
             • (eq_sym (f_equal (fun x => rew [S0] gs u2 in Fs (uf0 u2) x) kbR)
                • eq_sym kc2)))
@@ -333,7 +333,7 @@ Lemma rew_coh2Layer
               (f_equal (fun x => rew [fun dd => S1 (uf0 dd)] eU2 in x) kbR
                • (f_equal (fun x => rew [fun dd => S1 (uf0 dd)] eU2 in
                     rew [S1] pV2 in Rq1 zr2 x) kQ
-                  • (rew_cohLayer33 S1 uf0 Rq1 Rr1 eU2 pIr pIq pV2 pV3 K3
+                  • (rew_cohLayer_hex S1 uf0 Rq1 Rr1 eU2 pIr pIq pV2 pV3 K3
                        (FIr a) (FIq a) HK3 HH3
                      • (eq_sym (f_equal (fun x =>
                           rew [S1] pV3 in Rr1 zq2 x) kR)
@@ -342,7 +342,7 @@ Lemma rew_coh2Layer
   = f_equal (fun x => rew [fun dd => S0 (rf0 dd)] e4 in x) kc0
     • (f_equal (fun x => rew [fun dd => S0 (rf0 dd)] e4 in
          rew [S0] gq u0 in Fq (uf0 u0) x) kbP
-       • (rew_cohLayer33 S0 rf0 Fq Fr e4 pV0 pV4 (gq u0) (gr u4) (KA4 zs2)
+       • (rew_cohLayer_hex S0 rf0 Fq Fr e4 pV0 pV4 (gq u0) (gr u4) (KA4 zs2)
             (Rr zs2 aP) (Rq1 zs2 aP) (HKA4 zs2 aP) HH4
           • (eq_sym (f_equal (fun x => rew [S0] gr u4 in Fr (uf0 u4) x) kbW)
              • eq_sym kc4)))
@@ -354,7 +354,7 @@ Lemma rew_coh2Layer
             (f_equal (fun x => rew [fun dd => S1 (uf0 dd)] eU3 in x) kbW
              • (f_equal (fun x => rew [fun dd => S1 (uf0 dd)] eU3 in
                   rew [S1] pV4 in Rq1 zs2 x) kP
-                • (rew_cohLayer33 S1 uf0 Rq1 Rs eU3 pIs pIq pV4 pV5 K5
+                • (rew_cohLayer_hex S1 uf0 Rq1 Rs eU3 pIs pIq pV4 pV5 K5
                      (FIs a) (FIq a) HK5 HH5
                    • (eq_sym (f_equal (fun x => rew [S1] pV5 in Rs zq2 x) kR)
                       • eq_sym kbW'))))
@@ -363,7 +363,7 @@ Lemma rew_coh2Layer
          (f_equal (fun x => rew [fun dd => S0 (rf0 dd)] e6 in x) kc5
           • (f_equal (fun x => rew [fun dd => S0 (rf0 dd)] e6 in
                rew [S0] gr u5 in Fr (uf0 u5) x) kbW'
-             • (rew_cohLayer33 S0 rf0 Fr Fs e6 pV5 pV3 (gr u5) (gs u3) (KA6 zq2)
+             • (rew_cohLayer_hex S0 rf0 Fr Fs e6 pV5 pV3 (gr u5) (gs u3) (KA6 zq2)
                   (Rs zq2 aR) (Rr1 zq2 aR) (HKA6 zq2 aR) HH6
                 • (eq_sym (f_equal (fun x =>
                      rew [S0] gs u3 in Fs (uf0 u3) x) kbR')
@@ -470,7 +470,7 @@ Lemma rew_coh2Painting_restr0 {TU TL A0: Type}
          • (f_equal (fun x => rew [fun dd: TU => P (r0 dd)] E1 in x) kM
             • (f_equal (fun x =>
                  rew [fun dd: TU => P (r0 dd)] E1 in rew [P] pQ in F m2 x) kF
-               • (rew_cohLayer33 P r0 F G E1 e2 e5 pQ pR KA
+               • (rew_cohLayer_hex P r0 F G E1 e2 e5 pQ pR KA
                     (AR a0) (AQ1 a0) HK κ
                   • (eq_sym (f_equal (fun x =>
                        rew [P] pR in G n2 x) kG)
