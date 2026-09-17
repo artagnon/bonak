@@ -1,3 +1,5 @@
+From Bonak Require Import Notation.
+
 Set Primitive Projections.
 Set Printing Projections.
 
@@ -172,6 +174,15 @@ Lemma sigT_trans_eq_refl {A: Type} {P: A -> Type} {x: A} {u v w: P x}
 Proof.
   now destruct q', q.
 Defined.
+
+(** Solve for the second dependent path in a composite with a fixed first path. *)
+Definition sigT_trans_eq_inv_l {A: Type} {P: A -> Type}
+  {x y z: A} {u: P x} {v: P y} {w: P z}
+  {p: x = y} {r: y = z}
+  (q: rew [P] p in u = v) (h: rew [P] (p • r) in u = w):
+  rew [P] r in v = w :=
+  eq_sym (f_equal (fun v => rew [P] r in v) q)
+  • (rew_compose P p r u • h).
 
 Lemma eq_trans_eq_existT_curried {A: Type} {P: A -> Type}
   {x y z: A} {u: P x} {v: P y} {w: P z}

@@ -149,12 +149,24 @@ Lemma rew_cohLayer_hex {T1 T2 T3 X: Type} {P: X -> Type}
   rew [fun d => P (rf0 d)] E1 in rew [P] C1 in F m2 (rew [S2] C2 in aL)
   = rew [P] D1 in G n2 (rew [S3] D2 in aR).
 Proof.
+(** The proof below makes path composition explicit, simplifying higher
+    coherence proofs that depend on the structure of its proof term.
+    An alternative proof is:
+
   intros HC Hpath.
   rewrite <- (map_subst F C2 aL), <- (map_subst G D2 aR), <- HC.
   destruct E1, C2, D2. cbn in Hpath |- *.
   rewrite rew_compose.
   rewrite 2 eq_trans_refl_l in Hpath.
   now rewrite Hpath.
+*)
+  intros HC Hpath.
+  refine (rew_map P rf0 E1 _ • _).
+  (** Combine the base transports, then cancel the mapped left edge. *)
+  refine (rew_compose P C1 (f_equal rf0 E1) _ • _).
+  refine (sigT_trans_eq_inv_l (sigT_map_eq (Q := P) F (p := C2) (u := aL) eq_refl) _).
+  rewrite Hpath.
+  now exact (HC ⊙ (sigT_map_eq (Q := P) G (p := D2) (u := aR) eq_refl ⊙ eq_refl)).
 Defined.
 
 (** The [rew_cohLayer*] lemmas for square-shaped coherences can be considered an

@@ -379,6 +379,8 @@ Proof.
   cbn in HH1, HH3, HH5, κ.
   rewrite 3 sigT_map_eq_refl.
   cbv beta.
+  unfold rew_cohLayer_hex, sigT_trans_eq_inv_l.
+  cbn [sigT_map_eq rew_map rew_compose].
   revert K1 K3 K5 pV1 pV3 pV5 pV0 pV2 pV4 HH1 HH3 HH5 HK1 HK3 HK5
     e6 e2 e4 κ HH2 HH4 HH6 HHA Hcoh3Frame Hcoh2Painting.
   generalize (HKA2 zr1 (FIr a)). generalize (HKA4 zs1 (FIs a)).
@@ -441,7 +443,7 @@ Proof.
     with (eq_refl • hk6).
   rewrite 5 eq_trans_refl_l.
   rewrite 2 eq_trans_refl_l in Hcoh2Painting.
-  now exact Hcoh2Painting.
+  now rewrite <- Hcoh2Painting.
 Defined.
 
 End Coh2Layer.
@@ -479,6 +481,8 @@ Lemma rew_coh2Painting_restr0 {TU TL A0: Type}
 Proof.
   subst u1 u12 w3 w4.
   destruct E1, e2, e5.
+  unfold rew_cohLayer_hex, sigT_trans_eq_inv_l.
+  cbn [sigT_map_eq rew_map rew_compose].
   cbn [eq_sym f_equal eq_trans].
   cbn in κ |- *.
   revert κ. revert HK. revert KA. revert pQ. revert pR.
