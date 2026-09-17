@@ -879,7 +879,7 @@ Proof.
         depsCohs2.(_depsCohs).(_cohs).2 r (Hr ↕ Hq) 0 leR_O ω ω0 dd in
       depsCohs2.(_depsCohs).(_restrPaintings).2 r (Hr ↕ Hq) ω _ c)).
   intro ζ; unfold lmap2_hex_pointwise.
-  eapply (rew_coh2Layer
+  eapply (rew_coh2Layer_perm4
     (S0 := fun x => depsCohs2.(_depsCohs).(_deps).(_paintings).2 x)
     (rf0 := fun x => depsCohs2.(_depsCohs).(_deps).(_restrFrames).2 0 leR_O ζ x)
     (S1 := fun x => (mkDepsCohs depsCohs2).(1).(_deps).(_paintings).2 x)

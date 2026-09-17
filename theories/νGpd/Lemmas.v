@@ -211,10 +211,13 @@ Context {HKA4: forall z (c: S2 z),
 Context {HKA6: forall z (c: S2 z),
   rew [S0] KA6 z in Fr (rus z) (Rs z c) = Fs (rur1 z) (Rr1 z c)}.
 
-(** The permutahedral coherence of frames: the hexagon proved as a
-    composition of the seven other hexagons of the permutahedron. The six
-    squares hold by naturality and don't appear here explicitly. *)
-Lemma permutahedral_coherence
+(** The permutahedral coherence of frames compares four hexagons on each
+    side. The squares [NKA2, NKA4, NKA6] express naturality of the restriction
+    coherences; [Ngq, Ngs, Ngr] express naturality of the comparison maps.
+    Each side-face pasting combines one hexagon and one of these squares.
+    Pasting [HHA] at the top and the image of [κ] at the bottom completes
+    the two boundary paths. *)
+Definition permutahedral_coherence
   (u0 u1 u2 u3 u4 u5: TU)
   (eU1: u0 = u1) (eU2: u2 = u3) (eU3: u4 = u5)
   (e2: fA u1 = fB u2) (e4: fA u0 = fC u4) (e6: fC u5 = fB u3)
@@ -230,57 +233,52 @@ Lemma permutahedral_coherence
         = K3 • (f_equal rur1 pIq • pV3))
   (HH5: f_equal ruq1 pIs • (pV4 • f_equal uf0 eU3)
         = K5 • (f_equal rus pIq • pV5))
+  (κ: f_equal fA eU1 • (e2 • f_equal fB eU2)
+      = e4 • (f_equal fC eU3 • e6))
   (HH2: f_equal rfq pV1 • (gq u1 • f_equal rf0 e2)
         = KA2 zr2 • (f_equal rfs pV2 • gs u2))
   (HH4: f_equal rfq pV0 • (gq u0 • f_equal rf0 e4)
         = KA4 zs2 • (f_equal rfr pV4 • gr u4))
   (HH6: f_equal rfr pV5 • (gr u5 • f_equal rf0 e6)
         = KA6 zq2 • (f_equal rfs pV3 • gs u3))
-  (κ: f_equal fA eU1 • (e2 • f_equal fB eU2)
-      = e4 • (f_equal fC eU3 • e6)):
-  f_equal rfq K1 • (KA2 zr1 • f_equal rfs K3)
-  = KA4 zs1 • (f_equal rfr K5 • KA6 zq1).
-Proof.
-  destruct eU1, eU2, eU3, pIs, pIr, pIq.
-  cbn in HH1, HH3, HH5, κ.
-  revert K1 K3 K5 pV1 pV3 pV5 pV0 pV2 pV4 HH1 HH3 HH5
-    e6 e2 e4 κ HH2 HH4 HH6.
-  generalize (KA2 zr1). generalize (KA4 zs1). generalize (KA6 zq1).
-  generalize (gq u0). generalize (gs u2). generalize (gr u4).
-  generalize (fA u0). generalize (fB u2). generalize (fC u4).
-  generalize (uf0 u0). generalize (uf0 u2). generalize (uf0 u4).
-  generalize (rur zs1). generalize (rus zr1). generalize (ruq1 zr1).
-  generalize (rur1 zq1). generalize (ruq1 zs1). generalize (rus zq1).
-  intros t t0 t1 t2 t3 t4 t5 t6 t7 t8 t9 t10 ge gs0 gq0 k6 k4 k2
-    K1 K3 K5 pV1 pV3 pV5 pV0 pV2 pV4 HH1 HH3 HH5 e6 e2 e4 κ HH2 HH4 HH6.
-  revert ge gs0 gq0 pV0 pV2 pV4 HH1 HH3 HH5 e6 e2 e4 κ HH2 HH4 HH6.
-  destruct pV1, pV3, pV5.
-  intros ge gs0 gq0 pV0 pV2 pV4 HH1 HH3 HH5.
-  cbn in HH1, HH3, HH5.
-  destruct HH1, HH3, HH5.
-  revert ge gs0 gq0.
-  destruct pV0, pV2, pV4.
-  intros ge gs0 gq0 e6 e2 e4 κ.
-  revert e2 e4 κ ge gs0 gq0.
-  destruct e6.
-  destruct e2.
-  intros e4 κ. cbn in κ. destruct κ.
-  intros ge gs0 gq0.
-  revert k2 k4 k6.
-  revert gs0 ge gq0.
-  cbn.
-  generalize (rfq t4). generalize (rfs t2). generalize (rfr t0).
-  generalize (rf0 t10).
-  destruct gs0.
-  destruct ge.
-  destruct gq0.
-  intros k2 k4 k6 HH2 HH4 HH6.
-  cbn in HH2, HH4, HH6.
-  destruct HH2, HH4, HH6.
-  now reflexivity.
-Defined.
+  (HHA: f_equal rfq K1 • (KA2 zr1 • f_equal rfs K3)
+      = KA4 zs1 • (f_equal rfr K5 • KA6 zq1)): Type :=
+  let NKA2: f_equal rfq (f_equal rus pIr) • KA2 zr2 =
+      KA2 zr1 • f_equal rfs (f_equal ruq1 pIr) :=
+    f_equal_naturality rus ruq1 rfq rfs KA2 pIr in
+  let NKA4: f_equal rfq (f_equal rur pIs) • KA4 zs2 =
+      KA4 zs1 • f_equal rfr (f_equal ruq1 pIs) :=
+    f_equal_naturality rur ruq1 rfq rfr KA4 pIs in
+  let NKA6: f_equal rfr (f_equal rus pIq) • KA6 zq2 =
+      KA6 zq1 • f_equal rfs (f_equal rur1 pIq) :=
+    f_equal_naturality rus rur1 rfr rfs KA6 pIq in
+  let Ngq: f_equal rfq (f_equal uf0 eU1) • gq u1 =
+      gq u0 • f_equal rf0 (f_equal fA eU1) :=
+    f_equal_naturality uf0 fA rfq rf0 gq eU1 in
+  let Ngs: f_equal rfs (f_equal uf0 eU2) • gs u3 =
+      gs u2 • f_equal rf0 (f_equal fB eU2) :=
+    f_equal_naturality uf0 fB rfs rf0 gs eU2 in
+  let Ngr: f_equal rfr (f_equal uf0 eU3) • gr u5 =
+      gr u4 • f_equal rf0 (f_equal fC eU3) :=
+    f_equal_naturality uf0 fC rfr rf0 gr eU3 in
+  let left := square_compose_map rf0
+      (layer_square_map uf0 rur rus rfq fA rf0 gq eU1 pIs pIr pV0 pV1 K1 HH1 Ngq)
+      (square_compose_map rf0
+        (layer_square_nat rus ruq1 rfq rfs rf0 KA2 pIr pV1 pV2 e2 (gq u1) (gs u2) HH2 NKA2)
+        (layer_square_map uf0 ruq1 rur1 rfs fB rf0 gs eU2 pIr pIq pV2 pV3 K3 HH3 Ngs)) •
+    whisker_r HHA _ in
+  let right := whisker_l _ (f_equal (fun e => f_equal rf0 e) κ) •
+    square_compose_map rf0
+      (layer_square_nat rur ruq1 rfq rfr rf0 KA4 pIs pV0 pV4 e4 (gq u0) (gr u4) HH4 NKA4)
+      (square_compose_map rf0
+        (layer_square_map uf0 ruq1 rus rfr fC rf0 gr eU3 pIs pIq pV4 pV5 K5 HH5 Ngr)
+        (layer_square_nat rus rur1 rfr rfs rf0 KA6 pIq pV5 pV3 e6 (gr u5) (gs u3) HH6 NKA6)) in
+  left = right.
 
-Lemma rew_coh2Layer
+
+(** The dependent hexagon transported through the six layer-coherence cells.
+    The frame premise [permutahedral_coherence] compares its two boundary pastings. *)
+Lemma rew_coh2Layer_perm4
   (u0 u1 u2 u3 u4 u5: TU)
   (eU1: u0 = u1) (eU2: u2 = u3) (eU3: u4 = u5)
   (e2: fA u1 = fB u2) (e4: fA u0 = fC u4) (e6: fC u5 = fB u3)
@@ -316,9 +314,9 @@ Lemma rew_coh2Layer
         = Fs (rur1 zq1) (Rr1 zq1 aQ)] HHA in
     (sigT_map_eq Fq HK1 ⊙ (HKA2 zr1 aR ⊙ sigT_map_eq Fs HK3)) =
     HKA4 zs1 aS ⊙ (sigT_map_eq Fr HK5 ⊙ HKA6 zq1 aQ))
-  (Hcoh3Frame: HHA = permutahedral_coherence u0 u1 u2 u3 u4 u5
+  (Hcoh3Frame: permutahedral_coherence u0 u1 u2 u3 u4 u5
     eU1 eU2 eU3 e2 e4 e6 zs1 zs2 zr1 zr2 zq1 zq2 pIs pIr pIq
-    pV0 pV1 pV2 pV3 pV4 pV5 K1 K3 K5 HH1 HH3 HH5 HH2 HH4 HH6 κ):
+    pV0 pV1 pV2 pV3 pV4 pV5 K1 K3 K5 HH1 HH3 HH5 κ HH2 HH4 HH6 HHA):
   rew [fun e: fA u0 = fB u3 =>
     rew [fun dd => S0 (rf0 dd)] e in
       rew [S0] gq u0 in Fq (uf0 u0)
@@ -341,13 +339,15 @@ Lemma rew_coh2Layer
          (Rs zq2 (rew [S2] pIq in aQ)) (Rr1 zq2 (rew [S2] pIq in aQ))
          (HKA6 zq2 (rew [S2] pIq in aQ)) HH6).
 Proof.
-  unfold permutahedral_coherence in Hcoh3Frame.
+  unfold permutahedral_coherence, layer_square_nat, layer_square_map,
+    f_equal_naturality, square_compose_map, square_compose, square_stack,
+    square_map, whisker_l, whisker_r in Hcoh3Frame.
   cbn [f_equal eq_sym eq_trans].
   destruct pIs, pIr, pIq, eU1, eU2, eU3.
   change (rew [S2] eq_refl in aS) with aS.
   change (rew [S2] eq_refl in aR) with aR.
   change (rew [S2] eq_refl in aQ) with aQ.
-  cbn in HH1, HH3, HH5, κ.
+  cbn in HH1, HH3, HH5, κ, Hcoh3Frame.
   rewrite 3 sigT_map_eq_refl.
   cbv beta.
   unfold rew_cohLayer_hex, sigT_trans_eq_inv_l.
@@ -407,6 +407,7 @@ Proof.
   destruct hk2, hk4.
   intros hk6 HHA Hcoh3Frame Hcoh2Painting.
   cbn in hk6, HHA, Hcoh3Frame, Hcoh2Painting |- *.
+  rewrite eq_trans_refl_l, f_equal_id in Hcoh3Frame.
   rewrite Hcoh3Frame in Hcoh2Painting.
   cbn in Hcoh2Painting.
   rewrite 2 sigT_trans_eq_refl in Hcoh2Painting.
