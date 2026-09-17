@@ -1,4 +1,5 @@
-(** Pasting squares and layer-coherence cells, with their dependent lifts. *)
+(** Pasting path comparisons, squares, and layer-coherence cells,
+    with their dependent lifts. *)
 
 Import Logic.EqNotations.
 
@@ -14,6 +15,38 @@ Definition whisker_l {X: Type} {x y z: X} (p: x = y)
 Definition whisker_r {X: Type} {x y z: X}
   {p p': x = y} (H: p = p') (q: y = z): p • q = p' • q :=
   f_equal (fun p => p • q) H.
+
+(** Paste two edge comparisons and assemble their dependent components. *)
+Definition sigT_path_paste {A: Type} {P: A -> Type}
+  {x y z: A} {u: P x} {v: P y} {w: P z}
+  {p: x = y} {q: y = z}
+  {h: rew [P] p in u = v} {k: rew [P] q in v = w}
+  {a: (x; u) = (y; v)} {b: (y; v) = (z; w)}
+  (H: a = (= p; h)) (K: b = (= q; k)):
+  a • b = (= p • q; h ⊙ k) :=
+  (whisker_r H b • whisker_l (= p; h) K)
+  • eq_trans_eq_existT_curried p h q k.
+
+(** Transport through a pasting first transports the two component paths,
+    then applies the comparison assembling their composite pair path. *)
+Lemma sigT_path_paste_dep {A: Type} {P: A -> Type}
+  (R: {x: A &T P x} -> Type)
+  {x y z: A} {u: P x} {v: P y} {w: P z}
+  {p: x = y} {q: y = z}
+  {h: rew [P] p in u = v} {k: rew [P] q in v = w}
+  {a: (x; u) = (y; v)} {b: (y; v) = (z; w)}
+  (H: a = (= p; h)) (K: b = (= q; k))
+  {r: R (x; u)} {s: R (y; v)} {t: R (z; w)}
+  (ha: rew [R] a in r = s) (hb: rew [R] b in s = t):
+  rew [fun e => rew [R] e in r = t] sigT_path_paste H K in (ha ⊙ hb) =
+  rew [fun e => rew [R] e in r = t] eq_trans_eq_existT_curried p h q k in
+    ((rew [fun e => rew [R] e in r = s] H in ha) ⊙
+     (rew [fun e => rew [R] e in s = t] K in hb)).
+Proof.
+  subst a b. unfold sigT_path_paste.
+  cbn [whisker_l whisker_r f_equal].
+  now rewrite eq_trans_refl_l.
+Defined.
 
 (** Pasting squares written [p • c = a • q], with horizontal edges [a, c]
     and vertical edges [p, q]. *)

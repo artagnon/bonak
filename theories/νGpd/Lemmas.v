@@ -32,50 +32,11 @@ Lemma eq_existT_curried_hex {A1 A2 A3 B: Type}
   • (f_equal (fun z: {a: A2 &T P2 a} => (f2 z.1; g2 z.1 z.2)) (= K2; W2)
      • (= H3'; U3')).
 Proof.
-  (** The proof below makes path composition explicit, simplifying higher
-      coherence proofs that depend on the structure of its proof term.
-      An alternative proof is:
-
-    rewrite 3 f_equal_eq_existT_curried.
-    rewrite 4 eq_trans_eq_existT_curried.
-    now exact (eq_existT_curried_eq HH HHu).
-  *)
   refine (_ • (eq_existT_curried_eq HH HHu • eq_sym _)).
-  - refine (_ • eq_trans_eq_existT_curried
-      (f_equal f1 K1) (sigT_map_eq g1 W1)
-      (H2 • f_equal f3 K3) (U2 ⊙ sigT_map_eq g3 W3)).
-    refine (whisker_r (f_equal_eq_existT_curried f1 g1 K1 W1) _ • _).
-    refine (whisker_l _ _).
-    refine (whisker_l _ (f_equal_eq_existT_curried f3 g3 K3 W3) • _).
-    now exact (eq_trans_eq_existT_curried H2 U2 (f_equal f3 K3) (sigT_map_eq g3 W3)).
-  - refine (_ • eq_trans_eq_existT_curried
-      H1' U1' (f_equal f2 K2 • H3') (sigT_map_eq g2 W2 ⊙ U3')).
-    refine (whisker_l _ _).
-    refine (whisker_r (f_equal_eq_existT_curried f2 g2 K2 W2) _ • _).
-    now exact (eq_trans_eq_existT_curried (f_equal f2 K2) (sigT_map_eq g2 W2) H3' U3').
-Defined.
-
-(** The two nested instances needed for a right-associated three-edge path. *)
-Local Lemma rew_sigT_trans_eq_rr {A: Type} {P: A -> Type}
-  {x y z w: A} {u: P x} {v: P y} {s: P z} {t: P w}
-  {p: x = y} {q: y = z} {r r': z = w} (e: r = r')
-  (U: rew [P] p in u = v) (V: rew [P] q in v = s)
-  (W: rew [P] r in s = t):
-  rew [fun r => rew [P] (p • (q • r)) in u = t] e in (U ⊙ (V ⊙ W)) =
-  U ⊙ (V ⊙ rew [fun r => rew [P] r in s = t] e in W).
-Proof.
-  now exact (map_subst (fun r (W: rew [P] r in s = t) => U ⊙ (V ⊙ W)) e W).
-Defined.
-
-Local Lemma rew_sigT_trans_eq_rl {A: Type} {P: A -> Type}
-  {x y z w: A} {u: P x} {v: P y} {s: P z} {t: P w}
-  {p: x = y} {q q': y = z} {r: z = w} (e: q = q')
-  (U: rew [P] p in u = v) (V: rew [P] q in v = s)
-  (W: rew [P] r in s = t):
-  rew [fun q => rew [P] (p • (q • r)) in u = t] e in (U ⊙ (V ⊙ W)) =
-  U ⊙ ((rew [fun q => rew [P] q in v = s] e in V) ⊙ W).
-Proof.
-  now exact (map_subst (fun q (V: rew [P] q in v = s) => U ⊙ (V ⊙ W)) e V).
+  - now exact (sigT_path_paste (f_equal_eq_existT_curried f1 g1 K1 W1)
+      (sigT_path_paste eq_refl (f_equal_eq_existT_curried f3 g3 K3 W3))).
+  - now exact (sigT_path_paste eq_refl
+      (sigT_path_paste (f_equal_eq_existT_curried f2 g2 K2 W2) eq_refl)).
 Defined.
 
 (** The hexagon first normalizes the left route, compares the resulting
@@ -165,15 +126,9 @@ Proof.
   apply (rew_conjugate (fun p: (f1 x0; g1 x0 u0) = (f3 x3; g3 x3 u3) =>
     @eq_rect _ (f1 x0; g1 x0 u0) R
       (h1 x0 u0 v0) (f3 x3; g3 x3 u3) p = h3 x3 u3 v3)) in HHv.
-  rewrite <- 3 rew_compose,
-    <- (rew_map _ (fun p => p • _) _ _), <- (rew_map _ (fun p => _ • p) _ _),
-    <- rew_compose, <- 2 (rew_map _ (fun p => _ • p) _ _),
-    <- rew_compose, <- (rew_map _ (fun p => p • _) _ _) in HHv.
-  rewrite (rew_sigT_trans_eq_l (P := R)), (rew_sigT_trans_eq_rr (P := R)),
-    (rew_sigT_trans_eq_rl (P := R)), 2 (rew_sigT_trans_eq_r (P := R)) in HHv.
+  rewrite 4 (sigT_path_paste_dep R) in HHv.
   now exact HHv.
 Defined.
-
 
 Section Coh2Layer.
 
