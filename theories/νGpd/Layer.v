@@ -170,121 +170,102 @@ Proof.
     (fun a l => nth_lmap (G a) l ω) q).
 Defined.
 
-(** [nth_dpath] of the first projection of a dependent pair path: projecting
-    a painting pair path onto a component of its layer part gives the
-    component path, up to the [rew_map] cast on the transport. *)
-Lemma nth_dpath_sigT_fst {T X: Type} {P: X -> HGpd} {rf0: arity -> T -> X}
-  {θ: arity}
-  {R: forall d, Layer (fun ω => P (rf0 ω d)) -> HGpd}
-  {d1 d2: T} {H: d1 = d2}
-  {l1: Layer (fun ω => P (rf0 ω d1))} {l2: Layer (fun ω => P (rf0 ω d2))}
-  {Hu: rew [fun d => Layer (fun ω => P (rf0 ω d))] H in l1 = l2}
-  {v1: R d1 l1} {v2: R d2 l2}
-  (Hv: rew [fun z: {d: T &T Layer (fun ω => P (rf0 ω d))} => (R z.1 z.2).(GDom)]
-    (= H; Hu) in
-    (v1: (fun z: {d: T &T Layer (fun ω => P (rf0 ω d))} => (R z.1 z.2).(GDom))
-      (d1; l1)) = v2):
-  sigT_map_eq
-    (P := fun d => {a: Layer (fun ω => P (rf0 ω d)) &T R d a})
-    (Q := fun x => (P x).(GDom)) (f := fun d => rf0 θ d)
-    (fun d X => nth X.1 θ)
-    (eq_existT_curried_dep
-       (Q := fun z: {d: T &T Layer (fun ω => P (rf0 ω d))} => (R z.1 z.2).(GDom))
-       (H := H) (Hu := Hu) (Hv := Hv))
-  = eq_sym (rew_map P (rf0 θ) H (nth l1 θ))
-    • nth_dpath (Bd := fun d ω => P (rf0 ω d)) Hu θ.
+(** Evaluating a two-map layer path gives its component path, with the
+    computation corrections at the two endpoints. *)
+Lemma sigT_map_eq_lmap2_rew_eq {T X: Type} {P: X -> HGpd} {rf0: arity -> T -> X}
+  {θ: arity} {d1 d2: T} {H: d1 = d2}
+  {B B1 B2: arity -> HGpd} {l: Layer B}
+  {F1: forall ω, B ω -> B1 ω} {F2: forall ω, B1 ω -> P (rf0 ω d1)}
+  {G1: forall ω, B ω -> B2 ω} {G2: forall ω, B2 ω -> P (rf0 ω d2)}
+  (HL: forall ω (a: B ω), rew [fun d => P (rf0 ω d)] H in F2 ω (F1 ω a)
+    = G2 ω (G1 ω a)):
+  sigT_map_eq (P := fun d => GDom (Layer (fun ω => P (rf0 ω d))))
+    (Q := fun x => GDom (P x)) (f := rf0 θ) (fun d l => nth l θ)
+    (lmap2_rew_eq (P := P) (rf0 := rf0) (E1 := H) HL)
+  = dpath_change (P := fun x => GDom (P x))
+      (nth_lmap F2 (lmap F1 l) θ • f_equal (F2 θ) (nth_lmap F1 l θ))
+      (sigT_map_eq (P := fun d => GDom (P (rf0 θ d)))
+        (Q := fun x => GDom (P x)) (f := rf0 θ) (fun _ a => a) (HL θ (nth l θ)))
+      (nth_lmap G2 (lmap G1 l) θ • f_equal (G2 θ) (nth_lmap G1 l θ)).
 Proof.
-  rewrite (sigT_map_eq_fst
-    (P := fun d => GDom (Layer (fun ω => P (rf0 ω d))))
-    (Q := fun x => GDom (P x)) (R := fun d l => GDom (R d l))
-    (f := rf0 θ) (fun d l => nth l θ) Hv).
-  now rewrite sigT_map_eq_dpath_map, nth_dpath_map.
+  rewrite sigT_map_eq_dpath_map, <- (nth_dpath_map (Bd := fun d ω => P (rf0 ω d))).
+  rewrite nth_dpath_lmap2_rew_eq, dpath_change_nest.
+  rewrite <- (sigT_map_eq_id (P := fun x => GDom (P x)) (rf0 θ)).
+  now rewrite dpath_change_map, 2 f_equal_id.
 Defined.
 
-(** Lift a component triangle through two layer maps. The component
-    computation paths cancel at the shared vertices. *)
-Lemma sigT_fst_lmap2_rew_eq {TU TL: Type}
-  {P: TL -> HGpd} {S: TU -> HGpd} {r0: arity -> TU -> TL} {rq rr: TU -> TL}
+Section Triangle.
+
+Context {T X: Type} {P: X -> HGpd} {S: T -> HGpd}
+  {rq rr: T -> X} {rf0: arity -> T -> X}
   {F: forall m, S m -> P (rq m)} {G: forall n, S n -> P (rr n)}
-  {θ: arity} {B: arity -> HGpd} {l: Layer B}
-  {d1 d2: TU} {E1: d1 = d2}
-  {m1 m2 n1 n2: arity -> TU}
-  {e2: forall ω, m1 ω = m2 ω} {e5: forall ω, n1 ω = n2 ω}
-  {pQ: forall ω, rq (m2 ω) = r0 ω d1} {pR: forall ω, rr (n2 ω) = r0 ω d2}
-  {AR: forall ω, B ω -> S (m1 ω)} {AQ: forall ω, B ω -> S (n1 ω)}
-  {HL: forall ω a,
-    rew [fun d => P (r0 ω d)] E1 in rew [P] pQ ω in F (m2 ω) (rew [S] e2 ω in AR ω a) =
-    rew [P] pR ω in G (n2 ω) (rew [S] e5 ω in AQ ω a)}
-  {R: forall d, Layer (fun ω => P (r0 ω d)) -> HGpd}
-  {v1: R d1 (lmap (fun ω a => rew [P] pQ ω in F (m2 ω) a)
-    (lmap (fun ω a => rew [S] e2 ω in AR ω a) l))}
-  {v2: R d2 (lmap (fun ω a => rew [P] pR ω in G (n2 ω) a)
-    (lmap (fun ω a => rew [S] e5 ω in AQ ω a) l))}
-  {Hv: rew [fun z: {d: TU &T Layer (fun ω => P (r0 ω d))} => GDom (R z.1 z.2)]
-    (= E1; lmap2_rew_eq (P := P) (rf0 := r0) (E1 := E1) HL) in
-    (v1: (fun z: {d: TU &T Layer (fun ω => P (r0 ω d))} => GDom (R z.1 z.2))
-      (d1; lmap (fun ω a => rew [P] pQ ω in F (m2 ω) a)
-        (lmap (fun ω a => rew [S] e2 ω in AR ω a) l))) = v2}
-  {KA: rq (m1 θ) = rr (n1 θ)}
-  (HK: rew [P] KA in F (m1 θ) (AR θ (nth l θ)) = G (n1 θ) (AQ θ (nth l θ)))
-  (κ: f_equal rq (e2 θ) • (pQ θ • f_equal (r0 θ) E1) = KA • (f_equal rr (e5 θ) • pR θ)):
-  rew [fun π => rew [P] π in F (m1 θ) (AR θ (nth l θ)) =
-    rew [P] pR θ in G (n2 θ) (rew [S] e5 θ in AQ θ (nth l θ))] κ in
-    (sigT_map_eq (P := fun x => GDom (S x)) (Q := fun x => GDom (P x)) F (p := e2 θ) eq_refl
-     ⊙[fun x => GDom (P x)] (eq_refl ⊙[fun x => GDom (P x)]
-       (eq_sym (rew_map P (r0 θ) E1 _) • HL θ (nth l θ)))) =
-    HK ⊙[fun x => GDom (P x)]
-      (sigT_map_eq (P := fun x => GDom (S x)) (Q := fun x => GDom (P x)) G (p := e5 θ) eq_refl
-       ⊙[fun x => GDom (P x)] eq_refl) ->
-  rew [fun π => rew [P] π in F (m1 θ) (AR θ (nth l θ)) =
-    nth (lmap (fun ω a => rew [P] pR ω in G (n2 ω) a)
-      (lmap (fun ω a => rew [S] e5 ω in AQ ω a) l)) θ] κ in
-    (sigT_map_eq (P := fun x => GDom (S x)) (Q := fun x => GDom (P x)) F
-       (eq_sym (nth_lmap (fun ω a => rew [S] e2 ω in AR ω a) l θ))
-     ⊙[fun x => GDom (P x)]
-       (eq_sym (nth_lmap (fun ω a => rew [P] pQ ω in F (m2 ω) a)
-          (lmap (fun ω a => rew [S] e2 ω in AR ω a) l) θ)
-        ⊙[fun x => GDom (P x)]
-          sigT_map_eq
-            (P := fun d => {a: Layer (fun ω => P (r0 ω d)) &T R d a})
-            (Q := fun x => GDom (P x)) (f := r0 θ) (fun d z => nth z.1 θ)
-            (eq_existT_curried_dep
-              (Q := fun z: {d: TU &T Layer (fun ω => P (r0 ω d))} => GDom (R z.1 z.2))
-              (H := E1) (Hu := lmap2_rew_eq (P := P) (rf0 := r0) (E1 := E1) HL)
-              (Hv := Hv)))) =
-    HK ⊙[fun x => GDom (P x)]
-      (sigT_map_eq (P := fun x => GDom (S x)) (Q := fun x => GDom (P x)) G
-         (eq_sym (nth_lmap (fun ω a => rew [S] e5 ω in AQ ω a) l θ))
-       ⊙[fun x => GDom (P x)]
-         eq_sym (nth_lmap (fun ω a => rew [P] pR ω in G (n2 ω) a)
-           (lmap (fun ω a => rew [S] e5 ω in AQ ω a) l) θ)).
+  {d1 d2: T} {E1: d1 = d2}
+  {m1 m2 n1 n2: arity -> T}
+  {e2: forall θ, m1 θ = m2 θ} {e5: forall θ, n1 θ = n2 θ}
+  {pQ: forall θ, rq (m2 θ) = rf0 θ d1}
+  {pR: forall θ, rr (n2 θ) = rf0 θ d2}
+  {B: arity -> HGpd} {l: Layer B}
+  {aL: forall θ, B θ -> S (m1 θ)} {aR: forall θ, B θ -> S (n1 θ)}.
+
+Let F1 θ a := rew [S] e2 θ in aL θ a.
+Let F2 θ b := rew [P] pQ θ in F (m2 θ) b.
+Let G1 θ a := rew [S] e5 θ in aR θ a.
+Let G2 θ b := rew [P] pR θ in G (n2 θ) b.
+
+Context {HL: forall θ a,
+  rew [fun d => P (rf0 θ d)] E1 in F2 θ (F1 θ a) = G2 θ (G1 θ a)}
+  {θ: arity} {KA: rq (m1 θ) = rr (n1 θ)}
+  {HK: rew [P] KA in F (m1 θ) (aL θ (nth l θ)) = G (n1 θ) (aR θ (nth l θ))}
+  {κ: f_equal rq (e2 θ) • (pQ θ • f_equal (rf0 θ) E1) =
+    KA • (f_equal rr (e5 θ) • pR θ)}.
+
+Definition lmap2_triangle_pointwise: Type :=
+  rew [fun π => rew [P] π in F (m1 θ) (aL θ (nth l θ)) =
+    G2 θ (G1 θ (nth l θ))] κ in
+  (sigT_map_eq (Q := fun x => GDom (P x)) F (p := e2 θ) eq_refl
+   ⊙[fun x => GDom (P x)] (eq_refl ⊙[fun x => GDom (P x)]
+     sigT_map_eq (P := fun d => GDom (P (rf0 θ d)))
+       (Q := fun x => GDom (P x)) (f := rf0 θ) (fun _ a => a) (HL θ (nth l θ)))) =
+  HK ⊙[fun x => GDom (P x)]
+    (sigT_map_eq (Q := fun x => GDom (P x)) G (p := e5 θ) eq_refl
+     ⊙[fun x => GDom (P x)] eq_refl).
+
+(** Evaluating a layer triangle cancels the computation corrections at
+    its shared vertices, leaving the pointwise triangle. *)
+Lemma lmap2_triangle_rew_eq:
+  lmap2_triangle_pointwise ->
+  rew [fun π => rew [P] π in F (m1 θ) (aL θ (nth l θ)) =
+    nth (lmap G2 (lmap G1 l)) θ] κ in
+  (sigT_map_eq (Q := fun x => GDom (P x)) F (eq_sym (nth_lmap F1 l θ))
+   ⊙[fun x => GDom (P x)]
+     (eq_sym (nth_lmap F2 (lmap F1 l) θ)
+      ⊙[fun x => GDom (P x)]
+        sigT_map_eq (P := fun d => GDom (Layer (fun ω => P (rf0 ω d))))
+          (Q := fun x => GDom (P x)) (f := rf0 θ) (fun d u => nth u θ)
+          (lmap2_rew_eq (P := P) (rf0 := rf0) (E1 := E1) HL))) =
+  HK ⊙[fun x => GDom (P x)]
+    (sigT_map_eq (Q := fun x => GDom (P x)) G (eq_sym (nth_lmap G1 l θ))
+     ⊙[fun x => GDom (P x)] eq_sym (nth_lmap G2 (lmap G1 l) θ)).
 Proof.
-  intro HC.
-  rewrite (nth_dpath_sigT_fst (P := P) (rf0 := r0) Hv).
-  cbn [projT1].
-  clear Hv v1 v2 R.
-  set (F1 := fun ω a => rew [S] e2 ω in AR ω a) in *.
-  set (G1 := fun ω a => rew [S] e5 ω in AQ ω a) in *.
-  set (F2 := fun ω a => rew [P] pQ ω in F (m2 ω) a) in *.
-  set (G2 := fun ω a => rew [P] pR ω in G (n2 ω) a) in *.
-  rewrite <- (sigT_map_eq_id (P := fun x => GDom (P x)) (r0 θ)).
-  rewrite nth_dpath_lmap2_rew_eq, dpath_change_nest.
+  intro Hpointwise.
+  rewrite (sigT_map_eq_lmap2_rew_eq (P := P) (rf0 := rf0) (θ := θ) (l := l)
+    (F1 := F1) (F2 := F2) (G1 := G1) (G2 := G2) HL).
   rewrite <- (dpath_change_refl (P := fun x => GDom (S x)) (e2 θ)
-    (AR θ (nth l θ)) (nth_lmap F1 l θ)).
+    (aL θ (nth l θ)) (nth_lmap F1 l θ)).
   rewrite <- (dpath_change_refl (P := fun x => GDom (S x)) (e5 θ)
-    (AQ θ (nth l θ)) (nth_lmap G1 l θ)).
+    (aR θ (nth l θ)) (nth_lmap G1 l θ)).
   rewrite <- (dpath_change_transport (P := fun x => GDom (P x)) (pQ θ)
     (f_equal (F (m2 θ)) (nth_lmap F1 l θ)) (nth_lmap F2 (lmap F1 l) θ)).
   rewrite <- (dpath_change_transport (P := fun x => GDom (P x)) (pR θ)
     (f_equal (G (n2 θ)) (nth_lmap G1 l θ)) (nth_lmap G2 (lmap G1 l) θ)).
-  rewrite 3 dpath_change_map, 2 f_equal_id, 2 f_equal_compose.
+  rewrite 2 dpath_change_map, 2 f_equal_compose.
   cbn [f_equal].
   rewrite <- (dpath_change_id (P := fun x => GDom (P x)) HK).
-  (** Only the two exterior endpoint corrections survive the pasting. *)
   rewrite 4 dpath_change_comp.
-  apply (dpath_change_cell (P := fun x => GDom (P x))).
-  now rewrite (sigT_map_eq_id (P := fun x => GDom (P x)) (r0 θ)).
+  now apply (dpath_change_cell (P := fun x => GDom (P x))).
 Defined.
+
+End Triangle.
 
 (** [ext2] restated over [nth_dpath]: two parallel dependent layer paths are
     equal as soon as their components are. *)
