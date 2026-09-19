@@ -3,13 +3,30 @@
 Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import HSet Notation.
+From Bonak Require Import SigT Notation.
 
-Lemma rew_permute_ll_hset: forall (A: Type) (P Q: A -> HSet) (x y: A)
-  (H: forall z: A, P z = Q z) (H': x = y) (a: P x),
-  rew [Dom] H y in rew [P] H' in a = rew [Q] H' in rew [Dom] H x in a.
+(** Transport along a pointwise equality commutes with transport in the
+    indexing type, for any family [El] over the common codomain. *)
+Lemma rew_permute_ll {S: Type} (El: S -> Type)
+  (A: Type) (P Q: A -> S) (x y: A)
+  (H: forall z: A, P z = Q z) (H': x = y) (a: El (P x)):
+  rew [El] H y in rew [fun z => El (P z)] H' in a =
+  rew [fun z => El (Q z)] H' in rew [El] H x in a.
 Proof.
   now destruct H'.
+Defined.
+
+(** Transport along [p • (h • eq_sym q)] is equivalent to transporting
+    both endpoints along [p] and [q] before comparing them over [h]. *)
+Lemma rew_conjugate {A: Type} (P: A -> Type)
+  {x x' y y': A} (p: x = x') (h: x' = y') (q: y = y')
+  (u: P x) (v: P y):
+  rew [P] (p • (h • eq_sym q)) in u = v ->
+  rew [P] h in rew [P] p in u = rew [P] q in v.
+Proof.
+  intro H; rewrite <- 2 rew_compose in H.
+  refine (eq_sym (rew_opp_r P q _) • _).
+  now exact (f_equal (fun v => rew [P] q in v) H).
 Defined.
 
 Lemma rew_swap: forall A (P: A -> Type) a b (H: a = b) (x: P a) (y: P b),
@@ -119,14 +136,15 @@ Qed.
 
 (** Fused transport-chain lemmas for layer coherence proofs
 
-    [rew_cohLayer<NM>] closes a layer coherence goal after a lemma from
-    [Layer.v] proves the pointwise equality. It equates two transport chains,
-    N on the left-hand side and M on the right, whose starting elements are
-    identified by the painting coherence. A call site supplies only the two
-    premises: the painting coherence and the 2-dimensional frame coherence
-    ([UIP] in HSet development). *)
+    [rew_cohLayer_hex] equates two chains of three transport steps, whose
+    starting elements are identified by the painting coherence. The three
+    square variants [rew_cohLayer_sq_13], [rew_cohLayer_sq_31], and
+    [rew_cohLayer_sq_22] split the four transport steps between the two
+    sides as 1 = 3, 3 = 1, and 2 = 2, respectively.
+    A call site supplies only the two premises: the painting coherence and
+    the 2-dimensional frame coherence ([UIP] in the HSet development). *)
 
-Lemma rew_cohLayer33 {T1 T2 T3 X: Type} {P: X -> Type}
+Lemma rew_cohLayer_hex {T1 T2 T3 X: Type} {P: X -> Type}
   {S2: T2 -> Type} {S3: T3 -> Type}
   {rf0: T1 -> X} {rfF: T2 -> X} {rfG: T3 -> X}
   {F: forall m, S2 m -> P (rfF m)}
@@ -145,17 +163,16 @@ Lemma rew_cohLayer33 {T1 T2 T3 X: Type} {P: X -> Type}
   = rew [P] D1 in G n2 (rew [S3] D2 in aR).
 Proof.
   intros HC Hpath.
-  rewrite <- (map_subst F C2 aL), <- (map_subst G D2 aR), <- HC.
-  destruct E1, C2, D2. cbn in Hpath |- *.
-  rewrite rew_compose.
-  rewrite 2 eq_trans_refl_l in Hpath.
-  now rewrite Hpath.
+  refine (rew_map P rf0 E1 _ • _).
+  now exact (sigT_square_fill (eq_sym (eq_trans_assoc _ _ _) • Hpath)
+    (sigT_map_eq (Q := P) F (p := C2) (u := aL) eq_refl ⊙ eq_refl)
+    HC (sigT_map_eq (Q := P) G (p := D2) (u := aR) eq_refl ⊙ eq_refl)).
 Defined.
 
 (** The [rew_cohLayer*] lemmas for square-shaped coherences can be considered an
     instance of the hexagon-shaped one, with 2 arrows trivial. *)
 
-Lemma rew_cohLayer13 {T1 T3 X: Type} {P: X -> Type} {S3: T3 -> Type}
+Lemma rew_cohLayer_sq_13 {T1 T3 X: Type} {P: X -> Type} {S3: T3 -> Type}
   {rf0: T1 -> X} {rfG: T3 -> X}
   {G: forall n, S3 n -> P (rfG n)}
   {d1 d2: T1} {E1: d1 = d2}
@@ -169,14 +186,12 @@ Lemma rew_cohLayer13 {T1 T3 X: Type} {P: X -> Type} {S3: T3 -> Type}
   = rew [P] D1 in G n2 (rew [S3] D2 in aR).
 Proof.
   intros HC Hpath.
-  eapply (rew_cohLayer33 (P := P) (S2 := P) (rf0 := rf0)
-    (rfF := fun x => x) (F := fun _ a => a)
-    (C2 := eq_refl) (C1 := eq_refl) (K := K) (aL := aL)).
-  now exact HC.
-  now rewrite 2 eq_trans_refl_l.
+  refine (rew_map P rf0 E1 _ • _).
+  now exact (sigT_square_fill (eq_trans_refl_l _ • Hpath) eq_refl
+    HC (sigT_map_eq (Q := P) G (p := D2) (u := aR) eq_refl ⊙ eq_refl)).
 Defined.
 
-Lemma rew_cohLayer22 {T1 T3 X: Type} {P: X -> Type} {S3: T3 -> Type}
+Lemma rew_cohLayer_sq_22 {T1 T3 X: Type} {P: X -> Type} {S3: T3 -> Type}
   {rf0: T1 -> X} {rfG: T3 -> X}
   {G: forall n, S3 n -> P (rfG n)}
   {d1 d2: T1} {E1: d1 = d2}
@@ -190,14 +205,12 @@ Lemma rew_cohLayer22 {T1 T3 X: Type} {P: X -> Type} {S3: T3 -> Type}
   = rew [P] D1 in G n2 (rew [S3] D2 in aR).
 Proof.
   intros HC Hpath.
-  eapply (rew_cohLayer33 (P := P) (S2 := P) (rf0 := rf0)
-    (rfF := fun x => x) (F := fun _ a => a)
-    (C2 := eq_refl) (C1 := E0) (K := eq_refl) (aL := aL)).
-  now exact HC.
-  now rewrite 2 eq_trans_refl_l.
+  refine (rew_map P rf0 E1 _ • _).
+  now exact (sigT_square_fill (Hpath • eq_sym (eq_trans_refl_l _)) eq_refl
+    HC (sigT_map_eq (Q := P) G (p := D2) (u := aR) eq_refl ⊙ eq_refl)).
 Defined.
 
-Lemma rew_cohLayer31 {T1 T2 X: Type} {P: X -> Type} {S2: T2 -> Type}
+Lemma rew_cohLayer_sq_31 {T1 T2 X: Type} {P: X -> Type} {S2: T2 -> Type}
   {rf0: T1 -> X} {rfF: T2 -> X}
   {F: forall m, S2 m -> P (rfF m)}
   {d1 d2: T1} {E1: d1 = d2}
@@ -211,9 +224,8 @@ Lemma rew_cohLayer31 {T1 T2 X: Type} {P: X -> Type} {S2: T2 -> Type}
   = rew [P] D1 in aR.
 Proof.
   intros HC Hpath.
-  eapply (rew_cohLayer33 (P := P) (S3 := P) (rf0 := rf0)
-    (rfF := rfF) (rfG := fun x => x) (G := fun _ a => a)
-    (m1 := m1) (D2 := eq_refl) (D1 := D1) (K := eq_refl) (aR := aR)).
-  now exact HC.
-  now rewrite 2 eq_trans_refl_l.
+  refine (rew_map P rf0 E1 _ • _).
+  now exact (sigT_square_fill
+    (eq_sym (eq_trans_assoc _ _ _) • (Hpath • eq_sym (eq_trans_refl_l _)))
+    (sigT_map_eq (Q := P) F (p := C2) (u := aL) eq_refl ⊙ eq_refl) HC eq_refl).
 Defined.

@@ -14,6 +14,7 @@ theories/νSet/νSet.v
 theories/νSet/νDgnSet.v
 theories/νGpd/HGpd.v
 theories/νGpd/Layer.v
+theories/νGpd/Pasting.v
 theories/νGpd/Lemmas.v
 theories/νGpd/νGpd.v
 theories/Equiv/PresheafEquiv.v

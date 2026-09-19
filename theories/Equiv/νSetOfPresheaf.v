@@ -292,14 +292,14 @@ Definition mkPshFramesNext {m p k} (PC: PshDepsCohs m p k)
     (mkPshFrames PC.(_pshDeps))
     (mkPshPaintings PC.(_pshExtraDeps))).(PshFramesDef) Q.
 
-(** The next-level restr coherences
+(** The next-level restriction coherences
 
     In the layer case ([mkPshRestrLayer]), componentwise equality ([ext])
-    reduces the goal to a transport chain. The restr layer of the presheaf
-    layer is the presheaf painting at the
-    exchanged face pair — [FaceCoh] on the presheaf side matches the stored
+    reduces the goal to a transport chain. Restricting the presheaf layer
+    gives the presheaf painting at the exchanged face pair.
+    [FaceCoh] on the presheaf side matches the stored
     coherence [_pCohs] on the construction side, and the two transport
-    chains collapse by [UIP] of the frame ([rew_cohLayer33], as in
+    chains collapse by [UIP] of the frame ([rew_cohLayer_hex], as in
     [mkCohLayer]). *)
 
 Lemma mkPshRestrLayer {m p k} (PC: PshDepsCohs m p.+1 k)
@@ -328,7 +328,7 @@ Proof.
       (⇓ (⇑ (proj1PshDepsCohs PC).(_pshDeps).(_pshBound))) ω d)).
   rewrite <- (f_equal_dep _ PC.(_pshDeps).(_pshPaintings).2
     (psh.(FaceCoh) m (q + p) (⇓ Hqp) p (leR_add_l q) ε ω d)).
-  eapply (rew_cohLayer33
+  eapply (rew_cohLayer_hex
     (P := fun x => PC.(_pshDeps).(_pdeps).(_paintings).2 x)
     (rf0 := fun x => PC.(_pshDeps).(_pdeps).(_restrFrames).2 0 leR_O ω x)
     (rfF := fun x => PC.(_pshDeps).(_pshFrames).2 x)
