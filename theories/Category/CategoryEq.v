@@ -34,3 +34,23 @@ Proof.
     apply functional_extensionality_dep; intro g. now apply (D.(CHom)). }
   now destruct ei, ec.
 Qed.
+
+(** Functor data over a fixed map on objects. *)
+
+Definition FunctorOn {C D: Category} (Fo: C.(CObj) -> D.(CObj)): Type :=
+  {Fh: forall a b, C.(CHom) a b -> D.(CHom) (Fo a) (Fo b) &T
+   {Fi: forall a, Fh a a (C.(cid) a) = D.(cid) (Fo a) &T
+    forall a b c (f: C.(CHom) a b) (g: C.(CHom) b c),
+      Fh a c (f ⨟ g) = Fh a b f ⨟ Fh b c g}}.
+
+Definition ofFunctorOn {C D: Category} {Fo: C.(CObj) -> D.(CObj)}
+  (z: FunctorOn Fo): Functor C D := {|
+  fobj := Fo;
+  fhom a b f := z.1 a b f;
+  fid a := z.2.1 a;
+  fcomp a b c f g := z.2.2 a b c f g;
+|}.
+
+Definition toFunctorOn {C D: Category} (F: Functor C D): FunctorOn F.(fobj) :=
+  (fun a b f => F.(fhom) f;
+   (fun a => F.(fid) a; fun a b c f g => F.(fcomp) f g)).

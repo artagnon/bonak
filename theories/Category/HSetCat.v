@@ -18,3 +18,13 @@ Definition HSetCat: Category := {|
   cassoc A B C D f g h := eq_refl;
 |}.
 
+(** Functor laws evaluated at an element of the source h-set. *)
+
+Lemma fhomCompPt {C: Category} (F: Functor C HSetCat) {a b c}
+  (f: C.(CHom) a b) (g: C.(CHom) b c) (x: F.(fobj) a):
+  F.(fhom) g (F.(fhom) f x) = F.(fhom) (f ⨟ g) x.
+Proof. exact (eq_sym (f_equal (fun h => h x) (F.(fcomp) f g))). Qed.
+
+Lemma fhomIdPt {C: Category} (F: Functor C HSetCat) a (x: F.(fobj) a):
+  F.(fhom) (C.(cid) a) x = x.
+Proof. exact (f_equal (fun h => h x) (F.(fid) a)). Qed.

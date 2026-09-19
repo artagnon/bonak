@@ -63,3 +63,10 @@ Definition compFunctor {C D E} (F: Functor C D) (G: Functor D E):
   fcomp a b c f g :=
     f_equal G.(fhom) (F.(fcomp) f g) • G.(fcomp) (F.(fhom) f) (F.(fhom) g);
 |}.
+
+Infix "⨟ᶠ" := compFunctor (at level 40, left associativity).
+
+Definition opFunctor {C D: Category} (F: Functor C D): Functor (Op C) (Op D) :=
+  Build_Functor (Op C) (Op D) F.(fobj)
+    (fun a b f => F.(fhom) f) (fun a => F.(fid) a)
+    (fun a b c f g => F.(fcomp) g f).
