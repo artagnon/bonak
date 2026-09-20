@@ -1,5 +1,5 @@
 \documentclass{art.cls/art}
-\usepackage{amssymb, mathrsfs, wasysym, tikz, tikz-cd, lmodern, mathpazo, anyfontsize, xargs, environ, multirow, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs, fontawesome5}
+\usepackage{wasysym, tikz, tikz-cd, anyfontsize, xargs, environ, multirow, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs, fontawesome5}
 \usepackage[utf8]{inputenc}
 \usepackage[OT1]{fontenc}
 \usepackage[prefix=bonak]{art.cls/xkeymask}
@@ -294,14 +294,24 @@
 % and { ... } if in mask
 \newcommandx*{\eqnarg}[3]{\ifinmask[bonak]{#1}[#2]{\{#2:#3\}}{(#2:#3)}}
 
-\title{An indexed construction of degeneracies in simplicial and cubical sets}
-
 \begin{document}
-\author{Hugo Herbelin}{Université Paris Cité, Inria, CNRS, IRIF, Paris}{Hugo.Herbelin@inria.fr}{}{}
-\author{Valerii Huhnin}{Université Paris Cité}{valerii.huhnin@etu.u-paris.fr}{}{}
-\author{Alice Laroche}{Université Paris Cité}{alice.laroche@etu.u-paris.fr}{}{}
-\author{Ramkumar Ramachandra}{Unaffiliated}{r@artagnon.com}{}{}
+\title{An indexed construction of degeneracies in simplicial and cubical sets}
+\author{
+  Hugo Herbelin\\
+  Université Paris Cité, Inria, CNRS, IRIF, Paris \\
+  \texttt{Hugo.Herbelin@inria.fr} \and
+  Valerii Huhnin \\
+  Université Paris Cité \\
+  \texttt{valerii.huhnin@etu.u-paris.fr} \and
+  Alice Laroche \\
+  Université Paris Cité \\
+  \texttt{alice.laroche@etu.u-paris.fr} \and
+  Ramkumar Ramachandra \\
+  Unaffiliated \\
+  \texttt{r@artagnon.com}
+}
 \maketitle
+
 \begin{abstract}
   In an exploration of building simplicial and cubical set models in indexed form, we extend a previous construction of semi-simplicial and semi-cubical sets with degeneracies. The degeneracies we construct can be characterized as adding a new dimension, and coincide with usual degeneracies in the cubical set case. As necessitated by the construction, we refined the degeneracies and coherence conditions outlined in Grandis-Mauri~\cite{grandis03} to make it step-wise. Our work includes a mechanically checked formalization in Rocq.
 \end{abstract}
@@ -339,18 +349,18 @@ Degeneracies can be added to the $\nu$-semi-shape category in different ways. We
 \begin{definition}[$\hexagon_d$]
   The $\nu$-shape category extends the $\nu$-semi-shape category with degeneracies. Write $|w|_{\kstar}$ for the number of stars in a word $w$. Its objects, morphisms, and identities are:
   \begin{align*}
-    \Obj_{\hexagon_d}       & := \Nat \\
+    \Obj_{\hexagon_d}      & := \Nat                                  \\
     \Hom_{\hexagon_d}(p,n) & := \{(r,f) \in \{\kstar,\bullet\}^p
-      \times (\nu \sqcup \{\kstar\})^n \mid |r|_{\kstar}=|f|_{\kstar}\} \\
+    \times (\nu \sqcup \{\kstar\})^n \mid |r|_{\kstar}=|f|_{\kstar}\} \\
     \id_n                  & := (\kstar^n,\kstar^n).
   \end{align*}
   In the selection mask $r$, a star retains an input coordinate and a bullet discards it. To define composition, first normalize a face word followed by a selection mask. For words $f$ and $s$ of the same length, with $k$ and $l$ stars respectively, define $\mathsf{cross}(f,s)\in\Hom_{\hexagon_d}(k,l)$ recursively by
   \begin{align*}
-    \mathsf{cross}(\epsilon,\epsilon) & := (\epsilon,\epsilon), \\
-    \mathsf{cross}(a f,\bullet s)     & := (t,h), \\
-    \mathsf{cross}(a f,\kstar s)      & := (t,a h), \\
-    \mathsf{cross}(\kstar f,\bullet s)& := (\bullet t,h), \\
-    \mathsf{cross}(\kstar f,\kstar s) & := (\kstar t,\kstar h),
+    \mathsf{cross}(\epsilon,\epsilon)  & := (\epsilon,\epsilon), \\
+    \mathsf{cross}(a f,\bullet s)      & := (t,h),               \\
+    \mathsf{cross}(a f,\kstar s)       & := (t,a h),             \\
+    \mathsf{cross}(\kstar f,\bullet s) & := (\bullet t,h),       \\
+    \mathsf{cross}(\kstar f,\kstar s)  & := (\kstar t,\kstar h),
   \end{align*}
   where $\epsilon$ is the empty word, $a\in\nu$, and $(t,h)=\mathsf{cross}(f,s)$ in each recursive clause. Thus a discarded constant disappears, a retained constant remains in the output word, and an input variable is retained exactly when the mask retains its position.
 
