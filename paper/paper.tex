@@ -1,5 +1,5 @@
 \documentclass{art.cls/art}
-\usepackage{wasysym, tikz, tikz-cd, anyfontsize, xargs, environ, multirow, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs, fontawesome5}
+\usepackage{wasysym, tikz, tikz-cd, anyfontsize, xargs, environ, multirow, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs, fontawesome5, cases}
 \usepackage[utf8]{inputenc}
 \usepackage[OT1]{fontenc}
 \usepackage[prefix=bonak]{art.cls/xkeymask}
@@ -734,20 +734,22 @@ is a full frame.
 
 \subsubsection{Coherence conditions}
 
+The face and degeneracy relations of Grandis--Mauri~\cite{grandis03} describe how two successive operations commute, and when a face cancels a degeneracy. In their $\delta/\varepsilon$ notation, the relations on cells are as follows, with $\delta$ denoting restriction, $\varepsilon$ denoting degeneracy, and composition read from right to left. Dimension indices are suppressed:
+
 \begin{equation*}
   \begin{array}{lccr}
     \delta^\beta_j \delta^\alpha_i & = & \delta^\alpha_{i + 1} \delta^\beta_j & j \leq i \\
     \varepsilon_i \varepsilon_j    & = & \varepsilon_j \varepsilon_{i + 1}    & j \leq i \\
     \epsilon_i \delta^\alpha_i     & = &
     \begin{cases}
-      \delta^\alpha_{i - 1} \varepsilon_j & j < i \\
-      1                                   & j = i \\
-      \delta^\alpha_i \varepsilon_{j - 1} & j > i \\
+      \delta^\alpha_{i - 1} \varepsilon_j & j < i \text{\qquad(inf)} \\
+      1                                   & j = i \text{\qquad(id)}  \\
+      \delta^\alpha_i \varepsilon_{j - 1} & j > i \text{\qquad(sup)} \\
     \end{cases}
   \end{array}
 \end{equation*}
 
-Among restriction-degeneracy coherecnces, we refer to the equation eps-eps-inf as restr-refl-inf, the equation eps-eps-id as restr-refl-id and the equation eps-eps-sup as restr-refl-sup.
+The first two equations express restriction-restriction and degeneracy-degeneracy coherence, respectively. We call the three restriction-degeneracy coherences $\mathsf{inf}$, $\mathsf{id}$ and $\mathsf{sup}$, according to whether the restriction is before, at, or after the inserted direction.
 
 In our construction, the restr-refl-sup coherence gets split into two equations, one for refl-above and one for refl-below. The refl-refl coherence gets split into three equations, one for below-below, one for below-above and one for above-above.
 
@@ -784,8 +786,7 @@ other directions to be well-typed:
   \cohzfour  \\
 \end{align*}
 
-Additionally, degeneracies in cubical sets are assumed to be a subject of these
-additional degeneracy-degenracy coherences, which are an additonal structure someone can impose, and are not intrinsically required for the
+Additionally, degeneracies in cubical sets are assumed to be a subject of these additional degeneracy-degenracy coherences, which are an additonal structure someone can impose, and are not intrinsically required for the
 
 \begin{align*}
   \cohzfive  \\
