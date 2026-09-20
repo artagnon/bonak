@@ -340,22 +340,33 @@ The semi-simplicial and semi-cubical categories are instances of the more genera
 
 In particular $1$-semi-shape category presents the semi-simplicial category while the $2$-semi-shape category presents the semi-cubical category (note that this also relates to unary and binary parametricity~\cite{bernardy15, reynolds83}).
 
-Degeneracies can be added to the $\nu$-semi-shape category in different ways. We here focus on cubical-style degeneracies as in Grandis~\cite{grandis03} and their adaptation to the unary case as in \cite{bernardy15}. A morphism from $p$ to $n$ in the $\nu$-shape category is the composition of a $q$-long degeneracy from $p$ to $p-q$ followed by a face map from $p-q$ to $n$.
+Degeneracies can be added to the $\nu$-semi-shape category in different ways. We here focus on cubical-style degeneracies as in Grandis~\cite{grandis03} and their adaptation to the unary case as in \cite{bernardy15}. A morphism from $p$ to $n$ in the $\nu$-shape category first discards $p-k$ input coordinates, giving a map from $p$ to $k$, then applies a face map from $k$ to $n$.
 
 \begin{definition}[$\hexagon_d$]
-  The definition of $\nu$-shape category extends the $\nu$-shape category with degeneracies:
+  The $\nu$-shape category extends the $\nu$-semi-shape category with degeneracies. Write $|w|_{\kstar}$ for the number of stars in a word $w$. Its objects, morphisms, and identities are:
   \begin{align*}
-    \Obj_{\hexagon_d}                             & := \Nat                                                                                                                                                                         \\
-    \Hom_{\hexagon_d}(p, n)                       & := \{(r,f) \mid \exists q\,(r \in \{\kstar,\bullet\}^p \wedge f \in (\nu \sqcup \{\kstar\})^n \wedge \text{number of $\kstar$ in $r$} = \text{number of $\kstar$ in $f$} = q)\} \\
-    (\epsilon,g) \circ_{\hexagon_d} (r,f)         & := (r,g \circ_{\hexagon} )f)                                                                                                                                                    \\
-    (s,g) \circ_{\hexagon_d} (r,\epsilon)         & := \text{impossible}                                                                                                                                                            \\
-    (\kstar s,g) \circ_{\hexagon_d} (r,\kstar f)  & := (s,g) \circ_{\hexagon_d} (r,f)                                                                                                                                               \\
-    (\bullet s,g) \circ_{\hexagon_d} (r,a f)      & := (s,g) \circ_{\hexagon_d} (r,f), \text{where $a \in \nu$}                                                                                                                     \\
-    (\kstar s,g) \circ_{\hexagon_d} (r,a f)       & := (\kstar t,h) \text{where $(t,h) = (s,g) \circ_{\hexagon_d} (r,f)
-                                                                      $}                                                                                                              \\
-    (\bullet s,g) \circ_{\hexagon_d} (r,\kstar f) & := (t,\kstar h) \text{where $(t,h) = (s,g) \circ_{\hexagon_d} (r,f)$}                                                                                                           \\
-    \id                                           & := (\kstar \ldots \kstar, \kstar \ldots \kstar) \text{ $n$ times each for $\id \in \Hom_{\hexagon_d}(n, n)$}
+    \Obj_{\hexagon_d}       & := \Nat \\
+    \Hom_{\hexagon_d}(p,n) & := \{(r,f) \in \{\kstar,\bullet\}^p
+      \times (\nu \sqcup \{\kstar\})^n \mid |r|_{\kstar}=|f|_{\kstar}\} \\
+    \id_n                  & := (\kstar^n,\kstar^n).
   \end{align*}
+  In the selection mask $r$, a star retains an input coordinate and a bullet discards it. To define composition, first normalize a face word followed by a selection mask. For words $f$ and $s$ of the same length, with $k$ and $l$ stars respectively, define $\mathsf{cross}(f,s)\in\Hom_{\hexagon_d}(k,l)$ recursively by
+  \begin{align*}
+    \mathsf{cross}(\epsilon,\epsilon) & := (\epsilon,\epsilon), \\
+    \mathsf{cross}(a f,\bullet s)     & := (t,h), \\
+    \mathsf{cross}(a f,\kstar s)      & := (t,a h), \\
+    \mathsf{cross}(\kstar f,\bullet s)& := (\bullet t,h), \\
+    \mathsf{cross}(\kstar f,\kstar s) & := (\kstar t,\kstar h),
+  \end{align*}
+  where $\epsilon$ is the empty word, $a\in\nu$, and $(t,h)=\mathsf{cross}(f,s)$ in each recursive clause. Thus a discarded constant disappears, a retained constant remains in the output word, and an input variable is retained exactly when the mask retains its position.
+
+  For $(r,f):p\to m$ and $(s,g):m\to n$, composition is
+  \[
+    (s,g)\circ_{\hexagon_d}(r,f)
+    := (r\circ_{\hexagon_1}t,\;g\circ_{\hexagon}h)
+    \quad\text{where }(t,h)=\mathsf{cross}(f,s).
+  \]
+  Here $\circ_{\hexagon_1}$ is the semi-shape word composition with $\bullet$ as its sole label: it substitutes $t$ into the stars of $r$. The other component substitutes $h$ into the stars of $g$. These operations satisfy the identity and associativity laws.
 \end{definition}
 
 \subsection{Fibred-indexed correspondence}
