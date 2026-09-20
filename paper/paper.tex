@@ -1,6 +1,5 @@
-\documentclass{lipics-v2021}
-
-\usepackage{amsmath, amssymb, mathrsfs, wasysym, tikz, tikz-cd, lmodern, mathpazo, anyfontsize, xargs, environ, multirow, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
+\documentclass{art.cls/art}
+\usepackage{amssymb, mathrsfs, wasysym, tikz, tikz-cd, lmodern, mathpazo, anyfontsize, xargs, environ, multirow, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs, fontawesome5}
 \usepackage[utf8]{inputenc}
 \usepackage[OT1]{fontenc}
 \usepackage[prefix=bonak]{art.cls/xkeymask}
@@ -296,17 +295,12 @@
 \newcommandx*{\eqnarg}[3]{\ifinmask[bonak]{#1}[#2]{\{#2:#3\}}{(#2:#3)}}
 
 \title{An indexed construction of degeneracies in simplicial and cubical sets}
+
+\begin{document}
 \author{Hugo Herbelin}{Université Paris Cité, Inria, CNRS, IRIF, Paris}{Hugo.Herbelin@inria.fr}{}{}
 \author{Valerii Huhnin}{Université Paris Cité}{valerii.huhnin@etu.u-paris.fr}{}{}
 \author{Alice Laroche}{Université Paris Cité}{alice.laroche@etu.u-paris.fr}{}{}
 \author{Ramkumar Ramachandra}{Unaffiliated}{r@artagnon.com}{}{}
-\authorrunning{H. Herbelin, V. Huhnin, A. Laroche, and R. Ramachandra}
-\keywords{Parametricity, Simplicial sets, Cubical sets, Formalization, Rocq, Indexed-fibred correspondence}
-\ccsdesc{10003752.10003790.10011740}
-\Copyright{Hugo Herbelin, Valerii Huhnin, Alice Laroche, Ramkumar Ramachandra}
-%\nolinenumbers
-
-\begin{document}
 \maketitle
 \begin{abstract}
   In an exploration of building simplicial and cubical set models in indexed form, we extend a previous construction of semi-simplicial and semi-cubical sets with degeneracies. The degeneracies we construct can be characterized as adding a new dimension, and coincide with usual degeneracies in the cubical set case. As necessitated by the construction, we refined the degeneracies and coherence conditions outlined in Grandis-Mauri~\cite{grandis03} to make it step-wise. Our work includes a mechanically checked formalization in Rocq.
@@ -594,20 +588,45 @@ In this paper, we focus on an indexed definition of simplicial sets equipped wit
   \end{tabularx}
 \end{table}
 
-The added degeneracy is \emph{parametric}: in the binary case, it gives a standard cubical degeneracy; in the unary case, it gives a ParamTT-like degeneracy and \emph{not} a simplicial degeneracy.
+\paragraph{Parametric degeneracies vs connective degeneracies}
 
-First, our degeneracy implies a distinguished point $r_{-1}(a)$ for any $a:X_{-1}$. Then:
+Despite a common terminology, degeneracies in simplicial sets~\cite{} and in cubical sets~\cite{grandis03} are of a different nature. Degeneracies in cubical sets insert a new axis while degeneracies in simplicial sets duplicate an existing axis. In particular, degenerating a $n$-shape $c$ in a cubical set is about \emph{inserting a new axis} $i \leq n$ (counting axes of a $n$-shape from $0$ to $n-1$), yielding a $(n+1)$-shape lying on $c$ in the $i$-th axis and lying on the degeneracy of the $j$-th axis of $c$ in the $j$-th axis (resp. $(j-1)$-th axis) for $j < i$ (resp $j > i$). In the simplicial case, the degeneracy process is better understood by reasoning in augmented simplicial sets where the dimension starts at $-1$: degenerating a $n$-shape $c$ in simplicial sets is about \emph{duplicating an existing axis} $i < n$ (thus requiring $n$ to be at least $0$), yielding a $(n+1)$-shape lying on $c$ in both the $i$ and $i+1$ axes, while it lies again on the degeneracy of the $j$-th axis (resp. $(j-1)$-th) of $c$ in the $j$-th axis for $j < i$ (resp. $j > i+1$).
+
+Let us call \emph{parametric degeneracy} the kind of degeneracy present in (binary) cubical sets, as described in~\cite{grandis03}. Let us call \emph{connective degeneracy} the kind of degeneracy present in simplicial sets. The unary case of parametric degeneracies have already been considered in the literature, e.g. implicitly in type theories with internal parametricity~\cite{Moulin,BernardyMoulin} and more explicitly in Parametric Type Theory~\cite{BernardyCoquandMoulin} where the connection with a unary form of cubical sets is given. The binary case of connective degeneracies happens to be similar to connections in (binary) cubical sets.
+
+
+We illustrate below the difference between parametric degeneracy and connective degeneracy in the unary and binary case for $0$ and $1$-shapes, reminding that we start from dimension $-1$ in the unary case and from dimension 0 in the binary case. In particular, in the unary case, there is a parametric degeneracy $r_{-1}(a)$ for any $a:X_{-1}$.
+
 
 \begin{equation*}
   \begin{array}{lcccr}
+                                                                           & n=0, \nu=1                                                        & n=1, \nu=1                                          \\
+    \\
     \begin{tabular}{l}source\\ (over some $a:X_{-1}$)\end{tabular}         & b~~                                                               & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\[1mm]
-    \begin{tabular}{l}parametric\\ degeneracy\end{tabular}                 & \begin{tikzcd}b \arrow[r, dash, "r_0(b)"] & r_{-1}(a)\end{tikzcd} &
+    \begin{tabular}{l}parametric\\ (cubical)\\ degeneracy\end{tabular}     & \begin{tikzcd}b \arrow[r, dash, "r_0(b)"] & r_{-1}(a)\end{tikzcd} &
     \begin{tikzcd}
       & |[alias=F]|r_{-1}(a) \arrow[ddr, dash, "r_0(c)"] & \\\\
       b \arrow[rr, dash, "q"{name=T, below}]\arrow[uur, dash, "r_0(b)"] && c \\
       \arrow[rightarrow, from=F, to=T, phantom, "r_1(q)" description]
     \end{tikzcd}                                                                                                                         \\[-8mm]
-    \begin{tabular}{l}simplicial\\ degeneracy\end{tabular}                 & \begin{tikzcd}b \arrow[r, dash, "s_0(b)"] & b\end{tikzcd}         &
+    \begin{tabular}{l}connective\\ (simplicial)\\ degeneracy\end{tabular}  & \begin{tikzcd}b \arrow[r, dash, "s_0(b)"] & b\end{tikzcd}         &
+    \begin{tikzcd}
+      & |[alias=F]|c \arrow[ddr, dash, "s_0(c)"] & \\\\
+      b \arrow[rr, dash, "q"{name=T, below}]\arrow[uur, dash, "q"] && c \\
+      \arrow[rightarrow, from=F, to=T, phantom, "s_1(q)" description]
+    \end{tikzcd} & \begin{tabular}{l}actually\\ a 1-connection!\end{tabular}
+    \\
+
+                                                                           & n=0, \nu=2                                                        & n=1, \nu=2                                          \\
+    \\
+    \begin{tabular}{l}source\\ (over some $a:X_{-1}$)\end{tabular}         & b~~                                                               & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\[1mm]
+    \begin{tabular}{l}parametric\\ (cubical)\\ degeneracy\end{tabular}     & \begin{tikzcd}b \arrow[r, dash, "r_0(b)"] & r_{-1}(a)\end{tikzcd} &
+    \begin{tikzcd}
+      & |[alias=F]|r_{-1}(a) \arrow[ddr, dash, "r_0(c)"] & \\\\
+      b \arrow[rr, dash, "q"{name=T, below}]\arrow[uur, dash, "r_0(b)"] && c \\
+      \arrow[rightarrow, from=F, to=T, phantom, "r_1(q)" description]
+    \end{tikzcd}                                                                                                                         \\[-8mm]
+    \begin{tabular}{l}connective\\ (simplicial)\\ degeneracy\end{tabular}  & \begin{tikzcd}b \arrow[r, dash, "s_0(b)"] & b\end{tikzcd}         &
     \begin{tikzcd}
       & |[alias=F]|c \arrow[ddr, dash, "s_0(c)"] & \\\\
       b \arrow[rr, dash, "q"{name=T, below}]\arrow[uur, dash, "q"] && c \\
@@ -615,6 +634,10 @@ First, our degeneracy implies a distinguished point $r_{-1}(a)$ for any $a:X_{-1
     \end{tikzcd} & \begin{tabular}{l}actually\\ a 1-connection!\end{tabular}
   \end{array}
 \end{equation*}
+
+\subsubsection{The construction of degeneracies}
+
+Our construction includes degeneracies in all directions, although the degeneracies in one direction is logically independent.
 
 For any $(X_0,X_1,\ldots): \X$, we define a stream of degeneracies:
 \begin{equation*}
@@ -637,24 +660,6 @@ computes the $n$ first layers of the border of $r_{n}(d)(x)$, knowing that the l
 \end{equation*}
 is a full frame.
 
-On the way, we need two coherence conditions:
-\begin{equation*}
-  \begin{array}{l}
-    \mathsf{\textcolor{chestnut}{idrestrrefl}}_{\textcolor{indian-yellow}{\mathsf{frame}},\epsilon}^n(r_{-1},\ldots,r_{n-1})(d:\fullframe[n][D={X_0,\ldots,X_{n-1}}]):        \\
-    ~~ \restrf[n][n][][][][d={\reflff[n][D={r_{-1},\ldots,r_{n-1}},d=\d]}] = d                                                                                                \\
-    \\
-    \mathsf{\textcolor{chestnut}{cohrestrrefl}}_{\textcolor{indian-yellow}{\mathsf{frame}},\epsilon,p<n}^n(r_{-1},\ldots,r_{n-1})(d:\framep[n][][p][D={X_0,\ldots,X_{n-1}}]): \\
-    ~~\restrf[n][p](\mathsf{\color{russian-green}{refl}}^{n,p}_{\mathsf{\color{indian-yellow}{frame}}}(r_{-1},\ldots,r_{n-1})(d)) = \reflf[n-1][p][][][D={r_{-1},\ldots,r_{n-2}},d={\restrf[n-1][p][][\epsilon][p][d=\d]}]
-  \end{array}
-\end{equation*}
-where
-$\reflf[n][p]$ generalises $\reflff[n]$ prefixes of $\fullframe[n]$:
-
-\begin{equation*}
-  \reflf[n][p][][][D={r_{-1},\ldots,r_{n-1}}]:\framep[n][p][][D={X_{-1},\ldots,X_{n-1}}] \rightarrow \framep[n+1][p][][D={X_{-1},\ldots,X_{n}}]
-\end{equation*}
-
-\subsection{Detailed construction}
 % Abbreviated tables in this section†
 %
 % The rule for implicit arguments for each table:
@@ -706,18 +711,83 @@ $\reflf[n][p]$ generalises $\reflff[n]$ prefixes of $\fullframe[n]$:
 \def\lab{tab:refl}
 \input{tab-refl.tex}
 
-Coherence conditions
+\subsubsection{Coherence conditions}
+
+\begin{equation*}
+  \begin{array}{lccr}
+    \delta^\beta_j \delta^\alpha_i & = & \delta^\alpha_{i + 1} \delta^\beta_j & j \leq i \\
+    \varepsilon_i \varepsilon_j    & = & \varepsilon_j \varepsilon_{i + 1}    & j \leq i \\
+    \epsilon_i \delta^\alpha_i     & = &
+    \begin{cases}
+      \delta^\alpha_{i - 1} \varepsilon_j & j < i \\
+      1                                   & j = i \\
+      \delta^\alpha_i \varepsilon_{j - 1} & j > i \\
+    \end{cases}
+  \end{array}
+\end{equation*}
+
+Among restriction-degeneracy coherecnces, we refer to the equation eps-eps-inf as restr-refl-inf, the equation eps-eps-id as restr-refl-id and the equation eps-eps-sup as restr-refl-sup.
+
+In our construction, the restr-refl-sup coherence gets split into two equations, one for refl-above and one for refl-below. The refl-refl coherence gets split into three equations, one for below-below, one for below-above and one for above-above.
+
+The restr-refl-id and restr-refl-inf coherences make sense only for refl-below, and don't get a refl-above counterpart, as it is ruled out by their index inequality assumptions.
+
+The coherence conditions for the degeneracies in one direction are:
+
+\begin{equation*}
+  \begin{array}{l}
+    \mathsf{\textcolor{chestnut}{idrestrrefl}}_{\textcolor{indian-yellow}{\mathsf{frame}},\epsilon}^n(r_{-1},\ldots,r_{n-1})(d:\fullframe[n][D={X_0,\ldots,X_{n-1}}]):        \\
+    ~~ \restrf[n][n][][][][d={\reflff[n][D={r_{-1},\ldots,r_{n-1}},d=\d]}] = d                                                                                                \\
+    \\
+    \mathsf{\textcolor{chestnut}{cohrestrrefl}}_{\textcolor{indian-yellow}{\mathsf{frame}},\epsilon,p<n}^n(r_{-1},\ldots,r_{n-1})(d:\framep[n][][p][D={X_0,\ldots,X_{n-1}}]): \\
+    ~~\restrf[n][p](\mathsf{\color{russian-green}{refl}}^{n,p}_{\mathsf{\color{indian-yellow}{frame}}}(r_{-1},\ldots,r_{n-1})(d)) = \reflf[n-1][p][][][D={r_{-1},\ldots,r_{n-2}},d={\restrf[n-1][p][][\epsilon][p][d=\d]}]
+  \end{array}
+\end{equation*}
+where
+$\reflf[n][p]$ generalises $\reflff[n]$ prefixes of $\fullframe[n]$:
+
+\begin{equation*}
+  \reflf[n][p][][][D={r_{-1},\ldots,r_{n-1}}]:\framep[n][p][][D={X_{-1},\ldots,X_{n-1}}] \rightarrow \framep[n+1][p][][D={X_{-1},\ldots,X_{n}}]
+\end{equation*}
 
 \begin{align*}
-  \cohzone   \\
-  \cohztwo   \\
+  \cohzone \\
+  \cohztwo \\
+\end{align*}
+
+We need the following additional coherence conditions for degeneracies in the
+other directions to be well-typed:
+
+\begin{align*}
   \cohzthree \\
   \cohzfour  \\
+\end{align*}
+
+Additionally, degeneracies in cubical sets are assumed to be a subject of these
+additional degeneracy-degenracy coherences, which are an additonal structure someone can impose, and are not intrinsically required for the
+
+\begin{align*}
   \cohzfive  \\
   \cohzsix   \\
   \cohzseven \\
   \cohzeight \\
 \end{align*}
+
+All coherence condition proofs follow the same decomposition pattern, which is induced by the structure of the underlying construction of restrictions and degenracies:
+
+- The recursive case of $\cohf$ is built as a pair of $\cohf$ (recursively) and $\cohl$
+- The recursive case of $\cohp$ is built as a pair of $\cohl$ and $\cohp$ (recursively)
+- The $\cohl$ is built from $\coh2$ and $\cohp$
+
+For the coherences that are decomposed into above and below cases, there exists a dependency between above and below proofs\dots
+
+TODO: explain the above-below dependency.
+
+TODO: show one table with definitions for frames, layers and paintigns
+TODO: show an example/detaield explanation of a layer decomposition
+
+
+The restr-refl-above coherence for frames is
 
 \section{Conclusion and future work}
 
