@@ -613,46 +613,67 @@ In this paper, we focus on an indexed definition of simplicial sets equipped wit
 
 Despite a common terminology, degeneracies in simplicial sets~\cite{} and in cubical sets~\cite{grandis03} are of a different nature. Degeneracies in cubical sets insert a new axis while degeneracies in simplicial sets duplicate an existing axis. In particular, degenerating a $n$-shape $c$ in a cubical set is about \emph{inserting a new axis} $i \leq n$ (counting axes of a $n$-shape from $0$ to $n-1$), yielding a $(n+1)$-shape lying on $c$ in the $i$-th axis and lying on the degeneracy of the $j$-th axis of $c$ in the $j$-th axis (resp. $(j-1)$-th axis) for $j < i$ (resp $j > i$). In the simplicial case, the degeneracy process is better understood by reasoning in augmented simplicial sets where the dimension starts at $-1$: degenerating a $n$-shape $c$ in simplicial sets is about \emph{duplicating an existing axis} $i < n$ (thus requiring $n$ to be at least $0$), yielding a $(n+1)$-shape lying on $c$ in both the $i$ and $i+1$ axes, while it lies again on the degeneracy of the $j$-th axis (resp. $(j-1)$-th) of $c$ in the $j$-th axis for $j < i$ (resp. $j > i+1$).
 
-Let us call \emph{parametric degeneracy} the kind of degeneracy present in (binary) cubical sets, as described in~\cite{grandis03}. Let us call \emph{connective degeneracy} the kind of degeneracy present in simplicial sets. The unary case of parametric degeneracies have already been considered in the literature, e.g. implicitly in type theories with internal parametricity~\cite{Moulin,BernardyMoulin} and more explicitly in Parametric Type Theory~\cite{BernardyCoquandMoulin} where the connection with a unary form of cubical sets is given. The binary case of connective degeneracies happens to be similar to connections in (binary) cubical sets.
+Let us call \emph{parametric degeneracy} the kind of degeneracy present in (binary) cubical sets, as described in~\cite{grandis03} and \emph{connecting degeneracy} the kind of degeneracy present in simplicial sets. The unary case of parametric degeneracies have already been considered in the literature, e.g. implicitly in type theories with internal parametricity~\cite{moulin16,bernardy12} and more explicitly in Parametric Type Theory~\cite{bernardy15} where an interpretation in terms of a unary form of cubical sets is given. The binary case of connecting degeneracies happens to be similar to connections in (binary) cubical sets, where it should be noted that for arity 2 (and higher), connections additionally need parametric degeneracies to fill faces which in the non-duplicated axes.
 
-
-We illustrate below the difference between parametric degeneracy and connective degeneracy in the unary and binary case for $0$ and $1$-shapes, reminding that we start from dimension $-1$ in the unary case and from dimension 0 in the binary case. In particular, in the unary case, there is a parametric degeneracy $r_{-1}(a)$ for any $a:X_{-1}$.
+We illustrate below the difference between parametric degeneracy and connecting degeneracy in the unary and binary case for $0$ and $1$-shapes, reminding that we start from dimension $-1$ in the unary case and from dimension 0 in the binary case. In particular, in the unary case, there is a parametric degeneracy $r_{-1}(a)$ for any $a:X_{-1}$.
 
 
 \begin{equation*}
   \begin{array}{lcccr}
                                                                            & n=0, \nu=1                                                        & n=1, \nu=1                                          \\
     \\
-    \begin{tabular}{l}source\\ (over some $a:X_{-1}$)\end{tabular}         & b~~                                                               & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\[1mm]
-    \begin{tabular}{l}parametric\\ (cubical)\\ degeneracy\end{tabular}     & \begin{tikzcd}b \arrow[r, dash, "r_0(b)"] & r_{-1}(a)\end{tikzcd} &
+    \begin{tabular}{l}source\\ (over some $a:X_{-1}$)\end{tabular}         & b~~                                                               & \begin{tikzcd}b \arrow[r, "q"] & c\end{tikzcd} \\[1mm]
+    \begin{tabular}{l}parametric (cubical)\\ degeneracy \\($r^0_i$ for $-1\leq i\leq n$)\end{tabular}     & \begin{tikzcd}b \arrow[r, "r^0_{-1}(b)"] & r^{-1}_{-1}(a)\\
+r^{-1}_{-1}(a) \arrow[r, "r^0_0(b)"] & b
+\end{tikzcd} &
     \begin{tikzcd}
-      & |[alias=F]|r_{-1}(a) \arrow[ddr, dash, "r_0(c)"] & \\\\
-      b \arrow[rr, dash, "q"{name=T, below}]\arrow[uur, dash, "r_0(b)"] && c \\
-      \arrow[rightarrow, from=F, to=T, phantom, "r_1(q)" description]
+      & |[alias=F]|b \arrow[ddr, "q"] & \\\\
+      r^{-1}_{-1}(a) \arrow[rr, "r^0_0(b)"{name=T, below}]\arrow[uur, "r^0_0(c)"] && c \\
+      \arrow[from=F, to=T, double, shorten = 2mm, "r^1_{-1}(q)" description]
+    \end{tikzcd}
+    \begin{tikzcd}
+      & |[alias=F]|c \arrow[ddr, "r^0_{-1}(c)"] & \\\\
+      b \arrow[rr, "r^0_{-1}(b)"{name=T, below}]\arrow[uur, "q"] && r^{-1}_{-1}(a) \\
+      \arrow[from=F, to=T, double, shorten = 2mm, "r^1_{0}(q)" description]
+    \end{tikzcd}
+    \begin{tikzcd}
+      & |[alias=F]|r_{-1}(a) \arrow[ddr, "r^0_0(c)"] & \\\\
+      b \arrow[rr, "q"{name=T, below}]\arrow[uur, "r^0_{-1}(b)"] && c \\
+      \arrow[from=F, to=T, double, shorten = 2mm, "r^1_1(q)" description]
     \end{tikzcd}                                                                                                                         \\[-8mm]
-    \begin{tabular}{l}connective\\ (simplicial)\\ degeneracy\end{tabular}  & \begin{tikzcd}b \arrow[r, dash, "s_0(b)"] & b\end{tikzcd}         &
+    \begin{tabular}{l}connecting (simplicial)\\ degeneracy\\($s^0_i$ for $-1< i \leq n$)\end{tabular}  & \begin{tikzcd}b \arrow[r, "s^0_0(b)"] & b\end{tikzcd}         &
     \begin{tikzcd}
-      & |[alias=F]|c \arrow[ddr, dash, "s_0(c)"] & \\\\
-      b \arrow[rr, dash, "q"{name=T, below}]\arrow[uur, dash, "q"] && c \\
-      \arrow[rightarrow, from=F, to=T, phantom, "s_1(q)" description]
-    \end{tikzcd} & \begin{tabular}{l}actually\\ a 1-connection!\end{tabular}
+      & |[alias=F]|b \arrow[ddr, "q"] & \\\\
+      b \arrow[rr, "q"{name=T, below}]\arrow[uur, "s^0_0(b)"] && c \\
+      \arrow[from=F, to=T, double, shorten = 2mm, "s^1_{0}(q)" description]
+    \end{tikzcd}
+    \begin{tikzcd}
+      & |[alias=F]|c \arrow[ddr, "s^0_0(c)"] & \\\\
+      b \arrow[rr, "q"{name=T, below}]\arrow[uur, "q"] && c \\
+      \arrow[from=F, to=T, double, shorten = 2mm, "s^1_{1}(q)" description]
+    \end{tikzcd}
     \\
 
                                                                            & n=0, \nu=2                                                        & n=1, \nu=2                                          \\
     \\
-    \begin{tabular}{l}source\\ (over some $a:X_{-1}$)\end{tabular}         & b~~                                                               & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\[1mm]
-    \begin{tabular}{l}parametric\\ (cubical)\\ degeneracy\end{tabular}     & \begin{tikzcd}b \arrow[r, dash, "r_0(b)"] & b\end{tikzcd}         &
+    \begin{tabular}{l}source\end{tabular}         & b~~                                                               & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\[1mm]
+    \begin{tabular}{l}parametric (cubical)\\ degeneracy\\($r^0_i$ for $0\leq i\leq n$)\end{tabular}     & \begin{tikzcd}b \arrow[r, "r^0_0(b)"] & b\end{tikzcd}         &
     \begin{tikzcd}
-      b \arrow[rr, dash, "q"{name=F, below}]\arrow[dd, dash, "r_0(b)"] && c \arrow[dd, dash, "r_0(c)"] \\\\
-      b \arrow[rr, dash, "q"{name=T, below}] && c \\
-      & \arrow[rightarrow, from=F, to=T, phantom, "r_1(q)" description]
+      b \arrow[rr, "q"{name=F}']\arrow[dd, "r^0_0(b)"] && c \arrow[dd, "r^0_0(c)"] \\\\
+      b \arrow[rr, "q"{name=T, below}] && c \\
+      & \arrow[from=F, to=T, double, shorten=1mm, "r^1_0(q)" description]
+    \end{tikzcd}                                                                                  
+    \begin{tikzcd}
+      b \arrow[rr, "r^0_0(b)"{name=F}']\arrow[dd, "q"] && b \arrow[dd, "q"] \\\\
+      c \arrow[rr, "r^0_0(c)"{name=T, below}] && c \\
+      & \arrow[from=F, to=T, double, shorten=1mm, "r^1_1(q)" description]
     \end{tikzcd}                                                                                             \\[-8mm]
-    \begin{tabular}{l}connective\\ (simplicial)\\ degeneracy\end{tabular}  & \begin{tikzcd}b \arrow[r, dash, "s_0(b)"] & b\end{tikzcd}         &
+    \begin{tabular}{l}connecting (simplicial)\\ degeneracy\\($s^0_i$ for $0 \leq i < n$)\end{tabular}  & \mbox{(none)}         &
     \begin{tikzcd}
-      & |[alias=F]|c \arrow[ddr, dash, "s_0(c)"] & \\\\
-      b \arrow[rr, dash, "q"{name=T, below}]\arrow[uur, dash, "q"] && c \\
-      \arrow[rightarrow, from=F, to=T, phantom, "s_1(q)" description]
-    \end{tikzcd} & \begin{tabular}{l}actually\\ a 1-connection!\end{tabular}
+      b \arrow[rr, "q"{name=F, below}]\arrow[dd, "q"] && c \arrow[dd, "r^0_0(c)"] \\\\
+      c \arrow[rr, "r^0_0(c)"{name=T, below}] && c \\
+      \arrow[from=F, to=T, double, shorten=1mm, "s_1(q)" description]
+    \end{tikzcd}
   \end{array}
 \end{equation*}
 
