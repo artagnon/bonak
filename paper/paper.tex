@@ -328,16 +328,16 @@ We previously exploited the observation that semi-simplicial and semi-cubical se
 The semi-simplicial and semi-cubical categories are instances of the more general notion of $\nu$-semi-shape category.
 
 \begin{definition}[$\hexagon$]
-  The definition of $\nu$-semi-shape category is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than or equal to that of $g$. It can be shown that composition is associative and that $\id$ is neutral.
+  The definition of $\nu$-semi-shape category is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than or equal to that of $g$. We write $|l|_{\kstar}$ for the number of stars in a word $l$. Its objects, morphisms, and identities are:
   \begin{align*}
-    \Obj_{\hexagon}       & := \Nat                                                                          \\
-    \Hom_{\hexagon}(p, n) & := \{l \in (\nu \sqcup \{\kstar\})^n \mid \text{number of $\kstar$ in $l = p$}\} \\
+    \Obj_{\hexagon}       & := \Nat                                                                       \\
+    \Hom_{\hexagon}(p, n) & := \{l \in (\nu \sqcup \{\kstar\})^n \mid |l|_{\kstar} = p\}                  \\
     g \circ f             & :=
     \begin{cases}
       f                & \text{if $g = \epsilon$}                                                   \\
       a\,(g' \circ f)  & \text{if $g = a\,g'$}, \text{where $a \in \nu$}                            \\
       a\,(g' \circ f') & \text{if $g = \kstar\,g'$, $f = a\,f'$, where $a \in \nu$ or $a = \kstar$} \\
-    \end{cases}          \\
+    \end{cases}       \\
     \id                   & := \kstar \ldots \kstar \text{ $n$ times for $\id \in \Hom_{\hexagon}(n, n)$}
   \end{align*}
 \end{definition}
@@ -347,7 +347,7 @@ In particular $1$-semi-shape category presents the semi-simplicial category whil
 Degeneracies can be added to the $\nu$-semi-shape category in different ways. We here focus on cubical-style degeneracies as in Grandis~\cite{grandis03} and their adaptation to the unary case as in \cite{bernardy15}. A morphism from $p$ to $n$ in the $\nu$-shape category first discards $p-k$ input coordinates, giving a map from $p$ to $k$, then applies a face map from $k$ to $n$.
 
 \begin{definition}[$\hexagon_d$]
-  The $\nu$-shape category extends the $\nu$-semi-shape category with degeneracies. Write $|w|_{\kstar}$ for the number of stars in a word $w$. Its objects, morphisms, and identities are:
+  The $\nu$-shape category extends the $\nu$-semi-shape category with degeneracies. We write $|w|_{\kstar}$ for the number of stars in a word $w$. Its objects, morphisms, and identities are:
   \begin{align*}
     \Obj_{\hexagon_d}      & := \Nat                                  \\
     \Hom_{\hexagon_d}(p,n) & := \{(r,f) \in \{\kstar,\bullet\}^p
@@ -373,10 +373,16 @@ Degeneracies can be added to the $\nu$-semi-shape category in different ways. We
   Here $\circ_{\hexagon_1}$ is the semi-shape word composition with $\bullet$ as its sole label: it substitutes $t$ into the stars of $r$. The other component substitutes $h$ into the stars of $g$. These operations satisfy the identity and associativity laws.
 \end{definition}
 
+In particular, a $2$-shape category presents the cubical category, while $1$-shape category presents the simplicial category with cubical-style degeneracies, which we explain in more detail in section \ref{sec:dgn-flavors}.
+
 \subsection{Fibred-indexed correspondence}
 
-Semi-cubical sets can be expressed directly in terms of presheaves over a direct category using morphisms or alternatively using families, by iterating the standard equivalence between maps and families:
-$(\Sigma A : Set. A \rightarrow B) \equiv (B \rightarrow Set)$.
+% TODO: connect to the previous section; we should mention specifically that our $nu$-sets are equivalent to presheaves form the $nu$-semi-shape category, and that our $nu$-relf-sets are equivalent to presheaves from the $nu$-shape category.
+
+Semi-cubical sets can be expressed directly in terms of presheaves over a $\nu$-semi-shape category using morphisms, by iterating the equivalence between maps and families:
+\[
+  (\Sigma A : Set. A \rightarrow B) \equiv (B \rightarrow Set)
+\]
 
 \begin{equation*}
   \begin{array}{cllccllll}
@@ -397,6 +403,8 @@ $(\Sigma A : Set. A \rightarrow B) \equiv (B \rightarrow Set)$.
 Both definitions are provably equivalent using univalence~\href{https://github.com/artagnon/bonak/tree/master/theories/Equiv}{\linkicon}, and this is yet another instance of the \emph{Grothendieck construction}, which we refer to as the fibred-indexed correspondence.
 
 In this paper, we focus on an indexed definition of simplicial sets equipped with faces and a \emph{cubical-like} form of degeneracy and on cubical sets with faces and degeneracies. While faces are part of the indexed infrastructure and coherences between faces are necessitated by faces meeting at common edges, degeneracies and their coherences are postulated explicitly as shown below:
+
+TODO: Clarify that the restriction-degeneracy coherences are necessiated in the same way as the face-face coherences, while degenracy-degeneracy coherences are additional structure someone can assume.
 
 \begin{equation*}
   \begin{array}{cllccllll}
@@ -609,39 +617,42 @@ In this paper, we focus on an indexed definition of simplicial sets equipped wit
   \end{tabularx}
 \end{table}
 
-\paragraph{Parametric degeneracies vs connective degeneracies}
+\subsubsection{Parametric degeneracies vs connecting degeneracies}
+\label{sec:dgn-flavors}
 
 Despite a common terminology, degeneracies in simplicial sets~\cite{} and in cubical sets~\cite{grandis03} are of a different nature. Degeneracies in cubical sets insert a new axis while degeneracies in simplicial sets duplicate an existing axis. In particular, degenerating a $n$-shape $c$ in a cubical set is about \emph{inserting a new axis} $i \leq n$ (counting axes of a $n$-shape from $0$ to $n-1$), yielding a $(n+1)$-shape lying on $c$ in the $i$-th axis and lying on the degeneracy of the $j$-th axis of $c$ in the $j$-th axis (resp. $(j-1)$-th axis) for $j < i$ (resp $j > i$). In the simplicial case, the degeneracy process is better understood by reasoning in augmented simplicial sets where the dimension starts at $-1$: degenerating a $n$-shape $c$ in simplicial sets is about \emph{duplicating an existing axis} $i < n$ (thus requiring $n$ to be at least $0$), yielding a $(n+1)$-shape lying on $c$ in both the $i$ and $i+1$ axes, while it lies again on the degeneracy of the $j$-th axis (resp. $(j-1)$-th) of $c$ in the $j$-th axis for $j < i$ (resp. $j > i+1$).
 
-Let us call \emph{parametric degeneracy} the kind of degeneracy present in (binary) cubical sets, as described in~\cite{grandis03} and \emph{connecting degeneracy} the kind of degeneracy present in simplicial sets. The unary case of parametric degeneracies have already been considered in the literature, e.g. implicitly in type theories with internal parametricity~\cite{moulin16,bernardy12} and more explicitly in Parametric Type Theory~\cite{bernardy15} where an interpretation in terms of a unary form of cubical sets is given. The binary case of connecting degeneracies happens to be similar to connections in (binary) cubical sets, where it should be noted that for arity 2 (and higher), connections additionally need parametric degeneracies to fill faces which in the non-duplicated axes.
+Let us call \emph{parametric degeneracy} the kind of degeneracy present in (binary) cubical sets, as described in~\cite{grandis03} and \emph{connecting degeneracy} the kind of degeneracy present in simplicial sets. The unary case of parametric degeneracies have already been considered in the literature, e.g. implicitly in type theories with internal parametricity~\cite{moulin16,bernardy12} and more explicitly in Parametric Type Theory~\cite{bernardy15} where an interpretation in terms of a unary form of cubical sets is given. The binary case of connecting degeneracies happens to be similar to connections in (binary) cubical sets, where it should be noted that for arity 2 (and higher), connections additionally need parametric degeneracies to fill faces which in the non-duplicated axes. It should also be noted that each connection breaks down in $\nu$ variants (that is only one variant in the unary case but two in the binary cases, resulting in the ``disjunctive'' and ``conjunctive'' variants).
 
-We illustrate below the difference between parametric degeneracy and connecting degeneracy in the unary and binary case for $0$ and $1$-shapes, reminding that we start from dimension $-1$ in the unary case and from dimension 0 in the binary case. In particular, in the unary case, there is a parametric degeneracy $r_{-1}(a)$ for any $a:X_{-1}$.
+We illustrate below the difference between parametric degeneracy and connecting degeneracy in the unary and binary case for $0$ and $1$-shapes, reminding that we start from dimension $-1$ in the unary case and from dimension 0 in the binary case. In particular, in the unary case, there is a parametric degeneracy $r^{-1}_{-1}(a)$ for any $a:X_{-1}$.
 
 
 \begin{equation*}
   \begin{array}{lcccr}
-                                                                                                      & n=0, \nu=1                                                  & n=1, \nu=1                                          \\
+                                                                                                                & n=0, \nu=1                                                  & n=1, \nu=1                                          \\
     \\
-    \begin{tabular}{l}source\\ (over some $a:X_{-1}$)\end{tabular}                                    & b~~                                                         & \begin{tikzcd}b \arrow[r, "q"] & c\end{tikzcd}      \\[1mm]
-    \begin{tabular}{l}parametric (cubical)\\ degeneracy \\($r^n_i$ for $-1\leq i\leq n$)\end{tabular} & \begin{tikzcd}b \arrow[r, "r^0_{-1}(b)"] & r^{-1}_{-1}(a)\\
-                                                                                                          r^{-1}_{-1}(a) \arrow[r, "r^0_0(b)"] & b
-                                                                                                        \end{tikzcd} &
-    \begin{tikzcd}
-      & |[alias=F]|b \arrow[ddr, "q"] & \\\\
-      r^{-1}_{-1}(a) \arrow[rr, "r^0_0(b)"{name=T, below}]\arrow[uur, "r^0_0(c)"] && c \\
-      \arrow[from=F, to=T, double, shorten = 2mm, "r^1_{-1}(q)" description]
-    \end{tikzcd}
-    \begin{tikzcd}
-      & |[alias=F]|c \arrow[ddr, "r^0_{-1}(c)"] & \\\\
-      b \arrow[rr, "r^0_{-1}(b)"{name=T, below}]\arrow[uur, "q"] && r^{-1}_{-1}(a) \\
-      \arrow[from=F, to=T, double, shorten = 2mm, "r^1_{0}(q)" description]
-    \end{tikzcd}
-    \begin{tikzcd}
-      & |[alias=F]|r_{-1}(a) \arrow[ddr, "r^0_0(c)"] & \\\\
-      b \arrow[rr, "q"{name=T, below}]\arrow[uur, "r^0_{-1}(b)"] && c \\
-      \arrow[from=F, to=T, double, shorten = 2mm, "r^1_1(q)" description]
-    \end{tikzcd}                                                                                                                                                  \\[-8mm]
-    \begin{tabular}{l}connecting (simplicial)\\ degeneracy\\($s^n_i$ for $-1< i \leq n$)\end{tabular} & \begin{tikzcd}b \arrow[r, "s^0_0(b)"] & b\end{tikzcd}       &
+    \begin{tabular}{l}source of dimension $n$\\ (over some $a:X_{-1}$)\end{tabular}                             & b~~                                                         & \begin{tikzcd}b \arrow[r, "q"] & c\end{tikzcd}      \\[1mm]
+    \begin{tabular}{l}parametric (cubical)\\ degeneracy \\($r^n_i$ for $-1\leq i\leq n$)\end{tabular}           & \begin{tikzcd}b \arrow[r, "r^0_{-1}(b)"] & r^{-1}_{-1}(a)\\
+                                                                                                                    r^{-1}_{-1}(a) \arrow[r, "r^0_0(b)"] & b
+                                                                                                                  \end{tikzcd} &
+    \begin{array}{c}
+      \begin{tikzcd}
+        & |[alias=F]|b \arrow[ddr, "q"] & \\\\
+        r^{-1}_{-1}(a) \arrow[rr, "r^0_0(b)"{name=T, below}]\arrow[uur, "r^0_0(c)"] && c \\
+        \arrow[from=F, to=T, double, shorten = 2mm, "r^1_{-1}(q)" description]
+      \end{tikzcd}
+      \begin{tikzcd}
+        & |[alias=F]|c \arrow[ddr, "r^0_{-1}(c)"] & \\\\
+        b \arrow[rr, "r^0_{-1}(b)"{name=T, below}]\arrow[uur, "q"] && r^{-1}_{-1}(a) \\
+        \arrow[from=F, to=T, double, shorten = 2mm, "r^1_{0}(q)" description]
+      \end{tikzcd} \\[-8mm]
+      \begin{tikzcd}
+        & |[alias=F]|r^{-1}_{-1}(a) \arrow[ddr, "r^0_0(c)"] & \\\\
+        b \arrow[rr, "q"{name=T, below}]\arrow[uur, "r^0_{-1}(b)"] && c \\
+        \arrow[from=F, to=T, double, shorten = 2mm, "r^1_1(q)" description]
+      \end{tikzcd}
+    \end{array}                                                                                                                                            \\[-8mm]
+    \begin{tabular}{l}connecting (simplicial)\\ degeneracy\\($s^n_i$ for $-1< i \leq n$)\end{tabular}           & \begin{tikzcd}b \arrow[r, "s^0_0(b)"] & b\end{tikzcd}       &
     \begin{tikzcd}
       & |[alias=F]|b \arrow[ddr, "q"] & \\\\
       b \arrow[rr, "q"{name=T, below}]\arrow[uur, "s^0_0(b)"] && c \\
@@ -654,25 +665,30 @@ We illustrate below the difference between parametric degeneracy and connecting 
     \end{tikzcd}
     \\
 
-                                                                                                      & n=0, \nu=2                                                  & n=1, \nu=2                                          \\
+                                                                                                                & n=0, \nu=2                                                  & n=1, \nu=2                                          \\
     \\
-    \begin{tabular}{l}source\end{tabular}                                                             & b~~                                                         & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\[1mm]
-    \begin{tabular}{l}parametric (cubical)\\ degeneracy\\($r^n_i$ for $0\leq i\leq n$)\end{tabular}   & \begin{tikzcd}b \arrow[r, "r^0_0(b)"] & b\end{tikzcd}       &
+    \begin{tabular}{l}source of dimension $n$\end{tabular}                                                      & b~~                                                         & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\[1mm]
+    \begin{tabular}{l}parametric (cubical)\\ degeneracy\\($r^n_i$ for $0\leq i\leq n$)\end{tabular}             & \begin{tikzcd}b \arrow[r, "r^0_0(b)"] & b\end{tikzcd}       &
     \begin{tikzcd}
       b \arrow[rr, "q"{name=F}']\arrow[dd, "r^0_0(b)"] && c \arrow[dd, "r^0_0(c)"] \\\\
       b \arrow[rr, "q"{name=T, below}] && c \\
       & \arrow[from=F, to=T, double, shorten=1mm, "r^1_0(q)" description]
     \end{tikzcd}
     \begin{tikzcd}
-      b \arrow[rr, "r^0_0(b)"{name=F}']\arrow[dd, "q"] && b \arrow[dd, "q"] \\\\
+      b \arrow[rr, "r^0_0(b)"{name=F}']\arrow[dd, "q"] && b \arrow[dd, "q"'] \\\\
       c \arrow[rr, "r^0_0(c)"{name=T, below}] && c \\
       & \arrow[from=F, to=T, double, shorten=1mm, "r^1_1(q)" description]
-    \end{tikzcd}                                                                                                                                             \\[-8mm]
-    \begin{tabular}{l}connecting (simplicial)\\ degeneracy\\($s^n_i$ for $0 \leq i < n$)\end{tabular} & \mbox{(none)}                                               &
+    \end{tikzcd}                                                                                                                                                      \\[-8mm]
+    \begin{tabular}{l}connecting (simplicial)\\ degeneracy\\($s^n_{i\epsilon}$ for $0 \leq i < n$)\end{tabular} & \mbox{(none)}                                               &
     \begin{tikzcd}
-      b \arrow[rr, "q"{name=F, below}]\arrow[dd, "q"] && c \arrow[dd, "r^0_0(c)"] \\\\
+      b \arrow[rr, "q"{name=F, below}]\arrow[dd, "q"] && c \arrow[dd, "r^0_0(c)"'] \\\\
       c \arrow[rr, "r^0_0(c)"{name=T, below}] && c \\
-      \arrow[from=F, to=T, double, shorten=1mm, "s^1_0(q)" description]
+      \arrow[from=F, to=T, double, shorten=1mm, "s^1_{0L}(q)" description]
+    \end{tikzcd}
+    \begin{tikzcd}
+      b \arrow[rr, "r^0_0(b)"{name=F, below}]\arrow[dd, "r^0_0(b)"] && b \arrow[dd, "q"'] \\\\
+      b \arrow[rr, "q"{name=T, below}] && c \\
+      \arrow[from=F, to=T, double, shorten=1mm, "s^1_{0R}(q)" description]
     \end{tikzcd}
   \end{array}
 \end{equation*}
@@ -680,6 +696,11 @@ We illustrate below the difference between parametric degeneracy and connecting 
 \subsubsection{The construction of degeneracies}
 
 Our construction includes degeneracies in all directions, although the degeneracies in one direction is logically independent.
+
+% TODO: Explain Below/Above, their types (why above needs a painting), their dependency order for frames and paintings
+% TODO: Explain relative indices, bounds, dimension conventions
+% TODO: Explain relationship to the last-direction construction
+% TODO: Explain coherences needed for typing, with forward reference to the coherence section
 
 For any $(X_0,X_1,\ldots): \X$, we define a stream of degeneracies:
 \begin{equation*}
@@ -820,15 +841,15 @@ All coherence condition proofs follow the same decomposition pattern, which is i
 - The recursive case of $\cohp$ is built as a pair of $\cohl$ and $\cohp$ (recursively)
 - The $\cohl$ is built from $\coh2$ and $\cohp$
 
-For the coherences that are decomposed into above and below cases, there exists a dependency between above and below proofs.
-
-TODO: explain the above-below dependency.
-
-TODO: show one table with definitions for frames, layers and paintigns
-TODO: show an example/detaield explanation of a layer decomposition
+For the coherences that are decomposed into above and below cases, there exists a dependency between above and below proofs, induced by the dependency between above and below degeneracies.
 
 
-The restr-refl-above coherence for frames is
+
+% TODO: explain the above-below dependency.
+
+
+% TODO: show one table with definitions for frames, layers and paintigns
+% TODO: show an example/detaield explanation of a layer decomposition
 
 \section{Conclusion and future work}
 
