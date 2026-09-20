@@ -620,12 +620,12 @@ We illustrate below the difference between parametric degeneracy and connecting 
 
 \begin{equation*}
   \begin{array}{lcccr}
-                                                                           & n=0, \nu=1                                                        & n=1, \nu=1                                          \\
+                                                                                                      & n=0, \nu=1                                                  & n=1, \nu=1                                          \\
     \\
-    \begin{tabular}{l}source\\ (over some $a:X_{-1}$)\end{tabular}         & b~~                                                               & \begin{tikzcd}b \arrow[r, "q"] & c\end{tikzcd} \\[1mm]
-    \begin{tabular}{l}parametric (cubical)\\ degeneracy \\($r^n_i$ for $-1\leq i\leq n$)\end{tabular}     & \begin{tikzcd}b \arrow[r, "r^0_{-1}(b)"] & r^{-1}_{-1}(a)\\
-r^{-1}_{-1}(a) \arrow[r, "r^0_0(b)"] & b
-\end{tikzcd} &
+    \begin{tabular}{l}source\\ (over some $a:X_{-1}$)\end{tabular}                                    & b~~                                                         & \begin{tikzcd}b \arrow[r, "q"] & c\end{tikzcd}      \\[1mm]
+    \begin{tabular}{l}parametric (cubical)\\ degeneracy \\($r^n_i$ for $-1\leq i\leq n$)\end{tabular} & \begin{tikzcd}b \arrow[r, "r^0_{-1}(b)"] & r^{-1}_{-1}(a)\\
+                                                                                                          r^{-1}_{-1}(a) \arrow[r, "r^0_0(b)"] & b
+                                                                                                        \end{tikzcd} &
     \begin{tikzcd}
       & |[alias=F]|b \arrow[ddr, "q"] & \\\\
       r^{-1}_{-1}(a) \arrow[rr, "r^0_0(b)"{name=T, below}]\arrow[uur, "r^0_0(c)"] && c \\
@@ -640,8 +640,8 @@ r^{-1}_{-1}(a) \arrow[r, "r^0_0(b)"] & b
       & |[alias=F]|r_{-1}(a) \arrow[ddr, "r^0_0(c)"] & \\\\
       b \arrow[rr, "q"{name=T, below}]\arrow[uur, "r^0_{-1}(b)"] && c \\
       \arrow[from=F, to=T, double, shorten = 2mm, "r^1_1(q)" description]
-    \end{tikzcd}                                                                                                                         \\[-8mm]
-    \begin{tabular}{l}connecting (simplicial)\\ degeneracy\\($s^n_i$ for $-1< i \leq n$)\end{tabular}  & \begin{tikzcd}b \arrow[r, "s^0_0(b)"] & b\end{tikzcd}         &
+    \end{tikzcd}                                                                                                                                                  \\[-8mm]
+    \begin{tabular}{l}connecting (simplicial)\\ degeneracy\\($s^n_i$ for $-1< i \leq n$)\end{tabular} & \begin{tikzcd}b \arrow[r, "s^0_0(b)"] & b\end{tikzcd}       &
     \begin{tikzcd}
       & |[alias=F]|b \arrow[ddr, "q"] & \\\\
       b \arrow[rr, "q"{name=T, below}]\arrow[uur, "s^0_0(b)"] && c \\
@@ -654,21 +654,21 @@ r^{-1}_{-1}(a) \arrow[r, "r^0_0(b)"] & b
     \end{tikzcd}
     \\
 
-                                                                           & n=0, \nu=2                                                        & n=1, \nu=2                                          \\
+                                                                                                      & n=0, \nu=2                                                  & n=1, \nu=2                                          \\
     \\
-    \begin{tabular}{l}source\end{tabular}         & b~~                                                               & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\[1mm]
-    \begin{tabular}{l}parametric (cubical)\\ degeneracy\\($r^n_i$ for $0\leq i\leq n$)\end{tabular}     & \begin{tikzcd}b \arrow[r, "r^0_0(b)"] & b\end{tikzcd}         &
+    \begin{tabular}{l}source\end{tabular}                                                             & b~~                                                         & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\[1mm]
+    \begin{tabular}{l}parametric (cubical)\\ degeneracy\\($r^n_i$ for $0\leq i\leq n$)\end{tabular}   & \begin{tikzcd}b \arrow[r, "r^0_0(b)"] & b\end{tikzcd}       &
     \begin{tikzcd}
       b \arrow[rr, "q"{name=F}']\arrow[dd, "r^0_0(b)"] && c \arrow[dd, "r^0_0(c)"] \\\\
       b \arrow[rr, "q"{name=T, below}] && c \\
       & \arrow[from=F, to=T, double, shorten=1mm, "r^1_0(q)" description]
-    \end{tikzcd}                                                                                  
+    \end{tikzcd}
     \begin{tikzcd}
       b \arrow[rr, "r^0_0(b)"{name=F}']\arrow[dd, "q"] && b \arrow[dd, "q"] \\\\
       c \arrow[rr, "r^0_0(c)"{name=T, below}] && c \\
       & \arrow[from=F, to=T, double, shorten=1mm, "r^1_1(q)" description]
-    \end{tikzcd}                                                                                             \\[-8mm]
-    \begin{tabular}{l}connecting (simplicial)\\ degeneracy\\($s^n_i$ for $0 \leq i < n$)\end{tabular}  & \mbox{(none)}         &
+    \end{tikzcd}                                                                                                                                             \\[-8mm]
+    \begin{tabular}{l}connecting (simplicial)\\ degeneracy\\($s^n_i$ for $0 \leq i < n$)\end{tabular} & \mbox{(none)}                                               &
     \begin{tikzcd}
       b \arrow[rr, "q"{name=F, below}]\arrow[dd, "q"] && c \arrow[dd, "r^0_0(c)"] \\\\
       c \arrow[rr, "r^0_0(c)"{name=T, below}] && c \\
@@ -770,11 +770,9 @@ The face and degeneracy relations of Grandis--Mauri~\cite{grandis03} describe ho
   \end{array}
 \end{equation*}
 
-The first two equations express restriction-restriction and degeneracy-degeneracy coherence, respectively. We call the three restriction-degeneracy coherences $\mathsf{inf}$, $\mathsf{id}$ and $\mathsf{sup}$, according to whether the restriction is before, at, or after the inserted direction.
+The first two equations express restriction--restriction and degeneracy--degeneracy coherence, respectively. We call the three restriction--degeneracy coherences $\mathsf{inf}$, $\mathsf{id}$ and $\mathsf{sup}$, according to whether the restriction is before, at, or after the inserted direction.
 
-In our construction, the restr-refl-sup coherence gets split into two equations, one for refl-above and one for refl-below. The refl-refl coherence gets split into three equations, one for below-below, one for below-above and one for above-above.
-
-The restr-refl-id and restr-refl-inf coherences make sense only for refl-below, and don't get a refl-above counterpart, as it is ruled out by their index inequality assumptions.
+The below/above distinction gives seven degeneracy coherence families: restriction--restriction coherence from the underlying $\nu$-set construction, $\mathsf{id}$ and $\mathsf{inf}$ for below, $\mathsf{sup}$ for below and above, and degeneracy--degeneracy coherence in the below--below, above--below and above--above cases.
 
 The coherence conditions for the degeneracies in one direction are:
 
