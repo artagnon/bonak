@@ -620,12 +620,12 @@ We illustrate below the difference between parametric degeneracy and connective 
                                                                            & n=0, \nu=2                                                        & n=1, \nu=2                                          \\
     \\
     \begin{tabular}{l}source\\ (over some $a:X_{-1}$)\end{tabular}         & b~~                                                               & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\[1mm]
-    \begin{tabular}{l}parametric\\ (cubical)\\ degeneracy\end{tabular}     & \begin{tikzcd}b \arrow[r, dash, "r_0(b)"] & r_{-1}(a)\end{tikzcd} &
+    \begin{tabular}{l}parametric\\ (cubical)\\ degeneracy\end{tabular}     & \begin{tikzcd}b \arrow[r, dash, "r_0(b)"] & b\end{tikzcd}         &
     \begin{tikzcd}
-      & |[alias=F]|r_{-1}(a) \arrow[ddr, dash, "r_0(c)"] & \\\\
-      b \arrow[rr, dash, "q"{name=T, below}]\arrow[uur, dash, "r_0(b)"] && c \\
-      \arrow[rightarrow, from=F, to=T, phantom, "r_1(q)" description]
-    \end{tikzcd}                                                                                                                         \\[-8mm]
+      b \arrow[rr, dash, "q"{name=F, below}]\arrow[dd, dash, "r_0(b)"] && c \arrow[dd, dash, "r_0(c)"] \\\\
+      b \arrow[rr, dash, "q"{name=T, below}] && c \\
+      & \arrow[rightarrow, from=F, to=T, phantom, "r_1(q)" description]
+    \end{tikzcd}                                                                                             \\[-8mm]
     \begin{tabular}{l}connective\\ (simplicial)\\ degeneracy\end{tabular}  & \begin{tikzcd}b \arrow[r, dash, "s_0(b)"] & b\end{tikzcd}         &
     \begin{tikzcd}
       & |[alias=F]|c \arrow[ddr, dash, "s_0(c)"] & \\\\
@@ -779,7 +779,7 @@ All coherence condition proofs follow the same decomposition pattern, which is i
 - The recursive case of $\cohp$ is built as a pair of $\cohl$ and $\cohp$ (recursively)
 - The $\cohl$ is built from $\coh2$ and $\cohp$
 
-For the coherences that are decomposed into above and below cases, there exists a dependency between above and below proofs\dots
+For the coherences that are decomposed into above and below cases, there exists a dependency between above and below proofs.
 
 TODO: explain the above-below dependency.
 
