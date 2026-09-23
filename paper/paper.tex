@@ -875,6 +875,12 @@ In the tables, transports and the standard conversions between equalities of dep
 
 The proofs follow the decomposition of boundaries into frames, layers, and paintings. A frame proof combines a frame proof (recursively) with a layer proof. A painting proof combines a layer proof with a painting proof (recursively). A layer proof is pointwise over the face labels and uses a lower-dimensional painting coherence.
 
+We give the construction of $\relRestrReflBelowInf$ in Table~\ref{tab:coh-inf}. Subscripts $\mathsf{frame}$, $\mathsf{layer}$, and $\mathsf{painting}$ identify its three forms. A pair of proofs denotes equality of dependent pairs, and $\lambda\theta$ denotes the pointwise proof of equality of layers. Here $\mathsf{refl}$ is reflexivity of equality. The recursive clauses use the same convention of implicit transports as the other construction tables.
+
+\input{tab-coh-inf.tex}
+
+In this example, the frame recursion decreases the prefix height. Passing from height $p+1$ to $p$ increments the two relative direction indices, producing the $q+1$ and $r+1$ in the prefix proof. The layer row applies the painting coherence one dimension lower to each component $l(\theta)$. The painting recursion decreases the restriction index; at index $0$, restriction evaluates the first layer, giving the reflexivity clause.
+
 The intensional justification of the layer proof also uses a second coherence, an equality between composites of frame-equality proofs. Besides the lower-dimensional painting coherence, it requires those composites to agree so that the implicit transports have the same effect. Since frames are sets, this second coherence follows from uniqueness of identity proofs ($\UIP$). It does not replace the painting coherence: the two are separate premises of the layer argument.
 
 The families use this recursive decomposition, with different dependencies and boundary cases. The families $\relRestrReflBelowInf$ and $\relRestrReflBelowId$ each have a single Below stage. For $\relRestrReflSup$, the frame proofs construct $\relRestrReflBelowSup$ before $\relRestrReflAboveSup$, while the painting proofs proceed in the reverse order. For $\relReflRefl$, the frame order is $\relReflBelowBelow$, then $\relReflBelowAbove$, then $\relReflAboveAbove$; the painting order is again reversed. At a transition between stages, the zero-direction case uses the adjacent stage's coherence together with a separate layer proof.
