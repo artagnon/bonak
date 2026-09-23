@@ -224,7 +224,6 @@
 \newcommandx{\restrl}[6][1,2,3,4,5,6]{\restr{layer}[#1][#2][#3][#4][#5][#6]}
 \newcommandx{\restrp}[6][1,2,3,4,5,6]{\restr{painting}[#1][#2][#3][#4][#5][#6]}
 \newcommandx{\reflff}[2][1,2]{\refl[][fullframe][#1][][][][#2]}
-\newcommandx{\reflf}[5][1,2,3,4,5]{\refl[][frame][#1][#2][#3][#4][#5]}
 \newcommandx{\reflfbelow}[5][1,2,3,4,5]{\refl[Below][frame][#1][#2][#3][#4][#5]}
 \newcommandx{\reflfabove}[5][1,2,3,4,5]{\refl[Above][frame][#1][#2][#3][#4][#5]}
 \newcommandx{\refllbelow}[5][1,2,3,4,5]{\refl[Below][layer][#1][#2][#3][#4][#5]}
@@ -719,33 +718,42 @@ We illustrate below the difference between parametric degeneracy and connecting 
 
 \subsubsection{The construction of degeneracies}
 
-Our construction includes degeneracies in all directions, although the degeneracies in one direction is logically independent.
+A degeneracy direction specifies where a new coordinate axis is inserted. For an $n$-cube, there are $n+1$ insertion positions, numbered $0,\ldots,n$.
 
-% TODO: Explain Below/Above, their types (why above needs a painting), their dependency order for frames and paintings
-% TODO: Explain relative indices, bounds, dimension conventions
-% TODO: Explain relationship to the last-direction construction
-% TODO: Explain coherences needed for typing, with forward reference to the coherence section
+We construct degeneracies by building their boundaries layer by layer. In the formulas below, $n$ is the construction level and $p\leq n$ is the number of layers in a prefix. A full frame at level $n$ has $n$ layers. Thus level $n$ corresponds to geometric dimension $n-1$ in the augmented unary case and to dimension $n$ in the binary case.
 
-For any $(X_0,X_1,\ldots): \X$, we define a stream of degeneracies:
-\begin{equation*}
-  \begin{array}{lll}
-    \Xrefl(X_0,X_1,\ldots) \defeq                                                                                             \\
-    \quad \Sigma r_{0}:\Pi d:\fullframe[0].\Pi x:X_0(d).X_1(\reflff[0][d=\d],\lambda \epsilon.x).                             \\
-    \quad \Sigma r_1:\Pi d:\fullframe[1][D={X_0}].\,\Pi x:X_1(d).X_2(\reflff[1][D={r_0}, d=\d],\lambda \epsilon.x).           \\
-    \quad \Sigma r_2:\Pi d:\fullframe[2][D={X_0,X_1}].\,\Pi x:X_2(d).X_3(\reflff[2][D={r_0,r_1}, d=\d],\lambda \epsilon.\,x). \\
-    \quad \ldots
-  \end{array}
-\end{equation*}
-where
-\begin{equation*}
-  \reflff[n][D={r_{-1},\ldots,r_{n-1}}]:\fullframe[n][D={X_{-1},\ldots,X_{n-1}}] \rightarrow \framep[n+1][n][][D={X_{-1},\ldots,X_{n}}]
-\end{equation*}
-computes the $n$ first layers of the border of $r_{n}(d)(x)$, knowing that the last layer is made of $\nu$ times $x$ itself, so that
+The chosen direction may lie beyond the prefix, or the prefix may have reached or passed it. These two cases give the operations \emph{Below} and \emph{Above}, written $\downarrow$ and $\uparrow$. Their direction indices are relative to the prefix height: Below counts upwards, so its index $q$ denotes direction $p+q$; Above counts downwards, so its index $q$ denotes direction $p-q$.
 
+Below transforms the existing prefix without inserting the repeated layer. It acts on a frame alone and preserves the prefix height:
 \begin{equation*}
-  (\reflff[n][D={r_{-1},\ldots,r_{n-1}},d=\d],\lambda \epsilon.\,x): \framep[n+1][n+1][][D={X_{-1},\ldots,X_{n}}]
+  \reflfbelow[n][p][][q]:\framep[n][p]\rightarrow\framep[n+1][p]
+  \qquad(q\leq n-p).
 \end{equation*}
-is a full frame.
+Above inserts the repeated layer, so it needs the painting $c$ completing the original prefix and produces one more layer:
+\begin{equation*}
+  \reflfabove[n][p][][q]:\Pi d:\framep[n][p].\,
+  \painting[n][p][][d=\d]\rightarrow\framep[n+1][p+1]
+  \qquad(q\leq p).
+\end{equation*}
+
+For any $(X_0,X_1,\ldots):\X$, let $R$ collect the degeneracy families at levels below $n$. The supplied family $L$ at level $n$ has type
+\begin{equation*}
+  L:\Pi q\leq n.\,\Pi d:\fullframe[n].\,\Pi x:X_n(d).\,
+  X_{n+1}(\reflfabove[n][n][][q][d=\d,c=x]).
+\end{equation*}
+Here $q$ is the Above index, so $L(q)$ inserts direction $n-q$. In the geometric examples, this operation is denoted $r^n_{n-q}$ in the binary case and $r^{n-1}_{n-q-1}$ in the augmented unary case. The underlying $X_i$ and earlier degeneracies $R$ are left implicit.
+
+The last-direction construction is the special case $q=0$ at a full frame. Writing
+\begin{equation*}
+  \reflff[n]\defeq\reflfbelow[n][n][][0]
+\end{equation*}
+its boundary is
+\begin{equation*}
+  \reflfabove[n][n][][0][d=\d,c=x]
+  = (\reflfbelow[n][n][][0][d=\d],\lambda\epsilon.\,x)
+  = (\reflff[n][d=\d],\lambda\epsilon.\,x).
+\end{equation*}
+Typing these boundaries uses face--degeneracy coherences. In particular, the constant layer is well-typed because restricting a degeneracy in its inserted direction recovers the original frame. The layer recursion also requires degeneracies to commute with restrictions. These laws are discussed in Section~\ref{sec:coherences}.
 
 % Abbreviated tables in this section†
 %
@@ -790,6 +798,7 @@ is a full frame.
 \input{tab-reflabove.tex}
 
 \subsubsection{Coherence conditions}
+\label{sec:coherences}
 
 The face and degeneracy relations of Grandis--Mauri~\cite{grandis03} describe how two successive operations commute, and when a face cancels a degeneracy. In their $\delta/\varepsilon$ notation, the relations on cells are as follows, with $\delta$ denoting restriction, $\varepsilon$ denoting degeneracy, and composition read from right to left. Dimension indices are suppressed:
 
