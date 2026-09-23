@@ -785,17 +785,27 @@ Typing these boundaries uses face--degeneracy coherences. In particular, the con
 \newcommandx{\Xreflto}[2][2]{\Xrefl[to][<#1][#2]}
 \newcommandx{\Xreflfrom}[2][2]{\Xrefl[from][\geq#1][#2]}
 
+At each step, the stream extends the previous degeneracy data and continues with the remaining underlying $\nu$-set. Coherences between the supplied degeneracies are additional data, discussed in Section~\ref{sec:coherences}.
+
 \def\lab{tab:coind}
 \input{tab-coind.tex}
+
+In Table~\ref{tab:core}, $R$ records earlier degeneracies and $L$ supplies the family at the current level. Its target is indexed by the Above frame constructed from $R$.
 
 \def\lab{tab:core}
 \input{tab-core.tex}
 
+The Below frame step transforms the prefix and its next layer. Each layer component uses the lower-dimensional Below painting operation. When the prefix height decreases by one, the Below index increases by one to denote the same direction; this accounts for the $q+1$ in the frame recursion. The layer step uses the $\mathsf{inf}$ coherence to commute the degeneracy with restriction. The Below and Above tables refer to each other through painting operations at earlier levels.
+
 \def\lab{tab:reflbelow}
 \input{tab-reflbelow.tex}
 
+At Above index $0$, the prefix reaches the chosen direction. The boundary is obtained by adjoining the constant layer $\lambda\epsilon.\,c$ to the Below frame in direction $0$, using the $\mathsf{id}$ coherence. At a successor index, Above recurses through the prefix and transforms the next layer using the Above painting operation and the $\mathsf{sup}$ coherence for Above.
+
 \def\lab{tab:reflabove}
 \input{tab-reflabove.tex}
+
+The frame operations are constructed Below first, then Above. For paintings the order is reversed: Above extends a painting through the remaining layers and ends with the supplied $L$ at the full frame. Below hands over to Above when it reaches the chosen direction.
 
 \subsubsection{Coherence conditions}
 \label{sec:coherences}
