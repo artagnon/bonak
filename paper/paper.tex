@@ -1,5 +1,5 @@
 \documentclass{art.cls/art}
-\usepackage{wasysym, tikz, tikz-cd, anyfontsize, xargs, environ, multirow, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, fontawesome5, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
+\usepackage{wasysym, tikz, tikz-cd, anyfontsize, xargs, environ, multirow, bigdelim, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, fontawesome5, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
 \usepackage[prefix=bonak]{art.cls/xkeymask}
 
 % Use the patterns library to draw the cubes figure
@@ -157,6 +157,16 @@
   \setkeys*[bonak]{cohz}{#8}
 }
 
+% Compact applications in the coherence tables; dimensions are inferred
+% from the argument types stated in each row.
+\newcommand{\cRF}[3]{\restrf[][][][#1][#2](#3)}
+\newcommand{\cRL}[3]{\restrl[][][][#1][#2](#3)}
+\newcommand{\cRP}[3]{\restrp[][][][#1][#2](#3)}
+\newcommand{\cSF}[2]{\reflfbelow[][][][#1](#2)}
+\newcommand{\cSL}[2]{\refllbelow[][][][#1](#2)}
+\newcommand{\cSP}[2]{\reflpbelow[][][][#1](#2)}
+\newcommand{\cAF}[3]{\reflfabove[][][][#1](#2,#3)}
+\newcommand{\cAP}[2]{\reflpabove[][][][#1](#2)}
 % Relation names; arrows identify the Bonak form of each degeneracy.
 \newcommand{\cohname}[1]{\ensuremath{\textsf{\color{chestnut}#1}}}
 \newcommand{\relRestrRestr}{\cohname{restr-restr}}
@@ -169,8 +179,12 @@
 \newcommand{\relRestrReflBelowSup}{\cohname{restr-refl\ensuremath{\downarrow}-sup}}
 \newcommand{\relRestrReflAboveSup}{\cohname{restr-refl\ensuremath{\uparrow}-sup}}
 \newcommand{\relReflBelowBelow}{\cohname{refl\ensuremath{\downarrow}-refl\ensuremath{\downarrow}}}
-\newcommand{\relReflAboveBelow}{\cohname{refl\ensuremath{\uparrow}-refl\ensuremath{\downarrow}}}
+\newcommand{\relReflBelowAbove}{\cohname{refl\ensuremath{\downarrow}-refl\ensuremath{\uparrow}}}
 \newcommand{\relReflAboveAbove}{\cohname{refl\ensuremath{\uparrow}-refl\ensuremath{\uparrow}}}
+\newcommand{\cohproof}[5]{#1^{#2,#3}_{\mathsf{\color{indian-yellow}#4},#5}}
+\newcommand{\cIF}[4]{\cohproof{\relRestrReflBelowInf}{#1}{#2}{frame}{#3,#4,\epsilon}}
+\newcommand{\cIL}[4]{\cohproof{\relRestrReflBelowInf}{#1}{#2}{layer}{#3,#4,\epsilon}}
+\newcommand{\cIP}[4]{\cohproof{\relRestrReflBelowInf}{#1}{#2}{painting}{#3,#4,\epsilon}}
 
 % Simplicial and Cubical sets
 \newcommand{\DeltaHat}{\ensuremath{\hat{\boldsymbol{\Delta}}}}
@@ -254,13 +268,13 @@
 \newcommandx{\cohp}[8][1,2,3,4,5,6,7,8]{\coh{painting}[#1][#2][#3][#4][#5][#6][#7][#8]}
 \newcommandx{\cohpbelow}[8][1,2,3,4,5,6,7,8]{{\renewcommand{\cohmark}{\zoneBelow}\coh{painting}[#1][#2][#3][#4][#5][#6][#7][#8]}}
 \newcommandx{\cohpabove}[8][1,2,3,4,5,6,7,8]{{\renewcommand{\cohmark}{\zoneAbove}\coh{painting}[#1][#2][#3][#4][#5][#6][#7][#8]}}
-\newcommandx{\cohzone}[7][1,2,3,4,5,6,7]{\cohz{restr-refl-id}[#1][#2][#3][#4][#5][#6][#7]}
-\newcommandx{\cohztwo}[7][1,2,3,4,5,6,7]{\cohz{restr-refl-inf}[#1][#2][#3][#4][#5][#6][#7]}
-\newcommandx{\cohzthree}[7][1,2,3,4,5,6,7]{\cohz{restr-refl0-sup}[#1][#2][#3][#4][#5][#6][#7]}
-\newcommandx{\cohzfour}[7][1,2,3,4,5,6,7]{\cohz{restr-refl1-sup}[#1][#2][#3][#4][#5][#6][#7]}
-\newcommandx{\cohzfive}[7][1,2,3,4,5,6,7]{\cohz{refl0-refl0}[#1][#2][#3][#4][#5][#6][#7]}
-\newcommandx{\cohzsix}[7][1,2,3,4,5,6,7]{\cohz{refl0-refl1}[#1][#2][#3][#4][#5][#6][#7]}
-\newcommandx{\cohzseven}[7][1,2,3,4,5,6,7]{\cohz{refl1-refl1}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohzone}[7][1,2,3,4,5,6,7]{\cohz{restr-refl\ensuremath{\downarrow}-id}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohztwo}[7][1,2,3,4,5,6,7]{\cohz{restr-refl\ensuremath{\downarrow}-inf}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohzthree}[7][1,2,3,4,5,6,7]{\cohz{restr-refl\ensuremath{\downarrow}-sup}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohzfour}[7][1,2,3,4,5,6,7]{\cohz{restr-refl\ensuremath{\uparrow}-sup}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohzfive}[7][1,2,3,4,5,6,7]{\cohz{refl\ensuremath{\downarrow}-refl\ensuremath{\downarrow}}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohzsix}[7][1,2,3,4,5,6,7]{\cohz{refl\ensuremath{\downarrow}-refl\ensuremath{\uparrow}}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohzseven}[7][1,2,3,4,5,6,7]{\cohz{refl\ensuremath{\uparrow}-refl\ensuremath{\uparrow}}[#1][#2][#3][#4][#5][#6][#7]}
 \newcommandx{\cohzeight}[7][1,2,3,4,5,6,7]{\cohz{restr-restr}[#1][#2][#3][#4][#5][#6][#7]}
 \newcommandx{\fullframe}[2][1,2]{\prim{fullframe}[#1][][][#2]}
 
@@ -831,82 +845,43 @@ The frame operations are constructed Below first, then Above. For paintings the 
 \subsubsection{Coherence conditions}
 \label{sec:coherences}
 
-The face and degeneracy relations of Grandis--Mauri~\cite{grandis03} describe how two successive operations commute, and when a face cancels a degeneracy. In their $\delta/\varepsilon$ notation, the relations on cells are as follows, with $\delta$ denoting restriction, $\varepsilon$ denoting degeneracy, and composition read from right to left. Dimension indices are suppressed:
+The five relations of Grandis--Mauri~\cite{grandis03} describe commutation of restrictions and degeneracies, and cancellation of a degeneracy by a restriction in its inserted direction. Grandis--Mauri state the relations between maps in the cubical site. Here we display their images under a contravariant presheaf, which reverses composition. Thus $\delta_r^\alpha$ denotes restriction on cells and $\varepsilon_q$ denotes degeneracy, with face labels $\alpha,\beta\in\nu$. Composition is read from right to left, and dimension indices are left implicit:
+\[
+\begin{array}{r@{\;}c@{\;}c@{}l@{\qquad}l@{\qquad}l}
+ \delta_q^\alpha\delta_r^\beta & = & &
+   \delta_r^\beta\delta_{q+1}^\alpha & r\leq q & (\relRestrRestr),\\[0.4em]
+   & & \ldelim\{{3}{*} &
+   \varepsilon_{q-1}\delta_r^\alpha & r<q & (\relRestrReflInf),\\
+ \delta_r^\alpha\varepsilon_q & = & &
+   \id & r=q & (\relRestrReflId),\\
+   & & & \varepsilon_q\delta_{r-1}^\alpha & r>q & (\relRestrReflSup),\\[0.4em]
+ \varepsilon_q\varepsilon_r & = & &
+   \varepsilon_{r+1}\varepsilon_q & q\leq r & (\relReflRefl).
+\end{array}
+\]
+These are zero-based absolute direction indices, ranging over the instances in which the composites are defined. At level $n$, the cell component of $\varepsilon_i$ is supplied by $L(n-i)$. The three cases distinguish a restriction before, at, or after the inserted direction.
 
-\begin{equation*}
-  \begin{array}{lccr}
-    \delta^\beta_j \delta^\alpha_i & = & \delta^\alpha_{i + 1} \delta^\beta_j & j \leq i \\
-    \varepsilon_i \varepsilon_j    & = & \varepsilon_j \varepsilon_{i + 1}    & j \leq i \\
-    \epsilon_i \delta^\alpha_i     & = &
-    \begin{cases}
-      \delta^\alpha_{i - 1} \varepsilon_j & j < i \text{\qquad(inf)} \\
-      1                                   & j = i \text{\qquad(id)}  \\
-      \delta^\alpha_i \varepsilon_{j - 1} & j > i \text{\qquad(sup)} \\
-    \end{cases}
-  \end{array}
-\end{equation*}
+The mixed relation above is displayed in the simplifying direction. In the construction tables, the equality proofs are oriented in the direction used for transport, as in the formalization. Coherence names list the operations on the right-hand side of those construction-oriented equations, with the outer operation first. In particular, $\relRestrReflBelowId$ proves $d=\cRF{q}{\epsilon}{\cSF{q}{d}}$, reversing the cancellation equation above.
 
-The first two equations express restriction--restriction and degeneracy--degeneracy coherence, respectively. We call the three restriction--degeneracy coherences $\mathsf{inf}$, $\mathsf{id}$ and $\mathsf{sup}$, according to whether the restriction is before, at, or after the inserted direction.
+In the indexed construction, these relations become equalities of partial boundaries. The Below/Above distinction refines $\relRestrReflSup$ into $\relRestrReflBelowSup$ and $\relRestrReflAboveSup$, and $\relReflRefl$ into $\relReflBelowBelow$, $\relReflBelowAbove$, and $\relReflAboveAbove$. Together with $\relRestrReflBelowInf$ and $\relRestrReflBelowId$, these are the seven degeneracy coherence families. The underlying $\nu$-set already supplies $\relRestrRestr$.
 
-The below/above distinction gives seven degeneracy coherence families: restriction--restriction coherence from the underlying $\nu$-set construction, $\mathsf{id}$ and $\mathsf{inf}$ for below, $\mathsf{sup}$ for below and above, and degeneracy--degeneracy coherence in the below--below, above--below and above--above cases.
+Typing the layer operations requires transporting paintings along frame equalities. The Below layer step uses $\relRestrReflBelowInf$ to commute degeneracy with restriction. At Above index $0$, $\relRestrReflBelowId$ identifies the restriction of the degenerate frame with the original frame, allowing the input painting to form a constant layer. At a successor Above index, the layer step uses $\relRestrReflAboveSup$. The restriction layer similarly uses $\relRestrRestr$ to commute two restrictions. The frame operations and the types of the coherences they require are therefore constructed together.
 
-The coherence conditions for the degeneracies in one direction are:
+Tables~\ref{tab:cohframe-types} and~\ref{tab:cohframe-dgn} give their types for frames. We assume $p\leq n$ and face labels $\epsilon,\omega\in\nu$. Each row quantifies over its displayed arguments and bounds, using the relative direction indices introduced above. Operation superscripts are omitted where the dimensions follow from the argument types. Indexing frames of layer and painting operations are implicit; an Above frame operation displays both its frame and painting arguments. The resulting equality is between frames even when its terms involve paintings.
 
-\begin{equation*}
-  \begin{array}{l}
-    \mathsf{\textcolor{chestnut}{idrestrrefl}}_{\textcolor{indian-yellow}{\mathsf{frame}},\epsilon}^n(r_{-1},\ldots,r_{n-1})(d:\fullframe[n][D={X_0,\ldots,X_{n-1}}]):        \\
-    ~~ \restrf[n][n][][][][d={\reflff[n][D={r_{-1},\ldots,r_{n-1}},d=\d]}] = d                                                                                                \\
-    \\
-    \mathsf{\textcolor{chestnut}{cohrestrrefl}}_{\textcolor{indian-yellow}{\mathsf{frame}},\epsilon,p<n}^n(r_{-1},\ldots,r_{n-1})(d:\framep[n][][p][D={X_0,\ldots,X_{n-1}}]): \\
-    ~~\restrf[n][p](\mathsf{\color{russian-green}{refl}}^{n,p}_{\mathsf{\color{indian-yellow}{frame}}}(r_{-1},\ldots,r_{n-1})(d)) = \reflf[n-1][p][][][D={r_{-1},\ldots,r_{n-2}},d={\restrf[n-1][p][][\epsilon][p][d=\d]}]
-  \end{array}
-\end{equation*}
-where
-$\reflf[n][p]$ generalises $\reflff[n]$ prefixes of $\fullframe[n]$:
+In the tables, transports and the standard conversions between equalities of dependent pairs or functions and their componentwise equalities are left implicit, as if working in extensional type theory. The Rocq formalization makes these conversions explicit. We record a dependent type with $u=_e v$ when it is useful to identify the frame equality $e$ along which $u$ is transported before comparison with $v$.
 
-\begin{equation*}
-  \reflf[n][p][][][D={r_{-1},\ldots,r_{n-1}}]:\framep[n][p][][D={X_{-1},\ldots,X_{n-1}}] \rightarrow \framep[n+1][p][][D={X_{-1},\ldots,X_{n}}]
-\end{equation*}
+\input{tab-cohframe-types.tex}
 
-\begin{align*}
-  \cohzone \\
-  \cohztwo \\
-\end{align*}
+The proofs follow the decomposition of boundaries into frames, layers, and paintings. A frame proof combines a frame proof (recursively) with a layer proof. A painting proof combines a layer proof with a painting proof (recursively). A layer proof is pointwise over the face labels and uses a lower-dimensional painting coherence.
 
-We need the following additional coherence conditions for degeneracies in the
-other directions to be well-typed:
+The intensional justification of the layer proof also uses a second coherence, an equality between composites of frame-equality proofs. Besides the lower-dimensional painting coherence, it requires those composites to agree so that the implicit transports have the same effect. Since frames are sets, this second coherence follows from uniqueness of identity proofs ($\UIP$). It does not replace the painting coherence: the two are separate premises of the layer argument.
 
-\begin{align*}
-  \cohzthree \\
-  \cohzfour  \\
-\end{align*}
+The families use this recursive decomposition, with different dependencies and boundary cases. The families $\relRestrReflBelowInf$ and $\relRestrReflBelowId$ each have a single Below stage. For $\relRestrReflSup$, the frame proofs construct $\relRestrReflBelowSup$ before $\relRestrReflAboveSup$, while the painting proofs proceed in the reverse order. For $\relReflRefl$, the frame order is $\relReflBelowBelow$, then $\relReflBelowAbove$, then $\relReflAboveAbove$; the painting order is again reversed. At a transition between stages, the zero-direction case uses the adjacent stage's coherence together with a separate layer proof.
 
-Additionally, degeneracies in cubical sets are assumed to be a subject of these additional degeneracy-degenracy coherences, which are an additonal structure someone can impose, and are not intrinsically required for the
+These boundary cases also change the shape of the second coherence. A hexagon compares two composites of three frame equalities; a square compares composites containing four equalities in total. The ordinary commutation-layer steps give hexagons. The cancellation family $\relRestrReflBelowId$ gives a square with one step on one side and three on the other. The zero-direction layer cases of $\relRestrReflAboveSup$ and $\relReflBelowAbove$ require squares with two steps on each side; $\relReflAboveAbove$ requires a square with three steps on one side and one on the other. Including $\relRestrRestr$, the construction has seven hexagonal and four square obligations, all discharged by $\UIP$.
 
-\begin{align*}
-  \cohzfive  \\
-  \cohzsix   \\
-  \cohzseven \\
-  \cohzeight \\
-\end{align*}
-
-All coherence condition proofs follow the same decomposition pattern, which is induced by the structure of the underlying construction of restrictions and degenracies:
-
-\begin{enumerate}
-  \item The recursive case of $\cohf$ is built as a pair of $\cohf$ (recursively) and $\cohl$.
-  \item The recursive case of $\cohp$ is built as a pair of $\cohl$ and $\cohp$ (recursively).
-  \item The $\cohl$ is built from $\coh2$ and $\cohp$.
-\end{enumerate}
-
-For the coherences that are decomposed into above and below cases, there exists a dependency between above and below proofs, induced by the dependency between above and below degeneracies.
-
-
-
-% TODO: explain the above-below dependency.
-
-
-% TODO: show one table with definitions for frames, layers and paintigns
-% TODO: show an example/detaield explanation of a layer decomposition
+The degeneracy--degeneracy laws require additional compatibility data alongside the supplied families. The full-frame painting case of $\relReflAboveAbove$ uses a compatibility proof supplied alongside the family $L$. This proof equates two composites of supplied degeneracies over the corresponding frame equality. The data for the $\relReflRefl$ laws comprise the families in Tables~\ref{tab:coind} and~\ref{tab:core} together with these compatibility proofs.
 
 \section{Conclusion and future work}
 

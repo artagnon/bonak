@@ -1,0 +1,57 @@
+\begin{eqntable}{Frame-coherence types for restrictions and degeneracies.
+    \label{tab:cohframe-types}}
+  \eqnline{\cohproof{\relRestrRestr}{n}{p}{frame}{q,r,\epsilon,\omega}}
+    {\makecell{\eqnarg{cohframe}{d}{\framep[n+2][p]} \\
+      \ensuremath{0\leq r\leq q\leq n-p}}}
+    {:}{\mbox{$\cRF{q}{\epsilon}{\cRF{r}{\omega}{d}}
+      =\cRF{r}{\omega}{\cRF{q+1}{\epsilon}{d}}$}}
+  \midrule
+  \eqnline{\cohproof{\relRestrReflBelowId}{n}{p}{frame}{q,\epsilon}}
+    {\makecell{\eqnarg{cohframe}{d}{\framep[n][p]} \\
+      \ensuremath{0\leq q\leq n-p}}}
+    {:}{\mbox{$d=\cRF{q}{\epsilon}{\cSF{q}{d}}$}}
+  \midrule
+  \eqnline{\cIF{n}{p}{q}{r}}
+    {\makecell{\eqnarg{cohframe}{d}{\framep[n+1][p]} \\
+      \ensuremath{0\leq r\leq q\leq n-p}}}
+    {:}{\mbox{$\cSF{q}{\cRF{r}{\epsilon}{d}}
+      =\cRF{r}{\epsilon}{\cSF{q+1}{d}}$}}
+  \midrule
+  \eqnline{\cohproof{\relRestrReflBelowSup}{n}{p}{frame}{q,r,\epsilon}}
+    {\makecell{\eqnarg{cohframe}{d}{\framep[n+1][p]} \\
+      \ensuremath{0\leq q\leq r\leq n-p}}}
+    {:}{\mbox{$\cSF{q}{\cRF{r}{\epsilon}{d}}
+      =\cRF{r+1}{\epsilon}{\cSF{q}{d}}$}}
+  \midrule
+  \eqnline{\cohproof{\relRestrReflAboveSup}{n}{p}{frame}{q,r,\epsilon}}
+    {\makecell{\eqnarg{cohframe}{d}{\framep[n+1][p]} \\
+      \eqnarg{cohpainting}{c}{\painting[n+1][p](d)} \\
+      \ensuremath{0\leq q\leq p} \\
+      \ensuremath{0\leq r\leq n-p}}}
+    {:}{\mbox{$\cAF{q}{\cRF{r}{\epsilon}{d}}{\cRP{r}{\epsilon}{c}}
+      =\cRF{r}{\epsilon}{\cAF{q}{d}{c}}$}}
+\end{eqntable}
+
+\begin{eqntable}{Frame-coherence types for two degeneracies.
+    Painting arguments complete the boundaries needed by Above;
+    the displayed types are frame equalities.\label{tab:cohframe-dgn}}
+  \eqnline{\cohproof{\relReflBelowBelow}{n}{p}{frame}{q,r}}
+    {\makecell{\eqnarg{cohframe}{d}{\framep[n][p]} \\
+      \ensuremath{q\leq r\leq n-p}}}
+    {:}{\mbox{$\cSF{q}{\cSF{r}{d}}=\cSF{r+1}{\cSF{q}{d}}$}}
+  \midrule
+  \eqnline{\cohproof{\relReflBelowAbove}{n}{p}{frame}{q,r}}
+    {\makecell{\eqnarg{cohframe}{d}{\framep[n][p]} \\
+      \eqnarg{cohpainting}{c}{\painting[n][p](d)} \\
+      \ensuremath{q\leq p} \\
+      \ensuremath{r\leq n-p}}}
+    {:}{\mbox{$\cAF{q}{\cSF{r}{d}}{\cSP{r}{c}}
+      =\cSF{r}{\cAF{q}{d}{c}}$}}
+  \midrule
+  \eqnline{\cohproof{\relReflAboveAbove}{n}{p}{frame}{q,r}}
+    {\makecell{\eqnarg{cohframe}{d}{\framep[n][p]} \\
+      \eqnarg{cohpainting}{c}{\painting[n][p](d)} \\
+      \ensuremath{q\leq r\leq p}}}
+    {:}{\mbox{$\cAF{r+1}{\cAF{q}{d}{c}}{\cAP{q}{c}}
+      =\cAF{q}{\cAF{r}{d}{c}}{\cAP{r}{c}}$}}
+\end{eqntable}
