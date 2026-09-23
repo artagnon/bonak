@@ -452,7 +452,9 @@ In this paper, we focus on an indexed definition of simplicial sets equipped wit
 
 \section{Our construction}
 \subsection{Intuition for our construction}
-\begin{table}[H]
+A parametric degeneracy inserts a new direction at any position in the ordered list of directions. Its boundary contains a repeated layer at that position, together with degeneracies of the original faces. Figure~\ref{fig:degeneracy-layers} illustrates the three possible positions for a square.
+
+\begin{figure}[H]
   \begin{tabularx}{\linewidth}{c c c c c}
     \toprule
     \begin{tikzpicture}[scale=1.5]
@@ -635,7 +637,9 @@ In this paper, we focus on an indexed definition of simplicial sets equipped wit
     \end{tikzpicture}                                                                                                                         \\
     \bottomrule
   \end{tabularx}
-\end{table}
+  \caption{Cubical degeneracies and their boundary layers, each consisting of two paintings. Below the original square, the rows insert directions $0$, $1$, and $2$. Green faces repeat the square; blue and red faces are degeneracies of its edges. The bottom row shows the last-direction case.}
+  \label{fig:degeneracy-layers}
+\end{figure}
 
 \subsubsection{Parametric degeneracies vs connecting degeneracies}
 \label{sec:dgn-flavors}
