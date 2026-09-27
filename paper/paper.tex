@@ -427,21 +427,21 @@ Semi-cubical sets can be expressed directly in terms of presheaves over a $\nu$-
 \]
 
 \begin{figure}[H]
-\begin{equation*}
-  \begin{array}{cllccllll}
-    \multicolumn{3}{c}{\mbox{\emph{fibred form}}} & \quad\mathit{vs}\quad & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                     \\
-    \\
-    Y_0                                           & :                     & \HSet                                       &  & X_0                                                                                & :                & \HSet                                                           & \mbox{(points)}   \\
-    \uparrow\uparrow                                                                                                                                                                                                                                                                                                           \\
-    Y_1                                           & :                     & \HSet                                       &  & X_1                                                                                & :                & X_0 \times X_0 \rightarrow \HSet                                & \mbox{(segments)} \\
-    \uparrow\uparrow\uparrow\uparrow              &                       &                                                &  &                                                                                                                                                                                                \\
-    Y_2                                           & :                     & \HSet                                       &  & X_2                                                                                & :                & \Pi (x^0_{LL},x^0_{LR}).\, \Pi x^1_{L*}:X_1 (x^0_{LL},x^0_{LR}).                       \\
-                                                  &                       &                                                &  &                                                                                    &                  & \Pi (x^0_{RL},x^0_{RR}).\, \Pi x^1_{R*}:X_1 (x^0_{RL},x^0_{RR}).\,                     \\
-    \multicolumn{3}{c}{\mbox{~+ coherences}}      &                       &                                                &  & X_1 (x^0_{LL},x^0_{RL}) \times X_1 (x^0_{LR},x^0_{RR}) \rightarrow \HSet \qquad & \mbox{(squares)}                                                                                          \\
-                                                  &                       &                                                &  &                                                                                                                                                                                                \\
-    \vdots                                        &                       &                                                &  & \vdots                                                                                                                                                                                         \\
-  \end{array}
-\end{equation*}
+  \begin{equation*}
+    \begin{array}{cllccllll}
+      \multicolumn{3}{c}{\mbox{\emph{fibred form}}} & \quad\mathit{vs}\quad & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                  \\
+      \\
+      Y_0                                           & :                     & \HSet                                          &  & X_0                                                                             & :                & \HSet                                                              & \mbox{(points)}   \\
+      \uparrow\uparrow                                                                                                                                                                                                                                                                                                        \\
+      Y_1                                           & :                     & \HSet                                          &  & X_1                                                                             & :                & X_0 \times X_0 \rightarrow \HSet                                   & \mbox{(segments)} \\
+      \uparrow\uparrow\uparrow\uparrow              &                       &                                                &  &                                                                                                                                                                                             \\
+      Y_2                                           & :                     & \HSet                                          &  & X_2                                                                             & :                & \Pi (x^0_{LL},x^0_{LR}).\, \Pi x^1_{L*}:X_1 (x^0_{LL},x^0_{LR}).                       \\
+                                                    &                       &                                                &  &                                                                                 &                  & \Pi (x^0_{RL},x^0_{RR}).\, \Pi x^1_{R*}:X_1 (x^0_{RL},x^0_{RR}).\,                     \\
+      \multicolumn{3}{c}{\mbox{~+ coherences}}      &                       &                                                &  & X_1 (x^0_{LL},x^0_{RL}) \times X_1 (x^0_{LR},x^0_{RR}) \rightarrow \HSet \qquad & \mbox{(squares)}                                                                                          \\
+                                                    &                       &                                                &  &                                                                                                                                                                                             \\
+      \vdots                                        &                       &                                                &  & \vdots                                                                                                                                                                                      \\
+    \end{array}
+  \end{equation*}
   \caption{Fibred and indexed presentations of semi-cubical sets.}
   \label{fig:fibred-indexed-faces}
 \end{figure}
@@ -451,29 +451,29 @@ The two presentations in Figure~\ref{fig:fibred-indexed-faces} are provably equi
 In this paper, we focus on an indexed definition of simplicial sets equipped with faces and a \emph{cubical-like} form of degeneracy and on cubical sets with faces and degeneracies. Figure~\ref{fig:fibred-indexed-degeneracies} illustrates the corresponding fibred and indexed presentations with degeneracies.
 
 \begin{figure}[H]
-\begin{equation*}
-  \begin{array}{cllccllll}
-    \multicolumn{3}{c}{\mbox{\emph{fibred form}}}            & \quad\mathit{vs}\quad                                                     & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                                                     \\
-    \\
-    Y_0                                                      & :                                                                         & \HSet                                                             &  & X_0                                                                                & :                & \HSet                                                                     & \mbox{(points)}   \\
-    \uparrow\!\downarrow\uparrow                                                                                                                                                                                                                                                                                                                                                                                              \\
-    Y_1                                                      & :                                                                         & \HSet                                                             &  & X_1                                                                                & :                & X_0 \times X_0 \rightarrow \HSet                                          & \mbox{(segments)} \\
-    \uparrow\!\downarrow\uparrow\uparrow\!\downarrow\uparrow &                                                                           &                                                                      &  & r^0_0                                                                              & :                & \Pi x_0:X_0.\,X_1(x_0,x_0)                                                                       \\
-    Y_2                                                      & :                                                                         & \HSet                                                             &  & X_2                                                                                & :                & \Pi (x^0_{LL},x^0_{LR}).\, \Pi x^1_{L*}:X_1 (x^0_{LL},x^0_{LR}).                                 \\
-                                                             &                                                                           &                                                                      &  &                                                                                    &                  & \Pi (x^0_{RL},x^0_{RR}).\, \Pi x^1_{R*}:X_1 (x^0_{RL},x^0_{RR}).\,                               \\
-    \multicolumn{3}{c}{\mbox{~+ coherences}}                 &                                                                           &                                                                      &  & X_1 (x^0_{LL},x^0_{RL}) \times X_1 (x^0_{LR},x^0_{RR}) \rightarrow \HSet \qquad & \mbox{(squares)}                                                                                                    \\
-                                                             &                                                                           &                                                                      &  & r^1_0                                                                              & :                & \Pi (x^0_{L},x^0_{R}):(X_0 \times X_0).\,\Pi x^1:X_1(x^0_L,x^0_R).\,                             \\
-                                                             &                                                                           &                                                                      &  &                                                                                    &                  & X_2((x^0_{L},x^0_{L}),r^0_0(x^0_{L}),(x^0_{R},x^0_{R}),r^0_0(x^0_{R}),(x^1,x^1))                     \\
-                                                             &                                                                           &                                                                      &  &
-    r^1_1                                                    & :                                                                         & \Pi (x^0_{L},x^0_{R}):(X_0 \times X_0).\,\Pi x^1:X_1(x^0_L,x^0_R).\,                                                                                                                                                                                                               \\
-                                                             &                                                                           &                                                                      &  &                                                                                    &                  & X_2((x^0_{L},x^0_{R}),x^1,(x^0_{L},x^0_{R}),x^1,(r^0_0(x^0_{L}),r^0_0(x^0_{L})))                     \\
-                                                             &                                                                           &                                                                      &  &
-    coh^1_0                                                  &
-    :                                                        & \Pi x_0:X_0.\, r^1_0 (x^0, x^0,r^0_0 (x^0)) = r^1_1 (x^0,x^0,r^0_0 (x^0))                                                                                                                                                                                                                                                                                      \\
+  \begin{equation*}
+    \begin{array}{cllccllll}
+      \multicolumn{3}{c}{\mbox{\emph{fibred form}}}            & \quad\mathit{vs}\quad                                                     & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                                                      \\
+      \\
+      Y_0                                                      & :                                                                         & \HSet                                                                &  & X_0                                                                             & :                & \HSet                                                                            & \mbox{(points)}   \\
+      \uparrow\!\downarrow\uparrow                                                                                                                                                                                                                                                                                                                                                                                               \\
+      Y_1                                                      & :                                                                         & \HSet                                                                &  & X_1                                                                             & :                & X_0 \times X_0 \rightarrow \HSet                                                 & \mbox{(segments)} \\
+      \uparrow\!\downarrow\uparrow\uparrow\!\downarrow\uparrow &                                                                           &                                                                      &  & r^0_0                                                                           & :                & \Pi x_0:X_0.\,X_1(x_0,x_0)                                                                           \\
+      Y_2                                                      & :                                                                         & \HSet                                                                &  & X_2                                                                             & :                & \Pi (x^0_{LL},x^0_{LR}).\, \Pi x^1_{L*}:X_1 (x^0_{LL},x^0_{LR}).                                     \\
+                                                               &                                                                           &                                                                      &  &                                                                                 &                  & \Pi (x^0_{RL},x^0_{RR}).\, \Pi x^1_{R*}:X_1 (x^0_{RL},x^0_{RR}).\,                                   \\
+      \multicolumn{3}{c}{\mbox{~+ coherences}}                 &                                                                           &                                                                      &  & X_1 (x^0_{LL},x^0_{RL}) \times X_1 (x^0_{LR},x^0_{RR}) \rightarrow \HSet \qquad & \mbox{(squares)}                                                                                                        \\
+                                                               &                                                                           &                                                                      &  & r^1_0                                                                           & :                & \Pi (x^0_{L},x^0_{R}):(X_0 \times X_0).\,\Pi x^1:X_1(x^0_L,x^0_R).\,                                 \\
+                                                               &                                                                           &                                                                      &  &                                                                                 &                  & X_2((x^0_{L},x^0_{L}),r^0_0(x^0_{L}),(x^0_{R},x^0_{R}),r^0_0(x^0_{R}),(x^1,x^1))                     \\
+                                                               &                                                                           &                                                                      &  &
+      r^1_1                                                    & :                                                                         & \Pi (x^0_{L},x^0_{R}):(X_0 \times X_0).\,\Pi x^1:X_1(x^0_L,x^0_R).\,                                                                                                                                                                                                                \\
+                                                               &                                                                           &                                                                      &  &                                                                                 &                  & X_2((x^0_{L},x^0_{R}),x^1,(x^0_{L},x^0_{R}),x^1,(r^0_0(x^0_{L}),r^0_0(x^0_{L})))                     \\
+                                                               &                                                                           &                                                                      &  &
+      coh^1_0                                                  &
+      :                                                        & \Pi x_0:X_0.\, r^1_0 (x^0, x^0,r^0_0 (x^0)) = r^1_1 (x^0,x^0,r^0_0 (x^0))                                                                                                                                                                                                                                                                                       \\
 
-    \vdots                                                   &                                                                           &                                                                      &  & \vdots                                                                                                                                                                                                   \\
-  \end{array}
-\end{equation*}
+      \vdots                                                   &                                                                           &                                                                      &  & \vdots                                                                                                                                                                                                    \\
+    \end{array}
+  \end{equation*}
   \caption{Fibred and indexed presentations of cubical sets with degeneracies. The indexed presentation explicitly supplies degeneracies and their mutual coherences.}
   \label{fig:fibred-indexed-degeneracies}
 \end{figure}
@@ -842,17 +842,17 @@ The frame operations are constructed Below first, then Above. For paintings the 
 
 The five relations of Grandis--Mauri~\cite{grandis03} describe commutation of restrictions and degeneracies, and cancellation of a degeneracy by a restriction in its inserted direction. Grandis--Mauri state the relations between maps in the cubical site. Here we display their images under a contravariant presheaf, which reverses composition. Thus $\delta_r^\alpha$ denotes restriction on cells and $\varepsilon_q$ denotes degeneracy, with face labels $\alpha,\beta\in\nu$. Composition is read from right to left, and dimension indices are left implicit:
 \[
-\begin{array}{r@{\;}c@{\;}c@{}l@{\qquad}l@{\qquad}l}
- \delta_q^\alpha\delta_r^\beta & = & &
-   \delta_r^\beta\delta_{q+1}^\alpha & r\leq q & (\relRestrRestr),\\[0.4em]
-   & & \ldelim\{{3}{*} &
-   \varepsilon_{q-1}\delta_r^\alpha & r<q & (\relRestrReflInf),\\
- \delta_r^\alpha\varepsilon_q & = & &
-   \id & r=q & (\relRestrReflId),\\
-   & & & \varepsilon_q\delta_{r-1}^\alpha & r>q & (\relRestrReflSup),\\[0.4em]
- \varepsilon_q\varepsilon_r & = & &
-   \varepsilon_{r+1}\varepsilon_q & q\leq r & (\relReflRefl).
-\end{array}
+  \begin{array}{r@{\;}c@{\;}c@{}l@{\qquad}l@{\qquad}l}
+    \delta_q^\alpha\delta_r^\beta     & =       &                     &
+    \delta_r^\beta\delta_{q+1}^\alpha & r\leq q & (\relRestrRestr),                                                                  \\[0.4em]
+                                      &         & \ldelim\{{3}{*}     &
+    \varepsilon_{q-1}\delta_r^\alpha  & r<q     & (\relRestrReflInf),                                                                \\
+    \delta_r^\alpha\varepsilon_q      & =       &                     &
+    \id                               & r=q     & (\relRestrReflId),                                                                 \\
+                                      &         &                     & \varepsilon_q\delta_{r-1}^\alpha & r>q & (\relRestrReflSup), \\[0.4em]
+    \varepsilon_q\varepsilon_r        & =       &                     &
+    \varepsilon_{r+1}\varepsilon_q    & q\leq r & (\relReflRefl).
+  \end{array}
 \]
 These are zero-based absolute direction indices, ranging over the instances in which the composites are defined. At level $n$, the cell component of $\varepsilon_i$ is supplied by $L(n-i)$. The three cases distinguish a restriction before, at, or after the inserted direction.
 
