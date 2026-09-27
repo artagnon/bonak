@@ -367,7 +367,7 @@ We previously exploited the observation that semi-simplicial and semi-cubical se
 
 \subsection{\texorpdfstring{$\nu$}{nu}-shape sets}
 
-Fix a set $\nu$ of face labels, called the \emph{arity}. The unary case uses a singleton set of labels; the binary case uses two labels. The semi-simplicial and semi-cubical categories are instances of the more general notion of $\nu$-semi-shape category.
+Fix a set $\nu$ of face labels, called the \emph{arity}. The unary case uses a singleton set of labels; the binary case uses two labels. The augmented semi-simplicial and semi-cubical categories are instances of the more general notion of $\nu$-semi-shape category.
 
 \begin{definition}[$\hexagon$]
   The definition of $\nu$-semi-shape category is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than or equal to that of $g$. A star denotes a retained coordinate and a label in $\nu$ denotes an inserted constant. We write $|l|_{\kstar}$ for the number of stars in a word $l$ and $\epsilon$ for the empty word. Its objects, morphisms, and identities are:
@@ -384,7 +384,7 @@ Fix a set $\nu$ of face labels, called the \emph{arity}. The unary case uses a s
   \end{align*}
 \end{definition}
 
-In particular $1$-semi-shape category presents the semi-simplicial category while the $2$-semi-shape category presents the semi-cubical category (note that this also relates to unary and binary parametricity~\cite{bernardy15, reynolds83}).
+In particular $1$-semi-shape category presents the augmented semi-simplicial category while the $2$-semi-shape category presents the semi-cubical category (note that this also relates to unary and binary parametricity~\cite{bernardy15, reynolds83}).
 
 Degeneracies can be added to the $\nu$-semi-shape category in different ways. We here focus on cubical-style degeneracies as in Grandis~\cite{grandis03} and their adaptation to the unary case as in \cite{bernardy15}. A morphism from $p$ to $n$ in the $\nu$-shape category retains $k$ of the $p$ input coordinates: it first discards the other $p-k$ coordinates, then inserts constants to obtain $n$ output coordinates.
 
@@ -423,7 +423,7 @@ We now work in dependent type theory. A type $A$ is an \emph{h-set} if, for any 
 
 Semi-cubical sets can be expressed directly in terms of presheaves over a $\nu$-semi-shape category using morphisms, by iterating the equivalence between maps and families:
 \[
-  (\Sigma A : Set. A \rightarrow B) \equiv (B \rightarrow Set)
+  (\Sigma A : \HSet. A \rightarrow B) \simeq (B \rightarrow \HSet)
 \]
 
 \begin{figure}[H]
@@ -678,7 +678,7 @@ The boundary of a degenerate cell contains a repeated layer at the inserted dire
 \subsubsection{Parametric degeneracies vs connecting degeneracies}
 \label{sec:dgn-flavors}
 
-We use $n$-shape to mean a cell of geometric dimension $n$. Despite a common terminology, degeneracies in simplicial sets~\cite{} and in cubical sets~\cite{grandis03} are of a different nature. Degeneracies in cubical sets insert a new axis while degeneracies in simplicial sets duplicate an existing axis. In particular, degenerating a $n$-shape $c$ in a cubical set is about \emph{inserting a new axis} $i \leq n$ (counting axes of a $n$-shape from $0$ to $n-1$), yielding a $(n+1)$-shape lying on $c$ in the $i$-th axis and lying on the degeneracy of the $j$-th axis of $c$ in the $j$-th axis (resp. $(j-1)$-th axis) for $j < i$ (resp $j > i$). In the simplicial case, the degeneracy process is better understood by reasoning in augmented simplicial sets where the dimension starts at $-1$: degenerating a $n$-shape $c$ in simplicial sets is about \emph{duplicating an existing axis} $i < n$ (thus requiring $n$ to be at least $0$), yielding a $(n+1)$-shape lying on $c$ in both the $i$ and $i+1$ axes, while it lies again on the degeneracy of the $j$-th axis (resp. $(j-1)$-th) of $c$ in the $j$-th axis for $j < i$ (resp. $j > i+1$).
+We use $n$-shape to mean a cell of geometric dimension $n$. Despite a common terminology, degeneracies in simplicial sets~\cite[Section~3]{fri08} and in cubical sets~\cite{grandis03} are of a different nature. Degeneracies in cubical sets insert a new axis while degeneracies in simplicial sets duplicate an existing axis. In particular, degenerating a $n$-shape $c$ in a cubical set is about \emph{inserting a new axis} $i \leq n$ (counting axes of a $n$-shape from $0$ to $n-1$), yielding a $(n+1)$-shape lying on $c$ in the $i$-th axis and lying on the degeneracy of the $j$-th axis of $c$ in the $j$-th axis (resp. $(j-1)$-th axis) for $j < i$ (resp $j > i$). In the simplicial case, the degeneracy process is better understood by reasoning in augmented simplicial sets where the dimension starts at $-1$: degenerating a $n$-shape $c$ in simplicial sets is about \emph{duplicating an existing axis} $i < n$ (thus requiring $n$ to be at least $0$), yielding a $(n+1)$-shape lying on $c$ in both the $i$ and $i+1$ axes, while it lies again on the degeneracy of the $j$-th axis (resp. $(j-1)$-th) of $c$ in the $j$-th axis for $j < i$ (resp. $j > i+1$).
 
 We call the axis-duplicating operation a \emph{connecting degeneracy}; the axis-inserting operation is the parametric degeneracy introduced above. The unary case of parametric degeneracies have already been considered in the literature, e.g. implicitly in type theories with internal parametricity~\cite{moulin16,bernardy12} and more explicitly in Parametric Type Theory~\cite{bernardy15} where an interpretation in terms of a unary form of cubical sets is given. The binary case of connecting degeneracies happens to be similar to connections in (binary) cubical sets, where it should be noted that for arity 2 (and higher), connections additionally need parametric degeneracies to fill faces which in the non-duplicated axes. It should also be noted that each connection has one variant for each face label in $\nu$ (that is only one variant in the unary case but two in the binary cases, resulting in the ``disjunctive'' and ``conjunctive'' variants).
 
