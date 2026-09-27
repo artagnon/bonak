@@ -363,7 +363,7 @@
 Semi--simplicial sets are usually defined as presheaves from the semi--simplicial category, termed as the \emph{fibred} form~\cite{rourkesanderson71}. In our previous work, we proposed a uniform construction of semi--simplicial and semi--cubical sets using iterated parametericity, termed as the \emph{indexed} form~\cite{hr25}, using the \emph{fibred-indexed correspondence}. That our indexed construction is equivalent to the fibred one is proved in~\cite{Laroche26}. It was originally suggested at Univalent Foundations IAS 2012~\cite{UFwiki2012} that the open problem of constructing semi--simplicial \emph{types} could be solved with the indexed construction, as it supplies more definitional equalities for tackling the combinatorial problem of solving coherence conditions~\footnote{It was originally postulated that the coherences would come for free with the indexed construction, but this turns out not to be the case.}.
 
 \subsection{Contributions}
-We previously exploited the observation that semi--simplicial and semi--cubical sets are naturally unary and binary cases of iterated parametricity~\cite{hr25}. We extend this construction with operations that insert a new coordinate axis: the usual cubical degeneracies in the binary case and their unary analogue~\cite{bernardy15,bernardy12}. The coherence conditions we used to complete our construction made explicit the ones outlined in Grandis--Mauri~\cite{grandis03}. Our work includes a mechanically-checked formalization in Rocq~\href{https://github.com/artagnon/bonak}{\linkicon}.
+We previously exploited the observation that semi--simplicial and semi--cubical sets are naturally unary and binary cases of iterated parametricity~\cite{hr25}. We extend this construction with operations that insert a new coordinate axis: the usual cubical degeneracies in the binary case and their unary analogue~\cite{bernardy15,bernardy12}. The coherence conditions we used to complete our construction made explicit the ones outlined in Grandis--Mauri~\cite{grandis03}. Our work includes a mechanically-checked formalization in Rocq~\href{https://github.com/artagnon/bonak}{\linkicon}, including a proof of equivalence with Grandis--Mauri's definition of cubical sets with degeneracies~\href{https://github.com/artagnon/bonak/tree/master/theories/Equiv}{\linkicon}.
 
 \subsection{\texorpdfstring{$\nu$}{nu}-shape sets}
 
@@ -446,7 +446,7 @@ Semi--cubical sets can be expressed directly in terms of presheaves over a $\nu$
   \label{fig:fibred-indexed-faces}
 \end{figure}
 
-The two presentations in Figure~\ref{fig:fibred-indexed-faces} are provably equivalent using univalence~\href{https://github.com/artagnon/bonak/tree/master/theories/Equiv}{\linkicon}, and this is yet another instance of the \emph{Grothendieck construction}, which we refer to as the fibred-indexed correspondence.
+The two presentations in Figure~\ref{fig:fibred-indexed-faces} are provably equivalent using univalence, and this is yet another instance of the \emph{Grothendieck construction}, which we refer to as the fibred-indexed correspondence.
 
 In this paper, we focus on an indexed definition of simplicial sets equipped with faces and a \emph{cubical--like} form of degeneracy and on cubical sets with faces and degeneracies. Figure~\ref{fig:fibred-indexed-degeneracies} illustrates the corresponding fibred and indexed presentations with degeneracies.
 
