@@ -398,6 +398,7 @@ Semi-cubical sets can be expressed directly in terms of presheaves over a $\nu$-
   (\Sigma A : Set. A \rightarrow B) \equiv (B \rightarrow Set)
 \]
 
+\begin{figure}[H]
 \begin{equation*}
   \begin{array}{cllccllll}
     \multicolumn{3}{c}{\mbox{\emph{fibred form}}} & \quad\mathit{vs}\quad & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                     \\
@@ -413,11 +414,15 @@ Semi-cubical sets can be expressed directly in terms of presheaves over a $\nu$-
     \vdots                                        &                       &                                                &  & \vdots                                                                                                                                                                                         \\
   \end{array}
 \end{equation*}
+  \caption{Fibred and indexed presentations of semi-cubical sets.}
+  \label{fig:fibred-indexed-faces}
+\end{figure}
 
-Both definitions are provably equivalent using univalence~\href{https://github.com/artagnon/bonak/tree/master/theories/Equiv}{\linkicon}, and this is yet another instance of the \emph{Grothendieck construction}, which we refer to as the fibred-indexed correspondence.
+The two presentations in Figure~\ref{fig:fibred-indexed-faces} are provably equivalent using univalence~\href{https://github.com/artagnon/bonak/tree/master/theories/Equiv}{\linkicon}, and this is yet another instance of the \emph{Grothendieck construction}, which we refer to as the fibred-indexed correspondence.
 
-In this paper, we focus on an indexed definition of simplicial sets equipped with faces and a \emph{cubical-like} form of degeneracy and on cubical sets with faces and degeneracies.
+In this paper, we focus on an indexed definition of simplicial sets equipped with faces and a \emph{cubical-like} form of degeneracy and on cubical sets with faces and degeneracies. Figure~\ref{fig:fibred-indexed-degeneracies} illustrates the corresponding fibred and indexed presentations with degeneracies.
 
+\begin{figure}[H]
 \begin{equation*}
   \begin{array}{cllccllll}
     \multicolumn{3}{c}{\mbox{\emph{fibred form}}}            & \quad\mathit{vs}\quad                                                     & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                                                     \\
@@ -441,6 +446,9 @@ In this paper, we focus on an indexed definition of simplicial sets equipped wit
     \vdots                                                   &                                                                           &                                                                      &  & \vdots                                                                                                                                                                                                   \\
   \end{array}
 \end{equation*}
+  \caption{Fibred and indexed presentations of cubical sets with degeneracies. The indexed presentation explicitly supplies degeneracies and their mutual coherences.}
+  \label{fig:fibred-indexed-degeneracies}
+\end{figure}
 
 \section{Our construction}
 \subsection{Intuition for our construction}
