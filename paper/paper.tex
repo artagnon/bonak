@@ -316,7 +316,7 @@
 
 \section{Introduction}
 \subsection{Motivation}
-Semi-simplicial sets are usually defined as presheaves from the semi-simplicial category, termed as the \emph{fibered} form~\cite{?}. In our previous work, we proposed a uniform construction of semi-simplicial and semi-cubical sets using iterated parametericity, termed as the \emph{indexed} form~\cite{hr25}, using the \emph{fibred-indexed correspondence}. It was originally suggested at Univalent Foundations IAS 2012~\cite{UFwiki2012} that the open problem of constructing semi-simplicial \emph{types} could be solved with the indexed construction, as it supplies more definitional equalities for tackling the combinatorial problem of solving coherence conditions~\footnote{It was originally postulated that the coherences would come for free with the indexed construction, but this turns out not to be the case.}.
+Semi-simplicial sets are usually defined as presheaves from the semi-simplicial category, termed as the \emph{fibered} form~\cite{?}. In our previous work, we proposed a uniform construction of semi-simplicial and semi-cubical sets using iterated parametericity, termed as the \emph{indexed} form~\cite{hr25}, using the \emph{fibred-indexed correspondence}. That our indexed construction is equivalent to the fibred one is proved in~\cite{Laroche26}. It was originally suggested at Univalent Foundations IAS 2012~\cite{UFwiki2012} that the open problem of constructing semi-simplicial \emph{types} could be solved with the indexed construction, as it supplies more definitional equalities for tackling the combinatorial problem of solving coherence conditions~\footnote{It was originally postulated that the coherences would come for free with the indexed construction, but this turns out not to be the case.}.
 
 \subsection{Contributions}
 We previously exploited the observation that semi-simplicial and semi-cubical sets are naturally unary and binary cases of iterated parametricity~\cite{hr25}. In adding a new dimension to our construction, we observed the usual cubical degeneracies in the cubical case and \emph{connections}~\cite{bernardy15,bernardy12} in the simplicial case. The coherence conditions we used to complete our construction made explicit the ones outlined in Grandis-Mauri~\cite{grandis03}. Our work includes a mechanically-checked formalization in Rocq~\href{https://github.com/artagnon/bonak}{\linkicon}.
@@ -668,7 +668,7 @@ We illustrate below the difference between parametric degeneracy and connecting 
     \begin{tabular}{l}source of dimension $n$\end{tabular}                                                      & b~~                                                         & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\[1mm]
     \begin{tabular}{l}parametric (cubical)\\ degeneracy\\($r^n_i$ for $0\leq i\leq n$)\end{tabular}             & \begin{tikzcd}b \arrow[r, "r^0_0(b)"] & b\end{tikzcd}       &
     \begin{tikzcd}
-      b \arrow[rr, "q"{name=F}']\arrow[dd, "r^0_0(b)"] && c \arrow[dd, "r^0_0(c)"] \\\\
+      b \arrow[rr, "q"{name=F}']\arrow[dd, "r^0_0(b)"] && c \arrow[dd, "r^0_0(c)"'] \\\\
       b \arrow[rr, "q"{name=T, below}] && c \\
       & \arrow[from=F, to=T, double, shorten=1mm, "r^1_0(q)" description]
     \end{tikzcd}
@@ -679,12 +679,12 @@ We illustrate below the difference between parametric degeneracy and connecting 
     \end{tikzcd}                                                                                                                                                      \\[-8mm]
     \begin{tabular}{l}connecting (simplicial)\\ degeneracy\\($s^n_{i\epsilon}$ for $0 \leq i < n$)\end{tabular} & \mbox{(none)}                                               &
     \begin{tikzcd}
-      b \arrow[rr, "q"{name=F, below}]\arrow[dd, "q"] && c \arrow[dd, "r^0_0(c)"'] \\\\
+      b \arrow[rr, "q"{name=F}']\arrow[dd, "q"] && c \arrow[dd, "r^0_0(c)"'] \\\\
       c \arrow[rr, "r^0_0(c)"{name=T, below}] && c \\
       \arrow[from=F, to=T, double, shorten=1mm, "s^1_{0L}(q)" description]
     \end{tikzcd}
     \begin{tikzcd}
-      b \arrow[rr, "r^0_0(b)"{name=F, below}]\arrow[dd, "r^0_0(b)"] && b \arrow[dd, "q"'] \\\\
+      b \arrow[rr, "r^0_0(b)"{name=F}']\arrow[dd, "r^0_0(b)"] && b \arrow[dd, "q"'] \\\\
       b \arrow[rr, "q"{name=T, below}] && c \\
       \arrow[from=F, to=T, double, shorten=1mm, "s^1_{0R}(q)" description]
     \end{tikzcd}
