@@ -785,18 +785,6 @@ For any $(X_0,X_1,\ldots):\X$, let $R$ collect the degeneracy families at levels
 \end{equation*}
 Here $q$ is the Above index, so $L(q)$ inserts direction $n-q$. In the geometric examples, this operation is denoted $r^n_{n-q}$ in the binary case and $r^{n-1}_{n-q-1}$ in the augmented unary case. The underlying $X_i$ and earlier degeneracies $R$ are left implicit.
 
-The last-direction construction is the special case $q=0$ at a full frame. Writing
-\begin{equation*}
-  \reflff[n]\defeq\reflfbelow[n][n][][0]
-\end{equation*}
-its boundary is
-\begin{equation*}
-  \reflfabove[n][n][][0][d=\d,c=x]
-  = (\reflfbelow[n][n][][0][d=\d],\lambda\epsilon.\,x)
-  = (\reflff[n][d=\d],\lambda\epsilon.\,x).
-\end{equation*}
-Typing these boundaries uses face--degeneracy coherences. In particular, the constant layer is well-typed because restricting a degeneracy in its inserted direction recovers the original frame. The layer recursion also requires degeneracies to commute with restrictions. These laws are discussed in Section~\ref{sec:coherences}.
-
 % Abbreviated tables in this section†
 %
 % The rule for implicit arguments for each table:
@@ -895,6 +883,21 @@ The families use this recursive decomposition, with different dependencies and b
 These boundary cases also change the shape of the second coherence. A hexagon compares two composites of three frame equalities; a square compares composites containing four equalities in total. The ordinary commutation-layer steps give hexagons. The cancellation family $\relRestrReflBelowId$ gives a square with one step on one side and three on the other. The zero-direction layer cases of $\relRestrReflAboveSup$ and $\relReflBelowAbove$ require squares with two steps on each side; $\relReflAboveAbove$ requires a square with three steps on one side and one on the other. Including $\relRestrRestr$, the construction has seven hexagonal and four square obligations, all discharged by $\UIP$.
 
 The degeneracy--degeneracy laws require additional compatibility data alongside the supplied families. The full-frame painting case of $\relReflAboveAbove$ uses a compatibility proof supplied alongside the family $L$. This proof equates two composites of supplied degeneracies over the corresponding frame equality. The data for the $\relReflRefl$ laws comprise the families in Tables~\ref{tab:coind} and~\ref{tab:core} together with these compatibility proofs.
+
+\subsubsection{Last-direction degeneracies}
+\label{sec:last-direction}
+
+The last-direction construction is the special case $q=0$ at a full frame. Writing
+\begin{equation*}
+  \reflff[n]\defeq\reflfbelow[n][n][][0]
+\end{equation*}
+its boundary is
+\begin{equation*}
+  \reflfabove[n][n][][0][d=\d,c=x]
+  = (\reflfbelow[n][n][][0][d=\d],\lambda\epsilon.\,x)
+  = (\reflff[n][d=\d],\lambda\epsilon.\,x).
+\end{equation*}
+Typing these boundaries uses the face--degeneracy coherences from Section~\ref{sec:coherences}. In particular, the constant layer is well-typed because restricting a degeneracy in its inserted direction recovers the original frame. The layer recursion also requires degeneracies to commute with restrictions.
 
 \section{Conclusion and future work}
 
