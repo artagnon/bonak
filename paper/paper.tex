@@ -367,10 +367,10 @@ We previously exploited the observation that semi--simplicial and semi--cubical 
 
 \subsection{\texorpdfstring{$\nu$}{nu}-shape sets}
 
-Fix a set $\nu$ of face labels, called the \emph{arity}. The unary case uses a singleton set of labels; the binary case uses two labels. The augmented semi--simplicial and semi--cubical categories are instances of the more general notion of $\nu$-semi--shape category.
+Fix a set $\nu$ of face labels, called the \emph{arity}. The unary case uses a singleton set of labels; the binary case uses two labels. The augmented semi--simplicial and semi--cubical categories are instances of the more general notion of $\nu$--semi--shape category.
 
 \begin{definition}[$\hexagon$]
-  The definition of $\nu$-semi--shape category is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than or equal to that of $g$. A star denotes a retained coordinate and a label in $\nu$ denotes an inserted constant. We write $|l|_{\kstar}$ for the number of stars in a word $l$ and $\epsilon$ for the empty word. Its objects, morphisms, and identities are:
+  The definition of $\nu$--semi--shape category is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than or equal to that of $g$. A star denotes a retained coordinate and a label in $\nu$ denotes an inserted constant. We write $|l|_{\kstar}$ for the number of stars in a word $l$ and $\epsilon$ for the empty word. Its objects, morphisms, and identities are:
   \begin{align*}
     \Obj_{\hexagon}       & := \Nat                                                                       \\
     \Hom_{\hexagon}(p, n) & := \{l \in (\nu \sqcup \{\kstar\})^n \mid |l|_{\kstar} = p\}                  \\
@@ -386,10 +386,10 @@ Fix a set $\nu$ of face labels, called the \emph{arity}. The unary case uses a s
 
 In particular $1$-semi--shape category presents the augmented semi--simplicial category while the $2$-semi--shape category presents the semi--cubical category (note that this also relates to unary and binary parametricity~\cite{bernardy15, reynolds83}).
 
-Degeneracies can be added to the $\nu$-semi--shape category in different ways. We here focus on cubical-style degeneracies as in Grandis~\cite{grandis03} and their adaptation to the unary case as in \cite{bernardy15}. A morphism from $p$ to $n$ in the $\nu$-shape category retains $k$ of the $p$ input coordinates: it first discards the other $p-k$ coordinates, then inserts constants to obtain $n$ output coordinates.
+Degeneracies can be added to the $\nu$--semi--shape category in different ways. We here focus on cubical-style degeneracies as in Grandis~\cite{grandis03} and their adaptation to the unary case as in \cite{bernardy15}. A morphism from $p$ to $n$ in the $\nu$--shape category retains $k$ of the $p$ input coordinates: it first discards the other $p-k$ coordinates, then inserts constants to obtain $n$ output coordinates.
 
 \begin{definition}[$\hexagon_d$]
-  The $\nu$-shape category extends the $\nu$-semi--shape category with degeneracies. We write $|w|_{\kstar}$ for the number of stars in a word $w$. Its objects, morphisms, and identities are:
+  The $\nu$--shape category extends the $\nu$--semi--shape category with degeneracies. We write $|w|_{\kstar}$ for the number of stars in a word $w$. Its objects, morphisms, and identities are:
   \begin{align*}
     \Obj_{\hexagon_d}      & := \Nat                                  \\
     \Hom_{\hexagon_d}(p,n) & := \{(r,f) \in \{\kstar,\bullet\}^p
@@ -421,7 +421,7 @@ In particular, a $2$-shape category presents the cubical category, while $1$-sha
 
 We now work in dependent type theory. A type $A$ is an \emph{h-set} if, for any $x,y:A$ and any two proofs $p,q:x=y$, we have $p=q$. Thus equality between elements of $A$ is proof-irrelevant: this is the uniqueness of identity proofs property ($\UIP$). We write $\HSet$ for the universe of h-sets.
 
-Semi--cubical sets can be expressed directly in terms of presheaves over a $\nu$-semi--shape category using morphisms, by iterating the equivalence between maps and families:
+Semi--cubical sets can be expressed directly in terms of presheaves over a $\nu$--semi--shape category using morphisms, by iterating the equivalence between maps and families:
 \[
   (\Sigma A : \HSet. A \rightarrow B) \simeq (B \rightarrow \HSet)
 \]
@@ -480,7 +480,7 @@ In this paper, we focus on an indexed definition of simplicial sets equipped wit
 
 \section{Our construction}
 \subsection{Intuition for our construction}
-We call the structures presented by presheaves on the $\nu$-semi--shape category \emph{$\nu$-sets}, and write $\X$ for the type of their indexed presentations.
+We call the structures presented by presheaves on the $\nu$--semi--shape category \emph{$\nu$--sets}, and write $\X$ for the type of their indexed presentations.
 
 We call a degeneracy that inserts a new coordinate axis a \emph{parametric degeneracy}. A degeneracy direction specifies where a new coordinate axis is inserted. For an $n$-cube, there are $n+1$ insertion positions, numbered $0,\ldots,n$.
 
@@ -754,7 +754,7 @@ We illustrate below the difference between parametric degeneracy and connecting 
 \subsubsection{Construction of faces}
 \label{sec:faces}
 
-The construction of degeneracies presented in this paper builds on the very dependent recursive presentation~\cite{hr26} of the indexed construction of $\nu$-sets~\cite{hr25}. At each level $n$, the earlier families $X_0,\ldots,X_{n-1}$ determine the type of full frames, and the next family $X_n$ assigns an h-set of cells to each full frame.
+The construction of degeneracies presented in this paper builds on the very dependent recursive presentation~\cite{hr26} of the indexed construction of $\nu$--sets~\cite{hr25}. At each level $n$, the earlier families $X_0,\ldots,X_{n-1}$ determine the type of full frames, and the next family $X_n$ assigns an h-set of cells to each full frame.
 
 In the formulas below, $n$ is the construction level and $p\leq n$ is the number of layers in a prefix, called its \emph{height}. A full frame at level $n$ has $n$ layers. Thus level $n$ corresponds to geometric dimension $n-1$ in the augmented unary case and to dimension $n$ in the binary case. We write $\framep[n][p]$ for frames of height $p$, $\layer[n][p][][d=d]$ for the next layer over a frame $d$, and $\painting[n][p][][d=d]$ for its paintings. In particular, $\fullframe[n]=\framep[n][n]$, and a painting over a full frame $d$ is a cell of $X_n(d)$. A successor frame is a dependent pair $(d,l)$ of a frame and its next layer; a painting with layers left to supply is a pair $(l,c)$ of its next layer and remaining painting.
 
@@ -815,7 +815,7 @@ Here $q$ is the Above index, so $L(q)$ inserts direction $n-q$. In the geometric
 \newcommandx{\Xreflto}[2][2]{\Xrefl[to][<#1][#2]}
 \newcommandx{\Xreflfrom}[2][2]{\Xrefl[from][\geq#1][#2]}
 
-The supplied families form a \emph{dependent stream}: each new family is typed using the earlier ones. We write $\Xrefl$ for this type of degeneracy families over an underlying $\nu$-set. In the tables, $D$ records an initial segment of the underlying $\nu$-set, $E$ its next component, and $M$ its remaining tail. Superscripts $<n$, $=n$, and $\geq n$ indicate an initial segment, its next extension, and a remaining tail, respectively. We write $D.1$ and $D.2$ for the two projections of a pair. Arguments in braces are implicit; the equations retain their dependence on those arguments.
+The supplied families form a \emph{dependent stream}: each new family is typed using the earlier ones. We write $\Xrefl$ for this type of degeneracy families over an underlying $\nu$--set. In the tables, $D$ records an initial segment of the underlying $\nu$--set, $E$ its next component, and $M$ its remaining tail. Superscripts $<n$, $=n$, and $\geq n$ indicate an initial segment, its next extension, and a remaining tail, respectively. We write $D.1$ and $D.2$ for the two projections of a pair. Arguments in braces are implicit; the equations retain their dependence on those arguments.
 
 \def\lab{tab:coind}
 \input{tab-coind.tex}
@@ -858,7 +858,7 @@ These are zero-based absolute direction indices, ranging over the instances in w
 
 The mixed relation above is displayed in the simplifying direction. In the construction tables, the equality proofs are oriented in the direction used for transport, as in the formalization. Coherence names list the operations on the right-hand side of those construction-oriented equations, with the outer operation first. In particular, $\relRestrReflBelowId$ proves $d=\cRF{q}{\epsilon}{\cSF{q}{d}}$, reversing the cancellation equation above.
 
-In the indexed construction, these relations become equalities of partial boundaries. The Below/Above distinction refines $\relRestrReflSup$ into $\relRestrReflBelowSup$ and $\relRestrReflAboveSup$, and $\relReflRefl$ into $\relReflBelowBelow$, $\relReflBelowAbove$, and $\relReflAboveAbove$. Together with $\relRestrReflBelowInf$ and $\relRestrReflBelowId$, these are the seven degeneracy coherence families. The underlying $\nu$-set already supplies $\relRestrRestr$.
+In the indexed construction, these relations become equalities of partial boundaries. The Below/Above distinction refines $\relRestrReflSup$ into $\relRestrReflBelowSup$ and $\relRestrReflAboveSup$, and $\relReflRefl$ into $\relReflBelowBelow$, $\relReflBelowAbove$, and $\relReflAboveAbove$. Together with $\relRestrReflBelowInf$ and $\relRestrReflBelowId$, these are the seven degeneracy coherence families. The underlying $\nu$--set already supplies $\relRestrRestr$.
 
 Typing the layer operations requires transporting paintings along frame equalities. The Below layer step uses $\relRestrReflBelowInf$ to commute degeneracy with restriction. At Above index $0$, $\relRestrReflBelowId$ identifies the restriction of the degenerate frame with the original frame, allowing the input painting to form a constant layer. At a successor Above index, the layer step uses $\relRestrReflAboveSup$. The restriction layer similarly uses $\relRestrRestr$ to commute two restrictions. The frame operations and the types of the coherences they require are therefore constructed together.
 
