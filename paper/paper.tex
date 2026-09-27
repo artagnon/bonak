@@ -355,22 +355,22 @@
 \maketitle
 
 \begin{abstract}
-  In an exploration of building simplicial and cubical set models in indexed form, we extend a previous construction of semi-simplicial and semi-cubical sets with degeneracies. The degeneracies we construct can be characterized as adding a new dimension, and coincide with usual degeneracies in the cubical set case. As necessitated by the construction, we refined the degeneracies and coherence conditions outlined in Grandis-Mauri~\cite{grandis03} to make it step-wise. Our work includes a mechanically checked formalization in Rocq.
+  In an exploration of building simplicial and cubical set models in indexed form, we extend a previous construction of semi--simplicial and semi--cubical sets with degeneracies. The degeneracies we construct can be characterized as adding a new dimension, and coincide with usual degeneracies in the cubical set case. As necessitated by the construction, we refined the degeneracies and coherence conditions outlined in Grandis-Mauri~\cite{grandis03} to make it step-wise. Our work includes a mechanically checked formalization in Rocq.
 \end{abstract}
 
 \section{Introduction}
 \subsection{Motivation}
-Semi-simplicial sets are usually defined as presheaves from the semi-simplicial category, termed as the \emph{fibred} form~\cite{rourkesanderson71}. In our previous work, we proposed a uniform construction of semi-simplicial and semi-cubical sets using iterated parametericity, termed as the \emph{indexed} form~\cite{hr25}, using the \emph{fibred-indexed correspondence}. That our indexed construction is equivalent to the fibred one is proved in~\cite{Laroche26}. It was originally suggested at Univalent Foundations IAS 2012~\cite{UFwiki2012} that the open problem of constructing semi-simplicial \emph{types} could be solved with the indexed construction, as it supplies more definitional equalities for tackling the combinatorial problem of solving coherence conditions~\footnote{It was originally postulated that the coherences would come for free with the indexed construction, but this turns out not to be the case.}.
+Semi--simplicial sets are usually defined as presheaves from the semi--simplicial category, termed as the \emph{fibred} form~\cite{rourkesanderson71}. In our previous work, we proposed a uniform construction of semi--simplicial and semi--cubical sets using iterated parametericity, termed as the \emph{indexed} form~\cite{hr25}, using the \emph{fibred-indexed correspondence}. That our indexed construction is equivalent to the fibred one is proved in~\cite{Laroche26}. It was originally suggested at Univalent Foundations IAS 2012~\cite{UFwiki2012} that the open problem of constructing semi--simplicial \emph{types} could be solved with the indexed construction, as it supplies more definitional equalities for tackling the combinatorial problem of solving coherence conditions~\footnote{It was originally postulated that the coherences would come for free with the indexed construction, but this turns out not to be the case.}.
 
 \subsection{Contributions}
-We previously exploited the observation that semi-simplicial and semi-cubical sets are naturally unary and binary cases of iterated parametricity~\cite{hr25}. We extend this construction with operations that insert a new coordinate axis: the usual cubical degeneracies in the binary case and their unary analogue~\cite{bernardy15,bernardy12}. The coherence conditions we used to complete our construction made explicit the ones outlined in Grandis-Mauri~\cite{grandis03}. Our work includes a mechanically-checked formalization in Rocq~\href{https://github.com/artagnon/bonak}{\linkicon}.
+We previously exploited the observation that semi--simplicial and semi--cubical sets are naturally unary and binary cases of iterated parametricity~\cite{hr25}. We extend this construction with operations that insert a new coordinate axis: the usual cubical degeneracies in the binary case and their unary analogue~\cite{bernardy15,bernardy12}. The coherence conditions we used to complete our construction made explicit the ones outlined in Grandis-Mauri~\cite{grandis03}. Our work includes a mechanically-checked formalization in Rocq~\href{https://github.com/artagnon/bonak}{\linkicon}.
 
 \subsection{\texorpdfstring{$\nu$}{nu}-shape sets}
 
-Fix a set $\nu$ of face labels, called the \emph{arity}. The unary case uses a singleton set of labels; the binary case uses two labels. The augmented semi-simplicial and semi-cubical categories are instances of the more general notion of $\nu$-semi-shape category.
+Fix a set $\nu$ of face labels, called the \emph{arity}. The unary case uses a singleton set of labels; the binary case uses two labels. The augmented semi--simplicial and semi--cubical categories are instances of the more general notion of $\nu$-semi--shape category.
 
 \begin{definition}[$\hexagon$]
-  The definition of $\nu$-semi-shape category is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than or equal to that of $g$. A star denotes a retained coordinate and a label in $\nu$ denotes an inserted constant. We write $|l|_{\kstar}$ for the number of stars in a word $l$ and $\epsilon$ for the empty word. Its objects, morphisms, and identities are:
+  The definition of $\nu$-semi--shape category is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than or equal to that of $g$. A star denotes a retained coordinate and a label in $\nu$ denotes an inserted constant. We write $|l|_{\kstar}$ for the number of stars in a word $l$ and $\epsilon$ for the empty word. Its objects, morphisms, and identities are:
   \begin{align*}
     \Obj_{\hexagon}       & := \Nat                                                                       \\
     \Hom_{\hexagon}(p, n) & := \{l \in (\nu \sqcup \{\kstar\})^n \mid |l|_{\kstar} = p\}                  \\
@@ -384,12 +384,12 @@ Fix a set $\nu$ of face labels, called the \emph{arity}. The unary case uses a s
   \end{align*}
 \end{definition}
 
-In particular $1$-semi-shape category presents the augmented semi-simplicial category while the $2$-semi-shape category presents the semi-cubical category (note that this also relates to unary and binary parametricity~\cite{bernardy15, reynolds83}).
+In particular $1$-semi--shape category presents the augmented semi--simplicial category while the $2$-semi--shape category presents the semi--cubical category (note that this also relates to unary and binary parametricity~\cite{bernardy15, reynolds83}).
 
-Degeneracies can be added to the $\nu$-semi-shape category in different ways. We here focus on cubical-style degeneracies as in Grandis~\cite{grandis03} and their adaptation to the unary case as in \cite{bernardy15}. A morphism from $p$ to $n$ in the $\nu$-shape category retains $k$ of the $p$ input coordinates: it first discards the other $p-k$ coordinates, then inserts constants to obtain $n$ output coordinates.
+Degeneracies can be added to the $\nu$-semi--shape category in different ways. We here focus on cubical-style degeneracies as in Grandis~\cite{grandis03} and their adaptation to the unary case as in \cite{bernardy15}. A morphism from $p$ to $n$ in the $\nu$-shape category retains $k$ of the $p$ input coordinates: it first discards the other $p-k$ coordinates, then inserts constants to obtain $n$ output coordinates.
 
 \begin{definition}[$\hexagon_d$]
-  The $\nu$-shape category extends the $\nu$-semi-shape category with degeneracies. We write $|w|_{\kstar}$ for the number of stars in a word $w$. Its objects, morphisms, and identities are:
+  The $\nu$-shape category extends the $\nu$-semi--shape category with degeneracies. We write $|w|_{\kstar}$ for the number of stars in a word $w$. Its objects, morphisms, and identities are:
   \begin{align*}
     \Obj_{\hexagon_d}      & := \Nat                                  \\
     \Hom_{\hexagon_d}(p,n) & := \{(r,f) \in \{\kstar,\bullet\}^p
@@ -412,7 +412,7 @@ Degeneracies can be added to the $\nu$-semi-shape category in different ways. We
     := (r\circ_{\hexagon_1}t,\;g\circ_{\hexagon}h)
     \quad\text{where }(t,h)=\mathsf{cross}(f,s).
   \]
-  Here $\circ_{\hexagon_1}$ is the semi-shape word composition with $\bullet$ as its sole label: it substitutes $t$ into the stars of $r$. The other component substitutes $h$ into the stars of $g$. These operations satisfy the identity and associativity laws.
+  Here $\circ_{\hexagon_1}$ is the semi--shape word composition with $\bullet$ as its sole label: it substitutes $t$ into the stars of $r$. The other component substitutes $h$ into the stars of $g$. These operations satisfy the identity and associativity laws.
 \end{definition}
 
 In particular, a $2$-shape category presents the cubical category, while $1$-shape category presents the simplicial category with cubical-style degeneracies, which we explain in more detail in section \ref{sec:dgn-flavors}.
@@ -421,7 +421,7 @@ In particular, a $2$-shape category presents the cubical category, while $1$-sha
 
 We now work in dependent type theory. A type $A$ is an \emph{h-set} if, for any $x,y:A$ and any two proofs $p,q:x=y$, we have $p=q$. Thus equality between elements of $A$ is proof-irrelevant: this is the uniqueness of identity proofs property ($\UIP$). We write $\HSet$ for the universe of h-sets.
 
-Semi-cubical sets can be expressed directly in terms of presheaves over a $\nu$-semi-shape category using morphisms, by iterating the equivalence between maps and families:
+Semi--cubical sets can be expressed directly in terms of presheaves over a $\nu$-semi--shape category using morphisms, by iterating the equivalence between maps and families:
 \[
   (\Sigma A : \HSet. A \rightarrow B) \simeq (B \rightarrow \HSet)
 \]
@@ -442,7 +442,7 @@ Semi-cubical sets can be expressed directly in terms of presheaves over a $\nu$-
       \vdots                                        &                       &                                                &  & \vdots                                                                                                                                                                                      \\
     \end{array}
   \end{equation*}
-  \caption{Fibred and indexed presentations of semi-cubical sets.}
+  \caption{Fibred and indexed presentations of semi--cubical sets.}
   \label{fig:fibred-indexed-faces}
 \end{figure}
 
@@ -480,7 +480,7 @@ In this paper, we focus on an indexed definition of simplicial sets equipped wit
 
 \section{Our construction}
 \subsection{Intuition for our construction}
-We call the structures presented by presheaves on the $\nu$-semi-shape category \emph{$\nu$-sets}, and write $\X$ for the type of their indexed presentations.
+We call the structures presented by presheaves on the $\nu$-semi--shape category \emph{$\nu$-sets}, and write $\X$ for the type of their indexed presentations.
 
 We call a degeneracy that inserts a new coordinate axis a \emph{parametric degeneracy}. A degeneracy direction specifies where a new coordinate axis is inserted. For an $n$-cube, there are $n+1$ insertion positions, numbered $0,\ldots,n$.
 
@@ -841,7 +841,7 @@ The frame operations are constructed Below first, then Above. For paintings the 
 \label{sec:coherences}
 
 The five relations of Grandis--Mauri~\cite{grandis03} describe commutation of restrictions and degeneracies, and cancellation of a degeneracy by a restriction in its inserted direction. Grandis--Mauri state the relations between maps in the cubical site. Here we display their images under a contravariant presheaf, which reverses composition. Thus $\delta_r^\alpha$ denotes restriction on cells and $\varepsilon_q$ denotes degeneracy, with face labels $\alpha,\beta\in\nu$. Composition is read from right to left, and dimension indices are left implicit:
-\[
+\begin{equation}
   \begin{array}{r@{\;}c@{\;}c@{}l@{\qquad}l@{\qquad}l}
     \delta_q^\alpha\delta_r^\beta     & =       &                     &
     \delta_r^\beta\delta_{q+1}^\alpha & r\leq q & (\relRestrRestr),                                                                  \\[0.4em]
@@ -853,7 +853,7 @@ The five relations of Grandis--Mauri~\cite{grandis03} describe commutation of re
     \varepsilon_q\varepsilon_r        & =       &                     &
     \varepsilon_{r+1}\varepsilon_q    & q\leq r & (\relReflRefl).
   \end{array}
-\]
+\end{equation}
 These are zero-based absolute direction indices, ranging over the instances in which the composites are defined. At level $n$, the cell component of $\varepsilon_i$ is supplied by $L(n-i)$. The three cases distinguish a restriction before, at, or after the inserted direction.
 
 The mixed relation above is displayed in the simplifying direction. In the construction tables, the equality proofs are oriented in the direction used for transport, as in the formalization. Coherence names list the operations on the right-hand side of those construction-oriented equations, with the outer operation first. In particular, $\relRestrReflBelowId$ proves $d=\cRF{q}{\epsilon}{\cSF{q}{d}}$, reversing the cancellation equation above.
@@ -876,18 +876,18 @@ We give the construction of $\relRestrReflBelowInf$ in Table~\ref{tab:coh-inf}. 
 
 In this example, the frame recursion decreases the prefix height. Passing from height $p+1$ to $p$ increments the two relative direction indices, producing the $q+1$ and $r+1$ in the prefix proof. The layer row applies the painting coherence one dimension lower to each component $l(\theta)$. The painting recursion decreases the restriction index; at index $0$, restriction evaluates the first layer, giving the reflexivity clause.
 
-The intensional justification of the layer proof also uses a second coherence, an equality between composites of frame-equality proofs. Besides the lower-dimensional painting coherence, it requires those composites to agree so that the implicit transports have the same effect. Since frames are sets, this second coherence follows from uniqueness of identity proofs ($\UIP$). It does not replace the painting coherence: the two are separate premises of the layer argument.
+The intensional justification of the layer proof also uses a second coherence, an equality between composites of frame--equality proofs. Besides the lower-dimensional painting coherence, it requires those composites to agree so that the implicit transports have the same effect. Since frames are sets, this second coherence follows from uniqueness of identity proofs ($\UIP$). It does not replace the painting coherence: the two are separate premises of the layer argument.
 
 The families use this recursive decomposition, with different dependencies and boundary cases. The families $\relRestrReflBelowInf$ and $\relRestrReflBelowId$ each have a single Below stage. For $\relRestrReflSup$, the frame proofs construct $\relRestrReflBelowSup$ before $\relRestrReflAboveSup$, while the painting proofs proceed in the reverse order. For $\relReflRefl$, the frame order is $\relReflBelowBelow$, then $\relReflBelowAbove$, then $\relReflAboveAbove$; the painting order is again reversed. At a transition between stages, the zero-direction case uses the adjacent stage's coherence together with a separate layer proof.
 
 These boundary cases also change the shape of the second coherence. A hexagon compares two composites of three frame equalities; a square compares composites containing four equalities in total. The ordinary commutation-layer steps give hexagons. The cancellation family $\relRestrReflBelowId$ gives a square with one step on one side and three on the other. The zero-direction layer cases of $\relRestrReflAboveSup$ and $\relReflBelowAbove$ require squares with two steps on each side; $\relReflAboveAbove$ requires a square with three steps on one side and one on the other. Including $\relRestrRestr$, the construction has seven hexagonal and four square obligations, all discharged by $\UIP$.
 
-The degeneracy--degeneracy laws require additional compatibility data alongside the supplied families. The full-frame painting case of $\relReflAboveAbove$ uses a compatibility proof supplied alongside the family $L$. This proof equates two composites of supplied degeneracies over the corresponding frame equality. The data for the $\relReflRefl$ laws comprise the families in Tables~\ref{tab:coind} and~\ref{tab:core} together with these compatibility proofs.
+The degeneracy--degeneracy laws require additional compatibility data alongside the supplied families. The full--frame painting case of $\relReflAboveAbove$ uses a compatibility proof supplied alongside the family $L$. This proof equates two composites of supplied degeneracies over the corresponding frame equality. The data for the $\relReflRefl$ laws comprise the families in Tables~\ref{tab:coind} and~\ref{tab:core} together with these compatibility proofs.
 
 \subsubsection{Last-direction degeneracies}
 \label{sec:last-direction}
 
-The construction simplifies when only the last-direction degeneracy is supplied at each level. At level $n$, the inserted direction is $n$, so a prefix of height $p$ uses the Below operation $\reflfbelow[n][p][][n-p]$. The prefix reaches the inserted direction only at the full frame, where the Above index is $0$. Writing
+The construction simplifies when only the last--direction degeneracy is supplied at each level. At level $n$, the inserted direction is $n$, so a prefix of height $p$ uses the Below operation $\reflfbelow[n][p][][n-p]$. The prefix reaches the inserted direction only at the full frame, where the Above index is $0$. Writing
 \begin{equation*}
   \reflff[n]\defeq\reflfbelow[n][n][][0]
 \end{equation*}
@@ -901,7 +901,7 @@ The supplied cell operation is thus $L(0)$, with target $X_{n+1}(\reflff[n][d=\d
 
 Only two face--degeneracy coherence families are needed for this construction. The specialization of $\relRestrReflBelowInf$ makes the layer recursion well-typed, and that of $\relRestrReflBelowId$ makes the final constant layer well-typed. There is no restriction direction after the inserted one, so no $\relRestrReflSup$ case arises. The general $\relReflRefl$ law also involves a degeneracy that is not in the last direction of its source, and therefore is not a law expressible using only these supplied operations.
 
-In the cubical case, compatible coordinate symmetries allow every degeneracy to be expressed using the last-direction degeneracy~\cite[\S6]{grandis03}. Writing $\varepsilon_i$ for degeneracy in absolute direction $i$ and $\tau_i$ for the exchange of directions $i$ and $i+1$, we have
+In the cubical case, compatible coordinate symmetries allow every degeneracy to be expressed using the last--direction degeneracy~\cite[\S6]{grandis03}. Writing $\varepsilon_i$ for degeneracy in absolute direction $i$ and $\tau_i$ for the exchange of directions $i$ and $i+1$, we have
 \begin{equation*}
   \varepsilon_i
   =\tau_i\circ\tau_{i+1}\circ\cdots\circ\tau_{n-1}\circ\varepsilon_n
