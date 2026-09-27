@@ -370,7 +370,7 @@ We previously exploited the observation that semi--simplicial and semi--cubical 
 Fix a set $\nu$ of face labels, called the \emph{arity}. The unary case uses a singleton set of labels; the binary case uses two labels. The augmented semi--simplicial and semi--cubical categories are instances of the more general notion of $\nu$--semi--shape category.
 
 \begin{definition}[$\hexagon$]
-  The definition of $\nu$--semi--shape category is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than or equal to that of $g$. A star denotes a retained coordinate and a label in $\nu$ denotes an inserted constant. We write $|l|_{\kstar}$ for the number of stars in a word $l$ and $\epsilon$ for the empty word. Its objects, morphisms, and identities are:
+  The definition of $\nu$--semi--shape category is shown below. Note that, if $g \circ f$ is well--defined, then the length of $f$ is less than or equal to that of $g$. A star denotes a retained coordinate and a label in $\nu$ denotes an inserted constant. We write $|l|_{\kstar}$ for the number of stars in a word $l$ and $\epsilon$ for the empty word. Its objects, morphisms, and identities are:
   \begin{align*}
     \Obj_{\hexagon}       & := \Nat                                                                       \\
     \Hom_{\hexagon}(p, n) & := \{l \in (\nu \sqcup \{\kstar\})^n \mid |l|_{\kstar} = p\}                  \\
@@ -671,7 +671,7 @@ The boundary of a degenerate cell contains a repeated layer at the inserted dire
     \end{tikzpicture}                                                                                                                         \\
     \bottomrule
   \end{tabularx}
-  \caption{Cubical degeneracies and their boundary layers, each consisting of two paintings. Below the original square, the rows insert directions $0$, $1$, and $2$. Green faces repeat the square; blue and red faces are degeneracies of its edges. The bottom row shows the last-direction case.}
+  \caption{Cubical degeneracies and their boundary layers, each consisting of two paintings. Below the original square, the rows insert directions $0$, $1$, and $2$. Green faces repeat the square; blue and red faces are degeneracies of its edges. The bottom row shows the last--direction case.}
   \label{fig:degeneracy-layers}
 \end{figure}
 
@@ -897,9 +897,9 @@ its boundary is
   = (\reflfbelow[n][n][][0][d=\d],\lambda\epsilon.\,x)
   = (\reflff[n][d=\d],\lambda\epsilon.\,x).
 \end{equation*}
-The supplied cell operation is thus $L(0)$, with target $X_{n+1}(\reflff[n][d=\d],\lambda\epsilon.\,x)$. Its boundary can be constructed using earlier last-direction degeneracies alone: each existing layer is transformed using the last-direction painting operation one level lower, and the constant layer is appended at the end.
+The supplied cell operation is thus $L(0)$, with target $X_{n+1}(\reflff[n][d=\d],\lambda\epsilon.\,x)$. Its boundary can be constructed using earlier last--direction degeneracies alone: each existing layer is transformed using the last--direction painting operation one level lower, and the constant layer is appended at the end.
 
-Only two face--degeneracy coherence families are needed for this construction. The specialization of $\relRestrReflBelowInf$ makes the layer recursion well-typed, and that of $\relRestrReflBelowId$ makes the final constant layer well-typed. There is no restriction direction after the inserted one, so no $\relRestrReflSup$ case arises. The general $\relReflRefl$ law also involves a degeneracy that is not in the last direction of its source, and therefore is not a law expressible using only these supplied operations.
+Only two face--degeneracy coherence families are needed for this construction. The specialization of $\relRestrReflBelowInf$ makes the layer recursion well--typed, and that of $\relRestrReflBelowId$ makes the final constant layer well--typed. There is no restriction direction after the inserted one, so no $\relRestrReflSup$ case arises. The general $\relReflRefl$ law also involves a degeneracy that is not in the last direction of its source, and therefore is not a law expressible using only these supplied operations.
 
 In the cubical case, compatible coordinate symmetries allow every degeneracy to be expressed using the last--direction degeneracy~\cite[\S6]{grandis03}. Writing $\varepsilon_i$ for degeneracy in absolute direction $i$ and $\tau_i$ for the exchange of directions $i$ and $i+1$, we have
 \begin{equation*}
