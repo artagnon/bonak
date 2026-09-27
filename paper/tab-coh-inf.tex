@@ -4,40 +4,40 @@
     Bounds in recursive clauses apply to the indices on the left-hand side.
     \label{tab:coh-inf}}
   \eqnline{\cIF{n}{p}{q}{r}}
-    {\makecell{\eqnarg{cohframe}{d}{\framep[n+1][p]} \\
+  {\makecell{\eqnarg{cohframe}{d}{\framep[n+1][p]} \\
       \ensuremath{r\leq q\leq n-p}}}
-    {:}{\mbox{$\cSF{q}{\cRF{r}{\epsilon}{d}}
-      =\cRF{r}{\epsilon}{\cSF{q+1}{d}}$}}
+  {:}{\mbox{$\cSF{q}{\cRF{r}{\epsilon}{d}}
+        =\cRF{r}{\epsilon}{\cSF{q+1}{d}}$}}
   \eqnline{\cIF{n}{0}{q}{r}}{\unitpoint}{\defeq}{\mathsf{refl}}
   \eqnline{\cIF{n}{p+1}{q}{r}}{(d,l)}{\defeq}
-    {\left(\begin{aligned}
-      &\cIF{n}{p}{q+1}{r+1}(d),\\
-      &\cIL{n}{p}{q}{r}(d,l)
-      \end{aligned}\right)}
+  {\left(\begin{aligned}
+       & \cIF{n}{p}{q+1}{r+1}(d), \\
+       & \cIL{n}{p}{q}{r}(d,l)
+    \end{aligned}\right)}
   \midrule
   \eqnline{\cIL{n}{p}{q}{r}}
-    {\makecell{\eqnarg{cohlayer}{d}{\framep[n+1][p]} \\
+  {\makecell{\eqnarg{cohlayer}{d}{\framep[n+1][p]} \\
       \eqnarg{cohlayer}{l}{\layer[n+1][p](d)} \\
       \ensuremath{r\leq q<n-p}}}
-    {:}{\mbox{$\cSL{q}{\cRL{r}{\epsilon}{l}}
-      =_{\cIF{n}{p}{q+1}{r+1}(d)}
-      \cRL{r}{\epsilon}{\cSL{q+1}{l}}$}}
+  {:}{\mbox{$\cSL{q}{\cRL{r}{\epsilon}{l}}
+        =_{\cIF{n}{p}{q+1}{r+1}(d)}
+        \cRL{r}{\epsilon}{\cSL{q+1}{l}}$}}
   \eqnline{\cIL{n}{p}{q}{r}}{d~l}{\defeq}
-    {\lambda\theta.\,\cIP{n-1}{p}{q}{r}
-      (\cRF{0}{\theta}{d},l(\theta))}
+  {\lambda\theta.\,\cIP{n-1}{p}{q}{r}
+    (\cRF{0}{\theta}{d},l(\theta))}
   \midrule
   \eqnline{\cIP{n}{p}{q}{r}}
-    {\makecell{\eqnarg{cohpainting}{d}{\framep[n+1][p]} \\
+  {\makecell{\eqnarg{cohpainting}{d}{\framep[n+1][p]} \\
       \eqnarg{cohpainting}{c}{\painting[n+1][p](d)} \\
       \ensuremath{r\leq q\leq n-p}}}
-    {:}{\mbox{$\cSP{q}{\cRP{r}{\epsilon}{c}}
-      =_{\cIF{n}{p}{q}{r}(d)}
-      \cRP{r}{\epsilon}{\cSP{q+1}{c}}$}}
+  {:}{\mbox{$\cSP{q}{\cRP{r}{\epsilon}{c}}
+        =_{\cIF{n}{p}{q}{r}(d)}
+        \cRP{r}{\epsilon}{\cSP{q+1}{c}}$}}
   \eqnline{\cIP{n}{p}{q}{0}}{d~(l,c)}{\defeq}{\mathsf{refl}}
   \eqnline{\cIP{n}{p}{q+1}{r+1}}{d~(l,c)}{\defeq}
-    {\left(\begin{aligned}
-        &\cIL{n}{p}{q}{r}(d,l),\\
-        &\cIP{n}{p+1}{q}{r}((d,l),c)
-      \end{aligned}\right)}
+  {\left(\begin{aligned}
+       & \cIL{n}{p}{q}{r}(d,l),      \\
+       & \cIP{n}{p+1}{q}{r}((d,l),c)
+    \end{aligned}\right)}
 \end{eqntable}
 \endgroup
