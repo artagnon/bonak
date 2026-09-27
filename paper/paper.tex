@@ -1,5 +1,5 @@
 \documentclass{art.cls/art}
-\usepackage{wasysym, tikz, tikz-cd, anyfontsize, xargs, environ, multirow, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, fontawesome5, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
+\usepackage{wasysym, tikz, tikz-cd, anyfontsize, xargs, environ, multirow, bigdelim, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, fontawesome5, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
 \usepackage[prefix=bonak]{art.cls/xkeymask}
 
 % Use the patterns library to draw the cubes figure
@@ -46,34 +46,37 @@
 \define@cmdkey[bonak]{reflframe}{D}{(#1)}
 \define@cmdkey[bonak]{reflframe}{R}{(#1)}
 \define@cmdkey[bonak]{reflframe}{d}{(#1)}
+\define@cmdkey[bonak]{reflframeBelow}{D}{(#1)}
+\define@cmdkey[bonak]{reflframeBelow}{R}{(#1)}
+\define@cmdkey[bonak]{reflframeBelow}{d}{(#1)}
 \define@cmdkey[bonak]{reflfullframe}{D}{(#1)}
 \define@cmdkey[bonak]{reflfullframe}{d}{(#1)}
-\define@cmdkey[bonak]{reflframeExt}{D}{(#1)}
-\define@cmdkey[bonak]{reflframeExt}{R}{(#1)}
-\define@cmdkey[bonak]{reflframeExt}{d}{(#1)}
-\define@cmdkey[bonak]{reflframeExt}{c}{(#1)}
-\define@cmdkey[bonak]{refllayer}{D}{(#1)}
-\define@cmdkey[bonak]{refllayer}{R}{(#1)}
-\define@cmdkey[bonak]{refllayer}{d}{(#1)}
-\define@cmdkey[bonak]{refllayer}{l}{(#1)}
-\define@cmdkey[bonak]{refllayer}{c}{(#1)}
-\define@cmdkey[bonak]{refllayerExt}{D}{(#1)}
-\define@cmdkey[bonak]{refllayerExt}{L}{(#1)}
-\define@cmdkey[bonak]{refllayerExt}{d}{(#1)}
-\define@cmdkey[bonak]{refllayerExt}{l}{(#1)}
-\define@cmdkey[bonak]{refllayerExt}{c}{(#1)}
-\define@cmdkey[bonak]{reflpainting}{D}{(#1)}
-\define@cmdkey[bonak]{reflpainting}{E}{(#1)}
-\define@cmdkey[bonak]{reflpainting}{L}{(#1)}
-\define@cmdkey[bonak]{reflpainting}{R}{(#1)}
-\define@cmdkey[bonak]{reflpainting}{d}{(#1)}
-\define@cmdkey[bonak]{reflpainting}{c}{(#1)}
-\define@cmdkey[bonak]{reflpaintingExt}{D}{(#1)}
-\define@cmdkey[bonak]{reflpaintingExt}{E}{(#1)}
-\define@cmdkey[bonak]{reflpaintingExt}{L}{(#1)}
-\define@cmdkey[bonak]{reflpaintingExt}{R}{(#1)}
-\define@cmdkey[bonak]{reflpaintingExt}{d}{(#1)}
-\define@cmdkey[bonak]{reflpaintingExt}{c}{(#1)}
+\define@cmdkey[bonak]{reflframeAbove}{D}{(#1)}
+\define@cmdkey[bonak]{reflframeAbove}{R}{(#1)}
+\define@cmdkey[bonak]{reflframeAbove}{d}{(#1)}
+\define@cmdkey[bonak]{reflframeAbove}{c}{(#1)}
+\define@cmdkey[bonak]{refllayerBelow}{D}{(#1)}
+\define@cmdkey[bonak]{refllayerBelow}{R}{(#1)}
+\define@cmdkey[bonak]{refllayerBelow}{d}{(#1)}
+\define@cmdkey[bonak]{refllayerBelow}{l}{(#1)}
+\define@cmdkey[bonak]{refllayerBelow}{c}{(#1)}
+\define@cmdkey[bonak]{refllayerAbove}{D}{(#1)}
+\define@cmdkey[bonak]{refllayerAbove}{L}{(#1)}
+\define@cmdkey[bonak]{refllayerAbove}{d}{(#1)}
+\define@cmdkey[bonak]{refllayerAbove}{l}{(#1)}
+\define@cmdkey[bonak]{refllayerAbove}{c}{(#1)}
+\define@cmdkey[bonak]{reflpaintingBelow}{D}{(#1)}
+\define@cmdkey[bonak]{reflpaintingBelow}{E}{(#1)}
+\define@cmdkey[bonak]{reflpaintingBelow}{L}{(#1)}
+\define@cmdkey[bonak]{reflpaintingBelow}{R}{(#1)}
+\define@cmdkey[bonak]{reflpaintingBelow}{d}{(#1)}
+\define@cmdkey[bonak]{reflpaintingBelow}{c}{(#1)}
+\define@cmdkey[bonak]{reflpaintingAbove}{D}{(#1)}
+\define@cmdkey[bonak]{reflpaintingAbove}{E}{(#1)}
+\define@cmdkey[bonak]{reflpaintingAbove}{L}{(#1)}
+\define@cmdkey[bonak]{reflpaintingAbove}{R}{(#1)}
+\define@cmdkey[bonak]{reflpaintingAbove}{d}{(#1)}
+\define@cmdkey[bonak]{reflpaintingAbove}{c}{(#1)}
 
 \define@cmdkey[bonak]{cohframe}{D}{(#1)}
 \define@cmdkey[bonak]{cohframe}{d}{(#1)}
@@ -121,10 +124,18 @@
   \setkeys*[bonak]{restr#1}{#7}
 }
 
-\newcommandx{\refl}[6][1,2,3,4,5,6]{
-  \ensuremath{\mathsf{\color{russian-green}{refl}}^{
-    \joinargs[#2][#3][#4]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#5]}}
-  \setkeys*[bonak]{refl#1}{#6}
+% Zone of a degeneracy or coherence: Below (the prefix has not reached the
+% degenerate direction) or Above (it has), rendered as a down or up arrow
+\newcommand{\zoneBelow}{\downarrow}
+\newcommand{\zoneAbove}{\uparrow}
+\newcommand{\zone}[1]{\if\relax\detokenize{#1}\relax\else{\csname zone#1\endcsname}\fi}
+
+% Degeneracies for frame, layer, and painting: the general macro.
+% #1 is the zone (Below or Above), #2 the kind (frame, layer or painting)
+\newcommandx{\refl}[7][1,2,3,4,5,6,7]{
+  \ensuremath{\mathsf{\color{russian-green}{refl}}{\color{russian-green}\zone{#1}}^{
+    \joinargs[#3][#4][#5]}_{\joinargs[\mathsf{\color{indian-yellow}{#2}}][#6]}}
+  \setkeys*[bonak]{refl#2#1}{#7}
 }
 
 \newcommandx{\depsmacro}[5][4,5]{
@@ -133,8 +144,9 @@
 }
 
 % Coherence conditions for frame, layer, and painting: the general macro
+\newcommand{\cohmark}{}
 \newcommandx{\coh}[9][2,3,4,5,6,7,8,9]{
-  \ensuremath{\mathsf{\color{chestnut}{coh}}^{
+  \ensuremath{\mathsf{\color{chestnut}{coh}}{\color{chestnut}\cohmark}^{
     \joinargs[#2][#3][#4]}_{\joinargs[\mathsf{\color{indian-yellow}{#1}}][#5][#6][#7][#8]}}
   \setkeys*[bonak]{coh#1}{#9}
 }
@@ -144,6 +156,35 @@
     \joinargs[#2][#3][#4]}_{\joinargs[#5][#6][#7]}}
   \setkeys*[bonak]{cohz}{#8}
 }
+
+% Compact applications in the coherence tables; dimensions are inferred
+% from the argument types stated in each row.
+\newcommand{\cRF}[3]{\restrf[][][][#1][#2](#3)}
+\newcommand{\cRL}[3]{\restrl[][][][#1][#2](#3)}
+\newcommand{\cRP}[3]{\restrp[][][][#1][#2](#3)}
+\newcommand{\cSF}[2]{\reflfbelow[][][][#1](#2)}
+\newcommand{\cSL}[2]{\refllbelow[][][][#1](#2)}
+\newcommand{\cSP}[2]{\reflpbelow[][][][#1](#2)}
+\newcommand{\cAF}[3]{\reflfabove[][][][#1](#2,#3)}
+\newcommand{\cAP}[2]{\reflpabove[][][][#1](#2)}
+% Relation names; arrows identify the Bonak form of each degeneracy.
+\newcommand{\cohname}[1]{\ensuremath{\textsf{\color{chestnut}#1}}}
+\newcommand{\relRestrRestr}{\cohname{restr-restr}}
+\newcommand{\relRestrReflInf}{\cohname{restr-refl-inf}}
+\newcommand{\relRestrReflId}{\cohname{restr-refl-id}}
+\newcommand{\relRestrReflSup}{\cohname{restr-refl-sup}}
+\newcommand{\relReflRefl}{\cohname{refl-refl}}
+\newcommand{\relRestrReflBelowInf}{\cohname{restr-refl\ensuremath{\downarrow}-inf}}
+\newcommand{\relRestrReflBelowId}{\cohname{restr-refl\ensuremath{\downarrow}-id}}
+\newcommand{\relRestrReflBelowSup}{\cohname{restr-refl\ensuremath{\downarrow}-sup}}
+\newcommand{\relRestrReflAboveSup}{\cohname{restr-refl\ensuremath{\uparrow}-sup}}
+\newcommand{\relReflBelowBelow}{\cohname{refl\ensuremath{\downarrow}-refl\ensuremath{\downarrow}}}
+\newcommand{\relReflBelowAbove}{\cohname{refl\ensuremath{\downarrow}-refl\ensuremath{\uparrow}}}
+\newcommand{\relReflAboveAbove}{\cohname{refl\ensuremath{\uparrow}-refl\ensuremath{\uparrow}}}
+\newcommand{\cohproof}[5]{#1^{#2,#3}_{\mathsf{\color{indian-yellow}#4},#5}}
+\newcommand{\cIF}[4]{\cohproof{\relRestrReflBelowInf}{#1}{#2}{frame}{#3,#4,\epsilon}}
+\newcommand{\cIL}[4]{\cohproof{\relRestrReflBelowInf}{#1}{#2}{layer}{#3,#4,\epsilon}}
+\newcommand{\cIP}[4]{\cohproof{\relRestrReflBelowInf}{#1}{#2}{painting}{#3,#4,\epsilon}}
 
 % Simplicial and Cubical sets
 \newcommand{\DeltaHat}{\ensuremath{\hat{\boldsymbol{\Delta}}}}
@@ -211,26 +252,29 @@
 \newcommandx{\restrf}[6][1,2,3,4,5,6]{\restr{frame}[#1][#2][#3][#4][#5][#6]}
 \newcommandx{\restrl}[6][1,2,3,4,5,6]{\restr{layer}[#1][#2][#3][#4][#5][#6]}
 \newcommandx{\restrp}[6][1,2,3,4,5,6]{\restr{painting}[#1][#2][#3][#4][#5][#6]}
-\newcommandx{\reflff}[2][1,2]{\refl[fullframe][#1][][][][#2]}
-\newcommandx{\reflf}[5][1,2,3,4,5]{\refl[frame][#1][#2][#3][#4][#5]}
-\newcommandx{\reflfext}[5][1,2,3,4,5]{\refl[frameExt][#1][#2][#3][#4][#5]}
-\newcommandx{\refll}[5][1,2,3,4,5]{\refl[layer][#1][#2][#3][#4][#5]}
-\newcommandx{\refllext}[5][1,2,3,4,5]{\refl[layerExt][#1][#2][#3][#4][#5]}
-\newcommandx{\reflp}[5][1,2,3,4,5]{\refl[painting][#1][#2][#3][#4][#5]}
-\newcommandx{\reflpext}[5][1,2,3,4,5]{\refl[paintingExt][#1][#2][#3][#4][#5]}
+\newcommandx{\reflff}[2][1,2]{\refl[][fullframe][#1][][][][#2]}
+\newcommandx{\reflfbelow}[5][1,2,3,4,5]{\refl[Below][frame][#1][#2][#3][#4][#5]}
+\newcommandx{\reflfabove}[5][1,2,3,4,5]{\refl[Above][frame][#1][#2][#3][#4][#5]}
+\newcommandx{\refllbelow}[5][1,2,3,4,5]{\refl[Below][layer][#1][#2][#3][#4][#5]}
+\newcommandx{\refllabove}[5][1,2,3,4,5]{\refl[Above][layer][#1][#2][#3][#4][#5]}
+\newcommandx{\reflpbelow}[5][1,2,3,4,5]{\refl[Below][painting][#1][#2][#3][#4][#5]}
+\newcommandx{\reflpabove}[5][1,2,3,4,5]{\refl[Above][painting][#1][#2][#3][#4][#5]}
 \newcommandx{\cohf}[8][1,2,3,4,5,6,7,8]{\coh{frame}[#1][#2][#3][#4][#5][#6][#7][#8]}
-\newcommandx{\cohfext}[8][1,2,3,4,5,6,7,8]{\coh{frameExt}[#1][#2][#3][#4][#5][#6][#7][#8]}
+\newcommandx{\cohfbelow}[8][1,2,3,4,5,6,7,8]{{\renewcommand{\cohmark}{\zoneBelow}\coh{frame}[#1][#2][#3][#4][#5][#6][#7][#8]}}
+\newcommandx{\cohfabove}[8][1,2,3,4,5,6,7,8]{{\renewcommand{\cohmark}{\zoneAbove}\coh{frame}[#1][#2][#3][#4][#5][#6][#7][#8]}}
 \newcommandx{\cohl}[8][1,2,3,4,5,6,7,8]{\coh{layer}[#1][#2][#3][#4][#5][#6][#7][#8]}
-\newcommandx{\cohlext}[8][1,2,3,4,5,6,7,8]{\coh{layerExt}[#1][#2][#3][#4][#5][#6][#7][#8]}
+\newcommandx{\cohlbelow}[8][1,2,3,4,5,6,7,8]{{\renewcommand{\cohmark}{\zoneBelow}\coh{layer}[#1][#2][#3][#4][#5][#6][#7][#8]}}
+\newcommandx{\cohlabove}[8][1,2,3,4,5,6,7,8]{{\renewcommand{\cohmark}{\zoneAbove}\coh{layer}[#1][#2][#3][#4][#5][#6][#7][#8]}}
 \newcommandx{\cohp}[8][1,2,3,4,5,6,7,8]{\coh{painting}[#1][#2][#3][#4][#5][#6][#7][#8]}
-\newcommandx{\cohpext}[8][1,2,3,4,5,6,7,8]{\coh{paintingExt}[#1][#2][#3][#4][#5][#6][#7][#8]}
-\newcommandx{\cohzone}[7][1,2,3,4,5,6,7]{\cohz{restr-refl-id}[#1][#2][#3][#4][#5][#6][#7]}
-\newcommandx{\cohztwo}[7][1,2,3,4,5,6,7]{\cohz{restr-refl-inf}[#1][#2][#3][#4][#5][#6][#7]}
-\newcommandx{\cohzthree}[7][1,2,3,4,5,6,7]{\cohz{restr-refl0-sup}[#1][#2][#3][#4][#5][#6][#7]}
-\newcommandx{\cohzfour}[7][1,2,3,4,5,6,7]{\cohz{restr-refl1-sup}[#1][#2][#3][#4][#5][#6][#7]}
-\newcommandx{\cohzfive}[7][1,2,3,4,5,6,7]{\cohz{refl0-refl0}[#1][#2][#3][#4][#5][#6][#7]}
-\newcommandx{\cohzsix}[7][1,2,3,4,5,6,7]{\cohz{refl0-refl1}[#1][#2][#3][#4][#5][#6][#7]}
-\newcommandx{\cohzseven}[7][1,2,3,4,5,6,7]{\cohz{refl1-refl1}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohpbelow}[8][1,2,3,4,5,6,7,8]{{\renewcommand{\cohmark}{\zoneBelow}\coh{painting}[#1][#2][#3][#4][#5][#6][#7][#8]}}
+\newcommandx{\cohpabove}[8][1,2,3,4,5,6,7,8]{{\renewcommand{\cohmark}{\zoneAbove}\coh{painting}[#1][#2][#3][#4][#5][#6][#7][#8]}}
+\newcommandx{\cohzone}[7][1,2,3,4,5,6,7]{\cohz{restr-refl\ensuremath{\downarrow}-id}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohztwo}[7][1,2,3,4,5,6,7]{\cohz{restr-refl\ensuremath{\downarrow}-inf}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohzthree}[7][1,2,3,4,5,6,7]{\cohz{restr-refl\ensuremath{\downarrow}-sup}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohzfour}[7][1,2,3,4,5,6,7]{\cohz{restr-refl\ensuremath{\uparrow}-sup}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohzfive}[7][1,2,3,4,5,6,7]{\cohz{refl\ensuremath{\downarrow}-refl\ensuremath{\downarrow}}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohzsix}[7][1,2,3,4,5,6,7]{\cohz{refl\ensuremath{\downarrow}-refl\ensuremath{\uparrow}}[#1][#2][#3][#4][#5][#6][#7]}
+\newcommandx{\cohzseven}[7][1,2,3,4,5,6,7]{\cohz{refl\ensuremath{\uparrow}-refl\ensuremath{\uparrow}}[#1][#2][#3][#4][#5][#6][#7]}
 \newcommandx{\cohzeight}[7][1,2,3,4,5,6,7]{\cohz{restr-restr}[#1][#2][#3][#4][#5][#6][#7]}
 \newcommandx{\fullframe}[2][1,2]{\prim{fullframe}[#1][][][#2]}
 
@@ -316,17 +360,17 @@
 
 \section{Introduction}
 \subsection{Motivation}
-Semi-simplicial sets are usually defined as presheaves from the semi-simplicial category, termed as the \emph{fibered} form~\cite{?}. In our previous work, we proposed a uniform construction of semi-simplicial and semi-cubical sets using iterated parametericity, termed as the \emph{indexed} form~\cite{hr25}, using the \emph{fibred-indexed correspondence}. That our indexed construction is equivalent to the fibred one is proved in~\cite{Laroche26}. It was originally suggested at Univalent Foundations IAS 2012~\cite{UFwiki2012} that the open problem of constructing semi-simplicial \emph{types} could be solved with the indexed construction, as it supplies more definitional equalities for tackling the combinatorial problem of solving coherence conditions~\footnote{It was originally postulated that the coherences would come for free with the indexed construction, but this turns out not to be the case.}.
+Semi-simplicial sets are usually defined as presheaves from the semi-simplicial category, termed as the \emph{fibred} form~\cite{rourkesanderson71}. In our previous work, we proposed a uniform construction of semi-simplicial and semi-cubical sets using iterated parametericity, termed as the \emph{indexed} form~\cite{hr25}, using the \emph{fibred-indexed correspondence}. That our indexed construction is equivalent to the fibred one is proved in~\cite{Laroche26}. It was originally suggested at Univalent Foundations IAS 2012~\cite{UFwiki2012} that the open problem of constructing semi-simplicial \emph{types} could be solved with the indexed construction, as it supplies more definitional equalities for tackling the combinatorial problem of solving coherence conditions~\footnote{It was originally postulated that the coherences would come for free with the indexed construction, but this turns out not to be the case.}.
 
 \subsection{Contributions}
-We previously exploited the observation that semi-simplicial and semi-cubical sets are naturally unary and binary cases of iterated parametricity~\cite{hr25}. In adding a new dimension to our construction, we observed the usual cubical degeneracies in the cubical case and \emph{connections}~\cite{bernardy15,bernardy12} in the simplicial case. The coherence conditions we used to complete our construction made explicit the ones outlined in Grandis-Mauri~\cite{grandis03}. Our work includes a mechanically-checked formalization in Rocq~\href{https://github.com/artagnon/bonak}{\linkicon}.
+We previously exploited the observation that semi-simplicial and semi-cubical sets are naturally unary and binary cases of iterated parametricity~\cite{hr25}. We extend this construction with operations that insert a new coordinate axis: the usual cubical degeneracies in the binary case and their unary analogue~\cite{bernardy15,bernardy12}. The coherence conditions we used to complete our construction made explicit the ones outlined in Grandis-Mauri~\cite{grandis03}. Our work includes a mechanically-checked formalization in Rocq~\href{https://github.com/artagnon/bonak}{\linkicon}.
 
 \subsection{\texorpdfstring{$\nu$}{nu}-shape sets}
 
-The semi-simplicial and semi-cubical categories are instances of the more general notion of $\nu$-semi-shape category.
+Fix a set $\nu$ of face labels, called the \emph{arity}. The unary case uses a singleton set of labels; the binary case uses two labels. The semi-simplicial and semi-cubical categories are instances of the more general notion of $\nu$-semi-shape category.
 
 \begin{definition}[$\hexagon$]
-  The definition of $\nu$-semi-shape category is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than or equal to that of $g$. We write $|l|_{\kstar}$ for the number of stars in a word $l$. Its objects, morphisms, and identities are:
+  The definition of $\nu$-semi-shape category is shown below. Note that, if $g \circ f$ is well-defined, then the length of $f$ is less than or equal to that of $g$. A star denotes a retained coordinate and a label in $\nu$ denotes an inserted constant. We write $|l|_{\kstar}$ for the number of stars in a word $l$ and $\epsilon$ for the empty word. Its objects, morphisms, and identities are:
   \begin{align*}
     \Obj_{\hexagon}       & := \Nat                                                                       \\
     \Hom_{\hexagon}(p, n) & := \{l \in (\nu \sqcup \{\kstar\})^n \mid |l|_{\kstar} = p\}                  \\
@@ -342,7 +386,7 @@ The semi-simplicial and semi-cubical categories are instances of the more genera
 
 In particular $1$-semi-shape category presents the semi-simplicial category while the $2$-semi-shape category presents the semi-cubical category (note that this also relates to unary and binary parametricity~\cite{bernardy15, reynolds83}).
 
-Degeneracies can be added to the $\nu$-semi-shape category in different ways. We here focus on cubical-style degeneracies as in Grandis~\cite{grandis03} and their adaptation to the unary case as in \cite{bernardy15}. A morphism from $p$ to $n$ in the $\nu$-shape category first discards $p-k$ input coordinates, giving a map from $p$ to $k$, then applies a face map from $k$ to $n$.
+Degeneracies can be added to the $\nu$-semi-shape category in different ways. We here focus on cubical-style degeneracies as in Grandis~\cite{grandis03} and their adaptation to the unary case as in \cite{bernardy15}. A morphism from $p$ to $n$ in the $\nu$-shape category retains $k$ of the $p$ input coordinates: it first discards the other $p-k$ coordinates, then inserts constants to obtain $n$ output coordinates.
 
 \begin{definition}[$\hexagon_d$]
   The $\nu$-shape category extends the $\nu$-semi-shape category with degeneracies. We write $|w|_{\kstar}$ for the number of stars in a word $w$. Its objects, morphisms, and identities are:
@@ -375,51 +419,54 @@ In particular, a $2$-shape category presents the cubical category, while $1$-sha
 
 \subsection{Fibred-indexed correspondence}
 
-% TODO: connect to the previous section; we should mention specifically that our $nu$-sets are equivalent to presheaves form the $nu$-semi-shape category, and that our $nu$-relf-sets are equivalent to presheaves from the $nu$-shape category.
+We now work in dependent type theory. A type $A$ is an \emph{h-set} if, for any $x,y:A$ and any two proofs $p,q:x=y$, we have $p=q$. Thus equality between elements of $A$ is proof-irrelevant: this is the uniqueness of identity proofs property ($\UIP$). We write $\HSet$ for the universe of h-sets.
 
 Semi-cubical sets can be expressed directly in terms of presheaves over a $\nu$-semi-shape category using morphisms, by iterating the equivalence between maps and families:
 \[
   (\Sigma A : Set. A \rightarrow B) \equiv (B \rightarrow Set)
 \]
 
+\begin{figure}[H]
 \begin{equation*}
   \begin{array}{cllccllll}
     \multicolumn{3}{c}{\mbox{\emph{fibred form}}} & \quad\mathit{vs}\quad & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                     \\
     \\
-    Y_0                                           & :                     & \HSet[l]                                       &  & X_0                                                                                & :                & \HSet[l]                                                           & \mbox{(points)}   \\
+    Y_0                                           & :                     & \HSet                                       &  & X_0                                                                                & :                & \HSet                                                           & \mbox{(points)}   \\
     \uparrow\uparrow                                                                                                                                                                                                                                                                                                           \\
-    Y_1                                           & :                     & \HSet[l]                                       &  & X_1                                                                                & :                & X_0 \times X_0 \rightarrow \HSet[l]                                & \mbox{(segments)} \\
+    Y_1                                           & :                     & \HSet                                       &  & X_1                                                                                & :                & X_0 \times X_0 \rightarrow \HSet                                & \mbox{(segments)} \\
     \uparrow\uparrow\uparrow\uparrow              &                       &                                                &  &                                                                                                                                                                                                \\
-    Y_2                                           & :                     & \HSet[l]                                       &  & X_2                                                                                & :                & \Pi (x^0_{LL},x^0_{LR}).\, \Pi x^1_{L*}:X_1 (x^0_{LL},x^0_{LR}).                       \\
+    Y_2                                           & :                     & \HSet                                       &  & X_2                                                                                & :                & \Pi (x^0_{LL},x^0_{LR}).\, \Pi x^1_{L*}:X_1 (x^0_{LL},x^0_{LR}).                       \\
                                                   &                       &                                                &  &                                                                                    &                  & \Pi (x^0_{RL},x^0_{RR}).\, \Pi x^1_{R*}:X_1 (x^0_{RL},x^0_{RR}).\,                     \\
-    \multicolumn{3}{c}{\mbox{~+ coherences}}      &                       &                                                &  & X_1 (x^0_{LL},x^0_{RL}) \times X_1 (x^0_{LR},x^0_{RR}) \rightarrow \HSet[l] \qquad & \mbox{(squares)}                                                                                          \\
+    \multicolumn{3}{c}{\mbox{~+ coherences}}      &                       &                                                &  & X_1 (x^0_{LL},x^0_{RL}) \times X_1 (x^0_{LR},x^0_{RR}) \rightarrow \HSet \qquad & \mbox{(squares)}                                                                                          \\
                                                   &                       &                                                &  &                                                                                                                                                                                                \\
     \vdots                                        &                       &                                                &  & \vdots                                                                                                                                                                                         \\
   \end{array}
 \end{equation*}
+  \caption{Fibred and indexed presentations of semi-cubical sets.}
+  \label{fig:fibred-indexed-faces}
+\end{figure}
 
-Both definitions are provably equivalent using univalence~\href{https://github.com/artagnon/bonak/tree/master/theories/Equiv}{\linkicon}, and this is yet another instance of the \emph{Grothendieck construction}, which we refer to as the fibred-indexed correspondence.
+The two presentations in Figure~\ref{fig:fibred-indexed-faces} are provably equivalent using univalence~\href{https://github.com/artagnon/bonak/tree/master/theories/Equiv}{\linkicon}, and this is yet another instance of the \emph{Grothendieck construction}, which we refer to as the fibred-indexed correspondence.
 
-In this paper, we focus on an indexed definition of simplicial sets equipped with faces and a \emph{cubical-like} form of degeneracy and on cubical sets with faces and degeneracies. While faces are part of the indexed infrastructure and coherences between faces are necessitated by faces meeting at common edges, degeneracies and their coherences are postulated explicitly as shown below:
+In this paper, we focus on an indexed definition of simplicial sets equipped with faces and a \emph{cubical-like} form of degeneracy and on cubical sets with faces and degeneracies. Figure~\ref{fig:fibred-indexed-degeneracies} illustrates the corresponding fibred and indexed presentations with degeneracies.
 
-TODO: Clarify that the restriction-degeneracy coherences are necessiated in the same way as the face-face coherences, while degenracy-degeneracy coherences are additional structure someone can assume.
-
+\begin{figure}[H]
 \begin{equation*}
   \begin{array}{cllccllll}
     \multicolumn{3}{c}{\mbox{\emph{fibred form}}}            & \quad\mathit{vs}\quad                                                     & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                                                     \\
     \\
-    Y_0                                                      & :                                                                         & \HSet[l]                                                             &  & X_0                                                                                & :                & \HSet[l]                                                                     & \mbox{(points)}   \\
+    Y_0                                                      & :                                                                         & \HSet                                                             &  & X_0                                                                                & :                & \HSet                                                                     & \mbox{(points)}   \\
     \uparrow\!\downarrow\uparrow                                                                                                                                                                                                                                                                                                                                                                                              \\
-    Y_1                                                      & :                                                                         & \HSet[l]                                                             &  & X_1                                                                                & :                & X_0 \times X_0 \rightarrow \HSet[l]                                          & \mbox{(segments)} \\
+    Y_1                                                      & :                                                                         & \HSet                                                             &  & X_1                                                                                & :                & X_0 \times X_0 \rightarrow \HSet                                          & \mbox{(segments)} \\
     \uparrow\!\downarrow\uparrow\uparrow\!\downarrow\uparrow &                                                                           &                                                                      &  & r^0_0                                                                              & :                & \Pi x_0:X_0.\,X_1(x_0,x_0)                                                                       \\
-    Y_2                                                      & :                                                                         & \HSet[l]                                                             &  & X_2                                                                                & :                & \Pi (x^0_{LL},x^0_{LR}).\, \Pi x^1_{L*}:X_1 (x^0_{LL},x^0_{LR}).                                 \\
+    Y_2                                                      & :                                                                         & \HSet                                                             &  & X_2                                                                                & :                & \Pi (x^0_{LL},x^0_{LR}).\, \Pi x^1_{L*}:X_1 (x^0_{LL},x^0_{LR}).                                 \\
                                                              &                                                                           &                                                                      &  &                                                                                    &                  & \Pi (x^0_{RL},x^0_{RR}).\, \Pi x^1_{R*}:X_1 (x^0_{RL},x^0_{RR}).\,                               \\
-    \multicolumn{3}{c}{\mbox{~+ coherences}}                 &                                                                           &                                                                      &  & X_1 (x^0_{LL},x^0_{RL}) \times X_1 (x^0_{LR},x^0_{RR}) \rightarrow \HSet[l] \qquad & \mbox{(squares)}                                                                                                    \\
+    \multicolumn{3}{c}{\mbox{~+ coherences}}                 &                                                                           &                                                                      &  & X_1 (x^0_{LL},x^0_{RL}) \times X_1 (x^0_{LR},x^0_{RR}) \rightarrow \HSet \qquad & \mbox{(squares)}                                                                                                    \\
                                                              &                                                                           &                                                                      &  & r^1_0                                                                              & :                & \Pi (x^0_{L},x^0_{R}):(X_0 \times X_0).\,\Pi x^1:X_1(x^0_L,x^0_R).\,                             \\
-                                                             &                                                                           &                                                                      &  &                                                                                    &                  & X_2((x^0_{L},x^0_{L}),r_0(x^0_{L}),(x^0_{R},x^0_{R}),r_0(x^0_{R}),(x^1,x^1))                     \\
+                                                             &                                                                           &                                                                      &  &                                                                                    &                  & X_2((x^0_{L},x^0_{L}),r^0_0(x^0_{L}),(x^0_{R},x^0_{R}),r^0_0(x^0_{R}),(x^1,x^1))                     \\
                                                              &                                                                           &                                                                      &  &
     r^1_1                                                    & :                                                                         & \Pi (x^0_{L},x^0_{R}):(X_0 \times X_0).\,\Pi x^1:X_1(x^0_L,x^0_R).\,                                                                                                                                                                                                               \\
-                                                             &                                                                           &                                                                      &  &                                                                                    &                  & X_2((x^0_{L},x^0_{R}),x^1,(x^0_{L},x^0_{R}),x^1,(r_0(x^0_{L}),r_0(x^0_{L})))                     \\
+                                                             &                                                                           &                                                                      &  &                                                                                    &                  & X_2((x^0_{L},x^0_{R}),x^1,(x^0_{L},x^0_{R}),x^1,(r^0_0(x^0_{L}),r^0_0(x^0_{L})))                     \\
                                                              &                                                                           &                                                                      &  &
     coh^1_0                                                  &
     :                                                        & \Pi x_0:X_0.\, r^1_0 (x^0, x^0,r^0_0 (x^0)) = r^1_1 (x^0,x^0,r^0_0 (x^0))                                                                                                                                                                                                                                                                                      \\
@@ -427,10 +474,21 @@ TODO: Clarify that the restriction-degeneracy coherences are necessiated in the 
     \vdots                                                   &                                                                           &                                                                      &  & \vdots                                                                                                                                                                                                   \\
   \end{array}
 \end{equation*}
+  \caption{Fibred and indexed presentations of cubical sets with degeneracies. The indexed presentation explicitly supplies degeneracies and their mutual coherences.}
+  \label{fig:fibred-indexed-degeneracies}
+\end{figure}
 
 \section{Our construction}
 \subsection{Intuition for our construction}
-\begin{table}[H]
+We call the structures presented by presheaves on the $\nu$-semi-shape category \emph{$\nu$-sets}, and write $\X$ for the type of their indexed presentations.
+
+We call a degeneracy that inserts a new coordinate axis a \emph{parametric degeneracy}. A degeneracy direction specifies where a new coordinate axis is inserted. For an $n$-cube, there are $n+1$ insertion positions, numbered $0,\ldots,n$.
+
+We recall the boundary terminology of the indexed construction~\cite{hr25}. A \emph{layer} groups the face data for one direction, with one component for each label in $\nu$. A \emph{frame} records a prefix of these boundary layers; a \emph{full frame} contains all of them. A \emph{painting} over a frame supplies the remaining boundary layers and a cell over the completed boundary. In the dependent presentation, each component of a layer is itself a lower-dimensional painting over a suitable restricted frame. Restriction means taking a face, and acts on frames, layers, and paintings.
+
+The boundary of a degenerate cell contains a repeated layer at the inserted direction, together with degeneracies of the original faces. Figure~\ref{fig:degeneracy-layers} illustrates the three insertion positions for a square.
+
+\begin{figure}[H]
   \begin{tabularx}{\linewidth}{c c c c c}
     \toprule
     \begin{tikzpicture}[scale=1.5]
@@ -613,14 +671,16 @@ TODO: Clarify that the restriction-degeneracy coherences are necessiated in the 
     \end{tikzpicture}                                                                                                                         \\
     \bottomrule
   \end{tabularx}
-\end{table}
+  \caption{Cubical degeneracies and their boundary layers, each consisting of two paintings. Below the original square, the rows insert directions $0$, $1$, and $2$. Green faces repeat the square; blue and red faces are degeneracies of its edges. The bottom row shows the last-direction case.}
+  \label{fig:degeneracy-layers}
+\end{figure}
 
 \subsubsection{Parametric degeneracies vs connecting degeneracies}
 \label{sec:dgn-flavors}
 
-Despite a common terminology, degeneracies in simplicial sets~\cite{} and in cubical sets~\cite{grandis03} are of a different nature. Degeneracies in cubical sets insert a new axis while degeneracies in simplicial sets duplicate an existing axis. In particular, degenerating a $n$-shape $c$ in a cubical set is about \emph{inserting a new axis} $i \leq n$ (counting axes of a $n$-shape from $0$ to $n-1$), yielding a $(n+1)$-shape lying on $c$ in the $i$-th axis and lying on the degeneracy of the $j$-th axis of $c$ in the $j$-th axis (resp. $(j-1)$-th axis) for $j < i$ (resp $j > i$). In the simplicial case, the degeneracy process is better understood by reasoning in augmented simplicial sets where the dimension starts at $-1$: degenerating a $n$-shape $c$ in simplicial sets is about \emph{duplicating an existing axis} $i < n$ (thus requiring $n$ to be at least $0$), yielding a $(n+1)$-shape lying on $c$ in both the $i$ and $i+1$ axes, while it lies again on the degeneracy of the $j$-th axis (resp. $(j-1)$-th) of $c$ in the $j$-th axis for $j < i$ (resp. $j > i+1$).
+We use $n$-shape to mean a cell of geometric dimension $n$. Despite a common terminology, degeneracies in simplicial sets~\cite{} and in cubical sets~\cite{grandis03} are of a different nature. Degeneracies in cubical sets insert a new axis while degeneracies in simplicial sets duplicate an existing axis. In particular, degenerating a $n$-shape $c$ in a cubical set is about \emph{inserting a new axis} $i \leq n$ (counting axes of a $n$-shape from $0$ to $n-1$), yielding a $(n+1)$-shape lying on $c$ in the $i$-th axis and lying on the degeneracy of the $j$-th axis of $c$ in the $j$-th axis (resp. $(j-1)$-th axis) for $j < i$ (resp $j > i$). In the simplicial case, the degeneracy process is better understood by reasoning in augmented simplicial sets where the dimension starts at $-1$: degenerating a $n$-shape $c$ in simplicial sets is about \emph{duplicating an existing axis} $i < n$ (thus requiring $n$ to be at least $0$), yielding a $(n+1)$-shape lying on $c$ in both the $i$ and $i+1$ axes, while it lies again on the degeneracy of the $j$-th axis (resp. $(j-1)$-th) of $c$ in the $j$-th axis for $j < i$ (resp. $j > i+1$).
 
-Let us call \emph{parametric degeneracy} the kind of degeneracy present in (binary) cubical sets, as described in~\cite{grandis03} and \emph{connecting degeneracy} the kind of degeneracy present in simplicial sets. The unary case of parametric degeneracies have already been considered in the literature, e.g. implicitly in type theories with internal parametricity~\cite{moulin16,bernardy12} and more explicitly in Parametric Type Theory~\cite{bernardy15} where an interpretation in terms of a unary form of cubical sets is given. The binary case of connecting degeneracies happens to be similar to connections in (binary) cubical sets, where it should be noted that for arity 2 (and higher), connections additionally need parametric degeneracies to fill faces which in the non-duplicated axes. It should also be noted that each connection breaks down in $\nu$ variants (that is only one variant in the unary case but two in the binary cases, resulting in the ``disjunctive'' and ``conjunctive'' variants).
+We call the axis-duplicating operation a \emph{connecting degeneracy}; the axis-inserting operation is the parametric degeneracy introduced above. The unary case of parametric degeneracies have already been considered in the literature, e.g. implicitly in type theories with internal parametricity~\cite{moulin16,bernardy12} and more explicitly in Parametric Type Theory~\cite{bernardy15} where an interpretation in terms of a unary form of cubical sets is given. The binary case of connecting degeneracies happens to be similar to connections in (binary) cubical sets, where it should be noted that for arity 2 (and higher), connections additionally need parametric degeneracies to fill faces which in the non-duplicated axes. It should also be noted that each connection has one variant for each face label in $\nu$ (that is only one variant in the unary case but two in the binary cases, resulting in the ``disjunctive'' and ``conjunctive'' variants).
 
 We illustrate below the difference between parametric degeneracy and connecting degeneracy in the unary and binary case for $0$ and $1$-shapes, reminding that we start from dimension $-1$ in the unary case and from dimension 0 in the binary case. In particular, in the unary case, there is a parametric degeneracy $r^{-1}_{-1}(a)$ for any $a:X_{-1}$.
 
@@ -691,35 +751,39 @@ We illustrate below the difference between parametric degeneracy and connecting 
   \end{array}
 \end{equation*}
 
-\subsubsection{The construction of degeneracies}
+\subsubsection{Construction of faces}
+\label{sec:faces}
 
-Our construction includes degeneracies in all directions, although the degeneracies in one direction is logically independent.
+The construction of degeneracies presented in this paper builds on the very dependent recursive presentation~\cite{hr26} of the indexed construction of $\nu$-sets~\cite{hr25}. At each level $n$, the earlier families $X_0,\ldots,X_{n-1}$ determine the type of full frames, and the next family $X_n$ assigns an h-set of cells to each full frame.
 
-% TODO: Explain Below/Above, their types (why above needs a painting), their dependency order for frames and paintings
-% TODO: Explain relative indices, bounds, dimension conventions
-% TODO: Explain relationship to the last-direction construction
-% TODO: Explain coherences needed for typing, with forward reference to the coherence section
+In the formulas below, $n$ is the construction level and $p\leq n$ is the number of layers in a prefix, called its \emph{height}. A full frame at level $n$ has $n$ layers. Thus level $n$ corresponds to geometric dimension $n-1$ in the augmented unary case and to dimension $n$ in the binary case. We write $\framep[n][p]$ for frames of height $p$, $\layer[n][p][][d=d]$ for the next layer over a frame $d$, and $\painting[n][p][][d=d]$ for its paintings. In particular, $\fullframe[n]=\framep[n][n]$, and a painting over a full frame $d$ is a cell of $X_n(d)$. A successor frame is a dependent pair $(d,l)$ of a frame and its next layer; a painting with layers left to supply is a pair $(l,c)$ of its next layer and remaining painting.
 
-For any $(X_0,X_1,\ldots): \X$, we define a stream of degeneracies:
+The restriction operation $\restrf[n][p][][q][\epsilon]$ maps a frame in $\framep[n+1][p]$ to one in $\framep[n][p]$. Its relative index $q\leq n-p$ denotes direction $p+q$, and $\epsilon\in\nu$ selects a face in that direction. The corresponding layer and painting operations are written $\restrl$ and $\restrp$; a painting restriction includes the restriction of its indexing frame.
+
+Restrictions follow the decomposition into frames, layers, and paintings. Restricting a successor frame restricts its prefix and its next layer; restricting a layer applies painting restriction to each face-label component. On a painting $(l,c)$, restriction at index $0$ selects the component $l(\epsilon)$ of the first layer. A successor index restricts the layer and continues recursively through the remaining painting.
+
+\subsubsection{Construction of degeneracies}
+
+We construct degeneracies by building their boundaries layer by layer. The chosen direction may lie beyond the prefix, or the prefix may have reached or passed it. These two cases give the operations \emph{Below} and \emph{Above}, written $\downarrow$ and $\uparrow$. Their direction indices are relative to the prefix height: Below counts upwards, so its index $q$ denotes direction $p+q$; Above counts downwards, so its index $q$ denotes direction $p-q$.
+
+Below transforms the existing prefix without inserting the repeated layer. It acts on a frame alone and preserves the prefix height:
 \begin{equation*}
-  \begin{array}{lll}
-    \Xrefl(X_0,X_1,\ldots) \defeq                                                                                             \\
-    \quad \Sigma r_{0}:\Pi d:\fullframe[0].\Pi x:X_0(d).X_1(\reflff[0][d=\d],\lambda \epsilon.x).                             \\
-    \quad \Sigma r_1:\Pi d:\fullframe[1][D={X_0}].\,\Pi x:X_1(d).X_2(\reflff[1][D={r_0}, d=\d],\lambda \epsilon.x).           \\
-    \quad \Sigma r_2:\Pi d:\fullframe[2][D={X_0,X_1}].\,\Pi x:X_2(d).X_3(\reflff[2][D={r_0,r_1}, d=\d],\lambda \epsilon.\,x). \\
-    \quad \ldots
-  \end{array}
+  \reflfbelow[n][p][][q]:\framep[n][p]\rightarrow\framep[n+1][p]
+  \qquad(q\leq n-p).
 \end{equation*}
-where
+Above inserts the repeated layer, so it needs the painting $c$ completing the original prefix and produces one more layer:
 \begin{equation*}
-  \reflff[n][D={r_{-1},\ldots,r_{n-1}}]:\fullframe[n][D={X_{-1},\ldots,X_{n-1}}] \rightarrow \framep[n+1][n][][D={X_{-1},\ldots,X_{n}}]
+  \reflfabove[n][p][][q]:\Pi d:\framep[n][p].\,
+  \painting[n][p][][d=\d]\rightarrow\framep[n+1][p+1]
+  \qquad(q\leq p).
 \end{equation*}
-computes the $n$ first layers of the border of $r_{n}(d)(x)$, knowing that the last layer is made of $\nu$ times $x$ itself, so that
 
+For any $(X_0,X_1,\ldots):\X$, let $R$ collect the degeneracy families at levels below $n$. The supplied family $L$ at level $n$ has type
 \begin{equation*}
-  (\reflff[n][D={r_{-1},\ldots,r_{n-1}},d=\d],\lambda \epsilon.\,x): \framep[n+1][n+1][][D={X_{-1},\ldots,X_{n}}]
+  L:\Pi q\leq n.\,\Pi d:\fullframe[n].\,\Pi x:X_n(d).\,
+  X_{n+1}(\reflfabove[n][n][][q][d=\d,c=x]).
 \end{equation*}
-is a full frame.
+Here $q$ is the Above index, so $L(q)$ inserts direction $n-q$. In the geometric examples, this operation is denoted $r^n_{n-q}$ in the binary case and $r^{n-1}_{n-q-1}$ in the augmented unary case. The underlying $X_i$ and earlier degeneracies $R$ are left implicit.
 
 % Abbreviated tables in this section†
 %
@@ -733,21 +797,12 @@ is a full frame.
 \appendmask[bonak]{restrframe}[D]
 \appendmask[bonak]{restrlayer}[D, d]
 \appendmask[bonak]{restrpainting}[D, d]
-\appendmask[bonak]{reflframe}[D, R]
-\appendmask[bonak]{refllayer}[D, R, d]
-\appendmask[bonak]{reflpainting}[D, E, R, d]
-\appendmask[bonak]{reflframeExt}[D, R]
-\appendmask[bonak]{refllayerExt}[D, E, R, d]
-\appendmask[bonak]{reflpaintingExt}[D, E, R, d]
-\appendmask[bonak]{cohframe}[D, E, R]
-\appendmask[bonak]{cohlayer}[D, E, R, d]
-\appendmask[bonak]{cohpainting}[D, E, R, d]
-\appendmask[bonak]{cohidframe}[D, E, R]
-\appendmask[bonak]{cohidlayer}[D, E, R, d]
-\appendmask[bonak]{cohidpainting}[D, E, R, d]
-\appendmask[bonak]{cohframeExt}[D, E, R]
-\appendmask[bonak]{cohlayerExt}[D, E, R, d]
-\appendmask[bonak]{cohpaintingExt}[D, E, R, d]
+\appendmask[bonak]{reflframeBelow}[D, R]
+\appendmask[bonak]{refllayerBelow}[D, R, d]
+\appendmask[bonak]{reflpaintingBelow}[D, E, R, d]
+\appendmask[bonak]{reflframeAbove}[D, R]
+\appendmask[bonak]{refllayerAbove}[D, E, R, d]
+\appendmask[bonak]{reflpaintingAbove}[D, E, R, d]
 
 % Truncated sets, otherwise referred to as X
 % Keep all arguments
@@ -760,102 +815,103 @@ is a full frame.
 \newcommandx{\Xreflto}[2][2]{\Xrefl[to][<#1][#2]}
 \newcommandx{\Xreflfrom}[2][2]{\Xrefl[from][\geq#1][#2]}
 
+The supplied families form a \emph{dependent stream}: each new family is typed using the earlier ones. We write $\Xrefl$ for this type of degeneracy families over an underlying $\nu$-set. In the tables, $D$ records an initial segment of the underlying $\nu$-set, $E$ its next component, and $M$ its remaining tail. Superscripts $<n$, $=n$, and $\geq n$ indicate an initial segment, its next extension, and a remaining tail, respectively. We write $D.1$ and $D.2$ for the two projections of a pair. Arguments in braces are implicit; the equations retain their dependence on those arguments.
+
 \def\lab{tab:coind}
 \input{tab-coind.tex}
+
+Table~\ref{tab:core} gives the finite degeneracy prefixes and their extensions used in the stream. The target of the next family $L$ is indexed by the Above frame constructed from $R$.
 
 \def\lab{tab:core}
 \input{tab-core.tex}
 
-\def\lab{tab:reflext}
-\input{tab-reflext.tex}
+The Below frame step transforms the prefix and its next layer. Each layer component uses the lower-dimensional Below painting operation. When the prefix height decreases by one, the Below index increases by one to denote the same direction; this accounts for the $q+1$ in the frame recursion. The Below and Above tables refer to each other through painting operations at earlier levels.
 
-\def\lab{tab:refl}
-\input{tab-refl.tex}
+\def\lab{tab:reflbelow}
+\input{tab-reflbelow.tex}
+
+At Above index $0$, the prefix reaches the chosen direction. The boundary is obtained by adjoining the constant layer $\lambda\epsilon.\,c$ to the Below frame in direction $0$. At a successor index, Above recurses through the prefix and transforms the next layer using the Above painting operation.
+
+\def\lab{tab:reflabove}
+\input{tab-reflabove.tex}
+
+The frame operations are constructed Below first, then Above. For paintings the order is reversed: Above extends a painting through the remaining layers and ends with the supplied $L$ at the full frame. Below hands over to Above when it reaches the chosen direction.
 
 \subsubsection{Coherence conditions}
+\label{sec:coherences}
 
-The face and degeneracy relations of Grandis--Mauri~\cite{grandis03} describe how two successive operations commute, and when a face cancels a degeneracy. In their $\delta/\varepsilon$ notation, the relations on cells are as follows, with $\delta$ denoting restriction, $\varepsilon$ denoting degeneracy, and composition read from right to left. Dimension indices are suppressed:
+The five relations of Grandis--Mauri~\cite{grandis03} describe commutation of restrictions and degeneracies, and cancellation of a degeneracy by a restriction in its inserted direction. Grandis--Mauri state the relations between maps in the cubical site. Here we display their images under a contravariant presheaf, which reverses composition. Thus $\delta_r^\alpha$ denotes restriction on cells and $\varepsilon_q$ denotes degeneracy, with face labels $\alpha,\beta\in\nu$. Composition is read from right to left, and dimension indices are left implicit:
+\[
+\begin{array}{r@{\;}c@{\;}c@{}l@{\qquad}l@{\qquad}l}
+ \delta_q^\alpha\delta_r^\beta & = & &
+   \delta_r^\beta\delta_{q+1}^\alpha & r\leq q & (\relRestrRestr),\\[0.4em]
+   & & \ldelim\{{3}{*} &
+   \varepsilon_{q-1}\delta_r^\alpha & r<q & (\relRestrReflInf),\\
+ \delta_r^\alpha\varepsilon_q & = & &
+   \id & r=q & (\relRestrReflId),\\
+   & & & \varepsilon_q\delta_{r-1}^\alpha & r>q & (\relRestrReflSup),\\[0.4em]
+ \varepsilon_q\varepsilon_r & = & &
+   \varepsilon_{r+1}\varepsilon_q & q\leq r & (\relReflRefl).
+\end{array}
+\]
+These are zero-based absolute direction indices, ranging over the instances in which the composites are defined. At level $n$, the cell component of $\varepsilon_i$ is supplied by $L(n-i)$. The three cases distinguish a restriction before, at, or after the inserted direction.
 
+The mixed relation above is displayed in the simplifying direction. In the construction tables, the equality proofs are oriented in the direction used for transport, as in the formalization. Coherence names list the operations on the right-hand side of those construction-oriented equations, with the outer operation first. In particular, $\relRestrReflBelowId$ proves $d=\cRF{q}{\epsilon}{\cSF{q}{d}}$, reversing the cancellation equation above.
+
+In the indexed construction, these relations become equalities of partial boundaries. The Below/Above distinction refines $\relRestrReflSup$ into $\relRestrReflBelowSup$ and $\relRestrReflAboveSup$, and $\relReflRefl$ into $\relReflBelowBelow$, $\relReflBelowAbove$, and $\relReflAboveAbove$. Together with $\relRestrReflBelowInf$ and $\relRestrReflBelowId$, these are the seven degeneracy coherence families. The underlying $\nu$-set already supplies $\relRestrRestr$.
+
+Typing the layer operations requires transporting paintings along frame equalities. The Below layer step uses $\relRestrReflBelowInf$ to commute degeneracy with restriction. At Above index $0$, $\relRestrReflBelowId$ identifies the restriction of the degenerate frame with the original frame, allowing the input painting to form a constant layer. At a successor Above index, the layer step uses $\relRestrReflAboveSup$. The restriction layer similarly uses $\relRestrRestr$ to commute two restrictions. The frame operations and the types of the coherences they require are therefore constructed together.
+
+Tables~\ref{tab:cohframe-types} and~\ref{tab:cohframe-dgn} give their types for frames. We assume $p\leq n$ and face labels $\epsilon,\omega\in\nu$. Each row quantifies over its displayed arguments and bounds, using the relative direction indices introduced above. Operation superscripts are omitted where the dimensions follow from the argument types. Indexing frames of layer and painting operations are implicit; an Above frame operation displays both its frame and painting arguments. The resulting equality is between frames even when its terms involve paintings.
+
+In the tables, transports and the standard conversions between equalities of dependent pairs or functions and their componentwise equalities are left implicit, as if working in extensional type theory. The Rocq formalization makes these conversions explicit. We record a dependent type with $u=_e v$ when it is useful to identify the frame equality $e$ along which $u$ is transported before comparison with $v$.
+
+\input{tab-cohframe-types.tex}
+
+The proofs follow the decomposition of boundaries into frames, layers, and paintings. A frame proof combines a frame proof (recursively) with a layer proof. A painting proof combines a layer proof with a painting proof (recursively). A layer proof is pointwise over the face labels and uses a lower-dimensional painting coherence.
+
+We give the construction of $\relRestrReflBelowInf$ in Table~\ref{tab:coh-inf}. Subscripts $\mathsf{frame}$, $\mathsf{layer}$, and $\mathsf{painting}$ identify its three forms. A pair of proofs denotes equality of dependent pairs, and $\lambda\theta$ denotes the pointwise proof of equality of layers. Here $\mathsf{refl}$ is reflexivity of equality. The recursive clauses use the same convention of implicit transports as the other construction tables.
+
+\input{tab-coh-inf.tex}
+
+In this example, the frame recursion decreases the prefix height. Passing from height $p+1$ to $p$ increments the two relative direction indices, producing the $q+1$ and $r+1$ in the prefix proof. The layer row applies the painting coherence one dimension lower to each component $l(\theta)$. The painting recursion decreases the restriction index; at index $0$, restriction evaluates the first layer, giving the reflexivity clause.
+
+The intensional justification of the layer proof also uses a second coherence, an equality between composites of frame-equality proofs. Besides the lower-dimensional painting coherence, it requires those composites to agree so that the implicit transports have the same effect. Since frames are sets, this second coherence follows from uniqueness of identity proofs ($\UIP$). It does not replace the painting coherence: the two are separate premises of the layer argument.
+
+The families use this recursive decomposition, with different dependencies and boundary cases. The families $\relRestrReflBelowInf$ and $\relRestrReflBelowId$ each have a single Below stage. For $\relRestrReflSup$, the frame proofs construct $\relRestrReflBelowSup$ before $\relRestrReflAboveSup$, while the painting proofs proceed in the reverse order. For $\relReflRefl$, the frame order is $\relReflBelowBelow$, then $\relReflBelowAbove$, then $\relReflAboveAbove$; the painting order is again reversed. At a transition between stages, the zero-direction case uses the adjacent stage's coherence together with a separate layer proof.
+
+These boundary cases also change the shape of the second coherence. A hexagon compares two composites of three frame equalities; a square compares composites containing four equalities in total. The ordinary commutation-layer steps give hexagons. The cancellation family $\relRestrReflBelowId$ gives a square with one step on one side and three on the other. The zero-direction layer cases of $\relRestrReflAboveSup$ and $\relReflBelowAbove$ require squares with two steps on each side; $\relReflAboveAbove$ requires a square with three steps on one side and one on the other. Including $\relRestrRestr$, the construction has seven hexagonal and four square obligations, all discharged by $\UIP$.
+
+The degeneracy--degeneracy laws require additional compatibility data alongside the supplied families. The full-frame painting case of $\relReflAboveAbove$ uses a compatibility proof supplied alongside the family $L$. This proof equates two composites of supplied degeneracies over the corresponding frame equality. The data for the $\relReflRefl$ laws comprise the families in Tables~\ref{tab:coind} and~\ref{tab:core} together with these compatibility proofs.
+
+\subsubsection{Last-direction degeneracies}
+\label{sec:last-direction}
+
+The construction simplifies when only the last-direction degeneracy is supplied at each level. At level $n$, the inserted direction is $n$, so a prefix of height $p$ uses the Below operation $\reflfbelow[n][p][][n-p]$. The prefix reaches the inserted direction only at the full frame, where the Above index is $0$. Writing
 \begin{equation*}
-  \begin{array}{lccr}
-    \delta^\beta_j \delta^\alpha_i & = & \delta^\alpha_{i + 1} \delta^\beta_j & j \leq i \\
-    \varepsilon_i \varepsilon_j    & = & \varepsilon_j \varepsilon_{i + 1}    & j \leq i \\
-    \epsilon_i \delta^\alpha_i     & = &
-    \begin{cases}
-      \delta^\alpha_{i - 1} \varepsilon_j & j < i \text{\qquad(inf)} \\
-      1                                   & j = i \text{\qquad(id)}  \\
-      \delta^\alpha_i \varepsilon_{j - 1} & j > i \text{\qquad(sup)} \\
-    \end{cases}
-  \end{array}
+  \reflff[n]\defeq\reflfbelow[n][n][][0]
 \end{equation*}
-
-The first two equations express restriction--restriction and degeneracy--degeneracy coherence, respectively. We call the three restriction--degeneracy coherences $\mathsf{inf}$, $\mathsf{id}$ and $\mathsf{sup}$, according to whether the restriction is before, at, or after the inserted direction.
-
-The below/above distinction gives seven degeneracy coherence families: restriction--restriction coherence from the underlying $\nu$-set construction, $\mathsf{id}$ and $\mathsf{inf}$ for below, $\mathsf{sup}$ for below and above, and degeneracy--degeneracy coherence in the below--below, above--below and above--above cases.
-
-The coherence conditions for the degeneracies in one direction are:
-
+its boundary is
 \begin{equation*}
-  \begin{array}{l}
-    \mathsf{\textcolor{chestnut}{idrestrrefl}}_{\textcolor{indian-yellow}{\mathsf{frame}},\epsilon}^n(r_{-1},\ldots,r_{n-1})(d:\fullframe[n][D={X_0,\ldots,X_{n-1}}]):        \\
-    ~~ \restrf[n][n][][][][d={\reflff[n][D={r_{-1},\ldots,r_{n-1}},d=\d]}] = d                                                                                                \\
-    \\
-    \mathsf{\textcolor{chestnut}{cohrestrrefl}}_{\textcolor{indian-yellow}{\mathsf{frame}},\epsilon,p<n}^n(r_{-1},\ldots,r_{n-1})(d:\framep[n][][p][D={X_0,\ldots,X_{n-1}}]): \\
-    ~~\restrf[n][p](\mathsf{\color{russian-green}{refl}}^{n,p}_{\mathsf{\color{indian-yellow}{frame}}}(r_{-1},\ldots,r_{n-1})(d)) = \reflf[n-1][p][][][D={r_{-1},\ldots,r_{n-2}},d={\restrf[n-1][p][][\epsilon][p][d=\d]}]
-  \end{array}
+  \reflfabove[n][n][][0][d=\d,c=x]
+  = (\reflfbelow[n][n][][0][d=\d],\lambda\epsilon.\,x)
+  = (\reflff[n][d=\d],\lambda\epsilon.\,x).
 \end{equation*}
-where
-$\reflf[n][p]$ generalises $\reflff[n]$ prefixes of $\fullframe[n]$:
+The supplied cell operation is thus $L(0)$, with target $X_{n+1}(\reflff[n][d=\d],\lambda\epsilon.\,x)$. Its boundary can be constructed using earlier last-direction degeneracies alone: each existing layer is transformed using the last-direction painting operation one level lower, and the constant layer is appended at the end.
 
+Only two face--degeneracy coherence families are needed for this construction. The specialization of $\relRestrReflBelowInf$ makes the layer recursion well-typed, and that of $\relRestrReflBelowId$ makes the final constant layer well-typed. There is no restriction direction after the inserted one, so no $\relRestrReflSup$ case arises. The general $\relReflRefl$ law also involves a degeneracy that is not in the last direction of its source, and therefore is not a law expressible using only these supplied operations.
+
+In the cubical case, compatible coordinate symmetries allow every degeneracy to be expressed using the last-direction degeneracy~\cite[\S6]{grandis03}. Writing $\varepsilon_i$ for degeneracy in absolute direction $i$ and $\tau_i$ for the exchange of directions $i$ and $i+1$, we have
 \begin{equation*}
-  \reflf[n][p][][][D={r_{-1},\ldots,r_{n-1}}]:\framep[n][p][][D={X_{-1},\ldots,X_{n-1}}] \rightarrow \framep[n+1][p][][D={X_{-1},\ldots,X_{n}}]
+  \varepsilon_i
+  =\tau_i\circ\tau_{i+1}\circ\cdots\circ\tau_{n-1}\circ\varepsilon_n
+  \qquad(0\leq i\leq n),
 \end{equation*}
-
-\begin{align*}
-  \cohzone \\
-  \cohztwo \\
-\end{align*}
-
-We need the following additional coherence conditions for degeneracies in the
-other directions to be well-typed:
-
-\begin{align*}
-  \cohzthree \\
-  \cohzfour  \\
-\end{align*}
-
-Additionally, degeneracies in cubical sets are assumed to be a subject of these additional degeneracy-degenracy coherences, which are an additonal structure someone can impose, and are not intrinsically required for the
-
-\begin{align*}
-  \cohzfive  \\
-  \cohzsix   \\
-  \cohzseven \\
-  \cohzeight \\
-\end{align*}
-
-All coherence condition proofs follow the same decomposition pattern, which is induced by the structure of the underlying construction of restrictions and degenracies:
-
-\begin{enumerate}
-  \item The recursive case of $\cohf$ is built as a pair of $\cohf$ (recursively) and $\cohl$.
-  \item The recursive case of $\cohp$ is built as a pair of $\cohl$ and $\cohp$ (recursively).
-  \item The $\cohl$ is built from $\coh2$ and $\cohp$.
-\end{enumerate}
-
-For the coherences that are decomposed into above and below cases, there exists a dependency between above and below proofs, induced by the dependency between above and below degeneracies.
-
-
-
-% TODO: explain the above-below dependency.
-
-
-% TODO: show one table with definitions for frames, layers and paintigns
-% TODO: show an example/detaield explanation of a layer decomposition
+where the composite of exchanges is empty when $i=n$. One first inserts the last direction and then moves it to position $i$ by adjacent exchanges. The construction presented above supplies degeneracies in every direction without requiring these symmetries.
 
 \section{Conclusion and future work}
 
 \bibliographystyle{plainurl}
 \bibliography{paper}
-
-\appendix
 
 \end{document}
