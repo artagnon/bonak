@@ -751,13 +751,20 @@ We illustrate below the difference between parametric degeneracy and connecting 
   \end{array}
 \end{equation*}
 
-\subsubsection{The construction of degeneracies}
+\subsubsection{Construction of faces}
+\label{sec:faces}
 
-We construct degeneracies by building their boundaries layer by layer. In the formulas below, $n$ is the construction level and $p\leq n$ is the number of layers in a prefix, called its \emph{height}. A full frame at level $n$ has $n$ layers. Thus level $n$ corresponds to geometric dimension $n-1$ in the augmented unary case and to dimension $n$ in the binary case. We write $\framep[n][p]$ for frames of height $p$, $\layer[n][p][][d=d]$ for the next layer over a frame $d$, and $\painting[n][p][][d=d]$ for its paintings. In particular, $\fullframe[n]=\framep[n][n]$, and a painting over a full frame $d$ is a cell of $X_n(d)$. A successor frame is a dependent pair $(d,l)$ of a frame and its next layer; a painting with layers left to supply is a pair $(l,c)$ of its next layer and remaining painting.
+The construction of degeneracies presented in this paper builds on the very dependent recursive presentation~\cite{hr26} of the indexed construction of $\nu$-sets~\cite{hr25}. At each level $n$, the earlier families $X_0,\ldots,X_{n-1}$ determine the type of full frames, and the next family $X_n$ assigns an h-set of cells to each full frame.
 
-The chosen direction may lie beyond the prefix, or the prefix may have reached or passed it. These two cases give the operations \emph{Below} and \emph{Above}, written $\downarrow$ and $\uparrow$. Their direction indices are relative to the prefix height: Below counts upwards, so its index $q$ denotes direction $p+q$; Above counts downwards, so its index $q$ denotes direction $p-q$.
+In the formulas below, $n$ is the construction level and $p\leq n$ is the number of layers in a prefix, called its \emph{height}. A full frame at level $n$ has $n$ layers. Thus level $n$ corresponds to geometric dimension $n-1$ in the augmented unary case and to dimension $n$ in the binary case. We write $\framep[n][p]$ for frames of height $p$, $\layer[n][p][][d=d]$ for the next layer over a frame $d$, and $\painting[n][p][][d=d]$ for its paintings. In particular, $\fullframe[n]=\framep[n][n]$, and a painting over a full frame $d$ is a cell of $X_n(d)$. A successor frame is a dependent pair $(d,l)$ of a frame and its next layer; a painting with layers left to supply is a pair $(l,c)$ of its next layer and remaining painting.
 
 The restriction operation $\restrf[n][p][][q][\epsilon]$ maps a frame in $\framep[n+1][p]$ to one in $\framep[n][p]$. Its relative index $q\leq n-p$ denotes direction $p+q$, and $\epsilon\in\nu$ selects a face in that direction. The corresponding layer and painting operations are written $\restrl$ and $\restrp$; a painting restriction includes the restriction of its indexing frame.
+
+Restrictions follow the decomposition into frames, layers, and paintings. Restricting a successor frame restricts its prefix and its next layer; restricting a layer applies painting restriction to each face-label component. On a painting $(l,c)$, restriction at index $0$ selects the component $l(\epsilon)$ of the first layer. A successor index restricts the layer and continues recursively through the remaining painting.
+
+\subsubsection{Construction of degeneracies}
+
+We construct degeneracies by building their boundaries layer by layer. The chosen direction may lie beyond the prefix, or the prefix may have reached or passed it. These two cases give the operations \emph{Below} and \emph{Above}, written $\downarrow$ and $\uparrow$. Their direction indices are relative to the prefix height: Below counts upwards, so its index $q$ denotes direction $p+q$; Above counts downwards, so its index $q$ denotes direction $p-q$.
 
 Below transforms the existing prefix without inserting the repeated layer. It acts on a frame alone and preserves the prefix height:
 \begin{equation*}
