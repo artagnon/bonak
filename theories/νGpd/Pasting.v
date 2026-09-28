@@ -5,6 +5,7 @@ Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
 From Bonak Require Import SigT Notation RewLemmas.
+From Bonak.Lib Require Export CohShapes.
 
 (** Whiskering composes each boundary of a 2-cell with a fixed path.
     Composition is written in traversal order. *)
@@ -81,18 +82,6 @@ Definition square_map {X Y: Type} (f: X -> Y) {x0 x1 y0 y1: X}
   eq_sym (eq_trans_map_distr f p b) •
     (f_equal (fun h => f_equal f h) H • eq_trans_map_distr f a q).
 
-(** The naturality square for a homotopy between two composites:
-    Lemma 2.4.3 of the HoTT book (The Univalent Foundations Program,
-    "Homotopy Type Theory: Univalent Foundations of Mathematics", 2013),
-    with the equality reversed and path actions expanded through the composites. *)
-Lemma f_equal_naturality {A B C D: Type}
-  (u: A -> B) (v: A -> C) (f: B -> D) (g: C -> D)
-  (K: forall x, f (u x) = g (v x)) {x y: A} (p: x = y):
-  f_equal f (f_equal u p) • K y = K x • f_equal g (f_equal v p).
-Proof.
-  destruct p; cbn. now exact (eq_trans_refl_l (K x)).
-Defined.
-
 (** Dependent paths respect square pasting. *)
 Lemma square_compose_dep {X: Type} (P: X -> Type) {x0 x1 x2 y0 y1 y2: X}
   {a: x0 = x1} {b: x1 = x2} {c: y0 = y1} {d: y1 = y2}
@@ -157,27 +146,6 @@ Proof.
   rewrite eq_trans_refl_r in HH. subst ha.
   rewrite 2 sigT_trans_eq_refl.
   cbn [sigT_map_eq]. now rewrite eq_trans_refl_l.
-Defined.
-
-(** A dependent homotopy lifts the naturality square of its base homotopy. *)
-Lemma f_equal_naturality_dep {A B C D: Type}
-  {PA: A -> Type} {PB: B -> Type} {PC: C -> Type} {PD: D -> Type}
-  (u: A -> B) (v: A -> C) (f: B -> D) (g: C -> D)
-  (U: forall x, PA x -> PB (u x)) (V: forall x, PA x -> PC (v x))
-  (F: forall x, PB x -> PD (f x)) (G: forall x, PC x -> PD (g x))
-  (K: forall x, f (u x) = g (v x))
-  (HK: forall x a, rew [PD] K x in F (u x) (U x a) = G (v x) (V x a))
-  {x y: A} (p: x = y) {a: PA x} {b: PA y} (h: rew [PA] p in a = b):
-  rew [fun e => rew [PD] e in F (u x) (U x a) = G (v y) (V y b)]
-    f_equal_naturality u v f g K p in
-    (sigT_map_eq F (sigT_map_eq U h) ⊙ HK y b) =
-  HK x a ⊙ sigT_map_eq G (sigT_map_eq V h).
-Proof.
-  destruct p, h. cbn [f_equal_naturality f_equal sigT_map_eq eq_rect].
-  generalize (HK x a).
-  generalize (K x), (G (v x) (V x a)).
-  generalize (g (v x)).
-  intros z k w hk. now destruct hk, k.
 Defined.
 
 (** Replace the vertical sides of a square by equal paths. *)
@@ -334,7 +302,7 @@ Lemma layer_square {V V' W X: Type} {S: V -> Type} {S': V' -> Type} {P: X -> Typ
   {w1 w2: W} (e: w1 = w2)
   (c: f m2 = d w1) (c': g n2 = d w2) (k: f m1 = g n1)
   {a: S m1} {b: S' n1} (h: rew [P] k in F m1 a = G n1 b)
-  (H: f_equal f l • (c • f_equal d e) = k • (f_equal g r • c')):
+  (H: hexagonal_coherence f d g l e r c k c'):
   rew [fun e => rew [P] e in F m1 a = rew [P] c' in G n2 (rew [S'] r in b)]
     (eq_sym (eq_trans_assoc _ _ _) • H) in
     ((sigT_map_eq F (p := l) (u := a) eq_refl ⊙ eq_refl) ⊙
@@ -357,8 +325,8 @@ Definition layer_square_map
   (α: forall d, f (r d) = j (g d))
   {d d': T} (e: d = d') {m m': M} (p: m = m') {n n': N} (q: n = n')
   (v: s m' = r d) (w: t n' = r d') (k: s m = t n)
-  (H: f_equal s p • (v • f_equal r e) = k • (f_equal t q • w))
-  (Hnat: f_equal f (f_equal r e) • α d' = α d • f_equal j (f_equal g e)):
+  (H: hexagonal_coherence s r t p e q v k w)
+  (Hnat: square_coherence r g f j α e):
   (f_equal f (f_equal s p • v) • α d) • f_equal j (f_equal g e) =
   f_equal f k • (f_equal f (f_equal t q • w) • α d').
 Proof.
@@ -375,12 +343,12 @@ Lemma layer_square_map_dep
   (L: forall m, PM m -> P (s m)) (R: forall n, PN n -> P (t n))
   {d d': T} (e: d = d') {m m': M} (p: m = m') {n n': N} (q: n = n')
   (v: s m' = r d) (w: t n' = r d') (k: s m = t n)
-  (H: f_equal s p • (v • f_equal r e) = k • (f_equal t q • w))
+  (H: hexagonal_coherence s r t p e q v k w)
   {a: PM m} {b: PN n} (h: rew [P] k in L m a = R n b):
   rew [fun e => rew [Q] e in F (s m) (L m a) =
     rew [Q] α d' in F (r d') (rew [P] w in R n' (rew [PN] q in b))]
     layer_square_map r s t f g j α e p q v w k H
-      (f_equal_naturality r g f j α e) in
+      (square_coherence_fill r g f j α e) in
   ((sigT_map_eq F (sigT_map_eq L (p := p) (u := a) eq_refl ⊙ eq_refl) ⊙ eq_refl)
     ⊙ sigT_map_eq (Q := Q) (fun _ u => u)
       (sigT_map_eq (Q := fun u => Q (j u))
@@ -394,7 +362,7 @@ Proof.
   eapply square_stack_dep.
   - eapply square_map_dep.
     now exact (layer_square s t r L R p q e v w k h H).
-  - pose proof (f_equal_naturality_dep r g f j
+  - pose proof (square_coherence_dep_fill r g f j
       (fun _ u => u) (fun dd x => rew [Q] α dd in F (r dd) x)
       F (fun _ u => u) α (fun _ _ => eq_refl) e
       (rew_cohLayer_hex (P := P) (rf0 := r) (F := L) (G := R)
@@ -411,8 +379,8 @@ Definition layer_square_nat {Z V W X: Type}
   {m n: V} (l: L z2 = m) (r: R z2 = n)
   {w1 w2: W} (e: w1 = w2)
   (c: f m = d w1) (c': g n = d w2)
-  (H: f_equal f l • (c • f_equal d e) = k z2 • (f_equal g r • c'))
-  (Hnat: f_equal f (f_equal L p) • k z2 = k z1 • f_equal g (f_equal R p)):
+  (H: hexagonal_coherence f d g l e r c (k z2) c')
+  (Hnat: square_coherence L R f g k p):
   (f_equal f (f_equal L p • l) • c) • f_equal d e =
     k z1 • (f_equal g (f_equal R p • r) • c').
 Proof.
@@ -432,12 +400,12 @@ Lemma layer_square_nat_dep {Z V W X: Type}
   {m n: V} (l: L z2 = m) (r: R z2 = n)
   {w1 w2: W} (e: w1 = w2)
   (c: f m = d w1) (c': g n = d w2)
-  (H: f_equal f l • (c • f_equal d e) = k z2 • (f_equal g r • c'))
+  (H: hexagonal_coherence f d g l e r c (k z2) c')
   (a: S z1):
   rew [fun e => rew [P] e in F (L z1) (RL z1 a) =
     rew [P] c' in G n (rew [Q] r in RR z2 (rew [S] p in a))]
     layer_square_nat L R f g d k p l r e c c' H
-      (f_equal_naturality L R f g k p) in
+      (square_coherence_fill L R f g k p) in
     ((sigT_map_eq F
        (sigT_map_eq RL (p := p) (u := a) eq_refl ⊙
          (eq_refl: rew [Q] l in RL z2 (rew [S] p in a) = _)) ⊙ eq_refl) ⊙
@@ -454,7 +422,7 @@ Proof.
   eapply square_change_sides_dep.
   - now apply map_compose_tail_dep.
   - eapply square_stack_dep.
-    + now exact (f_equal_naturality_dep L R f g RL RR F G k hk p eq_refl).
+    + now exact (square_coherence_dep_fill L R f g RL RR F G k hk p eq_refl).
     + now exact (layer_square f g d F G l r e c c' (k z2)
         (hk z2 (rew [S] p in a)) H).
   - now apply map_compose_tail_dep.
@@ -508,7 +476,7 @@ Lemma dpath_change_natural {X A: Type} {P: X -> Type} {x y: X} {p: x = y}
 Proof.
   unfold dpath_change.
   rewrite eq_trans_assoc.
-  rewrite (f_equal_naturality f g (fun v => rew [P] p in v) (fun v => v) H s).
+  rewrite (square_coherence_fill f g (fun v => rew [P] p in v) (fun v => v) H s).
   rewrite f_equal_id, <- eq_trans_assoc, eq_trans_sym_inv_r.
   now apply eq_trans_refl_r.
 Defined.
