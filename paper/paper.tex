@@ -4,6 +4,8 @@
 
 % Use the patterns library to draw the cubes figure
 \usetikzlibrary{patterns}
+\usetikzlibrary{arrows.meta}
+\tikzcdset{arrow style=tikz, diagrams={>=Latex}}
 
 % Magic with xkeyval to go over the 9-argument limit of LaTeX
 \makeatletter
@@ -661,13 +663,13 @@ We illustrate below the difference between parametric degeneracy and connecting 
                                                                                                                 & n=0, \nu=1                                                  & n=1, \nu=1                                          \\
     \\
     \begin{tabular}{l}source of dimension $n$\\ (over some $a:X_{-1}$)\end{tabular}                             & b~~                                                         & \begin{tikzcd}b \arrow[r, "q"] & c\end{tikzcd}      \\[1mm]
-    \begin{tabular}{l}parametric (cubical)\\ degeneracy \\($r^n_i$ for $-1\leq i\leq n$)\end{tabular}           & \begin{tikzcd}b \arrow[r, "r^0_{-1}(b)"] & r^{-1}_{-1}(a)\\
+    \begin{tabular}{l}parametric degeneracy \\($r^n_i$ for $-1\leq i\leq n$)\end{tabular}           & \begin{tikzcd}b \arrow[r, "r^0_{-1}(b)"] & r^{-1}_{-1}(a)\\
                                                                                                                     r^{-1}_{-1}(a) \arrow[r, "r^0_0(b)"] & b
                                                                                                                   \end{tikzcd} &
     \begin{array}{c}
       \begin{tikzcd}
         & |[alias=F]|b \arrow[ddr, "q"] & \\\\
-        r^{-1}_{-1}(a) \arrow[rr, "r^0_0(b)"{name=T, below}]\arrow[uur, "r^0_0(c)"] && c \\
+        r^{-1}_{-1}(a) \arrow[rr, "r^0_0(c)"{name=T, below}]\arrow[uur, "r^0_0(b)"] && c \\
         \arrow[from=F, to=T, double, shorten = 2mm, "r^1_{-1}(q)" description]
       \end{tikzcd}
       \begin{tikzcd}
@@ -681,7 +683,7 @@ We illustrate below the difference between parametric degeneracy and connecting 
         \arrow[from=F, to=T, double, shorten = 2mm, "r^1_1(q)" description]
       \end{tikzcd}
     \end{array}                                                                                                                                            \\[-8mm]
-    \begin{tabular}{l}connecting (simplicial)\\ degeneracy\\($s^n_i$ for $-1< i \leq n$)\end{tabular}           & \begin{tikzcd}b \arrow[r, "s^0_0(b)"] & b\end{tikzcd}       &
+    \begin{tabular}{l}connecting degeneracy\\($s^n_i$ for $-1< i \leq n$)\end{tabular}           & \begin{tikzcd}b \arrow[r, "s^0_0(b)"] & b\end{tikzcd}       &
     \begin{tikzcd}
       & |[alias=F]|b \arrow[ddr, "q"] & \\\\
       b \arrow[rr, "q"{name=T, below}]\arrow[uur, "s^0_0(b)"] && c \\
@@ -697,7 +699,7 @@ We illustrate below the difference between parametric degeneracy and connecting 
                                                                                                                 & n=0, \nu=2                                                  & n=1, \nu=2                                          \\
     \\
     \begin{tabular}{l}source of dimension $n$\end{tabular}                                                      & b~~                                                         & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\[1mm]
-    \begin{tabular}{l}parametric (cubical)\\ degeneracy\\($r^n_i$ for $0\leq i\leq n$)\end{tabular}             & \begin{tikzcd}b \arrow[r, "r^0_0(b)"] & b\end{tikzcd}       &
+    \begin{tabular}{l}parametric degeneracy\\($r^n_i$ for $0\leq i\leq n$)\end{tabular}             & \begin{tikzcd}b \arrow[r, "r^0_0(b)"] & b\end{tikzcd}       &
     \begin{tikzcd}
       b \arrow[rr, "q"{name=F}']\arrow[dd, "r^0_0(b)"] && c \arrow[dd, "r^0_0(c)"'] \\\\
       b \arrow[rr, "q"{name=T, below}] && c \\
@@ -708,13 +710,13 @@ We illustrate below the difference between parametric degeneracy and connecting 
       c \arrow[rr, "r^0_0(c)"{name=T, below}] && c \\
       & \arrow[from=F, to=T, double, shorten=1mm, "r^1_1(q)" description]
     \end{tikzcd}                                                                                                                                                      \\[-8mm]
-    \begin{tabular}{l}connecting (simplicial)\\ degeneracy\\($s^n_{i\epsilon}$ for $0 \leq i < n$)\end{tabular} & \mbox{(none)}                                               &
-    \begin{tikzcd}
+    \begin{tabular}{l}connecting degeneracy\\($s^n_{i\epsilon}$ for $0 \leq i < n$)\end{tabular} & \mbox{(none)}                                               &
+    \begin{tikzcd}[column sep=1cm]
       b \arrow[rr, "q"{name=F}']\arrow[dd, "q"] && c \arrow[dd, "r^0_0(c)"'] \\\\
       c \arrow[rr, "r^0_0(c)"{name=T, below}] && c \\
       \arrow[from=F, to=T, double, shorten=1mm, "s^1_{0L}(q)" description]
     \end{tikzcd}
-    \begin{tikzcd}
+    \begin{tikzcd}[column sep=1cm]
       b \arrow[rr, "r^0_0(b)"{name=F}']\arrow[dd, "r^0_0(b)"] && b \arrow[dd, "q"'] \\\\
       b \arrow[rr, "q"{name=T, below}] && c \\
       \arrow[from=F, to=T, double, shorten=1mm, "s^1_{0R}(q)" description]
