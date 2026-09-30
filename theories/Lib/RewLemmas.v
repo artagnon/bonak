@@ -3,7 +3,7 @@
 Import Logic.EqNotations.
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT Notation.
+From Bonak Require Import SigT Notation CohShapes.
 
 (** Transport along a pointwise equality commutes with transport in the
     indexing type, for any family [El] over the common codomain. *)
@@ -157,7 +157,7 @@ Lemma rew_cohLayer_hex {T1 T2 T3 X: Type} {P: X -> Type}
   {K: rfF m1 = rfG n1}
   {aL: S2 m1} {aR: S3 n1}:
   rew [P] K in F m1 aL = G n1 aR -> (* painting coherence *)
-  f_equal rfF C2 • (C1 • f_equal rf0 E1) = K • (f_equal rfG D2 • D1) ->
+  hexagonal_coherence rfF rf0 rfG C2 E1 D2 C1 K D1 ->
   (* 2-dimensional frame coherence, UIP for HSets *)
   rew [fun d => P (rf0 d)] E1 in rew [P] C1 in F m2 (rew [S2] C2 in aL)
   = rew [P] D1 in G n2 (rew [S3] D2 in aR).
