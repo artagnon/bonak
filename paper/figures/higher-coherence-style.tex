@@ -1,0 +1,78 @@
+% Path diagrams adapted from the Bonak higher-coherence companion.
+\newcommand{\del}[2]{\delta^{#2}_{#1}}
+\newcommand{\epsdmark}{\varepsilon^\downarrow}
+\newcommand{\epsumark}{\varepsilon^\uparrow}
+\newcommand{\epsd}[1]{\varepsilon^\downarrow_{#1}}
+\newcommand{\epsu}[1]{\varepsilon^\uparrow_{#1}}
+\newcommand{\comp}{\mathbin{\circ}}
+
+\newcommand{\HC}[2]{#1\!\left(#2\right)}
+\newcommand{\HCdd}[4]{\HC{\delta\text{-}\delta}{#1,#2,#3,#4}}
+\newcommand{\HCdeid}[2]{\HC{\delta\text{-}\epsdmark\text{-}\mathrm{id}}{#1,#2}}
+\newcommand{\HCedinf}[3]{\HC{\delta\text{-}\epsdmark\text{-}\mathrm{inf}}{#1,#2,#3}}
+\newcommand{\HCedsup}[3]{\HC{\delta\text{-}\epsdmark\text{-}\mathrm{sup}}{#1,#2,#3}}
+\newcommand{\HCeusup}[3]{\HC{\delta\text{-}\epsumark\text{-}\mathrm{sup}}{#1,#2,#3}}
+\newcommand{\HCeded}[2]{\HC{\epsdmark\text{-}\epsdmark}{#1,#2}}
+\newcommand{\HCeued}[2]{\HC{\epsdmark\text{-}\epsumark}{#1,#2}}
+\newcommand{\HCeueu}[2]{\HC{\epsumark\text{-}\epsumark}{#1,#2}}
+\newcommand{\termone}[1]{#1}
+\newcommand{\termthree}[3]{#1 \comp #2 \comp #3}
+\tikzset{
+  coh edge/.style={->,>=Latex,thick},
+  coh term/.style={align=center,font=\normalsize,inner sep=1.5pt},
+  coh label/.style={fill=white,inner sep=1pt,font=\normalsize}
+}
+
+\newcommand{\HexTopEdges}[3]{%
+  \draw[coh edge] (L) -- node[coh label,above left] {$#1$} (UL);
+  \draw[coh edge] (UL) -- node[coh label,above] {$#2$} (UR);
+  \draw[coh edge] (UR) -- node[coh label,above right] {$#3$} (R);
+}
+
+\newcommand{\HexBottomEdges}[3]{%
+  \draw[coh edge] (L) -- node[coh label,below left] {$#1$} (LL);
+  \draw[coh edge] (LL) -- node[coh label,below] {$#2$} (LR);
+  \draw[coh edge] (LR) -- node[coh label,below right] {$#3$} (R);
+}
+
+\newcommand{\HexTermCohDiagram}[8]{%
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+    \node[coh term] (L) at (0,0) {$#1$};
+    \node[coh term] (UL) at (4.5,3) {$#2$};
+    \node[coh term] (UR) at (11,3) {$#3$};
+    \node[coh term] (R) at (15.5,0) {$#4$};
+    \node[coh term] (LR) at (11,-3) {$#5$};
+    \node[coh term] (LL) at (4.5,-3) {$#6$};
+    \HexTopEdges#7
+    \HexBottomEdges#8
+    \node at (7.75,0) {$\Downarrow$};
+  \end{tikzpicture}%
+}
+
+\newcommand{\SquareTermCohDiagram}[8]{%
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+    \node[coh term] (TL) at (0,3.3) {$#1$};
+    \node[coh term] (TR) at (10.5,3.3) {$#2$};
+    \node[coh term] (BL) at (0,0) {$#3$};
+    \node[coh term] (BR) at (10.5,0) {$#4$};
+    \draw[coh edge] (TL) -- node[coh label,above] {$#5$} (TR);
+    \draw[coh edge] (TR) -- node[coh label,right] {$#6$} (BR);
+    \draw[coh edge] (TL) -- node[coh label,left] {$#7$} (BL);
+    \draw[coh edge] (BL) -- node[coh label,below] {$#8$} (BR);
+    \node at (5.25,1.65) {$\Downarrow$};
+  \end{tikzpicture}%
+}
+
+\newcommand{\SquareTermCohDiagramRevB}[8]{%
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+    \node[coh term] (TL) at (0,3.3) {$#1$};
+    \node[coh term] (TR) at (10.5,3.3) {$#2$};
+    \node[coh term] (BL) at (0,0) {$#3$};
+    \node[coh term] (BR) at (10.5,0) {$#4$};
+    \draw[coh edge] (TL) -- node[coh label,above] {$#5$} (TR);
+    \draw[coh edge] (TR) -- node[coh label,right] {$#6$} (BR);
+    \draw[coh edge] (TL) -- node[coh label,left] {$#7$} (BL);
+    \draw[coh edge] (BR) -- node[coh label,below] {$#8$} (BL);
+    \node at (5.25,1.65) {$\Downarrow$};
+  \end{tikzpicture}%
+}
