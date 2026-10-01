@@ -1,0 +1,191 @@
+% Principal defining-term dependencies.
+\begingroup
+\input{figures/architecture-style.tex}
+\begin{tikzpicture}[x=1cm,y=-1cm]
+% oldB
+\fill[paintingink!4] (0.353,0) rectangle (3.147,0.88);
+\fill[paintingink!16] (0.353,0) rectangle (3.147,0.44);
+\draw[paintingink,line width=.6pt] (0.353,0) rectangle (3.147,0.88);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (0.493,0.22) {$\rname{\downarrow}{painting}{}{n-1}$};
+\draw[paintingink!35,line width=.35pt] (0.353,0.44) -- (3.147,0.44);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (0.493,0.66) {preceding dimension};
+% CInf
+\fill[frameink!4] (3.545,0.22) rectangle (6.055,1.1);
+\fill[frameink!16] (3.545,0.22) rectangle (6.055,0.66);
+\draw[frameink,line width=.6pt] (3.545,0.22) rectangle (6.055,1.1);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (3.685,0.44) {$\relRestrReflBelowInf_{\mathsf{frame}}$};
+\draw[frameink!35,line width=.35pt] (3.545,0.66) -- (6.055,0.66);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (3.685,0.88) {$r\leq q\leq k$};
+% CId
+\fill[frameink!4] (6.9423,0.22) rectangle (9.3577,1.1);
+\fill[frameink!16] (6.9423,0.22) rectangle (9.3577,0.66);
+\draw[frameink,line width=.6pt] (6.9423,0.22) rectangle (9.3577,1.1);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (7.0823,0.44) {$\relRestrReflBelowId_{\mathsf{frame}}$};
+\draw[frameink!35,line width=.35pt] (6.9423,0.66) -- (9.3577,0.66);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (7.0823,0.88) {$q\leq k$};
+% CSup
+\fill[frameink!4] (10.1901,0.22) rectangle (12.8099,1.1);
+\fill[frameink!16] (10.1901,0.22) rectangle (12.8099,0.66);
+\draw[frameink,line width=.6pt] (10.1901,0.22) rectangle (12.8099,1.1);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (10.3301,0.44) {$\relRestrReflAboveSup_{\mathsf{frame}}$};
+\draw[frameink!35,line width=.35pt] (10.1901,0.66) -- (12.8099,0.66);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (10.3301,0.88) {$q\leq p,\;r\leq k$};
+% oldA
+\fill[paintingink!4] (13.153,0) rectangle (15.947,0.88);
+\fill[paintingink!16] (13.153,0) rectangle (15.947,0.44);
+\draw[paintingink,line width=.6pt] (13.153,0) rectangle (15.947,0.88);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (13.293,0.22) {$\rname{\uparrow}{painting}{}{n-1}$};
+\draw[paintingink!35,line width=.35pt] (13.153,0.44) -- (15.947,0.44);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (13.293,0.66) {preceding dimension};
+% LB
+\fill[green!4] (1.1707,2.44) rectangle (4.1293,4.64);
+\fill[green!16] (1.1707,2.44) rectangle (4.1293,2.88);
+\draw[green,line width=.6pt] (1.1707,2.44) rectangle (4.1293,4.64);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (1.3107,2.66) {$\rname{\downarrow}{layer}{}{}$};
+\draw[green!35,line width=.35pt] (1.1707,2.88) -- (4.1293,2.88);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.3107,3.1) {$q<k$};
+\draw[green!35,line width=.35pt] (1.1707,3.32) -- (4.1293,3.32);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.3107,3.54) {$\lambda\omega.\,\mathsf{rew}(e,u)$};
+\draw[green!35,line width=.35pt] (1.1707,3.76) -- (4.1293,3.76);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.3107,3.98) {$e=\relRestrReflBelowInf_{\mathsf{frame}}$};
+\draw[green!35,line width=.35pt] (1.1707,4.2) -- (4.1293,4.2);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.3107,4.42) {$u=\rname{\downarrow}{painting}{}{n-1}$};
+% L0
+\fill[purple!4] (6.7164,2.44) rectangle (9.5836,4.64);
+\fill[purple!16] (6.7164,2.44) rectangle (9.5836,2.88);
+\draw[purple,line width=.6pt] (6.7164,2.44) rectangle (9.5836,4.64);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (6.8564,2.66) {$\rname{\uparrow}{layer}{,0}{}$};
+\draw[purple!35,line width=.35pt] (6.7164,2.88) -- (9.5836,2.88);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (6.8564,3.1) {$q=0$};
+\draw[purple!35,line width=.35pt] (6.7164,3.32) -- (9.5836,3.32);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (6.8564,3.54) {$\lambda\epsilon.\,\mathsf{rew}(e,u)$};
+\draw[purple!35,line width=.35pt] (6.7164,3.76) -- (9.5836,3.76);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (6.8564,3.98) {$e=\relRestrReflBelowId_{\mathsf{frame}}$};
+\draw[purple!35,line width=.35pt] (6.7164,4.2) -- (9.5836,4.2);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (6.8564,4.42) {$u=c$};
+% LA
+\fill[green!4] (12.1176,2.44) rectangle (15.1824,4.64);
+\fill[green!16] (12.1176,2.44) rectangle (15.1824,2.88);
+\draw[green,line width=.6pt] (12.1176,2.44) rectangle (15.1824,4.64);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (12.2576,2.66) {$\rname{\uparrow}{layer}{}{}$};
+\draw[green!35,line width=.35pt] (12.1176,2.88) -- (15.1824,2.88);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.2576,3.1) {$q\leq p,\;k>0$};
+\draw[green!35,line width=.35pt] (12.1176,3.32) -- (15.1824,3.32);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.2576,3.54) {$\lambda\omega.\,\mathsf{rew}(e,u)$};
+\draw[green!35,line width=.35pt] (12.1176,3.76) -- (15.1824,3.76);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.2576,3.98) {$e=\relRestrReflAboveSup_{\mathsf{frame}}$};
+\draw[green!35,line width=.35pt] (12.1176,4.2) -- (15.1824,4.2);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.2576,4.42) {$u=\rname{\uparrow}{painting}{}{n-1}$};
+% FB
+\fill[frameink!4] (2.4655,5.28) rectangle (5.5345,7.92);
+\fill[frameink!16] (2.4655,5.28) rectangle (5.5345,5.72);
+\draw[frameink,line width=.6pt] (2.4655,5.28) rectangle (5.5345,7.92);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (2.6055,5.5) {$\rname{\downarrow}{frame}{}{}$};
+\draw[frameink!35,line width=.35pt] (2.4655,5.72) -- (5.5345,5.72);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (2.6055,5.94) {$q\leq k$};
+\draw[frameink!35,line width=.35pt] (2.4655,6.16) -- (5.5345,6.16);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (2.6055,6.38) {$p=0$: $\ast$};
+\draw[frameink!35,line width=.35pt] (2.4655,6.6) -- (5.5345,6.6);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (2.6055,6.82) {$p=p'+1$: };
+\draw[frameink!35,line width=.35pt] (2.4655,7.04) -- (5.5345,7.04);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (2.6055,7.26) {\quad $\rname{\downarrow}{frame}{}{}$ (recursive)};
+\draw[frameink!35,line width=.35pt] (2.4655,7.48) -- (5.5345,7.48);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (2.6055,7.7) {\quad $\rname{\downarrow}{layer}{}{}$};
+% FA
+\fill[frameink!4] (10.2655,5.28) rectangle (13.3345,8.8);
+\fill[frameink!16] (10.2655,5.28) rectangle (13.3345,5.72);
+\draw[frameink,line width=.6pt] (10.2655,5.28) rectangle (13.3345,8.8);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (10.4055,5.5) {$\rname{\uparrow}{frame}{}{}$};
+\draw[frameink!35,line width=.35pt] (10.2655,5.72) -- (13.3345,5.72);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (10.4055,5.94) {$q\leq p$};
+\draw[frameink!35,line width=.35pt] (10.2655,6.16) -- (13.3345,6.16);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (10.4055,6.38) {$q=0$: };
+\draw[frameink!35,line width=.35pt] (10.2655,6.6) -- (13.3345,6.6);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (10.4055,6.82) {\quad $\rname{\downarrow}{frame}{}{}$};
+\draw[frameink!35,line width=.35pt] (10.2655,7.04) -- (13.3345,7.04);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (10.4055,7.26) {\quad $\rname{\uparrow}{layer}{,0}{}$};
+\draw[frameink!35,line width=.35pt] (10.2655,7.48) -- (13.3345,7.48);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (10.4055,7.7) {$q=q'+1$: };
+\draw[frameink!35,line width=.35pt] (10.2655,7.92) -- (13.3345,7.92);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (10.4055,8.14) {\quad $\rname{\uparrow}{frame}{}{}$ (recursive)};
+\draw[frameink!35,line width=.35pt] (10.2655,8.36) -- (13.3345,8.36);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (10.4055,8.58) {\quad $\rname{\uparrow}{layer}{}{}$};
+% PB
+\fill[paintingink!4] (2.3517,9.4) rectangle (5.6483,12.92);
+\fill[paintingink!16] (2.3517,9.4) rectangle (5.6483,9.84);
+\draw[paintingink,line width=.6pt] (2.3517,9.4) rectangle (5.6483,12.92);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (2.4917,9.62) {$\rname{\downarrow}{painting}{}{}$};
+\draw[paintingink!35,line width=.35pt] (2.3517,9.84) -- (5.6483,9.84);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (2.4917,10.06) {$q\leq k$};
+\draw[paintingink!35,line width=.35pt] (2.3517,10.28) -- (5.6483,10.28);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (2.4917,10.5) {$q=0$: };
+\draw[paintingink!35,line width=.35pt] (2.3517,10.72) -- (5.6483,10.72);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (2.4917,10.94) {\quad $\rname{\uparrow}{layer}{,0}{}$};
+\draw[paintingink!35,line width=.35pt] (2.3517,11.16) -- (5.6483,11.16);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (2.4917,11.38) {\quad $\rname{\uparrow}{painting}{}{}$};
+\draw[paintingink!35,line width=.35pt] (2.3517,11.6) -- (5.6483,11.6);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (2.4917,11.82) {$q=q'+1$: };
+\draw[paintingink!35,line width=.35pt] (2.3517,12.04) -- (5.6483,12.04);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (2.4917,12.26) {\quad $\rname{\downarrow}{layer}{}{}$};
+\draw[paintingink!35,line width=.35pt] (2.3517,12.48) -- (5.6483,12.48);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (2.4917,12.7) {\quad $\rname{\downarrow}{painting}{}{}$ (recursive)};
+% PA
+\fill[paintingink!4] (10.1517,9.4) rectangle (13.4483,12.04);
+\fill[paintingink!16] (10.1517,9.4) rectangle (13.4483,9.84);
+\draw[paintingink,line width=.6pt] (10.1517,9.4) rectangle (13.4483,12.04);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (10.2917,9.62) {$\rname{\uparrow}{painting}{}{}$};
+\draw[paintingink!35,line width=.35pt] (10.1517,9.84) -- (13.4483,9.84);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (10.2917,10.06) {$q\leq p$};
+\draw[paintingink!35,line width=.35pt] (10.1517,10.28) -- (13.4483,10.28);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (10.2917,10.5) {$k=0$: $\mathsf{L}$};
+\draw[paintingink!35,line width=.35pt] (10.1517,10.72) -- (13.4483,10.72);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (10.2917,10.94) {$k=k'+1$: };
+\draw[paintingink!35,line width=.35pt] (10.1517,11.16) -- (13.4483,11.16);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (10.2917,11.38) {\quad $\rname{\uparrow}{layer}{}{}$};
+\draw[paintingink!35,line width=.35pt] (10.1517,11.6) -- (13.4483,11.6);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (10.2917,11.82) {\quad $\rname{\uparrow}{painting}{}{}$ (recursive)};
+% storedL
+\fill[grayink!4] (14.0343,7.58) rectangle (15.8657,8.46);
+\fill[grayink!16] (14.0343,7.58) rectangle (15.8657,8.02);
+\draw[grayink,line width=.6pt] (14.0343,7.58) rectangle (15.8657,8.46);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (14.1743,7.8) {Supplied $\mathsf{L}$};
+\draw[grayink!35,line width=.35pt] (14.0343,8.02) -- (15.8657,8.02);
+\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (14.1743,8.24) {$q\leq p,\;k=0$};
+% FB -> FA, row 3
+\draw[edge,draw=purple] (5.5345,6.82) -- (10.2655,6.82);
+% PA -> PB, row 4
+\draw[edge,draw=purple] (10.1517,11.38) -- (5.6483,11.38);
+% oldB -> LB, row 4
+\draw[edge,draw=blue,dashed] (0.9907,0.88) -- (0.9907,4.42) -- (1.1707,4.42);
+% CInf -> LB, row 3
+\draw[edge] (4.3093,1.1) -- (4.3093,3.98) -- (4.1293,3.98);
+% CId -> L0, row 3
+\draw[edge,draw=purple] (9.3577,0.92) -- (9.7517,0.92) -- (9.7517,3.98) -- (9.5836,3.98);
+% oldA -> LA, row 4
+\draw[edge,draw=blue,dashed] (15.3624,0.88) -- (15.3624,4.42) -- (15.1824,4.42);
+% CSup -> LA, row 3
+\draw[edge] (11.9376,1.1) -- (11.9376,3.98) -- (12.1176,3.98);
+% LB -> FB, row 5
+\draw[edge] (2.2855,4.64) -- (2.2855,7.7) -- (2.4655,7.7);
+% LB -> PB, row 6
+\draw[edge] (2.1717,4.64) -- (2.1717,12.26) -- (2.3517,12.26);
+% LA -> FA, row 7
+\draw[edge] (13.5145,4.64) -- (13.5145,8.58) -- (13.3345,8.58);
+% LA -> PA, row 4
+\draw[edge] (13.6283,4.64) -- (13.6283,11.38) -- (13.4483,11.38);
+% L0 -> FA, row 4
+\draw[edge,draw=purple] (9.4536,4.64) -- (9.4536,7.26) -- (10.2655,7.26);
+% L0 -> PB, row 3
+\draw[edge,draw=purple] (6.8464,4.64) -- (6.8464,10.94) -- (5.6483,10.94);
+% storedL -> PA, row 2
+\draw[edge,draw=purple] (14.1643,8.46) -- (14.1643,10.5) -- (13.4483,10.5);
+\node[anchor=south west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (0.15,-0.2) {refl};
+\node[anchor=south east,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (16.486,-.20) {$p\leq n,\quad k=n-p$};
+\coordinate (page-north) at (current bounding box.north);
+\coordinate (page-south) at (current bounding box.south);
+\coordinate (page-left) at (0,0);
+\coordinate (page-right) at (16.636,0);
+\pgfresetboundingbox
+\path[use as bounding box] (page-left |- page-north) rectangle (page-right |- page-south);
+\end{tikzpicture}
+\endgroup

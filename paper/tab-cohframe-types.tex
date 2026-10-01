@@ -31,27 +31,3 @@
     {:}{\mbox{$\cAF{q}{\cRF{r}{\epsilon}{d}}{\cRP{r}{\epsilon}{c}}
       =\cRF{r}{\epsilon}{\cAF{q}{d}{c}}$}}
 \end{eqntable}
-
-\begin{eqntable}{Frame-coherence types for two degeneracies.
-    Painting arguments complete the boundaries needed by Above;
-    the displayed types are frame equalities.\label{tab:cohframe-dgn}}
-  \eqnline{\cohproof{\relReflBelowBelow}{n}{p}{frame}{q,r}}
-    {\makecell{\eqnarg{cohframe}{d}{\framep[n][p]} \\
-      \ensuremath{q\leq r\leq k}}}
-    {:}{\mbox{$\cSF{q}{\cSF{r}{d}}=\cSF{r+1}{\cSF{q}{d}}$}}
-  \midrule
-  \eqnline{\cohproof{\relReflBelowAbove}{n}{p}{frame}{q,r}}
-    {\makecell{\eqnarg{cohframe}{d}{\framep[n][p]} \\
-      \eqnarg{cohpainting}{c}{\painting[n][p](d)} \\
-      \ensuremath{q\leq p} \\
-      \ensuremath{r\leq k}}}
-    {:}{\mbox{$\cAF{q}{\cSF{r}{d}}{\cSP{r}{c}}
-      =\cSF{r}{\cAF{q}{d}{c}}$}}
-  \midrule
-  \eqnline{\cohproof{\relReflAboveAbove}{n}{p}{frame}{q,r}}
-    {\makecell{\eqnarg{cohframe}{d}{\framep[n][p]} \\
-      \eqnarg{cohpainting}{c}{\painting[n][p](d)} \\
-      \ensuremath{q\leq r\leq p}}}
-    {:}{\mbox{$\cAF{r+1}{\cAF{q}{d}{c}}{\cAP{q}{c}}
-      =\cAF{q}{\cAF{r}{d}{c}}{\cAP{r}{c}}$}}
-\end{eqntable}
