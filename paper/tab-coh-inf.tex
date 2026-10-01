@@ -5,7 +5,7 @@
     \label{tab:coh-inf}}
   \eqnline{\cIF{n}{p}{q}{r}}
   {\makecell{\eqnarg{cohframe}{d}{\framep[n+1][p]} \\
-      \ensuremath{r\leq q\leq n-p}}}
+      \ensuremath{r\leq q\leq k}}}
   {:}{\mbox{$\cSF{q}{\cRF{r}{\epsilon}{d}}
         =\cRF{r}{\epsilon}{\cSF{q+1}{d}}$}}
   \eqnline{\cIF{n}{0}{q}{r}}{\unitpoint}{\defeq}{\mathsf{refl}}
@@ -18,7 +18,7 @@
   \eqnline{\cIL{n}{p}{q}{r}}
   {\makecell{\eqnarg{cohlayer}{d}{\framep[n+1][p]} \\
       \eqnarg{cohlayer}{l}{\layer[n+1][p](d)} \\
-      \ensuremath{r\leq q<n-p}}}
+      \ensuremath{r\leq q<k}}}
   {:}{\mbox{$\cSL{q}{\cRL{r}{\epsilon}{l}}
         =_{\cIF{n}{p}{q+1}{r+1}(d)}
         \cRL{r}{\epsilon}{\cSL{q+1}{l}}$}}
@@ -29,7 +29,7 @@
   \eqnline{\cIP{n}{p}{q}{r}}
   {\makecell{\eqnarg{cohpainting}{d}{\framep[n+1][p]} \\
       \eqnarg{cohpainting}{c}{\painting[n+1][p](d)} \\
-      \ensuremath{r\leq q\leq n-p}}}
+      \ensuremath{r\leq q\leq k}}}
   {:}{\mbox{$\cSP{q}{\cRP{r}{\epsilon}{c}}
         =_{\cIF{n}{p}{q}{r}(d)}
         \cRP{r}{\epsilon}{\cSP{q+1}{c}}$}}

@@ -699,7 +699,7 @@ We illustrate below the difference between parametric degeneracy and connecting 
                                                                                                                 & n=0, \nu=2                                                  & n=1, \nu=2                                          \\
     \\
     \begin{tabular}{l}source of dimension $n$\end{tabular}                                                      & b~~                                                         & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\[1mm]
-    \begin{tabular}{l}parametric degeneracy\\($r^n_i$ for $0\leq i\leq n$)\end{tabular}             & \begin{tikzcd}b \arrow[r, "r^0_0(b)"] & b\end{tikzcd}       &
+    \begin{tabular}{l}parametric degeneracy\\($r^n_i$ for $i\leq n$)\end{tabular}             & \begin{tikzcd}b \arrow[r, "r^0_0(b)"] & b\end{tikzcd}       &
     \begin{tikzcd}
       b \arrow[rr, "q"{name=F}']\arrow[dd, "r^0_0(b)"] && c \arrow[dd, "r^0_0(c)"'] \\\\
       b \arrow[rr, "q"{name=T, below}] && c \\
@@ -710,7 +710,7 @@ We illustrate below the difference between parametric degeneracy and connecting 
       c \arrow[rr, "r^0_0(c)"{name=T, below}] && c \\
       & \arrow[from=F, to=T, double, shorten=1mm, "r^1_1(q)" description]
     \end{tikzcd}                                                                                                                                                      \\[-8mm]
-    \begin{tabular}{l}connecting degeneracy\\($s^n_{i\epsilon}$ for $0 \leq i < n$)\end{tabular} & \mbox{(none)}                                               &
+    \begin{tabular}{l}connecting degeneracy\\($s^n_{i\epsilon}$ for $i < n$)\end{tabular} & \mbox{(none)}                                               &
     \begin{tikzcd}[column sep=1cm]
       b \arrow[rr, "q"{name=F}']\arrow[dd, "q"] && c \arrow[dd, "r^0_0(c)"'] \\\\
       c \arrow[rr, "r^0_0(c)"{name=T, below}] && c \\
@@ -729,9 +729,9 @@ We illustrate below the difference between parametric degeneracy and connecting 
 
 The construction of degeneracies presented in this paper builds on the very dependent recursive presentation~\cite{hr26} of the indexed construction of $\nu$--sets~\cite{hr25}. At each level $n$, the earlier families $X_0,\ldots,X_{n-1}$ determine the type of full frames, and the next family $X_n$ assigns an h--set of cells to each full frame.
 
-In the formulas below, $n$ is the construction level and $p\leq n$ is the number of layers in a prefix, called its \emph{height}. A full frame at level $n$ has $n$ layers. Thus level $n$ corresponds to geometric dimension $n-1$ in the augmented unary case and to dimension $n$ in the binary case. We write $\framep[n][p]$ for frames of height $p$, $\layer[n][p][][d=d]$ for the next layer over a frame $d$, and $\painting[n][p][][d=d]$ for its paintings. In particular, $\fullframe[n]=\framep[n][n]$, and a painting over a full frame $d$ is a cell of $X_n(d)$. A successor frame is a dependent pair $(d,l)$ of a frame and its next layer; a painting with layers left to supply is a pair $(l,c)$ of its next layer and remaining painting.
+In the formulas below, $n$ is the construction level and $p\leq n$ is the number of layers in a prefix, called its \emph{height}. We put $k:=n-p$, the number of layers remaining at level $n$; a full frame has $k=0$. Throughout the construction, $k$ abbreviates this difference for the displayed parameters $n,p$. The recursive equations retain $n,p$ explicitly, so decreasing $n$ or increasing $p$ decreases $k$. A full frame at level $n$ has $n$ layers. Thus level $n$ corresponds to geometric dimension $n-1$ in the augmented unary case and to dimension $n$ in the binary case. We write $\framep[n][p]$ for frames of height $p$, $\layer[n][p][][d=d]$ for the next layer over a frame $d$, and $\painting[n][p][][d=d]$ for its paintings. In particular, $\fullframe[n]=\framep[n][n]$, and a painting over a full frame $d$ is a cell of $X_n(d)$. A successor frame is a dependent pair $(d,l)$ of a frame and its next layer; a painting with layers left to supply is a pair $(l,c)$ of its next layer and remaining painting.
 
-The restriction operation $\restrf[n][p][][q][\epsilon]$ maps a frame in $\framep[n+1][p]$ to one in $\framep[n][p]$. Its relative index $q\leq n-p$ denotes direction $p+q$, and $\epsilon\in\nu$ selects a face in that direction. The corresponding layer and painting operations are written $\restrl$ and $\restrp$; a painting restriction includes the restriction of its indexing frame.
+The restriction operation $\restrf[n][p][][q][\epsilon]$ maps a frame in $\framep[n+1][p]$ to one in $\framep[n][p]$. Its relative index $q\leq k$ denotes direction $p+q$, and $\epsilon\in\nu$ selects a face in that direction. The corresponding layer and painting operations are written $\restrl$ and $\restrp$; a painting restriction includes the restriction of its indexing frame.
 
 Restrictions follow the decomposition into frames, layers, and paintings. Restricting a successor frame restricts its prefix and its next layer; restricting a layer applies painting restriction to each face-label component. On a painting $(l,c)$, restriction at index $0$ selects the component $l(\epsilon)$ of the first layer. A successor index restricts the layer and continues recursively through the remaining painting.
 
@@ -742,7 +742,7 @@ We construct degeneracies by building their boundaries layer by layer. The chose
 Below transforms the existing prefix without inserting the repeated layer. It acts on a frame alone and preserves the prefix height:
 \begin{equation*}
   \reflfbelow[n][p][][q]:\framep[n][p]\rightarrow\framep[n+1][p]
-  \qquad(q\leq n-p).
+  \qquad(q\leq k).
 \end{equation*}
 Above inserts the repeated layer, so it needs the painting $c$ completing the original prefix and produces one more layer:
 \begin{equation*}
@@ -856,7 +856,7 @@ The degeneracy--degeneracy laws require additional compatibility data alongside 
 \subsubsection{Last-direction degeneracies}
 \label{sec:last-direction}
 
-The construction simplifies when only the last--direction degeneracy is supplied at each level. At level $n$, the inserted direction is $n$, so a prefix of height $p$ uses the Below operation $\reflfbelow[n][p][][n-p]$. The prefix reaches the inserted direction only at the full frame, where the Above index is $0$. Writing
+The construction simplifies when only the last--direction degeneracy is supplied at each level. At level $n$, the inserted direction is $n$, so a prefix of height $p$ uses the Below operation $\reflfbelow[n][p][][k]$. The prefix reaches the inserted direction only at the full frame, where the Above index is $0$. Writing
 \begin{equation*}
   \reflff[n]\defeq\reflfbelow[n][n][][0]
 \end{equation*}
@@ -874,7 +874,7 @@ In the cubical case, compatible coordinate symmetries allow every degeneracy to 
 \begin{equation*}
   \varepsilon_i
   =\tau_i\circ\tau_{i+1}\circ\cdots\circ\tau_{n-1}\circ\varepsilon_n
-  \qquad(0\leq i\leq n),
+  \qquad(i\leq n),
 \end{equation*}
 where the composite of exchanges is empty when $i=n$. One first inserts the last direction and then moves it to position $i$ by adjacent exchanges. The construction presented above supplies degeneracies in every direction without requiring these symmetries.
 

@@ -2,32 +2,32 @@
     \label{tab:cohframe-types}}
   \eqnline{\cohproof{\relRestrRestr}{n}{p}{frame}{q,r,\epsilon,\omega}}
     {\makecell{\eqnarg{cohframe}{d}{\framep[n+2][p]} \\
-      \ensuremath{0\leq r\leq q\leq n-p}}}
+      \ensuremath{r\leq q\leq k}}}
     {:}{\mbox{$\cRF{q}{\epsilon}{\cRF{r}{\omega}{d}}
       =\cRF{r}{\omega}{\cRF{q+1}{\epsilon}{d}}$}}
   \midrule
   \eqnline{\cohproof{\relRestrReflBelowId}{n}{p}{frame}{q,\epsilon}}
     {\makecell{\eqnarg{cohframe}{d}{\framep[n][p]} \\
-      \ensuremath{0\leq q\leq n-p}}}
+      \ensuremath{q\leq k}}}
     {:}{\mbox{$d=\cRF{q}{\epsilon}{\cSF{q}{d}}$}}
   \midrule
   \eqnline{\cIF{n}{p}{q}{r}}
     {\makecell{\eqnarg{cohframe}{d}{\framep[n+1][p]} \\
-      \ensuremath{0\leq r\leq q\leq n-p}}}
+      \ensuremath{r\leq q\leq k}}}
     {:}{\mbox{$\cSF{q}{\cRF{r}{\epsilon}{d}}
       =\cRF{r}{\epsilon}{\cSF{q+1}{d}}$}}
   \midrule
   \eqnline{\cohproof{\relRestrReflBelowSup}{n}{p}{frame}{q,r,\epsilon}}
     {\makecell{\eqnarg{cohframe}{d}{\framep[n+1][p]} \\
-      \ensuremath{0\leq q\leq r\leq n-p}}}
+      \ensuremath{q\leq r\leq k}}}
     {:}{\mbox{$\cSF{q}{\cRF{r}{\epsilon}{d}}
       =\cRF{r+1}{\epsilon}{\cSF{q}{d}}$}}
   \midrule
   \eqnline{\cohproof{\relRestrReflAboveSup}{n}{p}{frame}{q,r,\epsilon}}
     {\makecell{\eqnarg{cohframe}{d}{\framep[n+1][p]} \\
       \eqnarg{cohpainting}{c}{\painting[n+1][p](d)} \\
-      \ensuremath{0\leq q\leq p} \\
-      \ensuremath{0\leq r\leq n-p}}}
+      \ensuremath{q\leq p} \\
+      \ensuremath{r\leq k}}}
     {:}{\mbox{$\cAF{q}{\cRF{r}{\epsilon}{d}}{\cRP{r}{\epsilon}{c}}
       =\cRF{r}{\epsilon}{\cAF{q}{d}{c}}$}}
 \end{eqntable}
@@ -37,14 +37,14 @@
     the displayed types are frame equalities.\label{tab:cohframe-dgn}}
   \eqnline{\cohproof{\relReflBelowBelow}{n}{p}{frame}{q,r}}
     {\makecell{\eqnarg{cohframe}{d}{\framep[n][p]} \\
-      \ensuremath{q\leq r\leq n-p}}}
+      \ensuremath{q\leq r\leq k}}}
     {:}{\mbox{$\cSF{q}{\cSF{r}{d}}=\cSF{r+1}{\cSF{q}{d}}$}}
   \midrule
   \eqnline{\cohproof{\relReflBelowAbove}{n}{p}{frame}{q,r}}
     {\makecell{\eqnarg{cohframe}{d}{\framep[n][p]} \\
       \eqnarg{cohpainting}{c}{\painting[n][p](d)} \\
       \ensuremath{q\leq p} \\
-      \ensuremath{r\leq n-p}}}
+      \ensuremath{r\leq k}}}
     {:}{\mbox{$\cAF{q}{\cSF{r}{d}}{\cSP{r}{c}}
       =\cSF{r}{\cAF{q}{d}{c}}$}}
   \midrule
