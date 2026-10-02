@@ -107,6 +107,8 @@
   \setkeys*[bonak]{X#1}{#3}
 }
 
+\newcommand{\XDgn}{\ensuremath{{\color{carolina}{\nu\textsf{DgnSet}}}}}
+
 \newcommandx{\Xrefl}[3][1,2,3]{
   \ensuremath{{\color{carolina}{\nu\textsf{reflSet}}}^{#2}}
   \setkeys*[bonak]{Xrefl#1}{#3}
@@ -394,10 +396,14 @@ In particular, a $2$--shape category presents the cubical category, while $1$--s
 
 We now work in dependent type theory. A type $A$ is an \emph{h--set} if, for any $x,y:A$ and any two proofs $p,q:x=y$, we have $p=q$. Thus equality between elements of $A$ is proof-irrelevant: this is the uniqueness of identity proofs property ($\UIP$). We write $\HSet$ for the universe of h--sets.
 
-Semi--cubical sets can be expressed directly in terms of presheaves over a $\nu$--semi--shape category using morphisms, by iterating the equivalence between maps and families:
+We call the structures presented by presheaves on the $\nu$--semi--shape category \emph{$\nu$--sets}, and write $\X$ for the type of their indexed presentations.
+
+For arbitrary arity $\nu$, the indexed presentation is obtained from the presheaf presentation by iterating the equivalence between maps and families:
 \[
   (\Sigma A : \HSet. A \rightarrow B) \simeq (B \rightarrow \HSet)
 \]
+
+Figure~\ref{fig:fibred-indexed-faces} illustrates the binary case, with semi--cubical sets.
 
 \begin{figure}[H]
   \begin{equation*}
@@ -419,9 +425,14 @@ Semi--cubical sets can be expressed directly in terms of presheaves over a $\nu$
   \label{fig:fibred-indexed-faces}
 \end{figure}
 
-The two presentations in Figure~\ref{fig:fibred-indexed-faces} are provably equivalent using univalence, and this is yet another instance of the \emph{Grothendieck construction}, which we refer to as the fibred-indexed correspondence.
+For the fixed arity $\nu$, assuming univalence and functional extensionality, the fibred-indexed correspondence gives an equivalence of types
+\begin{equation}
+  \label{eq:nuset-correspondence}
+  \X\simeq\operatorname{Functor}(\hexagon^{\mathrm{op}},\HSet).
+\end{equation}
+Here $\operatorname{Functor}(C,\HSet)$ denotes the type of set-valued functors on $C$. This correspondence is an instance of the \emph{Grothendieck construction}.
 
-In this paper, we focus on an indexed definition of simplicial sets equipped with faces and a \emph{cubical--like} form of degeneracy and on cubical sets with faces and degeneracies. Figure~\ref{fig:fibred-indexed-degeneracies} illustrates the corresponding fibred and indexed presentations with degeneracies.
+We extend this correspondence to $\nu$--sets with cubical--style degeneracies. Figure~\ref{fig:fibred-indexed-degeneracies} illustrates the binary case, with cubical sets.
 
 \begin{figure}[H]
   \begin{equation*}
@@ -451,10 +462,16 @@ In this paper, we focus on an indexed definition of simplicial sets equipped wit
   \label{fig:fibred-indexed-degeneracies}
 \end{figure}
 
-\section{Our construction}
-\subsection{Intuition for our construction}
-We call the structures presented by presheaves on the $\nu$--semi--shape category \emph{$\nu$--sets}, and write $\X$ for the type of their indexed presentations.
+Write $\XDgn$ for the type of indexed $\nu$--sets equipped with cell degeneracy families and the compatibility data for their mutual coherences. Under the same assumptions, the correspondence extends to degeneracies:
+\begin{equation}
+  \label{eq:nudgnset-correspondence}
+  \XDgn\simeq\operatorname{Functor}(\hexagon_d^{\mathrm{op}},\HSet).
+\end{equation}
+The indexed structure on the left, including both the underlying $\nu$--set and its degeneracy data, is constructed in Section~\ref{sec:construction}. Both equivalences are formalized in Rocq; they factor through presentations by face maps, and by face and degeneracy maps with their identities, respectively.
 
+\section{Our construction}
+\label{sec:construction}
+\subsection{Intuition for our construction}
 We call a degeneracy that inserts a new coordinate axis a \emph{parametric degeneracy}. A degeneracy direction specifies where a new coordinate axis is inserted. For an $n$-cube, there are $n+1$ insertion positions, numbered $0,\ldots,n$.
 
 We recall the boundary terminology of the indexed construction~\cite{hr25}. A \emph{layer} groups the face data for one direction, with one component for each label in $\nu$. A \emph{frame} records a prefix of these boundary layers; a \emph{full frame} contains all of them. A \emph{painting} over a frame supplies the remaining boundary layers and a cell over the completed boundary. In the dependent presentation, each component of a layer is itself a lower-dimensional painting over a suitable restricted frame. Restriction means taking a face, and acts on frames, layers, and paintings.
@@ -769,6 +786,8 @@ For any $(X_0,X_1,\ldots):\X$, let $R$ collect the degeneracy families at levels
 \end{equation*}
 Here $q$ is the Above index, so $L(q)$ inserts direction $n-q$. In the geometric examples, this operation is denoted $r^n_{n-q}$ in the binary case and $r^{n-1}_{n-q-1}$ in the augmented unary case. The underlying $X_i$ and earlier degeneracies $R$ are left implicit.
 
+The families $L$ supply the cell degeneracies. The face--degeneracy laws are proved by the construction; the degeneracy--degeneracy laws additionally use supplied compatibility proofs $\mathsf{cohL}$ between composites of these families. Tables~\ref{tab:coind} and~\ref{tab:core} describe the families $L$; the role of $\mathsf{cohL}$ is explained in Section~\ref{sec:coherences}.
+
 Figure~\ref{fig:arch-refl} shows how the Below and Above operations fit together. The frame operations proceed from Below to Above; the painting operations proceed in the reverse order, ending with the supplied $L$ when $k=0$. The zero-direction layer is the common boundary case: it transports the input painting to form the constant layer. The layer definitions use the frame coherences $\relRestrReflBelowInf$, $\relRestrReflBelowId$, and $\relRestrReflAboveSup$, whose types and proofs are developed in Section~\ref{sec:coherences}. Purple arrows mark dependencies in the boundary cases, including the transition between Below and Above.
 
 \begin{figure}[H]
@@ -896,11 +915,11 @@ Table~\ref{tab:cohframe-dgn} states the three frame equalities for two degenerac
 
 \input{tab-cohframe-dgn.tex}
 
-The degeneracy--degeneracy laws require additional compatibility data alongside the supplied families. The full-frame painting case of $\relReflAboveAbove$ uses a compatibility proof $\mathsf{cohL}$ supplied alongside $L$. It equates two composites of supplied degeneracies over the corresponding frame equality. Thus the data comprise the families in Tables~\ref{tab:coind} and~\ref{tab:core} together with these compatibility proofs.
+The full-frame painting case of $\relReflAboveAbove$ uses the supplied compatibility proof $\mathsf{cohL}$. It equates two composites of the cell degeneracies $L$ over the corresponding frame equality.
 
 Figure~\ref{fig:arch-coh-refl} shows the three stages. The frame proofs proceed through these three stages from left to right; the painting proofs proceed from right to left, starting with the supplied $\mathsf{cohL}$ at $k=0$.
 
-Each transition introduces a zero-direction layer proof. The mixed stage uses the square in Figure~\ref{fig:coh2-refl-ba-zero}, and the Above--Above stage uses the square in Figure~\ref{fig:coh2-refl-aa-zero}. Together with the preceding families, there are seven hexagonal and four square obligations, all discharged by $\UIP$. The supplied $\mathsf{cohL}$ is separate data about the cell operations.
+Each transition introduces a zero-direction layer proof. The mixed stage uses the square in Figure~\ref{fig:coh2-refl-ba-zero}, and the Above--Above stage uses the square in Figure~\ref{fig:coh2-refl-aa-zero}. Together with the preceding families, there are seven hexagonal and four square obligations, all discharged by $\UIP$.
 
 \begin{figure}[H]
   \centering
@@ -909,6 +928,8 @@ Each transition introduces a zero-direction layer proof. The mixed stage uses th
   \label{fig:arch-coh-refl}
 \end{figure}
 
+
+Thus, over an underlying $\nu$--set, the construction takes a dependent stream of cell degeneracy families $L$ together with their compatibility proofs $\mathsf{cohL}$. It defines the Below and Above operations on frames, layers, and paintings and establishes the seven degeneracy coherence families. Together with the underlying $\relRestrRestr$ coherence, these give the eight frame laws in Tables~\ref{tab:cohframe-types} and~\ref{tab:cohframe-dgn}.
 
 \subsubsection{Last-direction degeneracies}
 \label{sec:last-direction}
