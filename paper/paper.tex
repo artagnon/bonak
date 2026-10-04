@@ -369,15 +369,15 @@ Degeneracies can be added to the $\nu$--semi--shape category in different ways. 
     \Obj_{\hexagon_d}      & := \Nat                                  \\
     \Hom_{\hexagon_d}(p,n) & := \{(r,f) \in \{\kstar,\bullet\}^p
     \times (\nu \sqcup \{\kstar\})^n \mid |r|_{\kstar}=|f|_{\kstar}\} \\
-    \id_n                  & := (\kstar^n,\kstar^n).
+    \id_n                  & := (\kstar^n,\kstar^n)
   \end{align*}
   In the selection mask $r$, a star retains an input coordinate and a bullet discards it. To define composition, first normalize a face word followed by a selection mask. For words $f$ and $s$ of the same length, with $k$ and $l$ stars respectively, define $\mathsf{cross}(f,s)\in\Hom_{\hexagon_d}(k,l)$ recursively by
   \begin{align*}
-    \mathsf{cross}(\epsilon,\epsilon)  & := (\epsilon,\epsilon), \\
-    \mathsf{cross}(a f,\bullet s)      & := (t,h),               \\
-    \mathsf{cross}(a f,\kstar s)       & := (t,a h),             \\
-    \mathsf{cross}(\kstar f,\bullet s) & := (\bullet t,h),       \\
-    \mathsf{cross}(\kstar f,\kstar s)  & := (\kstar t,\kstar h),
+    \mathsf{cross}(\epsilon,\epsilon)  & := (\epsilon,\epsilon) \\
+    \mathsf{cross}(a f,\bullet s)      & := (t,h)               \\
+    \mathsf{cross}(a f,\kstar s)       & := (t,a h)             \\
+    \mathsf{cross}(\kstar f,\bullet s) & := (\bullet t,h)       \\
+    \mathsf{cross}(\kstar f,\kstar s)  & := (\kstar t,\kstar h)
   \end{align*}
   where $\epsilon$ is the empty word, $a\in\nu$, and $(t,h)=\mathsf{cross}(f,s)$ in each recursive clause. Thus a discarded constant disappears, a retained constant remains in the output word, and an input variable is retained exactly when the mask retains its position.
 
@@ -385,7 +385,7 @@ Degeneracies can be added to the $\nu$--semi--shape category in different ways. 
   \[
     (s,g)\circ_{\hexagon_d}(r,f)
     := (r\circ_{\hexagon_1}t,\;g\circ_{\hexagon}h)
-    \quad\text{where }(t,h)=\mathsf{cross}(f,s).
+    \quad\text{where }(t,h)=\mathsf{cross}(f,s)
   \]
   Here $\circ_{\hexagon_1}$ is the semi--shape word composition with $\bullet$ as its sole label: it substitutes $t$ into the stars of $r$. The other component substitutes $h$ into the stars of $g$. These operations satisfy the identity and associativity laws.
 \end{definition}
@@ -506,7 +506,7 @@ Figure~\ref{fig:fibred-indexed-faces} illustrates the binary case, with semi--cu
 For the fixed arity $\nu$, assuming univalence and functional extensionality, the fibred-indexed correspondence gives an equivalence of types
 \begin{equation}
   \label{eq:nuset-correspondence}
-  \X\simeq\operatorname{Functor}(\hexagon^{\mathrm{op}},\HSet).
+  \X\simeq\operatorname{Functor}(\hexagon^{\mathrm{op}},\HSet)
 \end{equation}
 Here $\operatorname{Functor}(C,\HSet)$ denotes the type of set-valued functors on $C$. This correspondence is an instance of the \emph{Grothendieck construction}.
 
@@ -543,7 +543,7 @@ We extend this correspondence to $\nu$--sets with parametric degeneracies. Figur
 Write $\XDgn$ for the type of indexed $\nu$--sets equipped with cell degeneracy families and the compatibility data for their mutual coherences. Under the same assumptions, the correspondence extends to degeneracies:
 \begin{equation}
   \label{eq:nudgnset-correspondence}
-  \XDgn\simeq\operatorname{Functor}(\hexagon_d^{\mathrm{op}},\HSet).
+  \XDgn\simeq\operatorname{Functor}(\hexagon_d^{\mathrm{op}},\HSet)
 \end{equation}
 The indexed structure on the left, including both the underlying $\nu$--set and its degeneracy data, is constructed in Section~\ref{sec:construction}. Both equivalences are formalized in Rocq; they factor through presentations by face maps, and by face and degeneracy maps with their identities, respectively.
 
@@ -797,19 +797,19 @@ The chosen direction may lie beyond the prefix, or the prefix may have reached o
 Below transforms the existing prefix without inserting the repeated layer. It acts on a frame alone and preserves the prefix height:
 \begin{equation*}
   \reflfbelow[n][p][][q]:\framep[n][p]\rightarrow\framep[n+1][p]
-  \qquad(q\leq k).
+  \qquad(q\leq k)
 \end{equation*}
 Above inserts the repeated layer, so it needs the painting $c$ completing the original prefix and produces one more layer:
 \begin{equation*}
   \reflfabove[n][p][][q]:\Pi d:\framep[n][p].\,
   \painting[n][p][][d=\d]\rightarrow\framep[n+1][p+1]
-  \qquad(q\leq p).
+  \qquad(q\leq p)
 \end{equation*}
 
 For any $(X_0,X_1,\ldots):\X$, let $R$ collect the degeneracy families at levels below $n$. The supplied family $L$ at level $n$ has type
 \begin{equation*}
   L:\Pi q\leq n.\,\Pi d:\fullframe[n].\,\Pi x:X_n(d).\,
-  X_{n+1}(\reflfabove[n][n][][q][d=\d,c=x]).
+  X_{n+1}(\reflfabove[n][n][][q][d=\d,c=x])
 \end{equation*}
 Here $q$ is the Above index, so $L(q)$ inserts direction $n-q$. In the geometric examples, this operation is denoted $r^n_{n-q}$ in the binary case and $r^{n-1}_{n-q-1}$ in the augmented unary case. The underlying $X_i$ and earlier degeneracies $R$ are left implicit.
 
@@ -878,15 +878,15 @@ At Above index $0$, the prefix reaches the chosen direction. The boundary is obt
 The five relations of Grandis--Mauri~\cite{grandis03} describe commutation of restrictions and degeneracies, and cancellation of a degeneracy by a restriction in its inserted direction. Grandis--Mauri state the relations between maps in the cubical site. Here we display their images under a contravariant presheaf, which reverses composition. Thus $\delta_r^\alpha$ denotes restriction on cells and $\varepsilon_q$ denotes degeneracy, with face labels $\alpha,\beta\in\nu$. Composition is read from right to left, and dimension indices are left implicit:
 \begin{equation}
   \begin{array}{r@{\;}c@{\;}c@{}l@{\qquad}l@{\qquad}l}
-    \delta_q^\alpha\delta_r^\beta     & =       &                     &
-    \delta_r^\beta\delta_{q+1}^\alpha & r\leq q & (\relRestrRestr),                                                                  \\[0.4em]
-                                      &         & \ldelim\{{3}{*}     &
-    \varepsilon_{q-1}\delta_r^\alpha  & r<q     & (\relRestrReflInf),                                                                \\
-    \delta_r^\alpha\varepsilon_q      & =       &                     &
-    \id                               & r=q     & (\relRestrReflId),                                                                 \\
-                                      &         &                     & \varepsilon_q\delta_{r-1}^\alpha & r>q & (\relRestrReflSup), \\[0.4em]
-    \varepsilon_q\varepsilon_r        & =       &                     &
-    \varepsilon_{r+1}\varepsilon_q    & q\leq r & (\relReflRefl).
+    \delta_q^\alpha\delta_r^\beta     & =       &                    &
+    \delta_r^\beta\delta_{q+1}^\alpha & r\leq q & (\relRestrRestr)                                                                 \\[0.4em]
+                                      &         & \ldelim\{{3}{*}    &
+    \varepsilon_{q-1}\delta_r^\alpha  & r<q     & (\relRestrReflInf)                                                               \\
+    \delta_r^\alpha\varepsilon_q      & =       &                    &
+    \id                               & r=q     & (\relRestrReflId)                                                                \\
+                                      &         &                    & \varepsilon_q\delta_{r-1}^\alpha & r>q & (\relRestrReflSup) \\[0.4em]
+    \varepsilon_q\varepsilon_r        & =       &                    &
+    \varepsilon_{r+1}\varepsilon_q    & q\leq r & (\relReflRefl)
   \end{array}
 \end{equation}
 These are zero-based absolute direction indices, ranging over the instances in which the composites are defined. At level $n$, the cell component of $\varepsilon_i$ is supplied by $L(n-i)$. The three cases distinguish a restriction before, at, or after the inserted direction.
@@ -969,7 +969,7 @@ its boundary is
 \begin{equation*}
   \reflfabove[n][n][][0][d=\d,c=x]
   = (\reflfbelow[n][n][][0][d=\d],\lambda\epsilon.\,x)
-  = (\reflff[n][d=\d],\lambda\epsilon.\,x).
+  = (\reflff[n][d=\d],\lambda\epsilon.\,x)
 \end{equation*}
 The supplied cell operation is thus $L(0)$, with target $X_{n+1}(\reflff[n][d=\d],\lambda\epsilon.\,x)$. Its boundary can be constructed using earlier last--direction degeneracies alone: each existing layer is transformed using the last--direction painting operation one level lower, and the constant layer is appended at the end.
 
@@ -979,7 +979,7 @@ In the cubical case, compatible coordinate symmetries allow every degeneracy to 
 \begin{equation*}
   \varepsilon_i
   =\tau_i\circ\tau_{i+1}\circ\cdots\circ\tau_{n-1}\circ\varepsilon_n
-  \qquad(i\leq n),
+  \qquad(i\leq n)
 \end{equation*}
 where the composite of exchanges is empty when $i=n$. One first inserts the last direction and then moves it to position $i$ by adjacent exchanges. The construction presented above supplies degeneracies in every direction without requiring these symmetries.
 
