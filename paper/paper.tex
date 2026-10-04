@@ -395,26 +395,24 @@ In particular, a $2$--shape category presents the cubical category, while $1$--s
 \subsection{Parametric degeneracies vs connecting degeneracies}
 \label{sec:dgn-flavors}
 
-We call a $(n+1)$-$\nu$-shape that degenerates an existing $n$-$\nu$-shape along a new coordinate axis a \emph{parametric degeneracy}. A degeneracy direction specifies where a new coordinate axis is inserted. For an $n$-shape, there are $n+1$ insertion positions, numbered $0,\ldots,n$.
+Despite a common terminology, degeneracies in simplicial sets~\cite{fri08} and in cubical sets~\cite{grandis03} are of a different nature. Degeneracies in cubical sets degenerate an existing $n$-$\nu$-shape along a new axis while degeneracies in simplicial sets degenerate an existing $n$-$\nu$-shape by duplicating it around an existing axis. In particular, degenerating a $n$-$\nu$-shape $c$ in a cubical set is about \emph{inserting a new axis} $i \leq n$ (counting axes of a $n$-shape from $0$ to $n-1$), yielding a $(n+1)$-shape lying on $c$ in the new $i$-th axis and lying on the degeneracy of the $j$-th axis of $c$ in the $j$-th axis (resp. $(j-1)$-th axis) for $j < i$ (resp $j > i$). In the simplicial case, the degeneracy process is better understood by reasoning in augmented simplicial sets (where we now shift everything down by 1 so that the dimension starts at $-1$): degenerating a $n$-shape $c$ in simplicial sets is about \emph{duplicating along an existing axis} $i < n$ (thus requiring $n$ to be at least $0$), yielding a $(n+1)$-shape lying on $c$ in both the $i$ and $i+1$ axes, while it lies again on the degeneracy of the $j$-th axis (resp. $(j-1)$-th) of $c$ in the $j$-th axis for $j < i$ (resp. $j > i+1$).
 
-Despite a common terminology, degeneracies in simplicial sets~\cite{fri08} and in cubical sets~\cite{grandis03} are of a different nature. Degeneracies in cubical sets degenerates an existing $n$-$\nu$-shape along a new axis while degeneracies in simplicial sets degenerates an existing $n$-$\nu$-shape by duplicating it around an existing axis. In particular, degenerating a $n$-$\nu$-shape $c$ in a cubical set is about choosing a new axis $i \leq n$ (counting axes of a $n$-shape from $0$ to $n-1$), yielding a $(n+1)$-shape lying on $c$ in the $i$-th axis and lying on the degeneracy of the $j$-th axis of $c$ in the $j$-th axis (resp. $(j-1)$-th axis) for $j < i$ (resp $j > i$). In the simplicial case, the degeneracy process is better understood by reasoning in augmented simplicial sets where the dimension starts at $-1$: degenerating a $n$-shape $c$ in simplicial sets is about \emph{duplicating an existing axis} $i < n$ (thus requiring $n$ to be at least $0$), yielding a $(n+1)$-shape lying on $c$ in both the $i$ and $i+1$ axes, while it lies again on the degeneracy of the $j$-th axis (resp. $(j-1)$-th) of $c$ in the $j$-th axis for $j < i$ (resp. $j > i+1$).
+We call the axis-duplicating operation a \emph{connecting degeneracy} and the axis-inserting operation \emph{parametric degeneracy}. The unary case of parametric degeneracies have already been considered in the literature, e.g. implicitly in type theories with internal parametricity~\cite{moulin16,bernardy12} and more explicitly in Parametric Type Theory~\cite{bernardy15} where an interpretation in terms of a unary form of cubical sets is given. The binary case of connecting degeneracies happens to be similar to connections in (binary) cubical sets, where it should be noted that for arity $2$, there is one connection for each $\epsilon \in \{1,2\}$ (resulting in the ``conjunctive''/``meet'' and ``disjunctive''/``join'' variants~\cite{Grandis}, or also positive and negative~\cite{BrownHiggins}) and these connections additionally need parametric degeneracies to fill the faces on side $\epsilon' \neq \epsilon$.
 
-We call the axis-duplicating operation a \emph{connecting degeneracy}; the axis-inserting operation is the parametric degeneracy introduced above. The unary case of parametric degeneracies have already been considered in the literature, e.g. implicitly in type theories with internal parametricity~\cite{moulin16,bernardy12} and more explicitly in Parametric Type Theory~\cite{bernardy15} where an interpretation in terms of a unary form of cubical sets is given. The binary case of connecting degeneracies happens to be similar to connections in (binary) cubical sets, where it should be noted that for arity 2 (and higher), connections additionally need parametric degeneracies to fill faces which in the non-duplicated axes. It should also be noted that each connection has one variant for each face label in $\nu$ (that is only one variant in the unary case but two in the binary cases, resulting in the ``disjunctive'' and ``conjunctive'' variants).
-
-We illustrate below the difference between parametric degeneracy and connecting degeneracy in the unary and binary case for $0$ and $1$-shapes, reminding that we start from dimension $-1$ in the unary case and from dimension 0 in the binary case. In particular, writing $X_{-1}$ for the augmentation set in the unary case, there is a parametric degeneracy $r^{-1}_{-1}(a)$ for any $a:X_{-1}$.
-
+We illustrate below the difference between parametric degeneracy and connecting degeneracy in the unary and binary case for $0$ and $1$-shapes, adopting the convention of starting from dimension $-1$ in the unary case and from dimension 0 in the binary case. In particular, writing $X_{-1}$ for the augmentation set in the unary case, there is a parametric degeneracy $r^{-1}_{-1}(a)$ for any $a:X_{-1}$.
 
 \begin{figure}[H]
   \begin{equation*}
     \begin{array}{lcccr}
-                                                                                         & n=0, \nu=1                                                   & n=1, \nu=1                                          \\
+                                                                                      & n=0, \nu=1                                                   & n=1, \nu=1                                          \\
       \\
-      \begin{tabular}{l}source of dimension $n$\\ (over some $a:X_{-1}$)\end{tabular}    & b                                                            & \begin{tikzcd}b \arrow[r, "q"] & c\end{tikzcd}      \\
+      \begin{tabular}{l}source of dimension $n$\\ (over some $a:X_{-1}$)\end{tabular} & b                                                            & \begin{tikzcd}b \arrow[r, "q"] & c\end{tikzcd}      \\
       \begin{tabular}{l}
         parametric degeneracy \\
-        ($r^n_i$ for $-1\leq i\leq n$)\end{tabular}                                      & \begin{tikzcd}b \arrow[r, "r^0_{-1}(b)"] & r^{-1}_{-1}(a) \\
-                                                                                             r^{-1}_{-1}(a) \arrow[r, "r^0_0(b)"] & b
-                                                                                           \end{tikzcd} &
+        along direction $i$   \\
+        ($r^n_i$ for $-1\leq i\leq n$)\end{tabular}                                   & \begin{tikzcd}b \arrow[r, "r^0_{-1}(b)"] & r^{-1}_{-1}(a) \\
+                                                                                          r^{-1}_{-1}(a) \arrow[r, "r^0_0(b)"] & b
+                                                                                        \end{tikzcd} &
       \begin{array}{c}
         \begin{tikzcd}
           & |[alias=F]|b \arrow[ddr, "q"] & \\\\
@@ -431,8 +429,11 @@ We illustrate below the difference between parametric degeneracy and connecting 
           b \arrow[rr, "q"{name=T, below}]\arrow[uur, "r^0_{-1}(b)"] && c \\
           \arrow[from=F, to=T, double, shorten = 2mm, "r^1_1(q)" description]
         \end{tikzcd}
-      \end{array}                                                                                                                    \\[-8mm]
-      \begin{tabular}{l}connecting degeneracy\\($s^n_i$ for $-1< i \leq n$)\end{tabular} & \begin{tikzcd}b \arrow[r, "s^0_0(b)"] & b\end{tikzcd}        &
+      \end{array}                                                                                                                 \\[-8mm]
+      \begin{tabular}{l}
+        connecting degeneracy     \\
+        duplicating direction $i$ \\
+        ($s^n_i$ for $-1< i \leq n$)\end{tabular}                                     & \begin{tikzcd}b \arrow[r, "s^0_0(b)"] & b\end{tikzcd}        &
       \begin{tikzcd}
         & |[alias=F]|b \arrow[ddr, "q"] & \\\\
         b \arrow[rr, "q"{name=T, below}]\arrow[uur, "s^0_0(b)"] && c \\
@@ -445,12 +446,13 @@ We illustrate below the difference between parametric degeneracy and connecting 
       \end{tikzcd}
       \\
 
-                                                                                         & n=0, \nu=2                                                   & n=1, \nu=2                                          \\
+                                                                                      & n=0, \nu=2                                                   & n=1, \nu=2                                          \\
       \\
-      \begin{tabular}{l}source of dimension $n$\end{tabular}                             & b                                                            & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\
+      \begin{tabular}{l}source of dimension $n$\end{tabular}                          & b                                                            & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\
       \begin{tabular}{l}
         parametric degeneracy \\
-        ($r^n_i$ for $i\leq n$)\end{tabular}                                             & \begin{tikzcd}b \arrow[r, "r^0_0(b)"] & b\end{tikzcd}        &
+        along direction $i$   \\
+        ($r^n_i$ for $i\leq n$)\end{tabular}                                          & \begin{tikzcd}b \arrow[r, "r^0_0(b)"] & b\end{tikzcd}        &
       \begin{tikzcd}
         b \arrow[rr, "q"{name=F}']\arrow[dd, "r^0_0(b)"] && c \arrow[dd, "r^0_0(c)"'] \\\\
         b \arrow[rr, "q"{name=T, below}] && c \\
@@ -460,10 +462,12 @@ We illustrate below the difference between parametric degeneracy and connecting 
         b \arrow[rr, "r^0_0(b)"{name=F}']\arrow[dd, "q"] && b \arrow[dd, "q"'] \\\\
         c \arrow[rr, "r^0_0(c)"{name=T, below}] && c \\
         & \arrow[from=F, to=T, double, shorten=1mm, "r^1_1(q)" description]
-      \end{tikzcd}                                                                                                                              \\[-8mm]
-      \begin{tabular}{l}connecting degeneracy \\
+      \end{tikzcd}                                                                                                                           \\[-8mm]
+      \begin{tabular}{l}connecting degeneracy  \\
+        duplicating direction $i$ \\
+        on side $\epsilon \in \{L,R\}$
         ($s^n_{i\epsilon}$ for $i < n$)
-      \end{tabular}                                         & \mbox{(none)}                                                &
+      \end{tabular}                                     & \mbox{(none)}                                                &
       \begin{tikzcd}[column sep=1cm]
         b \arrow[rr, "q"{name=F}']\arrow[dd, "q"] && c \arrow[dd, "r^0_0(c)"'] \\\\
         c \arrow[rr, "r^0_0(c)"{name=T, below}] && c \\
@@ -476,7 +480,7 @@ We illustrate below the difference between parametric degeneracy and connecting 
       \end{tikzcd}
     \end{array}
   \end{equation*}
-  \caption{Parametric degeneracies}
+  \caption{Parametric degeneracy and connecting degeneracy in the unary and binary case for $0$ and $1$-shapes}
 \end{figure}
 
 \subsection{Fibred-indexed correspondence}
@@ -575,7 +579,8 @@ Figure~\ref{fig:arch-restr} displays this recursive decomposition. Arrows run fr
 
 For an equality $e:x=y$ and $u:P(x)$, we write $\mathsf{rew}(e,u):P(y)$ for transport along $e$, leaving the family $P$ implicit. In each layer box, the rows labelled $e$ and $u$ identify the equality and the painting transported by the displayed function. In the restriction layer, the equality is $\relRestrRestr$ on frames. It makes the preceding-dimensional painting restriction have the required type; its proof is described in Section~\ref{sec:coherences}.
 
-\begin{center}
+\begin{figure}[H]
+  \centering
   \begin{tikzpicture}[scale=2]
     \draw[spanish-blue, fill=spanish-blue] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
     \draw[spanish-blue, fill=spanish-blue, nearly transparent] (0.6, 1) -- (0.6, 1.6) -- (1.6, 1.6) -- (1.6, 0.6) -- (1, 0.6);
@@ -599,7 +604,8 @@ For an equality $e:x=y$ and $u:P(x)$, we write $\mathsf{rew}(e,u):P(y)$ for tran
     \draw[russian-green, pattern=dots] (0.2, 1.1) -- (1.0, 1.1) -- (1.4, 1.5) -- (0.6, 1.5) -- (0.2, 1.1);
     \filldraw[russian-green] (0.8, 1.3) circle (0.6pt);
   \end{tikzpicture}
-\end{center}
+  \caption{Prefixes of a cube boundary: $\framep[3,1]$, $\framep[3,2]$, and $\framep[3,3]=\fullframe[3]$. The three layers supply the front–back, left–right, and top–bottom face paintings, respectively.}
+\end{figure}
 
 \begin{figure}[H]
   \centering
