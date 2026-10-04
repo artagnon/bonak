@@ -406,12 +406,12 @@ We illustrate below the difference between parametric degeneracy and connecting 
 
 \begin{equation*}
   \begin{array}{lcccr}
-                                                                                                                & n=0, \nu=1                                                  & n=1, \nu=1                                          \\
+                                                                                          & n=0, \nu=1                                                  & n=1, \nu=1                                          \\
     \\
-    \begin{tabular}{l}source of dimension $n$\\ (over some $a:X_{-1}$)\end{tabular}                             & b~~                                                         & \begin{tikzcd}b \arrow[r, "q"] & c\end{tikzcd}      \\[1mm]
-    \begin{tabular}{l}parametric degeneracy \\($r^n_i$ for $-1\leq i\leq n$)\end{tabular}           & \begin{tikzcd}b \arrow[r, "r^0_{-1}(b)"] & r^{-1}_{-1}(a)\\
-                                                                                                                    r^{-1}_{-1}(a) \arrow[r, "r^0_0(b)"] & b
-                                                                                                                  \end{tikzcd} &
+    \begin{tabular}{l}source of dimension $n$\\ (over some $a:X_{-1}$)\end{tabular}       & b~~                                                         & \begin{tikzcd}b \arrow[r, "q"] & c\end{tikzcd}      \\[1mm]
+    \begin{tabular}{l}parametric degeneracy \\($r^n_i$ for $-1\leq i\leq n$)\end{tabular} & \begin{tikzcd}b \arrow[r, "r^0_{-1}(b)"] & r^{-1}_{-1}(a)\\
+                                                                                              r^{-1}_{-1}(a) \arrow[r, "r^0_0(b)"] & b
+                                                                                            \end{tikzcd} &
     \begin{array}{c}
       \begin{tikzcd}
         & |[alias=F]|b \arrow[ddr, "q"] & \\\\
@@ -428,8 +428,8 @@ We illustrate below the difference between parametric degeneracy and connecting 
         b \arrow[rr, "q"{name=T, below}]\arrow[uur, "r^0_{-1}(b)"] && c \\
         \arrow[from=F, to=T, double, shorten = 2mm, "r^1_1(q)" description]
       \end{tikzcd}
-    \end{array}                                                                                                                                            \\[-8mm]
-    \begin{tabular}{l}connecting degeneracy\\($s^n_i$ for $-1< i \leq n$)\end{tabular}           & \begin{tikzcd}b \arrow[r, "s^0_0(b)"] & b\end{tikzcd}       &
+    \end{array}                                                                                                                      \\[-8mm]
+    \begin{tabular}{l}connecting degeneracy\\($s^n_i$ for $-1< i \leq n$)\end{tabular}    & \begin{tikzcd}b \arrow[r, "s^0_0(b)"] & b\end{tikzcd}       &
     \begin{tikzcd}
       & |[alias=F]|b \arrow[ddr, "q"] & \\\\
       b \arrow[rr, "q"{name=T, below}]\arrow[uur, "s^0_0(b)"] && c \\
@@ -442,10 +442,10 @@ We illustrate below the difference between parametric degeneracy and connecting 
     \end{tikzcd}
     \\
 
-                                                                                                                & n=0, \nu=2                                                  & n=1, \nu=2                                          \\
+                                                                                          & n=0, \nu=2                                                  & n=1, \nu=2                                          \\
     \\
-    \begin{tabular}{l}source of dimension $n$\end{tabular}                                                      & b~~                                                         & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\[1mm]
-    \begin{tabular}{l}parametric degeneracy\\($r^n_i$ for $i\leq n$)\end{tabular}             & \begin{tikzcd}b \arrow[r, "r^0_0(b)"] & b\end{tikzcd}       &
+    \begin{tabular}{l}source of dimension $n$\end{tabular}                                & b~~                                                         & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\[1mm]
+    \begin{tabular}{l}parametric degeneracy\\($r^n_i$ for $i\leq n$)\end{tabular}         & \begin{tikzcd}b \arrow[r, "r^0_0(b)"] & b\end{tikzcd}       &
     \begin{tikzcd}
       b \arrow[rr, "q"{name=F}']\arrow[dd, "r^0_0(b)"] && c \arrow[dd, "r^0_0(c)"'] \\\\
       b \arrow[rr, "q"{name=T, below}] && c \\
@@ -455,7 +455,7 @@ We illustrate below the difference between parametric degeneracy and connecting 
       b \arrow[rr, "r^0_0(b)"{name=F}']\arrow[dd, "q"] && b \arrow[dd, "q"'] \\\\
       c \arrow[rr, "r^0_0(c)"{name=T, below}] && c \\
       & \arrow[from=F, to=T, double, shorten=1mm, "r^1_1(q)" description]
-    \end{tikzcd}                                                                                                                                                      \\[-8mm]
+    \end{tikzcd}                                                                                                                                \\[-8mm]
     \begin{tabular}{l}connecting degeneracy\\($s^n_{i\epsilon}$ for $i < n$)\end{tabular} & \mbox{(none)}                                               &
     \begin{tikzcd}[column sep=1cm]
       b \arrow[rr, "q"{name=F}']\arrow[dd, "q"] && c \arrow[dd, "r^0_0(c)"'] \\\\
@@ -565,6 +565,32 @@ These operations follow the dependent-pair decomposition. Restricting a successo
 Figure~\ref{fig:arch-restr} displays this recursive decomposition. Arrows run from an input to the row that uses it; dashed arrows bring in painting operations from the preceding dimension. The boxes show the principal components of the defining terms, with arguments implicit. Inequality rows give the domains of the named operations and coherences; all direction indices are nonnegative. Recursive calls instantiate these bounds at the shifted indices shown in the tables.
 
 For an equality $e:x=y$ and $u:P(x)$, we write $\mathsf{rew}(e,u):P(y)$ for transport along $e$, leaving the family $P$ implicit. In each layer box, the rows labelled $e$ and $u$ identify the equality and the painting transported by the displayed function. In the restriction layer, the equality is $\relRestrRestr$ on frames. It makes the preceding-dimensional painting restriction have the required type; its proof is described in Section~\ref{sec:coherences}.
+
+\begin{center}
+  \begin{tikzpicture}[scale=2]
+    \draw[spanish-blue, fill=spanish-blue] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
+    \draw[spanish-blue, fill=spanish-blue, nearly transparent] (0.6, 1) -- (0.6, 1.6) -- (1.6, 1.6) -- (1.6, 0.6) -- (1, 0.6);
+  \end{tikzpicture}
+  \;\;
+  \begin{tikzpicture}[scale=2]
+    \draw[spanish-blue, fill=spanish-blue] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
+    \draw[spanish-blue, fill=spanish-blue, nearly transparent] (0.6, 1) -- (0.6, 1.6) -- (1.6, 1.6) -- (1.6, 0.6) -- (1.0, 0.6);
+    \draw[raspberry, pattern=dots] (1.1, 1.1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1.1, 0.1) -- (1.1, 1.1);
+    \draw[raspberry] (1.3, 1.3) -- (1.3, 0.3);
+    \draw[raspberry, pattern=dots] (0.1, 1.1) -- (0.5, 1.5) -- (0.5, 1.1);
+    \draw[raspberry] (0.3, 1.3) -- (0.3, 1.1);
+  \end{tikzpicture}
+  \;\;
+  \begin{tikzpicture}[scale=2]
+    \draw[spanish-blue, fill=spanish-blue] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
+    \draw[spanish-blue, fill=spanish-blue, nearly transparent] (0.6, 1) -- (0.6, 1.6) -- (1.6, 1.6) -- (1.6, 0.6) -- (1.0, 0.6);
+    \draw[raspberry, pattern=dots] (1.1, 1.1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1.1, 0.1) -- (1.1, 1.1);
+    \draw[raspberry] (1.3, 1.3) -- (1.3, 0.3);
+    \draw[raspberry] (0.1, 1.1) -- (0.5, 1.5);
+    \draw[russian-green, pattern=dots] (0.2, 1.1) -- (1.0, 1.1) -- (1.4, 1.5) -- (0.6, 1.5) -- (0.2, 1.1);
+    \filldraw[russian-green] (0.8, 1.3) circle (0.6pt);
+  \end{tikzpicture}
+\end{center}
 
 \begin{figure}[H]
   \centering
