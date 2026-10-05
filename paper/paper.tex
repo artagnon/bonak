@@ -399,89 +399,46 @@ Despite a common terminology, degeneracies in simplicial sets~\cite{fri08} and i
 
 We call the axis-duplicating operation a \emph{connecting degeneracy} and the axis-inserting operation \emph{parametric degeneracy}. The unary case of parametric degeneracies have already been considered in the literature, e.g. implicitly in type theories with internal parametricity~\cite{moulin16,bernardy12} and more explicitly in Parametric Type Theory~\cite{bernardy15} where an interpretation in terms of a unary form of cubical sets is given. The binary case of connecting degeneracies happens to be similar to connections in (binary) cubical sets, where it should be noted that for arity $2$, there is one connection for each $\epsilon \in \{1,2\}$ (resulting in the ``conjunctive''/``meet'' and ``disjunctive''/``join'' variants~\cite{Grandis}, or also positive and negative~\cite{BrownHiggins}) and these connections additionally need parametric degeneracies to fill the faces on side $\epsilon' \neq \epsilon$.
 
-We illustrate below the difference between parametric degeneracy and connecting degeneracy in the unary and binary case for $0$ and $1$-shapes, adopting the convention of starting from dimension $-1$ in the unary case and from dimension 0 in the binary case. In particular, writing $X_{-1}$ for the augmentation set in the unary case, there is a parametric degeneracy $r^{-1}_{-1}(a)$ for any $a:X_{-1}$.
+In Table~\ref{tab:dgn-flavors}, dimensions start at $-1$ in the unary case and at $0$ in the binary case. In particular, writing $X_{-1}$ for the augmentation set in the unary case, there is a parametric degeneracy $r^{-1}_{-1}(a)$ for any $a:X_{-1}$.
 
-\begin{figure}[H]
-  \begin{equation*}
-    \begin{array}{lcccr}
-                                                                                      & n=0, \nu=1                                                   & n=1, \nu=1                                          \\
-      \\
-      \begin{tabular}{l}source of dimension $n$\\ (over some $a:X_{-1}$)\end{tabular} & b                                                            & \begin{tikzcd}b \arrow[r, "q"] & c\end{tikzcd}      \\
-      \begin{tabular}{l}
-        parametric degeneracy \\
-        along direction $i$   \\
-        ($r^n_i$ for $-1\leq i\leq n$)\end{tabular}                                   & \begin{tikzcd}b \arrow[r, "r^0_{-1}(b)"] & r^{-1}_{-1}(a) \\
-                                                                                          r^{-1}_{-1}(a) \arrow[r, "r^0_0(b)"] & b
-                                                                                        \end{tikzcd} &
-      \begin{array}{c}
-        \begin{tikzcd}
-          & |[alias=F]|b \arrow[ddr, "q"] & \\\\
-          r^{-1}_{-1}(a) \arrow[rr, "r^0_0(c)"{name=T, below}]\arrow[uur, "r^0_0(b)"] && c \\
-          \arrow[from=F, to=T, double, shorten = 2mm, "r^1_{-1}(q)" description]
-        \end{tikzcd}
-        \begin{tikzcd}
-          & |[alias=F]|c \arrow[ddr, "r^0_{-1}(c)"] & \\\\
-          b \arrow[rr, "r^0_{-1}(b)"{name=T, below}]\arrow[uur, "q"] && r^{-1}_{-1}(a) \\
-          \arrow[from=F, to=T, double, shorten = 2mm, "r^1_{0}(q)" description]
-        \end{tikzcd} \\[-8mm]
-        \begin{tikzcd}
-          & |[alias=F]|r^{-1}_{-1}(a) \arrow[ddr, "r^0_0(c)"] & \\\\
-          b \arrow[rr, "q"{name=T, below}]\arrow[uur, "r^0_{-1}(b)"] && c \\
-          \arrow[from=F, to=T, double, shorten = 2mm, "r^1_1(q)" description]
-        \end{tikzcd}
-      \end{array}                                                                                                                 \\[-8mm]
-      \begin{tabular}{l}
-        connecting degeneracy     \\
-        duplicating direction $i$ \\
-        ($s^n_i$ for $-1< i \leq n$)\end{tabular}                                     & \begin{tikzcd}b \arrow[r, "s^0_0(b)"] & b\end{tikzcd}        &
-      \begin{tikzcd}
-        & |[alias=F]|b \arrow[ddr, "q"] & \\\\
-        b \arrow[rr, "q"{name=T, below}]\arrow[uur, "s^0_0(b)"] && c \\
-        \arrow[from=F, to=T, double, shorten = 2mm, "s^1_{0}(q)" description]
-      \end{tikzcd}
-      \begin{tikzcd}
-        & |[alias=F]|c \arrow[ddr, "s^0_0(c)"] & \\\\
-        b \arrow[rr, "q"{name=T, below}]\arrow[uur, "q"] && c \\
-        \arrow[from=F, to=T, double, shorten = 2mm, "s^1_{1}(q)" description]
-      \end{tikzcd}
-      \\
-
-                                                                                      & n=0, \nu=2                                                   & n=1, \nu=2                                          \\
-      \\
-      \begin{tabular}{l}source of dimension $n$\end{tabular}                          & b                                                            & \begin{tikzcd}b \arrow[r, dash,"q"] & c\end{tikzcd} \\
-      \begin{tabular}{l}
-        parametric degeneracy \\
-        along direction $i$   \\
-        ($r^n_i$ for $i\leq n$)\end{tabular}                                          & \begin{tikzcd}b \arrow[r, "r^0_0(b)"] & b\end{tikzcd}        &
-      \begin{tikzcd}
-        b \arrow[rr, "q"{name=F}']\arrow[dd, "r^0_0(b)"] && c \arrow[dd, "r^0_0(c)"'] \\\\
-        b \arrow[rr, "q"{name=T, below}] && c \\
-        & \arrow[from=F, to=T, double, shorten=1mm, "r^1_0(q)" description]
-      \end{tikzcd}
-      \begin{tikzcd}
-        b \arrow[rr, "r^0_0(b)"{name=F}']\arrow[dd, "q"] && b \arrow[dd, "q"'] \\\\
-        c \arrow[rr, "r^0_0(c)"{name=T, below}] && c \\
-        & \arrow[from=F, to=T, double, shorten=1mm, "r^1_1(q)" description]
-      \end{tikzcd}                                                                                                                           \\[-8mm]
-      \begin{tabular}{l}connecting degeneracy  \\
-        duplicating direction $i$ \\
-        on side $\epsilon \in \{L,R\}$
-        ($s^n_{i\epsilon}$ for $i < n$)
-      \end{tabular}                                     & \mbox{(none)}                                                &
-      \begin{tikzcd}[column sep=1cm]
-        b \arrow[rr, "q"{name=F}']\arrow[dd, "q"] && c \arrow[dd, "r^0_0(c)"'] \\\\
-        c \arrow[rr, "r^0_0(c)"{name=T, below}] && c \\
-        \arrow[from=F, to=T, double, shorten=1mm, "s^1_{0L}(q)" description]
-      \end{tikzcd}
-      \begin{tikzcd}[column sep=1cm]
-        b \arrow[rr, "r^0_0(b)"{name=F}']\arrow[dd, "r^0_0(b)"] && b \arrow[dd, "q"'] \\\\
-        b \arrow[rr, "q"{name=T, below}] && c \\
-        \arrow[from=F, to=T, double, shorten=1mm, "s^1_{0R}(q)" description]
-      \end{tikzcd}
-    \end{array}
-  \end{equation*}
-  \caption{Parametric degeneracy and connecting degeneracy in the unary and binary case for $0$ and $1$-shapes}
-\end{figure}
+\begin{table}[H]
+  \centering
+  \small
+  \input{figures/degeneracy-comparison-style.tex}
+  \begin{tabularx}{\linewidth}{@{}>{\centering\arraybackslash}m{0.152\linewidth}YY@{}}
+    \toprule
+    Source & Parametric degeneracies & Connecting degeneracies \\
+    \midrule
+    \multicolumn{3}{c}{Unary case ($\nu=1$), over $a:X_{-1}$} \\[0.4em]
+    & $r^n_i$, $-1\leq i\leq n$ & $s^n_i$, $-1<i\leq n$ \\
+    \midrule
+    \makecell{$n=0$ \\ $b$}
+    & \makecell{\comparisonEdge{b}{r^{-1}_{-1}(a)}{r^0_{-1}(b)}{} \\[1em]
+        \comparisonEdge{r^{-1}_{-1}(a)}{b}{r^0_0(b)}{}}
+    & \comparisonEdge{b}{b}{s^0_0(b)}{} \\[1em]
+    \makecell{$n=1$ \\ \comparisonEdge{b}{c}{q}{}}
+    & \begin{tabular}{@{}cc@{}}
+        \comparisonTriangle{b}{r^{-1}_{-1}(a)}{c}{r^0_0(b)}{q}{r^0_0(c)}{r^1_{-1}(q)} &
+        \comparisonTriangle{c}{b}{r^{-1}_{-1}(a)}{q}{r^0_{-1}(c)}{r^0_{-1}(b)}{r^1_0(q)} \\
+        \multicolumn{2}{c}{\comparisonTriangle{r^{-1}_{-1}(a)}{b}{c}{r^0_{-1}(b)}{r^0_0(c)}{q}{r^1_1(q)}}
+      \end{tabular}
+    & \comparisonTriangle{b}{b}{c}{s^0_0(b)}{q}{q}{s^1_0(q)}\hspace{3mm}%
+      \comparisonTriangle{c}{b}{c}{q}{s^0_0(c)}{q}{s^1_1(q)} \\
+    \midrule
+    \multicolumn{3}{c}{Binary case ($\nu=2$)} \\[0.4em]
+    & $r^n_i$, $i\leq n$ & $s^n_{i\epsilon}$, $i<n$, $\epsilon\in\{L,R\}$ \\
+    \midrule
+    \makecell{$n=0$ \\ $b$} & \comparisonEdge{b}{b}{r^0_0(b)}{} & None \\[1em]
+    \makecell{$n=1$ \\ \comparisonEdge{b}{c}{q}{-}}
+    & \comparisonSquare{b}{c}{b}{c}{q}{r^0_0(b)}{r^0_0(c)}{q}{r^1_0(q)}\hspace{3mm}%
+      \comparisonSquare{b}{b}{c}{c}{r^0_0(b)}{q}{q}{r^0_0(c)}{r^1_1(q)}
+    & \comparisonSquare{b}{c}{c}{c}{q}{q}{r^0_0(c)}{r^0_0(c)}{s^1_{0L}(q)}\hspace{3mm}%
+      \comparisonSquare{b}{b}{b}{c}{r^0_0(b)}{r^0_0(b)}{q}{q}{s^1_{0R}(q)} \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Parametric and connecting degeneracies of $0$- and $1$-dimensional shapes in the unary and binary cases. Parametric degeneracies insert a new axis; connecting degeneracies duplicate an existing axis.}
+  \label{tab:dgn-flavors}
+\end{table}
 
 \subsection{Fibred-indexed correspondence}
 
@@ -567,9 +524,26 @@ The indexed structure on the left, including both the underlying $\nu$--set and 
 
 We recall the indexed representation of $\nu$--sets~\cite{hr25,hr26}. A \emph{layer} groups the face data for one direction, with one component for each label in $\nu$. A \emph{frame} records a prefix of these boundary layers; a \emph{full frame} contains all of them. A \emph{painting} over a frame supplies the remaining boundary layers and a cell over the completed boundary.
 
-At construction level $n$, the earlier families $X_0,\ldots,X_{n-1}$ determine the type of full frames, each consisting of $n$ layers, and the next family $X_n$ assigns an h--set of cells to each full frame. Level $n$ corresponds to geometric dimension $n-1$ in the augmented unary case and to dimension $n$ in the binary case.
+At construction level $n$, we first specify a boundary and then consider the cells that fill it. The earlier families $X_0,\ldots,X_{n-1}$ determine the type of full frames, each consisting of $n$ layers; for each full frame $d$, the next family supplies the h--set $X_n(d)$ of cells with that boundary. Level $n$ corresponds to geometric dimension $n-1$ in the augmented unary case and to dimension $n$ in the binary case.
 
 Let $p\leq n$ be the prefix height and $k:=n-p$ the number of remaining layers. We write $\framep[n][p]$ for frames of height $p$, $\layer[n][p][][d=d]$ for the next layer over a frame $d$, and $\painting[n][p][][d=d]$ for its paintings. A full frame has type $\fullframe[n]=\framep[n][n]$, so $k=0$; its paintings are cells of $X_n(d)$. A successor frame is a dependent pair $(d,l)$ of a frame and its next layer. A painting with layers left to supply is a pair $(l,c)$ of its next layer and remaining painting.
+
+Figure~\ref{fig:cube-prefixes} illustrates the prefixes for $n=3$ and $\nu=2$. The first layer supplies the left and right face paintings. The next adds the bottom and top face paintings over the edges already supplied by the first layer. The final layer adds the front and back face paintings over their completed boundaries, yielding the full frame. Thus each new layer uses the boundary data in the preceding prefix. A painting over the first prefix supplies the remaining four faces, compatible with the two already supplied, together with a cube cell filling the completed boundary. Over the full frame, a painting supplies only the cube cell.
+
+\begin{figure}[H]
+  \centering
+  \begingroup
+  \input{figures/cubical-boundaries-style.tex}
+  \begin{tabularx}{\linewidth}{YYY}
+    \cubePicture{\cubeLastLayerFirst} &
+    \cubePicture{\cubeLastLayerFirst\cubeLastLayerSecond} &
+    \cubePicture{\cubeLastLayerFirst\cubeLastLayerSecond\cubeLastLayerThird} \\\addlinespace[0.6em]
+    $\framep[3][1]$ & $\framep[3][2]$ & $\framep[3][3]=\fullframe[3]$
+  \end{tabularx}
+  \endgroup
+  \caption{Successive prefixes of a cube boundary. Each panel adds the next pair of opposite face paintings, retaining the boundary data already supplied.}
+  \label{fig:cube-prefixes}
+\end{figure}
 
 Restriction means taking a face. The operation $\restrf[n][p][][q][\epsilon]$ maps a frame in $\framep[n+1][p]$ to one in $\framep[n][p]$. Its relative index $q\leq k$ denotes direction $p+q$, and $\epsilon\in\nu$ selects a face in that direction. The corresponding layer and painting operations are written $\restrl$ and $\restrp$; a painting restriction includes the restriction of its indexing frame. Each component of a layer is a lower-dimensional painting over a suitable restricted frame.
 
@@ -581,34 +555,6 @@ For an equality $e:x=y$ and $u:P(x)$, we write $\mathsf{rew}(e,u):P(y)$ for tran
 
 \begin{figure}[H]
   \centering
-  \begin{tikzpicture}[scale=2]
-    \draw[spanish-blue, fill=spanish-blue] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-    \draw[spanish-blue, fill=spanish-blue, nearly transparent] (0.6, 1) -- (0.6, 1.6) -- (1.6, 1.6) -- (1.6, 0.6) -- (1, 0.6);
-  \end{tikzpicture}
-  \;\;
-  \begin{tikzpicture}[scale=2]
-    \draw[spanish-blue, fill=spanish-blue] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-    \draw[spanish-blue, fill=spanish-blue, nearly transparent] (0.6, 1) -- (0.6, 1.6) -- (1.6, 1.6) -- (1.6, 0.6) -- (1.0, 0.6);
-    \draw[raspberry, pattern=dots] (1.1, 1.1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1.1, 0.1) -- (1.1, 1.1);
-    \draw[raspberry] (1.3, 1.3) -- (1.3, 0.3);
-    \draw[raspberry, pattern=dots] (0.1, 1.1) -- (0.5, 1.5) -- (0.5, 1.1);
-    \draw[raspberry] (0.3, 1.3) -- (0.3, 1.1);
-  \end{tikzpicture}
-  \;\;
-  \begin{tikzpicture}[scale=2]
-    \draw[spanish-blue, fill=spanish-blue] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-    \draw[spanish-blue, fill=spanish-blue, nearly transparent] (0.6, 1) -- (0.6, 1.6) -- (1.6, 1.6) -- (1.6, 0.6) -- (1.0, 0.6);
-    \draw[raspberry, pattern=dots] (1.1, 1.1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1.1, 0.1) -- (1.1, 1.1);
-    \draw[raspberry] (1.3, 1.3) -- (1.3, 0.3);
-    \draw[raspberry] (0.1, 1.1) -- (0.5, 1.5);
-    \draw[russian-green, pattern=dots] (0.2, 1.1) -- (1.0, 1.1) -- (1.4, 1.5) -- (0.6, 1.5) -- (0.2, 1.1);
-    \filldraw[russian-green] (0.8, 1.3) circle (0.6pt);
-  \end{tikzpicture}
-  \caption{Prefixes of a cube boundary: $\framep[3,1]$, $\framep[3,2]$, and $\framep[3,3]=\fullframe[3]$. The three layers supply the front–back, left–right, and top–bottom face paintings, respectively.}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
   \input{figures/architecture-restr.tex}
   \caption{Construction of restrictions on layers, frames, and paintings. The frame coherence types are developed together with frame restriction.}
   \label{fig:arch-restr}
@@ -616,192 +562,36 @@ For an equality $e:x=y$ and $u:P(x)$, we write $\mathsf{rew}(e,u):P(y)$ for tran
 
 \subsection{Intuition for our construction}
 
-The boundary of a degenerate cell contains a repeated layer at the inserted direction, together with degeneracies of the original faces. This suggests building the boundary layer by layer, inserting the repeated layer when the prefix reaches the chosen direction. Figure~\ref{fig:degeneracy-layers} illustrates the three insertion positions for a square.
+The boundary of a degenerate cell contains a repeated layer at the inserted direction, together with degeneracies of the original faces. This suggests building the boundary layer by layer, inserting the repeated layer when the prefix reaches the chosen direction. Figure~\ref{fig:degeneracy-layers} illustrates the three insertion positions for a square, showing the separate layers and their assembled full frame.
 
 \begin{figure}[H]
-  \begin{tabularx}{\linewidth}{c c c c c}
+  \centering
+  \begingroup
+  \input{figures/cubical-boundaries-style.tex}
+  \small
+  \begin{tabularx}{\linewidth}{@{}YYYYYY@{}}
     \toprule
-    \begin{tikzpicture}[scale=1.5]
-      \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$0$};
-      \draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$1$};
-    \end{tikzpicture}                                                                                                                         & \begin{tikzpicture}[scale=1.5]
-                                                                                                                                                  \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-                                                                                                                                                \end{tikzpicture} &
-    \begin{tikzpicture}[scale=1.5]
-      \draw[spanish-blue] (0, 0) -- (0, 1);
-      \draw[spanish-blue] (1, 1) -- (1, 0);
-      \filldraw[spanish-blue] (0, 0) circle (1pt);
-      \filldraw[spanish-blue] (1, 0) circle (1pt);
-      \filldraw[spanish-blue] (1, 1) circle (1pt);
-      \filldraw[spanish-blue] (0, 1) circle (1pt);
-    \end{tikzpicture}                                                                                                                                             &
-    \begin{tikzpicture}[scale=1.5]
-      \draw[raspberry] (0, 0) -- (1, 0);
-      \draw[raspberry] (1, 1) -- (0, 1);
-    \end{tikzpicture}                                                                                                                                                                                                           \\
-    \begin{tikzpicture}[scale=1.5]
-      \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$1$};
-      \draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$2$};
-      \draw[->, russian-green] (0, 0) -- (0.75, 0.75) node at (0.75, 0.95) {$0$};
-    \end{tikzpicture}                                                                                                              &
-    \begin{tikzpicture}[scale=1.5]
-      \draw[gray20] (0, 0) -- (1, 0);
-      \draw[gray20] (1, 1) -- (0, 1);
-      \draw[gray20] (0.5, 0.5) -- (1.5, 0.5);
-      \draw[gray20] (1.5, 1.5) -- (0.5, 1.5);
-      \draw[gray20] (0, 0) -- (0, 1);
-      \draw[gray20] (1, 1) -- (1, 0);
-      \draw[gray20] (0.5, 0.5) -- (0.5, 1.5);
-      \draw[gray20] (1.5, 1.5) -- (1.5, 0.5);
-      \draw[gray20] (1, 1) -- (1.5, 1.5);
-      \draw[gray20] (0, 1) -- (0.5, 1.5);
-      \draw[gray20] (1.5, 0.5) -- (1, 0);
-      \draw[gray20] (0.5, 0.5) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (0.5, 0.5) -- (1.5, 0.5) -- (1.5, 1.5) -- (0.5, 1.5) -- (0.5, 0.5);
-      \fill[pattern=dots, pattern color=russian-green] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
-      \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
-      \fill[pattern=dots, pattern color=russian-green] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);                                                               \end{tikzpicture} &
-    \begin{tikzpicture}[scale=1.5]
-      \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (0.5, 0.5) -- (1.5, 0.5) -- (1.5, 1.5) -- (0.5, 1.5) -- (0.5, 0.5);
-      \draw[raspberry] (0, 0) -- (1, 0);
-      \draw[raspberry] (1, 1) -- (0, 1);
-      \draw[raspberry] (0.5, 0.5) -- (1.5, 0.5);
-      \draw[raspberry] (1.5, 1.5) -- (0.5, 1.5);
-      \draw[spanish-blue] (0, 0) -- (0, 1);
-      \draw[spanish-blue] (1, 1) -- (1, 0);
-      \draw[spanish-blue] (0.5, 0.5) -- (0.5, 1.5);
-      \draw[spanish-blue] (1.5, 1.5) -- (1.5, 0.5);
-      \filldraw[spanish-blue] (0, 0) circle (1pt);
-      \filldraw[spanish-blue] (1, 0) circle (1pt);
-      \filldraw[spanish-blue] (1, 1) circle (1pt);
-      \filldraw[spanish-blue] (0, 1) circle (1pt);
-      \filldraw[spanish-blue] (0.5, 0.5) circle (1pt);
-      \filldraw[spanish-blue] (0.5, 1.5) circle (1pt);
-      \filldraw[spanish-blue] (1.5, 1.5) circle (1pt);
-      \filldraw[spanish-blue] (1.5, 0.5) circle (1pt);
-    \end{tikzpicture}                                                                     &
-    \begin{tikzpicture}[scale=1.5]
-      \fill[pattern=dots, pattern color=spanish-blue] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
-      \fill[pattern=dots, pattern color=spanish-blue] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);
-      \draw[spanish-blue] (1, 1) -- (1.5, 1.5);
-      \draw[spanish-blue] (0, 1) -- (0.5, 1.5);
-      \draw[spanish-blue] (1.5, 0.5) -- (1, 0);
-      \draw[spanish-blue] (0.5, 0.5) -- (0, 0);
-    \end{tikzpicture}                                                                                  &
-    \begin{tikzpicture}[scale=1.5]
-      \fill[pattern=dots, pattern color=raspberry] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
-      \fill[pattern=dots, pattern color=raspberry] (0, 0) -- (1, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
-    \end{tikzpicture}                                                                                                                                         \\
-    \begin{tikzpicture}[scale=1.5]
-      \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$0$};
-      \draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$2$};
-      \draw[->, russian-green] (0, 0) -- (0.75, 0.75) node at (0.75, 0.95) {$1$};
-    \end{tikzpicture}                                                                                                              &
-    \begin{tikzpicture}[scale=1.5]
-      \draw[gray20] (0, 0) -- (1, 0);
-      \draw[gray20] (1, 1) -- (0, 1);
-      \draw[gray20] (0.5, 0.5) -- (1.5, 0.5);
-      \draw[gray20] (1.5, 1.5) -- (0.5, 1.5);
-      \draw[gray20] (0, 0) -- (0, 1);
-      \draw[gray20] (1, 1) -- (1, 0);
-      \draw[gray20] (0.5, 0.5) -- (0.5, 1.5);
-      \draw[gray20] (1.5, 1.5) -- (1.5, 0.5);
-      \draw[gray20] (1, 1) -- (1.5, 1.5);
-      \draw[gray20] (0, 1) -- (0.5, 1.5);
-      \draw[gray20] (1.5, 0.5) -- (1, 0);
-      \draw[gray20] (0.5, 0.5) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (0.5, 0.5) -- (1.5, 0.5) -- (1.5, 1.5) -- (0.5, 1.5) -- (0.5, 0.5);
-      \fill[pattern=dots, pattern color=russian-green] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
-      \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
-      \fill[pattern=dots, pattern color=russian-green] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);                                                               \end{tikzpicture} &
-    \begin{tikzpicture}[scale=1.5]
-      \fill[pattern=dots, pattern color=spanish-blue] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
-      \fill[pattern=dots, pattern color=spanish-blue] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);
-      \draw[spanish-blue] (1, 1) -- (1, 0);
-      \draw[spanish-blue] (0, 1) -- (0, 0);
-      \draw[spanish-blue] (1.5, 0.5) -- (1.5, 1.5);
-      \draw[spanish-blue] (0.5, 0.5) -- (0.5, 1.5);
-      \filldraw[spanish-blue] (1, 1) circle (1pt);
-      \filldraw[spanish-blue] (1.5, 1.5) circle (1pt);
-      \filldraw[spanish-blue] (1.5, 0.5) circle (1pt);
-      \filldraw[spanish-blue] (1, 0) circle (1pt);
-      \filldraw[spanish-blue] (0, 1) circle (1pt);
-      \filldraw[spanish-blue] (0.5, 1.5) circle (1pt);
-      \filldraw[spanish-blue] (0.5, 0.5) circle (1pt);
-      \filldraw[spanish-blue] (0, 0) circle (1pt);
-    \end{tikzpicture}                                                                                  &
-    \begin{tikzpicture}[scale=1.5]
-      \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (0.5, 0.5) -- (1.5, 0.5) -- (1.5, 1.5) -- (0.5, 1.5) -- (0.5, 0.5);
-      \draw[raspberry] (0, 0) -- (1, 0);
-      \draw[raspberry] (1, 1) -- (0, 1);
-      \draw[raspberry] (0.5, 0.5) -- (1.5, 0.5);
-      \draw[raspberry] (1.5, 1.5) -- (0.5, 1.5);
-    \end{tikzpicture}                                                                     &
-    \begin{tikzpicture}[scale=1.5]
-      \fill[pattern=dots, pattern color=raspberry] (0, 1) -- (1.0, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
-      \fill[pattern=dots, pattern color=raspberry] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
-    \end{tikzpicture}                                                                                                                                       \\
-    \begin{tikzpicture}[scale=1.5]
-      \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$0$};
-      \draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$1$};
-      \draw[->, russian-green] (0, 0) -- (0.75, 0.75) node at (0.75, 0.95) {$2$};
-    \end{tikzpicture}                                                                                                              &
-    \begin{tikzpicture}[scale=1.5]
-      \draw[gray20] (0, 0) -- (1, 0);
-      \draw[gray20] (1, 1) -- (0, 1);
-      \draw[gray20] (0.5, 0.5) -- (1.5, 0.5);
-      \draw[gray20] (1.5, 1.5) -- (0.5, 1.5);
-      \draw[gray20] (0, 0) -- (0, 1);
-      \draw[gray20] (1, 1) -- (1, 0);
-      \draw[gray20] (0.5, 0.5) -- (0.5, 1.5);
-      \draw[gray20] (1.5, 1.5) -- (1.5, 0.5);
-      \draw[gray20] (1, 1) -- (1.5, 1.5);
-      \draw[gray20] (0, 1) -- (0.5, 1.5);
-      \draw[gray20] (1.5, 0.5) -- (1, 0);
-      \draw[gray20] (0.5, 0.5) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (0.5, 0.5) -- (1.5, 0.5) -- (1.5, 1.5) -- (0.5, 1.5) -- (0.5, 0.5);
-      \fill[pattern=dots, pattern color=russian-green] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
-      \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
-      \fill[pattern=dots, pattern color=russian-green] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);                                                               \end{tikzpicture} &
-    \begin{tikzpicture}[scale=1.5]
-      \fill[pattern=dots, pattern color=spanish-blue] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
-      \fill[pattern=dots, pattern color=spanish-blue] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);
-      \draw[spanish-blue] (1, 1) -- (1, 0);
-      \draw[spanish-blue] (0, 1) -- (0, 0);
-      \draw[spanish-blue] (1.5, 0.5) -- (1.5, 1.5);
-      \draw[spanish-blue] (0.5, 0.5) -- (0.5, 1.5);
-      \filldraw[spanish-blue] (1, 1) circle (1pt);
-      \filldraw[spanish-blue] (1.5, 1.5) circle (1pt);
-      \filldraw[spanish-blue] (1.5, 0.5) circle (1pt);
-      \filldraw[spanish-blue] (1, 0) circle (1pt);
-      \filldraw[spanish-blue] (0, 1) circle (1pt);
-      \filldraw[spanish-blue] (0.5, 1.5) circle (1pt);
-      \filldraw[spanish-blue] (0.5, 0.5) circle (1pt);
-      \filldraw[spanish-blue] (0, 0) circle (1pt);
-    \end{tikzpicture}                                                                                  &
-    \begin{tikzpicture}[scale=1.5]
-      \fill[pattern=dots, pattern color=raspberry] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
-      \fill[pattern=dots, pattern color=raspberry] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
-      \draw[raspberry] (0, 1) -- (1, 1);
-      \draw[raspberry] (1.5, 1.5) -- (0.5, 1.5);
-      \draw[raspberry] (0, 0) -- (1, 0);
-      \draw[raspberry] (1.5, 0.5) -- (0.5, 0.5);
-    \end{tikzpicture}                                                                                   &
-    \begin{tikzpicture}[scale=1.5]
-      \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (0.5, 0.5) -- (1.5, 0.5) -- (1.5, 1.5) -- (0.5, 1.5) -- (0.5, 0.5);
-    \end{tikzpicture}                                                                                                                         \\
+    Directions & Cell & Layer $0$ & Layer $1$ & Layer $2$ & Full frame \\
+    \midrule
+    \cubePicture{\cubeSourceAxes} & \cubePicture{\cubeSourceCell} &
+    \cubePicture{\cubeSourceLayerFirst} & \cubePicture{\cubeSourceLayerSecond} &
+    --- & \cubePicture{\cubeSourceLayerFirst\cubeSourceLayerSecond} \\\addlinespace[0.7em]
+    \cubePicture{\cubeFirstAxes} & \cubePicture{\cubeFirstCell} &
+    \cubePicture{\cubeFirstLayerFirst} & \cubePicture{\cubeFirstLayerSecond} &
+    \cubePicture{\cubeFirstLayerThird} &
+    \cubePicture{\cubeFirstLayerFirst\cubeFirstLayerSecond\cubeFirstLayerThird} \\\addlinespace[0.7em]
+    \cubePicture{\cubeMiddleAxes} & \cubePicture{\cubeMiddleCell} &
+    \cubePicture{\cubeMiddleLayerFirst} & \cubePicture{\cubeMiddleLayerSecond} &
+    \cubePicture{\cubeMiddleLayerThird} &
+    \cubePicture{\cubeMiddleLayerFirst\cubeMiddleLayerSecond\cubeMiddleLayerThird} \\\addlinespace[0.7em]
+    \cubePicture{\cubeLastAxes} & \cubePicture{\cubeLastCell} &
+    \cubePicture{\cubeLastLayerFirst} & \cubePicture{\cubeLastLayerSecond} &
+    \cubePicture{\cubeLastLayerThird} &
+    \cubePicture{\cubeLastLayerFirst\cubeLastLayerSecond\cubeLastLayerThird} \\
     \bottomrule
   \end{tabularx}
-  \caption{Cubical degeneracies and their boundary layers, each consisting of two paintings. Below the original square, the rows insert directions $0$, $1$, and $2$. Green faces repeat the square; blue and red faces are degeneracies of its edges. The bottom row shows the last--direction case.}
+  \endgroup
+  \caption{Cubical degeneracies and their boundary layers, each consisting of two paintings. Below the original square, the rows insert directions $0$, $1$, and $2$. The final column assembles the layers into the full frame. Green faces repeat the square; blue and red faces are degeneracies of its edges. The bottom row shows the last--direction case.}
   \label{fig:degeneracy-layers}
 \end{figure}
 
@@ -879,13 +669,25 @@ Table~\ref{tab:core} gives the finite degeneracy prefixes and their extensions u
 
 \input{tab-core.tex}
 
+For Tables~\ref{tab:reflbelow} and~\ref{tab:reflabove}, fix the shared arguments
+\begin{equation*}
+  D:\Xto{n+1},\qquad R:\Xreflto{n}[D=\D],\qquad
+  E:\Xcomp{n+1}[D=\D],\qquad L:\Xreflcomp{n}[D=\D,E=\E,R=\R]
+\end{equation*}
+The frame and layer operations use $D,R$; the painting operations also use $E,L$. These arguments are left implicit in both tables.
+
+\begingroup
+\appendmask[bonak]{reflpaintingBelow}[L]
+\appendmask[bonak]{reflpaintingAbove}[L]
+
 The Below frame step transforms the prefix and its next layer. Each layer component uses the lower-dimensional Below painting operation. When the prefix height decreases by one, the Below index increases by one to denote the same direction; this accounts for the $q+1$ in the frame recursion.
 
 \input{tab-reflbelow.tex}
 
-At Above index $0$, the prefix reaches the chosen direction. The boundary is obtained by adjoining the constant layer $\lambda\epsilon.\,c$ to the Below frame in direction $0$. At a successor index, Above recurses through the prefix and transforms the next layer using the Above painting operation.
+At Above index $0$, the prefix reaches the chosen direction. The operation $\refllabove[n][p][][0]$ forms the constant layer $\lambda\epsilon.\,c$, used by both the Above frame and Below painting base cases. At a successor index, Above recurses through the prefix and transforms the next layer using the Above painting operation. The layer step is indexed by $q+1$, measured at the resulting prefix of height $p+1$.
 
 \input{tab-reflabove.tex}
+\endgroup
 
 \subsection{Coherence conditions}
 \label{sec:coherences}
@@ -953,11 +755,10 @@ The ordinary layer steps use hexagons. At Above index zero, the constant layer i
 \end{figure}
 
 \paragraph{\texorpdfstring{$\relReflRefl$}{refl-refl}.}
-Table~\ref{tab:cohframe-dgn} states the three frame equalities for two degeneracies.
-
-\input{tab-cohframe-dgn.tex}
 
 The full-frame painting case of $\relReflAboveAbove$ uses the supplied compatibility proof $\mathsf{cohL}$. It equates two composites of the cell degeneracies $L$ over the corresponding frame equality.
+
+\input{tab-cohframe-dgn.tex}
 
 Figure~\ref{fig:arch-coh-refl} shows the three stages. The frame proofs proceed through these three stages from left to right; the painting proofs proceed from right to left, starting with the supplied $\mathsf{cohL}$ at $k=0$.
 
