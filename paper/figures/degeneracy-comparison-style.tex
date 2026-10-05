@@ -1,0 +1,51 @@
+% Fixed geometry for Table 1: edges and square sides are 18 mm;
+% isosceles triangles have a 23.4 mm base and a height of 9 sqrt(3) mm.
+\tikzset{
+  comparison diagram/.style={x=18mm,y=18mm,baseline=(current bounding box.center),
+    font=\fontsize{8}{10}\selectfont,line width=.4pt,
+    every node/.style={inner sep=3pt}},
+  comparison edge/.style={-{Latex[length=1.3mm]},shorten <=.6mm,shorten >=.6mm},
+  comparison cell/.style={comparison edge,double,double distance=.5pt},
+  comparison label/.style={fill=white,inner xsep=2.5pt,inner ysep=3pt}
+}
+\newcommand{\comparisonEdge}[4]{%
+  \begin{tikzpicture}[comparison diagram]
+    \node[left] at (0,0) {$#1$};
+    \node[right] at (1,0) {$#2$};
+    \draw[comparison edge,#4] (0,0) -- node[above] {$#3$} (1,0);
+  \end{tikzpicture}%
+}
+% Top, left, right vertices; left, right, bottom edges; filling.
+\newcommand{\comparisonTriangle}[7]{%
+  \begin{tikzpicture}[comparison diagram]
+    \coordinate (T) at (.5,{sqrt(3)/2});
+    \coordinate (L) at (-.15,0);
+    \coordinate (R) at (1.15,0);
+    \node[above] at (T) {$#1$};
+    \node[left] at (L) {$#2$};
+    \node[right] at (R) {$#3$};
+    \draw[comparison edge] (L) -- node[left=1pt] {$#4$} (T);
+    \draw[comparison edge] (T) -- node[right=1pt] {$#5$} (R);
+    \draw[comparison edge] (L) -- node[below] {$#6$} (R);
+    \draw[comparison cell] (.5,.74) -- node[comparison label,inner xsep=1pt,inner ysep=2pt] {$#7$} (.5,.06);
+    \pgfresetboundingbox
+    \path[use as bounding box] (-.65cm,-.5cm) rectangle (2.45cm,2cm);
+  \end{tikzpicture}%
+}
+% Top-left, top-right, bottom-left, bottom-right vertices;
+% top, left, right, bottom edges; filling.
+\newcommand{\comparisonSquare}[9]{%
+  \begin{tikzpicture}[comparison diagram]
+    \node[above left] at (0,1) {$#1$};
+    \node[above right] at (1,1) {$#2$};
+    \node[below left] at (0,0) {$#3$};
+    \node[below right] at (1,0) {$#4$};
+    \draw[comparison edge] (0,1) -- node[above] {$#5$} (1,1);
+    \draw[comparison edge] (0,1) -- node[left] {$#6$} (0,0);
+    \draw[comparison edge] (1,1) -- node[right] {$#7$} (1,0);
+    \draw[comparison edge] (0,0) -- node[below] {$#8$} (1,0);
+    \draw[comparison cell] (.5,.92) -- node[comparison label] {$#9$} (.5,.08);
+    \pgfresetboundingbox
+    \path[use as bounding box] (-.65cm,-.5cm) rectangle (2.45cm,2.25cm);
+  \end{tikzpicture}%
+}
