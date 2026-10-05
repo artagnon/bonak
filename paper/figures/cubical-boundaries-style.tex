@@ -1,0 +1,189 @@
+% Cubical cells and their ordered boundary layers, in a common projection.
+\newcommand{\cubeSourceAxes}{%
+\draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$0$};
+\draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$1$};
+}
+\newcommand{\cubeSourceCell}{%
+\fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
+}
+\newcommand{\cubeSourceLayerFirst}{%
+\draw[spanish-blue] (0, 0) -- (0, 1);
+\draw[spanish-blue] (1, 1) -- (1, 0);
+\filldraw[spanish-blue] (0, 0) circle (1pt);
+\filldraw[spanish-blue] (1, 0) circle (1pt);
+\filldraw[spanish-blue] (1, 1) circle (1pt);
+\filldraw[spanish-blue] (0, 1) circle (1pt);
+}
+\newcommand{\cubeSourceLayerSecond}{%
+\draw[raspberry] (0, 0) -- (1, 0);
+\draw[raspberry] (1, 1) -- (0, 1);
+}
+\newcommand{\cubeFirstAxes}{%
+\draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$1$};
+\draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$2$};
+\draw[->, russian-green] (0, 0) -- (0.75, 0.75) node at (0.75, 0.95) {$0$};
+}
+\newcommand{\cubeFirstCell}{%
+\draw[gray20] (0, 0) -- (1, 0);
+\draw[gray20] (1, 1) -- (0, 1);
+\draw[gray20] (0.5, 0.5) -- (1.5, 0.5);
+\draw[gray20] (1.5, 1.5) -- (0.5, 1.5);
+\draw[gray20] (0, 0) -- (0, 1);
+\draw[gray20] (1, 1) -- (1, 0);
+\draw[gray20] (0.5, 0.5) -- (0.5, 1.5);
+\draw[gray20] (1.5, 1.5) -- (1.5, 0.5);
+\draw[gray20] (1, 1) -- (1.5, 1.5);
+\draw[gray20] (0, 1) -- (0.5, 1.5);
+\draw[gray20] (1.5, 0.5) -- (1, 0);
+\draw[gray20] (0.5, 0.5) -- (0, 0);
+\fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
+\fill[pattern=dots, pattern color=russian-green] (0.5, 0.5) -- (1.5, 0.5) -- (1.5, 1.5) -- (0.5, 1.5) -- (0.5, 0.5);
+\fill[pattern=dots, pattern color=russian-green] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
+\fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
+\fill[pattern=dots, pattern color=russian-green] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
+\fill[pattern=dots, pattern color=russian-green] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);
+}
+\newcommand{\cubeFirstLayerFirst}{%
+\fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
+\fill[pattern=dots, pattern color=russian-green] (0.5, 0.5) -- (1.5, 0.5) -- (1.5, 1.5) -- (0.5, 1.5) -- (0.5, 0.5);
+\draw[raspberry] (0, 0) -- (1, 0);
+\draw[raspberry] (1, 1) -- (0, 1);
+\draw[raspberry] (0.5, 0.5) -- (1.5, 0.5);
+\draw[raspberry] (1.5, 1.5) -- (0.5, 1.5);
+\draw[spanish-blue] (0, 0) -- (0, 1);
+\draw[spanish-blue] (1, 1) -- (1, 0);
+\draw[spanish-blue] (0.5, 0.5) -- (0.5, 1.5);
+\draw[spanish-blue] (1.5, 1.5) -- (1.5, 0.5);
+\filldraw[spanish-blue] (0, 0) circle (1pt);
+\filldraw[spanish-blue] (1, 0) circle (1pt);
+\filldraw[spanish-blue] (1, 1) circle (1pt);
+\filldraw[spanish-blue] (0, 1) circle (1pt);
+\filldraw[spanish-blue] (0.5, 0.5) circle (1pt);
+\filldraw[spanish-blue] (0.5, 1.5) circle (1pt);
+\filldraw[spanish-blue] (1.5, 1.5) circle (1pt);
+\filldraw[spanish-blue] (1.5, 0.5) circle (1pt);
+}
+\newcommand{\cubeFirstLayerSecond}{%
+\fill[pattern=dots, pattern color=spanish-blue] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
+\fill[pattern=dots, pattern color=spanish-blue] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);
+\draw[spanish-blue] (1, 1) -- (1.5, 1.5);
+\draw[spanish-blue] (0, 1) -- (0.5, 1.5);
+\draw[spanish-blue] (1.5, 0.5) -- (1, 0);
+\draw[spanish-blue] (0.5, 0.5) -- (0, 0);
+}
+\newcommand{\cubeFirstLayerThird}{%
+\fill[pattern=dots, pattern color=raspberry] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
+\fill[pattern=dots, pattern color=raspberry] (0, 0) -- (1, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
+}
+\newcommand{\cubeMiddleAxes}{%
+\draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$0$};
+\draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$2$};
+\draw[->, russian-green] (0, 0) -- (0.75, 0.75) node at (0.75, 0.95) {$1$};
+}
+\newcommand{\cubeMiddleCell}{%
+\draw[gray20] (0, 0) -- (1, 0);
+\draw[gray20] (1, 1) -- (0, 1);
+\draw[gray20] (0.5, 0.5) -- (1.5, 0.5);
+\draw[gray20] (1.5, 1.5) -- (0.5, 1.5);
+\draw[gray20] (0, 0) -- (0, 1);
+\draw[gray20] (1, 1) -- (1, 0);
+\draw[gray20] (0.5, 0.5) -- (0.5, 1.5);
+\draw[gray20] (1.5, 1.5) -- (1.5, 0.5);
+\draw[gray20] (1, 1) -- (1.5, 1.5);
+\draw[gray20] (0, 1) -- (0.5, 1.5);
+\draw[gray20] (1.5, 0.5) -- (1, 0);
+\draw[gray20] (0.5, 0.5) -- (0, 0);
+\fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
+\fill[pattern=dots, pattern color=russian-green] (0.5, 0.5) -- (1.5, 0.5) -- (1.5, 1.5) -- (0.5, 1.5) -- (0.5, 0.5);
+\fill[pattern=dots, pattern color=russian-green] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
+\fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
+\fill[pattern=dots, pattern color=russian-green] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
+\fill[pattern=dots, pattern color=russian-green] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);
+}
+\newcommand{\cubeMiddleLayerFirst}{%
+\fill[pattern=dots, pattern color=spanish-blue] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
+\fill[pattern=dots, pattern color=spanish-blue] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);
+\draw[spanish-blue] (1, 1) -- (1, 0);
+\draw[spanish-blue] (0, 1) -- (0, 0);
+\draw[spanish-blue] (1.5, 0.5) -- (1.5, 1.5);
+\draw[spanish-blue] (0.5, 0.5) -- (0.5, 1.5);
+\filldraw[spanish-blue] (1, 1) circle (1pt);
+\filldraw[spanish-blue] (1.5, 1.5) circle (1pt);
+\filldraw[spanish-blue] (1.5, 0.5) circle (1pt);
+\filldraw[spanish-blue] (1, 0) circle (1pt);
+\filldraw[spanish-blue] (0, 1) circle (1pt);
+\filldraw[spanish-blue] (0.5, 1.5) circle (1pt);
+\filldraw[spanish-blue] (0.5, 0.5) circle (1pt);
+\filldraw[spanish-blue] (0, 0) circle (1pt);
+}
+\newcommand{\cubeMiddleLayerSecond}{%
+\fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
+\fill[pattern=dots, pattern color=russian-green] (0.5, 0.5) -- (1.5, 0.5) -- (1.5, 1.5) -- (0.5, 1.5) -- (0.5, 0.5);
+\draw[raspberry] (0, 0) -- (1, 0);
+\draw[raspberry] (1, 1) -- (0, 1);
+\draw[raspberry] (0.5, 0.5) -- (1.5, 0.5);
+\draw[raspberry] (1.5, 1.5) -- (0.5, 1.5);
+}
+\newcommand{\cubeMiddleLayerThird}{%
+\fill[pattern=dots, pattern color=raspberry] (0, 1) -- (1.0, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
+\fill[pattern=dots, pattern color=raspberry] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
+}
+\newcommand{\cubeLastAxes}{%
+\draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$0$};
+\draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$1$};
+\draw[->, russian-green] (0, 0) -- (0.75, 0.75) node at (0.75, 0.95) {$2$};
+}
+\newcommand{\cubeLastCell}{%
+\draw[gray20] (0, 0) -- (1, 0);
+\draw[gray20] (1, 1) -- (0, 1);
+\draw[gray20] (0.5, 0.5) -- (1.5, 0.5);
+\draw[gray20] (1.5, 1.5) -- (0.5, 1.5);
+\draw[gray20] (0, 0) -- (0, 1);
+\draw[gray20] (1, 1) -- (1, 0);
+\draw[gray20] (0.5, 0.5) -- (0.5, 1.5);
+\draw[gray20] (1.5, 1.5) -- (1.5, 0.5);
+\draw[gray20] (1, 1) -- (1.5, 1.5);
+\draw[gray20] (0, 1) -- (0.5, 1.5);
+\draw[gray20] (1.5, 0.5) -- (1, 0);
+\draw[gray20] (0.5, 0.5) -- (0, 0);
+\fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
+\fill[pattern=dots, pattern color=russian-green] (0.5, 0.5) -- (1.5, 0.5) -- (1.5, 1.5) -- (0.5, 1.5) -- (0.5, 0.5);
+\fill[pattern=dots, pattern color=russian-green] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
+\fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
+\fill[pattern=dots, pattern color=russian-green] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
+\fill[pattern=dots, pattern color=russian-green] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);
+}
+\newcommand{\cubeLastLayerFirst}{%
+\fill[pattern=dots, pattern color=spanish-blue] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
+\fill[pattern=dots, pattern color=spanish-blue] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);
+\draw[spanish-blue] (1, 1) -- (1, 0);
+\draw[spanish-blue] (0, 1) -- (0, 0);
+\draw[spanish-blue] (1.5, 0.5) -- (1.5, 1.5);
+\draw[spanish-blue] (0.5, 0.5) -- (0.5, 1.5);
+\filldraw[spanish-blue] (1, 1) circle (1pt);
+\filldraw[spanish-blue] (1.5, 1.5) circle (1pt);
+\filldraw[spanish-blue] (1.5, 0.5) circle (1pt);
+\filldraw[spanish-blue] (1, 0) circle (1pt);
+\filldraw[spanish-blue] (0, 1) circle (1pt);
+\filldraw[spanish-blue] (0.5, 1.5) circle (1pt);
+\filldraw[spanish-blue] (0.5, 0.5) circle (1pt);
+\filldraw[spanish-blue] (0, 0) circle (1pt);
+}
+\newcommand{\cubeLastLayerSecond}{%
+\fill[pattern=dots, pattern color=raspberry] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
+\fill[pattern=dots, pattern color=raspberry] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
+\draw[raspberry] (0, 1) -- (1, 1);
+\draw[raspberry] (1.5, 1.5) -- (0.5, 1.5);
+\draw[raspberry] (0, 0) -- (1, 0);
+\draw[raspberry] (1.5, 0.5) -- (0.5, 0.5);
+}
+\newcommand{\cubeLastLayerThird}{%
+\fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
+\fill[pattern=dots, pattern color=russian-green] (0.5, 0.5) -- (1.5, 0.5) -- (1.5, 1.5) -- (0.5, 1.5) -- (0.5, 0.5);
+}
+
+\newcommand{\cubePicture}[1]{%
+  \begin{tikzpicture}[scale=1.5,baseline=(current bounding box.center)]
+    #1
+  \end{tikzpicture}%
+}

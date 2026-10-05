@@ -538,30 +538,17 @@ For an equality $e:x=y$ and $u:P(x)$, we write $\mathsf{rew}(e,u):P(y)$ for tran
 
 \begin{figure}[H]
   \centering
-  \begin{tikzpicture}[scale=2]
-    \draw[spanish-blue, fill=spanish-blue] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-    \draw[spanish-blue, fill=spanish-blue, nearly transparent] (0.6, 1) -- (0.6, 1.6) -- (1.6, 1.6) -- (1.6, 0.6) -- (1, 0.6);
-  \end{tikzpicture}
-  \;\;
-  \begin{tikzpicture}[scale=2]
-    \draw[spanish-blue, fill=spanish-blue] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-    \draw[spanish-blue, fill=spanish-blue, nearly transparent] (0.6, 1) -- (0.6, 1.6) -- (1.6, 1.6) -- (1.6, 0.6) -- (1.0, 0.6);
-    \draw[raspberry, pattern=dots] (1.1, 1.1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1.1, 0.1) -- (1.1, 1.1);
-    \draw[raspberry] (1.3, 1.3) -- (1.3, 0.3);
-    \draw[raspberry, pattern=dots] (0.1, 1.1) -- (0.5, 1.5) -- (0.5, 1.1);
-    \draw[raspberry] (0.3, 1.3) -- (0.3, 1.1);
-  \end{tikzpicture}
-  \;\;
-  \begin{tikzpicture}[scale=2]
-    \draw[spanish-blue, fill=spanish-blue] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-    \draw[spanish-blue, fill=spanish-blue, nearly transparent] (0.6, 1) -- (0.6, 1.6) -- (1.6, 1.6) -- (1.6, 0.6) -- (1.0, 0.6);
-    \draw[raspberry, pattern=dots] (1.1, 1.1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1.1, 0.1) -- (1.1, 1.1);
-    \draw[raspberry] (1.3, 1.3) -- (1.3, 0.3);
-    \draw[raspberry] (0.1, 1.1) -- (0.5, 1.5);
-    \draw[russian-green, pattern=dots] (0.2, 1.1) -- (1.0, 1.1) -- (1.4, 1.5) -- (0.6, 1.5) -- (0.2, 1.1);
-    \filldraw[russian-green] (0.8, 1.3) circle (0.6pt);
-  \end{tikzpicture}
-  \caption{Prefixes of a cube boundary: $\framep[3,1]$, $\framep[3,2]$, and $\framep[3,3]=\fullframe[3]$. The three layers supply the front–back, left–right, and top–bottom face paintings, respectively.}
+  \begingroup
+  \input{figures/cubical-boundaries-style.tex}
+  \begin{tabularx}{\linewidth}{YYY}
+    \cubePicture{\cubeLastLayerFirst} &
+    \cubePicture{\cubeLastLayerFirst\cubeLastLayerSecond} &
+    \cubePicture{\cubeLastLayerFirst\cubeLastLayerSecond\cubeLastLayerThird} \\\addlinespace[0.6em]
+    $\framep[3][1]$ & $\framep[3][2]$ & $\framep[3][3]=\fullframe[3]$
+  \end{tabularx}
+  \endgroup
+  \caption{Successive prefixes of a cube boundary. Each panel adds the next pair of opposite face paintings, retaining the boundary data already supplied.}
+  \label{fig:cube-prefixes}
 \end{figure}
 
 \begin{figure}[H]
@@ -576,188 +563,31 @@ For an equality $e:x=y$ and $u:P(x)$, we write $\mathsf{rew}(e,u):P(y)$ for tran
 The boundary of a degenerate cell contains a repeated layer at the inserted direction, together with degeneracies of the original faces. This suggests building the boundary layer by layer, inserting the repeated layer when the prefix reaches the chosen direction. Figure~\ref{fig:degeneracy-layers} illustrates the three insertion positions for a square.
 
 \begin{figure}[H]
+  \begingroup
+  \input{figures/cubical-boundaries-style.tex}
   \begin{tabularx}{\linewidth}{c c c c c}
     \toprule
-    \begin{tikzpicture}[scale=1.5]
-      \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$0$};
-      \draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$1$};
-    \end{tikzpicture}                                                                                                                         & \begin{tikzpicture}[scale=1.5]
-                                                                                                                                                  \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-                                                                                                                                                \end{tikzpicture} &
-    \begin{tikzpicture}[scale=1.5]
-      \draw[spanish-blue] (0, 0) -- (0, 1);
-      \draw[spanish-blue] (1, 1) -- (1, 0);
-      \filldraw[spanish-blue] (0, 0) circle (1pt);
-      \filldraw[spanish-blue] (1, 0) circle (1pt);
-      \filldraw[spanish-blue] (1, 1) circle (1pt);
-      \filldraw[spanish-blue] (0, 1) circle (1pt);
-    \end{tikzpicture}                                                                                                                                             &
-    \begin{tikzpicture}[scale=1.5]
-      \draw[raspberry] (0, 0) -- (1, 0);
-      \draw[raspberry] (1, 1) -- (0, 1);
-    \end{tikzpicture}                                                                                                                                                                                                           \\
-    \begin{tikzpicture}[scale=1.5]
-      \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$1$};
-      \draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$2$};
-      \draw[->, russian-green] (0, 0) -- (0.75, 0.75) node at (0.75, 0.95) {$0$};
-    \end{tikzpicture}                                                                                                              &
-    \begin{tikzpicture}[scale=1.5]
-      \draw[gray20] (0, 0) -- (1, 0);
-      \draw[gray20] (1, 1) -- (0, 1);
-      \draw[gray20] (0.5, 0.5) -- (1.5, 0.5);
-      \draw[gray20] (1.5, 1.5) -- (0.5, 1.5);
-      \draw[gray20] (0, 0) -- (0, 1);
-      \draw[gray20] (1, 1) -- (1, 0);
-      \draw[gray20] (0.5, 0.5) -- (0.5, 1.5);
-      \draw[gray20] (1.5, 1.5) -- (1.5, 0.5);
-      \draw[gray20] (1, 1) -- (1.5, 1.5);
-      \draw[gray20] (0, 1) -- (0.5, 1.5);
-      \draw[gray20] (1.5, 0.5) -- (1, 0);
-      \draw[gray20] (0.5, 0.5) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (0.5, 0.5) -- (1.5, 0.5) -- (1.5, 1.5) -- (0.5, 1.5) -- (0.5, 0.5);
-      \fill[pattern=dots, pattern color=russian-green] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
-      \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
-      \fill[pattern=dots, pattern color=russian-green] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);                                                               \end{tikzpicture} &
-    \begin{tikzpicture}[scale=1.5]
-      \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (0.5, 0.5) -- (1.5, 0.5) -- (1.5, 1.5) -- (0.5, 1.5) -- (0.5, 0.5);
-      \draw[raspberry] (0, 0) -- (1, 0);
-      \draw[raspberry] (1, 1) -- (0, 1);
-      \draw[raspberry] (0.5, 0.5) -- (1.5, 0.5);
-      \draw[raspberry] (1.5, 1.5) -- (0.5, 1.5);
-      \draw[spanish-blue] (0, 0) -- (0, 1);
-      \draw[spanish-blue] (1, 1) -- (1, 0);
-      \draw[spanish-blue] (0.5, 0.5) -- (0.5, 1.5);
-      \draw[spanish-blue] (1.5, 1.5) -- (1.5, 0.5);
-      \filldraw[spanish-blue] (0, 0) circle (1pt);
-      \filldraw[spanish-blue] (1, 0) circle (1pt);
-      \filldraw[spanish-blue] (1, 1) circle (1pt);
-      \filldraw[spanish-blue] (0, 1) circle (1pt);
-      \filldraw[spanish-blue] (0.5, 0.5) circle (1pt);
-      \filldraw[spanish-blue] (0.5, 1.5) circle (1pt);
-      \filldraw[spanish-blue] (1.5, 1.5) circle (1pt);
-      \filldraw[spanish-blue] (1.5, 0.5) circle (1pt);
-    \end{tikzpicture}                                                                     &
-    \begin{tikzpicture}[scale=1.5]
-      \fill[pattern=dots, pattern color=spanish-blue] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
-      \fill[pattern=dots, pattern color=spanish-blue] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);
-      \draw[spanish-blue] (1, 1) -- (1.5, 1.5);
-      \draw[spanish-blue] (0, 1) -- (0.5, 1.5);
-      \draw[spanish-blue] (1.5, 0.5) -- (1, 0);
-      \draw[spanish-blue] (0.5, 0.5) -- (0, 0);
-    \end{tikzpicture}                                                                                  &
-    \begin{tikzpicture}[scale=1.5]
-      \fill[pattern=dots, pattern color=raspberry] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
-      \fill[pattern=dots, pattern color=raspberry] (0, 0) -- (1, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
-    \end{tikzpicture}                                                                                                                                         \\
-    \begin{tikzpicture}[scale=1.5]
-      \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$0$};
-      \draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$2$};
-      \draw[->, russian-green] (0, 0) -- (0.75, 0.75) node at (0.75, 0.95) {$1$};
-    \end{tikzpicture}                                                                                                              &
-    \begin{tikzpicture}[scale=1.5]
-      \draw[gray20] (0, 0) -- (1, 0);
-      \draw[gray20] (1, 1) -- (0, 1);
-      \draw[gray20] (0.5, 0.5) -- (1.5, 0.5);
-      \draw[gray20] (1.5, 1.5) -- (0.5, 1.5);
-      \draw[gray20] (0, 0) -- (0, 1);
-      \draw[gray20] (1, 1) -- (1, 0);
-      \draw[gray20] (0.5, 0.5) -- (0.5, 1.5);
-      \draw[gray20] (1.5, 1.5) -- (1.5, 0.5);
-      \draw[gray20] (1, 1) -- (1.5, 1.5);
-      \draw[gray20] (0, 1) -- (0.5, 1.5);
-      \draw[gray20] (1.5, 0.5) -- (1, 0);
-      \draw[gray20] (0.5, 0.5) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (0.5, 0.5) -- (1.5, 0.5) -- (1.5, 1.5) -- (0.5, 1.5) -- (0.5, 0.5);
-      \fill[pattern=dots, pattern color=russian-green] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
-      \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
-      \fill[pattern=dots, pattern color=russian-green] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);                                                               \end{tikzpicture} &
-    \begin{tikzpicture}[scale=1.5]
-      \fill[pattern=dots, pattern color=spanish-blue] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
-      \fill[pattern=dots, pattern color=spanish-blue] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);
-      \draw[spanish-blue] (1, 1) -- (1, 0);
-      \draw[spanish-blue] (0, 1) -- (0, 0);
-      \draw[spanish-blue] (1.5, 0.5) -- (1.5, 1.5);
-      \draw[spanish-blue] (0.5, 0.5) -- (0.5, 1.5);
-      \filldraw[spanish-blue] (1, 1) circle (1pt);
-      \filldraw[spanish-blue] (1.5, 1.5) circle (1pt);
-      \filldraw[spanish-blue] (1.5, 0.5) circle (1pt);
-      \filldraw[spanish-blue] (1, 0) circle (1pt);
-      \filldraw[spanish-blue] (0, 1) circle (1pt);
-      \filldraw[spanish-blue] (0.5, 1.5) circle (1pt);
-      \filldraw[spanish-blue] (0.5, 0.5) circle (1pt);
-      \filldraw[spanish-blue] (0, 0) circle (1pt);
-    \end{tikzpicture}                                                                                  &
-    \begin{tikzpicture}[scale=1.5]
-      \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (0.5, 0.5) -- (1.5, 0.5) -- (1.5, 1.5) -- (0.5, 1.5) -- (0.5, 0.5);
-      \draw[raspberry] (0, 0) -- (1, 0);
-      \draw[raspberry] (1, 1) -- (0, 1);
-      \draw[raspberry] (0.5, 0.5) -- (1.5, 0.5);
-      \draw[raspberry] (1.5, 1.5) -- (0.5, 1.5);
-    \end{tikzpicture}                                                                     &
-    \begin{tikzpicture}[scale=1.5]
-      \fill[pattern=dots, pattern color=raspberry] (0, 1) -- (1.0, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
-      \fill[pattern=dots, pattern color=raspberry] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
-    \end{tikzpicture}                                                                                                                                       \\
-    \begin{tikzpicture}[scale=1.5]
-      \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$0$};
-      \draw[->, spanish-blue] (0, 0) -- (0, 1) node at (0.2, 1) {$1$};
-      \draw[->, russian-green] (0, 0) -- (0.75, 0.75) node at (0.75, 0.95) {$2$};
-    \end{tikzpicture}                                                                                                              &
-    \begin{tikzpicture}[scale=1.5]
-      \draw[gray20] (0, 0) -- (1, 0);
-      \draw[gray20] (1, 1) -- (0, 1);
-      \draw[gray20] (0.5, 0.5) -- (1.5, 0.5);
-      \draw[gray20] (1.5, 1.5) -- (0.5, 1.5);
-      \draw[gray20] (0, 0) -- (0, 1);
-      \draw[gray20] (1, 1) -- (1, 0);
-      \draw[gray20] (0.5, 0.5) -- (0.5, 1.5);
-      \draw[gray20] (1.5, 1.5) -- (1.5, 0.5);
-      \draw[gray20] (1, 1) -- (1.5, 1.5);
-      \draw[gray20] (0, 1) -- (0.5, 1.5);
-      \draw[gray20] (1.5, 0.5) -- (1, 0);
-      \draw[gray20] (0.5, 0.5) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (0.5, 0.5) -- (1.5, 0.5) -- (1.5, 1.5) -- (0.5, 1.5) -- (0.5, 0.5);
-      \fill[pattern=dots, pattern color=russian-green] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
-      \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
-      \fill[pattern=dots, pattern color=russian-green] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);                                                               \end{tikzpicture} &
-    \begin{tikzpicture}[scale=1.5]
-      \fill[pattern=dots, pattern color=spanish-blue] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
-      \fill[pattern=dots, pattern color=spanish-blue] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);
-      \draw[spanish-blue] (1, 1) -- (1, 0);
-      \draw[spanish-blue] (0, 1) -- (0, 0);
-      \draw[spanish-blue] (1.5, 0.5) -- (1.5, 1.5);
-      \draw[spanish-blue] (0.5, 0.5) -- (0.5, 1.5);
-      \filldraw[spanish-blue] (1, 1) circle (1pt);
-      \filldraw[spanish-blue] (1.5, 1.5) circle (1pt);
-      \filldraw[spanish-blue] (1.5, 0.5) circle (1pt);
-      \filldraw[spanish-blue] (1, 0) circle (1pt);
-      \filldraw[spanish-blue] (0, 1) circle (1pt);
-      \filldraw[spanish-blue] (0.5, 1.5) circle (1pt);
-      \filldraw[spanish-blue] (0.5, 0.5) circle (1pt);
-      \filldraw[spanish-blue] (0, 0) circle (1pt);
-    \end{tikzpicture}                                                                                  &
-    \begin{tikzpicture}[scale=1.5]
-      \fill[pattern=dots, pattern color=raspberry] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
-      \fill[pattern=dots, pattern color=raspberry] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
-      \draw[raspberry] (0, 1) -- (1, 1);
-      \draw[raspberry] (1.5, 1.5) -- (0.5, 1.5);
-      \draw[raspberry] (0, 0) -- (1, 0);
-      \draw[raspberry] (1.5, 0.5) -- (0.5, 0.5);
-    \end{tikzpicture}                                                                                   &
-    \begin{tikzpicture}[scale=1.5]
-      \fill[pattern=dots, pattern color=russian-green] (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- (0, 0);
-      \fill[pattern=dots, pattern color=russian-green] (0.5, 0.5) -- (1.5, 0.5) -- (1.5, 1.5) -- (0.5, 1.5) -- (0.5, 0.5);
-    \end{tikzpicture}                                                                                                                         \\
+    \cubePicture{\cubeSourceAxes}                                                                                                                         & \cubePicture{\cubeSourceCell} &
+    \cubePicture{\cubeSourceLayerFirst}                                                                                                                                             &
+    \cubePicture{\cubeSourceLayerSecond}                                                                                                                                                                                                           \\
+    \cubePicture{\cubeFirstAxes}                                                                                                              &
+    \cubePicture{\cubeFirstCell} &
+    \cubePicture{\cubeFirstLayerFirst}                                                                     &
+    \cubePicture{\cubeFirstLayerSecond}                                                                                  &
+    \cubePicture{\cubeFirstLayerThird}                                                                                                                                         \\
+    \cubePicture{\cubeMiddleAxes}                                                                                                              &
+    \cubePicture{\cubeMiddleCell} &
+    \cubePicture{\cubeMiddleLayerFirst}                                                                                  &
+    \cubePicture{\cubeMiddleLayerSecond}                                                                     &
+    \cubePicture{\cubeMiddleLayerThird}                                                                                                                                       \\
+    \cubePicture{\cubeLastAxes}                                                                                                              &
+    \cubePicture{\cubeLastCell} &
+    \cubePicture{\cubeLastLayerFirst}                                                                                  &
+    \cubePicture{\cubeLastLayerSecond}                                                                                   &
+    \cubePicture{\cubeLastLayerThird}                                                                                                                         \\
     \bottomrule
   \end{tabularx}
+  \endgroup
   \caption{Cubical degeneracies and their boundary layers, each consisting of two paintings. Below the original square, the rows insert directions $0$, $1$, and $2$. Green faces repeat the square; blue and red faces are degeneracies of its edges. The bottom row shows the last--direction case.}
   \label{fig:degeneracy-layers}
 \end{figure}
