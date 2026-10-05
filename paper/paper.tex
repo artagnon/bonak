@@ -669,6 +669,17 @@ Table~\ref{tab:core} gives the finite degeneracy prefixes and their extensions u
 
 \input{tab-core.tex}
 
+For Tables~\ref{tab:reflbelow} and~\ref{tab:reflabove}, fix the shared arguments
+\begin{equation*}
+  D:\Xto{n+1},\qquad R:\Xreflto{n}[D=\D],\qquad
+  E:\Xcomp{n+1}[D=\D],\qquad L:\Xreflcomp{n}[D=\D,E=\E,R=\R]
+\end{equation*}
+The frame and layer operations use $D,R$; the painting operations also use $E,L$. These arguments are left implicit in both tables.
+
+\begingroup
+\appendmask[bonak]{reflpaintingBelow}[L]
+\appendmask[bonak]{reflpaintingAbove}[L]
+
 The Below frame step transforms the prefix and its next layer. Each layer component uses the lower-dimensional Below painting operation. When the prefix height decreases by one, the Below index increases by one to denote the same direction; this accounts for the $q+1$ in the frame recursion.
 
 \input{tab-reflbelow.tex}
@@ -676,6 +687,7 @@ The Below frame step transforms the prefix and its next layer. Each layer compon
 At Above index $0$, the prefix reaches the chosen direction. The boundary is obtained by adjoining the constant layer $\lambda\epsilon.\,c$ to the Below frame in direction $0$. At a successor index, Above recurses through the prefix and transforms the next layer using the Above painting operation.
 
 \input{tab-reflabove.tex}
+\endgroup
 
 \subsection{Coherence conditions}
 \label{sec:coherences}
