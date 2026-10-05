@@ -1,12 +1,15 @@
 \begin{eqntable}{$q$-th degeneracies above\label{tab:reflabove}}
-  \eqnline{\reflfabove[n][p][][q]}{\makecell{\eqnarg{reflframeAbove}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{reflframeAbove}{c}{\painting[n][p][][D=\hdD, E=\tlD, d=\d]} \\ \ensuremath{q \leq p}}}{:}{\framep[n+1][p+1][][D=\D]}
-  \eqnline{\reflfabove[n][p][][0]}{d~c}{\defeq}{(\reflfbelow[n][p][][0][D=\D, d=\d],\lambda \epsilon.\,c)}
-  \eqnline{\reflfabove[n][p+1][][q+1]}{\pair{\d}{\l}~\c}{\defeq}{\pair{\reflfabove[n][p][][q][D=\D, d=\d, c={\l,\c}]}{\refllabove[n][p][][q][D=\D, R=\R, d=\d, l=\l,c=\c]}}
+  \eqnline{\refllabove[n][p][][0]}{\makecell{\eqnarg{refllayerAbove}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{refllayerAbove}{c}{\painting[n][p][][D=\hdD, E=\tlD, d=\d]}}}{:}{\layer[n+1][p][][D=\D, d={\reflfbelow[n][p][][0][D=\D, d=\d]}]}
+  \eqnline{\refllabove[n][p][][0]}{\d~\c}{\defeq}{\lambda \epsilon.\,c}
   \midrule
-  \eqnline{\refllabove[n][p][k>0][q]}{\makecell{\eqnarg{refllayerAbove}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{refllayerAbove}{l}{\layer[n][p][][D=\hdD, d=\d]} \\ \eqnarg{refllayerAbove}{c}{\painting[n][p+1][][D=\hdD, E=\tlD, d={\d,\l}]} \\ \ensuremath{q \leq p}}}{:}{\layer[n+1][p+1][][D=\hdD, d={\reflfabove[n][p][][q][D=\D, R=\R, d=\d, c={\l,\c}]}]}
-  \eqnline{\refllabove[n][p][][q]}{\d~\l~\c}{\defeq}{\lambda \omega.(\reflpabove[n-1][p][][q][D=\hdD, E=\tlD, d={\restrf[n-1][p][][0][\omega][D=\D, d=\d]}, R=\hdR, L=\tlR, c={\l_\omega}])}
+  \eqnline{\reflfabove[n][p][][q]}{\makecell{\eqnarg{reflframeAbove}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{reflframeAbove}{c}{\painting[n][p][][D=\hdD, E=\tlD, d=\d]} \\ \ensuremath{q \leq p}}}{:}{\framep[n+1][p+1][][D=\D]}
+  \eqnline{\reflfabove[n][p][][0]}{d~c}{\defeq}{(\reflfbelow[n][p][][0][D=\D, d=\d],\refllabove[n][p][][0][D=\D, d=\d, c=\c])}
+  \eqnline{\reflfabove[n][p+1][][q+1]}{\pair{\d}{\l}~\c}{\defeq}{\pair{\reflfabove[n][p][][q][D=\D, d=\d, c={\l,\c}]}{\refllabove[n][p][][q+1][D=\D, R=\R, d=\d, l=\l,c=\c]}}
+  \midrule
+  \eqnline{\refllabove[n][p][k>0][q+1]}{\makecell{\eqnarg{refllayerAbove}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{refllayerAbove}{l}{\layer[n][p][][D=\hdD, d=\d]} \\ \eqnarg{refllayerAbove}{c}{\painting[n][p+1][][D=\hdD, E=\tlD, d={\d,\l}]} \\ \ensuremath{q \leq p}}}{:}{\layer[n+1][p+1][][D=\hdD, d={\reflfabove[n][p][][q][D=\D, R=\R, d=\d, c={\l,\c}]}]}
+  \eqnline{\refllabove[n][p][][q+1]}{\d~\l~\c}{\defeq}{\lambda \omega.(\reflpabove[n-1][p][][q][D=\hdD, E=\tlD, d={\restrf[n-1][p][][0][\omega][D=\D, d=\d]}, R=\hdR, L=\tlR, c={\l_\omega}])}
   \midrule
   \eqnline{\reflpabove[n][p][][q]}{\makecell{\eqnarg{reflpaintingAbove}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{reflpaintingAbove}{c}{\painting[n][p][][D=\hdD, E=\tlD, d=\d]} \\ \ensuremath{q \leq p}}}{:}{\painting[n+1][p+1][][D=\hdD, E=\E, d={\reflfabove[n][p][][q][D=\D, R=\R, d=\d, c=\c]}]}
   \eqnline{\reflpabove[n][p][k=0][q]}{\d~c}{\defeq}{\L[q][d =\d, c=\c]}
-  \eqnline{\reflpabove[n][p][k>0][q]}{\d~\pair{l}{c}}{\defeq}{\pair{\refllabove[n][p][][q][D=\D, d=\d, l=\l, c=\c]}{\reflpabove[n][p+1][][q+1][D=\D, E=\E, R=\R, L=\L, d={\d, \l}, c=\c]}}
+  \eqnline{\reflpabove[n][p][k>0][q]}{\d~\pair{l}{c}}{\defeq}{\pair{\refllabove[n][p][][q+1][D=\D, d=\d, l=\l, c=\c]}{\reflpabove[n][p+1][][q+1][D=\D, E=\E, R=\R, L=\L, d={\d, \l}, c=\c]}}
 \end{eqntable}

@@ -8,6 +8,6 @@
   \eqnline{\refllbelow[n][p][][q]}{\d~\l}{\defeq}{\lambda \omega.(\reflpbelow[n-1][p][][q][D=\hdD, E=\tlD, R=\hdR, L=\tlR, d={\restrf[n-1][p][][0][\omega][D=\D, d=\d]}, c={\l_\omega}])}
   \midrule
   \eqnline{\reflpbelow[n][p][][q]}{\makecell{\eqnarg{reflpaintingBelow}{d}{\framep[n][p][][D=\hdD]} \\ \eqnarg{reflpaintingBelow}{c}{\painting[n][p][][D=\hdD, E=\tlD, d=\d]} \\ \ensuremath{q \leq k}}}{:}{\painting[n+1][p][][D=\hdD, E=\E, d={\reflfbelow[n][p][][q][D=\hdD, d=\d]}]}
-  \eqnline{\reflpbelow[n][p][][0]}{\d~\c}{\defeq}{\pair{\lambda \epsilon.\,c}{\reflpabove[n][p][][0][D=\D, E=\E, R=\R, L=\L, d=\d, c=\c]}}
+  \eqnline{\reflpbelow[n][p][][0]}{\d~\c}{\defeq}{\pair{\refllabove[n][p][][0][D=\D, d=\d, c=\c]}{\reflpabove[n][p][][0][D=\D, E=\E, R=\R, L=\L, d=\d, c=\c]}}
   \eqnline{\reflpbelow[n][p][][q+1]}{\d~\pair{l}{c}}{\defeq}{\pair{\refllbelow[n][p][][q][D=\D, d=\d, l=\l]}{\reflpbelow[n][p+1][][q][D=\D, E=\E, R=\R, L=\L, d=\pair{d}{l}, c=\c]}}
 \end{eqntable}

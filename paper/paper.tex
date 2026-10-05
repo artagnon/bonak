@@ -684,7 +684,7 @@ The Below frame step transforms the prefix and its next layer. Each layer compon
 
 \input{tab-reflbelow.tex}
 
-At Above index $0$, the prefix reaches the chosen direction. The boundary is obtained by adjoining the constant layer $\lambda\epsilon.\,c$ to the Below frame in direction $0$. At a successor index, Above recurses through the prefix and transforms the next layer using the Above painting operation.
+At Above index $0$, the prefix reaches the chosen direction. The operation $\refllabove[n][p][][0]$ forms the constant layer $\lambda\epsilon.\,c$, used by both the Above frame and Below painting base cases. At a successor index, Above recurses through the prefix and transforms the next layer using the Above painting operation. The layer step is indexed by $q+1$, measured at the resulting prefix of height $p+1$.
 
 \input{tab-reflabove.tex}
 \endgroup
