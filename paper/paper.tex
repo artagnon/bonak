@@ -524,9 +524,11 @@ The indexed structure on the left, including both the underlying $\nu$--set and 
 
 We recall the indexed representation of $\nu$--sets~\cite{hr25,hr26}. A \emph{layer} groups the face data for one direction, with one component for each label in $\nu$. A \emph{frame} records a prefix of these boundary layers; a \emph{full frame} contains all of them. A \emph{painting} over a frame supplies the remaining boundary layers and a cell over the completed boundary.
 
-At construction level $n$, the earlier families $X_0,\ldots,X_{n-1}$ determine the type of full frames, each consisting of $n$ layers, and the next family $X_n$ assigns an h--set of cells to each full frame. Level $n$ corresponds to geometric dimension $n-1$ in the augmented unary case and to dimension $n$ in the binary case.
+At construction level $n$, we first specify a boundary and then consider the cells that fill it. The earlier families $X_0,\ldots,X_{n-1}$ determine the type of full frames, each consisting of $n$ layers; for each full frame $d$, the next family supplies the h--set $X_n(d)$ of cells with that boundary. Level $n$ corresponds to geometric dimension $n-1$ in the augmented unary case and to dimension $n$ in the binary case.
 
 Let $p\leq n$ be the prefix height and $k:=n-p$ the number of remaining layers. We write $\framep[n][p]$ for frames of height $p$, $\layer[n][p][][d=d]$ for the next layer over a frame $d$, and $\painting[n][p][][d=d]$ for its paintings. A full frame has type $\fullframe[n]=\framep[n][n]$, so $k=0$; its paintings are cells of $X_n(d)$. A successor frame is a dependent pair $(d,l)$ of a frame and its next layer. A painting with layers left to supply is a pair $(l,c)$ of its next layer and remaining painting.
+
+For a cube, a painting over a prefix of one layer supplies the remaining four faces, compatible with the two already supplied, together with a cube cell filling the completed boundary. Over the full frame, a painting supplies only the cube cell.
 
 Restriction means taking a face. The operation $\restrf[n][p][][q][\epsilon]$ maps a frame in $\framep[n+1][p]$ to one in $\framep[n][p]$. Its relative index $q\leq k$ denotes direction $p+q$, and $\epsilon\in\nu$ selects a face in that direction. The corresponding layer and painting operations are written $\restrl$ and $\restrp$; a painting restriction includes the restriction of its indexing frame. Each component of a layer is a lower-dimensional painting over a suitable restricted frame.
 
