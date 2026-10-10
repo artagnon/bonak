@@ -1,309 +1,310 @@
 % Principal defining-term dependencies.
 \begingroup
+\scriptsize
 \input{figures/architecture-style.tex}
-\begin{tikzpicture}[x=1cm,y=-1cm]
-% UIP
-\fill[grayink!4] (6.914,0) rectangle (9.686,0.88);
-\fill[grayink!16] (6.914,0) rectangle (9.686,0.44);
-\draw[grayink,line width=.6pt] (6.914,0) rectangle (9.686,0.88);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (7.054,0.22) {UIP};
-\draw[grayink!35,line width=.35pt] (6.914,0.44) -- (9.686,0.44);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (7.054,0.66) {frame types are sets};
-% CBB
-\fill[frameink!4] (1.6719,1.65) rectangle (3.6281,2.97);
-\fill[frameink!16] (1.6719,1.65) rectangle (3.6281,2.09);
-\draw[frameink,line width=.6pt] (1.6719,1.65) rectangle (3.6281,2.97);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (1.8119,1.87) {$\cname{coh2}{\downarrow\downarrow}{frame}{}{}$};
-\draw[frameink!35,line width=.35pt] (1.6719,2.09) -- (3.6281,2.09);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.8119,2.31) {$s\leq q\leq r\leq k$};
-\draw[frameink!35,line width=.35pt] (1.6719,2.53) -- (3.6281,2.53);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.8119,2.75) {\hyperref[fig:coh2-refl-bb]{\textbf{hex.}~\ref*{fig:coh2-refl-bb}}};
-% oldBB
-\fill[paintingink!4] (1.253,3.49) rectangle (4.047,4.37);
-\fill[paintingink!16] (1.253,3.49) rectangle (4.047,3.93);
-\draw[paintingink,line width=.6pt] (1.253,3.49) rectangle (4.047,4.37);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (1.393,3.71) {$\cname{coh}{\downarrow\downarrow}{painting}{}{n-1}$};
-\draw[paintingink!35,line width=.35pt] (1.253,3.93) -- (4.047,3.93);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.393,4.15) {preceding dimension};
-% LBB
-\fill[green!4] (1.7507,5.04) rectangle (3.5493,6.8);
-\fill[green!16] (1.7507,5.04) rectangle (3.5493,5.48);
-\draw[green,line width=.6pt] (1.7507,5.04) rectangle (3.5493,6.8);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (1.8907,5.26) {$\cname{coh}{\downarrow\downarrow}{layer}{}{}$};
-\draw[green!35,line width=.35pt] (1.7507,5.48) -- (3.5493,5.48);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.8907,5.7) {$q\leq r<k$};
-\draw[green!35,line width=.35pt] (1.7507,5.92) -- (3.5493,5.92);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.8907,6.14) {$\cname{coh2}{\downarrow\downarrow}{frame}{}{}$};
-\draw[green!35,line width=.35pt] (1.7507,6.36) -- (3.5493,6.36);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.8907,6.58) {$\cname{coh}{\downarrow\downarrow}{painting}{}{n-1}$};
-% CAB
-\fill[frameink!4] (7.1427,1.65) rectangle (9.4573,2.97);
-\fill[frameink!16] (7.1427,1.65) rectangle (9.4573,2.09);
-\draw[frameink,line width=.6pt] (7.1427,1.65) rectangle (9.4573,2.97);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (7.2827,1.87) {$\cname{coh2}{\downarrow\uparrow}{frame}{}{}$};
-\draw[frameink!35,line width=.35pt] (7.1427,2.09) -- (9.4573,2.09);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (7.2827,2.31) {$q\leq p,\;s\leq r\leq k$};
-\draw[frameink!35,line width=.35pt] (7.1427,2.53) -- (9.4573,2.53);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (7.2827,2.75) {\hyperref[fig:coh2-refl-ba]{\textbf{hex.}~\ref*{fig:coh2-refl-ba}}};
-% oldAB
-\fill[paintingink!4] (6.903,3.49) rectangle (9.697,4.37);
-\fill[paintingink!16] (6.903,3.49) rectangle (9.697,3.93);
-\draw[paintingink,line width=.6pt] (6.903,3.49) rectangle (9.697,4.37);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (7.043,3.71) {$\cname{coh}{\downarrow\uparrow}{painting}{}{n-1}$};
-\draw[paintingink!35,line width=.35pt] (6.903,3.93) -- (9.697,3.93);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (7.043,4.15) {preceding dimension};
-% LAB
-\fill[green!4] (7.3964,5.04) rectangle (9.2036,6.8);
-\fill[green!16] (7.3964,5.04) rectangle (9.2036,5.48);
-\draw[green,line width=.6pt] (7.3964,5.04) rectangle (9.2036,6.8);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (7.5364,5.26) {$\cname{coh}{\downarrow\uparrow}{layer}{}{}$};
-\draw[green!35,line width=.35pt] (7.3964,5.48) -- (9.2036,5.48);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (7.5364,5.7) {$q\leq p,\;r<k$};
-\draw[green!35,line width=.35pt] (7.3964,5.92) -- (9.2036,5.92);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (7.5364,6.14) {$\cname{coh2}{\downarrow\uparrow}{frame}{}{}$};
-\draw[green!35,line width=.35pt] (7.3964,6.36) -- (9.2036,6.36);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (7.5364,6.58) {$\cname{coh}{\downarrow\uparrow}{painting}{}{n-1}$};
-% CAA
-\fill[frameink!4] (12.7927,1.65) rectangle (15.1073,2.97);
-\fill[frameink!16] (12.7927,1.65) rectangle (15.1073,2.09);
-\draw[frameink,line width=.6pt] (12.7927,1.65) rectangle (15.1073,2.97);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (12.9327,1.87) {$\cname{coh2}{\uparrow\uparrow}{frame}{}{}$};
-\draw[frameink!35,line width=.35pt] (12.7927,2.09) -- (15.1073,2.09);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.9327,2.31) {$q\leq r\leq p,\;s\leq k$};
-\draw[frameink!35,line width=.35pt] (12.7927,2.53) -- (15.1073,2.53);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.9327,2.75) {\hyperref[fig:coh2-refl-aa]{\textbf{hex.}~\ref*{fig:coh2-refl-aa}}};
-% oldAA
-\fill[paintingink!4] (12.553,3.49) rectangle (15.347,4.37);
-\fill[paintingink!16] (12.553,3.49) rectangle (15.347,3.93);
-\draw[paintingink,line width=.6pt] (12.553,3.49) rectangle (15.347,4.37);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (12.693,3.71) {$\cname{coh}{\uparrow\uparrow}{painting}{}{n-1}$};
-\draw[paintingink!35,line width=.35pt] (12.553,3.93) -- (15.347,3.93);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.693,4.15) {preceding dimension};
-% LAA
-\fill[green!4] (12.7806,5.04) rectangle (15.1194,6.8);
-\fill[green!16] (12.7806,5.04) rectangle (15.1194,5.48);
-\draw[green,line width=.6pt] (12.7806,5.04) rectangle (15.1194,6.8);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (12.9206,5.26) {$\cname{coh}{\uparrow\uparrow}{layer}{}{}$};
-\draw[green!35,line width=.35pt] (12.7806,5.48) -- (15.1194,5.48);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.9206,5.7) {$q\leq r\leq p,\;k>0$};
-\draw[green!35,line width=.35pt] (12.7806,5.92) -- (15.1194,5.92);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.9206,6.14) {$\cname{coh2}{\uparrow\uparrow}{frame}{}{}$};
-\draw[green!35,line width=.35pt] (12.7806,6.36) -- (15.1194,6.36);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.9206,6.58) {$\cname{coh}{\uparrow\uparrow}{painting}{}{n-1}$};
-% CAB0
-\fill[frameink!4] (4.5145,1.65) rectangle (6.4355,2.97);
-\fill[frameink!16] (4.5145,1.65) rectangle (6.4355,2.09);
-\draw[frameink,line width=.6pt] (4.5145,1.65) rectangle (6.4355,2.97);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (4.6545,1.87) {$\cname{coh2}{\downarrow\uparrow}{frame}{,0}{}$};
-\draw[frameink!35,line width=.35pt] (4.5145,2.09) -- (6.4355,2.09);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (4.6545,2.31) {$s\leq r\leq k$};
-\draw[frameink!35,line width=.35pt] (4.5145,2.53) -- (6.4355,2.53);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (4.6545,2.75) {\hyperref[fig:coh2-refl-ba-zero]{\textbf{sq.}~\ref*{fig:coh2-refl-ba-zero}}};
-% LAB0
-\fill[purple!4] (4.5145,5.04) rectangle (6.4355,6.36);
-\fill[purple!16] (4.5145,5.04) rectangle (6.4355,5.48);
-\draw[purple,line width=.6pt] (4.5145,5.04) rectangle (6.4355,6.36);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (4.6545,5.26) {$\cname{coh}{\downarrow\uparrow}{layer}{,0}{}$};
-\draw[purple!35,line width=.35pt] (4.5145,5.48) -- (6.4355,5.48);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (4.6545,5.7) {$q=0,\;r\leq k$};
-\draw[purple!35,line width=.35pt] (4.5145,5.92) -- (6.4355,5.92);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (4.6545,6.14) {$\cname{coh2}{\downarrow\uparrow}{frame}{,0}{}$};
-% CAA0
-\fill[frameink!4] (10.1645,1.65) rectangle (12.0855,2.97);
-\fill[frameink!16] (10.1645,1.65) rectangle (12.0855,2.09);
-\draw[frameink,line width=.6pt] (10.1645,1.65) rectangle (12.0855,2.97);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (10.3045,1.87) {$\cname{coh2}{\uparrow\uparrow}{frame}{,0}{}$};
-\draw[frameink!35,line width=.35pt] (10.1645,2.09) -- (12.0855,2.09);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (10.3045,2.31) {$r\leq p,\;s\leq k$};
-\draw[frameink!35,line width=.35pt] (10.1645,2.53) -- (12.0855,2.53);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (10.3045,2.75) {\hyperref[fig:coh2-refl-aa-zero]{\textbf{sq.}~\ref*{fig:coh2-refl-aa-zero}}};
-% LAA0
-\fill[purple!4] (10.1645,5.04) rectangle (12.0855,6.36);
-\fill[purple!16] (10.1645,5.04) rectangle (12.0855,5.48);
-\draw[purple,line width=.6pt] (10.1645,5.04) rectangle (12.0855,6.36);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (10.3045,5.26) {$\cname{coh}{\uparrow\uparrow}{layer}{,0}{}$};
-\draw[purple!35,line width=.35pt] (10.1645,5.48) -- (12.0855,5.48);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (10.3045,5.7) {$q=0,\;r\leq p$};
-\draw[purple!35,line width=.35pt] (10.1645,5.92) -- (12.0855,5.92);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (10.3045,6.14) {$\cname{coh2}{\uparrow\uparrow}{frame}{,0}{}$};
-% cohL
-\fill[grayink!4] (12.2543,7.73) rectangle (15.6457,9.05);
-\fill[grayink!16] (12.2543,7.73) rectangle (15.6457,8.17);
-\draw[grayink,line width=.6pt] (12.2543,7.73) rectangle (15.6457,9.05);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (12.3943,7.95) {Supplied $\mathsf{cohL}$};
-\draw[grayink!35,line width=.35pt] (12.2543,8.17) -- (15.6457,8.17);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.3943,8.39) {$q\leq r\leq p,\;k=0$};
-\draw[grayink!35,line width=.35pt] (12.2543,8.61) -- (15.6457,8.61);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.3943,8.83) {coherence at a full frame};
-% FBB
-\fill[frameink!4] (1.018,9.13) rectangle (4.282,11.77);
-\fill[frameink!16] (1.018,9.13) rectangle (4.282,9.57);
-\draw[frameink,line width=.6pt] (1.018,9.13) rectangle (4.282,11.77);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (1.158,9.35) {$\cname{coh}{\downarrow\downarrow}{frame}{}{}$};
-\draw[frameink!35,line width=.35pt] (1.018,9.57) -- (4.282,9.57);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.158,9.79) {$q\leq r\leq k$};
-\draw[frameink!35,line width=.35pt] (1.018,10.01) -- (4.282,10.01);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.158,10.23) {$p=0$: reflexivity};
-\draw[frameink!35,line width=.35pt] (1.018,10.45) -- (4.282,10.45);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.158,10.67) {$p=p'+1$:};
-\draw[frameink!35,line width=.35pt] (1.018,10.89) -- (4.282,10.89);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.158,11.11) {\quad $\cname{coh}{\downarrow\downarrow}{frame}{}{}$ (recursive)};
-\draw[frameink!35,line width=.35pt] (1.018,11.33) -- (4.282,11.33);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.158,11.55) {\quad $\cname{coh}{\downarrow\downarrow}{layer}{}{}$};
-% FAB
-\fill[frameink!4] (6.668,9.13) rectangle (9.932,12.65);
-\fill[frameink!16] (6.668,9.13) rectangle (9.932,9.57);
-\draw[frameink,line width=.6pt] (6.668,9.13) rectangle (9.932,12.65);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (6.808,9.35) {$\cname{coh}{\downarrow\uparrow}{frame}{}{}$};
-\draw[frameink!35,line width=.35pt] (6.668,9.57) -- (9.932,9.57);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (6.808,9.79) {$q\leq p,\;r\leq k$};
-\draw[frameink!35,line width=.35pt] (6.668,10.01) -- (9.932,10.01);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (6.808,10.23) {$q=0$:};
-\draw[frameink!35,line width=.35pt] (6.668,10.45) -- (9.932,10.45);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (6.808,10.67) {\quad $\cname{coh}{\downarrow\downarrow}{frame}{}{}$};
-\draw[frameink!35,line width=.35pt] (6.668,10.89) -- (9.932,10.89);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (6.808,11.11) {\quad $\cname{coh}{\downarrow\uparrow}{layer}{,0}{}$};
-\draw[frameink!35,line width=.35pt] (6.668,11.33) -- (9.932,11.33);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (6.808,11.55) {$q=q'+1$:};
-\draw[frameink!35,line width=.35pt] (6.668,11.77) -- (9.932,11.77);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (6.808,11.99) {\quad $\cname{coh}{\downarrow\uparrow}{frame}{}{}$ (recursive)};
-\draw[frameink!35,line width=.35pt] (6.668,12.21) -- (9.932,12.21);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (6.808,12.43) {\quad $\cname{coh}{\downarrow\uparrow}{layer}{}{}$};
-% FAA
-\fill[frameink!4] (12.318,9.13) rectangle (15.582,12.65);
-\fill[frameink!16] (12.318,9.13) rectangle (15.582,9.57);
-\draw[frameink,line width=.6pt] (12.318,9.13) rectangle (15.582,12.65);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (12.458,9.35) {$\cname{coh}{\uparrow\uparrow}{frame}{}{}$};
-\draw[frameink!35,line width=.35pt] (12.318,9.57) -- (15.582,9.57);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.458,9.79) {$q\leq r\leq p$};
-\draw[frameink!35,line width=.35pt] (12.318,10.01) -- (15.582,10.01);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.458,10.23) {$q=0$:};
-\draw[frameink!35,line width=.35pt] (12.318,10.45) -- (15.582,10.45);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.458,10.67) {\quad $\cname{coh}{\downarrow\uparrow}{frame}{}{}$};
-\draw[frameink!35,line width=.35pt] (12.318,10.89) -- (15.582,10.89);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.458,11.11) {\quad $\cname{coh}{\uparrow\uparrow}{layer}{,0}{}$};
-\draw[frameink!35,line width=.35pt] (12.318,11.33) -- (15.582,11.33);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.458,11.55) {$q=q'+1$:};
-\draw[frameink!35,line width=.35pt] (12.318,11.77) -- (15.582,11.77);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.458,11.99) {\quad $\cname{coh}{\uparrow\uparrow}{frame}{}{}$ (recursive)};
-\draw[frameink!35,line width=.35pt] (12.318,12.21) -- (15.582,12.21);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.458,12.43) {\quad $\cname{coh}{\uparrow\uparrow}{layer}{}{}$};
-% PAA
-\fill[paintingink!4] (12.2042,13.25) rectangle (15.6958,15.89);
-\fill[paintingink!16] (12.2042,13.25) rectangle (15.6958,13.69);
-\draw[paintingink,line width=.6pt] (12.2042,13.25) rectangle (15.6958,15.89);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (12.3442,13.47) {$\cname{coh}{\uparrow\uparrow}{painting}{}{}$};
-\draw[paintingink!35,line width=.35pt] (12.2042,13.69) -- (15.6958,13.69);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.3442,13.91) {$q\leq r\leq p$};
-\draw[paintingink!35,line width=.35pt] (12.2042,14.13) -- (15.6958,14.13);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.3442,14.35) {$k=0$: $\mathsf{cohL}$};
-\draw[paintingink!35,line width=.35pt] (12.2042,14.57) -- (15.6958,14.57);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.3442,14.79) {$k=k'+1$:};
-\draw[paintingink!35,line width=.35pt] (12.2042,15.01) -- (15.6958,15.01);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.3442,15.23) {\quad $\cname{coh}{\uparrow\uparrow}{layer}{}{}$};
-\draw[paintingink!35,line width=.35pt] (12.2042,15.45) -- (15.6958,15.45);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (12.3442,15.67) {\quad $\cname{coh}{\uparrow\uparrow}{painting}{}{}$ (recursive)};
-% PAB
-\fill[paintingink!4] (6.5542,13.25) rectangle (10.0458,16.77);
-\fill[paintingink!16] (6.5542,13.25) rectangle (10.0458,13.69);
-\draw[paintingink,line width=.6pt] (6.5542,13.25) rectangle (10.0458,16.77);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (6.6942,13.47) {$\cname{coh}{\downarrow\uparrow}{painting}{}{}$};
-\draw[paintingink!35,line width=.35pt] (6.5542,13.69) -- (10.0458,13.69);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (6.6942,13.91) {$q\leq p,\;r\leq k$};
-\draw[paintingink!35,line width=.35pt] (6.5542,14.13) -- (10.0458,14.13);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (6.6942,14.35) {$r=0$:};
-\draw[paintingink!35,line width=.35pt] (6.5542,14.57) -- (10.0458,14.57);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (6.6942,14.79) {\quad $\cname{coh}{\uparrow\uparrow}{layer}{,0}{}$};
-\draw[paintingink!35,line width=.35pt] (6.5542,15.01) -- (10.0458,15.01);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (6.6942,15.23) {\quad $\cname{coh}{\uparrow\uparrow}{painting}{}{}$};
-\draw[paintingink!35,line width=.35pt] (6.5542,15.45) -- (10.0458,15.45);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (6.6942,15.67) {$r=r'+1$:};
-\draw[paintingink!35,line width=.35pt] (6.5542,15.89) -- (10.0458,15.89);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (6.6942,16.11) {\quad $\cname{coh}{\downarrow\uparrow}{layer}{}{}$};
-\draw[paintingink!35,line width=.35pt] (6.5542,16.33) -- (10.0458,16.33);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (6.6942,16.55) {\quad $\cname{coh}{\downarrow\uparrow}{painting}{}{}$ (recursive)};
-% PBB
-\fill[paintingink!4] (0.9042,13.25) rectangle (4.3958,16.77);
-\fill[paintingink!16] (0.9042,13.25) rectangle (4.3958,13.69);
-\draw[paintingink,line width=.6pt] (0.9042,13.25) rectangle (4.3958,16.77);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (1.0442,13.47) {$\cname{coh}{\downarrow\downarrow}{painting}{}{}$};
-\draw[paintingink!35,line width=.35pt] (0.9042,13.69) -- (4.3958,13.69);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.0442,13.91) {$q\leq r\leq k$};
-\draw[paintingink!35,line width=.35pt] (0.9042,14.13) -- (4.3958,14.13);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.0442,14.35) {$q=0$:};
-\draw[paintingink!35,line width=.35pt] (0.9042,14.57) -- (4.3958,14.57);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.0442,14.79) {\quad $\cname{coh}{\downarrow\uparrow}{layer}{,0}{}$};
-\draw[paintingink!35,line width=.35pt] (0.9042,15.01) -- (4.3958,15.01);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.0442,15.23) {\quad $\cname{coh}{\downarrow\uparrow}{painting}{}{}$};
-\draw[paintingink!35,line width=.35pt] (0.9042,15.45) -- (4.3958,15.45);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.0442,15.67) {$q=q'+1$:};
-\draw[paintingink!35,line width=.35pt] (0.9042,15.89) -- (4.3958,15.89);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.0442,16.11) {\quad $\cname{coh}{\downarrow\downarrow}{layer}{}{}$};
-\draw[paintingink!35,line width=.35pt] (0.9042,16.33) -- (4.3958,16.33);
-\node[anchor=west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (1.0442,16.55) {\quad $\cname{coh}{\downarrow\downarrow}{painting}{}{}$ (recursive)};
-% FBB -> FAB, row 3
-\draw[edge,draw=purple] (4.282,10.67) -- (6.668,10.67);
-% FAB -> FAA, row 3
-\draw[edge,draw=purple] (9.932,10.67) -- (12.318,10.67);
-% PAA -> PAB, row 4
-\draw[edge,draw=purple] (12.2042,15.23) -- (10.0458,15.23);
-% PAB -> PBB, row 4
-\draw[edge,draw=purple] (6.5542,15.23) -- (4.3958,15.23);
-% UIP -> CBB, row 2
-\draw[edge] (6.914,0.7) -- (3.7293,0.7) -- (3.7293,2.75) -- (3.6281,2.75);
-% CBB -> LBB, row 2
-\draw[edge] (1.6719,2.79) -- (1.1507,2.79) -- (1.1507,6.14) -- (1.7507,6.14);
-% oldBB -> LBB, row 3
-\draw[edge,draw=blue,dashed] (3.7293,4.37) -- (3.7293,6.58) -- (3.5493,6.58);
-% UIP -> CAB, row 2
-\draw[edge] (6.914,0.7) -- (6.7964,0.7) -- (6.7964,2.75) -- (7.1427,2.75);
-% CAB -> LAB, row 2
-\draw[edge] (7.1427,2.79) -- (6.7964,2.79) -- (6.7964,6.14) -- (7.3964,6.14);
-% oldAB -> LAB, row 3
-\draw[edge,draw=blue,dashed] (9.3836,4.37) -- (9.3836,6.58) -- (9.2036,6.58);
-% UIP -> CAA, row 2
-\draw[edge] (9.686,0.7) -- (12.1927,0.7) -- (12.1927,2.75) -- (12.7927,2.75);
-% CAA -> LAA, row 2
-\draw[edge] (12.7927,2.79) -- (12.4355,2.79) -- (12.4355,6.14) -- (12.7806,6.14);
-% oldAA -> LAA, row 3
-\draw[edge,draw=blue,dashed] (15.347,4.19) -- (15.4645,4.19) -- (15.4645,6.58) -- (15.1194,6.58);
-% UIP -> CAB0, row 2
-\draw[edge] (6.914,0.7) -- (6.5427,0.7) -- (6.5427,2.75) -- (6.4355,2.75);
-% CAB0 -> LAB0, row 2
-\draw[edge] (6.4355,2.79) -- (6.5427,2.79) -- (6.5427,6.14) -- (6.4355,6.14);
-% UIP -> CAA0, row 2
-\draw[edge] (9.686,0.7) -- (9.8036,0.7) -- (9.8036,2.75) -- (10.1645,2.75);
-% CAA0 -> LAA0, row 2
-\draw[edge] (10.1645,2.79) -- (10.0573,2.79) -- (10.0573,6.14) -- (10.1645,6.14);
-% LBB -> FBB, row 5
-\draw[edge] (1.7507,6.62) -- (0.853,6.62) -- (0.853,11.55) -- (1.018,11.55);
-% LBB -> PBB, row 6
-\draw[edge] (1.7507,6.62) -- (0.758,6.62) -- (0.758,16.11) -- (0.9042,16.11);
-% LAB -> FAB, row 7
-\draw[edge] (7.3964,6.62) -- (6.5427,6.62) -- (6.5427,12.43) -- (6.668,12.43);
-% LAB -> PAB, row 6
-\draw[edge] (7.3964,6.62) -- (6.408,6.62) -- (6.408,16.11) -- (6.5542,16.11);
-% LAA -> FAA, row 7
-\draw[edge] (15.1194,6.62) -- (15.747,6.62) -- (15.747,12.43) -- (15.582,12.43);
-% LAA -> PAA, row 4
-\draw[edge] (15.1194,6.62) -- (15.8257,6.62) -- (15.8257,15.23) -- (15.6958,15.23);
-% LAB0 -> FAB, row 4
-\draw[edge,draw=purple] (6.3055,6.36) -- (6.3055,11.11) -- (6.668,11.11);
-% LAB0 -> PBB, row 3
-\draw[edge,draw=purple] (4.6445,6.36) -- (4.6445,14.79) -- (4.3958,14.79);
-% LAA0 -> FAA, row 4
-\draw[edge,draw=purple] (11.9555,6.36) -- (11.9555,11.11) -- (12.318,11.11);
-% LAA0 -> PAB, row 3
-\draw[edge,draw=purple] (10.2945,6.36) -- (10.2945,14.79) -- (10.0458,14.79);
-% cohL -> PAA, row 2
-\draw[edge,draw=purple] (12.2543,8.87) -- (12.0743,8.87) -- (12.0743,14.35) -- (12.2042,14.35);
-\node[anchor=south west,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily\bfseries}] at (0.15,-0.2) {refl-refl};
-\node[anchor=south east,inner sep=0pt,font={\fontsize{8}{11}\selectfont\sffamily}] at (16.486,-.20) {$p\leq n,\quad k=n-p$};
-\coordinate (page-north) at (current bounding box.north);
-\coordinate (page-south) at (current bounding box.south);
-\coordinate (page-left) at (0,0);
-\coordinate (page-right) at (16.636,0);
-\pgfresetboundingbox
-\path[use as bounding box] (page-left |- page-north) rectangle (page-right |- page-south);
+\begin{tikzpicture}[x=1cm,y=-1cm,scale=0.95]
+  % UIP
+  \fill[grayink!4] (6.914,0) rectangle (9.686,0.88);
+  \fill[grayink!16] (6.914,0) rectangle (9.686,0.44);
+  \draw[grayink,line width=.6pt] (6.914,0) rectangle (9.686,0.88);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (7.054,0.22) {UIP};
+  \draw[grayink!35,line width=.35pt] (6.914,0.44) -- (9.686,0.44);
+  \node[anchor=west,inner sep=0pt] at (7.054,0.66) {frame types are sets};
+  % CBB
+  \fill[frameink!4] (1.6719,1.65) rectangle (3.6281,2.97);
+  \fill[frameink!16] (1.6719,1.65) rectangle (3.6281,2.09);
+  \draw[frameink,line width=.6pt] (1.6719,1.65) rectangle (3.6281,2.97);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (1.8119,1.87) {$\cname{coh2}{\downarrow\downarrow}{frame}{}{}$};
+  \draw[frameink!35,line width=.35pt] (1.6719,2.09) -- (3.6281,2.09);
+  \node[anchor=west,inner sep=0pt] at (1.8119,2.31) {$s\leq q\leq r\leq k$};
+  \draw[frameink!35,line width=.35pt] (1.6719,2.53) -- (3.6281,2.53);
+  \node[anchor=west,inner sep=0pt] at (1.8119,2.75) {\hyperref[fig:coh2-refl-bb]{\textbf{hex.}~\ref*{fig:coh2-refl-bb}}};
+  % oldBB
+  \fill[paintingink!4] (1.253,3.49) rectangle (4.047,4.37);
+  \fill[paintingink!16] (1.253,3.49) rectangle (4.047,3.93);
+  \draw[paintingink,line width=.6pt] (1.253,3.49) rectangle (4.047,4.37);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (1.393,3.71) {$\cname{coh}{\downarrow\downarrow}{painting}{}{n-1}$};
+  \draw[paintingink!35,line width=.35pt] (1.253,3.93) -- (4.047,3.93);
+  \node[anchor=west,inner sep=0pt] at (1.393,4.15) {preceding dimension};
+  % LBB
+  \fill[green!4] (1.7507,5.04) rectangle (3.5493,6.8);
+  \fill[green!16] (1.7507,5.04) rectangle (3.5493,5.48);
+  \draw[green,line width=.6pt] (1.7507,5.04) rectangle (3.5493,6.8);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (1.8907,5.26) {$\cname{coh}{\downarrow\downarrow}{layer}{}{}$};
+  \draw[green!35,line width=.35pt] (1.7507,5.48) -- (3.5493,5.48);
+  \node[anchor=west,inner sep=0pt] at (1.8907,5.7) {$q\leq r<k$};
+  \draw[green!35,line width=.35pt] (1.7507,5.92) -- (3.5493,5.92);
+  \node[anchor=west,inner sep=0pt] at (1.8907,6.14) {$\cname{coh2}{\downarrow\downarrow}{frame}{}{}$};
+  \draw[green!35,line width=.35pt] (1.7507,6.36) -- (3.5493,6.36);
+  \node[anchor=west,inner sep=0pt] at (1.8907,6.58) {$\cname{coh}{\downarrow\downarrow}{painting}{}{n-1}$};
+  % CAB
+  \fill[frameink!4] (7.1427,1.65) rectangle (9.4573,2.97);
+  \fill[frameink!16] (7.1427,1.65) rectangle (9.4573,2.09);
+  \draw[frameink,line width=.6pt] (7.1427,1.65) rectangle (9.4573,2.97);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (7.2827,1.87) {$\cname{coh2}{\downarrow\uparrow}{frame}{}{}$};
+  \draw[frameink!35,line width=.35pt] (7.1427,2.09) -- (9.4573,2.09);
+  \node[anchor=west,inner sep=0pt] at (7.2827,2.31) {$q\leq p,\;s\leq r\leq k$};
+  \draw[frameink!35,line width=.35pt] (7.1427,2.53) -- (9.4573,2.53);
+  \node[anchor=west,inner sep=0pt] at (7.2827,2.75) {\hyperref[fig:coh2-refl-ba]{\textbf{hex.}~\ref*{fig:coh2-refl-ba}}};
+  % oldAB
+  \fill[paintingink!4] (6.903,3.49) rectangle (9.697,4.37);
+  \fill[paintingink!16] (6.903,3.49) rectangle (9.697,3.93);
+  \draw[paintingink,line width=.6pt] (6.903,3.49) rectangle (9.697,4.37);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (7.043,3.71) {$\cname{coh}{\downarrow\uparrow}{painting}{}{n-1}$};
+  \draw[paintingink!35,line width=.35pt] (6.903,3.93) -- (9.697,3.93);
+  \node[anchor=west,inner sep=0pt] at (7.043,4.15) {preceding dimension};
+  % LAB
+  \fill[green!4] (7.3964,5.04) rectangle (9.2036,6.8);
+  \fill[green!16] (7.3964,5.04) rectangle (9.2036,5.48);
+  \draw[green,line width=.6pt] (7.3964,5.04) rectangle (9.2036,6.8);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (7.5364,5.26) {$\cname{coh}{\downarrow\uparrow}{layer}{}{}$};
+  \draw[green!35,line width=.35pt] (7.3964,5.48) -- (9.2036,5.48);
+  \node[anchor=west,inner sep=0pt] at (7.5364,5.7) {$q\leq p,\;r<k$};
+  \draw[green!35,line width=.35pt] (7.3964,5.92) -- (9.2036,5.92);
+  \node[anchor=west,inner sep=0pt] at (7.5364,6.14) {$\cname{coh2}{\downarrow\uparrow}{frame}{}{}$};
+  \draw[green!35,line width=.35pt] (7.3964,6.36) -- (9.2036,6.36);
+  \node[anchor=west,inner sep=0pt] at (7.5364,6.58) {$\cname{coh}{\downarrow\uparrow}{painting}{}{n-1}$};
+  % CAA
+  \fill[frameink!4] (12.7927,1.65) rectangle (15.1073,2.97);
+  \fill[frameink!16] (12.7927,1.65) rectangle (15.1073,2.09);
+  \draw[frameink,line width=.6pt] (12.7927,1.65) rectangle (15.1073,2.97);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (12.9327,1.87) {$\cname{coh2}{\uparrow\uparrow}{frame}{}{}$};
+  \draw[frameink!35,line width=.35pt] (12.7927,2.09) -- (15.1073,2.09);
+  \node[anchor=west,inner sep=0pt] at (12.9327,2.31) {$q\leq r\leq p,\;s\leq k$};
+  \draw[frameink!35,line width=.35pt] (12.7927,2.53) -- (15.1073,2.53);
+  \node[anchor=west,inner sep=0pt] at (12.9327,2.75) {\hyperref[fig:coh2-refl-aa]{\textbf{hex.}~\ref*{fig:coh2-refl-aa}}};
+  % oldAA
+  \fill[paintingink!4] (12.553,3.49) rectangle (15.347,4.37);
+  \fill[paintingink!16] (12.553,3.49) rectangle (15.347,3.93);
+  \draw[paintingink,line width=.6pt] (12.553,3.49) rectangle (15.347,4.37);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (12.693,3.71) {$\cname{coh}{\uparrow\uparrow}{painting}{}{n-1}$};
+  \draw[paintingink!35,line width=.35pt] (12.553,3.93) -- (15.347,3.93);
+  \node[anchor=west,inner sep=0pt] at (12.693,4.15) {preceding dimension};
+  % LAA
+  \fill[green!4] (12.7806,5.04) rectangle (15.1194,6.8);
+  \fill[green!16] (12.7806,5.04) rectangle (15.1194,5.48);
+  \draw[green,line width=.6pt] (12.7806,5.04) rectangle (15.1194,6.8);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (12.9206,5.26) {$\cname{coh}{\uparrow\uparrow}{layer}{}{}$};
+  \draw[green!35,line width=.35pt] (12.7806,5.48) -- (15.1194,5.48);
+  \node[anchor=west,inner sep=0pt] at (12.9206,5.7) {$q\leq r\leq p,\;k>0$};
+  \draw[green!35,line width=.35pt] (12.7806,5.92) -- (15.1194,5.92);
+  \node[anchor=west,inner sep=0pt] at (12.9206,6.14) {$\cname{coh2}{\uparrow\uparrow}{frame}{}{}$};
+  \draw[green!35,line width=.35pt] (12.7806,6.36) -- (15.1194,6.36);
+  \node[anchor=west,inner sep=0pt] at (12.9206,6.58) {$\cname{coh}{\uparrow\uparrow}{painting}{}{n-1}$};
+  % CAB0
+  \fill[frameink!4] (4.5145,1.65) rectangle (6.4355,2.97);
+  \fill[frameink!16] (4.5145,1.65) rectangle (6.4355,2.09);
+  \draw[frameink,line width=.6pt] (4.5145,1.65) rectangle (6.4355,2.97);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (4.6545,1.87) {$\cname{coh2}{\downarrow\uparrow}{frame}{,0}{}$};
+  \draw[frameink!35,line width=.35pt] (4.5145,2.09) -- (6.4355,2.09);
+  \node[anchor=west,inner sep=0pt] at (4.6545,2.31) {$s\leq r\leq k$};
+  \draw[frameink!35,line width=.35pt] (4.5145,2.53) -- (6.4355,2.53);
+  \node[anchor=west,inner sep=0pt] at (4.6545,2.75) {\hyperref[fig:coh2-refl-ba-zero]{\textbf{sq.}~\ref*{fig:coh2-refl-ba-zero}}};
+  % LAB0
+  \fill[purple!4] (4.5145,5.04) rectangle (6.4355,6.36);
+  \fill[purple!16] (4.5145,5.04) rectangle (6.4355,5.48);
+  \draw[purple,line width=.6pt] (4.5145,5.04) rectangle (6.4355,6.36);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (4.6545,5.26) {$\cname{coh}{\downarrow\uparrow}{layer}{,0}{}$};
+  \draw[purple!35,line width=.35pt] (4.5145,5.48) -- (6.4355,5.48);
+  \node[anchor=west,inner sep=0pt] at (4.6545,5.7) {$q=0,\;r\leq k$};
+  \draw[purple!35,line width=.35pt] (4.5145,5.92) -- (6.4355,5.92);
+  \node[anchor=west,inner sep=0pt] at (4.6545,6.14) {$\cname{coh2}{\downarrow\uparrow}{frame}{,0}{}$};
+  % CAA0
+  \fill[frameink!4] (10.1645,1.65) rectangle (12.0855,2.97);
+  \fill[frameink!16] (10.1645,1.65) rectangle (12.0855,2.09);
+  \draw[frameink,line width=.6pt] (10.1645,1.65) rectangle (12.0855,2.97);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (10.3045,1.87) {$\cname{coh2}{\uparrow\uparrow}{frame}{,0}{}$};
+  \draw[frameink!35,line width=.35pt] (10.1645,2.09) -- (12.0855,2.09);
+  \node[anchor=west,inner sep=0pt] at (10.3045,2.31) {$r\leq p,\;s\leq k$};
+  \draw[frameink!35,line width=.35pt] (10.1645,2.53) -- (12.0855,2.53);
+  \node[anchor=west,inner sep=0pt] at (10.3045,2.75) {\hyperref[fig:coh2-refl-aa-zero]{\textbf{sq.}~\ref*{fig:coh2-refl-aa-zero}}};
+  % LAA0
+  \fill[purple!4] (10.1645,5.04) rectangle (12.0855,6.36);
+  \fill[purple!16] (10.1645,5.04) rectangle (12.0855,5.48);
+  \draw[purple,line width=.6pt] (10.1645,5.04) rectangle (12.0855,6.36);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (10.3045,5.26) {$\cname{coh}{\uparrow\uparrow}{layer}{,0}{}$};
+  \draw[purple!35,line width=.35pt] (10.1645,5.48) -- (12.0855,5.48);
+  \node[anchor=west,inner sep=0pt] at (10.3045,5.7) {$q=0,\;r\leq p$};
+  \draw[purple!35,line width=.35pt] (10.1645,5.92) -- (12.0855,5.92);
+  \node[anchor=west,inner sep=0pt] at (10.3045,6.14) {$\cname{coh2}{\uparrow\uparrow}{frame}{,0}{}$};
+  % cohL
+  \fill[grayink!4] (12.2543,7.73) rectangle (15.6457,9.05);
+  \fill[grayink!16] (12.2543,7.73) rectangle (15.6457,8.17);
+  \draw[grayink,line width=.6pt] (12.2543,7.73) rectangle (15.6457,9.05);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (12.3943,7.95) {Supplied $\mathsf{cohL}$};
+  \draw[grayink!35,line width=.35pt] (12.2543,8.17) -- (15.6457,8.17);
+  \node[anchor=west,inner sep=0pt] at (12.3943,8.39) {$q\leq r\leq p,\;k=0$};
+  \draw[grayink!35,line width=.35pt] (12.2543,8.61) -- (15.6457,8.61);
+  \node[anchor=west,inner sep=0pt] at (12.3943,8.83) {coherence at a full frame};
+  % FBB
+  \fill[frameink!4] (1.018,9.13) rectangle (4.282,11.77);
+  \fill[frameink!16] (1.018,9.13) rectangle (4.282,9.57);
+  \draw[frameink,line width=.6pt] (1.018,9.13) rectangle (4.282,11.77);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (1.158,9.35) {$\cname{coh}{\downarrow\downarrow}{frame}{}{}$};
+  \draw[frameink!35,line width=.35pt] (1.018,9.57) -- (4.282,9.57);
+  \node[anchor=west,inner sep=0pt] at (1.158,9.79) {$q\leq r\leq k$};
+  \draw[frameink!35,line width=.35pt] (1.018,10.01) -- (4.282,10.01);
+  \node[anchor=west,inner sep=0pt] at (1.158,10.23) {$p=0$: reflexivity};
+  \draw[frameink!35,line width=.35pt] (1.018,10.45) -- (4.282,10.45);
+  \node[anchor=west,inner sep=0pt] at (1.158,10.67) {$p=p'+1$:};
+  \draw[frameink!35,line width=.35pt] (1.018,10.89) -- (4.282,10.89);
+  \node[anchor=west,inner sep=0pt] at (1.158,11.11) {\quad $\cname{coh}{\downarrow\downarrow}{frame}{}{}$ (recursive)};
+  \draw[frameink!35,line width=.35pt] (1.018,11.33) -- (4.282,11.33);
+  \node[anchor=west,inner sep=0pt] at (1.158,11.55) {\quad $\cname{coh}{\downarrow\downarrow}{layer}{}{}$};
+  % FAB
+  \fill[frameink!4] (6.668,9.13) rectangle (9.932,12.65);
+  \fill[frameink!16] (6.668,9.13) rectangle (9.932,9.57);
+  \draw[frameink,line width=.6pt] (6.668,9.13) rectangle (9.932,12.65);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (6.808,9.35) {$\cname{coh}{\downarrow\uparrow}{frame}{}{}$};
+  \draw[frameink!35,line width=.35pt] (6.668,9.57) -- (9.932,9.57);
+  \node[anchor=west,inner sep=0pt] at (6.808,9.79) {$q\leq p,\;r\leq k$};
+  \draw[frameink!35,line width=.35pt] (6.668,10.01) -- (9.932,10.01);
+  \node[anchor=west,inner sep=0pt] at (6.808,10.23) {$q=0$:};
+  \draw[frameink!35,line width=.35pt] (6.668,10.45) -- (9.932,10.45);
+  \node[anchor=west,inner sep=0pt] at (6.808,10.67) {\quad $\cname{coh}{\downarrow\downarrow}{frame}{}{}$};
+  \draw[frameink!35,line width=.35pt] (6.668,10.89) -- (9.932,10.89);
+  \node[anchor=west,inner sep=0pt] at (6.808,11.11) {\quad $\cname{coh}{\downarrow\uparrow}{layer}{,0}{}$};
+  \draw[frameink!35,line width=.35pt] (6.668,11.33) -- (9.932,11.33);
+  \node[anchor=west,inner sep=0pt] at (6.808,11.55) {$q=q'+1$:};
+  \draw[frameink!35,line width=.35pt] (6.668,11.77) -- (9.932,11.77);
+  \node[anchor=west,inner sep=0pt] at (6.808,11.99) {\quad $\cname{coh}{\downarrow\uparrow}{frame}{}{}$ (recursive)};
+  \draw[frameink!35,line width=.35pt] (6.668,12.21) -- (9.932,12.21);
+  \node[anchor=west,inner sep=0pt] at (6.808,12.43) {\quad $\cname{coh}{\downarrow\uparrow}{layer}{}{}$};
+  % FAA
+  \fill[frameink!4] (12.318,9.13) rectangle (15.582,12.65);
+  \fill[frameink!16] (12.318,9.13) rectangle (15.582,9.57);
+  \draw[frameink,line width=.6pt] (12.318,9.13) rectangle (15.582,12.65);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (12.458,9.35) {$\cname{coh}{\uparrow\uparrow}{frame}{}{}$};
+  \draw[frameink!35,line width=.35pt] (12.318,9.57) -- (15.582,9.57);
+  \node[anchor=west,inner sep=0pt] at (12.458,9.79) {$q\leq r\leq p$};
+  \draw[frameink!35,line width=.35pt] (12.318,10.01) -- (15.582,10.01);
+  \node[anchor=west,inner sep=0pt] at (12.458,10.23) {$q=0$:};
+  \draw[frameink!35,line width=.35pt] (12.318,10.45) -- (15.582,10.45);
+  \node[anchor=west,inner sep=0pt] at (12.458,10.67) {\quad $\cname{coh}{\downarrow\uparrow}{frame}{}{}$};
+  \draw[frameink!35,line width=.35pt] (12.318,10.89) -- (15.582,10.89);
+  \node[anchor=west,inner sep=0pt] at (12.458,11.11) {\quad $\cname{coh}{\uparrow\uparrow}{layer}{,0}{}$};
+  \draw[frameink!35,line width=.35pt] (12.318,11.33) -- (15.582,11.33);
+  \node[anchor=west,inner sep=0pt] at (12.458,11.55) {$q=q'+1$:};
+  \draw[frameink!35,line width=.35pt] (12.318,11.77) -- (15.582,11.77);
+  \node[anchor=west,inner sep=0pt] at (12.458,11.99) {\quad $\cname{coh}{\uparrow\uparrow}{frame}{}{}$ (recursive)};
+  \draw[frameink!35,line width=.35pt] (12.318,12.21) -- (15.582,12.21);
+  \node[anchor=west,inner sep=0pt] at (12.458,12.43) {\quad $\cname{coh}{\uparrow\uparrow}{layer}{}{}$};
+  % PAA
+  \fill[paintingink!4] (12.2042,13.25) rectangle (15.6958,15.89);
+  \fill[paintingink!16] (12.2042,13.25) rectangle (15.6958,13.69);
+  \draw[paintingink,line width=.6pt] (12.2042,13.25) rectangle (15.6958,15.89);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (12.3442,13.47) {$\cname{coh}{\uparrow\uparrow}{painting}{}{}$};
+  \draw[paintingink!35,line width=.35pt] (12.2042,13.69) -- (15.6958,13.69);
+  \node[anchor=west,inner sep=0pt] at (12.3442,13.91) {$q\leq r\leq p$};
+  \draw[paintingink!35,line width=.35pt] (12.2042,14.13) -- (15.6958,14.13);
+  \node[anchor=west,inner sep=0pt] at (12.3442,14.35) {$k=0$: $\mathsf{cohL}$};
+  \draw[paintingink!35,line width=.35pt] (12.2042,14.57) -- (15.6958,14.57);
+  \node[anchor=west,inner sep=0pt] at (12.3442,14.79) {$k=k'+1$:};
+  \draw[paintingink!35,line width=.35pt] (12.2042,15.01) -- (15.6958,15.01);
+  \node[anchor=west,inner sep=0pt] at (12.3442,15.23) {\quad $\cname{coh}{\uparrow\uparrow}{layer}{}{}$};
+  \draw[paintingink!35,line width=.35pt] (12.2042,15.45) -- (15.6958,15.45);
+  \node[anchor=west,inner sep=0pt] at (12.3442,15.67) {\quad $\cname{coh}{\uparrow\uparrow}{painting}{}{}$ (recursive)};
+  % PAB
+  \fill[paintingink!4] (6.5542,13.25) rectangle (10.0458,16.77);
+  \fill[paintingink!16] (6.5542,13.25) rectangle (10.0458,13.69);
+  \draw[paintingink,line width=.6pt] (6.5542,13.25) rectangle (10.0458,16.77);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (6.6942,13.47) {$\cname{coh}{\downarrow\uparrow}{painting}{}{}$};
+  \draw[paintingink!35,line width=.35pt] (6.5542,13.69) -- (10.0458,13.69);
+  \node[anchor=west,inner sep=0pt] at (6.6942,13.91) {$q\leq p,\;r\leq k$};
+  \draw[paintingink!35,line width=.35pt] (6.5542,14.13) -- (10.0458,14.13);
+  \node[anchor=west,inner sep=0pt] at (6.6942,14.35) {$r=0$:};
+  \draw[paintingink!35,line width=.35pt] (6.5542,14.57) -- (10.0458,14.57);
+  \node[anchor=west,inner sep=0pt] at (6.6942,14.79) {\quad $\cname{coh}{\uparrow\uparrow}{layer}{,0}{}$};
+  \draw[paintingink!35,line width=.35pt] (6.5542,15.01) -- (10.0458,15.01);
+  \node[anchor=west,inner sep=0pt] at (6.6942,15.23) {\quad $\cname{coh}{\uparrow\uparrow}{painting}{}{}$};
+  \draw[paintingink!35,line width=.35pt] (6.5542,15.45) -- (10.0458,15.45);
+  \node[anchor=west,inner sep=0pt] at (6.6942,15.67) {$r=r'+1$:};
+  \draw[paintingink!35,line width=.35pt] (6.5542,15.89) -- (10.0458,15.89);
+  \node[anchor=west,inner sep=0pt] at (6.6942,16.11) {\quad $\cname{coh}{\downarrow\uparrow}{layer}{}{}$};
+  \draw[paintingink!35,line width=.35pt] (6.5542,16.33) -- (10.0458,16.33);
+  \node[anchor=west,inner sep=0pt] at (6.6942,16.55) {\quad $\cname{coh}{\downarrow\uparrow}{painting}{}{}$ (recursive)};
+  % PBB
+  \fill[paintingink!4] (0.9042,13.25) rectangle (4.3958,16.77);
+  \fill[paintingink!16] (0.9042,13.25) rectangle (4.3958,13.69);
+  \draw[paintingink,line width=.6pt] (0.9042,13.25) rectangle (4.3958,16.77);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (1.0442,13.47) {$\cname{coh}{\downarrow\downarrow}{painting}{}{}$};
+  \draw[paintingink!35,line width=.35pt] (0.9042,13.69) -- (4.3958,13.69);
+  \node[anchor=west,inner sep=0pt] at (1.0442,13.91) {$q\leq r\leq k$};
+  \draw[paintingink!35,line width=.35pt] (0.9042,14.13) -- (4.3958,14.13);
+  \node[anchor=west,inner sep=0pt] at (1.0442,14.35) {$q=0$:};
+  \draw[paintingink!35,line width=.35pt] (0.9042,14.57) -- (4.3958,14.57);
+  \node[anchor=west,inner sep=0pt] at (1.0442,14.79) {\quad $\cname{coh}{\downarrow\uparrow}{layer}{,0}{}$};
+  \draw[paintingink!35,line width=.35pt] (0.9042,15.01) -- (4.3958,15.01);
+  \node[anchor=west,inner sep=0pt] at (1.0442,15.23) {\quad $\cname{coh}{\downarrow\uparrow}{painting}{}{}$};
+  \draw[paintingink!35,line width=.35pt] (0.9042,15.45) -- (4.3958,15.45);
+  \node[anchor=west,inner sep=0pt] at (1.0442,15.67) {$q=q'+1$:};
+  \draw[paintingink!35,line width=.35pt] (0.9042,15.89) -- (4.3958,15.89);
+  \node[anchor=west,inner sep=0pt] at (1.0442,16.11) {\quad $\cname{coh}{\downarrow\downarrow}{layer}{}{}$};
+  \draw[paintingink!35,line width=.35pt] (0.9042,16.33) -- (4.3958,16.33);
+  \node[anchor=west,inner sep=0pt] at (1.0442,16.55) {\quad $\cname{coh}{\downarrow\downarrow}{painting}{}{}$ (recursive)};
+  % FBB -> FAB, row 3
+  \draw[edge,draw=purple] (4.282,10.67) -- (6.668,10.67);
+  % FAB -> FAA, row 3
+  \draw[edge,draw=purple] (9.932,10.67) -- (12.318,10.67);
+  % PAA -> PAB, row 4
+  \draw[edge,draw=purple] (12.2042,15.23) -- (10.0458,15.23);
+  % PAB -> PBB, row 4
+  \draw[edge,draw=purple] (6.5542,15.23) -- (4.3958,15.23);
+  % UIP -> CBB, row 2
+  \draw[edge] (6.914,0.7) -- (3.7293,0.7) -- (3.7293,2.75) -- (3.6281,2.75);
+  % CBB -> LBB, row 2
+  \draw[edge] (1.6719,2.79) -- (1.1507,2.79) -- (1.1507,6.14) -- (1.7507,6.14);
+  % oldBB -> LBB, row 3
+  \draw[edge,draw=blue,dashed] (3.7293,4.37) -- (3.7293,6.58) -- (3.5493,6.58);
+  % UIP -> CAB, row 2
+  \draw[edge] (6.914,0.7) -- (6.7964,0.7) -- (6.7964,2.75) -- (7.1427,2.75);
+  % CAB -> LAB, row 2
+  \draw[edge] (7.1427,2.79) -- (6.7964,2.79) -- (6.7964,6.14) -- (7.3964,6.14);
+  % oldAB -> LAB, row 3
+  \draw[edge,draw=blue,dashed] (9.3836,4.37) -- (9.3836,6.58) -- (9.2036,6.58);
+  % UIP -> CAA, row 2
+  \draw[edge] (9.686,0.7) -- (12.1927,0.7) -- (12.1927,2.75) -- (12.7927,2.75);
+  % CAA -> LAA, row 2
+  \draw[edge] (12.7927,2.79) -- (12.4355,2.79) -- (12.4355,6.14) -- (12.7806,6.14);
+  % oldAA -> LAA, row 3
+  \draw[edge,draw=blue,dashed] (15.347,4.19) -- (15.4645,4.19) -- (15.4645,6.58) -- (15.1194,6.58);
+  % UIP -> CAB0, row 2
+  \draw[edge] (6.914,0.7) -- (6.5427,0.7) -- (6.5427,2.75) -- (6.4355,2.75);
+  % CAB0 -> LAB0, row 2
+  \draw[edge] (6.4355,2.79) -- (6.5427,2.79) -- (6.5427,6.14) -- (6.4355,6.14);
+  % UIP -> CAA0, row 2
+  \draw[edge] (9.686,0.7) -- (9.8036,0.7) -- (9.8036,2.75) -- (10.1645,2.75);
+  % CAA0 -> LAA0, row 2
+  \draw[edge] (10.1645,2.79) -- (10.0573,2.79) -- (10.0573,6.14) -- (10.1645,6.14);
+  % LBB -> FBB, row 5
+  \draw[edge] (1.7507,6.62) -- (0.853,6.62) -- (0.853,11.55) -- (1.018,11.55);
+  % LBB -> PBB, row 6
+  \draw[edge] (1.7507,6.62) -- (0.758,6.62) -- (0.758,16.11) -- (0.9042,16.11);
+  % LAB -> FAB, row 7
+  \draw[edge] (7.3964,6.62) -- (6.5427,6.62) -- (6.5427,12.43) -- (6.668,12.43);
+  % LAB -> PAB, row 6
+  \draw[edge] (7.3964,6.62) -- (6.408,6.62) -- (6.408,16.11) -- (6.5542,16.11);
+  % LAA -> FAA, row 7
+  \draw[edge] (15.1194,6.62) -- (15.747,6.62) -- (15.747,12.43) -- (15.582,12.43);
+  % LAA -> PAA, row 4
+  \draw[edge] (15.1194,6.62) -- (15.8257,6.62) -- (15.8257,15.23) -- (15.6958,15.23);
+  % LAB0 -> FAB, row 4
+  \draw[edge,draw=purple] (6.3055,6.36) -- (6.3055,11.11) -- (6.668,11.11);
+  % LAB0 -> PBB, row 3
+  \draw[edge,draw=purple] (4.6445,6.36) -- (4.6445,14.79) -- (4.3958,14.79);
+  % LAA0 -> FAA, row 4
+  \draw[edge,draw=purple] (11.9555,6.36) -- (11.9555,11.11) -- (12.318,11.11);
+  % LAA0 -> PAB, row 3
+  \draw[edge,draw=purple] (10.2945,6.36) -- (10.2945,14.79) -- (10.0458,14.79);
+  % cohL -> PAA, row 2
+  \draw[edge,draw=purple] (12.2543,8.87) -- (12.0743,8.87) -- (12.0743,14.35) -- (12.2042,14.35);
+  \node[anchor=south west,inner sep=0pt,font=\bfseries] at (0.15,-0.2) {refl-refl};
+  \node[anchor=south east,inner sep=0pt] at (16.486,-.20) {$p\leq n,\quad k=n-p$};
+  \coordinate (page-north) at (current bounding box.north);
+  \coordinate (page-south) at (current bounding box.south);
+  \coordinate (page-left) at (0,0);
+  \coordinate (page-right) at (16.636,0);
+  \pgfresetboundingbox
+  \path[use as bounding box] (page-left |- page-north) rectangle (page-right |- page-south);
 \end{tikzpicture}
 \endgroup

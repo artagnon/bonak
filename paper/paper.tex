@@ -403,7 +403,6 @@ In Table~\ref{tab:dgn-flavors}, dimensions start at $-1$ in the unary case and a
 
 \begin{table}[H]
   \centering
-  \small
   \input{figures/degeneracy-comparison-style.tex}
   \begin{tabularx}{\linewidth}{@{}>{\centering\arraybackslash}m{0.152\linewidth}YY@{}}
     \toprule
@@ -429,7 +428,7 @@ In Table~\ref{tab:dgn-flavors}, dimensions start at $-1$ in the unary case and a
                             & $r^n_i$, $i\leq n$                                                                                  & $s^n_{i\epsilon}$, $i<n$, $\epsilon\in\{L,R\}$ \\
     \midrule
     \makecell{$n=0$ \\ $b$} & \comparisonEdge{b}{b}{r^0_0(b)}{}                                                                   & None                                           \\[1em]
-    \makecell{$n=1$ \\ \comparisonEdge{b}{c}{q}{-}}
+    \makecell{$n=1$ \\ \comparisonEdge{b}{c}{q}{}}
                             & \comparisonSquare{b}{c}{b}{c}{q}{r^0_0(b)}{r^0_0(c)}{q}{r^1_0(q)}\hspace{3mm}                                                                        %
     \comparisonSquare{b}{b}{c}{c}{r^0_0(b)}{q}{q}{r^0_0(c)}{r^1_1(q)}
                             & \comparisonSquare{b}{c}{c}{c}{q}{q}{r^0_0(c)}{r^0_0(c)}{s^1_{0L}(q)}\hspace{3mm}                                                                     %
@@ -473,37 +472,37 @@ Figure~\ref{fig:fibred-indexed-faces} illustrates the binary case, with semi--cu
   \label{fig:fibred-indexed-faces}
 \end{figure}
 
-For the fixed arity $\nu$, assuming univalence and functional extensionality, the fibred-indexed correspondence gives an equivalence of types
+For the fixed arity $\nu$, assuming univalence and functional extensionality, the fibred-indexed correspondence gives an equivalence of types~\cite{Laroche26}.
 \begin{equation}
   \label{eq:nuset-correspondence}
   \X\simeq\operatorname{Functor}(\hexagon^{\mathrm{op}},\HSet)
 \end{equation}
-Here $\operatorname{Functor}(C,\HSet)$ denotes the type of set-valued functors on $C$. This correspondence is an instance of the \emph{Grothendieck construction}.
+Here $\operatorname{Functor}(C,\HSet)$ denotes the type of set-valued functors on $C$. This correspondence is a variant of the \emph{Grothendieck construction}, where, in contrast to the usual equivalence between discrete fibrations and presheaves, presheaves are here seen as living on the fibred side, thanks to $\hexagon$ being a direct category.
 
 We extend this correspondence to $\nu$--sets with parametric degeneracies. Figure~\ref{fig:fibred-indexed-degeneracies} illustrates the binary case, with cubical sets.
 
 \begin{figure}[H]
   \begin{equation*}
     \begin{array}{cllccllll}
-      \multicolumn{3}{c}{\mbox{\emph{fibred form}}}            & \quad\mathit{vs}\quad                                                     & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                                                      \\
+      \multicolumn{3}{c}{\mbox{\emph{fibred form}}}            & \quad\mathit{vs}\quad                                                                                 & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                                                                    \\
       \\
-      Y_0                                                      & :                                                                         & \HSet                                                                &  & X_0                                                                             & :                & \HSet                                                                            & \mbox{(points)}   \\
-      \uparrow\!\downarrow\uparrow                                                                                                                                                                                                                                                                                                                                                                                               \\
-      Y_1                                                      & :                                                                         & \HSet                                                                &  & X_1                                                                             & :                & X_0 \times X_0 \rightarrow \HSet                                                 & \mbox{(segments)} \\
-      \uparrow\!\downarrow\uparrow\uparrow\!\downarrow\uparrow &                                                                           &                                                                      &  & r^0_0                                                                           & :                & \Pi x_0:X_0.\,X_1(x_0,x_0)                                                                           \\
-      Y_2                                                      & :                                                                         & \HSet                                                                &  & X_2                                                                             & :                & \Pi (x^0_{LL},x^0_{LR}).\, \Pi x^1_{L*}:X_1 (x^0_{LL},x^0_{LR}).                                     \\
-                                                               &                                                                           &                                                                      &  &                                                                                 &                  & \Pi (x^0_{RL},x^0_{RR}).\, \Pi x^1_{R*}:X_1 (x^0_{RL},x^0_{RR}).\,                                   \\
-      \multicolumn{3}{c}{\mbox{~+ coherences}}                 &                                                                           &                                                                      &  & X_1 (x^0_{LL},x^0_{RL}) \times X_1 (x^0_{LR},x^0_{RR}) \rightarrow \HSet \qquad & \mbox{(squares)}                                                                                                        \\
-                                                               &                                                                           &                                                                      &  & r^1_0                                                                           & :                & \Pi (x^0_{L},x^0_{R}):(X_0 \times X_0).\,\Pi x^1:X_1(x^0_L,x^0_R).\,                                 \\
-                                                               &                                                                           &                                                                      &  &                                                                                 &                  & X_2((x^0_{L},x^0_{L}),r^0_0(x^0_{L}),(x^0_{R},x^0_{R}),r^0_0(x^0_{R}),(x^1,x^1))                     \\
-                                                               &                                                                           &                                                                      &  &
-      r^1_1                                                    & :                                                                         & \Pi (x^0_{L},x^0_{R}):(X_0 \times X_0).\,\Pi x^1:X_1(x^0_L,x^0_R).\,                                                                                                                                                                                                                \\
-                                                               &                                                                           &                                                                      &  &                                                                                 &                  & X_2((x^0_{L},x^0_{R}),x^1,(x^0_{L},x^0_{R}),x^1,(r^0_0(x^0_{L}),r^0_0(x^0_{L})))                     \\
-                                                               &                                                                           &                                                                      &  &
+      Y_0                                                      & :                                                                                                     & \HSet                                                                &  & X_0                                                                             & :                & \HSet                                                                                          & \mbox{(points)}   \\
+      \uparrow\!\downarrow\uparrow                                                                                                                                                                                                                                                                                                                                                                                                                                         \\
+      Y_1                                                      & :                                                                                                     & \HSet                                                                &  & X_1                                                                             & :                & X_0 \times X_0 \rightarrow \HSet                                                               & \mbox{(segments)} \\
+      \uparrow\!\downarrow\uparrow\uparrow\!\downarrow\uparrow &                                                                                                       &                                                                      &  & r^0_0                                                                           & :                & \Pi x_0:X_0.\,X_1(x_0,x_0)                                                                                         \\
+      Y_2                                                      & :                                                                                                     & \HSet                                                                &  & X_2                                                                             & :                & \Pi (x^0_{LL},x^0_{LR}).\, \Pi x^1_{L*}:X_1 (x^0_{LL},x^0_{LR}).                                                   \\
+                                                               &                                                                                                       &                                                                      &  &                                                                                 &                  & \Pi (x^0_{RL},x^0_{RR}).\, \Pi x^1_{R*}:X_1 (x^0_{RL},x^0_{RR}).\,                                                 \\
+      \multicolumn{3}{c}{\mbox{~+ coherences}}                 &                                                                                                       &                                                                      &  & X_1 (x^0_{LL},x^0_{RL}) \times X_1 (x^0_{LR},x^0_{RR}) \rightarrow \HSet \qquad & \mbox{(squares)}                                                                                                                      \\
+                                                               &                                                                                                       &                                                                      &  & \epsilon^1_0                                                                    & :                & \Pi (x^0_{L},x^0_{R}):(X_0 \times X_0).\,\Pi x^1:X_1(x^0_L,x^0_R).\,                                               \\
+                                                               &                                                                                                       &                                                                      &  &                                                                                 &                  & X_2((x^0_{L},x^0_{L}),\epsilon^0_0(x^0_{L}),(x^0_{R},x^0_{R}),\epsilon^0_0(x^0_{R}),(x^1,x^1))                     \\
+                                                               &                                                                                                       &                                                                      &  &
+      r^1_1                                                    & :                                                                                                     & \Pi (x^0_{L},x^0_{R}):(X_0 \times X_0).\,\Pi x^1:X_1(x^0_L,x^0_R).\,                                                                                                                                                                                                                              \\
+                                                               &                                                                                                       &                                                                      &  &                                                                                 &                  & X_2((x^0_{L},x^0_{R}),x^1,(x^0_{L},x^0_{R}),x^1,(\epsilon^0_0(x^0_{L}),\epsilon^0_0(x^0_{L})))                     \\
+                                                               &                                                                                                       &                                                                      &  &
       coh^1_0                                                  &
-      :                                                        & \Pi x_0:X_0.\, r^1_0 (x^0, x^0,r^0_0 (x^0)) = r^1_1 (x^0,x^0,r^0_0 (x^0))                                                                                                                                                                                                                                                                                       \\
+      :                                                        & \Pi x_0:X_0.\, \epsilon^1_0 (x^0, x^0,\epsilon^0_0 (x^0)) = \epsilon^1_1 (x^0,x^0,\epsilon^0_0 (x^0))                                                                                                                                                                                                                                                                                                     \\
 
-      \vdots                                                   &                                                                           &                                                                      &  & \vdots                                                                                                                                                                                                    \\
+      \vdots                                                   &                                                                                                       &                                                                      &  & \vdots                                                                                                                                                                                                                  \\
     \end{array}
   \end{equation*}
   \caption{Fibred and indexed presentations of cubical sets with degeneracies. The indexed presentation explicitly supplies degeneracies and their mutual coherences.}
@@ -553,22 +552,14 @@ Figure~\ref{fig:arch-restr} displays this recursive decomposition. Arrows run fr
 
 For an equality $e:x=y$ and $u:P(x)$, we write $\mathsf{rew}(e,u):P(y)$ for transport along $e$, leaving the family $P$ implicit. In each layer box, the rows labelled $e$ and $u$ identify the equality and the painting transported by the displayed function. In the restriction layer, the equality is $\relRestrRestr$ on frames. It makes the preceding-dimensional painting restriction have the required type; its proof is described in Section~\ref{sec:coherences}.
 
-\begin{figure}[H]
-  \centering
-  \input{figures/architecture-restr.tex}
-  \caption{Construction of restrictions on layers, frames, and paintings. The frame coherence types are developed together with frame restriction.}
-  \label{fig:arch-restr}
-\end{figure}
-
-\subsection{Intuition for our construction}
-
+\subsection{Construction of degeneracies}
 The boundary of a degenerate cell contains a repeated layer at the inserted direction, together with degeneracies of the original faces. This suggests building the boundary layer by layer, inserting the repeated layer when the prefix reaches the chosen direction. Figure~\ref{fig:degeneracy-layers} illustrates the three insertion positions for a square, showing the separate layers and their assembled full frame.
 
 \begin{figure}[H]
   \centering
   \begingroup
   \input{figures/cubical-boundaries-style.tex}
-  \small
+  \smfontsize
   \begin{tabularx}{\linewidth}{@{}YYYYYY@{}}
     \toprule
     Directions                          & Cell                                                      & Layer $0$ & Layer $1$ & Layer $2$ & Full frame \\
@@ -595,7 +586,12 @@ The boundary of a degenerate cell contains a repeated layer at the inserted dire
   \label{fig:degeneracy-layers}
 \end{figure}
 
-\subsection{Construction of degeneracies}
+\begin{figure}[H]
+  \centering
+  \input{figures/architecture-restr.tex}
+  \caption{Construction of restrictions on layers, frames, and paintings. The frame coherence types are developed together with frame restriction.}
+  \label{fig:arch-restr}
+\end{figure}
 
 The chosen direction may lie beyond the prefix, or the prefix may have reached or passed it. These two cases give the operations \emph{Below} and \emph{Above}, written $\downarrow$ and $\uparrow$. Their direction indices are relative to the prefix height: Below counts upwards, so its index $q$ denotes direction $p+q$; Above counts downwards, so its index $q$ denotes direction $p-q$.
 
@@ -727,13 +723,9 @@ The proofs follow the decomposition of boundaries into frames, layers, and paint
 
 We give the construction of $\relRestrReflBelowInf$ in Table~\ref{tab:coh-inf}. Subscripts $\mathsf{frame}$, $\mathsf{layer}$, and $\mathsf{painting}$ identify its three forms. A pair of proofs denotes equality of dependent pairs, and $\lambda\theta$ denotes the pointwise proof of equality of layers. Here $\mathsf{refl}$ is reflexivity of equality. The recursive clauses use the same convention of implicit transports as the other construction tables.
 
-\input{tab-coh-inf.tex}
-
 In this example, the frame recursion decreases the prefix height. Passing from height $p+1$ to $p$ increments the two relative direction indices, producing the $q+1$ and $r+1$ in the prefix proof. The layer row applies the painting coherence one dimension lower to each component $l(\theta)$. The painting recursion decreases the restriction index; at index $0$, restriction evaluates the first layer, giving the reflexivity clause.
 
-Figure~\ref{fig:arch-coh-basic} compares this construction with restriction--restriction coherence and cancellation. The layer box has two inputs: this 2-dimensional coherence and the preceding-dimensional painting coherence. In the inf example, they justify the implicit transports and the pointwise equality in the layer row of Table~\ref{tab:coh-inf}, respectively.
-
-The $\relRestrRestr$ and $\relRestrReflInf$ families require hexagons; $\relRestrReflId$ requires a square. The zero-direction painting bases in these three families are reflexivity.
+\input{tab-coh-inf.tex}
 
 \begin{figure}[H]
   \centering
@@ -741,6 +733,10 @@ The $\relRestrRestr$ and $\relRestrReflInf$ families require hexagons; $\relRest
   \caption{Proofs of $\relRestrRestr$, $\relRestrReflId$, and $\relRestrReflInf$.}
   \label{fig:arch-coh-basic}
 \end{figure}
+
+Figure~\ref{fig:arch-coh-basic} compares this construction with restriction--restriction coherence and cancellation. The layer box has two inputs: this 2-dimensional coherence and the preceding-dimensional painting coherence. In the inf example, they justify the implicit transports and the pointwise equality in the layer row of Table~\ref{tab:coh-inf}, respectively.
+
+The $\relRestrRestr$ and $\relRestrReflInf$ families require hexagons; $\relRestrReflId$ requires a square. The zero-direction painting bases in these three families are reflexivity.
 
 \paragraph{\texorpdfstring{$\relRestrReflSup$}{restr-refl-sup}.}
 Figure~\ref{fig:arch-coh-sup} shows the two stages of $\relRestrReflSup$. The frame proof passes from Below to Above, whereas the painting proof passes from Above to Below. At the transition, the Above frame proof uses the Below frame proof and a separate zero-direction layer proof.
