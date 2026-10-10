@@ -407,33 +407,33 @@ In Table~\ref{tab:dgn-flavors}, dimensions start at $-1$ in the unary case and a
   \input{figures/degeneracy-comparison-style.tex}
   \begin{tabularx}{\linewidth}{@{}>{\centering\arraybackslash}m{0.152\linewidth}YY@{}}
     \toprule
-    Source & Parametric degeneracies & Connecting degeneracies \\
+    Source                  & Parametric degeneracies                                                                             & Connecting degeneracies                        \\
     \midrule
-    \multicolumn{3}{c}{Unary case ($\nu=1$), over $a:X_{-1}$} \\[0.4em]
-    & $r^n_i$, $-1\leq i\leq n$ & $s^n_i$, $-1<i\leq n$ \\
+    \multicolumn{3}{c}{Unary case ($\nu=1$), over $a:X_{-1}$}                                                                                                                      \\[0.4em]
+                            & $r^n_i$, $-1\leq i\leq n$                                                                           & $s^n_i$, $-1<i\leq n$                          \\
     \midrule
     \makecell{$n=0$ \\ $b$}
-    & \makecell{\comparisonEdge{b}{r^{-1}_{-1}(a)}{r^0_{-1}(b)}{} \\[1em]
-        \comparisonEdge{r^{-1}_{-1}(a)}{b}{r^0_0(b)}{}}
-    & \comparisonEdge{b}{b}{s^0_0(b)}{} \\[1em]
+                            & \makecell{\comparisonEdge{b}{r^{-1}_{-1}(a)}{r^0_{-1}(b)}{} \\[1em]
+                                \comparisonEdge{r^{-1}_{-1}(a)}{b}{r^0_0(b)}{}}
+                            & \comparisonEdge{b}{b}{s^0_0(b)}{}                                                                                                                    \\[1em]
     \makecell{$n=1$ \\ \comparisonEdge{b}{c}{q}{}}
-    & \begin{tabular}{@{}cc@{}}
-        \comparisonTriangle{b}{r^{-1}_{-1}(a)}{c}{r^0_0(b)}{q}{r^0_0(c)}{r^1_{-1}(q)} &
-        \comparisonTriangle{c}{b}{r^{-1}_{-1}(a)}{q}{r^0_{-1}(c)}{r^0_{-1}(b)}{r^1_0(q)} \\
-        \multicolumn{2}{c}{\comparisonTriangle{r^{-1}_{-1}(a)}{b}{c}{r^0_{-1}(b)}{r^0_0(c)}{q}{r^1_1(q)}}
-      \end{tabular}
-    & \comparisonTriangle{b}{b}{c}{s^0_0(b)}{q}{q}{s^1_0(q)}\hspace{3mm}%
-      \comparisonTriangle{c}{b}{c}{q}{s^0_0(c)}{q}{s^1_1(q)} \\
+                            & \begin{tabular}{@{}cc@{}}
+                                \comparisonTriangle{b}{r^{-1}_{-1}(a)}{c}{r^0_0(b)}{q}{r^0_0(c)}{r^1_{-1}(q)} &
+                                \comparisonTriangle{c}{b}{r^{-1}_{-1}(a)}{q}{r^0_{-1}(c)}{r^0_{-1}(b)}{r^1_0(q)} \\
+                                \multicolumn{2}{c}{\comparisonTriangle{r^{-1}_{-1}(a)}{b}{c}{r^0_{-1}(b)}{r^0_0(c)}{q}{r^1_1(q)}}
+                              \end{tabular}
+                            & \comparisonTriangle{b}{b}{c}{s^0_0(b)}{q}{q}{s^1_0(q)}\hspace{3mm}                                                                                   %
+    \comparisonTriangle{c}{b}{c}{q}{s^0_0(c)}{q}{s^1_1(q)}                                                                                                                         \\
     \midrule
-    \multicolumn{3}{c}{Binary case ($\nu=2$)} \\[0.4em]
-    & $r^n_i$, $i\leq n$ & $s^n_{i\epsilon}$, $i<n$, $\epsilon\in\{L,R\}$ \\
+    \multicolumn{3}{c}{Binary case ($\nu=2$)}                                                                                                                                      \\[0.4em]
+                            & $r^n_i$, $i\leq n$                                                                                  & $s^n_{i\epsilon}$, $i<n$, $\epsilon\in\{L,R\}$ \\
     \midrule
-    \makecell{$n=0$ \\ $b$} & \comparisonEdge{b}{b}{r^0_0(b)}{} & None \\[1em]
+    \makecell{$n=0$ \\ $b$} & \comparisonEdge{b}{b}{r^0_0(b)}{}                                                                   & None                                           \\[1em]
     \makecell{$n=1$ \\ \comparisonEdge{b}{c}{q}{-}}
-    & \comparisonSquare{b}{c}{b}{c}{q}{r^0_0(b)}{r^0_0(c)}{q}{r^1_0(q)}\hspace{3mm}%
-      \comparisonSquare{b}{b}{c}{c}{r^0_0(b)}{q}{q}{r^0_0(c)}{r^1_1(q)}
-    & \comparisonSquare{b}{c}{c}{c}{q}{q}{r^0_0(c)}{r^0_0(c)}{s^1_{0L}(q)}\hspace{3mm}%
-      \comparisonSquare{b}{b}{b}{c}{r^0_0(b)}{r^0_0(b)}{q}{q}{s^1_{0R}(q)} \\
+                            & \comparisonSquare{b}{c}{b}{c}{q}{r^0_0(b)}{r^0_0(c)}{q}{r^1_0(q)}\hspace{3mm}                                                                        %
+    \comparisonSquare{b}{b}{c}{c}{r^0_0(b)}{q}{q}{r^0_0(c)}{r^1_1(q)}
+                            & \comparisonSquare{b}{c}{c}{c}{q}{q}{r^0_0(c)}{r^0_0(c)}{s^1_{0L}(q)}\hspace{3mm}                                                                     %
+    \comparisonSquare{b}{b}{b}{c}{r^0_0(b)}{r^0_0(b)}{q}{q}{s^1_{0R}(q)}                                                                                                           \\
     \bottomrule
   \end{tabularx}
   \caption{Parametric and connecting degeneracies of $0$- and $1$-dimensional shapes in the unary and binary cases. Parametric degeneracies insert a new axis; connecting degeneracies duplicate an existing axis.}
@@ -535,10 +535,10 @@ Figure~\ref{fig:cube-prefixes} illustrates the prefixes for $n=3$ and $\nu=2$. T
   \begingroup
   \input{figures/cubical-boundaries-style.tex}
   \begin{tabularx}{\linewidth}{YYY}
-    \cubePicture{\cubeLastLayerFirst} &
+    \cubePicture{\cubeLastLayerFirst}                     &
     \cubePicture{\cubeLastLayerFirst\cubeLastLayerSecond} &
-    \cubePicture{\cubeLastLayerFirst\cubeLastLayerSecond\cubeLastLayerThird} \\\addlinespace[0.6em]
-    $\framep[3][1]$ & $\framep[3][2]$ & $\framep[3][3]=\fullframe[3]$
+    \cubePicture{\cubeLastLayerFirst\cubeLastLayerSecond\cubeLastLayerThird}                                \\\addlinespace[0.6em]
+    $\framep[3][1]$                                       & $\framep[3][2]$ & $\framep[3][3]=\fullframe[3]$
   \end{tabularx}
   \endgroup
   \caption{Successive prefixes of a cube boundary. Each panel adds the next pair of opposite face paintings, retaining the boundary data already supplied.}
@@ -571,23 +571,23 @@ The boundary of a degenerate cell contains a repeated layer at the inserted dire
   \small
   \begin{tabularx}{\linewidth}{@{}YYYYYY@{}}
     \toprule
-    Directions & Cell & Layer $0$ & Layer $1$ & Layer $2$ & Full frame \\
+    Directions                          & Cell                                                      & Layer $0$ & Layer $1$ & Layer $2$ & Full frame \\
     \midrule
-    \cubePicture{\cubeSourceAxes} & \cubePicture{\cubeSourceCell} &
-    \cubePicture{\cubeSourceLayerFirst} & \cubePicture{\cubeSourceLayerSecond} &
-    --- & \cubePicture{\cubeSourceLayerFirst\cubeSourceLayerSecond} \\\addlinespace[0.7em]
-    \cubePicture{\cubeFirstAxes} & \cubePicture{\cubeFirstCell} &
-    \cubePicture{\cubeFirstLayerFirst} & \cubePicture{\cubeFirstLayerSecond} &
-    \cubePicture{\cubeFirstLayerThird} &
-    \cubePicture{\cubeFirstLayerFirst\cubeFirstLayerSecond\cubeFirstLayerThird} \\\addlinespace[0.7em]
-    \cubePicture{\cubeMiddleAxes} & \cubePicture{\cubeMiddleCell} &
-    \cubePicture{\cubeMiddleLayerFirst} & \cubePicture{\cubeMiddleLayerSecond} &
+    \cubePicture{\cubeSourceAxes}       & \cubePicture{\cubeSourceCell}                             &
+    \cubePicture{\cubeSourceLayerFirst} & \cubePicture{\cubeSourceLayerSecond}                      &
+    ---                                 & \cubePicture{\cubeSourceLayerFirst\cubeSourceLayerSecond}                                                  \\\addlinespace[0.7em]
+    \cubePicture{\cubeFirstAxes}        & \cubePicture{\cubeFirstCell}                              &
+    \cubePicture{\cubeFirstLayerFirst}  & \cubePicture{\cubeFirstLayerSecond}                       &
+    \cubePicture{\cubeFirstLayerThird}  &
+    \cubePicture{\cubeFirstLayerFirst\cubeFirstLayerSecond\cubeFirstLayerThird}                                                                      \\\addlinespace[0.7em]
+    \cubePicture{\cubeMiddleAxes}       & \cubePicture{\cubeMiddleCell}                             &
+    \cubePicture{\cubeMiddleLayerFirst} & \cubePicture{\cubeMiddleLayerSecond}                      &
     \cubePicture{\cubeMiddleLayerThird} &
-    \cubePicture{\cubeMiddleLayerFirst\cubeMiddleLayerSecond\cubeMiddleLayerThird} \\\addlinespace[0.7em]
-    \cubePicture{\cubeLastAxes} & \cubePicture{\cubeLastCell} &
-    \cubePicture{\cubeLastLayerFirst} & \cubePicture{\cubeLastLayerSecond} &
-    \cubePicture{\cubeLastLayerThird} &
-    \cubePicture{\cubeLastLayerFirst\cubeLastLayerSecond\cubeLastLayerThird} \\
+    \cubePicture{\cubeMiddleLayerFirst\cubeMiddleLayerSecond\cubeMiddleLayerThird}                                                                   \\\addlinespace[0.7em]
+    \cubePicture{\cubeLastAxes}         & \cubePicture{\cubeLastCell}                               &
+    \cubePicture{\cubeLastLayerFirst}   & \cubePicture{\cubeLastLayerSecond}                        &
+    \cubePicture{\cubeLastLayerThird}   &
+    \cubePicture{\cubeLastLayerFirst\cubeLastLayerSecond\cubeLastLayerThird}                                                                         \\
     \bottomrule
   \end{tabularx}
   \endgroup
