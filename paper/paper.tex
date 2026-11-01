@@ -590,6 +590,8 @@ The boundary of a degenerate cell contains a repeated layer at the inserted dire
   \label{fig:arch-restr}
 \end{figure}
 
+At level $n$, let $i\leq n$ be the chosen insertion direction. When $p\leq i$, the operation \emph{Below} ($\downarrow$) uses the relative direction index $q=i-p\leq k$. When $i\leq p$, the operation \emph{Above} ($\uparrow$) uses $q=p-i\leq p$. The boundary $i=p$ is the common base case, where both indices are $0$.
+
 Below transforms the existing prefix without inserting the repeated layer. It acts on a frame alone and preserves the prefix height:
 \begin{equation*}
   \reflfbelow[n][p][][q]:\framep[n][p]\rightarrow\framep[n+1][p]
@@ -701,22 +703,22 @@ Table~\ref{tab:cohframe-types} gives the frame--coherence types involving restri
 
 \input{tab-cohframe-types.tex}
 
-A layer coherence uses a 2-dimensional coherence: two composites of frame equalities must themselves be equal. This ensures that the implicit transports have the same effect. Since frames are sets, this equality follows from uniqueness of identity proofs ($\UIP$). The layer proof also uses the lower--dimensional painting coherence.
+A layer coherence uses a $2$--dimensional coherence: two composites of frame equalities must themselves be equal. This ensures that the implicit transports have the same effect. Since frames are sets, this equality follows from uniqueness of identity proofs ($\UIP$). The layer proof also uses the lower--dimensional painting coherence.
 
-In every coherence architecture diagram, $\mathsf{coh}$ denotes the family named in the diagram or panel heading. The arrows $\downarrow$ and $\uparrow$ specify its Below and Above stages, in the same order as the operations in the coherence name. Thus $\mathsf{coh}^{\downarrow\uparrow}$ denotes $\relReflBelowAbove$. Subscripts select the frame, layer, or painting form. A 2-dimensional frame coherence inherits the name and stage of the layer coherence whose proof requires it. Where that layer proof has distinct zero-direction and successor cases, its 2-dimensional frame coherences have the same distinction: the zero-direction case has an additional subscript $0$. Each $\mathsf{coh2}_{\mathsf{frame}}$ box links to the corresponding diagram in Appendix~\ref{app:coh2}, using that diagram's variables in its inequality row.
+In every coherence architecture diagram, $\mathsf{coh}$ denotes the family named in the diagram or panel heading. The arrows $\downarrow$ and $\uparrow$ specify its Below and Above stages, in the same order as the operations in the coherence name. Thus $\mathsf{coh}^{\downarrow\uparrow}$ denotes $\relReflBelowAbove$. Subscripts select the frame, layer, or painting form. A $2$--dimensional frame coherence inherits the name and stage of the layer coherence whose proof requires it. Where that layer proof has distinct zero-direction and successor cases, its $2$--dimensional frame coherences have the same distinction: the zero-direction case has an additional subscript $0$. Each $\mathsf{coh2}_{\framep}$ box links to the corresponding diagram in Appendix~\ref{app:coh2}, using that diagram's variables in its inequality row.
 
 \paragraph{\texorpdfstring{$\relRestrRestr$, $\relRestrReflId$, and $\relRestrReflInf$}{restr-restr, restr-refl-id, and restr-refl-inf}.}
 The proofs follow the decomposition of boundaries into frames, layers, and paintings. A frame proof combines a frame proof (recursively) with a layer proof. A painting proof combines a layer proof with a painting proof (recursively). A layer proof is point--wise over the face labels and uses a lower--dimensional painting coherence.
 
-We give the construction of $\relRestrReflBelowInf$ in Table~\ref{tab:coh-inf}. Subscripts $\mathsf{frame}$, $\mathsf{layer}$, and $\mathsf{painting}$ identify its three forms. A pair of proofs denotes equality of dependent pairs, and $\lambda\theta$ denotes the point--wise proof of equality of layers. Here $\mathsf{refl}$ is reflexivity of equality. The recursive clauses use the same convention of implicit transports as the other construction tables.
+We give the construction of $\relRestrReflBelowInf$ in Table~\ref{tab:coh-inf}. Subscripts $\framep$, $\layer$, and $\painting$ identify its three forms. A pair of proofs denotes equality of dependent pairs, and $\lambda\theta$ denotes the point--wise proof of equality of layers. Here $\mathsf{refl}$ is reflexivity of equality. The recursive clauses use the same convention of implicit transports as the other construction tables.
 
 In this example, the frame recursion decreases the prefix height. Passing from height $p+1$ to $p$ increments the two relative direction indices, producing the $q+1$ and $r+1$ in the prefix proof. The layer row applies the painting coherence one dimension lower to each component $l(\theta)$. The painting recursion decreases the restriction index; at index $0$, restriction evaluates the first layer, giving the reflexivity clause.
 
 \input{tab-coh-inf.tex}
 
-Figure~\ref{fig:arch-coh-basic} compares this construction with restriction--restriction coherence and cancellation. The layer box has two inputs: this 2-dimensional coherence and the preceding--dimensional painting coherence. In the inf example, they justify the implicit transports and the point--wise equality in the layer row of Table~\ref{tab:coh-inf}, respectively.
+Figure~\ref{fig:arch-coh-basic} compares this construction with restriction--restriction coherence and cancellation. The layer box has two inputs: this $2$--dimensional coherence and the preceding--dimensional painting coherence. In the inf example, they justify the implicit transports and the point--wise equality in the layer row of Table~\ref{tab:coh-inf}, respectively.
 
-The $\relRestrRestr$ and $\relRestrReflInf$ families require hexagons; $\relRestrReflId$ requires a square. The zero-direction painting bases in these three families are reflexivity.
+The $\relRestrRestr$ and $\relRestrReflInf$ families require hexagons; $\relRestrReflId$ requires a square. The zero-direction painting bases in these three families hold by definition and are thus proved by reflexivity.
 
 \begin{figure}[H]
   \centering
@@ -728,7 +730,7 @@ The $\relRestrRestr$ and $\relRestrReflInf$ families require hexagons; $\relRest
 \paragraph{\texorpdfstring{$\relRestrReflSup$}{restr-refl-sup}.}
 Figure~\ref{fig:arch-coh-sup} shows the two stages of $\relRestrReflSup$. The frame proof passes from Below to Above, whereas the painting proof passes from Above to Below. At the transition, the Above frame proof uses the Below frame proof and a separate zero-direction layer proof.
 
-The ordinary layer steps use hexagons. At Above index zero, the constant layer instead requires the cancellation coherence, giving the square in Figure~\ref{fig:coh2-sup-zero}. This is the middle layer box in the architecture figure. The 2-dimensional frame boxes above the three layer cases link to the corresponding square and hexagons.
+The ordinary layer steps use hexagons. At Above index zero, the constant layer instead requires the cancellation coherence, giving the square in Figure~\ref{fig:coh2-sup-zero}. This is the middle layer box in the architecture figure. The $2$--dimensional frame boxes above the three layer cases link to the corresponding square and hexagons.
 
 \begin{figure}[H]
   \centering
@@ -770,14 +772,14 @@ its boundary is
   = (\reflfbelow[n][n][][0][d=\d],\lambda\epsilon.\,x)
   = (\reflff[n][d=\d],\lambda\epsilon.\,x)
 \end{equation*}
-The supplied cell operation is thus $L(0)$, with target $X_{n+1}(\reflff[n][d=\d],\lambda\epsilon.\,x)$. Its boundary can be constructed using earlier last--direction degeneracies alone: each existing layer is transformed using the last--direction painting operation one level lower, and the constant layer is appended at the end.
+The supplied cell operation is thus $L(0)$, with target $X_{n+1}(\reflff[n][d=\d],\refllabove[n][n][][0][d=\d,c=x])$. Its boundary can be constructed using earlier last--direction degeneracies alone: each existing layer is transformed using the last--direction painting operation one level lower, and the constant layer is appended at the end.
 
 Only two face--degeneracy coherence families are needed for this construction. The specialization of $\relRestrReflBelowInf$ makes the layer recursion well--typed, and that of $\relRestrReflBelowId$ makes the final constant layer well--typed. There is no restriction direction after the inserted one, so no $\relRestrReflSup$ case arises. The general $\relReflRefl$ law also involves a degeneracy that is not in the last direction of its source, and therefore is not a law expressible using only these supplied operations.
 
-In the cubical case, compatible coordinate symmetries allow every degeneracy to be expressed using the last--direction degeneracy~\cite{grandis03}. Writing $\varepsilon_i$ for degeneracy in absolute direction $i$ and $\tau_i$ for the exchange of directions $i$ and $i+1$, we have
+In the cubical case, compatible coordinate symmetries allow every degeneracy to be expressed using the last--direction degeneracy~\cite{grandis03}. Writing $\varepsilon_i$ for degeneracy in absolute direction $i$ and $sigma_i$ for the exchange of directions $i$ and $i+1$, we have
 \begin{equation*}
   \varepsilon_i
-  =\tau_i\circ\tau_{i+1}\circ\cdots\circ\tau_{n-1}\circ\varepsilon_n
+  =\sigma_i\circ\sigma_{i+1}\circ\cdots\circ\sigma_{n-1}\circ\varepsilon_n
   \qquad(i\leq n)
 \end{equation*}
 where the composite of exchanges is empty when $i=n$. One first inserts the last direction and then moves it to position $i$ by adjacent exchanges. The construction presented above supplies degeneracies in every direction without requiring these symmetries.
