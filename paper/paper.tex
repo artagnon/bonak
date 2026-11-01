@@ -342,7 +342,7 @@ We previously exploited the observation that semi--simplicial and semi--cubical 
 
 \subsection{\texorpdfstring{$\nu$}{nu}-shape sets}
 
-The categories of augmented semi-simplices and semi-cubes can both be seen as free monoidal categories over natural numbers generated either by elementary faces $\partial$~\cite{grandis01} or $\partial^+$ and $\partial^-$~\cite{grandis03,buchholtz17} respectively. Alternatively, morphisms from $p$ to $n$ in these categories can be represented respectively as inclusions of $\{1\}^p$ to $\{1\}^p$ (that is, equivalently, as strictly monotone functions from $[1;p]$ to $[1;n]$~\cite{maclane1998categories}) or as inclusions of $\{+,-\}^p$ in $\{+,-\}^n$~\cite{Fahrenberg_2024}. So, shortly, the definitions of categories of augmented semi-simplices and semi-cubes can be seen as only differing from an arity, either one or two.
+The categories of augmented semi-simplices and semi-cubes can both be seen as free monoidal categories over natural numbers generated either by elementary faces $\partial$ in the augmented semi-simplicial case~\cite{grandis01} or $\partial^+$ and $\partial^-$ in the semi-cubical case~\cite{grandis03,buchholtz17}. Alternatively, morphisms from $p$ to $n$ in these categories can be represented respectively as inclusions of $\{1\}^p$ to $\{1\}^p$ (that is, equivalently, as strictly monotone functions from $[1;p]$ to $[1;n]$~\cite{maclane1998categories}) or as inclusions of $\{+,-\}^p$ in $\{+,-\}^n$~\cite{Fahrenberg_2024}. So, shortly, the definitions of categories of augmented semi-simplices and semi-cubes can be seen as only differing from an arity, either one or two.
 
 Fix a set $\nu$ of face labels, called the \emph{arity}. The unary case uses a singleton set of labels; the binary case uses two labels. The augmented semi--simplicial and semi--cubical categories are instances of the more general notion of $\nu$--semi--shape category.
 
@@ -660,7 +660,7 @@ Figure~\ref{fig:arch-refl} shows how the Below and Above operations fit together
 
 The supplied families form a \emph{dependent stream}: each new family is typed using the earlier ones. We write $\Xrefl$ for this type of degeneracy families over an underlying $\nu$--set. In the tables, $D$ records an initial segment of the underlying $\nu$--set, $E$ its next component, and $M$ its remaining tail. Superscripts $<n$, $=n$, and $\geq n$ indicate an initial segment, its next extension, and a remaining tail, respectively. We write $D.1$ and $D.2$ for the two projections of a pair. Arguments in braces are implicit; the equations retain their dependence on those arguments.
 
-In the tables, transports and the standard conversions between equalities of dependent pairs or functions and their componentwise equalities are left implicit, as if working in extensional type theory. The Rocq formalization makes these conversions explicit. We write $u=_e v$ for $\mathsf{rew}(e,u)=v$ when it is useful to identify the frame equality $e$ along which the comparison takes place.
+In the tables, transports and the standard conversions between equalities of dependent pairs or functions and their component-wise equalities are left implicit, as if working in extensional type theory. The Rocq formalization makes these conversions explicit. We write $u=_e v$ for $\mathsf{rew}(e,u)=v$ when it is useful to identify the frame equality $e$ along which the comparison takes place.
 
 \input{tab-coind.tex}
 
@@ -722,9 +722,9 @@ A layer coherence uses a 2-dimensional coherence: two composites of frame equali
 In every coherence architecture diagram, $\mathsf{coh}$ denotes the family named in the diagram or panel heading. The arrows $\downarrow$ and $\uparrow$ specify its Below and Above stages, in the same order as the operations in the coherence name. Thus $\mathsf{coh}^{\downarrow\uparrow}$ denotes $\relReflBelowAbove$. Subscripts select the frame, layer, or painting form. A 2-dimensional frame coherence inherits the name and stage of the layer coherence whose proof requires it. Where that layer proof has distinct zero-direction and successor cases, its 2-dimensional frame coherences have the same distinction: the zero-direction case has an additional subscript $0$. Each $\mathsf{coh2}_{\mathsf{frame}}$ box links to the corresponding diagram in Appendix~\ref{app:coh2}, using that diagram's variables in its inequality row.
 
 \paragraph{\texorpdfstring{$\relRestrRestr$, $\relRestrReflId$, and $\relRestrReflInf$}{restr-restr, restr-refl-id, and restr-refl-inf}.}
-The proofs follow the decomposition of boundaries into frames, layers, and paintings. A frame proof combines a frame proof (recursively) with a layer proof. A painting proof combines a layer proof with a painting proof (recursively). A layer proof is pointwise over the face labels and uses a lower-dimensional painting coherence.
+The proofs follow the decomposition of boundaries into frames, layers, and paintings. A frame proof combines a frame proof (recursively) with a layer proof. A painting proof combines a layer proof with a painting proof (recursively). A layer proof is point-wise over the face labels and uses a lower-dimensional painting coherence.
 
-We give the construction of $\relRestrReflBelowInf$ in Table~\ref{tab:coh-inf}. Subscripts $\mathsf{frame}$, $\mathsf{layer}$, and $\mathsf{painting}$ identify its three forms. A pair of proofs denotes equality of dependent pairs, and $\lambda\theta$ denotes the pointwise proof of equality of layers. Here $\mathsf{refl}$ is reflexivity of equality. The recursive clauses use the same convention of implicit transports as the other construction tables.
+We give the construction of $\relRestrReflBelowInf$ in Table~\ref{tab:coh-inf}. Subscripts $\mathsf{frame}$, $\mathsf{layer}$, and $\mathsf{painting}$ identify its three forms. A pair of proofs denotes equality of dependent pairs, and $\lambda\theta$ denotes the point-wise proof of equality of layers. Here $\mathsf{refl}$ is reflexivity of equality. The recursive clauses use the same convention of implicit transports as the other construction tables.
 
 In this example, the frame recursion decreases the prefix height. Passing from height $p+1$ to $p$ increments the two relative direction indices, producing the $q+1$ and $r+1$ in the prefix proof. The layer row applies the painting coherence one dimension lower to each component $l(\theta)$. The painting recursion decreases the restriction index; at index $0$, restriction evaluates the first layer, giving the reflexivity clause.
 
@@ -737,7 +737,7 @@ In this example, the frame recursion decreases the prefix height. Passing from h
   \label{fig:arch-coh-basic}
 \end{figure}
 
-Figure~\ref{fig:arch-coh-basic} compares this construction with restriction--restriction coherence and cancellation. The layer box has two inputs: this 2-dimensional coherence and the preceding-dimensional painting coherence. In the inf example, they justify the implicit transports and the pointwise equality in the layer row of Table~\ref{tab:coh-inf}, respectively.
+Figure~\ref{fig:arch-coh-basic} compares this construction with restriction--restriction coherence and cancellation. The layer box has two inputs: this 2-dimensional coherence and the preceding-dimensional painting coherence. In the inf example, they justify the implicit transports and the point-wise equality in the layer row of Table~\ref{tab:coh-inf}, respectively.
 
 The $\relRestrRestr$ and $\relRestrReflInf$ families require hexagons; $\relRestrReflId$ requires a square. The zero-direction painting bases in these three families are reflexivity.
 
