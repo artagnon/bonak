@@ -107,8 +107,6 @@
   \setkeys*[bonak]{X#1}{#3}
 }
 
-\newcommand{\XDgn}{\ensuremath{{\color{carolina}{\nu\textsf{DgnSet}}}}}
-
 \newcommandx{\Xrefl}[3][1,2,3]{
   \ensuremath{{\color{carolina}{\nu\textsf{reflSet}}}^{#2}}
   \setkeys*[bonak]{Xrefl#1}{#3}
@@ -312,7 +310,7 @@
 \newcommandx*{\eqnarg}[3]{\ifinmask[bonak]{#1}[#2]{\{#2:#3\}}{(#2:#3)}}
 
 \begin{document}
-\title{An indexed construction of degeneracies in simplicial and cubical sets}
+\title{An indexed construction of reflexivities in simplicial and cubical sets}
 \author{
   Hugo Herbelin\\
   Université Paris Cité, Inria, CNRS, IRIF, Paris \\
@@ -330,7 +328,7 @@
 \maketitle
 
 \begin{abstract}
-  In an exploration of building simplicial and cubical set models in indexed form, we extend a previous construction of semi--simplicial and semi--cubical sets with degeneracies. The degeneracies we construct can be characterized as adding a new dimension, and coincide with usual degeneracies in the cubical set case. As necessitated by the construction, we refined the degeneracies and coherence conditions outlined in Grandis--Mauri~\cite{grandis03} to make it step-wise. Our work includes a mechanically checked formalization in Rocq.
+  In an exploration of building simplicial and cubical set models in indexed form, we extend a previous construction of semi--simplicial and semi--cubical sets with reflexivities. The reflexivities we construct can be characterized as adding a new dimension, and coincide with usual degeneracies in the cubical set case. As necessitated by the construction, we refined the degeneracies and coherence conditions outlined in Grandis--Mauri~\cite{grandis03} to make it step-wise. Our work includes a mechanically checked formalization in Rocq.
 \end{abstract}
 
 \section{Introduction}
@@ -338,11 +336,11 @@
 Semi--simplicial sets are usually defined as presheaves from the semi--simplicial category, termed as the \emph{fibred} form~\cite{rourkesanderson71}. In our previous work, we proposed a uniform construction of semi--simplicial and semi--cubical sets using iterated parametericity, termed as the \emph{indexed} form~\cite{hr25}, using the \emph{fibred-indexed correspondence}. That our indexed construction is equivalent to the fibred one is proved in~\cite{Laroche26}. It was originally suggested at Univalent Foundations IAS 2012~\cite{UFwiki2012} that the open problem of constructing semi--simplicial \emph{types} could be solved with the indexed construction, as it supplies more definitional equalities for tackling the combinatorial problem of solving coherence conditions~\footnote{It was originally postulated that the coherences would come for free with the indexed construction, but this turns out not to be the case.}.
 
 \subsection{Contributions}
-We previously exploited the observation that semi--simplicial and semi--cubical sets are naturally unary and binary cases of iterated parametricity~\cite{hr25}. We extend this construction with operations that insert a new coordinate axis: the usual cubical degeneracies in the binary case and their unary analogue~\cite{bernardy15,bernardy12}. The coherence conditions we used to complete our construction made explicit the ones outlined in Grandis--Mauri~\cite{grandis03}. Our work includes a mechanically-checked formalization in Rocq~\href{https://github.com/artagnon/bonak}{\linkicon}, including a proof of equivalence with Grandis--Mauri's definition of cubical sets with degeneracies~\href{https://github.com/artagnon/bonak/tree/master/theories/Equiv}{\linkicon}.
+We previously exploited the observation that semi--simplicial and semi--cubical sets are naturally unary and binary cases of iterated parametricity~\cite{hr25}. We extend this construction with operations that insert a new coordinate axis: the usual cubical degeneracies in the binary case and their unary analogue~\cite{bernardy15,bernardy12}. The coherence conditions we used to complete our construction made explicit the ones outlined in Grandis--Mauri~\cite{grandis03}. Our work includes a mechanically-checked formalization in Rocq~\href{https://github.com/artagnon/bonak}{\linkicon}, including a proof of equivalence with Grandis--Mauri's definition of cubical sets with degeneracies.
 
 \subsection{\texorpdfstring{$\nu$}{nu}-shape sets}
 
-The categories of augmented semi-simplices and semi-cubes can both be seen as free monoidal categories over natural numbers generated either by elementary faces $\partial$ in the augmented semi-simplicial case~\cite{grandis01} or $\partial^+$ and $\partial^-$ in the semi-cubical case~\cite{grandis03,buchholtz17}. Alternatively, morphisms from $p$ to $n$ in these categories can be represented respectively as inclusions of $\{1\}^p$ to $\{1\}^p$ (that is, equivalently, as strictly monotone functions from $[1;p]$ to $[1;n]$~\cite{maclane1998categories}) or as inclusions of $\{+,-\}^p$ in $\{+,-\}^n$~\cite{Fahrenberg_2024}. So, shortly, the definitions of categories of augmented semi-simplices and semi-cubes can be seen as only differing from an arity, either one or two.
+The categories of augmented semi-simplices and semi-cubes can both be seen as free monoidal categories over natural numbers generated either by elementary faces $\partial_i$ in the augmented semi-simplicial case~\cite{grandis01} or $\partial_i^+$ and $\partial_i^-$ in the semi-cubical case~\cite{grandis03,buchholtz17}. Alternatively, morphisms from $p$ to $n$ in these categories can be represented respectively as inclusions of $\{1\}^p$ to $\{1\}^p$ (that is, equivalently, as strictly monotone functions from $[1;p]$ to $[1;n]$~\cite{maclane1998categories}) or as inclusions of $\{+,-\}^p$ in $\{+,-\}^n$~\cite{Fahrenberg_2024}. So, shortly, the definitions of categories of augmented semi-simplices and semi-cubes can be seen as only differing from an arity, either one or two.
 
 Fix a set $\nu$ of face labels, called the \emph{arity}. The unary case uses a singleton set of labels; the binary case uses two labels. The augmented semi--simplicial and semi--cubical categories are instances of the more general notion of $\nu$--semi--shape category.
 
@@ -446,14 +444,14 @@ In Table~\ref{tab:dgn-flavors}, dimensions start at $-1$ in the unary case and a
 
 We now work in dependent type theory. A type $A$ is an \emph{h--set} if, for any $x,y:A$ and any two proofs $p,q:x=y$, we have $p=q$. Thus equality between elements of $A$ is proof-irrelevant: this is the uniqueness of identity proofs property for $A$ ($\UIP$). We write $\HSet$ for the universe of h--sets.
 
-We call the structures presented by presheaves on the $\nu$--semi--shape category \emph{$\nu$--sets}, and write $\X$ for the type of their indexed presentations.
+We call the structures presented by a presheaf on the $\nu$--semi--shape category \emph{$\nu$--set}. Such presheaf can be equivalently presented as a family of sets with faces and coherence laws~\href{https://github.com/artagnon/bonak/tree/master/theories/Presheaf}{\linkicon}, as pictured for the case $\nu=2$ on the left-hand side of Figure~\ref{fig:fibred-indexed-faces}. But they can also be presented in what we call indexed form~\cite{hr25}, as pictured on the right-hand side of Figure~\ref{fig:fibred-indexed-faces}.
 
 For arbitrary arity $\nu$, the indexed presentation is obtained from the presheaf presentation by iterating the equivalence between maps and families:
 \[
   (\Sigma A : \HSet. A \rightarrow B) \simeq (B \rightarrow \HSet)
 \]
 
-Figure~\ref{fig:fibred-indexed-faces} illustrates the binary case, with semi--cubical sets.
+%Figure~\ref{fig:fibred-indexed-faces} illustrates the binary case, with semi--cubical sets.
 
 \begin{figure}[H]
   \begin{equation*}
@@ -475,10 +473,10 @@ Figure~\ref{fig:fibred-indexed-faces} illustrates the binary case, with semi--cu
   \label{fig:fibred-indexed-faces}
 \end{figure}
 
-For the fixed arity $\nu$, assuming univalence and functional extensionality, the fibred-indexed correspondence gives an equivalence of types~\cite{Laroche26}.
+For the fixed arity $\nu$, assuming univalence, the fibred-indexed correspondence gives an equivalence of types~\cite{Laroche26} \href{https://github.com/artagnon/bonak/tree/master/theories/Equiv}{\linkicon}.
 \begin{equation*}
   \label{eq:nuset-correspondence}
-  \X\simeq\operatorname{Functor}(\hexagon^{\mathrm{op}},\HSet)
+  \operatorname{Functor}(\hexagon^{\mathrm{op}},\HSet)\simeq\X
 \end{equation*}
 Here $\operatorname{Functor}(C,\HSet)$ denotes the type of set-valued functors on $C$. This correspondence is an iterated variant of the \emph{Grothendieck construction}, where, in contrast to the usual equivalence between discrete fibrations and presheaves, presheaves are now seen as living on the fibred side, thanks to $\hexagon$ being a direct category.
 
@@ -512,12 +510,12 @@ We extend this correspondence to $\nu$--sets with parametric degeneracies. Figur
   \label{fig:fibred-indexed-degeneracies}
 \end{figure}
 
-Write $\XDgn$ for the type of indexed $\nu$--sets equipped with cell degeneracy families and the compatibility data for their mutual coherences. Under the same assumptions, the correspondence extends to degeneracies:
+We write $\Xrefl$ for the type of indexed $\nu$--sets equipped with cell degeneracy families and the compatibility data for their mutual coherences. Under the same assumptions, the correspondence extends to degeneracies~\href{https://github.com/artagnon/bonak/tree/master/theories/Equiv/Dgn}{\linkicon}:
 \begin{equation*}
   \label{eq:nudgnset-correspondence}
-  \XDgn\simeq\operatorname{Functor}(\hexagon_d^{\mathrm{op}},\HSet)
+  \operatorname{Functor}(\hexagon_d^{\mathrm{op}},\HSet)\simeq\Xrefl
 \end{equation*}
-The indexed structure on the left, including both the underlying $\nu$--set and its degeneracy data, is constructed in Section~\ref{sec:construction}. Both equivalences are formalized in Rocq; they factor through presentations by face maps, and by face and degeneracy maps with their identities, respectively.
+The indexed structure on the right, including both the underlying $\nu$--set and its degeneracy data, is constructed in Section~\ref{sec:construction}. Both equivalences are formalized in Rocq; they factor through presentations by face maps, and by face and degeneracy maps with their identities, respectively.
 
 \section{Our construction}
 \label{sec:construction}
