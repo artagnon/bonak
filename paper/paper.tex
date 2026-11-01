@@ -398,11 +398,11 @@ In particular, a $2$--shape category presents the cubical category, while $1$--s
 \subsection{Parametric degeneracies vs connecting degeneracies}
 \label{sec:dgn-flavors}
 
-Despite a common terminology, degeneracies in simplicial sets~\cite{fri08} and in cubical sets~\cite{grandis03} are of a different nature. Degeneracies in cubical sets degenerate an existing $n$-$\nu$-shape along a new axis while degeneracies in simplicial sets degenerate an existing $n$-$\nu$-shape by duplicating it around an existing axis. In particular, degenerating a $n$-$\nu$-shape $c$ in a cubical set is about \emph{inserting a new axis} $i \leq n$ (counting axes of a $n$-shape from $0$ to $n-1$), yielding a $(n+1)$-shape lying on $c$ in the new $i$-th axis and lying on the degeneracy of the $j$-th axis of $c$ in the $j$-th axis (resp. $(j-1)$-th axis) for $j < i$ (resp $j > i$). In the simplicial case, the degeneracy process is better understood by reasoning in augmented simplicial sets (where we now shift everything down by 1 so that the dimension starts at $-1$): degenerating a $n$-shape $c$ in simplicial sets is about \emph{duplicating along an existing axis} $i < n$ (thus requiring $n$ to be at least $0$), yielding a $(n+1)$-shape lying on $c$ in both the $i$ and $i+1$ axes, while it lies again on the degeneracy of the $j$-th axis (resp. $(j-1)$-th) of $c$ in the $j$-th axis for $j < i$ (resp. $j > i+1$).
+Despite a common terminology, degeneracies in simplicial sets~\cite{fri08} and in cubical sets~\cite{grandis03} are of a different nature. Degeneracies in cubical sets degenerate an existing $n$-$\nu$-shape along a new axis while degeneracies in simplicial sets degenerate an existing $n$-$\nu$-shape by duplicating an existing axis. In particular, degenerating a $n$-$\nu$-shape $c$ in a cubical set is about \emph{inserting a new axis} $i \leq n$ (counting axes of a $n$-shape from $0$ to $n-1$), yielding a $(n+1)$-shape lying on $c$ in the new $i$-th axis and lying on the degeneracy of the $j$-th axis of $c$ in the $j$-th axis (resp. $(j-1)$-th axis) for $j < i$ (resp $j > i$). In the simplicial case, the degeneracy process is better understood by reasoning in augmented simplicial sets (where we now shift everything down by 1 so that the dimension starts at $-1$): degenerating a $n$-shape $c$ in simplicial sets is about \emph{duplicating along an existing axis} $i < n$ (thus requiring $n$ to be at least $0$), yielding a $(n+1)$-shape lying on $c$ in both the $i$ and $i+1$ axes, while it lies again on the degeneracy of the $j$-th axis (resp. $(j-1)$-th) of $c$ in the $j$-th axis for $j < i$ (resp. $j > i+1$).
 
 We call the axis-duplicating operation a \emph{connecting degeneracy} and the axis-inserting operation \emph{parametric degeneracy}. The unary case of parametric degeneracies have already been considered in the literature, e.g. implicitly in type theories with internal parametricity~\cite{moulin16,bernardy12} and more explicitly in Parametric Type Theory~\cite{bernardy15} where an interpretation in terms of a unary form of cubical sets is given. The binary case of connecting degeneracies happens to be similar to connections in (binary) cubical sets, where it should be noted that for arity $2$, there is one connection for each $\epsilon \in \{1,2\}$ (resulting in the ``conjunctive''/``meet'' and ``disjunctive''/``join'' variants~\cite{grandis03}, or also positive and negative~\cite{BrownHiggins81}) and these connections additionally need parametric degeneracies to fill the faces on side $\epsilon' \neq \epsilon$ (for $\nu$ of higher cardinality, more complex operations are then a priori needed).
 
-In Table~\ref{tab:dgn-flavors}, dimensions start at $-1$ in the unary case and at $0$ in the binary case. In particular, writing $X_{-1}$ for the augmentation set in the unary case, there is a parametric degeneracy $r^{-1}_{-1}(a)$ for any $a:X_{-1}$.
+In Table~\ref{tab:dgn-flavors}, dimensions start at $-1$ in the unary case and at $0$ in the binary case. In particular, writing $X_{-1}$ for the augmentation set in the unary case, there is a parametric degeneracy $r^{-1}_{-1}(a)$ for any $a:X_{-1}$ (not explicitly pictured below though).
 
 \begin{table}[H]
   \centering
@@ -444,7 +444,7 @@ In Table~\ref{tab:dgn-flavors}, dimensions start at $-1$ in the unary case and a
 
 \subsection{Fibred-indexed correspondence}
 
-We now work in dependent type theory. A type $A$ is an \emph{h--set} if, for any $x,y:A$ and any two proofs $p,q:x=y$, we have $p=q$. Thus equality between elements of $A$ is proof-irrelevant: this is the uniqueness of identity proofs property ($\UIP$). We write $\HSet$ for the universe of h--sets.
+We now work in dependent type theory. A type $A$ is an \emph{h--set} if, for any $x,y:A$ and any two proofs $p,q:x=y$, we have $p=q$. Thus equality between elements of $A$ is proof-irrelevant: this is the uniqueness of identity proofs property for $A$ ($\UIP$). We write $\HSet$ for the universe of h--sets.
 
 We call the structures presented by presheaves on the $\nu$--semi--shape category \emph{$\nu$--sets}, and write $\X$ for the type of their indexed presentations.
 
@@ -476,10 +476,10 @@ Figure~\ref{fig:fibred-indexed-faces} illustrates the binary case, with semi--cu
 \end{figure}
 
 For the fixed arity $\nu$, assuming univalence and functional extensionality, the fibred-indexed correspondence gives an equivalence of types~\cite{Laroche26}.
-\begin{equation}
+\begin{equation*}
   \label{eq:nuset-correspondence}
   \X\simeq\operatorname{Functor}(\hexagon^{\mathrm{op}},\HSet)
-\end{equation}
+\end{equation*}
 Here $\operatorname{Functor}(C,\HSet)$ denotes the type of set-valued functors on $C$. This correspondence is an iterated variant of the \emph{Grothendieck construction}, where, in contrast to the usual equivalence between discrete fibrations and presheaves, presheaves are now seen as living on the fibred side, thanks to $\hexagon$ being a direct category.
 
 We extend this correspondence to $\nu$--sets with parametric degeneracies. Figure~\ref{fig:fibred-indexed-degeneracies} illustrates the binary case, with cubical sets.
@@ -513,10 +513,10 @@ We extend this correspondence to $\nu$--sets with parametric degeneracies. Figur
 \end{figure}
 
 Write $\XDgn$ for the type of indexed $\nu$--sets equipped with cell degeneracy families and the compatibility data for their mutual coherences. Under the same assumptions, the correspondence extends to degeneracies:
-\begin{equation}
+\begin{equation*}
   \label{eq:nudgnset-correspondence}
   \XDgn\simeq\operatorname{Functor}(\hexagon_d^{\mathrm{op}},\HSet)
-\end{equation}
+\end{equation*}
 The indexed structure on the left, including both the underlying $\nu$--set and its degeneracy data, is constructed in Section~\ref{sec:construction}. Both equivalences are formalized in Rocq; they factor through presentations by face maps, and by face and degeneracy maps with their identities, respectively.
 
 \section{Our construction}
@@ -692,7 +692,7 @@ At Above index $0$, the prefix reaches the chosen direction. The operation $\ref
 \label{sec:coherences}
 
 The five relations of Grandis--Mauri~\cite{grandis03} describe commutation of restrictions and degeneracies, and cancellation of a degeneracy by a restriction in its inserted direction. Grandis--Mauri state the relations between maps in the cubical site. Here we display their images under a contravariant presheaf, which reverses composition. Thus $\delta_r^\alpha$ denotes restriction on cells and $\varepsilon_q$ denotes degeneracy, with face labels $\alpha,\beta\in\nu$. Composition is read from right to left, and dimension indices are left implicit:
-\begin{equation}
+\begin{equation*}
   \begin{array}{r@{\;}c@{\;}c@{}l@{\qquad}l@{\qquad}l}
     \delta_q^\alpha\delta_r^\beta     & =       &                    &
     \delta_r^\beta\delta_{q+1}^\alpha & r\leq q & (\relRestrRestr)                                                                 \\[0.4em]
@@ -704,7 +704,7 @@ The five relations of Grandis--Mauri~\cite{grandis03} describe commutation of re
     \varepsilon_q\varepsilon_r        & =       &                    &
     \varepsilon_{r+1}\varepsilon_q    & q\leq r & (\relReflRefl)
   \end{array}
-\end{equation}
+\end{equation*}
 These are zero-based absolute direction indices, ranging over the instances in which the composites are defined. At level $n$, the cell component of $\varepsilon_i$ is supplied by $L(n-i)$. The three cases distinguish a restriction before, at, or after the inserted direction.
 
 The mixed relation above is displayed in the simplifying direction. In the construction tables, the equality proofs are oriented in the direction used for transport, as in the formalization. Coherence names list the operations on the right-hand side of those construction-oriented equations, with the outer operation first. In particular, $\relRestrReflBelowId$ proves $d=\cRF{q}{\epsilon}{\cSF{q}{d}}$, reversing the cancellation equation above.
