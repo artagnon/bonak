@@ -340,9 +340,7 @@ We previously exploited the observation that semi--simplicial and semi--cubical 
 
 \subsection{\texorpdfstring{$\nu$}{nu}-shape sets}
 
-The categories of augmented semi-simplices and semi-cubes can both be seen as free monoidal categories over natural numbers generated either by elementary faces $\partial_i$ in the augmented semi-simplicial case~\cite{grandis01} or $\partial_i^+$ and $\partial_i^-$ in the semi-cubical case~\cite{grandis03,buchholtz17}. Alternatively, morphisms from $p$ to $n$ in these categories can be represented respectively as inclusions of $\{1\}^p$ to $\{1\}^p$~\footnote{equivalently, as strictly monotone functions from $[1;p]$ to $[1;n]$~\cite{maclane1998categories}} or as inclusions of $\{+,-\}^p$ in $\{+,-\}^n$~\cite{Fahrenberg_2024}. So, shortly, the definitions of categories of augmented semi-simplices and semi-cubes can be seen as only differing from an arity, either one or two.
-
-Fix a set $\nu$ of face labels, called the \emph{arity}. The unary case uses a singleton set of labels; the binary case uses two labels. The augmented semi--simplicial and semi--cubical categories are instances of the more general notion of $\nu$--semi--shape category.
+The categories of augmented semi-simplices and semi-cubes can both be seen as free monoidal categories over natural numbers generated either by elementary faces $\partial_i$ in the augmented semi-simplicial case~\cite{grandis01} or $\partial_i^+$ and $\partial_i^-$ in the semi-cubical case~\cite{grandis03,buchholtz17}. Alternatively, morphisms from $p$ to $n$ in these categories can be represented respectively as inclusions of $\{1\}^p$ to $\{1\}^p$~\footnote{equivalently, as strictly monotone functions from $[1;p]$ to $[1;n]$~\cite{maclane1998categories}} or as inclusions of $\{+,-\}^p$ in $\{+,-\}^n$~\cite{Fahrenberg_2024}. The definitions of categories of augmented semi-simplices and semi-cubes can be seen as only differing in arity $\nu$, used as the face label: the unary case uses a single label, and the binary case uses two labels.
 
 \begin{definition}[$\hexagon$, \cite{hr25}]
   The definition of $\nu$--semi--shape category is shown below. It characterises an inclusion from $\nu^p$ to $\nu^n$ as a word of size $n$ over alphabet $\nu \sqcup \{\kstar\}$ such that a $\kstar$ denotes a retained coordinate and a label in $\nu$ denotes an inserted constant.
@@ -543,13 +541,13 @@ Figure~\ref{fig:cube-prefixes} illustrates the prefixes for $n=3$ and $\nu=2$. T
   \label{fig:cube-prefixes}
 \end{figure}
 
-Restriction means taking a face. The operation $\restrf[n][p][][q][\epsilon]$ maps a frame in $\framep[n+1][p]$ to one in $\framep[n][p]$. Its relative index $q\leq k$ denotes direction $p+q$, and $\epsilon\in\nu$ selects a face in that direction. The corresponding layer and painting operations are written $\restrl$ and $\restrp$; a painting restriction includes the restriction of its indexing frame. Each component of a layer is a lower--dimensional painting over a suitable restricted frame.
+Restriction corresponds to taking a face. The operation $\restrf[n][p][][q][\epsilon]$ maps a frame in $\framep[n+1][p]$ to one in $\framep[n][p]$. Its relative index $q\leq k$ denotes direction $p+q$, and $\epsilon\in\nu$ selects a face in that direction. The corresponding layer and painting operations are written $\restrl$ and $\restrp$; a painting restriction includes the restriction of its indexing frame. Each component of a layer is a lower--dimensional painting over a suitable restricted frame.
 
 These operations follow the dependent-pair decomposition. Restricting a successor frame restricts its prefix and its next layer; restricting a layer applies painting restriction to each face-label component. On a painting $(l,c)$, restriction at index $0$ selects the component $l(\epsilon)$ of the first layer. A successor index restricts the layer and continues recursively through the remaining painting.
 
 Figure~\ref{fig:arch-restr} displays this recursive decomposition. Arrows run from an input to the row that uses it; dashed arrows bring in painting operations from the preceding dimension. The boxes show the principal components of the defining terms, with arguments implicit. Inequality rows give the domains of the named operations and coherences; all direction indices are nonnegative. Recursive calls instantiate these bounds at the shifted indices shown in the tables.
 
-For an equality $e:x=y$ and $u:P(x)$, we write $\mathsf{rew}(e,u):P(y)$ for transport along $e$, leaving the family $P$ implicit. In each layer box, the rows labelled $e$ and $u$ identify the equality and the painting transported by the displayed function. In the restriction layer, the equality is $\relRestrRestr$ on frames. It makes the preceding--dimensional painting restriction have the required type; its proof is described in Section~\ref{sec:coherences}.
+For an equality $e:x=y$ and $u:P(x)$, we write $\mathsf{rew}(e,u):P(y)$ for transport along $e$. In each layer box, the rows labelled $e$ and $u$ identify the equality and the painting transported by the displayed function. In the restriction layer, the equality is $\relRestrRestr$ on frames. It makes the preceding--dimensional painting restriction have the required type, whose proof is described in Section~\ref{sec:coherences}.
 
 \subsection{Construction of degeneracies}
 The boundary of a degenerate cell contains a repeated layer at the inserted direction, together with degeneracies of the original faces. This suggests building the boundary layer by layer, inserting the repeated layer when the prefix reaches the chosen direction. Figure~\ref{fig:degeneracy-layers} illustrates the three insertion positions for a square, showing the separate layers and their assembled full frame.
@@ -679,7 +677,7 @@ The Below frame step transforms the prefix and its next layer. Each layer compon
 \subsection{Coherence conditions}
 \label{sec:coherences}
 
-The five relations of Grandis--Mauri~\cite{grandis03} describe commutation of restrictions and degeneracies, and cancellation of a degeneracy by a restriction in its inserted direction. Grandis--Mauri state the relations between maps in the cubical site. Here we display their images under a contravariant presheaf, which reverses composition. Thus $\delta_r^\alpha$ denotes restriction on cells and $\varepsilon_q$ denotes degeneracy, with face labels $\alpha,\beta\in\nu$. Composition is read from right to left, and dimension indices are left implicit:
+The five relations of Grandis--Mauri~\cite{grandis03} describe commutation of restrictions and degeneracies, and cancellation of a degeneracy by a restriction in its inserted direction. Grandis--Mauri state the relations between maps in the cubical site. Here we display their images under a contravariant presheaf, which reverses composition. Thus $\delta_r^\alpha$ denotes restriction on cells and $\varepsilon_q$ denotes degeneracy, with face labels $\alpha,\beta\in\nu$.
 \begin{equation*}
   \begin{array}{r@{\;}c@{\;}c@{}l@{\qquad}l@{\qquad}l}
     \delta_q^\alpha\delta_r^\beta     & =       &                    &
