@@ -729,20 +729,18 @@ Figure~\ref{fig:arch-coh-basic} compares this construction with restriction--res
 
 The $\relRestrRestr$ and $\relRestrReflInf$ families require hexagons; $\relRestrReflId$ requires a square. The zero-direction painting bases in these three families hold by definition and are thus proved by reflexivity.
 
-\begin{figure}[H]
-  \centering
-  \input{figures/architecture-coh-basic.tex}
-  \caption{Proofs of $\relRestrRestr$, $\relRestrReflId$, and $\relRestrReflInf$.}
-  \label{fig:arch-coh-basic}
-\end{figure}
-
 \paragraph{\texorpdfstring{$\relRestrReflSup$}{restr-refl-sup}.}
 Figure~\ref{fig:arch-coh-sup} shows the two stages of $\relRestrReflSup$. The frame proof passes from Below to Above, whereas the painting proof passes from Above to Below. At the transition, the Above frame proof uses the Below frame proof and a separate zero-direction layer proof.
 
 The ordinary layer steps use hexagons. At Above index zero, the constant layer instead requires the cancellation coherence, giving the square in Figure~\ref{fig:coh2-sup-zero}. This is the middle layer box in the architecture figure. The $2$--dimensional frame boxes above the three layer cases link to the corresponding square and hexagons.
 
-\begin{figure}[H]
+\begin{figure}[p]
   \centering
+  \input{figures/architecture-coh-basic.tex}
+  \caption{Proofs of $\relRestrRestr$, $\relRestrReflId$, and $\relRestrReflInf$.}
+  \label{fig:arch-coh-basic}
+
+  \medskip
   \input{figures/architecture-coh-sup.tex}
   \caption{Below and Above proofs of $\relRestrReflSup$. The middle layer box handles the zero-direction transition; the outside boxes handle the ordinary layer steps.}
   \label{fig:arch-coh-sup}
