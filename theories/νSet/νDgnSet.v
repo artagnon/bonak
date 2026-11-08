@@ -11,11 +11,97 @@ Set Typeclasses Depth 10.
 Remove Printing Let sigT.
 Remove Printing Let prod.
 
+(** Degeneracies over ν-sets
+
+    This file equips the indexed ν-sets of [νSet] with degeneracies that
+    insert a new direction. In the binary case these are the degeneracies
+    of cubical sets, as in Grandis and Mauri, "Cubical sets and their
+    site"; in the unary case they are their analogue for augmented
+    semi-simplicial sets, as in Bernardy, Coquand and Moulin, "A
+    presheaf model of parametric type theory".
+
+    The construction takes, at each level, a family [L] of degeneracies
+    on cells and a proof [cohL] that two composites of these families
+    agree. From them it defines degeneracies on frames, layers and
+    paintings, and proves the relations between degeneracies and
+    restrictions and between two degeneracies.
+
+    Levels and heights. A frame of level [n] and height [p ≤ n] consists
+    of the first [p] layers of the boundary of a cell of level [n];
+    [k := n - p] layers remain. Restriction maps a frame of level [n+1]
+    to a frame of level [n] of the same height.
+
+    A degeneracy of level [n] inserts a direction [i ≤ n] and maps data
+    of level [n] to data of level [n+1]. On a frame of height [p], it
+    takes one of two forms:
+    - the Below degeneracy [ε↓ q], when [p ≤ i], with relative index
+      [q := i - p ≤ k]: the frame lies before the inserted direction, and
+      the degenerate frame has the same height;
+    - the Above degeneracy [ε↑ q], when [i ≤ p], with relative index
+      [q := p - i ≤ p]: the frame reaches the inserted direction, so the
+      degeneracy also takes a painting [c] over the frame and inserts
+      the repeated layer built from it; the degenerate frame has height
+      [p+1].
+
+    The two forms meet at [i = p], where both indices are [0]. The same
+    symbols denote the Below and Above degeneracies of layers and
+    paintings. Degenerate frames are built from Below to Above, and
+    degenerate paintings in the opposite order: at a full frame
+    ([k = 0]), the Above degeneracy of a painting is given by [L].
+
+    Coherences. Write [δ r] for the restriction in relative direction [r],
+    leaving the face label implicit. The construction proves the
+    following coherence families on frames, layers and paintings:
+<<
+  restr-refl↓-id    d = δ q (ε↓ q d)                           q ≤ k
+  restr-refl↓-inf   ε↓ q (δ r d) = δ r (ε↓ (q+1) d)            r ≤ q ≤ k
+  restr-refl↓-sup   ε↓ q (δ r d) = δ (r+1) (ε↓ q d)            q ≤ r ≤ k
+  restr-refl↑-sup   ε↑ q (δ r d, δ r c) = δ r (ε↑ q (d, c))    q ≤ p, r ≤ k
+  refl↓-refl↓       ε↓ q (ε↓ r d) = ε↓ (r+1) (ε↓ q d)          q ≤ r ≤ k
+  refl↓-refl↑       ε↑ q (ε↓ r d, ε↓ r c) = ε↓ r (ε↑ q (d, c)) q ≤ p, r ≤ k
+  refl↑-refl↑       ε↑ (r+1) (ε↑ q (d, c), ε↑ q c)
+                      = ε↑ q (ε↑ r (d, c), ε↑ r c)             q ≤ r ≤ p
+>>
+    In the code, these families appear as [IdRestrRefl…Below],
+    [CohReflRestr…BelowInf], [CohReflRestr…BelowSup], [CohReflRestr…AboveSup],
+    [CohReflBelowBelow…], [CohReflAboveBelow…] and [CohReflAboveAbove…],
+    respectively. Together with [restr-restr], proved in [νSet], they refine the
+    relations [restr-restr], [restr-refl-id], [restr-refl-inf], [restr-refl-sup]
+    and [refl-refl] of Grandis and Mauri: [restr-refl-sup] splits into a Below
+    and an Above family, and [refl-refl] into three families.
+
+    Each coherence is proved for frames, layers and paintings together. A frame
+    equality is proved by recursion on the height, pairing the equality at the
+    lower height with a layer equality. A layer equality is proved pointwise
+    over the face labels from a painting coherence one level down; its
+    transports require two composites of frame equalities to agree, which holds
+    by UIP for frames. A painting equality is proved by recursion on an index,
+    pairing a layer equality with the equality on the remaining painting.
+
+    The file follows the pattern of [νSet]. For a family [X] of degeneracies or
+    coherences, [mkXType deps] is the type of its member at height [p], for
+    [deps] of shape [(p.+1, k)], and [mkXTypes deps] is the Σ-list of these
+    types for all heights below [p]. The dependency classes [DepsReflBelow],
+    [DepsReflCohsInf], [DepsReflAbove], [DepsReflCohsSup] and [DepsReflCohs2]
+    collect such lists in the order the construction needs them; the projection
+    [.(1)] of each class drops the top height and increments [k]. For [deps] of
+    shape [(p, k)], [mkX deps] builds the member at height [p] of the next
+    level, and [mkXs deps] the whole list. *)
+
 Module νDgnSet (A: LayerSig).
 Import A.
 
 Module Import νSet := νSet.νSet A.
 Arguments mkDepsRestr {p k} depsCohs.
+
+(** For [deps: DepsRestr p.+1 k] and [n := p + k]:
+    - [FramePrev deps] is the type of frames of level [n] and height [p],
+      and [PaintingPrev deps d] that of paintings over such a frame;
+    - [FrameBase deps] is the type of frames of level [n+1] and height
+      [p], and [PaintingBase deps extraDeps d] that of paintings over it.
+
+    The type [mkFrame deps] is that of frames of level [n+1] and height
+    [p+1]. *)
 
 Definition FramePrev {p k} (deps: DepsRestr p.+1 k): Type :=
   deps.(_frames).2.
@@ -31,6 +117,9 @@ Definition PaintingBase {p k} (deps: DepsRestr p.+1 k)
   (extraDeps: DepsRestrExtension p.+1 k deps): FrameBase deps -> Type :=
   (mkPaintings (deps; extraDeps)).2.
 
+(** The Below degeneracies of frames at all heights below [p]: at each
+    height, one map from [FramePrev] to [FrameBase] for each Below index. *)
+
 Fixpoint mkReflFrameBelowTypes {p k}: DepsRestr p k -> Type :=
   match p with
   | 0 => fun _ => unit
@@ -38,6 +127,10 @@ Fixpoint mkReflFrameBelowTypes {p k}: DepsRestr p k -> Type :=
     { R: mkReflFrameBelowTypes deps.(1) &T
           forall i (Hi: i <= k), FramePrev deps -> FrameBase deps }
   end.
+
+(** The Above degeneracies of frames: Above index [i ≤ p] maps a frame of
+    level [n] and height [p], with a painting over it, to a frame of level
+    [n+1] and height [p+1]. *)
 
 Definition mkReflFrameAboveType {p k} (deps: DepsRestr p.+1 k): Type :=
   forall i (Hi: i <= p) (d: FramePrev deps), PaintingPrev deps d -> mkFrame deps.
@@ -48,6 +141,9 @@ Fixpoint mkReflFrameAboveTypes {p k}: DepsRestr p k -> Type :=
   | p'.+1 => fun deps =>
     { R: mkReflFrameAboveTypes deps.(1) &T mkReflFrameAboveType deps }
   end.
+
+(** Restriction data with the Below degeneracies of frames, at heights below
+    [p]. *)
 
 Class DepsReflBelow p k := {
   _depsRestr: DepsRestr p k;
@@ -68,6 +164,9 @@ Bind Scope depsreflbelow_scope with DepsReflBelow.
 Notation "x .(1)" := (proj1DepsReflBelow x%depsreflbelow)
   (at level 1, left associativity, format "x .(1)"): depsreflbelow_scope.
 
+(** [restr-refl↓-id] on frames: restricting a Below degeneracy in its inserted
+    direction gives back the original frame. *)
+
 Definition mkIdRestrReflFrameBelowType {p k}
   (deps: DepsReflBelow p.+1 k): Type :=
   forall i (Hi: i <= k) ε (d: FramePrev deps.(_depsRestr)),
@@ -82,6 +181,9 @@ Fixpoint mkIdRestrReflFrameBelowTypes {p}:
     { _: mkIdRestrReflFrameBelowTypes deps.(1) &T
       mkIdRestrReflFrameBelowType deps }
   end.
+
+(** The Below degeneracies of paintings: a painting over [d] is mapped to a
+    painting over the Below frame of [d]. *)
 
 Definition mkReflPaintingBelowType {p k} (deps: DepsReflBelow p.+1 k)
   (extraDeps: DepsRestrExtension p.+1 k deps.(_depsRestr)) :=
@@ -100,6 +202,13 @@ Fixpoint mkReflPaintingBelowTypes {p}:
       mkReflPaintingBelowType deps extraDeps }
   end.
 
+(** As for restriction frames and their coherences in [νSet], the Below
+    frames of the next level and the types of their [restr-refl↓-inf]
+    coherences are built by a single fixpoint: the Below layer at height [p]
+    transports along the coherence at height [p], whose type refers to the
+    Below frames at lower heights. This block pairs the type of the list of
+    coherences with the Below frames defined from an inhabitant of it. *)
+
 Class CohReflRestrFrameBelowInfTypeBlock {p k} (deps: DepsRestr p k) := {
   CohReflRestrFrameBelowInfTypesDef: Type;
   ReflFramesBelowDef: CohReflRestrFrameBelowInfTypesDef -> mkReflFrameBelowTypes deps;
@@ -113,6 +222,9 @@ Instance toDepsReflBelow {p k}
      _reflFramesBelow := reflFrames;
   |}.
 
+(** The [restr-refl↓-inf] coherence on the frames of height [p] of the next
+    level, over the coherences at lower heights. *)
+
 Definition mkCohReflRestrFrameBelowInfTypesStep {p k} (deps: DepsCohs p.+1 k)
   (reflFramesBelow: mkReflFrameBelowTypes deps.(_deps))
   (prev: CohReflRestrFrameBelowInfTypeBlock (mkDepsRestr deps.(1))): Type :=
@@ -120,6 +232,11 @@ Definition mkCohReflRestrFrameBelowInfTypesStep {p k} (deps: DepsCohs p.+1 k)
     forall q r (Hq: q <= k) (Hr: r <= q) (ε: arity) (d: FrameBase deps.(_deps)),
     reflFramesBelow.2 q Hq (deps.(_deps).(_restrFrames).2 r (Hr ↕ Hq) ε d) =
     mkRestrFrame r (Hr ↕ ↑ Hq) ε ((prev.(ReflFramesBelowDef) Q).2 q.+1 (⇑ Hq) d) }.
+
+(** The Below layer. The component of [l] at a face label is a painting over
+    the face [δ 0 d]. Its Below degeneracy lies over [ε↓ i (δ 0 d)], which
+    [restr-refl↓-inf] identifies with the face [δ 0 (ε↓ (i+1) d)] of the
+    Below frame one height up. *)
 
 Definition mkReflLayerBelow {p k} (deps: DepsCohs p.+1 k)
   (reflFramesBelow: mkReflFrameBelowTypes deps.(_deps))
@@ -137,6 +254,11 @@ Definition mkReflLayerBelow {p k} (deps: DepsCohs p.+1 k)
     rew [(mkDepsRestr deps.(1)).(_paintings).2]
       cohFrames.2 i 0 Hi leR_O ε d in
     reflPaintingsBelow.2 i Hi (deps.(_deps).(_restrFrames).2 0 leR_O ε d) c).
+
+(** At height [0] the frame is trivial and every Below degeneracy is the
+    identity. At height [p+1], the Below frame of [(d, l)] at index [i]
+    pairs the Below frame of [d] at index [i+1], which denotes the same
+    direction relative to the lower height, with the Below layer of [l]. *)
 
 Fixpoint mkCohReflRestrFrameBelowInfTypesAndReflFramesBelow {p k}:
   forall (deps: DepsCohs p k) (reflFramesBelow: mkReflFrameBelowTypes deps.(_deps))
@@ -206,6 +328,11 @@ Fixpoint mkIdRestrReflPaintingBelowTypes {p}:
       mkIdRestrReflPaintingBelowType deps reflFramesBelow reflPaintingsBelow
         idRestrReflFrames }
   end.
+
+(** The data, at heights below [p], from which the next level's Below frames
+    and their [restr-refl↓-id] coherences are built: ν-set data with painting
+    coherences, Below and Above frames, Below paintings, [restr-refl↓-id] on
+    frames and paintings, and the [restr-refl↓-inf] frame coherences. *)
 
 Class DepsReflCohsInf p k := {
   _depsCohs2: DepsCohs2 p k;
@@ -280,6 +407,9 @@ Definition mkDepsReflBelow {p k} (deps: DepsReflCohsInf p k): DepsReflBelow p.+1
      _reflFramesBelow := mkReflFramesBelow deps
   |}.
 
+(** The [restr-refl↓-sup] coherence on frames: a Below degeneracy commutes
+    with a restriction after the inserted direction. *)
+
 Definition mkCohReflRestrFrameBelowSupType {p k}
   (deps: DepsReflCohsInf p.+1 k): Type :=
   forall q r (Hq: q <= r) (Hr: r <= k) (ε: arity) (d: FrameBase (RestrOfReflCohsInf deps)),
@@ -295,6 +425,8 @@ Fixpoint mkCohReflRestrFrameBelowSupTypes {p}:
     { _: mkCohReflRestrFrameBelowSupTypes deps.(1) &T
       mkCohReflRestrFrameBelowSupType deps }
   end.
+
+(** [restr-refl↓-id] on layers. *)
 
 Definition mkIdRestrReflLayerBelow {p k}
   (deps: DepsReflCohsInf p.+1 k)
@@ -344,6 +476,8 @@ Definition mkIdRestrReflFrameBelow {p k} (deps: DepsReflCohsInf p k):
   mkIdRestrReflFrameBelowType (mkDepsReflBelow deps) :=
   (mkIdRestrReflFramesBelow deps).2.
 
+(** The data over which the Above degeneracies of paintings are typed. *)
+
 Class DepsReflAbove p k := {
   _depsRefl: DepsReflBelow p k;
   _extraDeps: DepsRestrExtension p k _depsRefl.(_depsRestr);
@@ -373,6 +507,9 @@ Definition AboveOfReflCohsInf {p k}
   _reflFramesAbove' := depsCohs.(_reflFramesAbove);
 |}.
 
+(** The Above degeneracies of paintings: a painting [c] over [d] is mapped
+    to a painting over the Above frame of [d] and [c]. *)
+
 Definition mkReflPaintingAboveType {p k} (deps: DepsReflAbove p.+1 k) :=
   forall i (Hi: i <= p)
     (d: FramePrev deps.(_depsRefl).(_depsRestr))
@@ -389,6 +526,11 @@ Fixpoint mkReflPaintingAboveTypes {p}:
       mkReflPaintingAboveType deps }
   end.
 
+(** At Above index [0], the inserted direction is the next one. The inserted
+    layer is constant: each of its components is [c], transported along
+    [restr-refl↓-id]. The Above frame at index [0] pairs the Below frame at
+    index [0] with this layer. *)
+
 Definition mkReflLayerAbove0 {p k} (deps: DepsReflCohsInf p k)
   (d: FramePrev (mkDepsRestr (CohsOfReflCohsInf deps)))
   (c: PaintingPrev (mkDepsRestr (CohsOfReflCohsInf deps)) d):
@@ -403,6 +545,9 @@ Definition mkReflFrameAbove0 {p k} (deps: DepsReflCohsInf p k)
   (c: PaintingPrev (mkDepsRestr (CohsOfReflCohsInf deps)) d):
   mkFrame (mkDepsRestr (CohsOfReflCohsInf deps)) :=
   (mkReflFrameBelow deps 0 leR_O d; mkReflLayerAbove0 deps d c).
+
+(** The Above degeneracies of frames at successor indices;
+    [mkReflFrameAboveOf0AndS] adds index [0]. *)
 
 Definition mkReflFrameAboveTypeS {p k} (deps: DepsRestr p.+1 k): Type :=
   forall i (Hi: i.+1 <= p) (d: FramePrev deps),
@@ -441,10 +586,17 @@ Definition mkReflFramesAboveOf0AndS {p k} (deps: DepsReflCohsInf p k)
   (mkReflFramesAboveOf0AndSPrefix deps reflFramesAboveS.1;
    mkReflFrameAboveOf0AndS deps reflFramesAboveS.2).
 
+(** The next level's Above frames at successor indices and the types of
+    their [restr-refl↑-sup] coherences are built by a single fixpoint, as for
+    the Below frames. *)
+
 Class CohReflRestrFrameAboveSupTypeBlock {p k} (deps: DepsRestr p k) := {
   CohReflRestrFrameAboveSupTypesDef: Type;
   ReflFramesAboveSDef: CohReflRestrFrameAboveSupTypesDef -> mkReflFrameAboveTypesS deps;
 }.
+
+(** The [restr-refl↑-sup] coherence on frames: an Above degeneracy commutes
+    with restrictions, all of which lie after the inserted direction. *)
 
 Definition mkCohReflRestrFrameAboveSupType {p k} (deps: DepsReflCohsInf p.+1 k)
   (prev: CohReflRestrFrameAboveSupTypeBlock (mkDepsRestr (CohsOfReflCohsInf deps.(1))))
@@ -460,6 +612,10 @@ Definition mkCohReflRestrFrameAboveSupTypesStep {p k} (deps: DepsReflCohsInf p.+
   (prev: CohReflRestrFrameAboveSupTypeBlock (mkDepsRestr (CohsOfReflCohsInf deps.(1)))): Type :=
   { Q: prev.(CohReflRestrFrameAboveSupTypesDef) &T
    mkCohReflRestrFrameAboveSupType deps prev Q }.
+
+(** The Above layer at a successor index. Its component at a face label is
+    the Above painting, one level down, of the corresponding face of [c],
+    transported along [restr-refl↑-sup]. *)
 
 Definition mkReflLayerAbove {p k} (deps: DepsReflCohsInf p.+1 k)
   (reflPaintingsAbove: mkReflPaintingAboveTypes (AboveOfReflCohsInf deps))
@@ -478,6 +634,10 @@ Definition mkReflLayerAbove {p k} (deps: DepsReflCohsInf p.+1 k)
       cohFrames.2 i 0 Hi leR_O ε d c in
   reflPaintingsAbove.2 i Hi _
     ((CohsOfReflCohsInf deps).(_restrPaintings).2 0 leR_O ε d c)).
+
+(** At height [0] there is no successor index. At height [p+1], the
+    Above frame of [(d, l)] and [c] at index [i+1] pairs the Above frame
+    of [d] and [(l, c)] at index [i] with the Above layer. *)
 
 Fixpoint mkCohReflRestrFrameAboveSupTypesAndReflFramesAbove {p k}:
   forall (deps: DepsReflCohsInf p k)
@@ -512,6 +672,10 @@ Definition mkCohReflRestrFrameAboveSupTypes {p k}
   (reflPaintingsAbove: mkReflPaintingAboveTypes (AboveOfReflCohsInf deps)): Type :=
   (mkCohReflRestrFrameAboveSupTypesAndReflFramesAbove deps
     reflPaintingsAbove).(CohReflRestrFrameAboveSupTypesDef).
+
+(** [DepsReflCohsInf] extended with the [restr-refl↓-sup] frame coherences,
+    the Above paintings and the [restr-refl↑-sup] frame coherences, at heights
+    below [p]. The next level's Above frames are built from it. *)
 
 Class DepsReflCohsSup p k := {
   _depsReflCohsInf: DepsReflCohsInf p k;
@@ -589,12 +753,21 @@ Definition mkDepsReflAbove {p k}
   _reflFramesAbove' := mkReflFramesAbove depsCohsSup;
 |}.
 
+(** The supplied degeneracies on cells of level [p]: for a full frame
+    [d], a cell [c] over it and an Above index [i ≤ p], a cell of the
+    next family [E] over the Above frame of [d] and [c]. Index [i]
+    inserts direction [p - i]. *)
+
 Definition HasRefl {p} (deps: DepsReflCohsSup p 0)
   (E: mkFrame (mkDepsRestr (CohsOfReflCohsSup deps)) -> HSet): Type :=
   forall i (Hi: i <= p)
     (d: FramePrev (mkDepsRestr (CohsOfReflCohsSup deps)))
     (c: PaintingPrev (mkDepsRestr (CohsOfReflCohsSup deps)) d),
   E (mkReflFrameAbove deps i Hi d c).
+
+(** The analogue of [DepsRestrExtension] for degeneracies: the
+    dependency data at the heights from [p] up to the full frame, ending
+    with the supplied degeneracies [L]. *)
 
 Inductive DepsReflCohsSupExtension p: forall k (deps: DepsReflCohsSup p k), Type :=
 | TopReflCohSupDep {deps: DepsReflCohsSup p 0}
@@ -611,6 +784,11 @@ Delimit Scope extra_depsreflcohssup_scope with extradepsreflcohssup.
 Bind Scope extra_depsreflcohssup_scope with DepsReflCohsSupExtension.
 Notation "( x ; y )" := (AddReflCohSupDep x y)
   (at level 0, format "( x ; y )"): extra_depsreflcohssup_scope.
+
+(** Above paintings, by recursion on the remaining layers. At the full
+    frame, the Above painting is given by [L]. Otherwise, the Above
+    painting of [(l, c)] at index [i] pairs the Above layer at index
+    [i+1] with the Above painting of [c] at index [i+1], one height up. *)
 
 Fixpoint mkReflPaintingAbove {p k}
   (deps: DepsReflCohsSup p k)
@@ -642,6 +820,15 @@ Definition mkReflPaintingsAbove {p k}:
   mkReflPaintingAboveTypes (mkDepsReflAbove deps) :=
   fun deps extraDeps =>
     (mkReflPaintingsAbovePrefix deps extraDeps; mkReflPaintingAbove deps extraDeps).
+
+(** Below paintings, by recursion on the Below index. A painting over a
+    Below frame starts with a layer: [mkReflPaintingBelow1] defines that
+    layer and [mkReflPaintingBelow2] the remaining painting, whose type
+    refers to the layer. At index [0], the painting reaches the inserted
+    direction: the layer is the constant layer, and the remaining
+    painting is the Above painting at index [0]. At index [i+1], the
+    Below painting of [(l, c)] pairs the Below layer of [l] at index [i]
+    with the Below painting of [c] at index [i], one height up. *)
 
 Definition mkReflPaintingBelow1 {p k}
   (deps: DepsReflCohsSup p k)
@@ -795,6 +982,10 @@ Fixpoint mkCohReflRestrPaintingAboveSupTypes {p}:
     { _: mkCohReflRestrPaintingAboveSupTypes deps.(1) (deps; extraDeps)
       &T mkCohReflRestrPaintingAboveSupType deps extraDeps }
   end.
+
+(** [restr-refl↓-id] on paintings. At Below index [0], restriction selects a
+    component of the constant layer, which is [c] transported along
+    [restr-refl↓-id] on frames. *)
 
 Fixpoint mkIdRestrReflPaintingBelow {p k}
   (deps: DepsReflCohsSup p k)
@@ -982,6 +1173,12 @@ Fixpoint mkCohReflAboveAbovePaintingTypes {p}:
       mkCohReflAboveAbovePaintingType deps extraDeps cohReflAboveAboveFrames }
   end.
 
+(** The full dependency data at heights below [p]: [DepsReflCohsSup],
+    the extensions of its ν-set and degeneracy parts, and the painting
+    coherences between degeneracies and restrictions and the frame and
+    painting coherences between two degeneracies. Every component of the
+    next level's [DepsReflCohsSup] is built from it. *)
+
 Class DepsReflCohs2 p k := {
   _depsReflCohsSup: DepsReflCohsSup p k;
   _extraDepsCohs2: DepsCohs2Extension p k (Cohs2OfReflCohsSup _depsReflCohsSup);
@@ -1074,6 +1271,8 @@ Definition CohsExtOfReflCohs2 {p k}
     (CohsOfReflCohs2 depsCohs2) :=
   CohsExtOfReflCohsSup depsCohs2.(_depsReflCohsSup).
 
+(** [restr-refl↓-inf] on layers. *)
+
 Definition mkCohReflRestrLayerBelowInf {p k}
   (deps: DepsReflCohs2 p.+1 k)
   (ε: arity) q r (Hq: q <= k) (Hr: r <= q)
@@ -1159,6 +1358,8 @@ Proof.
   - now apply mkCohReflRestrFramesBelowInf.
 Defined.
 
+(** [restr-refl↓-sup] on layers. *)
+
 Definition mkCohReflRestrLayerBelowSup {p k}
   (deps: DepsReflCohs2 p.+1 k)
   (ε: arity) q r (Hq: q <= r) (Hr: r <= k)
@@ -1221,6 +1422,8 @@ Proof.
       * now exact (mkCohReflRestrLayerBelowSup deps ε q r Hq Hr l c h).
 Defined.
 
+(** [restr-refl↑-sup] on the Above layer at a successor index. *)
+
 Definition mkCohReflRestrLayerAboveSup {p k}
   (deps: DepsReflCohs2 p.+1 k)
   (ε: arity) q r (Hq: q <= p) (Hr: r <= k)
@@ -1275,6 +1478,8 @@ Proof.
   now apply ((mkFrame (RestrOfReflCohsSup deps.(_depsReflCohsSup))).(UIP)).
 Defined.
 
+(** [restr-refl↑-sup] on the constant layer at index [0]. *)
+
 Definition mkCohReflRestrLayerAboveSup0 {p k}
   (deps: DepsReflCohs2 p k) r (Hr: r <= k) (ε: arity)
   (d: FrameBase (RestrOfReflCohsInf (mkDepsReflCohsInf deps)))
@@ -1306,6 +1511,10 @@ Proof.
   now apply
     ((CohsOfReflCohsInf (mkDepsReflCohsInf deps)).(_deps).(_frames).2.(UIP)).
 Defined.
+
+(** [restr-refl↑-sup] on frames. At index [0], the Above frame starts with a
+    Below frame, so the proof pairs [restr-refl↓-sup] at Below index [0] with
+    the constant-layer case. *)
 
 Definition mkCohReflRestrFrameAboveSup {p k} (deps: DepsReflCohs2 p k)
   (cohPrefix:
@@ -1357,6 +1566,8 @@ Proof.
   - now apply mkCohReflRestrFramesBelowSup.
   - now apply mkCohReflRestrFramesAboveSup.
 Defined.
+
+(** [refl↓-refl↓] on layers. *)
 
 Definition mkCohReflBelowBelowLayer {p k}
   (deps: DepsReflCohs2 p.+1 k)
@@ -1420,6 +1631,8 @@ Proof.
       * now exact (h.2 q.+1 r.+1 (⇑ Hq) (⇑ Hr) d).
       * now exact (mkCohReflBelowBelowLayer deps q r Hq Hr d l h).
 Defined.
+
+(** [refl↓-refl↑] on the Above layer at a successor index. *)
 
 Definition mkCohReflAboveBelowLayer {p k}
   (deps: DepsReflCohs2 p.+1 k)
@@ -1494,6 +1707,8 @@ Proof.
       (mkDepsReflCohsSup deps).(1).(_depsReflCohsInf))).(_frames).2.(UIP)).
 Defined.
 
+(** [refl↓-refl↑] on the constant layer at index [0]. *)
+
 Definition mkCohReflAboveBelowLayer0 {p k}
   (deps: DepsReflCohs2 p k) r (Hr: r <= k)
   (d: FramePrev (RestrOfReflCohsSup (mkDepsReflCohsSup deps)))
@@ -1533,6 +1748,9 @@ Proof.
       .(_frames).2.(UIP)).
 Defined.
 
+(** [refl↓-refl↑] on frames. At Above index [0], the proof pairs [refl↓-refl↓]
+    at index [0] with the constant-layer case. *)
+
 Definition mkCohReflAboveBelowFrame {p k} (deps: DepsReflCohs2 p k)
   (cohPrefix: mkCohReflAboveBelowFrameTypes (mkDepsReflCohsSup deps).(1)):
   mkCohReflAboveBelowFrameType (mkDepsReflCohsSup deps).
@@ -1568,6 +1786,8 @@ Proof.
   - now exact h.
   - now exact (mkCohReflAboveBelowFrame deps h).
 Defined.
+
+(** [refl↑-refl↑] on the Above layer at a successor index. *)
 
 Definition mkCohReflAboveAboveLayer {p k}
   (deps: DepsReflCohs2 p.+1 k)
@@ -1635,6 +1855,8 @@ Proof.
       .(_frames).2.(UIP)).
 Defined.
 
+(** [refl↑-refl↑] on the constant layer at index [0]. *)
+
 Definition mkCohReflAboveAboveLayer0 {p k}
   (deps: DepsReflCohs2 p k) r (Hr: r <= p)
   (d: FramePrev (RestrOfReflCohsSup (mkDepsReflCohsSup deps)))
@@ -1684,6 +1906,9 @@ Proof.
       .(_frames).2.(UIP)).
 Defined.
 
+(** [refl↑-refl↑] on frames. When [q = 0], the proof pairs [refl↓-refl↑] at
+    Below index [0] with the constant-layer case. *)
+
 Definition mkCohReflAboveAboveFrame {p k} (deps: DepsReflCohs2 p k)
   (cohPrefix: mkCohReflAboveAboveFrameTypes (mkDepsReflCohsSup deps).(1)):
   mkCohReflAboveAboveFrameType (mkDepsReflCohsSup deps).
@@ -1721,6 +1946,18 @@ Proof.
   - now exact (mkCohReflAboveAboveFrame deps h).
 Defined.
 
+(** The compatibility required of the supplied degeneracies [L]:
+    [refl↑-refl↑] on cells. For [q ≤ r ≤ p], a full frame [d] and a
+    cell [c] over it, writing [L'] for the degeneracies of the previous
+    level, it states, up to transport along the corresponding frame
+    equality,
+<<
+  L (r+1) (ε↑ q (d, c)) (L' q d c) = L q (ε↑ r (d, c)) (L' r d c)
+>>
+    It is the only coherence that is supplied. The [refl-refl] coherences
+    on paintings reduce to it at full frames; the [restr-refl] coherences
+    do not use it. *)
+
 Definition cohReflAboveAboveL {p} (deps: DepsReflCohs2 p 0)
   (L: HasRefl
     (mkDepsReflCohsSup deps)
@@ -1730,14 +1967,8 @@ Definition cohReflAboveAboveL {p} (deps: DepsReflCohs2 p 0)
     (TopReflCohSupDep L)
     (mkCohReflAboveAboveFrames deps).
 
-(*
-  L r.+1 (⇑ Hr)
-    ((mkReflFramesAbove _depsReflCohsSup).2 q (Hq ↕ Hr) d c)
-    (L' q (Hq ↕ Hr) d c) =
-  L q (Hq ↕ ↑ Hr)
-    ((mkReflFramesAbove _depsReflCohsSup).2 r Hr d c)
-    (L' r Hr d c)
-*)
+(** The analogue of [DepsReflCohsSupExtension] that also records [cohL]
+    with [L]. *)
 
 Inductive DepsReflCohs2Extension p: forall k (deps: DepsReflCohs2 p k), Type :=
 | TopReflCoh2Dep {deps: DepsReflCohs2 p 0}
@@ -1767,6 +1998,9 @@ Proof.
   - apply (AddReflCohSupDep (mkDepsReflCohsSup deps)).
     now exact (mkExtraDepsReflCohsSup p.+1 k deps extraDeps).
 Defined.
+
+(** [restr-refl↓-inf] on paintings. When [r = 0], both sides select the same
+    component of the first layer. *)
 
 Fixpoint mkCohReflRestrPaintingBelowInf {p k}
   (deps: DepsReflCohs2 p k)
@@ -1804,6 +2038,9 @@ Proof.
     + now apply mkCohReflRestrPaintingBelowInf.
 Defined.
 
+(** [restr-refl↑-sup] on paintings. When [r = 0], both sides select the same
+    component of the first layer. *)
+
 Fixpoint mkCohReflRestrPaintingAboveSup {p k}
   (deps: DepsReflCohs2 p k)
   (extraDeps: DepsReflCohs2Extension p k deps):
@@ -1838,6 +2075,10 @@ Proof.
         deps.(1)%depsreflcohs2 (deps; extraDeps)%extradepsreflcohs2).
     + now apply mkCohReflRestrPaintingAboveSup.
 Defined.
+
+(** [restr-refl↓-sup] on paintings. When [q = 0], the Below painting is a
+    constant layer followed by an Above painting, so the coherence reduces
+    to [restr-refl↑-sup]. *)
 
 Fixpoint mkCohReflRestrPaintingBelowSup {p k}
   (deps: DepsReflCohs2 p k)
@@ -1878,6 +2119,8 @@ Proof.
     + now apply mkCohReflRestrPaintingBelowSup.
 Defined.
 
+(** [refl↑-refl↑] on paintings. At the full frame, it is the supplied [cohL]. *)
+
 Fixpoint mkCohReflAboveAbovePainting {p k} (deps: DepsReflCohs2 p k)
   (extraDeps: DepsReflCohs2Extension p k deps):
   mkCohReflAboveAbovePaintingType
@@ -1913,6 +2156,9 @@ Proof.
         deps.(1)%depsreflcohs2 (deps; extraDeps)%extradepsreflcohs2).
     + now apply mkCohReflAboveAbovePainting.
 Defined.
+
+(** [refl↓-refl↑] on paintings. When [r = 0], the coherence reduces to
+    [refl↑-refl↑]. *)
 
 Fixpoint mkCohReflAboveBelowPainting {p k} (deps: DepsReflCohs2 p k)
   (extraDeps: DepsReflCohs2Extension p k deps):
@@ -1954,6 +2200,9 @@ Proof.
     + now apply mkCohReflAboveBelowPainting.
 Defined.
 
+(** [refl↓-refl↓] on paintings. When [q = 0], the coherence reduces to
+    [refl↓-refl↑]. *)
+
 Fixpoint mkCohReflBelowBelowPainting {p k} (deps: DepsReflCohs2 p k)
   (extraDeps: DepsReflCohs2Extension p k deps):
   mkCohReflBelowBelowPaintingType
@@ -1994,6 +2243,10 @@ Proof.
         deps.(1)%depsreflcohs2 (deps; extraDeps)%extradepsreflcohs2).
     + now apply mkCohReflBelowBelowPainting.
 Defined.
+
+(** Dependency records at the full frame of level [p], built from the
+    data [C] of the families below level [p], the family [E] of level
+    [p], the family [E'] of level [p+1], and the degeneracy data. *)
 
 Definition dgnDepsRestr {p} (C: νSetData p): DepsRestr p 0 :=
   toDepsRestr C.(restrFrames).
@@ -2142,6 +2395,14 @@ Definition dgnHasRefl {p} (C: νSetData p)
       cohReflRestrFramesAboveSup)
     E'.
 
+(** The degeneracies from level [p-1] to level [p] on frames and paintings,
+    together with their frame coherences, over the data [C] of the families
+    below level [p] and the family [E] of level [p]. This plays the role of
+    [νSetData] for degeneracies. As [cohPaintings] in [νSetData], the fields
+    from [cohReflRestrFramesBelowInf] on take the family [E'] of level [p+1]:
+    they are typed over, or built from, dependency records that include the
+    painting coherences of the ν-set, which involve [E']. *)
+
 Class DgnDataCore {p} (C: νSetData p)
   (E: mkFrame (dgnDepsRestr C) -> HSet) := {
   reflFramesBelow: mkReflFrameBelowTypes (dgnDepsRestr C);
@@ -2212,6 +2473,9 @@ Class DgnDataCore {p} (C: νSetData p)
         (cohReflRestrFramesAboveSup E'));
 }.
 
+(** The dependency records and types determined by [DgnDataCore] and by
+    the degeneracies [L] from level [p] to level [p+1]. *)
+
 Definition dgnDepsReflCohsInfFromBase {p}
   (C: νSetData p)
   (E: mkFrame (dgnDepsRestr C) -> HSet)
@@ -2268,6 +2532,10 @@ Definition dgnCohLFromBase {p}
     (dgnDepsReflCohsSupFromBase C E E' D)
     (dgnExtraDepsReflCohsSupFromBase C E E' D L)
     (D.(cohReflAboveAboveFrames) E').
+
+(** [DgnDataCore] with the coherences on paintings. These are stated over
+    the degeneracies [L] from level [p] to level [p+1], and take the
+    compatibility [cohL] of [L], which the [refl-refl] coherences use. *)
 
 Class DgnData {p} (C: νSetData p)
   (E: mkFrame (dgnDepsRestr C) -> HSet) := {
@@ -2358,6 +2626,9 @@ Definition dgnExtraDepsReflCohsSupFromData {p}
   DepsReflCohsSupExtension p 0 (dgnDepsReflCohsSupFromData C E E' D) :=
   dgnExtraDepsReflCohsSupFromBase C E E' D.(dgnDataCore) L.
 
+(** The full dependency record at the full frame of level [p], given [L],
+    [cohL] and the family [E''] of level [p+2]. *)
+
 Definition dgnDepsReflCohs2FromData {p}
   (C: νSetData p)
   (E: mkFrame (dgnDepsRestr C) -> HSet)
@@ -2388,6 +2659,10 @@ Definition dgnDepsReflCohs2FromData {p}
   _cohReflAboveAbovePaintings :=
     D.(cohReflAboveAbovePaintings) E' L cohL;
 |}.
+
+(** The degeneracy data one level up, given the degeneracies [L] from
+    level [p] to level [p+1] and their compatibility [cohL]: every field
+    is built by the construction above. *)
 
 #[local]
 Instance mkDgnData {p} (C: νSetData p)
@@ -2448,6 +2723,9 @@ Class νDgnSet p (C: νSet p) := {
     dgnStepType X R E -> DgnData (C.(data) X) E;
 }.
 
+(** One level up, a step supplies the degeneracies [L] from the top
+    family to the next one, with their compatibility [cohL]. *)
+
 Definition mkDgnPrefix p {C: νSet p} {D: νDgnSet p C}
   (X: (mkνSet C).(prefix)): Type :=
   { R: D.(dgnPrefix) X.1 &T D.(dgnStepType) X.1 R X.2 }.
@@ -2459,6 +2737,9 @@ Definition mkDgnStepType p {C: νSet p} {D: νDgnSet p C}
       (C.(data) X.1) X.2 E (D.(dgnStepData) X.1 R.1 X.2 R.2) &T
     dgnCohLFromData
       (C.(data) X.1) X.2 E (D.(dgnStepData) X.1 R.1 X.2 R.2) dgnL }.
+
+(** Level [0]: there are no families below, so every list is empty, and
+    the step to the first family carries no degeneracies. *)
 
 #[local]
 Definition mkνSetData0: νSetData 0 :=
@@ -2576,8 +2857,13 @@ End νDgnSet.
 Module νDgnSetSimplicial := νDgnSet SimplicialLayer.
 Module νDgnSetCubical := νDgnSet CubicalLayer.
 
+(** In the unary case, augmented semi-simplicial sets with parametric
+    degeneracies; in the binary case, cubical sets with degeneracies. *)
+
 Definition Simplicial := νDgnSetSimplicial.νDgnSets.
 Definition Cubical := νDgnSetCubical.νDgnSets.
+
+(** The first two families with the degeneracies between them. *)
 
 Example Simplicial2 :=
   Eval lazy -[leR] in νDgnSetSimplicial.DgnPrefix 2.
