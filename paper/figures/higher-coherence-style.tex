@@ -1,10 +1,9 @@
-% Path diagrams adapted from the Bonak higher-coherence companion.
 \newcommand{\del}[2]{\delta^{#2}_{#1}}
 \newcommand{\epsdmark}{\varepsilon^\downarrow}
 \newcommand{\epsumark}{\varepsilon^\uparrow}
 \newcommand{\epsd}[1]{\varepsilon^\downarrow_{#1}}
 \newcommand{\epsu}[1]{\varepsilon^\uparrow_{#1}}
-\newcommand{\comp}{\mathbin{\circ}}
+\newcommand{\comp}{\circ}
 
 \newcommand{\HC}[2]{#1\!\left(#2\right)}
 \newcommand{\HCdd}[4]{\HC{\delta\text{-}\delta}{#1,#2,#3,#4}}
@@ -19,8 +18,8 @@
 \newcommand{\termthree}[3]{#1 \comp #2 \comp #3}
 \tikzset{
   coh edge/.style={->,>=Latex,thick},
-  coh term/.style={align=center,font=\normalsize,inner sep=1.5pt},
-  coh label/.style={fill=white,inner sep=1pt,font=\normalsize}
+  coh term/.style={align=center,inner sep=1.5pt},
+  coh label/.style={fill=white,inner sep=1pt}
 }
 
 \newcommand{\HexTopEdges}[3]{%
@@ -36,7 +35,7 @@
 }
 
 \newcommand{\HexTermCohDiagram}[8]{%
-  \begin{tikzpicture}[baseline=(current bounding box.center)]
+  \begin{tikzpicture}
     \node[coh term] (L) at (0,0) {$#1$};
     \node[coh term] (UL) at (4.5,3) {$#2$};
     \node[coh term] (UR) at (11,3) {$#3$};
@@ -50,7 +49,7 @@
 }
 
 \newcommand{\SquareTermCohDiagram}[8]{%
-  \begin{tikzpicture}[baseline=(current bounding box.center)]
+  \begin{tikzpicture}
     \node[coh term] (TL) at (0,3.3) {$#1$};
     \node[coh term] (TR) at (10.5,3.3) {$#2$};
     \node[coh term] (BL) at (0,0) {$#3$};
@@ -59,20 +58,6 @@
     \draw[coh edge] (TR) -- node[coh label,right] {$#6$} (BR);
     \draw[coh edge] (TL) -- node[coh label,left] {$#7$} (BL);
     \draw[coh edge] (BL) -- node[coh label,below] {$#8$} (BR);
-    \node at (5.25,1.65) {$\Downarrow$};
-  \end{tikzpicture}%
-}
-
-\newcommand{\SquareTermCohDiagramRevB}[8]{%
-  \begin{tikzpicture}[baseline=(current bounding box.center)]
-    \node[coh term] (TL) at (0,3.3) {$#1$};
-    \node[coh term] (TR) at (10.5,3.3) {$#2$};
-    \node[coh term] (BL) at (0,0) {$#3$};
-    \node[coh term] (BR) at (10.5,0) {$#4$};
-    \draw[coh edge] (TL) -- node[coh label,above] {$#5$} (TR);
-    \draw[coh edge] (TR) -- node[coh label,right] {$#6$} (BR);
-    \draw[coh edge] (TL) -- node[coh label,left] {$#7$} (BL);
-    \draw[coh edge] (BR) -- node[coh label,below] {$#8$} (BL);
     \node at (5.25,1.65) {$\Downarrow$};
   \end{tikzpicture}%
 }
