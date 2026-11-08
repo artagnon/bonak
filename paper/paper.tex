@@ -541,6 +541,8 @@ Figure~\ref{fig:cube-prefixes} illustrates the prefixes for $n=3$ and $\nu=2$. T
   \label{fig:cube-prefixes}
 \end{figure}
 
+\noindent
+\begin{minipage}[C]{0.52\linewidth}
 Restriction corresponds to taking a face. The operation $\restrf[n][p][][q][\epsilon]$ maps a frame in $\framep[n+1][p]$ to one in $\framep[n][p]$. Its relative index $q\leq k$ denotes direction $p+q$, and $\epsilon\in\nu$ selects a face in that direction. The corresponding layer and painting operations are written $\restrl$ and $\restrp$; a painting restriction includes the restriction of its indexing frame. Each component of a layer is a lower--dimensional painting over a suitable restricted frame.
 
 These operations follow the dependent-pair decomposition. Restricting a successor frame restricts its prefix and its next layer; restricting a layer applies painting restriction to each face-label component. On a painting $(l,c)$, restriction at index $0$ selects the component $l(\epsilon)$ of the first layer. A successor index restricts the layer and continues recursively through the remaining painting.
@@ -548,6 +550,20 @@ These operations follow the dependent-pair decomposition. Restricting a successo
 Figure~\ref{fig:arch-restr} displays this recursive decomposition. Arrows run from an input to the row that uses it; dashed arrows bring in painting operations from the preceding dimension. The boxes show the principal components of the defining terms, with arguments implicit. Inequality rows give the domains of the named operations and coherences; all direction indices are nonnegative. Recursive calls instantiate these bounds at the shifted indices shown in the tables.
 
 For an equality $e:x=y$ and $u:P(x)$, we write $\mathsf{rew}(e,u):P(y)$ for transport along $e$. In each layer box, the rows labelled $e$ and $u$ identify the equality and the painting transported by the displayed function. In the restriction layer, the equality is $\relRestrRestr$ on frames. It makes the preceding--dimensional painting restriction have the required type, whose proof is described in Section~\ref{sec:coherences}.
+
+\end{minipage}
+\hspace{0.02\linewidth}
+\begin{minipage}[C]{0.44\linewidth}
+\vspace{1.5mm}
+\begin{flushright}
+\begin{figure}[H]
+  \centering
+  \input{figures/architecture-restr.tex}
+  \caption{Construction of restrictions on layers, frames, and paintings. The frame coherence types are developed together with frame restriction.}
+  \label{fig:arch-restr}
+\end{figure}
+\end{flushright}
+\end{minipage}
 
 \subsection{Construction of degeneracies}
 The boundary of a degenerate cell contains a repeated layer at the inserted direction, together with degeneracies of the original faces. This suggests building the boundary layer by layer, inserting the repeated layer when the prefix reaches the chosen direction. Figure~\ref{fig:degeneracy-layers} illustrates the three insertion positions for a square, showing the separate layers and their assembled full frame.
@@ -581,13 +597,6 @@ The boundary of a degenerate cell contains a repeated layer at the inserted dire
   \endgroup
   \caption{Cubical degeneracies and their boundary layers, each consisting of two paintings, in the $n=2$ case. Below the original square $x$ that inhabits the full frame from the last column, the rows insert directions $0$, $1$, and $2$, to specify degeneracies $\epsilon_2(x)$, $\epsilon_1(x)$, and $\epsilon_0(x)$ that inhabit full frames of dimension $3$ obtained by assembling layers as follows: green faces repeat the square, while blue and red faces are degeneracies in the lower dimension.}
   \label{fig:degeneracy-layers}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \input{figures/architecture-restr.tex}
-  \caption{Construction of restrictions on layers, frames, and paintings. The frame coherence types are developed together with frame restriction.}
-  \label{fig:arch-restr}
 \end{figure}
 
 At level $n$, let $i\leq n$ be the chosen insertion direction. When $p\leq i$, the operation \emph{Below} ($\downarrow$) uses the relative direction index $q=i-p\leq k$. When $i\leq p$, the operation \emph{Above} ($\uparrow$) uses $q=p-i\leq p$. The boundary $i=p$ is the common base case, where both indices are $0$.
