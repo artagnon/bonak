@@ -518,7 +518,7 @@ The indexed structure on the right, including both the underlying $\nu$--set and
 \subsection{\texorpdfstring{Indexed $\nu$--sets}{Indexed nu-sets}}
 \label{sec:faces}
 
-We recall the indexed representation of $\nu$--sets~\cite{hr25,hr26}. A \emph{layer} groups the face data for one direction, with one component for each label in $\nu$. A \emph{frame} records a prefix of these boundary layers; a \emph{full frame} contains all of them. A \emph{painting} over a frame supplies the remaining boundary layers and a cell over the completed boundary.
+We recall the indexed representation of $\nu$--sets~\cite{hr25,hr26}\href{https://github.com/artagnon/bonak/tree/master/theories/%BDSet/%BDSet.v}{\linkicon}. A \emph{layer} groups the face data for one direction, with one component for each label in $\nu$. A \emph{frame} records a prefix of these boundary layers; a \emph{full frame} contains all of them. A \emph{painting} over a frame supplies the remaining boundary layers and a cell over the completed boundary.
 
 At construction level $n$, we first specify a boundary and then consider the cells that fill it. The earlier families $X_0,\ldots,X_{n-1}$ determine the type of full frames, each consisting of $n$ layers; for each full frame $d$, the next family supplies the h--set $X_n(d)$ of cells with that boundary. Level $n$ corresponds to geometric dimension $n-1$ in the augmented unary case and to dimension $n$ in the binary case.
 
@@ -543,26 +543,26 @@ Figure~\ref{fig:cube-prefixes} illustrates the prefixes for $n=3$ and $\nu=2$. T
 
 \noindent
 \begin{minipage}[C]{0.52\linewidth}
-Restriction corresponds to taking a face. The operation $\restrf[n][p][][q][\epsilon]$ maps a frame in $\framep[n+1][p]$ to one in $\framep[n][p]$. Its relative index $q\leq k$ denotes direction $p+q$, and $\epsilon\in\nu$ selects a face in that direction. The corresponding layer and painting operations are written $\restrl$ and $\restrp$; a painting restriction includes the restriction of its indexing frame. Each component of a layer is a lower--dimensional painting over a suitable restricted frame.
+  Restriction corresponds to taking a face. The operation $\restrf[n][p][][q][\epsilon]$ maps a frame in $\framep[n+1][p]$ to one in $\framep[n][p]$. Its relative index $q\leq k$ denotes direction $p+q$, and $\epsilon\in\nu$ selects a face in that direction. The corresponding layer and painting operations are written $\restrl$ and $\restrp$; a painting restriction includes the restriction of its indexing frame. Each component of a layer is a lower--dimensional painting over a suitable restricted frame.
 
-These operations follow the dependent-pair decomposition. Restricting a successor frame restricts its prefix and its next layer; restricting a layer applies painting restriction to each face-label component. On a painting $(l,c)$, restriction at index $0$ selects the component $l(\epsilon)$ of the first layer. A successor index restricts the layer and continues recursively through the remaining painting.
+  These operations follow the dependent-pair decomposition. Restricting a successor frame restricts its prefix and its next layer; restricting a layer applies painting restriction to each face-label component. On a painting $(l,c)$, restriction at index $0$ selects the component $l(\epsilon)$ of the first layer. A successor index restricts the layer and continues recursively through the remaining painting.
 
-Figure~\ref{fig:arch-restr} displays this recursive decomposition. Arrows run from an input to the row that uses it; dashed arrows bring in painting operations from the preceding dimension. The boxes show the principal components of the defining terms, with arguments implicit. Inequality rows give the domains of the named operations and coherences; all direction indices are nonnegative. Recursive calls instantiate these bounds at the shifted indices shown in the tables.
+  Figure~\ref{fig:arch-restr} displays this recursive decomposition. Arrows run from an input to the row that uses it; dashed arrows bring in painting operations from the preceding dimension. The boxes show the principal components of the defining terms, with arguments implicit. Inequality rows give the domains of the named operations and coherences; all direction indices are nonnegative. Recursive calls instantiate these bounds at the shifted indices shown in the tables.
 
-For an equality $e:x=y$ and $u:P(x)$, we write $\mathsf{rew}(e,u):P(y)$ for transport along $e$. In each layer box, the rows labelled $e$ and $u$ identify the equality and the painting transported by the displayed function. In the restriction layer, the equality is $\relRestrRestr$ on frames. It makes the preceding--dimensional painting restriction have the required type, whose proof is described in Section~\ref{sec:coherences}.
+  For an equality $e:x=y$ and $u:P(x)$, we write $\mathsf{rew}(e,u):P(y)$ for transport along $e$. In each layer box, the rows labelled $e$ and $u$ identify the equality and the painting transported by the displayed function. In the restriction layer, the equality is $\relRestrRestr$ on frames. It makes the preceding--dimensional painting restriction have the required type, whose proof is described in Section~\ref{sec:coherences}.
 
 \end{minipage}
 \hspace{0.02\linewidth}
 \begin{minipage}[C]{0.44\linewidth}
-\vspace{1.5mm}
-\begin{flushright}
-\begin{figure}[H]
-  \centering
-  \input{figures/architecture-restr.tex}
-  \caption{Construction of restrictions on layers, frames, and paintings. The frame coherence types are developed together with frame restriction.}
-  \label{fig:arch-restr}
-\end{figure}
-\end{flushright}
+  \vspace{1.5mm}
+  \begin{flushright}
+    \begin{figure}[H]
+      \centering
+      \input{figures/architecture-restr.tex}
+      \caption{Construction of restrictions on layers, frames, and paintings. The frame coherence types are developed together with frame restriction.}
+      \label{fig:arch-restr}
+    \end{figure}
+  \end{flushright}
 \end{minipage}
 
 \subsection{Construction of degeneracies}
