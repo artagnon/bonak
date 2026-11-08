@@ -66,16 +66,16 @@
   \filldraw[spanish-blue] (1.5, 0.5) circle (1pt);
 }
 \newcommand{\cubeFirstLayerSecond}{%
-  \fill[pattern=dots, pattern color=spanish-blue] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
-  \fill[pattern=dots, pattern color=spanish-blue] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);
-  \draw[spanish-blue] (1, 1) -- (1.5, 1.5);
-  \draw[spanish-blue] (0, 1) -- (0.5, 1.5);
-  \draw[spanish-blue] (1.5, 0.5) -- (1, 0);
-  \draw[spanish-blue] (0.5, 0.5) -- (0, 0);
+  \fill[pattern=north east lines, pattern color=spanish-blue] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
+  \fill[pattern=north east lines, pattern color=spanish-blue] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);
+  \draw[thick,spanish-blue] (1, 1) -- (1.5, 1.5);
+  \draw[thick,spanish-blue] (0, 1) -- (0.5, 1.5);
+  \draw[thick,spanish-blue] (1.5, 0.5) -- (1, 0);
+  \draw[thick,spanish-blue] (0.5, 0.5) -- (0, 0);
 }
 \newcommand{\cubeFirstLayerThird}{%
-  \fill[pattern=dots, pattern color=raspberry] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
-  \fill[pattern=dots, pattern color=raspberry] (0, 0) -- (1, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
+  \fill[pattern=north east lines, pattern color=raspberry] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
+  \fill[pattern=north east lines, pattern color=raspberry] (0, 0) -- (1, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
 }
 \newcommand{\cubeMiddleAxes}{%
   \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$0$};
@@ -104,16 +104,16 @@
   \node at (0.75,0.65) {$\varepsilon_1(x)$};
 }
 \newcommand{\cubeMiddleLayerFirst}{%
-  \fill[pattern=dots, pattern color=spanish-blue] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
-  \fill[pattern=dots, pattern color=spanish-blue] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);
+  \fill[pattern=north east lines, pattern color=spanish-blue] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
+  \fill[pattern=north east lines, pattern color=spanish-blue] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);
   \draw[spanish-blue] (1, 1) -- (1, 0);
   \draw[spanish-blue] (0, 1) -- (0, 0);
   \draw[spanish-blue] (1.5, 0.5) -- (1.5, 1.5);
   \draw[spanish-blue] (0.5, 0.5) -- (0.5, 1.5);
-  \draw[spanish-blue] (1, 1) -- (1.5, 1.5);
-  \draw[spanish-blue] (0, 1) -- (0.5, 1.5);
-  \draw[spanish-blue] (1, 0) -- (1.5, 0.5);
-  \draw[spanish-blue] (0, 0) -- (0.5, 0.5);
+  \draw[thick,spanish-blue] (1, 1) -- (1.5, 1.5);
+  \draw[thick,spanish-blue] (0, 1) -- (0.5, 1.5);
+  \draw[thick,spanish-blue] (1, 0) -- (1.5, 0.5);
+  \draw[thick,spanish-blue] (0, 0) -- (0.5, 0.5);
   \filldraw[spanish-blue] (1, 1) circle (1pt);
   \filldraw[spanish-blue] (1.5, 1.5) circle (1pt);
   \filldraw[spanish-blue] (1.5, 0.5) circle (1pt);
@@ -132,8 +132,8 @@
   \draw[raspberry] (1.5, 1.5) -- (0.5, 1.5);
 }
 \newcommand{\cubeMiddleLayerThird}{%
-  \fill[pattern=dots, pattern color=raspberry] (0, 1) -- (1.0, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
-  \fill[pattern=dots, pattern color=raspberry] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
+  \fill[pattern=north east lines, pattern color=raspberry] (0, 1) -- (1.0, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
+  \fill[pattern=north east lines, pattern color=raspberry] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
 }
 \newcommand{\cubeLastAxes}{%
   \draw[->, raspberry] (0, 0) -- (1, 0) node at (1, 0.2) {$0$};
@@ -181,9 +181,37 @@
   \filldraw[spanish-blue] (0.5, 0.5) circle (1pt);
   \filldraw[spanish-blue] (0, 0) circle (1pt);
 }
+\newcommand{\cubeDegenLastLayerFirst}{%
+  \fill[pattern=north east lines, pattern color=spanish-blue] (1, 1) -- (1.5, 1.5) -- (1.5, 0.5) -- (1, 0) -- (1, 1);
+  \fill[pattern=north east lines, pattern color=spanish-blue] (0, 1) -- (0.5, 1.5) -- (0.5, 0.5) -- (0, 0) -- (0, 1);
+  \draw[spanish-blue] (1, 1) -- (1, 0);
+  \draw[spanish-blue] (0, 1) -- (0, 0);
+  \draw[spanish-blue] (1.5, 0.5) -- (1.5, 1.5);
+  \draw[spanish-blue] (0.5, 0.5) -- (0.5, 1.5);
+  \draw[thick,spanish-blue] (1, 1) -- (1.5, 1.5);
+  \draw[thick,spanish-blue] (0, 1) -- (0.5, 1.5);
+  \draw[thick,spanish-blue] (1, 0) -- (1.5, 0.5);
+  \draw[thick,spanish-blue] (0, 0) -- (0.5, 0.5);
+  \filldraw[spanish-blue] (1, 1) circle (1pt);
+  \filldraw[spanish-blue] (1.5, 1.5) circle (1pt);
+  \filldraw[spanish-blue] (1.5, 0.5) circle (1pt);
+  \filldraw[spanish-blue] (1, 0) circle (1pt);
+  \filldraw[spanish-blue] (0, 1) circle (1pt);
+  \filldraw[spanish-blue] (0.5, 1.5) circle (1pt);
+  \filldraw[spanish-blue] (0.5, 0.5) circle (1pt);
+  \filldraw[spanish-blue] (0, 0) circle (1pt);
+}
 \newcommand{\cubeLastLayerSecond}{%
   \fill[pattern=dots, pattern color=raspberry] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
   \fill[pattern=dots, pattern color=raspberry] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
+  \draw[raspberry] (0, 1) -- (1, 1);
+  \draw[raspberry] (1.5, 1.5) -- (0.5, 1.5);
+  \draw[raspberry] (0, 0) -- (1, 0);
+  \draw[raspberry] (1.5, 0.5) -- (0.5, 0.5);
+}
+\newcommand{\cubeDegenLastLayerSecond}{%
+  \fill[pattern=north east lines, pattern color=raspberry] (0, 1) -- (1, 1) -- (1.5, 1.5) -- (0.5, 1.5) -- (0, 1);
+  \fill[pattern=north east lines, pattern color=raspberry] (0, 0) -- (1.0, 0) -- (1.5, 0.5) -- (0.5, 0.5) -- (0, 0);
   \draw[raspberry] (0, 1) -- (1, 1);
   \draw[raspberry] (1.5, 1.5) -- (0.5, 1.5);
   \draw[raspberry] (0, 0) -- (1, 0);
