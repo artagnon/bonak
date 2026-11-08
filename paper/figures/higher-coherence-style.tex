@@ -37,11 +37,11 @@
 \newcommand{\HexTermCohDiagram}[8]{%
   \begin{tikzpicture}
     \node[coh term] (L) at (0,0) {$#1$};
-    \node[coh term] (UL) at (4.2,3) {$#2$};
-    \node[coh term] (UR) at (10.2,3) {$#3$};
+    \node[coh term] (UL) at (4.2,2.4) {$#2$};
+    \node[coh term] (UR) at (10.2,2.4) {$#3$};
     \node[coh term] (R) at (14.4,0) {$#4$};
-    \node[coh term] (LR) at (10.2,-3) {$#5$};
-    \node[coh term] (LL) at (4.2,-3) {$#6$};
+    \node[coh term] (LR) at (10.2,-2.4) {$#5$};
+    \node[coh term] (LL) at (4.2,-2.4) {$#6$};
     \HexTopEdges#7
     \HexBottomEdges#8
     \node at (7.2,0) {$\Downarrow$};
@@ -50,14 +50,14 @@
 
 \newcommand{\SquareTermCohDiagram}[8]{%
   \begin{tikzpicture}
-    \node[coh term] (TL) at (0,3.3) {$#1$};
-    \node[coh term] (TR) at (10.5,3.3) {$#2$};
+    \node[coh term] (TL) at (0,2.7) {$#1$};
+    \node[coh term] (TR) at (10.5,2.7) {$#2$};
     \node[coh term] (BL) at (0,0) {$#3$};
     \node[coh term] (BR) at (10.5,0) {$#4$};
     \draw[coh edge] (TL) -- node[coh label,above] {$#5$} (TR);
     \draw[coh edge] (TR) -- node[coh label,right] {$#6$} (BR);
     \draw[coh edge] (TL) -- node[coh label,left] {$#7$} (BL);
     \draw[coh edge] (BL) -- node[coh label,below] {$#8$} (BR);
-    \node at (5.25,1.65) {$\Downarrow$};
+    \node at (5.25,1.35) {$\Downarrow$};
   \end{tikzpicture}%
 }
