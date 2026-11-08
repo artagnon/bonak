@@ -549,8 +549,6 @@ Figure~\ref{fig:cube-prefixes} illustrates the prefixes for $n=3$ and $\nu=2$. T
 
   Figure~\ref{fig:arch-restr} displays this recursive decomposition. Arrows run from an input to the row that uses it; dashed arrows bring in painting operations from the preceding dimension. The boxes show the principal components of the defining terms, with arguments implicit. Inequality rows give the domains of the named operations and coherences; all direction indices are nonnegative. Recursive calls instantiate these bounds at the shifted indices shown in the tables.
 
-  For an equality $e:x=y$ and $u:P(x)$, we write $\mathsf{rew}(e,u):P(y)$ for transport along $e$. In each layer box, the rows labelled $e$ and $u$ identify the equality and the painting transported by the displayed function. In the restriction layer, the equality is $\relRestrRestr$ on frames. It makes the preceding--dimensional painting restriction have the required type, whose proof is described in Section~\ref{sec:coherences}.
-
 \end{minipage}
 \hspace{0.02\linewidth}
 \begin{minipage}[C]{0.44\linewidth}
@@ -564,6 +562,8 @@ Figure~\ref{fig:cube-prefixes} illustrates the prefixes for $n=3$ and $\nu=2$. T
     \end{figure}
   \end{flushright}
 \end{minipage}
+
+For an equality $e:x=y$ and $u:P(x)$, we write $\mathsf{rew}(e,u):P(y)$ for transport along $e$. In each layer box, the rows labelled $e$ and $u$ identify the equality and the painting transported by the displayed function. In the restriction layer, the equality is $\relRestrRestr$ on frames. It makes the preceding--dimensional painting restriction have the required type, whose proof is described in Section~\ref{sec:coherences}.
 
 \subsection{Construction of degeneracies}
 The boundary of a degenerate cell contains a repeated layer at the inserted direction, together with degeneracies of the original faces. This suggests building the boundary layer by layer, inserting the repeated layer when the prefix reaches the chosen direction. Figure~\ref{fig:degeneracy-layers} illustrates the three insertion positions for a square, showing the separate layers and their assembled full frame.
