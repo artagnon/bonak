@@ -1,6 +1,6 @@
 \pdfoutput=1
 \documentclass[a4paper,UKenglish,cleveref,autoref]{lipics-v2021}
-\usepackage{mathrsfs, wasysym, tikz, tikz-cd, anyfontsize, xargs, environ, bigdelim, booktabs, makecell, colortbl, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
+\usepackage{mathrsfs, wasysym, tikz, tikz-cd, anyfontsize, xargs, environ, bigdelim, tabularx, booktabs, makecell, colortbl, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
 \usepackage[prefix=bonak]{art.cls/xkeymask}
 
 % Use the patterns library to draw the cubes figure
@@ -286,19 +286,18 @@
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 \NewEnviron{eqntable}[1]{
   \begin{table}[tbp]
-  \centering
   \smfontsize
-  \begin{tabular*}{\linewidth}{
-    @{\extracolsep{\fill}}
+  \begin{tabularx}{\linewidth}{
+    @{}
     >{$}l<{$}
     >{$}c<{$}
     >{$}c<{$}
-    >{$}c<{$}
+    >{$}Y<{$}
     @{}}
     \toprule
     \BODY
     \bottomrule
-  \end{tabular*}
+  \end{tabularx}
   \caption{#1}
   \end{table}
 }
@@ -434,7 +433,7 @@ In Table~\ref{tab:dgn-flavors}, dimensions start at $-1$ in the unary case and a
   \centering
   \input{figures/degeneracy-comparison-style.tex}
   \setlength{\tabcolsep}{3pt}
-  \begin{tabular}{@{}>{\centering\arraybackslash}m{0.1\linewidth}cc@{}}
+  \begin{tabularx}{\linewidth}{@{}>{\centering\arraybackslash}m{0.1\linewidth}YY@{}}
     \toprule
     Source                  & Parametric degeneracies                                                                             & Connecting degeneracies                        \\
     \midrule
@@ -464,7 +463,7 @@ In Table~\ref{tab:dgn-flavors}, dimensions start at $-1$ in the unary case and a
                             & \comparisonSquare{b}{c}{c}{c}{q}{q}{r^0_0(c)}{r^0_0(c)}{s^1_{0L}(q)}\hspace{2mm}                                                                     %
     \comparisonSquare{b}{b}{b}{c}{r^0_0(b)}{r^0_0(b)}{q}{q}{s^1_{0R}(q)}                                                                                                           \\
     \bottomrule
-  \end{tabular}
+  \end{tabularx}
   \caption{Parametric and connecting degeneracies of $0$ and $1$-dimensional shapes in the unary and binary cases. Parametric degeneracies insert a new axis; connecting degeneracies duplicate an existing axis.}
   \label{tab:dgn-flavors}
 \end{table}
@@ -608,8 +607,8 @@ The boundary of a degenerate cell contains a repeated layer at the inserted dire
   \begingroup
   \input{figures/cubical-boundaries-style.tex}
   \smfontsize
-  \setlength{\tabcolsep}{4pt}
-  \begin{tabular}{@{}cccccc@{}}
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabularx}{\linewidth}{@{}YYYYYY@{}}
     \toprule
     Directions                             & Cell                                                      & Layer $0$ & Layer $1$ & Layer $2$ & Full frame \\
     \midrule
@@ -629,7 +628,7 @@ The boundary of a degenerate cell contains a repeated layer at the inserted dire
     \cubePicture{\cubeLastLayerThird}      &
     \cubePicture{\cubeDegenLastLayerFirst\cubeDegenLastLayerSecond\cubeLastLayerThird}                                                                  \\
     \bottomrule
-  \end{tabular}
+  \end{tabularx}
   \endgroup
   \caption{Cubical degeneracies and their boundary layers, each consisting of two paintings, in the $n=2$ case. Below the original square $x$ that inhabits the full frame from the last column, the rows insert directions $0$, $1$, and $2$, to specify degeneracies $\epsilon_2(x)$, $\epsilon_1(x)$, and $\epsilon_0(x)$ that inhabit full frames of dimension $3$ obtained by assembling layers as follows: green faces repeat the square, while blue and red faces are degeneracies in the lower dimension, shown with thicker lines and line-filled surfaces.}
   \label{fig:degeneracy-layers}
