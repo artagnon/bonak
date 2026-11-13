@@ -34,30 +34,36 @@
   \draw[coh edge] (LR) -- node[coh label,below right] {$#3$} (R);
 }
 
+% Horizontal layout of the hexagon: the slanted edges span \HexSide,
+% the top and bottom edges \HexTop
+\newcommand{\HexSide}{2.8}
+\newcommand{\HexTop}{5.0}
 \newcommand{\HexTermCohDiagram}[8]{%
   \begin{tikzpicture}
     \node[coh term] (L) at (0,0) {$#1$};
-    \node[coh term] (UL) at (4.2,2.4) {$#2$};
-    \node[coh term] (UR) at (10.2,2.4) {$#3$};
-    \node[coh term] (R) at (14.4,0) {$#4$};
-    \node[coh term] (LR) at (10.2,-2.4) {$#5$};
-    \node[coh term] (LL) at (4.2,-2.4) {$#6$};
+    \node[coh term] (UL) at (\HexSide,2.4) {$#2$};
+    \node[coh term] (UR) at ({\HexSide+\HexTop},2.4) {$#3$};
+    \node[coh term] (R) at ({2*\HexSide+\HexTop},0) {$#4$};
+    \node[coh term] (LR) at ({\HexSide+\HexTop},-2.4) {$#5$};
+    \node[coh term] (LL) at (\HexSide,-2.4) {$#6$};
     \HexTopEdges#7
     \HexBottomEdges#8
-    \node at (7.2,0) {$\Downarrow$};
+    \node at ({\HexSide+\HexTop/2},0) {$\Downarrow$};
   \end{tikzpicture}%
 }
 
+% Horizontal span of the square
+\newcommand{\SquareWidth}{7.5}
 \newcommand{\SquareTermCohDiagram}[8]{%
   \begin{tikzpicture}
     \node[coh term] (TL) at (0,2.7) {$#1$};
-    \node[coh term] (TR) at (10.5,2.7) {$#2$};
+    \node[coh term] (TR) at (\SquareWidth,2.7) {$#2$};
     \node[coh term] (BL) at (0,0) {$#3$};
-    \node[coh term] (BR) at (10.5,0) {$#4$};
+    \node[coh term] (BR) at (\SquareWidth,0) {$#4$};
     \draw[coh edge] (TL) -- node[coh label,above] {$#5$} (TR);
     \draw[coh edge] (TR) -- node[coh label,right] {$#6$} (BR);
     \draw[coh edge] (TL) -- node[coh label,left] {$#7$} (BL);
     \draw[coh edge] (BL) -- node[coh label,below] {$#8$} (BR);
-    \node at (5.25,1.35) {$\Downarrow$};
+    \node at ({\SquareWidth/2},1.35) {$\Downarrow$};
   \end{tikzpicture}%
 }
