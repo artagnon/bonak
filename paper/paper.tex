@@ -1,5 +1,6 @@
-\documentclass{art.cls/art}
-\usepackage{wasysym, tikz, tikz-cd, anyfontsize, xargs, environ, multirow, bigdelim, tabularx, caption, bookmark, booktabs, makecell, colortbl, minted, fontawesome5, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
+\pdfoutput=1
+\documentclass[a4paper,UKenglish,cleveref,autoref]{lipics-v2021}
+\usepackage{mathrsfs, wasysym, tikz, tikz-cd, anyfontsize, xargs, environ, bigdelim, booktabs, makecell, colortbl, art.cls/colorpal, art.cls/ct, art.cls/sset, art.cls/lim, art.cls/joinargs}
 \usepackage[prefix=bonak]{art.cls/xkeymask}
 
 % Use the patterns library to draw the cubes figure
@@ -284,19 +285,20 @@
 % The eqntable environment
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 \NewEnviron{eqntable}[1]{
-  \begin{table}[H]
+  \begin{table}[tbp]
+  \centering
   \smfontsize
-  \begin{tabularx}{\linewidth}{
-    @{}
+  \begin{tabular*}{\linewidth}{
+    @{\extracolsep{\fill}}
     >{$}l<{$}
     >{$}c<{$}
     >{$}c<{$}
-    >{$}Y<{$}
+    >{$}c<{$}
     @{}}
     \toprule
     \BODY
     \bottomrule
-  \end{tabularx}
+  \end{tabular*}
   \caption{#1}
   \end{table}
 }
@@ -315,24 +317,45 @@
 % and { ... } if in mask
 \newcommandx*{\eqnarg}[3]{\ifinmask[bonak]{#1}[#2]{\{#2:#3\}}{(#2:#3)}}
 
-\begin{document}
+
 \title{An indexed construction of degeneracies in simplicial and cubical sets}
-\author{
-  Hugo Herbelin\\
-  Université Paris Cité, Inria, CNRS, IRIF, Paris \\
-  \texttt{Hugo.Herbelin@inria.fr} \and
-  Valerii Huhnin \\
-  Université Paris Cité \\
-  \texttt{valerii.huhnin@etu.u-paris.fr} \and
-  Alice Laroche \\
-  Université Paris Cité \\
-  \texttt{alice.laroche@etu.u-paris.fr} \and
-  Ramkumar Ramachandra \\
-  Unaffiliated \\
-  \texttt{r@artagnon.com}
-}
+\titlerunning{Indexed degeneracies in simplicial and cubical sets}
+
+\author{Hugo Herbelin}{Université Paris Cité, Inria, CNRS, IRIF, Paris, France}{Hugo.Herbelin@inria.fr}{}{}
+\author{Valerii Huhnin}{Université Paris Cité, Paris, France}{valerii.huhnin@etu.u-paris.fr}{}{}
+\author{Alice Laroche}{Université Paris Cité, Paris, France}{alice.laroche@etu.u-paris.fr}{}{}
+\author{Ramkumar Ramachandra}{Unaffiliated}{r@artagnon.com}{}{}
+
+\authorrunning{H. Herbelin, V. Huhnin, A. Laroche, and R. Ramachandra}
+\Copyright{Hugo Herbelin, Valerii Huhnin, Alice Laroche, and Ramkumar Ramachandra}
+
+\ccsdesc[500]{Theory of computation~Type theory}
+\ccsdesc[300]{Theory of computation~Constructive mathematics}
+\keywords{simplicial sets, cubical sets, degeneracies, parametricity, indexed construction, Rocq}
+
+\supplementdetails[subcategory={Formal Proofs}]{Software}{https://github.com/artagnon/bonak}
+
+\EventEditors{Andreas Abel and Christian Sattler}
+\EventNoEds{2}
+\EventLongTitle{32nd International Conference on Types for Proofs and Programs (TYPES 2026)}
+\EventShortTitle{TYPES 2026}
+\EventAcronym{TYPES}
+\EventYear{2026}
+\EventDate{May 4--8, 2026}
+\EventLocation{Gothenburg, Sweden}
+
+% Float placement: a float page must be at least 80% full, and its
+% floats stack from the top instead of being spread over the page.
+% Tall figures may take 80% of a text page.
+\renewcommand{\floatpagefraction}{0.8}
+\renewcommand{\topfraction}{0.8}
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpsep}{\floatsep}
+\makeatother
+
+\begin{document}
 \maketitle
-\thispagestyle{empty}
 
 \begin{abstract}
   In an exploration of building simplicial and cubical set models in indexed form, we extend a previous construction of semi--simplicial and semi--cubical sets with degeneracies. The degeneracies we construct can be characterized as adding a new dimension, and coincide with usual degeneracies in the cubical set case. As necessitated by the construction, we refined the degeneracies and coherence conditions outlined in Grandis--Mauri~\cite{grandis03} to make it step--wise. Our work includes a mechanically checked formalization in Rocq.
@@ -407,7 +430,7 @@ We call the axis-duplicating operation a \emph{connecting degeneracy} and the ax
 
 In Table~\ref{tab:dgn-flavors}, dimensions start at $-1$ in the unary case and at $0$ in the binary case. In particular, writing $X_{-1}$ for the augmentation set in the unary case, there is a parametric degeneracy $r^{-1}_{-1}(a)$ for any $a:X_{-1}$~\footnote{not explicitly pictured below though}.
 
-\begin{table}[H]
+\begin{table}[tbp]
   \centering
   \input{figures/degeneracy-comparison-style.tex}
   \setlength{\tabcolsep}{3pt}
@@ -457,7 +480,7 @@ For arbitrary arity $\nu$, the indexed presentation is obtained from the preshea
   (\Sigma A : \HSet. A \rightarrow B) \simeq (B \rightarrow \HSet)
 \]
 
-\begin{figure}[H]
+\begin{figure}[tbp]
   \centering
   \setlength{\arraycolsep}{3pt}
   $\displaystyle
@@ -487,7 +510,7 @@ Here $\operatorname{Functor}(C,\HSet)$ denotes the type of set-valued functors o
 
 We extend this correspondence to $\nu$--sets with parametric degeneracies. Figure~\ref{fig:fibred-indexed-degeneracies} illustrates the binary case, with cubical sets.
 
-\begin{figure}[H]
+\begin{figure}[tbp]
   \centering
   \setlength{\arraycolsep}{3pt}
   $\displaystyle
@@ -536,7 +559,7 @@ Let $p\leq n$ be the prefix height and $k:=n-p$ the number of remaining layers. 
 
 Figure~\ref{fig:cube-prefixes} illustrates the prefixes for $n=3$ and $\nu=2$. The first layer supplies the left and right face paintings. The next adds the bottom and top face paintings over the edges already supplied by the first layer. The final layer adds the front and back face paintings over their completed boundaries, yielding the full frame. Thus each new layer uses the boundary data in the preceding prefix. A painting over the first prefix supplies the remaining four faces, compatible with the two already supplied, together with a cube cell filling the completed boundary. Over the full frame, a painting supplies only the cube cell.
 
-\begin{figure}[H]
+\begin{figure}[tbp]
   \centering
   \begingroup
   \input{figures/cubical-boundaries-style.tex}
@@ -551,34 +574,36 @@ Figure~\ref{fig:cube-prefixes} illustrates the prefixes for $n=3$ and $\nu=2$. T
   \label{fig:cube-prefixes}
 \end{figure}
 
+\newsavebox{\archrestrbox}
+\sbox{\archrestrbox}{\input{figures/architecture-restr.tex}}
+% The minipage numbers its own lines
+\nolinenumbers
 \noindent
-\begin{minipage}[C]{0.52\linewidth}
-  Restriction corresponds to taking a face. The operation $\restrf[n][p][][q][\epsilon]$ maps a frame in $\framep[n+1][p]$ to one in $\framep[n][p]$. Its relative index $q\leq k$ denotes direction $p+q$, and $\epsilon\in\nu$ selects a face in that direction. The corresponding layer and painting operations are written $\restrl$ and $\restrp$; a painting restriction includes the restriction of its indexing frame. Each component of a layer is a lower--dimensional painting over a suitable restricted frame.
+\begin{minipage}[t]{\dimexpr\linewidth-\wd\archrestrbox-1.5em\relax}
+\vspace{0pt}
+\begin{internallinenumbers}
+\setlength{\parindent}{1.5em}\noindent
+Restriction corresponds to taking a face. The operation $\restrf[n][p][][q][\epsilon]$ maps a frame in $\framep[n+1][p]$ to one in $\framep[n][p]$. Its relative index $q\leq k$ denotes direction $p+q$, and $\epsilon\in\nu$ selects a face in that direction. The corresponding layer and painting operations are written $\restrl$ and $\restrp$; a painting restriction includes the restriction of its indexing frame. Each component of a layer is a lower--dimensional painting over a suitable restricted frame.
 
-  These operations follow the dependent-pair decomposition. Restricting a successor frame restricts its prefix and its next layer; restricting a layer applies painting restriction to each face-label component. On a painting $(l,c)$, restriction at index $0$ selects the component $l(\epsilon)$ of the first layer. A successor index restricts the layer and continues recursively through the remaining painting.
+These operations follow the dependent-pair decomposition. Restricting a successor frame restricts its prefix and its next layer; restricting a layer applies painting restriction to each face-label component. On a painting $(l,c)$, restriction at index $0$ selects the component $l(\epsilon)$ of the first layer. A successor index restricts the layer and continues recursively through the remaining painting.
 
-  Figure~\ref{fig:arch-restr} displays this recursive decomposition. Arrows run from an input to the row that uses it; dashed arrows bring in painting operations from the preceding dimension. The boxes show the principal components of the defining terms, with arguments implicit. Inequality rows give the domains of the named operations and coherences; all direction indices are nonnegative. Recursive calls instantiate these bounds at the shifted indices shown in the tables.
+Figure~\ref{fig:arch-restr} displays this recursive decomposition. Arrows run from an input to the row that uses it; dashed arrows bring in painting operations from the preceding dimension. The boxes show the principal components of the defining terms, with arguments implicit. Inequality rows give the domains of the named operations and coherences; all direction indices are nonnegative. Recursive calls instantiate these bounds at the shifted indices shown in the tables.
 
+\end{internallinenumbers}
+\end{minipage}\hfill
+\begin{minipage}[t]{\wd\archrestrbox}
+  \vspace{0pt}\usebox{\archrestrbox}
+  \captionof{figure}{Construction of restrictions on layers, frames, and paintings. The frame coherence types are developed together with frame restriction.}
+  \label{fig:arch-restr}
 \end{minipage}
-\hspace{0.02\linewidth}
-\begin{minipage}[C]{0.44\linewidth}
-  \vspace{1.5mm}
-  \begin{flushright}
-    \begin{figure}[H]
-      \centering
-      \input{figures/architecture-restr.tex}
-      \caption{Construction of restrictions on layers, frames, and paintings. The frame coherence types are developed together with frame restriction.}
-      \label{fig:arch-restr}
-    \end{figure}
-  \end{flushright}
-\end{minipage}
+\par\linenumbers\smallskip
 
 For an equality $e:x=y$ and $u:P(x)$, we write $\mathsf{rew}(e,u):P(y)$ for transport along $e$. In each layer box, the rows labelled $e$ and $u$ identify the equality and the painting transported by the displayed function. In the restriction layer, the equality is $\relRestrRestr$ on frames. It makes the preceding--dimensional painting restriction have the required type, whose proof is described in Section~\ref{sec:coherences}.
 
 \subsection{Construction of degeneracies}
 The boundary of a degenerate cell contains a repeated layer at the inserted direction, together with degeneracies of the original faces. This suggests building the boundary layer by layer, inserting the repeated layer when the prefix reaches the chosen direction. Figure~\ref{fig:degeneracy-layers} illustrates the three insertion positions for a square, showing the separate layers and their assembled full frame.
 
-\begin{figure}[H]
+\begin{figure}[tbp]
   \centering
   \begingroup
   \input{figures/cubical-boundaries-style.tex}
@@ -635,7 +660,7 @@ The families $L$ supply the cell degeneracies. The face--degeneracy laws are pro
 
 Figure~\ref{fig:arch-refl} shows how the Below and Above operations fit together. The frame operations proceed from Below to Above, while the painting operations proceed in the reverse order, ending with the supplied $L$ when $k=0$. The zero-direction layer is the common boundary case: it transports the input painting to form the constant layer. The layer definitions use the frame coherences $\relRestrReflBelowInf$, $\relRestrReflBelowId$, and $\relRestrReflAboveSup$, whose types and proofs are developed in Section~\ref{sec:coherences}. Purple arrows mark dependencies in the boundary cases, including the transition between Below and Above.
 
-\begin{figure}[H]
+\begin{figure}[tbp]
   \centering
   \input{figures/architecture-refl.tex}
   \caption{Construction of Below and Above degeneracies. The equations and types are given in Tables~\ref{tab:reflbelow} and~\ref{tab:reflabove}.}
@@ -727,7 +752,7 @@ A layer coherence uses a $2$--dimensional coherence: two composites of frame equ
 
 In every coherence architecture diagram, $\mathsf{coh}$ denotes the family named in the diagram or panel heading. The arrows $\downarrow$ and $\uparrow$ specify its Below and Above stages, in the same order as the operations in the coherence name. Thus $\mathsf{coh}^{\downarrow\uparrow}$ denotes $\relReflBelowAbove$. Subscripts select the frame, layer, or painting form. A $2$--dimensional frame coherence inherits the name and stage of the layer coherence whose proof requires it. Where that layer proof has distinct zero-direction and successor cases, its $2$--dimensional frame coherences have the same distinction: the zero-direction case has an additional subscript $0$. Each $\mathsf{coh2}_{\framep}$ box links to the corresponding diagram in Appendix~\ref{app:coh2}, using that diagram's variables in its inequality row.
 
-\paragraph{\texorpdfstring{$\relRestrRestr$, $\relRestrReflId$, and $\relRestrReflInf$}{restr-restr, restr-refl-id, and restr-refl-inf}.}
+\subparagraph{\texorpdfstring{$\relRestrRestr$, $\relRestrReflId$, and $\relRestrReflInf$}{restr-restr, restr-refl-id, and restr-refl-inf}.}
 The proofs follow the decomposition of boundaries into frames, layers, and paintings. A frame proof combines a frame proof (recursively) with a layer proof. A painting proof combines a layer proof with a painting proof (recursively). A layer proof is point--wise over the face labels and uses a lower--dimensional painting coherence.
 
 We give the construction of $\relRestrReflBelowInf$ in Table~\ref{tab:coh-inf}. Subscripts $\framep$, $\layer$, and $\painting$ identify its three forms. A pair of proofs denotes equality of dependent pairs, and $\lambda\theta$ denotes the point--wise proof of equality of layers. Here $\mathsf{refl}$ is reflexivity of equality. The recursive clauses use the same convention of implicit transports as the other construction tables.
@@ -740,7 +765,7 @@ Figure~\ref{fig:arch-coh-basic} compares this construction with restriction--res
 
 The $\relRestrRestr$ and $\relRestrReflInf$ families require hexagons; $\relRestrReflId$ requires a square. The zero-direction painting bases in these three families hold by definition and are thus proved by reflexivity.
 
-\paragraph{\texorpdfstring{$\relRestrReflSup$}{restr-refl-sup}.}
+\subparagraph{\texorpdfstring{$\relRestrReflSup$}{restr-refl-sup}.}
 Figure~\ref{fig:arch-coh-sup} shows the two stages of $\relRestrReflSup$. The frame proof passes from Below to Above, whereas the painting proof passes from Above to Below. At the transition, the Above frame proof uses the Below frame proof and a separate zero-direction layer proof.
 
 The ordinary layer steps use hexagons. At Above index zero, the constant layer instead requires the cancellation coherence, giving the square in Figure~\ref{fig:coh2-sup-zero}. This is the middle layer box in the architecture figure. The $2$--dimensional frame boxes above the three layer cases link to the corresponding square and hexagons.
@@ -757,7 +782,7 @@ The ordinary layer steps use hexagons. At Above index zero, the constant layer i
   \label{fig:arch-coh-sup}
 \end{figure}
 
-\paragraph{\texorpdfstring{$\relReflRefl$}{refl-refl}.}
+\subparagraph{\texorpdfstring{$\relReflRefl$}{refl-refl}.}
 
 The full-frame painting case of $\relReflAboveAbove$ uses the supplied compatibility proof $\mathsf{cohL}$. It equates two composites of the cell degeneracies $L$ over the corresponding frame equality.
 
@@ -767,7 +792,7 @@ Figure~\ref{fig:arch-coh-refl} shows the three stages. The frame proofs proceed 
 
 Each transition introduces a zero-direction layer proof. The mixed stage uses the square in Figure~\ref{fig:coh2-refl-ba-zero}, and the Above--Above stage uses the square in Figure~\ref{fig:coh2-refl-aa-zero}. Together with the preceding families, there are seven hexagonal and four square obligations, all discharged by $\UIP$.
 
-\begin{figure}[H]
+\begin{figure}[tbp]
   \centering
   \input{figures/architecture-coh-refl.tex}
   \caption{Three stages of $\relReflRefl$. The frame and painting dependencies run in opposite directions. The full-frame painting base uses supplied compatibility $\mathsf{cohL}$.}
@@ -802,7 +827,7 @@ In the cubical case, compatible coordinate symmetries allow every degeneracy to 
 \end{equation*}
 where the composite of exchanges is empty when $i=n$. One first inserts the last direction and then moves it to position $i$ by adjacent exchanges. The construction presented above supplies degeneracies in every direction without requiring these symmetries.
 
-\bibliographystyle{alpha}
+\bibliographystyle{plainurl}
 \bibliography{paper}
 \appendix
 \setcounter{figure}{0}
