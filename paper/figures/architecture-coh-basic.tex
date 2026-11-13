@@ -1,239 +1,239 @@
 % Principal defining-term dependencies.
 \begingroup
 \scriptsize
-\input{figures/architecture-style.tex}
+\input{figures/architecture-style.tex}%
 \begin{tikzpicture}[x=1cm,y=-1cm,scale=0.95]
   % s0-UIP
-  \fill[grayink!4] (0.214,0) rectangle (2.986,0.88);
-  \fill[grayink!16] (0.214,0) rectangle (2.986,0.44);
-  \draw[grayink,line width=.6pt] (0.214,0) rectangle (2.986,0.88);
-  \node[anchor=west,inner sep=0pt,font=\bfseries] at (0.354,0.22) {UIP};
-  \draw[grayink!35,line width=.35pt] (0.214,0.44) -- (2.986,0.44);
-  \node[anchor=west,inner sep=0pt] at (0.354,0.66) {frame types are sets};
+  \fill[grayink!4] (0,0) rectangle (2.9975,0.88);
+  \fill[grayink!16] (0,0) rectangle (2.9975,0.44);
+  \draw[grayink,line width=.6pt] (0,0) rectangle (2.9975,0.88);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (0.14,0.22) {UIP};
+  \draw[grayink!35,line width=.35pt] (0,0.44) -- (2.9975,0.44);
+  \node[anchor=west,inner sep=0pt] at (0.14,0.66) {frame types are sets};
   % s0-C
-  \fill[frameink!4] (0.1619,1.23) rectangle (2.1181,2.55);
-  \fill[frameink!16] (0.1619,1.23) rectangle (2.1181,1.67);
-  \draw[frameink,line width=.6pt] (0.1619,1.23) rectangle (2.1181,2.55);
-  \node[anchor=west,inner sep=0pt,font=\bfseries] at (0.3019,1.45) {$\cname{coh2}{}{frame}{}{}$};
-  \draw[frameink!35,line width=.35pt] (0.1619,1.67) -- (2.1181,1.67);
-  \node[anchor=west,inner sep=0pt] at (0.3019,1.89) {$s\leq r\leq q\leq k$};
-  \draw[frameink!35,line width=.35pt] (0.1619,2.11) -- (2.1181,2.11);
-  \node[anchor=west,inner sep=0pt] at (0.3019,2.33) {\hyperref[fig:coh2-dd]{\textbf{hex.}~\ref*{fig:coh2-dd}}};
+  \fill[frameink!4] (0.32,2.46) rectangle (2.522,3.78);
+  \fill[frameink!16] (0.32,2.46) rectangle (2.522,2.9);
+  \draw[frameink,line width=.6pt] (0.32,2.46) rectangle (2.522,3.78);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (0.46,2.68) {$\cname{coh2}{}{frame}{}{}$};
+  \draw[frameink!35,line width=.35pt] (0.32,2.9) -- (2.522,2.9);
+  \node[anchor=west,inner sep=0pt] at (0.46,3.12) {$s\leq r\leq q\leq k$};
+  \draw[frameink!35,line width=.35pt] (0.32,3.34) -- (2.522,3.34);
+  \node[anchor=west,inner sep=0pt] at (0.46,3.56) {\hyperref[fig:coh2-dd]{\textbf{hex.}~\ref*{fig:coh2-dd}}};
   % s0-old
-  \fill[paintingink!4] (2.4561,1.23) rectangle (5.25,2.11);
-  \fill[paintingink!16] (2.4561,1.23) rectangle (5.25,1.67);
-  \draw[paintingink,line width=.6pt] (2.4561,1.23) rectangle (5.25,2.11);
-  \node[anchor=west,inner sep=0pt,font=\bfseries] at (2.5961,1.45) {$\cname{coh}{}{painting}{}{n-1}$};
-  \draw[paintingink!35,line width=.35pt] (2.4561,1.67) -- (5.25,1.67);
-  \node[anchor=west,inner sep=0pt] at (2.5961,1.89) {preceding dimension};
+  \fill[paintingink!4] (1.7267,1.23) rectangle (4.7647,2.11);
+  \fill[paintingink!16] (1.7267,1.23) rectangle (4.7647,1.67);
+  \draw[paintingink,line width=.6pt] (1.7267,1.23) rectangle (4.7647,2.11);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (1.8667,1.45) {$\cname{coh}{}{painting}{}{n-1}$};
+  \draw[paintingink!35,line width=.35pt] (1.7267,1.67) -- (4.7647,1.67);
+  \node[anchor=west,inner sep=0pt] at (1.8667,1.89) {preceding dimension};
   % s0-L
-  \fill[green!4] (2.0042,2.9) rectangle (3.4958,4.66);
-  \fill[green!16] (2.0042,2.9) rectangle (3.4958,3.34);
-  \draw[green,line width=.6pt] (2.0042,2.9) rectangle (3.4958,4.66);
-  \node[anchor=west,inner sep=0pt,font=\bfseries] at (2.1442,3.12) {$\cname{coh}{}{layer}{}{}$};
-  \draw[green!35,line width=.35pt] (2.0042,3.34) -- (3.4958,3.34);
-  \node[anchor=west,inner sep=0pt] at (2.1442,3.56) {$r\leq q<k$};
-  \draw[green!35,line width=.35pt] (2.0042,3.78) -- (3.4958,3.78);
-  \node[anchor=west,inner sep=0pt] at (2.1442,4) {$\cname{coh2}{}{frame}{}{}$};
-  \draw[green!35,line width=.35pt] (2.0042,4.22) -- (3.4958,4.22);
-  \node[anchor=west,inner sep=0pt] at (2.1442,4.44) {$\cname{coh}{}{painting}{}{n-1}$};
+  \fill[green!4] (2.762,2.9) rectangle (4.4247,4.66);
+  \fill[green!16] (2.762,2.9) rectangle (4.4247,3.34);
+  \draw[green,line width=.6pt] (2.762,2.9) rectangle (4.4247,4.66);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (2.902,3.12) {$\cname{coh}{}{layer}{}{}$};
+  \draw[green!35,line width=.35pt] (2.762,3.34) -- (4.4247,3.34);
+  \node[anchor=west,inner sep=0pt] at (2.902,3.56) {$r\leq q<k$};
+  \draw[green!35,line width=.35pt] (2.762,3.78) -- (4.4247,3.78);
+  \node[anchor=west,inner sep=0pt] at (2.902,4) {$\cname{coh2}{}{frame}{}{}$};
+  \draw[green!35,line width=.35pt] (2.762,4.22) -- (4.4247,4.22);
+  \node[anchor=west,inner sep=0pt] at (2.902,4.44) {$\cname{coh}{}{painting}{}{n-1}$};
   % s0-F
-  \fill[frameink!4] (1.2715,5.29) rectangle (4.2285,7.93);
-  \fill[frameink!16] (1.2715,5.29) rectangle (4.2285,5.73);
-  \draw[frameink,line width=.6pt] (1.2715,5.29) rectangle (4.2285,7.93);
-  \node[anchor=west,inner sep=0pt,font=\bfseries] at (1.4115,5.51) {$\cname{coh}{}{frame}{}{}$};
-  \draw[frameink!35,line width=.35pt] (1.2715,5.73) -- (4.2285,5.73);
-  \node[anchor=west,inner sep=0pt] at (1.4115,5.95) {$r\leq q\leq k$};
-  \draw[frameink!35,line width=.35pt] (1.2715,6.17) -- (4.2285,6.17);
-  \node[anchor=west,inner sep=0pt] at (1.4115,6.39) {$p=0$: reflexivity};
-  \draw[frameink!35,line width=.35pt] (1.2715,6.61) -- (4.2285,6.61);
-  \node[anchor=west,inner sep=0pt] at (1.4115,6.83) {$p=p'+1$:};
-  \draw[frameink!35,line width=.35pt] (1.2715,7.05) -- (4.2285,7.05);
-  \node[anchor=west,inner sep=0pt] at (1.4115,7.27) {\quad $\cname{coh}{}{frame}{}{}$ (recursive)};
-  \draw[frameink!35,line width=.35pt] (1.2715,7.49) -- (4.2285,7.49);
-  \node[anchor=west,inner sep=0pt] at (1.4115,7.71) {\quad $\cname{coh}{}{layer}{}{}$};
+  \fill[frameink!4] (0.916,5.01) rectangle (3.9747,7.65);
+  \fill[frameink!16] (0.916,5.01) rectangle (3.9747,5.45);
+  \draw[frameink,line width=.6pt] (0.916,5.01) rectangle (3.9747,7.65);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (1.056,5.23) {$\cname{coh}{}{frame}{}{}$};
+  \draw[frameink!35,line width=.35pt] (0.916,5.45) -- (3.9747,5.45);
+  \node[anchor=west,inner sep=0pt] at (1.056,5.67) {$r\leq q\leq k$};
+  \draw[frameink!35,line width=.35pt] (0.916,5.89) -- (3.9747,5.89);
+  \node[anchor=west,inner sep=0pt] at (1.056,6.11) {$p=0$: reflexivity};
+  \draw[frameink!35,line width=.35pt] (0.916,6.33) -- (3.9747,6.33);
+  \node[anchor=west,inner sep=0pt] at (1.056,6.55) {$p=p'+1$:};
+  \draw[frameink!35,line width=.35pt] (0.916,6.77) -- (3.9747,6.77);
+  \node[anchor=west,inner sep=0pt] at (1.056,6.99) {\quad $\cname{coh}{}{frame}{}{}$ (recursive)};
+  \draw[frameink!35,line width=.35pt] (0.916,7.21) -- (3.9747,7.21);
+  \node[anchor=west,inner sep=0pt] at (1.056,7.43) {\quad $\cname{coh}{}{layer}{}{}$};
   % s0-P
-  \fill[paintingink!4] (1.1577,8.28) rectangle (4.3423,10.92);
-  \fill[paintingink!16] (1.1577,8.28) rectangle (4.3423,8.72);
-  \draw[paintingink,line width=.6pt] (1.1577,8.28) rectangle (4.3423,10.92);
-  \node[anchor=west,inner sep=0pt,font=\bfseries] at (1.2977,8.5) {$\cname{coh}{}{painting}{}{}$};
-  \draw[paintingink!35,line width=.35pt] (1.1577,8.72) -- (4.3423,8.72);
-  \node[anchor=west,inner sep=0pt] at (1.2977,8.94) {$r\leq q\leq k$};
-  \draw[paintingink!35,line width=.35pt] (1.1577,9.16) -- (4.3423,9.16);
-  \node[anchor=west,inner sep=0pt] at (1.2977,9.38) {$r=0$: reflexivity};
-  \draw[paintingink!35,line width=.35pt] (1.1577,9.6) -- (4.3423,9.6);
-  \node[anchor=west,inner sep=0pt] at (1.2977,9.82) {$r=r'+1$:};
-  \draw[paintingink!35,line width=.35pt] (1.1577,10.04) -- (4.3423,10.04);
-  \node[anchor=west,inner sep=0pt] at (1.2977,10.26) {\quad $\cname{coh}{}{layer}{}{}$};
-  \draw[paintingink!35,line width=.35pt] (1.1577,10.48) -- (4.3423,10.48);
-  \node[anchor=west,inner sep=0pt] at (1.2977,10.7) {\quad $\cname{coh}{}{painting}{}{}$ (recursive)};
+  \fill[paintingink!4] (0.857,8) rectangle (4.1147,10.64);
+  \fill[paintingink!16] (0.857,8) rectangle (4.1147,8.44);
+  \draw[paintingink,line width=.6pt] (0.857,8) rectangle (4.1147,10.64);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (0.997,8.22) {$\cname{coh}{}{painting}{}{}$};
+  \draw[paintingink!35,line width=.35pt] (0.857,8.44) -- (4.1147,8.44);
+  \node[anchor=west,inner sep=0pt] at (0.997,8.66) {$r\leq q\leq k$};
+  \draw[paintingink!35,line width=.35pt] (0.857,8.88) -- (4.1147,8.88);
+  \node[anchor=west,inner sep=0pt] at (0.997,9.1) {$r=0$: reflexivity};
+  \draw[paintingink!35,line width=.35pt] (0.857,9.32) -- (4.1147,9.32);
+  \node[anchor=west,inner sep=0pt] at (0.997,9.54) {$r=r'+1$:};
+  \draw[paintingink!35,line width=.35pt] (0.857,9.76) -- (4.1147,9.76);
+  \node[anchor=west,inner sep=0pt] at (0.997,9.98) {\quad $\cname{coh}{}{layer}{}{}$};
+  \draw[paintingink!35,line width=.35pt] (0.857,10.2) -- (4.1147,10.2);
+  \node[anchor=west,inner sep=0pt] at (0.997,10.42) {\quad $\cname{coh}{}{painting}{}{}$ (recursive)};
   % s1-UIP
-  \fill[grayink!4] (5.714,0) rectangle (8.486,0.88);
-  \fill[grayink!16] (5.714,0) rectangle (8.486,0.44);
-  \draw[grayink,line width=.6pt] (5.714,0) rectangle (8.486,0.88);
-  \node[anchor=west,inner sep=0pt,font=\bfseries] at (5.854,0.22) {UIP};
-  \draw[grayink!35,line width=.35pt] (5.714,0.44) -- (8.486,0.44);
-  \node[anchor=west,inner sep=0pt] at (5.854,0.66) {frame types are sets};
+  \fill[grayink!4] (5.1447,0) rectangle (8.1422,0.88);
+  \fill[grayink!16] (5.1447,0) rectangle (8.1422,0.44);
+  \draw[grayink,line width=.6pt] (5.1447,0) rectangle (8.1422,0.88);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (5.2847,0.22) {UIP};
+  \draw[grayink!35,line width=.35pt] (5.1447,0.44) -- (8.1422,0.44);
+  \node[anchor=west,inner sep=0pt] at (5.2847,0.66) {frame types are sets};
   % s1-C
-  \fill[frameink!4] (5.7779,1.23) rectangle (7.3449,2.55);
-  \fill[frameink!16] (5.7779,1.23) rectangle (7.3449,1.67);
-  \draw[frameink,line width=.6pt] (5.7779,1.23) rectangle (7.3449,2.55);
-  \node[anchor=west,inner sep=0pt,font=\bfseries] at (5.9179,1.45) {$\cname{coh2}{\downarrow}{frame}{}{}$};
-  \draw[frameink!35,line width=.35pt] (5.7779,1.67) -- (7.3449,1.67);
-  \node[anchor=west,inner sep=0pt] at (5.9179,1.89) {$s\leq q\leq k$};
-  \draw[frameink!35,line width=.35pt] (5.7779,2.11) -- (7.3449,2.11);
-  \node[anchor=west,inner sep=0pt] at (5.9179,2.33) {\hyperref[fig:coh2-id]{\textbf{sq.}~\ref*{fig:coh2-id}}};
+  \fill[frameink!4] (5.4647,2.46) rectangle (7.1217,3.78);
+  \fill[frameink!16] (5.4647,2.46) rectangle (7.1217,2.9);
+  \draw[frameink,line width=.6pt] (5.4647,2.46) rectangle (7.1217,3.78);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (5.6047,2.68) {$\cname{coh2}{\downarrow}{frame}{}{}$};
+  \draw[frameink!35,line width=.35pt] (5.4647,2.9) -- (7.1217,2.9);
+  \node[anchor=west,inner sep=0pt] at (5.6047,3.12) {$s\leq q\leq k$};
+  \draw[frameink!35,line width=.35pt] (5.4647,3.34) -- (7.1217,3.34);
+  \node[anchor=west,inner sep=0pt] at (5.6047,3.56) {\hyperref[fig:coh2-id]{\textbf{sq.}~\ref*{fig:coh2-id}}};
   % s1-old
-  \fill[paintingink!4] (7.9561,1.23) rectangle (10.75,2.11);
-  \fill[paintingink!16] (7.9561,1.23) rectangle (10.75,1.67);
-  \draw[paintingink,line width=.6pt] (7.9561,1.23) rectangle (10.75,2.11);
-  \node[anchor=west,inner sep=0pt,font=\bfseries] at (8.0961,1.45) {$\cname{coh}{\downarrow}{painting}{}{n-1}$};
-  \draw[paintingink!35,line width=.35pt] (7.9561,1.67) -- (10.75,1.67);
-  \node[anchor=west,inner sep=0pt] at (8.0961,1.89) {preceding dimension};
+  \fill[paintingink!4] (6.3094,1.23) rectangle (9.3474,2.11);
+  \fill[paintingink!16] (6.3094,1.23) rectangle (9.3474,1.67);
+  \draw[paintingink,line width=.6pt] (6.3094,1.23) rectangle (9.3474,2.11);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (6.4494,1.45) {$\cname{coh}{\downarrow}{painting}{}{n-1}$};
+  \draw[paintingink!35,line width=.35pt] (6.3094,1.67) -- (9.3474,1.67);
+  \node[anchor=west,inner sep=0pt] at (6.4494,1.89) {preceding dimension};
   % s1-L
-  \fill[green!4] (7.3728,2.9) rectangle (9.1272,4.66);
-  \fill[green!16] (7.3728,2.9) rectangle (9.1272,3.34);
-  \draw[green,line width=.6pt] (7.3728,2.9) rectangle (9.1272,4.66);
-  \node[anchor=west,inner sep=0pt,font=\bfseries] at (7.5128,3.12) {$\cname{coh}{\downarrow}{layer}{}{}$};
-  \draw[green!35,line width=.35pt] (7.3728,3.34) -- (9.1272,3.34);
-  \node[anchor=west,inner sep=0pt] at (7.5128,3.56) {$q<k$};
-  \draw[green!35,line width=.35pt] (7.3728,3.78) -- (9.1272,3.78);
-  \node[anchor=west,inner sep=0pt] at (7.5128,4) {$\cname{coh2}{\downarrow}{frame}{}{}$};
-  \draw[green!35,line width=.35pt] (7.3728,4.22) -- (9.1272,4.22);
-  \node[anchor=west,inner sep=0pt] at (7.5128,4.44) {$\cname{coh}{\downarrow}{painting}{}{n-1}$};
+  \fill[green!4] (7.3617,2.9) rectangle (9.0074,4.66);
+  \fill[green!16] (7.3617,2.9) rectangle (9.0074,3.34);
+  \draw[green,line width=.6pt] (7.3617,2.9) rectangle (9.0074,4.66);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (7.5017,3.12) {$\cname{coh}{\downarrow}{layer}{}{}$};
+  \draw[green!35,line width=.35pt] (7.3617,3.34) -- (9.0074,3.34);
+  \node[anchor=west,inner sep=0pt] at (7.5017,3.56) {$q<k$};
+  \draw[green!35,line width=.35pt] (7.3617,3.78) -- (9.0074,3.78);
+  \node[anchor=west,inner sep=0pt] at (7.5017,4) {$\cname{coh2}{\downarrow}{frame}{}{}$};
+  \draw[green!35,line width=.35pt] (7.3617,4.22) -- (9.0074,4.22);
+  \node[anchor=west,inner sep=0pt] at (7.5017,4.44) {$\cname{coh}{\downarrow}{painting}{}{n-1}$};
   % s1-F
-  \fill[frameink!4] (6.6947,5.29) rectangle (9.8053,7.93);
-  \fill[frameink!16] (6.6947,5.29) rectangle (9.8053,5.73);
-  \draw[frameink,line width=.6pt] (6.6947,5.29) rectangle (9.8053,7.93);
-  \node[anchor=west,inner sep=0pt,font=\bfseries] at (6.8347,5.51) {$\cname{coh}{\downarrow}{frame}{}{}$};
-  \draw[frameink!35,line width=.35pt] (6.6947,5.73) -- (9.8053,5.73);
-  \node[anchor=west,inner sep=0pt] at (6.8347,5.95) {$q\leq k$};
-  \draw[frameink!35,line width=.35pt] (6.6947,6.17) -- (9.8053,6.17);
-  \node[anchor=west,inner sep=0pt] at (6.8347,6.39) {$p=0$: reflexivity};
-  \draw[frameink!35,line width=.35pt] (6.6947,6.61) -- (9.8053,6.61);
-  \node[anchor=west,inner sep=0pt] at (6.8347,6.83) {$p=p'+1$:};
-  \draw[frameink!35,line width=.35pt] (6.6947,7.05) -- (9.8053,7.05);
-  \node[anchor=west,inner sep=0pt] at (6.8347,7.27) {\quad $\cname{coh}{\downarrow}{frame}{}{}$ (recursive)};
-  \draw[frameink!35,line width=.35pt] (6.6947,7.49) -- (9.8053,7.49);
-  \node[anchor=west,inner sep=0pt] at (6.8347,7.71) {\quad $\cname{coh}{\downarrow}{layer}{}{}$};
+  \fill[frameink!4] (5.3471,5.01) rectangle (8.5574,7.65);
+  \fill[frameink!16] (5.3471,5.01) rectangle (8.5574,5.45);
+  \draw[frameink,line width=.6pt] (5.3471,5.01) rectangle (8.5574,7.65);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (5.4871,5.23) {$\cname{coh}{\downarrow}{frame}{}{}$};
+  \draw[frameink!35,line width=.35pt] (5.3471,5.45) -- (8.5574,5.45);
+  \node[anchor=west,inner sep=0pt] at (5.4871,5.67) {$q\leq k$};
+  \draw[frameink!35,line width=.35pt] (5.3471,5.89) -- (8.5574,5.89);
+  \node[anchor=west,inner sep=0pt] at (5.4871,6.11) {$p=0$: reflexivity};
+  \draw[frameink!35,line width=.35pt] (5.3471,6.33) -- (8.5574,6.33);
+  \node[anchor=west,inner sep=0pt] at (5.4871,6.55) {$p=p'+1$:};
+  \draw[frameink!35,line width=.35pt] (5.3471,6.77) -- (8.5574,6.77);
+  \node[anchor=west,inner sep=0pt] at (5.4871,6.99) {\quad $\cname{coh}{\downarrow}{frame}{}{}$ (recursive)};
+  \draw[frameink!35,line width=.35pt] (5.3471,7.21) -- (8.5574,7.21);
+  \node[anchor=west,inner sep=0pt] at (5.4871,7.43) {\quad $\cname{coh}{\downarrow}{layer}{}{}$};
   % s1-P
-  \fill[paintingink!4] (6.581,8.28) rectangle (9.919,10.92);
-  \fill[paintingink!16] (6.581,8.28) rectangle (9.919,8.72);
-  \draw[paintingink,line width=.6pt] (6.581,8.28) rectangle (9.919,10.92);
-  \node[anchor=west,inner sep=0pt,font=\bfseries] at (6.721,8.5) {$\cname{coh}{\downarrow}{painting}{}{}$};
-  \draw[paintingink!35,line width=.35pt] (6.581,8.72) -- (9.919,8.72);
-  \node[anchor=west,inner sep=0pt] at (6.721,8.94) {$q\leq k$};
-  \draw[paintingink!35,line width=.35pt] (6.581,9.16) -- (9.919,9.16);
-  \node[anchor=west,inner sep=0pt] at (6.721,9.38) {$q=0$: reflexivity};
-  \draw[paintingink!35,line width=.35pt] (6.581,9.6) -- (9.919,9.6);
-  \node[anchor=west,inner sep=0pt] at (6.721,9.82) {$q=q'+1$:};
-  \draw[paintingink!35,line width=.35pt] (6.581,10.04) -- (9.919,10.04);
-  \node[anchor=west,inner sep=0pt] at (6.721,10.26) {\quad $\cname{coh}{\downarrow}{layer}{}{}$};
-  \draw[paintingink!35,line width=.35pt] (6.581,10.48) -- (9.919,10.48);
-  \node[anchor=west,inner sep=0pt] at (6.721,10.7) {\quad $\cname{coh}{\downarrow}{painting}{}{}$ (recursive)};
+  \fill[paintingink!4] (5.2882,8) rectangle (8.6974,10.64);
+  \fill[paintingink!16] (5.2882,8) rectangle (8.6974,8.44);
+  \draw[paintingink,line width=.6pt] (5.2882,8) rectangle (8.6974,10.64);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (5.4282,8.22) {$\cname{coh}{\downarrow}{painting}{}{}$};
+  \draw[paintingink!35,line width=.35pt] (5.2882,8.44) -- (8.6974,8.44);
+  \node[anchor=west,inner sep=0pt] at (5.4282,8.66) {$q\leq k$};
+  \draw[paintingink!35,line width=.35pt] (5.2882,8.88) -- (8.6974,8.88);
+  \node[anchor=west,inner sep=0pt] at (5.4282,9.1) {$q=0$: reflexivity};
+  \draw[paintingink!35,line width=.35pt] (5.2882,9.32) -- (8.6974,9.32);
+  \node[anchor=west,inner sep=0pt] at (5.4282,9.54) {$q=q'+1$:};
+  \draw[paintingink!35,line width=.35pt] (5.2882,9.76) -- (8.6974,9.76);
+  \node[anchor=west,inner sep=0pt] at (5.4282,9.98) {\quad $\cname{coh}{\downarrow}{layer}{}{}$};
+  \draw[paintingink!35,line width=.35pt] (5.2882,10.2) -- (8.6974,10.2);
+  \node[anchor=west,inner sep=0pt] at (5.4282,10.42) {\quad $\cname{coh}{\downarrow}{painting}{}{}$ (recursive)};
   % s2-UIP
-  \fill[grayink!4] (11.214,0) rectangle (13.986,0.88);
-  \fill[grayink!16] (11.214,0) rectangle (13.986,0.44);
-  \draw[grayink,line width=.6pt] (11.214,0) rectangle (13.986,0.88);
-  \node[anchor=west,inner sep=0pt,font=\bfseries] at (11.354,0.22) {UIP};
-  \draw[grayink!35,line width=.35pt] (11.214,0.44) -- (13.986,0.44);
-  \node[anchor=west,inner sep=0pt] at (11.354,0.66) {frame types are sets};
+  \fill[grayink!4] (9.7274,0) rectangle (12.7249,0.88);
+  \fill[grayink!16] (9.7274,0) rectangle (12.7249,0.44);
+  \draw[grayink,line width=.6pt] (9.7274,0) rectangle (12.7249,0.88);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (9.8674,0.22) {UIP};
+  \draw[grayink!35,line width=.35pt] (9.7274,0.44) -- (12.7249,0.44);
+  \node[anchor=west,inner sep=0pt] at (9.8674,0.66) {frame types are sets};
   % s2-C
-  \fill[frameink!4] (11.0833,1.23) rectangle (13.0395,2.55);
-  \fill[frameink!16] (11.0833,1.23) rectangle (13.0395,1.67);
-  \draw[frameink,line width=.6pt] (11.0833,1.23) rectangle (13.0395,2.55);
-  \node[anchor=west,inner sep=0pt,font=\bfseries] at (11.2233,1.45) {$\cname{coh2}{\downarrow}{frame}{}{}$};
-  \draw[frameink!35,line width=.35pt] (11.0833,1.67) -- (13.0395,1.67);
-  \node[anchor=west,inner sep=0pt] at (11.2233,1.89) {$s\leq r\leq q\leq k$};
-  \draw[frameink!35,line width=.35pt] (11.0833,2.11) -- (13.0395,2.11);
-  \node[anchor=west,inner sep=0pt] at (11.2233,2.33) {\hyperref[fig:coh2-inf]{\textbf{hex.}~\ref*{fig:coh2-inf}}};
+  \fill[frameink!4] (10.0474,2.46) rectangle (12.2494,3.78);
+  \fill[frameink!16] (10.0474,2.46) rectangle (12.2494,2.9);
+  \draw[frameink,line width=.6pt] (10.0474,2.46) rectangle (12.2494,3.78);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (10.1874,2.68) {$\cname{coh2}{\downarrow}{frame}{}{}$};
+  \draw[frameink!35,line width=.35pt] (10.0474,2.9) -- (12.2494,2.9);
+  \node[anchor=west,inner sep=0pt] at (10.1874,3.12) {$s\leq r\leq q\leq k$};
+  \draw[frameink!35,line width=.35pt] (10.0474,3.34) -- (12.2494,3.34);
+  \node[anchor=west,inner sep=0pt] at (10.1874,3.56) {\hyperref[fig:coh2-inf]{\textbf{hex.}~\ref*{fig:coh2-inf}}};
   % s2-old
-  \fill[paintingink!4] (13.4561,1.23) rectangle (16.25,2.11);
-  \fill[paintingink!16] (13.4561,1.23) rectangle (16.25,1.67);
-  \draw[paintingink,line width=.6pt] (13.4561,1.23) rectangle (16.25,2.11);
-  \node[anchor=west,inner sep=0pt,font=\bfseries] at (13.5961,1.45) {$\cname{coh}{\downarrow}{painting}{}{n-1}$};
-  \draw[paintingink!35,line width=.35pt] (13.4561,1.67) -- (16.25,1.67);
-  \node[anchor=west,inner sep=0pt] at (13.5961,1.89) {preceding dimension};
+  \fill[paintingink!4] (11.4541,1.23) rectangle (14.4921,2.11);
+  \fill[paintingink!16] (11.4541,1.23) rectangle (14.4921,1.67);
+  \draw[paintingink,line width=.6pt] (11.4541,1.23) rectangle (14.4921,2.11);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (11.5941,1.45) {$\cname{coh}{\downarrow}{painting}{}{n-1}$};
+  \draw[paintingink!35,line width=.35pt] (11.4541,1.67) -- (14.4921,1.67);
+  \node[anchor=west,inner sep=0pt] at (11.5941,1.89) {preceding dimension};
   % s2-L
-  \fill[green!4] (12.9274,2.9) rectangle (14.5726,4.66);
-  \fill[green!16] (12.9274,2.9) rectangle (14.5726,3.34);
-  \draw[green,line width=.6pt] (12.9274,2.9) rectangle (14.5726,4.66);
-  \node[anchor=west,inner sep=0pt,font=\bfseries] at (13.0674,3.12) {$\cname{coh}{\downarrow}{layer}{}{}$};
-  \draw[green!35,line width=.35pt] (12.9274,3.34) -- (14.5726,3.34);
-  \node[anchor=west,inner sep=0pt] at (13.0674,3.56) {$r\leq q<k$};
-  \draw[green!35,line width=.35pt] (12.9274,3.78) -- (14.5726,3.78);
-  \node[anchor=west,inner sep=0pt] at (13.0674,4) {$\cname{coh2}{\downarrow}{frame}{}{}$};
-  \draw[green!35,line width=.35pt] (12.9274,4.22) -- (14.5726,4.22);
-  \node[anchor=west,inner sep=0pt] at (13.0674,4.44) {$\cname{coh}{\downarrow}{painting}{}{n-1}$};
+  \fill[green!4] (12.4894,2.9) rectangle (14.1521,4.66);
+  \fill[green!16] (12.4894,2.9) rectangle (14.1521,3.34);
+  \draw[green,line width=.6pt] (12.4894,2.9) rectangle (14.1521,4.66);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (12.6294,3.12) {$\cname{coh}{\downarrow}{layer}{}{}$};
+  \draw[green!35,line width=.35pt] (12.4894,3.34) -- (14.1521,3.34);
+  \node[anchor=west,inner sep=0pt] at (12.6294,3.56) {$r\leq q<k$};
+  \draw[green!35,line width=.35pt] (12.4894,3.78) -- (14.1521,3.78);
+  \node[anchor=west,inner sep=0pt] at (12.6294,4) {$\cname{coh2}{\downarrow}{frame}{}{}$};
+  \draw[green!35,line width=.35pt] (12.4894,4.22) -- (14.1521,4.22);
+  \node[anchor=west,inner sep=0pt] at (12.6294,4.44) {$\cname{coh}{\downarrow}{painting}{}{n-1}$};
   % s2-F
-  \fill[frameink!4] (12.1947,5.29) rectangle (15.3053,7.93);
-  \fill[frameink!16] (12.1947,5.29) rectangle (15.3053,5.73);
-  \draw[frameink,line width=.6pt] (12.1947,5.29) rectangle (15.3053,7.93);
-  \node[anchor=west,inner sep=0pt,font=\bfseries] at (12.3347,5.51) {$\cname{coh}{\downarrow}{frame}{}{}$};
-  \draw[frameink!35,line width=.35pt] (12.1947,5.73) -- (15.3053,5.73);
-  \node[anchor=west,inner sep=0pt] at (12.3347,5.95) {$r\leq q\leq k$};
-  \draw[frameink!35,line width=.35pt] (12.1947,6.17) -- (15.3053,6.17);
-  \node[anchor=west,inner sep=0pt] at (12.3347,6.39) {$p=0$: reflexivity};
-  \draw[frameink!35,line width=.35pt] (12.1947,6.61) -- (15.3053,6.61);
-  \node[anchor=west,inner sep=0pt] at (12.3347,6.83) {$p=p'+1$:};
-  \draw[frameink!35,line width=.35pt] (12.1947,7.05) -- (15.3053,7.05);
-  \node[anchor=west,inner sep=0pt] at (12.3347,7.27) {\quad $\cname{coh}{\downarrow}{frame}{}{}$ (recursive)};
-  \draw[frameink!35,line width=.35pt] (12.1947,7.49) -- (15.3053,7.49);
-  \node[anchor=west,inner sep=0pt] at (12.3347,7.71) {\quad $\cname{coh}{\downarrow}{layer}{}{}$};
+  \fill[frameink!4] (10.4918,5.01) rectangle (13.7021,7.65);
+  \fill[frameink!16] (10.4918,5.01) rectangle (13.7021,5.45);
+  \draw[frameink,line width=.6pt] (10.4918,5.01) rectangle (13.7021,7.65);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (10.6318,5.23) {$\cname{coh}{\downarrow}{frame}{}{}$};
+  \draw[frameink!35,line width=.35pt] (10.4918,5.45) -- (13.7021,5.45);
+  \node[anchor=west,inner sep=0pt] at (10.6318,5.67) {$r\leq q\leq k$};
+  \draw[frameink!35,line width=.35pt] (10.4918,5.89) -- (13.7021,5.89);
+  \node[anchor=west,inner sep=0pt] at (10.6318,6.11) {$p=0$: reflexivity};
+  \draw[frameink!35,line width=.35pt] (10.4918,6.33) -- (13.7021,6.33);
+  \node[anchor=west,inner sep=0pt] at (10.6318,6.55) {$p=p'+1$:};
+  \draw[frameink!35,line width=.35pt] (10.4918,6.77) -- (13.7021,6.77);
+  \node[anchor=west,inner sep=0pt] at (10.6318,6.99) {\quad $\cname{coh}{\downarrow}{frame}{}{}$ (recursive)};
+  \draw[frameink!35,line width=.35pt] (10.4918,7.21) -- (13.7021,7.21);
+  \node[anchor=west,inner sep=0pt] at (10.6318,7.43) {\quad $\cname{coh}{\downarrow}{layer}{}{}$};
   % s2-P
-  \fill[paintingink!4] (12.081,8.28) rectangle (15.419,10.92);
-  \fill[paintingink!16] (12.081,8.28) rectangle (15.419,8.72);
-  \draw[paintingink,line width=.6pt] (12.081,8.28) rectangle (15.419,10.92);
-  \node[anchor=west,inner sep=0pt,font=\bfseries] at (12.221,8.5) {$\cname{coh}{\downarrow}{painting}{}{}$};
-  \draw[paintingink!35,line width=.35pt] (12.081,8.72) -- (15.419,8.72);
-  \node[anchor=west,inner sep=0pt] at (12.221,8.94) {$r\leq q\leq k$};
-  \draw[paintingink!35,line width=.35pt] (12.081,9.16) -- (15.419,9.16);
-  \node[anchor=west,inner sep=0pt] at (12.221,9.38) {$r=0$: reflexivity};
-  \draw[paintingink!35,line width=.35pt] (12.081,9.6) -- (15.419,9.6);
-  \node[anchor=west,inner sep=0pt] at (12.221,9.82) {$r=r'+1$:};
-  \draw[paintingink!35,line width=.35pt] (12.081,10.04) -- (15.419,10.04);
-  \node[anchor=west,inner sep=0pt] at (12.221,10.26) {\quad $\cname{coh}{\downarrow}{layer}{}{}$};
-  \draw[paintingink!35,line width=.35pt] (12.081,10.48) -- (15.419,10.48);
-  \node[anchor=west,inner sep=0pt] at (12.221,10.7) {\quad $\cname{coh}{\downarrow}{painting}{}{}$ (recursive)};
+  \fill[paintingink!4] (10.4329,8) rectangle (13.8421,10.64);
+  \fill[paintingink!16] (10.4329,8) rectangle (13.8421,8.44);
+  \draw[paintingink,line width=.6pt] (10.4329,8) rectangle (13.8421,10.64);
+  \node[anchor=west,inner sep=0pt,font=\bfseries] at (10.5729,8.22) {$\cname{coh}{\downarrow}{painting}{}{}$};
+  \draw[paintingink!35,line width=.35pt] (10.4329,8.44) -- (13.8421,8.44);
+  \node[anchor=west,inner sep=0pt] at (10.5729,8.66) {$r\leq q\leq k$};
+  \draw[paintingink!35,line width=.35pt] (10.4329,8.88) -- (13.8421,8.88);
+  \node[anchor=west,inner sep=0pt] at (10.5729,9.1) {$r=0$: reflexivity};
+  \draw[paintingink!35,line width=.35pt] (10.4329,9.32) -- (13.8421,9.32);
+  \node[anchor=west,inner sep=0pt] at (10.5729,9.54) {$r=r'+1$:};
+  \draw[paintingink!35,line width=.35pt] (10.4329,9.76) -- (13.8421,9.76);
+  \node[anchor=west,inner sep=0pt] at (10.5729,9.98) {\quad $\cname{coh}{\downarrow}{layer}{}{}$};
+  \draw[paintingink!35,line width=.35pt] (10.4329,10.2) -- (13.8421,10.2);
+  \node[anchor=west,inner sep=0pt] at (10.5729,10.42) {\quad $\cname{coh}{\downarrow}{painting}{}{}$ (recursive)};
   % s0-UIP -> s0-C, row 2
-  \draw[edge] (2.2981,0.88) -- (2.2981,2.33) -- (2.1181,2.33);
+  \draw[edge] (0.14,0.88) -- (0.14,3.56) -- (0.32,3.56);
   % s0-C -> s0-L, row 2
-  \draw[edge] (1.8242,2.55) -- (1.8242,4) -- (2.0042,4);
+  \draw[edge] (2.322,3.78) -- (2.322,4) -- (2.762,4);
   % s0-old -> s0-L, row 3
-  \draw[edge,draw=blue,dashed] (3.6758,2.11) -- (3.6758,4.44) -- (3.4958,4.44);
+  \draw[edge,draw=blue,dashed] (4.6047,2.11) -- (4.6047,4.44) -- (4.4247,4.44);
   % s0-L -> s0-F, row 5
-  \draw[edge] (2.4042,4.66) -- (2.4042,4.94) -- (1.0915,4.94) -- (1.0915,7.71) -- (1.2715,7.71);
+  \draw[edge] (4.1547,4.66) -- (4.1547,7.43) -- (3.9747,7.43);
   % s0-L -> s0-P, row 4
-  \draw[edge] (2.2042,4.66) -- (2.2042,4.82) -- (1.0115,4.82) -- (1.0115,10.26) -- (1.1577,10.26);
+  \draw[edge] (4.2947,4.66) -- (4.2947,9.98) -- (4.1147,9.98);
   % s1-UIP -> s1-C, row 2
-  \draw[edge] (7.5249,0.88) -- (7.5249,2.33) -- (7.3449,2.33);
+  \draw[edge] (5.2847,0.88) -- (5.2847,3.56) -- (5.4647,3.56);
   % s1-C -> s1-L, row 2
-  \draw[edge] (7.2149,2.55) -- (7.2149,4) -- (7.3728,4);
+  \draw[edge] (6.9217,3.78) -- (6.9217,4) -- (7.3617,4);
   % s1-old -> s1-L, row 3
-  \draw[edge,draw=blue,dashed] (9.3072,2.11) -- (9.3072,4.44) -- (9.1272,4.44);
+  \draw[edge,draw=blue,dashed] (9.1874,2.11) -- (9.1874,4.44) -- (9.0074,4.44);
   % s1-L -> s1-F, row 5
-  \draw[edge] (7.7728,4.66) -- (7.7728,4.94) -- (6.5147,4.94) -- (6.5147,7.71) -- (6.6947,7.71);
+  \draw[edge] (8.7374,4.66) -- (8.7374,7.43) -- (8.5574,7.43);
   % s1-L -> s1-P, row 4
-  \draw[edge] (7.5728,4.66) -- (7.5728,4.82) -- (6.4347,4.82) -- (6.4347,10.26) -- (6.581,10.26);
+  \draw[edge] (8.8774,4.66) -- (8.8774,9.98) -- (8.6974,9.98);
   % s2-UIP -> s2-C, row 2
-  \draw[edge] (13.2195,0.88) -- (13.2195,2.33) -- (13.0395,2.33);
+  \draw[edge] (9.8674,0.88) -- (9.8674,3.56) -- (10.0474,3.56);
   % s2-C -> s2-L, row 2
-  \draw[edge] (12.7474,2.55) -- (12.7474,4) -- (12.9274,4);
+  \draw[edge] (12.0494,3.78) -- (12.0494,4) -- (12.4894,4);
   % s2-old -> s2-L, row 3
-  \draw[edge,draw=blue,dashed] (14.7526,2.11) -- (14.7526,4.44) -- (14.5726,4.44);
+  \draw[edge,draw=blue,dashed] (14.3321,2.11) -- (14.3321,4.44) -- (14.1521,4.44);
   % s2-L -> s2-F, row 5
-  \draw[edge] (13.3274,4.66) -- (13.3274,4.94) -- (12.0147,4.94) -- (12.0147,7.71) -- (12.1947,7.71);
+  \draw[edge] (13.8821,4.66) -- (13.8821,7.43) -- (13.7021,7.43);
   % s2-L -> s2-P, row 4
-  \draw[edge] (13.1274,4.66) -- (13.1274,4.82) -- (11.9347,4.82) -- (11.9347,10.26) -- (12.081,10.26);
-  \node[anchor=south west,inner sep=0pt,font=\bfseries] at (0.1,-0.2) {restr-restr};
-  \node[anchor=south west,inner sep=0pt,font=\bfseries] at (5.6,-0.2) {restr-refl$\downarrow$-id};
-  \node[anchor=south west,inner sep=0pt,font=\bfseries] at (11.1,-0.2) {restr-refl$\downarrow$-inf};
-  \node[anchor=south east,inner sep=0pt] at (16.486,-.20) {$p\leq n,\quad k=n-p$};
+  \draw[edge] (14.0221,4.66) -- (14.0221,9.98) -- (13.8421,9.98);
+  \node[anchor=base west,inner sep=0pt,font=\bfseries] at (0,-0.2) {restr-restr};
+  \node[anchor=base west,inner sep=0pt,font=\bfseries] at (5.1447,-0.2) {restr-refl$\downarrow$-id};
+  \node[anchor=base west,inner sep=0pt,font=\bfseries] at (9.7274,-0.2) {restr-refl$\downarrow$-inf};
+  \node[anchor=base east,inner sep=0pt] at (14.5392,-0.2) {$p\leq n,\quad k=n-p$};
   \coordinate (page-north) at (current bounding box.north);
   \coordinate (page-south) at (current bounding box.south);
-  \coordinate (page-left) at (0,0);
-  \coordinate (page-right) at (16.636,0);
+  \coordinate (page-left) at (-0.012,0);
+  \coordinate (page-right) at (14.5392,0);
   \pgfresetboundingbox
   \path[use as bounding box] (page-left |- page-north) rectangle (page-right |- page-south);
-\end{tikzpicture}
+\end{tikzpicture}%
 \endgroup

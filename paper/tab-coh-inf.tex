@@ -6,8 +6,8 @@
   \eqnline{\cIF{n}{p}{q}{r}}
   {\makecell{\eqnarg{cohframe}{d}{\framep[n+1][p]} \\
       \ensuremath{r\leq q\leq k}}}
-  {:}{\mbox{$\cSF{q}{\cRF{r}{\epsilon}{d}}
-        =\cRF{r}{\epsilon}{\cSF{q+1}{d}}$}}
+  {:}{\eqnsplit{\cSF{q}{\cRF{r}{\epsilon}{d}}}
+        {\cRF{r}{\epsilon}{\cSF{q+1}{d}}}}
   \eqnline{\cIF{n}{0}{q}{r}}{\unitpoint}{\defeq}{\mathsf{refl}}
   \eqnline{\cIF{n}{p+1}{q}{r}}{(d,l)}{\defeq}
   {\left(\begin{aligned}
@@ -19,9 +19,8 @@
   {\makecell{\eqnarg{cohlayer}{d}{\framep[n+1][p]} \\
       \eqnarg{cohlayer}{l}{\layer[n+1][p](d)} \\
       \ensuremath{r\leq q<k}}}
-  {:}{\mbox{$\cSL{q}{\cRL{r}{\epsilon}{l}}
-        =_{\cIF{n}{p}{q+1}{r+1}(d)}
-        \cRL{r}{\epsilon}{\cSL{q+1}{l}}$}}
+  {:}{\eqnsplitover{\cIF{n}{p}{q+1}{r+1}(d)}{\cSL{q}{\cRL{r}{\epsilon}{l}}}
+        {\cRL{r}{\epsilon}{\cSL{q+1}{l}}}}
   \eqnline{\cIL{n}{p}{q}{r}}{d~l}{\defeq}
   {\lambda\theta.\,\cIP{n-1}{p}{q}{r}
     (\cRF{0}{\theta}{d},l(\theta))}
@@ -30,9 +29,8 @@
   {\makecell{\eqnarg{cohpainting}{d}{\framep[n+1][p]} \\
       \eqnarg{cohpainting}{c}{\painting[n+1][p](d)} \\
       \ensuremath{r\leq q\leq k}}}
-  {:}{\mbox{$\cSP{q}{\cRP{r}{\epsilon}{c}}
-        =_{\cIF{n}{p}{q}{r}(d)}
-        \cRP{r}{\epsilon}{\cSP{q+1}{c}}$}}
+  {:}{\eqnsplitover{\cIF{n}{p}{q}{r}(d)}{\cSP{q}{\cRP{r}{\epsilon}{c}}}
+        {\cRP{r}{\epsilon}{\cSP{q+1}{c}}}}
   \eqnline{\cIP{n}{p}{q}{0}}{d~(l,c)}{\defeq}{\mathsf{refl}}
   \eqnline{\cIP{n}{p}{q+1}{r+1}}{d~(l,c)}{\defeq}
   {\left(\begin{aligned}
