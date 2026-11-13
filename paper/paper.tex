@@ -305,6 +305,12 @@
 \NewDocumentCommand{\eqnline}{m m m m}{\ensuremath{#1} & \ensuremath{#2} & \ensuremath{#3} & \ensuremath{#4} \expandafter\\}
 \newcommandx*{\mc}[1]{\multicolumn{4}{c}{\emph{#1}} \\\\}
 
+% An equation broken after its left-hand side, for the long rows of
+% the coherence tables
+\newcommand{\eqnsplit}[3][=]{\begin{array}{@{}l@{}}#2\\\qquad{}#1#3\end{array}}
+% The same with a subscripted equality, which ends the first line
+\newcommand{\eqnsplitover}[3]{\begin{array}{@{}l@{}}#2=_{#1}\\\qquad{}#3\end{array}}
+
 % \eqnarg is slightly more involved: output ( ... ) if not in mask,
 % and { ... } if in mask
 \newcommandx*{\eqnarg}[3]{\ifinmask[bonak]{#1}[#2]{\{#2:#3\}}{(#2:#3)}}
