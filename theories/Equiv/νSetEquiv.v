@@ -1,25 +1,15 @@
-(** The equivalence theory of νSets: the levelwise equivalence
-    [νSetsEquiv] and its conversion into an equality of towers.
+(** Equality of νSets from levelwise filler equivalences.
 
-    Two towers are levelwise equivalent when their finite prefixes
-    correspond level by level and their filler families correspond over that
-    identification. A correspondence of prefixes is turned into an equality
-    as soon as it is formed ([prefixEq]), univalence and functional
-    extensionality collapsing the filler equivalences. All restriction and
+    A family of equivalences between the filler families of two prefixes,
+    over a path between those prefixes, gives a path between the extended
+    prefixes: univalence and functional extensionality collapse the
+    equivalences into a filler path ([νFillerEq]). All restriction and
     coherence data of the construction is computed from the prefix, so
-    transport along that equality supplies its compatibility.
-    [prefixEqRewTotal] computes that transport on a total-space element: the
-    frame component moves along the lower prefix equality, the filler
-    component through the inverse of the stored equivalence. This is the one
-    place where the computation rules of [ua] enter.
-
-    An equality of towers then follows from [limitEqIntro], which asks for a
-    family of paths between the stored prefixes commuting with the bonding
-    map. The relations are indexed by [νSetPack], the unfolding whose stage
-    at [m.+1] is definitionally a Σ-type over its stage at [m], whereas a
-    tower stores [approx], for which that holds only up to [approxS].
-    [packPath] identifies the two and [packPathS] shows the identification
-    commutes with the bonding maps, so the paths transfer. *)
+    transport along that path supplies its compatibility.
+    [rewTotalνFillerEq] computes that transport on a total-space element:
+    the frame component moves along the lower prefix path, the filler
+    component through the inverse of the equivalence. This is the one place
+    where the computation rules of [ua] enter. *)
 
 Import Logic.EqNotations.
 
@@ -76,14 +66,7 @@ Definition prefixDepsCohs {n} (Xp: (νSetAt n.+1).(prefix)): DepsCohs n 0 := {|
 Definition νTotalType {n} (Xp: (νSetAt n.+1).(prefix)): Type :=
   {d: νFrame Xp.1 &T Xp.2 d}.
 
-(** The levelwise prefix relation, mutually with its conversion to equality
-
-    The relation at level [n.+1] pairs a relation on the lower prefixes
-    with an equivalence of the filler families over the transport along the
-    lower equality; converting it to an equality collapses those
-    equivalences through univalence and functional extensionality
-    ([νFillerEq]). Relation and conversion are mutually recursive on the
-    level, which [Rel] and [relEq] build together from a [Bisimulation]. *)
+(** Equivalences of filler families over a prefix path *)
 
 Definition νFillerEqvType {n} {XA XB: (νSetAt n).(prefix)} (e: XA = XB)
   (EA: νFillerType XA) (EB: νFillerType XB): Type :=
@@ -109,33 +92,6 @@ Definition νFillerEq {n} {XA XB: (νSetAt n).(prefix)} (e: XA = XB)
   rewνFillerType e EA
   • functional_extensionality_dep_good _ _ (fun d => hsetEq (eqvs d)).
 
-(** The levelwise relation is the bisimulation of the νSet telescope:
-    correspondence of data over a prefix path is a family of filler
-    equivalences, and [νFillerEq] converts it into a path. Prefixes at
-    level [0] are [unit], which supplies the base irrelevance. *)
-
-Definition νSetBisim: Bisimulation νSetTel :=
-  Build_Bisimulation νSetTel
-    (fun x y => hunit_ext x y)
-    (fun n XA XB e EA EB => νFillerEqvType e EA EB)
-    (fun n XA XB e EA EB eqvs => νFillerEq e eqvs).
-
-Definition PrefixRel n: (νSetAt n).(prefix) -> (νSetAt n).(prefix) -> Type :=
-  Rel νSetBisim n.
-
-Definition prefixEq {n} {XA XB: (νSetAt n).(prefix)}
-  (r: PrefixRel n XA XB): XA = XB := relEq νSetBisim r.
-
-(** The relation one level up, from filler equivalences over the current
-    equality — definitionally a pair, named for the corecursion *)
-
-Definition relStep {n} {XA XB: (νSetAt n).(prefix)} (r: PrefixRel n XA XB)
-  {EA: νFillerType XA} {EB: νFillerType XB}
-  (eqvs: νFillerEqvType (prefixEq r) EA EB):
-  PrefixRel n.+1 (XA; EA) (XB; EB) := (r; eqvs).
-
-Definition rel0: PrefixRel 0 tt tt := tt.
-
 (** Computing transport along a prefix equality
 
     Three steps: backward transport of a total-space pair along a sigma
@@ -144,7 +100,7 @@ Definition rel0: PrefixRel 0 tt tt := tt.
     funext-assembled family equality computes pointwise
     ([rewνFillerFunext]); and pointwise backward transport along [hsetEq]
     is the inverse of the equivalence ([hsetEqRewSym]).
-    [prefixEqRewTotal] assembles them after destructing the lower prefix
+    [rewTotalνFillerEq] assembles them after destructing the lower prefix
     equality. *)
 
 Lemma rewTotalFamily {n} {X1: (νSetAt n).(prefix)}
@@ -195,14 +151,6 @@ Proof.
   now apply hsetEqRewSym.
 Qed.
 
-Lemma prefixEqRewTotal {n} {XA XB: (νSetAt n.+1).(prefix)}
-  (r: PrefixRel n.+1 XA XB) (t: νTotalType XB):
-  rew <- [νTotalType] (prefixEq r) in t =
-  (rew <- [νFrameDom] (prefixEq r.1) in t.1; invEq (r.2 t.1) t.2).
-Proof.
-  now exact (rewTotalνFillerEq (prefixEq r.1) r.2 t).
-Qed.
-
 (** Finite unfoldings of a tower
 
     The [m]-step unfolding of a νSet: the reached prefix, packed with the
@@ -210,110 +158,6 @@ Qed.
 
 Definition νSetPack (m: nat) (S: νSets):
   {Xp: (νSetAt m).(prefix) &T νSetFrom m Xp} := limitPack m S.
-
-(** The levelwise equivalence
-
-    The prefix relations form a telescope of their own: [PrefixRel] is
-    indexed by the level and definitionally a Σ-type over the level below,
-    whose second component is the filler equivalence at that level. So a
-    levelwise equivalence of two towers is a limit of that telescope, in
-    the same form as the towers it relates. The restriction and coherence
-    data at each level is computed from the prefix, so transport along
-    [prefixEq] supplies its compatibility. *)
-
-Definition eqvTel (SA SB: νSets): Telescope := {|
-  stage m := PrefixRel m (νSetPack m SA).1 (νSetPack m SB).1;
-  datum m r := νFillerEqvType (prefixEq r)
-    (this ((νSetPack m SA).2)) (this ((νSetPack m SB).2));
-  extend m r E := ((r; E): PrefixRel m.+1
-    (νSetPack m.+1 SA).1 (νSetPack m.+1 SB).1);
-  bond m r := r.1;
-  head m r := r.2;
-  bondExtend m r E := eq_refl;
-  headExtend _ _ _ := eq_refl;
-  extendHead m r := eq_refl;
-  bondExtendHead _ _ := eq_refl;
-|}.
-
-Definition νSetsEquiv (SA SB: νSets): Type := Limit (eqvTel SA SB) 0 tt.
-
-(** Reading the finite unfoldings off the chain
-
-    [νSetPack] rebuilds the level-[m] prefix by iterating the
-    destructors. [packPath] identifies that prefix with level [m] of the
-    tower's stored chain. *)
-
-Definition packPath (m: nat) (S: νSets):
-  (νSetPack m S).1 = S.(approx) m leR_O := limitPackPath m S.
-
-Lemma packPathS (m: nat) (S: νSets):
-  f_equal (fun Y: (νSetAt m.+1).(prefix) => Y.1) (packPath m.+1 S)
-    • S.(approxS) m leR_O leR_O = packPath m S.
-Proof.
-  pose proof (limitPackPathS m S) as H.
-  now rewrite eq_trans_refl_l in H.
-Qed.
-
-(** From coherent prefix paths to tower equality
-
-    Conjugating the given paths by [packPath] gives paths between the
-    stored prefixes, and [packPathS] turns their coherence into the square
-    [limitEqIntro] asks for. The base coherence lives in the [unit] prefix
-    of level 0, hence is free. *)
-
-Lemma νSetsEqFromPaths {SA SB: νSets}
-  (p: forall m, (νSetPack m SA).1 = (νSetPack m SB).1)
-  (ps: forall m,
-    f_equal (fun Xp: (νSetAt m.+1).(prefix) => Xp.1) (p m.+1) = p m):
-  SA = SB.
-Proof.
-  unshelve eapply limitEqIntro.
-  - exact (fun l => eq_sym (packPath l SA) • (p l • packPath l SB)).
-  - now apply unit_UIP.
-  - intro l; cbv beta.
-    rewrite eq_trans_map_distr, eq_trans_map_distr, <- eq_sym_map_distr.
-    rewrite (ps l).
-    rewrite <- (packPathS l SA), <- (packPathS l SB).
-    apply eq_trans_conj_comp.
-Qed.
-
-(** The chain of prefix paths generated by a levelwise equivalence
-
-    [prefixEq] at a positive level is built by [eq_existT_curried], so its
-    first projection is [prefixEq] of the relation's own first projection,
-    which the bonding equation identifies with the relation one level
-    down. *)
-
-(** [extendCong] abstracts the two components of a stage as independent
-    variables, which is what lets both paths be inducted on; at [prefixEq]
-    they are projections of one prefix and no longer independent. *)
-
-Lemma extendCongFst {n} {XA XB: (νSetAt n).(prefix)} (e: XA = XB)
-  {EA: νFillerType XA} {EB: νFillerType XB}
-  (h: rew [νFillerType] e in EA = EB):
-  f_equal (fun Xp: (νSetAt n.+1).(prefix) => Xp.1)
-    (extendCong (T := νSetTel) e h) = e.
-Proof.
-  now destruct e, h.
-Qed.
-
-Lemma prefixEqFst {m} {XA XB: (νSetAt m.+1).(prefix)}
-  (r: PrefixRel m.+1 XA XB):
-  f_equal (fun Xp: (νSetAt m.+1).(prefix) => Xp.1) (prefixEq r) =
-  prefixEq r.1.
-Proof.
-  now exact (extendCongFst (prefixEq r.1) (νFillerEq (prefixEq r.1) r.2)).
-Qed.
-
-(** Convert a levelwise equivalence of towers into an equality through the
-    prefix paths its stored relations generate. *)
-
-Definition νSetsEquivEq {SA SB: νSets} (E: νSetsEquiv SA SB): SA = SB :=
-  νSetsEqFromPaths
-    (fun m => prefixEq (E.(approx) m leR_O))
-    (fun m => prefixEqFst (E.(approx) m.+1 leR_O)
-      • f_equal (@prefixEq m (νSetPack m SA).1 (νSetPack m SB).1)
-          (E.(approxS) m leR_O leR_O)).
 
 End νSetEquivOn.
 

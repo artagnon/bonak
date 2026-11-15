@@ -51,47 +51,35 @@ Definition DgnStepBase n: Type := {Y: DgnPrefix n &T νFillerType Y.1}.
 Definition dgnLayerType n (Z: DgnStepBase n): Type :=
   (νDgnSetAt n).(dgnStepType) Z.1.1 Z.1.2 Z.2.
 
-Definition dgnExtendEq {n} {X Y: DgnPrefix n} (e: X = Y)
-  {a: dgnIncrType X} {b: dgnIncrType Y}
-  (ef: rew [fun Z: DgnPrefix n => νFillerType Z.1] e in a.1 = b.1)
-  (el: rew [dgnLayerType n] (eq_existT_curried e ef : ((X; a.1): DgnStepBase n) = (Y; b.1)) in (a.2: dgnLayerType n (X; a.1)) = b.2):
-  dgnExtend X a = dgnExtend Y b.
-Proof.
-  destruct e, a as [F L], b as [G M]; cbn in ef, el.
-  destruct ef; cbn in el. destruct el. reflexivity.
-Defined.
+(** A path between data over a path [e] of stages, assembled from a path
+    [ef] between the fillers and a path [el] between the layers over the
+    pair of [e] and [ef]. *)
 
-Lemma dgnExtendEqBond {n} {X Y: DgnPrefix n} (e: X = Y)
+Definition dgnIncrEq {n} {X Y: DgnPrefix n} (e: X = Y)
   {a: dgnIncrType X} {b: dgnIncrType Y}
   (ef: rew [fun Z: DgnPrefix n => νFillerType Z.1] e in a.1 = b.1)
-  (el: rew [dgnLayerType n] (eq_existT_curried e ef : ((X; a.1): DgnStepBase n) = (Y; b.1)) in (a.2: dgnLayerType n (X; a.1)) = b.2):
-  f_equal (@dgnBond n) (dgnExtendEq e ef el) = e.
-Proof.
-  destruct e, a as [F L], b as [G M]; cbn in ef, el.
-  destruct ef; cbn in el. destruct el. reflexivity.
-Qed.
+  (el: rew [dgnLayerType n]
+      (eq_existT_curried e ef: ((X; a.1): DgnStepBase n) = (Y; b.1)) in
+    (a.2: dgnLayerType n (X; a.1)) = b.2):
+  rew [dgnIncrType] e in a = b :=
+  eq_existT_curried_dep (Q := dgnLayerType n) (Hu := ef) (Hv := el).
 
-Lemma dgnExtendEqUnderlying {n} {X Y: DgnPrefix n} (e: X = Y)
+(** Extending by such a path extends the underlying νSet prefix path by
+    the filler path. *)
+
+Lemma dgnIncrEqUnderlying {n} {X Y: DgnPrefix n} (e: X = Y)
   {a: dgnIncrType X} {b: dgnIncrType Y}
   (ef: rew [fun Z: DgnPrefix n => νFillerType Z.1] e in a.1 = b.1)
-  (el: rew [dgnLayerType n] (eq_existT_curried e ef : ((X; a.1): DgnStepBase n) = (Y; b.1)) in (a.2: dgnLayerType n (X; a.1)) = b.2):
-  f_equal (fun Z: DgnPrefix n.+1 => Z.1) (dgnExtendEq e ef el) =
+  (el: rew [dgnLayerType n]
+      (eq_existT_curried e ef: ((X; a.1): DgnStepBase n) = (Y; b.1)) in
+    (a.2: dgnLayerType n (X; a.1)) = b.2):
+  f_equal (fun Z: DgnPrefix n.+1 => Z.1)
+    (extendCong (T := dgnTel) e (dgnIncrEq e ef el)) =
   extendCong (T := νSetTel) (f_equal (fun Z: DgnPrefix n => Z.1) e)
     (eq_sym (rew_map (@νFillerType n) (fun Z: DgnPrefix n => Z.1) e a.1) • ef).
 Proof.
   destruct e, a as [F L], b as [G M]; cbn in ef, el.
-  destruct ef; cbn in el. destruct el. reflexivity.
-Qed.
-
-Definition dgnPackPath m (X: νDgnSets):
-  (νDgnPack m X).1 = X.(approx) m leR_O := limitPackPath m X.
-
-Lemma dgnPackPathS m (X: νDgnSets):
-  f_equal (@dgnBond m) (dgnPackPath m.+1 X) • X.(approxS) m leR_O leR_O =
-  dgnPackPath m X.
-Proof.
-  pose proof (limitPackPathS m X) as H.
-  now rewrite eq_trans_refl_l in H.
+  destruct ef; cbn in el. now destruct el.
 Qed.
 
 End νDgnSetEquiv.
