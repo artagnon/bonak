@@ -811,8 +811,8 @@ The construction simplifies when only the last--direction degeneracy is supplied
 its boundary is
 \begin{equation*}
   \reflfabove[n][n][][0][d=\d,c=x]
-  = (\reflfbelow[n][n][][0][d=\d],\lambda\epsilon.\,x)
-  = (\reflff[n][d=\d],\lambda\epsilon.\,x)
+  = (\reflfbelow[n][n][][0][d=\d],\refllabove[n][n][][0][d=\d,c=x])
+  = (\reflff[n][d=\d],\refllabove[n][n][][0][d=\d,c=x])
 \end{equation*}
 The supplied cell operation is thus $L(0)$, with target $X_{n+1}(\reflff[n][d=\d],\refllabove[n][n][][0][d=\d,c=x])$. Its boundary can be constructed using earlier last--direction degeneracies alone: each existing layer is transformed using the last--direction painting operation one level lower, and the constant layer is appended at the end.
 
