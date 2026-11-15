@@ -64,7 +64,7 @@ jobs:
       # Rocq's stdlib lives in its own repository; this is the revision the
       # patched branch is developed against.
       STDLIB_REPO: "https://github.com/rocq-prover/stdlib.git"
-      STDLIB_REV: "b89635f66d5d5fe3c91a5755b389a30846411888"
+      STDLIB_REV: "5a6422fa68ef252a48a20225aac3a13345666db5"
       OCAML_COMPILER: "5.3"
     steps:
       - uses: "actions/checkout@v4"
