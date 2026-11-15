@@ -74,8 +74,8 @@ Lemma dgnIncrEqUnderlying {n} {X Y: DgnPrefix n} (e: X = Y)
       (eq_existT_curried e ef: ((X; a.1): DgnStepBase n) = (Y; b.1)) in
     (a.2: dgnLayerType n (X; a.1)) = b.2):
   f_equal (fun Z: DgnPrefix n.+1 => Z.1)
-    (extendCong (T := dgnTel) e (dgnIncrEq e ef el)) =
-  extendCong (T := νSetTel) (f_equal (fun Z: DgnPrefix n => Z.1) e)
+    (extendCong (T := dgnChain) e (dgnIncrEq e ef el)) =
+  extendCong (T := νSetChain) (f_equal (fun Z: DgnPrefix n => Z.1) e)
     (eq_sym (rew_map (@νFillerType n) (fun Z: DgnPrefix n => Z.1) e a.1) • ef).
 Proof.
   destruct e, a as [F L], b as [G M]; cbn in ef, el.

@@ -107,7 +107,7 @@ Lemma rewTotalFamily {n} {X1: (νSetAt n).(prefix)}
   {EA EB: νFillerType X1} (q: EA = EB)
   (t: νTotalType ((X1; EB): (νSetAt n.+1).(prefix))):
   rew <- [νTotalType]
-    (extendCong (T := νSetTel) (eq_refl X1) q
+    (extendCong (T := νSetChain) (eq_refl X1) q
      : ((X1; EA): (νSetAt n.+1).(prefix)) = (X1; EB)) in t =
   (t.1; rew <- [fun E: νFillerType X1 => E t.1: Type] q in t.2).
 Proof.
@@ -136,7 +136,7 @@ Lemma rewTotalνFillerEq {n} {XA XB: (νSetAt n).(prefix)} (e: XA = XB)
   (eqvs: νFillerEqvType e EA EB)
   (t: νTotalType ((XB; EB): (νSetAt n.+1).(prefix))):
   rew <- [νTotalType]
-    (extendCong (T := νSetTel) e (νFillerEq e eqvs)
+    (extendCong (T := νSetChain) e (νFillerEq e eqvs)
      : ((XA; EA): (νSetAt n.+1).(prefix)) = (XB; EB)) in t =
   (rew <- [νFrameDom] e in t.1; invEq (eqvs t.1) t.2).
 Proof.

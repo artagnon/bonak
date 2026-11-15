@@ -2807,7 +2807,7 @@ Fixpoint νDgnSetAt n: νDgnSet n (νSetAt n) :=
   | n.+1 => mkνDgnSetSn (νSetAt n) (νDgnSetAt n)
   end.
 
-(** The ω-limit tower over the combined telescope
+(** The ω-limit tower over the combined chain
 
     A stage pairs a νSet prefix with the degeneracy prefix over it, both at
     the same dimension: a stage carries as many layers as fillers, so the
@@ -2835,7 +2835,7 @@ Definition dgnBond {n} (Z: DgnPrefix n.+1): DgnPrefix n := (Z.1.1; Z.2.1).
 Definition dgnHead {n} (Z: DgnPrefix n.+1): dgnIncrType (dgnBond Z) :=
   (Z.1.2; Z.2.2).
 
-Definition dgnTel: Telescope := {|
+Definition dgnChain: Chain := {|
   stage := DgnPrefix;
   datum l Y := dgnIncrType Y;
   extend l Y h := dgnExtend Y h;
@@ -2847,7 +2847,7 @@ Definition dgnTel: Telescope := {|
   bondExtendHead _ _ := eq_refl;
 |}.
 
-Definition νDgnSetsFrom n (Y: DgnPrefix n): Type := Limit dgnTel n Y.
+Definition νDgnSetsFrom n (Y: DgnPrefix n): Type := Limit dgnChain n Y.
 
 (** The base stage is a Σ of two copies of [unit], so the construction is
     the tower over its unique inhabitant. *)

@@ -49,7 +49,7 @@ Definition νDgnPack (m: nat) (X: νDgnSets): DgnPosition m := limitPack m X.
 
 Definition underlyingFrom (X: νDgnSets) (m: nat):
   νSetFrom m (νDgnPack m X).1.1 :=
-  ofChain (T := νSetTel) (fun l => (νDgnPack l X).1.1)
+  ofChain (T := νSetChain) (fun l => (νDgnPack l X).1.1)
     (fun _ => eq_refl) m.
 
 Definition dgnF0 (X: νDgnSets) (n: nat): HSet :=

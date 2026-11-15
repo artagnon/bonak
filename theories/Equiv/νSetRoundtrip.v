@@ -311,7 +311,7 @@ Definition fgPathStep {m} {XpA XpB: (νSetAt m.+1).(prefix)} (e: XpA = XpB)
   (FRT: FrtInv e T SB HD):
   ((XpA; mkPshFiller (g X) (towerPshDeps (g X) T)): (νSetAt m.+2).(prefix))
   = (XpB; this SB) :=
-  extendCong (T := νSetTel) e (νFillerEq e (fgThis e T SB HD FRT)).
+  extendCong (T := νSetChain) e (νFillerEq e (fgThis e T SB HD FRT)).
 
 (** The bottom face of [g X] at the position, as [νFace] along an
     arbitrary chain from the position's top: the fuel-synthesized package
@@ -402,7 +402,7 @@ Definition fgThis0:
 
 Definition fgPathStep0:
   ((tt; pshFiller0 (g X)): (νSetAt 1).(prefix)) = (tt; this X) :=
-  extendCong (T := νSetTel) fgPrefix0 (νFillerEq fgPrefix0 fgThis0).
+  extendCong (T := νSetChain) fgPrefix0 (νFillerEq fgPrefix0 fgThis0).
 
 (** The level-1 base case of [fgFrameStep]. The only chain from stage 0 is
     empty, so both applications of [νFace] reduce by conversion. *)
@@ -462,7 +462,7 @@ Lemma fgStep (m: nat) (e: pshApprox (g X) m = (νSetPack m X).1)
   (s: FgState m e):
   { h: rew [νFillerType] e in this (pshFrom (g X) m)
        = this (νSetPack m X).2 &T
-    FgState m.+1 (extendCong (T := νSetTel) e h) }.
+    FgState m.+1 (extendCong (T := νSetChain) e h) }.
 Proof.
   destruct m as [|m]; cbn in s.
   - subst e. now exact (νFillerEq fgPrefix0 fgThis0; fgFrameStep0).
@@ -474,7 +474,7 @@ Proof.
 Defined.
 
 Definition fg: f (g X) = X :=
-  limitEqOfPositions (T := νSetTel)
+  limitEqOfPositions (T := νSetChain)
     (fun m => (pshApprox (g X) m; pshFrom (g X) m))
     (fun _ => eq_refl) X FgState eq_refl fgStep.
 End FG.

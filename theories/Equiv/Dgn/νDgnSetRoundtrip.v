@@ -59,7 +59,7 @@ Lemma dgnStepPrefixEq {n} {P Q: DgnPrefix n} (e: P = Q)
   (ef: rew [fun Z: DgnPrefix n => νFillerType Z.1] e in F = G):
   f_equal (dgnStepPrefix n)
     (eq_existT_curried e ef: ((P; F): DgnStepBase n) = (Q; G)) =
-  extendCong (T := νSetTel) (f_equal (fun Z: DgnPrefix n => Z.1) e)
+  extendCong (T := νSetChain) (f_equal (fun Z: DgnPrefix n => Z.1) e)
     (eq_sym (rew_map (@νFillerType n) (fun Z: DgnPrefix n => Z.1) e F) • ef).
 Proof.
   destruct e. cbn in ef. destruct ef. reflexivity.
@@ -128,7 +128,7 @@ Defined.
 Lemma fgFillersTotal n (e: pshApprox psh n = (νDgnPack n X).1.1)
   (H: FgFrame n e) (x: psh.(F0) n):
   rew <- [@νTotalType n]
-    (extendCong (T := νSetTel) e (νFillerEq e (fgFillers n e H)))
+    (extendCong (T := νSetChain) e (νFillerEq e (fgFillers n e H)))
     in (x: νTotalType (νDgnPack n.+1 X).1.1) =
   invEq (pshTotalEquiv psh n) x.
 Proof.
@@ -259,7 +259,7 @@ Definition fgStepAt n (e: pshDgnApprox psh dgn n = (νDgnPack n X).1)
          ((this (pshFrom psh n); L): dgnIncrType (pshDgnApprox psh dgn n))
        = this (νDgnPack n X).2 &T
     FgTotal n (f_equal (fun Z: DgnPrefix n.+1 => Z.1)
-      (extendCong (T := dgnTel) e h)) }.
+      (extendCong (T := dgnChain) e h)) }.
 Proof.
   exists (dgnIncrEq e (a := (this (pshFrom psh n); L))
     (b := this (νDgnPack n X).2) (fgFillerPath n e HF) el).
@@ -295,7 +295,7 @@ Definition fgStep n (e: pshDgnApprox psh dgn n = (νDgnPack n X).1)
     FgState n.+1
       (rew <- [fun P: DgnPosition n.+1 => P.1 = (νDgnPack n.+1 X).1]
          fgPositionNext n in
-       (extendCong (T := dgnTel) e h:
+       (extendCong (T := dgnChain) e h:
          (dgnPositionNext n (pshDgnPosition psh dgn n)).1 = _)) }.
 Proof.
   destruct n as [|n].
@@ -305,7 +305,7 @@ Proof.
 Defined.
 
 Definition fg: f psh dgn = X :=
-  limitEqOfPositions (T := dgnTel) (pshDgnPosition psh dgn)
+  limitEqOfPositions (T := dgnChain) (pshDgnPosition psh dgn)
     fgPositionNext X FgState tt fgStep.
 
 End FG.
