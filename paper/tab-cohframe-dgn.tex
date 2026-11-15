@@ -10,13 +10,13 @@
       \eqnarg{cohpainting}{c}{\painting[n][p](d)} \\
       \ensuremath{q\leq p} \\
       \ensuremath{r\leq k}}}
-    {:}{\mbox{$\cAF{q}{\cSF{r}{d}}{\cSP{r}{c}}
-      =\cSF{r}{\cAF{q}{d}{c}}$}}
+    {:}{\eqnsplit{\cAF{q}{\cSF{r}{d}}{\cSP{r}{c}}}
+      {\cSF{r}{\cAF{q}{d}{c}}}}
   \midrule
   \eqnline{\cohproof{\relReflAboveAbove}{n}{p}{frame}{q,r}}
     {\makecell{\eqnarg{cohframe}{d}{\framep[n][p]} \\
       \eqnarg{cohpainting}{c}{\painting[n][p](d)} \\
       \ensuremath{q\leq r\leq p}}}
-    {:}{\mbox{$\cAF{r+1}{\cAF{q}{d}{c}}{\cAP{q}{c}}
-      =\cAF{q}{\cAF{r}{d}{c}}{\cAP{r}{c}}$}}
+    {:}{\eqnsplit{\cAF{r+1}{\cAF{q}{d}{c}}{\cAP{q}{c}}}
+      {\cAF{q}{\cAF{r}{d}{c}}{\cAP{r}{c}}}}
 \end{eqntable}

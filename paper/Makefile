@@ -1,2 +1,2 @@
 all:
-	latexmk -lualatex --halt-on-error --interaction=nonstop -shell-escape paper
+	latexmk -pdf --halt-on-error --interaction=nonstopmode paper
