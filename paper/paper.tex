@@ -323,7 +323,7 @@
 \author{Hugo Herbelin}{Université Paris Cité, Inria, CNRS, IRIF, Paris, France}{Hugo.Herbelin@inria.fr}{}{}
 \author{Valerii Huhnin}{Université Paris Cité, Paris, France}{valerii.huhnin@etu.u-paris.fr}{}{}
 \author{Alice Laroche}{Université Paris Cité, Paris, France}{alice.laroche@etu.u-paris.fr}{}{}
-\author{Ramkumar Ramachandra}{Unaffiliated}{r@artagnon.com}{}{}
+\author{Ramkumar Ramachandra}{Unaffiliated, London, United Kingdom}{r@artagnon.com}{}{}
 
 \authorrunning{H. Herbelin, V. Huhnin, A. Laroche, and R. Ramachandra}
 \Copyright{Hugo Herbelin, Valerii Huhnin, Alice Laroche, and Ramkumar Ramachandra}
@@ -579,16 +579,16 @@ Figure~\ref{fig:cube-prefixes} illustrates the prefixes for $n=3$ and $\nu=2$. T
 \nolinenumbers
 \noindent
 \begin{minipage}[t]{\dimexpr\linewidth-\wd\archrestrbox-1.5em\relax}
-\vspace{0pt}
-\begin{internallinenumbers}
-\setlength{\parindent}{1.5em}\noindent
-Restriction corresponds to taking a face. The operation $\restrf[n][p][][q][\epsilon]$ maps a frame in $\framep[n+1][p]$ to one in $\framep[n][p]$. Its relative index $q\leq k$ denotes direction $p+q$, and $\epsilon\in\nu$ selects a face in that direction. The corresponding layer and painting operations are written $\restrl$ and $\restrp$; a painting restriction includes the restriction of its indexing frame. Each component of a layer is a lower--dimensional painting over a suitable restricted frame.
+  \vspace{0pt}
+  \begin{internallinenumbers}
+    \setlength{\parindent}{1.5em}\noindent
+    Restriction corresponds to taking a face. The operation $\restrf[n][p][][q][\epsilon]$ maps a frame in $\framep[n+1][p]$ to one in $\framep[n][p]$. Its relative index $q\leq k$ denotes direction $p+q$, and $\epsilon\in\nu$ selects a face in that direction. The corresponding layer and painting operations are written $\restrl$ and $\restrp$; a painting restriction includes the restriction of its indexing frame. Each component of a layer is a lower--dimensional painting over a suitable restricted frame.
 
-These operations follow the dependent-pair decomposition. Restricting a successor frame restricts its prefix and its next layer; restricting a layer applies painting restriction to each face-label component. On a painting $(l,c)$, restriction at index $0$ selects the component $l(\epsilon)$ of the first layer. A successor index restricts the layer and continues recursively through the remaining painting.
+    These operations follow the dependent-pair decomposition. Restricting a successor frame restricts its prefix and its next layer; restricting a layer applies painting restriction to each face-label component. On a painting $(l,c)$, restriction at index $0$ selects the component $l(\epsilon)$ of the first layer. A successor index restricts the layer and continues recursively through the remaining painting.
 
-Figure~\ref{fig:arch-restr} displays this recursive decomposition. Arrows run from an input to the row that uses it; dashed arrows bring in painting operations from the preceding dimension. The boxes show the principal components of the defining terms, with arguments implicit. Inequality rows give the domains of the named operations and coherences; all direction indices are nonnegative. Recursive calls instantiate these bounds at the shifted indices shown in the tables.
+    Figure~\ref{fig:arch-restr} displays this recursive decomposition. Arrows run from an input to the row that uses it; dashed arrows bring in painting operations from the preceding dimension. The boxes show the principal components of the defining terms, with arguments implicit. Inequality rows give the domains of the named operations and coherences; all direction indices are nonnegative. Recursive calls instantiate these bounds at the shifted indices shown in the tables.
 
-\end{internallinenumbers}
+  \end{internallinenumbers}
 \end{minipage}\hfill
 \begin{minipage}[t]{\wd\archrestrbox}
   \vspace{0pt}\usebox{\archrestrbox}
