@@ -59,7 +59,7 @@ Lemma dgnStepPrefixEq {n} {P Q: DgnPrefix n} (e: P = Q)
   (ef: rew [fun Z: DgnPrefix n => νFillerType Z.1] e in F = G):
   f_equal (dgnStepPrefix n)
     (eq_existT_curried e ef: ((P; F): DgnStepBase n) = (Q; G)) =
-  extendCong (T := νSetTel) (f_equal (fun Z: DgnPrefix n => Z.1) e)
+  extendCong (T := νSetChain) (f_equal (fun Z: DgnPrefix n => Z.1) e)
     (eq_sym (rew_map (@νFillerType n) (fun Z: DgnPrefix n => Z.1) e F) • ef).
 Proof.
   destruct e. cbn in ef. destruct ef. reflexivity.
@@ -128,7 +128,7 @@ Defined.
 Lemma fgFillersTotal n (e: pshApprox psh n = (νDgnPack n X).1.1)
   (H: FgFrame n e) (x: psh.(F0) n):
   rew <- [@νTotalType n]
-    (extendCong (T := νSetTel) e (νFillerEq e (fgFillers n e H)))
+    (extendCong (T := νSetChain) e (νFillerEq e (fgFillers n e H)))
     in (x: νTotalType (νDgnPack n.+1 X).1.1) =
   invEq (pshTotalEquiv psh n) x.
 Proof.
@@ -219,16 +219,15 @@ Proof.
     (this (νDgnPack n.+1 X).2).1 q ε x.1).
 Qed.
 
-Definition FgTotal n
-  (e: pshDgnApprox psh dgn n.+1 = (νDgnPack n.+1 X).1): Type :=
+Definition FgTotal n (u: pshApprox psh n.+1 = (νDgnPack n.+1 X).1.1): Type :=
   forall x: psh.(F0) n,
-    rew <- [@νTotalType n] (fgUnderlying n.+1 e) in
-      (x: νTotalType (νDgnPack n.+1 X).1.1) =
+    rew <- [@νTotalType n] u in (x: νTotalType (νDgnPack n.+1 X).1.1) =
     invEq (pshTotalEquiv psh n) x.
 
 Lemma fgLayer n
   (e: pshDgnApprox psh dgn n.+1 = (νDgnPack n.+1 X).1)
-  (HT: FgTotal n e) (HF: FgFrame n.+1 (fgUnderlying n.+1 e)):
+  (HT: FgTotal n (fgUnderlying n.+1 e))
+  (HF: FgFrame n.+1 (fgUnderlying n.+1 e)):
   rew [dgnLayerType n.+1] (fgStepPath n.+1 e HF) in
     ((this (pshDgnFrom psh dgn n.+1)).2:
       dgnLayerType n.+1 (pshDgnApprox psh dgn n.+1; this (pshFrom psh n.+1))) =
@@ -246,95 +245,68 @@ Proof.
   rewrite (subSubCancel Hi). intro H. reflexivity.
 Qed.
 
-Definition fgNext n
-  (e: pshDgnApprox psh dgn n.+1 = (νDgnPack n.+1 X).1)
-  (HT: FgTotal n e):
-  pshDgnApprox psh dgn n.+2 = (νDgnPack n.+2 X).1 :=
-  let HF := fgFrameStep n (fgUnderlying n.+1 e) HT in
-  dgnExtendEq e (a := this (pshDgnFrom psh dgn n.+1))
-    (b := this (νDgnPack n.+1 X).2)
-    (fgFillerPath n.+1 e HF) (fgLayer n e HT HF).
+(** The level step, given the frame identification at the level and a
+    layer path over the resulting filler path: the datum path, and the
+    identification of the total spaces one level up along the underlying
+    νSet prefix path. *)
 
-Lemma fgNextTotal n
-  (e: pshDgnApprox psh dgn n.+1 = (νDgnPack n.+1 X).1)
-  (HT: FgTotal n e): FgTotal n.+1 (fgNext n e HT).
+Definition fgStepAt n (e: pshDgnApprox psh dgn n = (νDgnPack n X).1)
+  (HF: FgFrame n (fgUnderlying n e))
+  (L: dgnLayerType n (pshDgnApprox psh dgn n; this (pshFrom psh n)))
+  (el: rew [dgnLayerType n] (fgStepPath n e HF) in L =
+    (this (νDgnPack n X).2).2):
+  { h: rew [dgnIncrType] e in
+         ((this (pshFrom psh n); L): dgnIncrType (pshDgnApprox psh dgn n))
+       = this (νDgnPack n X).2 &T
+    FgTotal n (f_equal (fun Z: DgnPrefix n.+1 => Z.1)
+      (extendCong (T := dgnChain) e h)) }.
 Proof.
-  unfold FgTotal, fgUnderlying, fgNext. intro x.
-  rewrite (dgnExtendEqUnderlying e
-    (a := this (pshDgnFrom psh dgn n.+1)) (b := this (νDgnPack n.+1 X).2)
-    (fgFillerPath n.+1 e (fgFrameStep n (fgUnderlying n.+1 e) HT))
-    (fgLayer n e HT (fgFrameStep n (fgUnderlying n.+1 e) HT))).
+  exists (dgnIncrEq e (a := (this (pshFrom psh n); L))
+    (b := this (νDgnPack n X).2) (fgFillerPath n e HF) el).
+  intro x. rewrite dgnIncrEqUnderlying.
   unfold fgFillerPath. rewrite eq_trans_sym_cancel_l.
-  apply fgFillersTotal.
-Qed.
+  now apply fgFillersTotal.
+Defined.
 
-Lemma fgNextBond n
-  (e: pshDgnApprox psh dgn n.+1 = (νDgnPack n.+1 X).1)
-  (HT: FgTotal n e):
-  f_equal (@dgnBond n.+1) (fgNext n e HT) = e.
-Proof.
-  exact (dgnExtendEqBond e
-    (a := this (pshDgnFrom psh dgn n.+1)) (b := this (νDgnPack n.+1 X).2)
-    (fgFillerPath n.+1 e (fgFrameStep n (fgUnderlying n.+1 e) HT))
-    (fgLayer n e HT (fgFrameStep n (fgUnderlying n.+1 e) HT))).
-Qed.
+(** The chain of prefix paths
 
-Definition fgFrame0: FgFrame 0 eq_refl := fun x => hunit_ext tt x.1.
+    The paths are produced level by level by [limitEqOfPositions], over
+    the presheaf positions [pshDgnPosition]. Since [pshDgnApprox] is defined
+    by cases on the level, the one-step unfolding of a position is the next
+    one by a path defined by cases ([pshDgnPositionNext]), and the step
+    proceeds by cases too. Above level [0], the state is the identification
+    of the total spaces carried along the prefix path, from which
+    [fgFrameStep] derives the frame identification of the level. *)
 
-Definition fgBase: pshDgnApprox psh dgn 1 = (νDgnPack 1 X).1 :=
-  dgnExtendEq eq_refl (a := this (pshDgnFrom psh dgn 0)) (b := this X)
-    (fgFillerPath 0 eq_refl fgFrame0) (hunit_ext _ _).
-
-Lemma fgBaseTotal: FgTotal 0 fgBase.
-Proof.
-  unfold FgTotal, fgUnderlying, fgBase. intro x.
-  rewrite (dgnExtendEqUnderlying eq_refl
-    (a := this (pshDgnFrom psh dgn 0)) (b := this X)
-    (fgFillerPath 0 eq_refl fgFrame0) (hunit_ext _ _)).
-  unfold fgFillerPath. rewrite eq_trans_sym_cancel_l.
-  apply fgFillersTotal.
-Qed.
-
-Fixpoint fgChain n:
-  {e: pshDgnApprox psh dgn n.+1 = (νDgnPack n.+1 X).1 &T FgTotal n e} :=
+Definition FgState n: pshDgnApprox psh dgn n = (νDgnPack n X).1 -> Type :=
   match n with
-  | 0 => (fgBase; fgBaseTotal)
-  | n.+1 =>
-      let s := fgChain n in
-      (fgNext n s.1 s.2; fgNextTotal n s.1 s.2)
+  | 0 => fun _ => unit
+  | n.+1 => fun e => FgTotal n (fgUnderlying n.+1 e)
   end.
 
-Definition fgPrefix n: pshDgnApprox psh dgn n = (νDgnPack n X).1 :=
-  match n with
-  | 0 => eq_refl
-  | n.+1 => (fgChain n).1
-  end.
+Definition fgPositionNext n:
+  pshDgnPosition psh dgn n.+1 = dgnPositionNext n (pshDgnPosition psh dgn n) :=
+  eq_sym (pshDgnPositionNext psh dgn n).
 
-Definition pshDgnBond n:
-  @dgnBond n (pshDgnApprox psh dgn n.+1) = pshDgnApprox psh dgn n :=
-  match n with 0 => eq_refl | n.+1 => eq_refl end.
-
-Lemma fgPrefixBond n:
-  f_equal (@dgnBond n) (fgPrefix n.+1) = pshDgnBond n • fgPrefix n.
+Definition fgStep n (e: pshDgnApprox psh dgn n = (νDgnPack n X).1)
+  (s: FgState n e):
+  { h: rew [dgnIncrType] e in this (pshDgnFrom psh dgn n)
+       = this (νDgnPack n X).2 &T
+    FgState n.+1
+      (rew <- [fun P: DgnPosition n.+1 => P.1 = (νDgnPack n.+1 X).1]
+         fgPositionNext n in
+       (extendCong (T := dgnChain) e h:
+         (dgnPositionNext n (pshDgnPosition psh dgn n)).1 = _)) }.
 Proof.
-  destruct n.
-  - exact (dgnExtendEqBond eq_refl
-      (a := this (pshDgnFrom psh dgn 0)) (b := this X)
-      (fgFillerPath 0 eq_refl fgFrame0) (hunit_ext _ _)).
-  - cbn [fgPrefix fgChain pshDgnBond].
-    rewrite eq_trans_refl_l. apply fgNextBond.
-Qed.
+  destruct n as [|n].
+  - now exact (fgStepAt 0 e (fun _ => hunit_ext tt _) _ (hunit_ext _ _)).
+  - now exact (fgStepAt n.+1 e (fgFrameStep n (fgUnderlying n.+1 e) s) _
+      (fgLayer n e s _)).
+Defined.
 
-Theorem fg: f psh dgn = X.
-Proof.
-  unshelve eapply limitEqIntro.
-  - exact (fun n => fgPrefix n • dgnPackPath n X).
-  - apply ({_: hunit & hunit}).(UIP).
-  - intro n. cbv beta.
-    rewrite eq_trans_map_distr, <- eq_trans_assoc.
-    rewrite (dgnPackPathS n X), (fgPrefixBond n).
-    rewrite eq_trans_assoc. reflexivity.
-Qed.
+Definition fg: f psh dgn = X :=
+  limitEqOfPositions (T := dgnChain) (pshDgnPosition psh dgn)
+    fgPositionNext X FgState tt fgStep.
 
 End FG.
 End νDgnSetRoundtrip.

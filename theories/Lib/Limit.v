@@ -1,13 +1,14 @@
-(** Telescopes and their ω-limits
+(** Chains and their ω-limits
 
-    A [Telescope] is a sequence of types [stage l], each of which extends
+    A [Chain] is a sequence of types [stage l], each of which extends
     the one below by a single [datum]: [extend] pairs a stage with a datum
     over it, and [bond] and [head] split a stage one level up back into the
-    stage below and the datum over it. The two laws [bondExtend] and
-    [extendHead] state that these are mutually inverse, and
-    [bondExtendHead] is the triangle identity relating them, so [stage l.+1]
-    is a Σ-type over [stage l] up to the given isomorphism. The triangle is
-    independent of the other two laws.
+    stage below and the datum over it. The laws [bondExtend] and
+    [headExtend] recover the two components of an extended stage, and
+    [extendHead] recovers a stage from its two components, so [extend] and
+    the pair of [bond] and [head] are mutually inverse and [stage l.+1] is
+    a Σ-type over [stage l] up to the given equivalence. [bondExtendHead]
+    is the triangle identity relating [bondExtend] and [extendHead].
 
     Its ω-limit is a structure of unbounded height: a [Limit] over a stage
     [s] at level [n] is a coherent family of stages, one at every level at
@@ -18,16 +19,21 @@
     from an already coherent family ([ofChain]) or by iterating a
     datum-producing function ([ana]).
 
-    The three laws are fields: [stage l.+1] is a computed type, so it
+    The laws are fields: [stage l.+1] is a computed type, so it
     cannot be required to be a literal Σ-type over [stage l]. When an
     instance discharges them all by [eq_refl] — which
     Σ-eta for primitive records gives whenever its stages really are nested
     Σ-types — the derived operations reduce, and [this] and [next] of an
-    [ana] compute to the datum-producing function.
+    [ana] compute to the datum-producing function; for an arbitrary
+    chain, [thisAna] states this up to [headExtend].
 
     [limitEqIntro] is the extensionality principle: two limits over the
     same stage are equal as soon as their families of stages are, coherently
-    with the two fields. It assumes functional extensionality. *)
+    with the two fields. It assumes functional extensionality.
+    [limitEqOfChain] derives it from a chain of paths between the finite
+    unfoldings, each extending the one below by a path between the data,
+    and [limitEqOfPositions] runs such a chain over a family of positions
+    standing in for the unfoldings of the first limit. *)
 
 Import Logic.EqNotations.
 
@@ -38,13 +44,15 @@ From Bonak Require Import Notation SigT LeSProp RewLemmas HSet Funext.
 Set Primitive Projections.
 Set Printing Projections.
 
-Record Telescope := {
+Record Chain := {
   stage: nat -> Type;
   datum: forall l, stage l -> Type;
   extend: forall l (s: stage l), datum l s -> stage l.+1;
   bond: forall l, stage l.+1 -> stage l;
   head: forall l (t: stage l.+1), datum l (bond l t);
   bondExtend: forall l (s: stage l) (d: datum l s), bond l (extend l s d) = s;
+  headExtend: forall l (s: stage l) (d: datum l s),
+    rew [datum l] bondExtend l s d in head l (extend l s d) = d;
   extendHead: forall l (t: stage l.+1), extend l (bond l t) (head l t) = t;
   bondExtendHead: forall l (t: stage l.+1),
     bondExtend l (bond l t) (head l t) = f_equal (bond l) (extendHead l t);
@@ -60,7 +68,7 @@ Arguments head {_ _} _.
     level at or above [n], agreeing with [s] at [n] and with its own
     truncation one level down. *)
 
-Record Limit (T: Telescope) n (s: T.(stage) n): Type := limit {
+Record Limit (T: Chain) n (s: T.(stage) n): Type := limit {
   approx l: n <= l -> T.(stage) l;
   approxO: approx n leR_refl = s;
   approxS l (Hl: n <= l) (HSl: n <= l.+1):
@@ -191,7 +199,7 @@ End FiniteUnfoldings.
 
     [ofChain] restricts a globally coherent family to the levels at or
     above [n]. If its coherence is pointwise [eq_refl] — as it is for
-    families built by [mkApprox] on a telescope whose [bondExtend] is
+    families built by [mkApprox] on a chain whose [bondExtend] is
     [eq_refl] — then [this] and [next] of the result compute. *)
 
 Definition ofChain {T} (A: forall l, T.(stage) l)
@@ -200,6 +208,8 @@ Definition ofChain {T} (A: forall l, T.(stage) l)
   approxO := eq_refl;
   approxS l _ _ := HA l;
 |}.
+
+Arguments ofChain {T} & A HA n.
 
 Fixpoint mkApprox {T} (z: T.(stage) 0)
   (F: forall l (s: T.(stage) l), T.(datum) l s) l: T.(stage) l :=
@@ -211,6 +221,13 @@ Fixpoint mkApprox {T} (z: T.(stage) 0)
 Definition ana {T} (z: T.(stage) 0)
   (F: forall l (s: T.(stage) l), T.(datum) l s): Limit T 0 z :=
   ofChain (mkApprox z F) (fun l => T.(bondExtend) l _ _) 0.
+
+(** The datum of [ana] at the base is the one [F] produces there. *)
+Definition thisAna {T} (z: T.(stage) 0)
+  (F: forall l (s: T.(stage) l), T.(datum) l s): this (ana z F) = F 0 z :=
+  T.(headExtend) 0 z (F 0 z).
+
+Arguments ana {T} & z F.
 
 (** Extensionality
 
@@ -295,27 +312,50 @@ Proof.
     symmetry; now apply eq_trans_shift_l, pS.
 Qed.
 
-(** Bisimulation
+(** Equality from paths between finite unfoldings
 
-    A bisimulation structure says what it means for two data over
-    identified stages to correspond ([datumEqv]) and how such a
-    correspondence yields an identification of them ([datumEq]). With
-    proof irrelevance at the base stage, that generates a relation on
-    stages at every level together with its conversion into an equality,
-    the two by mutual recursion on the level. *)
+    Two limits over the same base stage are equal as soon as their finite
+    unfoldings [limitPack] are identified by paths commuting with the
+    bonding maps. Conjugating these paths by [limitPackPath] gives the
+    paths between stored stages that [limitEqIntro] asks for, and
+    [limitPackPathS] turns their compatibility into its square. *)
 
-Record Bisimulation (T: Telescope) := {
-  stageIrr: forall x y: T.(stage) 0, x = y;
-  datumEqv m (sA sB: T.(stage) m) (e: sA = sB):
-    T.(datum) m sA -> T.(datum) m sB -> Type;
-  datumEq m (sA sB: T.(stage) m) (e: sA = sB)
-    (dA: T.(datum) m sA) (dB: T.(datum) m sB):
-    datumEqv m sA sB e dA dB -> rew [T.(datum) m] e in dA = dB;
-}.
+Lemma conjSquare {A B} (f: A -> B) {u1 u2 v1 v2: A} {w1 w2 z1 z2: B}
+  (b1: u1 = v1) (b2: u2 = v2) (p: u1 = u2)
+  (a1: w1 = z1) (a2: w2 = z2) (q: w1 = w2)
+  (β1: f u1 = w1) (β2: f u2 = w2) (σ1: f v1 = z1) (σ2: f v2 = z2)
+  (H1: f_equal f b1 • σ1 = β1 • a1) (H2: f_equal f b2 • σ2 = β2 • a2)
+  (Hp: f_equal f p • β2 = β1 • q):
+  f_equal f (eq_sym b1 • (p • b2)) • σ2 = σ1 • (eq_sym a1 • (q • a2)).
+Proof.
+  destruct b1, b2, a1, a2, p; cbn in *.
+  rewrite eq_trans_refl_l in H1, H2, Hp |- *.
+  rewrite eq_trans_refl_l.
+  now rewrite H1, H2, Hp.
+Qed.
 
-Arguments stageIrr {T} _ _ _.
-Arguments datumEqv {T} _ m {sA sB} e _ _.
-Arguments datumEq {T} _ m {sA sB} e {dA dB} _.
+Lemma limitEqOfPackPaths {T} {s: T.(stage) 0} (L1 L2: Limit T 0 s)
+  (p: forall m, (limitPack m L1).1 = (limitPack m L2).1)
+  (p0: p 0 = eq_refl)
+  (pS: forall m,
+    f_equal (@bond T m) (p m.+1)
+      • T.(bondExtend) m (limitPack m L2).1 (this (limitPack m L2).2)
+    = T.(bondExtend) m (limitPack m L1).1 (this (limitPack m L1).2) • p m):
+  L1 = L2.
+Proof.
+  unshelve eapply limitEqIntro.
+  - exact (fun l => eq_sym (limitPackPath l L1) • (p l • limitPackPath l L2)).
+  - cbv beta. rewrite p0, eq_trans_refl_l.
+    change (limitPackPath 0 L1) with (eq_sym L1.(approxO)).
+    change (limitPackPath 0 L2) with (eq_sym L2.(approxO)).
+    rewrite eq_sym_involutive, <- eq_trans_assoc, eq_trans_sym_inv_l.
+    now apply eq_trans_refl_r.
+  - intro l.
+    now exact (conjSquare (@bond T l)
+      (limitPackPath l.+1 L1) (limitPackPath l.+1 L2) (p l.+1)
+      (limitPackPath l L1) (limitPackPath l L2) (p l)
+      _ _ _ _ (limitPackPathS l L1) (limitPackPathS l L2) (pS l)).
+Qed.
 
 (** Extending along an identification of both components *)
 
@@ -328,12 +368,124 @@ Definition extendCong {T m} {xA xB: T.(stage) m} (e: xA = xB)
   | eq_refl => fun d h0 => f_equal (fun d0 => extend xA d0) h0
   end dB h.
 
+(** Bonding an extended path gives back the path below. *)
+
+Lemma extendCongBond {T m} {xA xB: T.(stage) m} (e: xA = xB)
+  {dA: T.(datum) m xA} {dB: T.(datum) m xB}
+  (h: rew [T.(datum) m] e in dA = dB):
+  f_equal (@bond T m) (extendCong e h) • T.(bondExtend) m xB dB
+  = T.(bondExtend) m xA dA • e.
+Proof.
+  destruct e, h; cbn.
+  now apply eq_trans_refl_l.
+Qed.
+
+(** A chain of such paths, each extending the one below by a path between
+    the data, can be produced by a fixpoint carrying an arbitrary state
+    [S]: the step consumes the state at a level and returns the path
+    between the data together with the state one level up. *)
+
+Section PrefixPaths.
+Context {T: Chain} {s: T.(stage) 0} (L1 L2: Limit T 0 s)
+  (S: forall m, (limitPack m L1).1 = (limitPack m L2).1 -> Type)
+  (s0: S 0 eq_refl)
+  (step: forall m (e: (limitPack m L1).1 = (limitPack m L2).1), S m e ->
+    { h: rew [T.(datum) m] e in this (limitPack m L1).2
+         = this (limitPack m L2).2 &T
+      S m.+1 (extendCong e h) }).
+
+Fixpoint limitChain (m: nat):
+  { e: (limitPack m L1).1 = (limitPack m L2).1 &T S m e } :=
+  match m with
+  | 0 => (eq_refl; s0)
+  | m.+1 =>
+      let c := limitChain m in
+      let st := step m c.1 c.2 in
+      (extendCong c.1 st.1; st.2)
+  end.
+
+Definition limitEqOfChain: L1 = L2 :=
+  limitEqOfPackPaths L1 L2 (fun m => (limitChain m).1) eq_refl
+    (fun m => extendCongBond (limitChain m).1
+      (step m (limitChain m).1 (limitChain m).2).1).
+
+End PrefixPaths.
+
+(** Chains over positions
+
+    The unfoldings [limitPack m L] are a recursion on [m], so at a variable
+    level they are not convertible with a family of positions [Q] computed
+    by another recursion, even when the two agree at every numeral. If
+    [Q 0] is the limit itself and [QS] identifies each [Q m.+1] with the
+    one-step unfolding of [Q m] — by [eq_refl] when [Q m] is [ofChain] of a
+    family whose bonding coherence is [eq_refl] — the chain can be run over
+    [Q]. The state passed to [limitEqOfChain] pairs an identification of
+    the unfolding with [Q m] with a state [S] over [Q m]; each step
+    eliminates the identification, so that [step] sees [Q m] in place of
+    the unfolding, and carries [S] one level up along [QS]. *)
+
+Section Positions.
+Context {T: Chain} (Q: forall m, {t: T.(stage) m &T Limit T m t})
+  (QS: forall m, Q m.+1 = (extend (Q m).1 (this (Q m).2); next (Q m).2))
+  (L: Limit T 0 (Q 0).1)
+  (S: forall m, (Q m).1 = (limitPack m L).1 -> Type)
+  (s0: S 0 eq_refl)
+  (step: forall m (e: (Q m).1 = (limitPack m L).1), S m e ->
+    { h: rew [T.(datum) m] e in this (Q m).2 = this (limitPack m L).2 &T
+      S m.+1 (rew <- [fun P: {t: T.(stage) m.+1 &T Limit T m.+1 t} =>
+                        P.1 = (limitPack m.+1 L).1] QS m in
+        (extendCong e h:
+          (extend (Q m).1 (this (Q m).2); next (Q m).2).1 = _)) }).
+
+Definition PositionState m (P: {t: T.(stage) m &T Limit T m t})
+  (e: P.1 = (limitPack m L).1): Type :=
+  { HP: Q m = P &T
+    S m (rew <- [fun P: {t: T.(stage) m &T Limit T m t} =>
+                   P.1 = (limitPack m L).1] HP in e) }.
+
+Definition positionStep m (P: {t: T.(stage) m &T Limit T m t})
+  (e: P.1 = (limitPack m L).1) (st: PositionState m P e):
+  { h: rew [T.(datum) m] e in this P.2 = this (limitPack m L).2 &T
+    PositionState m.+1 (extend P.1 (this P.2); next P.2) (extendCong e h) }.
+Proof.
+  destruct st as (HP, st); revert e st; destruct HP; intros e st.
+  now exact ((step m e st).1; (QS m; (step m e st).2)).
+Defined.
+
+Definition limitEqOfPositions: (Q 0).2 = L :=
+  limitEqOfChain (Q 0).2 L (fun m => PositionState m (limitPack m (Q 0).2))
+    (eq_refl; s0) (fun m => positionStep m (limitPack m (Q 0).2)).
+
+End Positions.
+
+(** Bisimulation
+
+    A bisimulation structure says what it means for two data over
+    identified stages to correspond ([datumEqv]) and how such a
+    correspondence yields an identification of them ([datumEq]). With
+    proof irrelevance at the base stage, that generates a relation on
+    stages at every level together with its conversion into an equality,
+    the two by mutual recursion on the level. *)
+
+Record Bisimulation (T: Chain) := {
+  stageIrr: forall x y: T.(stage) 0, x = y;
+  datumEqv m (sA sB: T.(stage) m) (e: sA = sB):
+    T.(datum) m sA -> T.(datum) m sB -> Type;
+  datumEq m (sA sB: T.(stage) m) (e: sA = sB)
+    (dA: T.(datum) m sA) (dB: T.(datum) m sB):
+    datumEqv m sA sB e dA dB -> rew [T.(datum) m] e in dA = dB;
+}.
+
+Arguments stageIrr {T} _ _ _.
+Arguments datumEqv {T} _ m {sA sB} e _ _.
+Arguments datumEq {T} _ m {sA sB} e {dA dB} _.
+
 (** The relation at a level, mutually with its conversion to equality:
     at [0] it is trivial and the conversion is proof irrelevance; one level
     up it pairs a relation on the truncations with a correspondence of the
     heads over the equality that relation yields. *)
 
-Record RelPack (T: Telescope) (m: nat) := {
+Record RelPack (T: Chain) (m: nat) := {
   RelDef: T.(stage) m -> T.(stage) m -> Type;
   relEqDef: forall sA sB, RelDef sA sB -> sA = sB;
 }.
@@ -362,4 +514,4 @@ Definition relEq {T} (B: Bisimulation T) {m} {sA sB: T.(stage) m}
 
 (** Stepping the relation is left to the instance: [Rel] one level up
     mentions [bond] of the extended stage, which reduces to the stage below
-    only when the telescope's [bondExtend] is [eq_refl]. *)
+    only when the chain's [bondExtend] is [eq_refl]. *)
