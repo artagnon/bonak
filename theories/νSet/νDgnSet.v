@@ -2842,6 +2842,7 @@ Definition dgnTel: Telescope := {|
   bond l Z := dgnBond Z;
   head l Z := dgnHead Z;
   bondExtend l Y h := eq_refl;
+  headExtend _ _ _ := eq_refl;
   extendHead l Z := eq_refl;
   bondExtendHead _ _ := eq_refl;
 |}.

@@ -230,6 +230,7 @@ Definition eqvTel (SA SB: νSets): Telescope := {|
   bond m r := r.1;
   head m r := r.2;
   bondExtend m r E := eq_refl;
+  headExtend _ _ _ := eq_refl;
   extendHead m r := eq_refl;
   bondExtendHead _ _ := eq_refl;
 |}.

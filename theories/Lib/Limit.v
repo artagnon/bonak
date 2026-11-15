@@ -3,11 +3,12 @@
     A [Telescope] is a sequence of types [stage l], each of which extends
     the one below by a single [datum]: [extend] pairs a stage with a datum
     over it, and [bond] and [head] split a stage one level up back into the
-    stage below and the datum over it. The two laws [bondExtend] and
-    [extendHead] state that these are mutually inverse, and
-    [bondExtendHead] is the triangle identity relating them, so [stage l.+1]
-    is a Σ-type over [stage l] up to the given isomorphism. The triangle is
-    independent of the other two laws.
+    stage below and the datum over it. The laws [bondExtend] and
+    [headExtend] recover the two components of an extended stage, and
+    [extendHead] recovers a stage from its two components, so [extend] and
+    the pair of [bond] and [head] are mutually inverse and [stage l.+1] is
+    a Σ-type over [stage l] up to the given equivalence. [bondExtendHead]
+    is the triangle identity relating [bondExtend] and [extendHead].
 
     Its ω-limit is a structure of unbounded height: a [Limit] over a stage
     [s] at level [n] is a coherent family of stages, one at every level at
@@ -18,12 +19,13 @@
     from an already coherent family ([ofChain]) or by iterating a
     datum-producing function ([ana]).
 
-    The three laws are fields: [stage l.+1] is a computed type, so it
+    The laws are fields: [stage l.+1] is a computed type, so it
     cannot be required to be a literal Σ-type over [stage l]. When an
     instance discharges them all by [eq_refl] — which
     Σ-eta for primitive records gives whenever its stages really are nested
     Σ-types — the derived operations reduce, and [this] and [next] of an
-    [ana] compute to the datum-producing function.
+    [ana] compute to the datum-producing function; for an arbitrary
+    telescope, [thisAna] states this up to [headExtend].
 
     [limitEqIntro] is the extensionality principle: two limits over the
     same stage are equal as soon as their families of stages are, coherently
@@ -45,6 +47,8 @@ Record Telescope := {
   bond: forall l, stage l.+1 -> stage l;
   head: forall l (t: stage l.+1), datum l (bond l t);
   bondExtend: forall l (s: stage l) (d: datum l s), bond l (extend l s d) = s;
+  headExtend: forall l (s: stage l) (d: datum l s),
+    rew [datum l] bondExtend l s d in head l (extend l s d) = d;
   extendHead: forall l (t: stage l.+1), extend l (bond l t) (head l t) = t;
   bondExtendHead: forall l (t: stage l.+1),
     bondExtend l (bond l t) (head l t) = f_equal (bond l) (extendHead l t);
@@ -211,6 +215,11 @@ Fixpoint mkApprox {T} (z: T.(stage) 0)
 Definition ana {T} (z: T.(stage) 0)
   (F: forall l (s: T.(stage) l), T.(datum) l s): Limit T 0 z :=
   ofChain (mkApprox z F) (fun l => T.(bondExtend) l _ _) 0.
+
+(** The datum of [ana] at the base is the one [F] produces there. *)
+Definition thisAna {T} (z: T.(stage) 0)
+  (F: forall l (s: T.(stage) l), T.(datum) l s): this (ana z F) = F 0 z :=
+  T.(headExtend) 0 z (F 0 z).
 
 (** Extensionality
 
