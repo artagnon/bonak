@@ -182,9 +182,9 @@
 \newcommand{\relReflBelowAbove}{\cohname{refl\ensuremath{\downarrow}-refl\ensuremath{\uparrow}}}
 \newcommand{\relReflAboveAbove}{\cohname{refl\ensuremath{\uparrow}-refl\ensuremath{\uparrow}}}
 \newcommand{\cohproof}[5]{#1^{#2,#3}_{\mathsf{\color{indian-yellow}#4},#5}}
-\newcommand{\cIF}[4]{\cohproof{\relRestrReflBelowInf}{#1}{#2}{frame}{#3,#4,\epsilon}}
-\newcommand{\cIL}[4]{\cohproof{\relRestrReflBelowInf}{#1}{#2}{layer}{#3,#4,\epsilon}}
-\newcommand{\cIP}[4]{\cohproof{\relRestrReflBelowInf}{#1}{#2}{painting}{#3,#4,\epsilon}}
+\newcommand{\cIF}[4]{\cohproof{\relRestrReflBelowInf}{#1}{#2}{frame}{#3,#4,\alpha}}
+\newcommand{\cIL}[4]{\cohproof{\relRestrReflBelowInf}{#1}{#2}{layer}{#3,#4,\alpha}}
+\newcommand{\cIP}[4]{\cohproof{\relRestrReflBelowInf}{#1}{#2}{painting}{#3,#4,\alpha}}
 
 % Simplicial and Cubical sets
 \newcommand{\DeltaHat}{\ensuremath{\hat{\boldsymbol{\Delta}}}}
@@ -428,7 +428,7 @@ In particular, a $2$--shape category presents the cubical category, while $1$--s
 
 Despite a common terminology, degeneracies in simplicial sets~\cite{fri08} and in cubical sets~\cite{grandis03} are of a different nature. Degeneracies in cubical sets degenerate an existing $n$-$\nu$-shape along a new axis while degeneracies in simplicial sets degenerate an existing $n$-$\nu$-shape by duplicating an existing axis. In particular, degenerating a $n$-$\nu$-shape $c$ in a cubical set is about \emph{inserting a new axis} $i \leq n$, yielding a $(n+1)$-shape lying on $c$ in the new $i$-th axis and lying on the degeneracy of the $j$-th axis of $c$ in the $j$-th axis (resp. $(j-1)$-th axis) for $j < i$ (resp $j > i$). In the simplicial case, the degeneracy process is better understood by reasoning in augmented simplicial sets~\footnote{where we now shift everything down by $1$ so that the dimension starts at $-1$}: degenerating a $n$-shape $c$ in simplicial sets is about \emph{duplicating along an existing axis} $i < n$, yielding a $(n+1)$-shape lying on $c$ in both the $i$ and $i+1$ axes, while it lies again on the degeneracy of the $j$-th axis (resp. $(j-1)$-th) of $c$ in the $j$-th axis for $j < i$ (resp. $j > i+1$).
 
-We call the axis-duplicating operation a \emph{connecting degeneracy} and the axis-inserting operation \emph{parametric degeneracy}. The unary case of parametric degeneracies have already been considered in the literature, e.g. implicitly in type theories with internal parametricity~\cite{moulin16,bernardy12} and more explicitly in Parametric Type Theory~\cite{bernardy15} where an interpretation in terms of a unary form of cubical sets is given. The binary case of connecting degeneracies happens to be similar to connections in cubical sets, where it should be noted that for arity $2$, there is one connection for each $\epsilon \in \{1,2\}$~\footnote{resulting in the ``conjunctive''/``meet'' and ``disjunctive''/``join'' variants~\cite{grandis03}, or also positive and negative~\cite{BrownHiggins81}}, and these connections additionally need parametric degeneracies to fill the faces on side $\epsilon' \neq \epsilon$.
+We call the axis-duplicating operation a \emph{connecting degeneracy} and the axis-inserting operation \emph{parametric degeneracy}. The unary case of parametric degeneracies have already been considered in the literature, e.g. implicitly in type theories with internal parametricity~\cite{moulin16,bernardy12} and more explicitly in Parametric Type Theory~\cite{bernardy15} where an interpretation in terms of a unary form of cubical sets is given. The binary case of connecting degeneracies happens to be similar to connections in cubical sets, where it should be noted that for arity $2$, there is one connection for each $\alpha \in \{1,2\}$~\footnote{resulting in the ``conjunctive''/``meet'' and ``disjunctive''/``join'' variants~\cite{grandis03}, or also positive and negative~\cite{BrownHiggins81}}, and these connections additionally need parametric degeneracies to fill the faces on side $\alpha' \neq \alpha$.
 
 In Table~\ref{tab:dgn-flavors}, dimensions start at $-1$ in the unary case and at $0$ in the binary case. In particular, writing $X_{-1}$ for the augmentation set in the unary case, there is a parametric degeneracy $r^{-1}_{-1}(a)$ for any $a:X_{-1}$~\footnote{not explicitly pictured below though}.
 
@@ -457,7 +457,7 @@ In Table~\ref{tab:dgn-flavors}, dimensions start at $-1$ in the unary case and a
     \comparisonTriangle{c}{b}{c}{q}{s^0_0(c)}{q}{s^1_1(q)}                                                                                                                         \\
     \midrule
     \multicolumn{3}{c}{Binary case ($\nu=2$)}                                                                                                                                      \\[0.4em]
-                            & $r^n_i$, $i\leq n$                                                                                  & $s^n_{i\epsilon}$, $i<n$, $\epsilon\in\{L,R\}$ \\
+                            & $r^n_i$, $i\leq n$                                                                                  & $s^n_{i\alpha}$, $i<n$, $\alpha\in\{L,R\}$ \\
     \midrule
     \makecell{$n=0$ \\ $b$} & \comparisonEdge{b}{b}{r^0_0(b)}{}                                                                   & None                                           \\[1em]
     \makecell{$n=1$ \\ \comparisonSourceEdge{b}{c}{q}}
@@ -585,9 +585,9 @@ Figure~\ref{fig:cube-prefixes} illustrates the prefixes for $n=3$ and $\nu=2$. T
   \vspace{0pt}
   \begin{internallinenumbers}
     \setlength{\parindent}{1.5em}\noindent
-    Restriction corresponds to taking a face. The operation $\restrf[n][p][][q][\epsilon]$ maps a frame in $\framep[n+1][p]$ to one in $\framep[n][p]$. Its relative index $q\leq k$ denotes direction $p+q$, and $\epsilon\in\nu$ selects a face in that direction. The corresponding layer and painting operations are written $\restrl$ and $\restrp$; a painting restriction includes the restriction of its indexing frame. Each component of a layer is a lower--dimensional painting over a suitable restricted frame.
+    Restriction corresponds to taking a face. The operation $\restrf[n][p][][q][\alpha]$ maps a frame in $\framep[n+1][p]$ to one in $\framep[n][p]$. Its relative index $q\leq k$ denotes direction $p+q$, and $\alpha\in\nu$ selects a face in that direction. The corresponding layer and painting operations are written $\restrl$ and $\restrp$; a painting restriction includes the restriction of its indexing frame. Each component of a layer is a lower--dimensional painting over a suitable restricted frame.
 
-    These operations follow the dependent-pair decomposition. Restricting a successor frame restricts its prefix and its next layer; restricting a layer applies painting restriction to each face-label component. On a painting $(l,c)$, restriction at index $0$ selects the component $l(\epsilon)$ of the first layer. A successor index restricts the layer and continues recursively through the remaining painting.
+    These operations follow the dependent-pair decomposition. Restricting a successor frame restricts its prefix and its next layer; restricting a layer applies painting restriction to each face-label component. On a painting $(l,c)$, restriction at index $0$ selects the component $l(\alpha)$ of the first layer. A successor index restricts the layer and continues recursively through the remaining painting.
 
     Figure~\ref{fig:arch-restr} displays this recursive decomposition. Arrows run from an input to the row that uses it; dashed arrows bring in painting operations from the preceding dimension. The boxes show the principal components of the defining terms, with arguments implicit. Inequality rows give the domains of the named operations and coherences; all direction indices are nonnegative. Recursive calls instantiate these bounds at the shifted indices shown in the tables.
 
@@ -724,7 +724,7 @@ The frame and layer operations use $D,R$. The painting operations also use $E$ a
 \input{tab-reflbelow.tex}
 \input{tab-reflabove.tex}
 
-At Above index $0$, the prefix reaches the chosen direction. The operation $\refllabove[n][p][][0]$ forms the constant layer $\lambda\epsilon.\,c$, used by both the Above frame and Below painting base cases. At a successor index, Above recurses through the prefix and transforms the next layer using the Above painting operation. The layer step is indexed by $q+1$, measured at the resulting prefix of height $p+1$.
+At Above index $0$, the prefix reaches the chosen direction. The operation $\refllabove[n][p][][0]$ forms the constant layer $\lambda\alpha.\,c$, used by both the Above frame and Below painting base cases. At a successor index, Above recurses through the prefix and transforms the next layer using the Above painting operation. The layer step is indexed by $q+1$, measured at the resulting prefix of height $p+1$.
 
 The Below frame step transforms the prefix and its next layer. Each layer component uses the lower--dimensional Below painting operation. When the prefix height decreases by one, the Below index increases by one to denote the same direction; this accounts for the $q+1$ in the frame recursion.
 
@@ -747,13 +747,13 @@ The five relations of Grandis--Mauri~\cite{grandis03} describe commutation of re
 \end{equation*}
 These are zero-based absolute direction indices, ranging over the instances in which the composites are defined. At level $n$, the cell component of $\varepsilon_i$ is supplied by $L(n-i)$. The three cases distinguish a restriction before, at, or after the inserted direction.
 
-The mixed relation above is displayed in the simplifying direction. In the construction tables, the equality proofs are oriented in the direction used for transport, as in the formalization. Coherence names list the operations on the right--hand side of those construction--oriented equations, with the outer operation first. In particular, $\relRestrReflBelowId$ proves $d=\cRF{q}{\epsilon}{\cSF{q}{d}}$, reversing the cancellation equation above.
+The mixed relation above is displayed in the simplifying direction. In the construction tables, the equality proofs are oriented in the direction used for transport, as in the formalization. Coherence names list the operations on the right--hand side of those construction--oriented equations, with the outer operation first. In particular, $\relRestrReflBelowId$ proves $d=\cRF{q}{\alpha}{\cSF{q}{d}}$, reversing the cancellation equation above.
 
 In the indexed construction, these relations become equalities of partial boundaries. The Below/Above distinction refines $\relRestrReflSup$ into $\relRestrReflBelowSup$ and $\relRestrReflAboveSup$, and $\relReflRefl$ into $\relReflBelowBelow$, $\relReflBelowAbove$, and $\relReflAboveAbove$. Together with $\relRestrReflBelowInf$ and $\relRestrReflBelowId$, these are the seven degeneracy coherence families. The underlying $\nu$--set already supplies $\relRestrRestr$.
 
 Typing the layer operations requires transporting paintings along frame equalities. The Below layer step uses $\relRestrReflBelowInf$ to commute degeneracy with restriction. At Above index $0$, $\relRestrReflBelowId$ identifies the restriction of the degenerate frame with the original frame, allowing the input painting to form a constant layer. At a successor Above index, the layer step uses $\relRestrReflAboveSup$. The restriction layer similarly uses $\relRestrRestr$ to commute two restrictions. The frame operations and the types of the coherences they require are therefore constructed together.
 
-Table~\ref{tab:cohframe-types} gives the frame--coherence types involving restrictions; Table~\ref{tab:cohframe-dgn} below gives those involving two degeneracies. We assume $p\leq n$ and face labels $\epsilon,\omega\in\nu$. Each row quantifies over its displayed arguments and bounds, using the relative direction indices introduced above. Operation superscripts are omitted where the dimensions follow from the argument types. Indexing frames of layer and painting operations are implicit; an Above frame operation displays both its frame and painting arguments. The resulting equality is between frames even when its terms involve paintings.
+Table~\ref{tab:cohframe-types} gives the frame--coherence types involving restrictions; Table~\ref{tab:cohframe-dgn} below gives those involving two degeneracies. We assume $p\leq n$ and face labels $\alpha,\beta\in\nu$. Each row quantifies over its displayed arguments and bounds, using the relative direction indices introduced above. Operation superscripts are omitted where the dimensions follow from the argument types. Indexing frames of layer and painting operations are implicit; an Above frame operation displays both its frame and painting arguments. The resulting equality is between frames even when its terms involve paintings.
 
 \input{tab-cohframe-types.tex}
 
@@ -764,9 +764,9 @@ In every coherence architecture diagram, $\mathsf{coh}$ denotes the family named
 \subparagraph{\texorpdfstring{$\relRestrRestr$, $\relRestrReflId$, and $\relRestrReflInf$}{restr-restr, restr-refl-id, and restr-refl-inf}.}
 The proofs follow the decomposition of boundaries into frames, layers, and paintings. A frame proof combines a frame proof (recursively) with a layer proof. A painting proof combines a layer proof with a painting proof (recursively). A layer proof is point--wise over the face labels and uses a lower--dimensional painting coherence.
 
-We give the construction of $\relRestrReflBelowInf$ in Table~\ref{tab:coh-inf}. Subscripts $\framep$, $\layer$, and $\painting$ identify its three forms. A pair of proofs denotes equality of dependent pairs, and $\lambda\theta$ denotes the point--wise proof of equality of layers. Here $\mathsf{refl}$ is reflexivity of equality. The recursive clauses use the same convention of implicit transports as the other construction tables.
+We give the construction of $\relRestrReflBelowInf$ in Table~\ref{tab:coh-inf}. Subscripts $\framep$, $\layer$, and $\painting$ identify its three forms. A pair of proofs denotes equality of dependent pairs, and $\lambda\gamma$ denotes the point--wise proof of equality of layers. Here $\mathsf{refl}$ is reflexivity of equality. The recursive clauses use the same convention of implicit transports as the other construction tables.
 
-In this example, the frame recursion decreases the prefix height. Passing from height $p+1$ to $p$ increments the two relative direction indices, producing the $q+1$ and $r+1$ in the prefix proof. The layer row applies the painting coherence one dimension lower to each component $l(\theta)$. The painting recursion decreases the restriction index; at index $0$, restriction evaluates the first layer, giving the reflexivity clause.
+In this example, the frame recursion decreases the prefix height. Passing from height $p+1$ to $p$ increments the two relative direction indices, producing the $q+1$ and $r+1$ in the prefix proof. The layer row applies the painting coherence one dimension lower to each component $l(\gamma)$. The painting recursion decreases the restriction index; at index $0$, restriction evaluates the first layer, giving the reflexivity clause.
 
 \input{tab-coh-inf.tex}
 
