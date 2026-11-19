@@ -113,6 +113,8 @@
   \setkeys*[bonak]{Xrefl#1}{#3}
 }
 
+\newcommand{\CohL}{\ensuremath{\textsf{\color{carolina}CohL}}}
+
 % Frame, layer, and painting: the general macro
 \newcommandx{\prim}[5][2,3,4,5]{
   \ensuremath{\mathsf{\color{indian-yellow}{#1}}^{
@@ -511,7 +513,7 @@ We extend this correspondence to $\nu$--sets with parametric degeneracies. Figur
 
 \begin{figure}[tbp]
   \centering
-  \setlength{\arraycolsep}{3pt}
+  \setlength{\arraycolsep}{2.5pt}
   $\displaystyle
     \begin{array}{cllccllll}
       \multicolumn{3}{c}{\mbox{\emph{fibred form}}}            & \quad\mathit{vs}\quad                                                                                 & \multicolumn{3}{l}{\mbox{\emph{indexed form}}}                                                                                                                                                                                                                                                    \\
@@ -527,10 +529,10 @@ We extend this correspondence to $\nu$--sets with parametric degeneracies. Figur
                                                                &                                                                                                       &                                                                      &  &                                                                                 &                  & X_2((x^0_{L},x^0_{L}),\varepsilon^0_0(x^0_{L}),(x^0_{R},x^0_{R}),\varepsilon^0_0(x^0_{R}),(x^1,x^1))                     \\
                                                                &                                                                                                       &                                                                      &  &
       \varepsilon^1_1                                             & :                                                                                                     & \Pi (x^0_{L},x^0_{R}):(X_0 \times X_0).\,\Pi x^1:X_1(x^0_L,x^0_R).\,                                                                                                                                                                                                                              \\
-                                                               &                                                                                                       &                                                                      &  &                                                                                 &                  & X_2((x^0_{L},x^0_{R}),x^1,(x^0_{L},x^0_{R}),x^1,(\varepsilon^0_0(x^0_{L}),\varepsilon^0_0(x^0_{L})))                     \\
+                                                               &                                                                                                       &                                                                      &  &                                                                                 &                  & X_2((x^0_{L},x^0_{R}),x^1,(x^0_{L},x^0_{R}),x^1,(\varepsilon^0_0(x^0_{L}),\varepsilon^0_0(x^0_{R})))                     \\
                                                                &                                                                                                       &                                                                      &  &
-      coh^1_0                                                  &
-      :                                                        & \Pi x_0:X_0.\, \varepsilon^1_0 (x^0, x^0,\varepsilon^0_0 (x^0)) = \varepsilon^1_1 (x^0,x^0,\varepsilon^0_0 (x^0))                                                                                                                                                                                                                                                                                                     \\
+      \mathsf{cohL}_1                                                  &
+      :                                                        & \Pi x^0:X_0.\, \varepsilon^1_0 (x^0, x^0,\varepsilon^0_0 (x^0)) = \varepsilon^1_1 (x^0,x^0,\varepsilon^0_0 (x^0))                                                                                                                                                                                                                                                                                                     \\
 
       \vdots                                                   &                                                                                                       &                                                                      &  & \vdots                                                                                                                                                                                                                  \\
     \end{array}$
@@ -648,14 +650,14 @@ Above inserts the repeated layer, so it needs the painting $c$ completing the or
   \qquad(q\leq p)
 \end{equation*}
 
-For any $(X_0,X_1,\ldots):\X$, let $R$ collect the degeneracy families at levels below $n$. The supplied family $L$ at level $n$ has type
+Suppose the construction has reached level $n$, with cell families $X_0,\ldots,X_n$ and degeneracy data $R$ below level $n$. Once the next cell family $X_{n+1}$ is chosen, the cell degeneracy $L$ at level $n$ has type
 \begin{equation*}
   L:\Pi q\leq n.\,\Pi d:\fullframe[n].\,\Pi x:X_n(d).\,
   X_{n+1}(\reflfabove[n][n][][q][d=\d,c=x])
 \end{equation*}
 Here, $q$ is the Above index, so $L(q)$ inserts direction $n-q$. In the geometric examples, this operation is denoted $\varepsilon^n_{n-q}$ in the binary case and $\varepsilon^{n-1}_{n-q-1}$ in the augmented unary case. The underlying $X_i$ and earlier degeneracies $R$ are left implicit.
 
-The families $L$ supply the cell degeneracies. The face--degeneracy laws are proved by the construction; the degeneracy--degeneracy laws additionally use supplied compatibility proofs $\mathsf{cohL}$ between composites of these families. Tables~\ref{tab:coind} and~\ref{tab:core} describe the families $L$; the role of $\mathsf{cohL}$ is explained in Section~\ref{sec:coherences}.
+The families $L$ supply the cell degeneracies. The face--degeneracy laws are proved by the construction; the degeneracy--degeneracy laws additionally use supplied compatibility proofs $\mathsf{cohL}$ between composites of these families. Tables~\ref{tab:coind} and~\ref{tab:core} assemble these data level by level.
 
 Figure~\ref{fig:arch-refl} shows how the Below and Above operations fit together. The frame operations proceed from Below to Above, while the painting operations proceed in the reverse order, ending with the supplied $L$ when $k=0$. The zero-direction layer is the common boundary case: it transports the input painting to form the constant layer. The layer definitions use the frame coherences $\relRestrReflBelowInf$, $\relRestrReflBelowId$, and $\relRestrReflAboveSup$, whose types and proofs are developed in Section~\ref{sec:coherences}. Purple arrows mark dependencies in the boundary cases, including the transition between Below and Above.
 
@@ -671,7 +673,6 @@ Figure~\ref{fig:arch-refl} shows how the Below and Above operations fit together
 % The rule for implicit arguments for each table:
 % show 1 explicit in first two parts
 % show E + 1 explicit in the third part
-\appendmask[bonak]{Xreflfrom}[D]
 \appendmask[bonak]{Xreflcomp}[D]
 \appendmask[bonak]{layer}[D]
 \appendmask[bonak]{painting}[D]
@@ -696,20 +697,28 @@ Figure~\ref{fig:arch-refl} shows how the Below and Above operations fit together
 \newcommandx{\Xreflto}[2][2]{\Xrefl[to][<#1][#2]}
 \newcommandx{\Xreflfrom}[2][2]{\Xrefl[from][\geq#1][#2]}
 
-The supplied families form a \emph{dependent stream}~\footnote{Dependent streams can be implemented as coinductives, or equivalently using an $\omega$-limit construction. In our formalization, we use the latter~\cite{ahrens_et_al15}\href{https://github.com/artagnon/bonak/theories/Lib/Limit.v}{\linkicon}}: each new family is typed using the earlier ones. We write $\Xrefl$ for this type of degeneracy families over an underlying $\nu$--set. In the tables, $D$ records an initial segment of the underlying $\nu$--set, $E$ its next component, and $M$ its remaining tail. Superscripts $<n$, $=n$, and $\geq n$ indicate an initial segment, its next extension, and a remaining tail, respectively. Arguments in braces are implicit; the equations retain their dependence on those arguments. Transports and the standard conversions between equalities of dependent pairs or functions and their component--wise equalities are left implicit, as if working in extensional type theory. We write $u=_e v$ for $\mathsf{rew}(e,u)=v$ when it is useful to identify the frame equality $e$ along which the comparison takes place.
+An element of $\Xrefl$ is a \emph{dependent stream} whose successive entries supply the cell families together with their degeneracy data.\footnote{The Rocq formalization implements this stream as an $\omega$-limit~\cite{ahrens_et_al15}\href{https://github.com/artagnon/bonak/blob/master/theories/Lib/Limit.v}{\linkicon}.} Its first three entries are
+\begin{equation*}
+  X_0,\qquad (X_1,L_0),\qquad (X_2,L_1,\mathsf{cohL}_1)
+\end{equation*}
+The family $L_0$ sends cells of $X_0$ to cells of $X_1$. The first composites of two degeneracies take values in $X_2$. In the cubical example of Figure~\ref{fig:fibred-indexed-degeneracies}, $\mathsf{cohL}_1$ identifies the two degenerate squares obtained from a point.
+
+In Table~\ref{tab:coind}, $D$ records the cell families through $X_n$ and $R$ records the degeneracy data below level $n$. Each step first chooses the next cell family $E=X_{n+1}$, then a degeneracy family $L$ with target $E$ and its compatibility proof $\mathsf{cohL}$. Projecting each prefix $(D,R)$ to $D$ recovers the underlying $\nu$--set. Superscripts $<n$, $=n$, and $\geq n$ denote a prefix, its next extension, and a continuation, respectively.
+
+In the tables, braces mark implicit arguments. Transports and the standard conversions between equalities of dependent pairs or functions and their component--wise equalities are left implicit, as if working in extensional type theory. We write $u=_e v$ for $\mathsf{rew}(e,u)=v$ when it is useful to identify the frame equality $e$ along which the comparison takes place.
 
 \input{tab-coind.tex}
 
-Table~\ref{tab:core} gives the finite degeneracy prefixes and their extensions used in the stream. The target of the next family $L$ is indexed by the Above frame constructed from $R$.
+Table~\ref{tab:core} gives the finite degeneracy prefixes and their extensions used in the stream. The target of $L$ is indexed by the Above frame constructed from $R$. The second component is a proof $\mathsf{cohL}:\CohL_n(R,L_n)$. In the successor row, $L_n$ is the last cell degeneracy family in $R$.
 
 \input{tab-core.tex}
 
 For Tables~\ref{tab:reflbelow} and~\ref{tab:reflabove}, fix the shared arguments
 \begin{equation*}
-  D:\Xto{n+1},\qquad R:\Xreflto{n}[D=\D],\qquad
-  E:\Xcomp{n+1}[D=\D],\qquad L:\Xreflcomp{n}[D=\D,E=\E,R=\R]
+  D:\Xto{n+1},\quad R:\Xreflto{n}[D=\D],\quad
+  E:\Xcomp{n+1}[D=\D],\quad (L,\mathsf{cohL}):\Xreflcomp{n}[D=\D,E=\E,R=\R]
 \end{equation*}
-The frame and layer operations use $D,R$; the painting operations also use $E,L$. These arguments are left implicit in both tables.
+The frame and layer operations use $D,R$. The painting operations also use $E$ and the cell family $L$ from the new pair. These arguments are left implicit in both tables.
 
 \input{tab-reflbelow.tex}
 \input{tab-reflabove.tex}
@@ -783,11 +792,11 @@ The ordinary layer steps use hexagons. At Above index zero, the constant layer i
 
 \subparagraph{\texorpdfstring{$\relReflRefl$}{refl-refl}.}
 
-The full-frame painting case of $\relReflAboveAbove$ uses the supplied compatibility proof $\mathsf{cohL}$. It equates two composites of the cell degeneracies $L$ over the corresponding frame equality.
+The supplied $\mathsf{cohL}$ of Table~\ref{tab:core} gives the full-frame case of the $\relReflAboveAbove$ painting proof.
 
 \input{tab-cohframe-dgn.tex}
 
-Figure~\ref{fig:arch-coh-refl} shows the three stages. The frame proofs proceed through these three stages from left to right; the painting proofs proceed from right to left, starting with the supplied $\mathsf{cohL}$ at $k=0$.
+Figure~\ref{fig:arch-coh-refl} shows the three stages. The frame proofs proceed through these three stages from left to right; the painting proofs proceed from right to left.
 
 Each transition introduces a zero-direction layer proof. The mixed stage uses the square in Figure~\ref{fig:coh2-refl-ba-zero}, and the Above--Above stage uses the square in Figure~\ref{fig:coh2-refl-aa-zero}. Together with the preceding families, there are seven hexagonal and four square obligations, all discharged by $\UIP$.
 
@@ -799,7 +808,7 @@ Each transition introduces a zero-direction layer proof. The mixed stage uses th
 \end{figure}
 
 
-Thus, over an underlying $\nu$--set, the construction takes a dependent stream of cell degeneracy families $L$ together with their compatibility proofs $\mathsf{cohL}$. It defines the Below and Above operations on frames, layers, and paintings and establishes the seven degeneracy coherence families. Together with the underlying $\relRestrRestr$ coherence, these give the eight frame laws in Tables~\ref{tab:cohframe-types} and~\ref{tab:cohframe-dgn}.
+From the cell families, degeneracies and compatibility proofs in the stream, the construction defines the Below and Above operations on frames, layers, and paintings and establishes the seven degeneracy coherence families. Together with the underlying $\relRestrRestr$ coherence, these give the eight frame laws in Tables~\ref{tab:cohframe-types} and~\ref{tab:cohframe-dgn}.
 
 \subsection{Last-direction degeneracies}
 \label{sec:last-direction}

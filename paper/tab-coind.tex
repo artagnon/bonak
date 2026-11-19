@@ -1,7 +1,12 @@
-\begin{eqntable}{Dependent stream of degeneracy families\label{tab:coind}}
-  \eqnline{\Xrefl}{\eqnarg{Xrefl}{M}{\X}}{:}{\HSet}
-  \eqnline{\Xrefl}{\pair{\R}{\M}}{\defeq}{\Xreflfrom{0}[D={\unitpoint,\R}, M=\M, R=\unitpoint]}
+\begin{eqntable}{Dependent stream of cell families, degeneracies and their compatibility proofs\label{tab:coind}}
+  \eqnline{\Xrefl}{}{:}{\Type}
+  \eqnline{\Xrefl}{}{\defeq}{\Sigma X_0:\HSet.\,\Xreflfrom{0}[D={\unitpoint,X_0}, R=\unitpoint]}
   \midrule
-  \eqnline{\Xreflfrom{n}}{\makecell{\eqnarg{Xreflfrom}{D}{\Xto{n+1}} \\ \eqnarg{Xreflfrom}{M}{\Xfrom{n+1}[D=\D]} \\ \eqnarg{Xreflfrom}{R}{\Xreflto{n}[D=\D]}}}{:}{\HSet}
-  \eqnline{\Xreflfrom{n}}{\D~\pair{\E}{\M}~\R}{\defeq}{\Sigma \L:\Xreflcomp{n}[D=\D, E=\E, R=\R]. \Xreflfrom{n+1}[D={\D,\E}, M=\M, R={\R,\L}]}
+  \eqnline{\Xreflfrom{n}}{\makecell{\eqnarg{Xreflfrom}{D}{\Xto{n+1}} \\ \eqnarg{Xreflfrom}{R}{\Xreflto{n}[D=\D]}}}{:}{\Type}
+  \eqnline{\Xreflfrom{n}}{\D~\R}{\defeq}{
+    \begin{aligned}[t]
+      &\Sigma E:\Xcomp{n+1}[D=\D].\\
+      &\Sigma (L,\mathsf{cohL}):\Xreflcomp{n}[D=\D, E=\E, R=\R].\\
+      &\quad \Xreflfrom{n+1}[D={\D,\E}, R={\R,(L,\mathsf{cohL})}]
+    \end{aligned}}
 \end{eqntable}
