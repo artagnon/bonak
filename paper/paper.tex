@@ -503,7 +503,7 @@ For arbitrary arity $\nu$, the indexed presentation is obtained from the preshea
   \label{fig:fibred-indexed-faces}
 \end{figure}
 
-For the fixed arity $\nu$, assuming univalence, the fibred-indexed correspondence gives an equivalence of types~\href{https://github.com/artagnon/bonak/tree/master/theories/Equiv}{\linkicon}.
+We write $\X$ for the type of indexed presentations of $\nu$--sets. For the fixed arity $\nu$, assuming univalence, the fibred-indexed correspondence gives an equivalence of types~\href{https://github.com/artagnon/bonak/tree/master/theories/Equiv}{\linkicon}.
 \begin{equation*}
   \label{eq:nuset-correspondence}
   \operatorname{Functor}(\hexagon^{\mathrm{op}},\HSet)\simeq\X
@@ -541,7 +541,7 @@ We extend this correspondence to $\nu$--sets with parametric degeneracies. Figur
   \label{fig:fibred-indexed-degeneracies}
 \end{figure}
 
-We write $\Xrefl$ for the type of indexed $\nu$--sets equipped with cell degeneracy families and the compatibility data for their mutual coherences. Under the same assumptions, the correspondence extends to degeneracies~\href{https://github.com/artagnon/bonak/tree/master/theories/Equiv/Dgn}{\linkicon}:
+We write $\Xrefl$ for the type of indexed presentations of $\nu$--sets equipped with cell degeneracy families and the compatibility data for their mutual coherences. Under the same assumptions, the correspondence extends to degeneracies~\href{https://github.com/artagnon/bonak/tree/master/theories/Equiv/Dgn}{\linkicon}:
 \begin{equation*}
   \label{eq:nudgnset-correspondence}
   \operatorname{Functor}(\hexagon_d^{\mathrm{op}},\HSet)\simeq\Xrefl
@@ -704,7 +704,7 @@ An element of $\Xrefl$ is a \emph{dependent stream} whose successive entries sup
 \end{equation*}
 The family $L_0$ sends cells of $X_0$ to cells of $X_1$. The first composites of two degeneracies take values in $X_2$. In the cubical example of Figure~\ref{fig:fibred-indexed-degeneracies}, $\mathsf{cohL}_1$ identifies the two degenerate squares obtained from a point.
 
-In Table~\ref{tab:coind}, $D$ records the cell families through $X_n$ and $R$ records the degeneracy data below level $n$. Each step first chooses the next cell family $E=X_{n+1}$, then a degeneracy family $L$ with target $E$ and its compatibility proof $\mathsf{cohL}$. Projecting each prefix $(D,R)$ to $D$ recovers the underlying $\nu$--set. Superscripts $<n$, $=n$, and $\geq n$ denote a prefix, its next extension, and a continuation, respectively.
+In Table~\ref{tab:coind}, $D$ records the cell families through $X_n$ and $R$ records the degeneracy data below level $n$. Each step first chooses the next cell family $E=X_{n+1}$, then a degeneracy family $L$ with target $E$ and its compatibility proof $\mathsf{cohL}$. Projecting each prefix $(D,R)$ to $D$ recovers the underlying $\X$. Superscripts $<n$, $=n$, and $\geq n$ denote a prefix, its next extension, and a continuation, respectively.
 
 In the tables, braces mark implicit arguments. Transports and the standard conversions between equalities of dependent pairs or functions and their component--wise equalities are left implicit, as if working in extensional type theory. We write $u=_e v$ for $\mathsf{rew}(e,u)=v$ when it is useful to identify the frame equality $e$ along which the comparison takes place.
 
