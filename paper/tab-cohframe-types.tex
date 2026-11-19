@@ -1,33 +1,33 @@
 \begin{eqntable}{Frame-coherence types for restrictions and degeneracies.
     \label{tab:cohframe-types}}
-  \eqnline{\cohproof{\relRestrRestr}{n}{p}{frame}{q,r,\epsilon,\omega}}
+  \eqnline{\cohproof{\relRestrRestr}{n}{p}{frame}{q,r,\alpha,\beta}}
     {\makecell{\eqnarg{cohframe}{d}{\framep[n+2][p]} \\
       \ensuremath{r\leq q\leq k}}}
-    {:}{\eqnsplit{\cRF{q}{\epsilon}{\cRF{r}{\omega}{d}}}
-      {\cRF{r}{\omega}{\cRF{q+1}{\epsilon}{d}}}}
+    {:}{\eqnsplit{\cRF{q}{\alpha}{\cRF{r}{\beta}{d}}}
+      {\cRF{r}{\beta}{\cRF{q+1}{\alpha}{d}}}}
   \midrule
-  \eqnline{\cohproof{\relRestrReflBelowId}{n}{p}{frame}{q,\epsilon}}
+  \eqnline{\cohproof{\relRestrReflBelowId}{n}{p}{frame}{q,\alpha}}
     {\makecell{\eqnarg{cohframe}{d}{\framep[n][p]} \\
       \ensuremath{q\leq k}}}
-    {:}{\mbox{$d=\cRF{q}{\epsilon}{\cSF{q}{d}}$}}
+    {:}{\mbox{$d=\cRF{q}{\alpha}{\cSF{q}{d}}$}}
   \midrule
   \eqnline{\cIF{n}{p}{q}{r}}
     {\makecell{\eqnarg{cohframe}{d}{\framep[n+1][p]} \\
       \ensuremath{r\leq q\leq k}}}
-    {:}{\eqnsplit{\cSF{q}{\cRF{r}{\epsilon}{d}}}
-      {\cRF{r}{\epsilon}{\cSF{q+1}{d}}}}
+    {:}{\eqnsplit{\cSF{q}{\cRF{r}{\alpha}{d}}}
+      {\cRF{r}{\alpha}{\cSF{q+1}{d}}}}
   \midrule
-  \eqnline{\cohproof{\relRestrReflBelowSup}{n}{p}{frame}{q,r,\epsilon}}
+  \eqnline{\cohproof{\relRestrReflBelowSup}{n}{p}{frame}{q,r,\alpha}}
     {\makecell{\eqnarg{cohframe}{d}{\framep[n+1][p]} \\
       \ensuremath{q\leq r\leq k}}}
-    {:}{\eqnsplit{\cSF{q}{\cRF{r}{\epsilon}{d}}}
-      {\cRF{r+1}{\epsilon}{\cSF{q}{d}}}}
+    {:}{\eqnsplit{\cSF{q}{\cRF{r}{\alpha}{d}}}
+      {\cRF{r+1}{\alpha}{\cSF{q}{d}}}}
   \midrule
-  \eqnline{\cohproof{\relRestrReflAboveSup}{n}{p}{frame}{q,r,\epsilon}}
+  \eqnline{\cohproof{\relRestrReflAboveSup}{n}{p}{frame}{q,r,\alpha}}
     {\makecell{\eqnarg{cohframe}{d}{\framep[n+1][p]} \\
       \eqnarg{cohpainting}{c}{\painting[n+1][p](d)} \\
       \ensuremath{q\leq p} \\
       \ensuremath{r\leq k}}}
-    {:}{\eqnsplit{\cAF{q}{\cRF{r}{\epsilon}{d}}{\cRP{r}{\epsilon}{c}}}
-      {\cRF{r}{\epsilon}{\cAF{q}{d}{c}}}}
+    {:}{\eqnsplit{\cAF{q}{\cRF{r}{\alpha}{d}}{\cRP{r}{\alpha}{c}}}
+      {\cRF{r}{\alpha}{\cAF{q}{d}{c}}}}
 \end{eqntable}
