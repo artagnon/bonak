@@ -2,11 +2,11 @@
     A normal form acts by its face word followed by its selection mask. *)
 
 Set Warnings "-notation-overridden".
-From Bonak.Lib Require Import HSet SigT Notation LeSProp.
+From Bonak.Lib Require Import Nat HSet Funext.
+
 From Bonak.Category Require Import Category HSetCat.
 From Bonak.Presheaf Require Import WordAction Functor.
 From Bonak.Presheaf.Dgn Require Export Generators MaskAction.
-From Stdlib Require Import Logic.FunctionalExtensionality.
 Set Primitive Projections.
 Set Printing Projections.
 

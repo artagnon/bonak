@@ -1,7 +1,8 @@
 (** Generating cofaces and coordinate deletions of the ν-shape category. *)
 
 Set Warnings "-notation-overridden".
-From Bonak.Lib Require Import HSet SigT Notation LeSProp NatLemmas.
+From Bonak.Lib Require Import Nat HSet.
+
 From Bonak.Category Require Import Category.
 From Bonak.Presheaf.Dgn Require Export νShape.
 Set Primitive Projections.

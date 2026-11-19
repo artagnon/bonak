@@ -1,9 +1,9 @@
 (** Face presentations equipped with cubical-style degeneracies. *)
 
 Set Warnings "-notation-overridden".
-From Bonak.Lib Require Import HSet Notation LeSProp SigT Funext.
-From Stdlib Require Import Logic.FunctionalExtensionality.
-Require Export Bonak.Presheaf.Presentation.
+From Bonak.Lib Require Import Nat Tactics HSet Funext.
+
+From Bonak.Presheaf Require Export Presentation.
 Set Primitive Projections.
 Set Printing Projections.
 

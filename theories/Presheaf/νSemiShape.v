@@ -19,7 +19,8 @@
     and needs no dependent inversion. *)
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import HSet Notation LeSProp NatLemmas.
+From Bonak.Lib Require Import Nat Tactics HSet.
+
 From Bonak.Category Require Import Category.
 
 Set Primitive Projections.
@@ -62,7 +63,7 @@ Fixpoint wcomp (p: nat) {struct p}:
   | S p =>
     fun m n g f =>
       match g with
-      | inl (ε, g) => wskip ε (wcomp p m n g f)
+      | inl (existT _ ε g) => wskip ε (wcomp p m n g f)
       | inr g =>
         (match m as m return
            (match m return Type with 0 => Empty_set | S m => Word m p end) ->
@@ -71,7 +72,7 @@ Fixpoint wcomp (p: nat) {struct p}:
          | 0 => fun g _ => match g return Word n (S p) with end
          | S m => fun g f =>
            match f with
-           | inl (ε, f) => wskip ε (wcomp p m n g f)
+           | inl (existT _ ε f) => wskip ε (wcomp p m n g f)
            | inr f =>
              (match n as n return
                 (match n return Type with 0 => Empty_set | S n => Word n m end) ->

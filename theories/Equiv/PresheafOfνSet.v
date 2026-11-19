@@ -7,10 +7,12 @@
     as the exchange law. *)
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT HSet LeSProp NatLemmas Notation νSet.Layer
-  νSet Face Presheaf.Presentation Equiv.νSetOfPresheaf Limit.
+From Bonak.Lib Require Import Nat Tactics HSet Limit.
 
-From Bonak.νSet Require Import νSet.
+From Bonak.νSet Require Import Layer νSet.
+From Bonak Require Import Face.
+From Bonak.Presheaf Require Import Presentation.
+From Bonak.Equiv Require Import νSetOfPresheaf.
 
 Set Primitive Projections.
 Set Printing Projections.

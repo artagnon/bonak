@@ -1,9 +1,8 @@
 (** This file defines HGpd and provides unit and sigT on HGpd. *)
 
-Import Logic.EqNotations.
-
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT HSet.
+From Bonak.Lib Require Import Logic Tactics SigT HSet.
+Import Logic.EqNotations.
 
 Set Primitive Projections.
 Set Printing Projections.
@@ -21,9 +20,9 @@ Definition hpaths {A: HGpd} (x y: A): HSet := {|
   UIP := @GUIP A x y;
 |}.
 
-(** A transparent copy of Stdlib's [Eqdep_dec.UIP_dec] (Hedberg's
-    theorem): the stdlib proof chain is [Qed]-opaque, which would leave
-    normal forms of groupoid-level coherences stuck on it. *)
+(** A transparent copy of [EqDec.UIP_dec] (Hedberg's theorem): the proof
+    chain of the prelude is [Qed]-opaque, which would leave normal forms of
+    groupoid-level coherences stuck on it. *)
 
 Section EqdepDec.
 
@@ -38,12 +37,12 @@ Proof.
 Defined.
 
 Variable x: A.
-Variable eq_dec: forall y: A, x = y \/ x <> y.
+Variable eq_dec: forall y: A, (x = y) + (x <> y).
 
 Let nu {y: A} (u: x = y): x = y :=
   match eq_dec y with
-  | or_introl eqxy => eqxy
-  | or_intror neqxy => False_ind _ (neqxy u)
+  | inl eqxy => eqxy
+  | inr neqxy => match neqxy u with end
   end.
 
 #[local]
@@ -73,7 +72,7 @@ Defined.
 
 End EqdepDec.
 
-Theorem UIP_dec (A: Type) (eq_dec: forall x y: A, {x = y} + {x <> y})
+Theorem UIP_dec (A: Type) (eq_dec: forall x y: A, (x = y) + (x <> y))
   (x y: A) (p1 p2: x = y): p1 = p2.
 Proof.
   apply eq_proofs_unicity_on.

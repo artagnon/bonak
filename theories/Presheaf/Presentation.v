@@ -8,10 +8,8 @@
     formalization of semi-simplicial and semi-cubical sets". *)
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT HSet Notation LeSProp.
+From Bonak.Lib Require Import Nat Tactics HSet Funext.
 
-From Bonak.Lib Require Import Funext.
-From Stdlib Require Import Logic.FunctionalExtensionality.
 Import Logic.EqNotations.
 
 Set Primitive Projections.

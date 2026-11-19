@@ -6,10 +6,10 @@
     enough to turn such a correspondence into an equality. *)
 
 Set Warnings "-notation-overridden".
-From Stdlib Require Import Logic.FunctionalExtensionality.
-From Bonak Require Import RewLemmas HSet LeSProp Notation νSet.Layer
-  Funext Univalence Presheaf.Presentation.
-From Bonak.Lib Require Import Equiv.
+From Bonak.Lib Require Import Nat Tactics Funext HSet Equiv.
+
+From Bonak.νSet Require Import Layer.
+From Bonak.Presheaf Require Import Presentation.
 
 Set Primitive Projections.
 Set Printing Projections.

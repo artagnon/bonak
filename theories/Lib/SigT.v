@@ -1,28 +1,6 @@
-From Bonak Require Import Notation.
-
+From Bonak.Lib Require Import Logic Tactics.
 Set Primitive Projections.
 Set Printing Projections.
-
-Record sigT {A: Type} (P: A -> Type): Type :=
-  existT { projT1: A; projT2: P projT1 }.
-
-Arguments sigT {A} P.
-Arguments projT1 {A P} _.
-Arguments projT2 {A P} _.
-Arguments existT {A} P _ _.
-
-Set Warnings "-notation-overridden".
-
-Notation "{ x &T P }" := (sigT (fun x => P%type))
-  (x at level 99, format "{ '[ ' x  &T  '/' P ']' }"): type_scope.
-Notation "{ x : A &T P }" := (sigT (A := A) (fun x => P%type))
-  (x at level 99, format "{ '[ ' '[' x  :  A ']'  &T  '/' P ']' }"): type_scope.
-Notation "( x 'as' z 'in' T ; y 'in' P )" := (existT (fun z: T => P%type) x y)
-  (at level 0, only parsing).
-Notation "( x ; y )" := (existT _ x y)
-  (at level 0, format "'[' ( x ;  '/ ' y ) ']'").
-Notation "x .1" := (projT1 x) (at level 1, left associativity, format "x .1").
-Notation "x .2" := (projT2 x) (at level 1, left associativity, format "x .2").
 
 Import Logic.EqNotations.
 

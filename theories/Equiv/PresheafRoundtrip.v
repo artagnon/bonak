@@ -5,11 +5,12 @@
     commutes with the face maps by [pshνFace]. *)
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT HSet LeSProp NatLemmas Notation νSet.Layer
-  νSet Face Presheaf.Presentation Equiv.νSetOfPresheaf Equiv.PresheafOfνSet Equiv.νSetRoundtrip Limit.
-From Bonak.Lib Require Import Equiv.
+From Bonak.Lib Require Import Nat Tactics HSet Limit Equiv.
 
-From Bonak.νSet Require Import νSet.
+From Bonak.νSet Require Import Layer νSet.
+From Bonak Require Import Face.
+From Bonak.Presheaf Require Import Presentation.
+From Bonak.Equiv Require Import νSetOfPresheaf PresheafOfνSet νSetRoundtrip.
 
 Set Primitive Projections.
 Set Printing Projections.

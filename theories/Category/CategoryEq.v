@@ -1,9 +1,9 @@
 (** Extensionality for functors. *)
 
 Set Warnings "-notation-overridden".
-From Bonak.Lib Require Import SigT HSet Notation.
+From Bonak.Lib Require Import Logic Tactics HSet Funext.
+
 From Bonak.Category Require Import Category.
-From Stdlib Require Import Logic.FunctionalExtensionality.
 Set Primitive Projections.
 Set Printing Projections.
 Set Universe Polymorphism.

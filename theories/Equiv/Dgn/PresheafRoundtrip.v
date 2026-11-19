@@ -1,12 +1,12 @@
 (** Recovering a presheaf with degeneracies from its indexed construction. *)
 
+Set Warnings "-notation-overridden".
+From Bonak.Lib Require Import Nat Tactics HSet Equiv.
 Import Logic.EqNotations.
 
-Set Warnings "-notation-overridden".
 From Bonak.Presheaf Require Import Presentation.
-From Bonak Require Import SigT HSet LeSProp NatLemmas Notation νSet.Layer
-  Equiv.Dgn.νDgnSetOfPresheaf Limit.
-From Bonak.Lib Require Import Equiv.
+From Bonak.νSet Require Import Layer.
+From Bonak.Equiv.Dgn Require Import νDgnSetOfPresheaf.
 
 Set Primitive Projections.
 Set Printing Projections.

@@ -1,5 +1,6 @@
 Set Warnings "-notation-overridden".
-From Bonak.Lib Require Import HSet.
+From Bonak.Lib Require Import Logic HSet.
+
 From Bonak.Category Require Import Category.
 Set Primitive Projections.
 Set Printing Projections.
