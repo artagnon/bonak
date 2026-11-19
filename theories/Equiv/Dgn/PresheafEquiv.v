@@ -1,13 +1,12 @@
 (** Equality of presheaves equipped with degeneracies. *)
 
+Set Warnings "-notation-overridden".
+From Bonak.Lib Require Import Nat Tactics Funext HSet Equiv.
 Import Logic.EqNotations.
 
-Set Warnings "-notation-overridden".
 From Bonak.Presheaf Require Import Presentation.
-From Stdlib Require Import Logic.FunctionalExtensionality.
-From Bonak Require Import SigT RewLemmas HSet LeSProp Notation νSet.Layer
-  Funext Univalence Equiv.PresheafEquiv.
-From Bonak.Lib Require Import Equiv.
+From Bonak.νSet Require Import Layer.
+From Bonak.Equiv Require Import PresheafEquiv.
 
 Set Primitive Projections.
 Set Printing Projections.

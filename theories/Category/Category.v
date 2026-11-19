@@ -5,8 +5,7 @@
     [f ⨟ g] is [f] followed by [g]. *)
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import HSet Notation.
-From Stdlib Require Import Logic.FunctionalExtensionality.
+From Bonak.Lib Require Import Logic HSet.
 
 Set Primitive Projections.
 Set Printing Projections.

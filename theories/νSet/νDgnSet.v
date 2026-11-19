@@ -1,15 +1,13 @@
-Import Logic.EqNotations.
-
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT νSet.Layer RewLemmas HSet LeSProp Notation
-  Limit νSet.
+From Bonak.Lib Require Import Nat Tactics SigT HSet Limit.
+From Bonak.νSet Require Import Lemmas Layer νSet.
+Import Logic.EqNotations.
 
 Set Primitive Projections.
 Set Printing Projections.
 Set Keyed Unification.
 Set Typeclasses Depth 10.
 Remove Printing Let sigT.
-Remove Printing Let prod.
 
 (** Degeneracies over ν-sets
 
@@ -1354,7 +1352,7 @@ Proof.
   - now exact (mkReflPaintingsBelow _ deps.(_extraDepsReflCohsSup)).
   - now apply mkIdRestrReflFramesBelow.
   - now apply mkReflFramesAbove.
-  - now apply mkIdRestrReflPaintingsBelow. 
+  - now apply mkIdRestrReflPaintingsBelow.
   - now apply mkCohReflRestrFramesBelowInf.
 Defined.
 

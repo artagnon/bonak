@@ -11,11 +11,12 @@
     stage in its endpoint index. The endpoint index directly determines the
     result type of the recursion. *)
 
+Set Warnings "-notation-overridden".
+From Bonak.Lib Require Import Nat Tactics SigT HSet.
 Import Logic.EqNotations.
 
-Set Warnings "-notation-overridden".
-From Bonak Require Import SigT HSet LeSProp Notation νSet.Layer νSet.
-From Bonak Require Equiv.νSetEquiv.
+From Bonak.νSet Require Import Layer νSet.
+From Bonak.Equiv Require νSetEquiv.
 
 Set Primitive Projections.
 Set Printing Projections.

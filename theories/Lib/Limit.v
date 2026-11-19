@@ -29,11 +29,9 @@
     same stage are equal as soon as their families of stages are, coherently
     with the two fields. It assumes functional extensionality. *)
 
-Import Logic.EqNotations.
-
 Set Warnings "-notation-overridden".
-From Stdlib Require Import Logic.FunctionalExtensionality.
-From Bonak Require Import Notation SigT LeSProp RewLemmas HSet Funext.
+From Bonak.Lib Require Import Nat Tactics Funext.
+Import Logic.EqNotations.
 
 Set Primitive Projections.
 Set Printing Projections.
