@@ -1,9 +1,10 @@
 (** Face presentations with degeneracies are presheaves on ν-shape. *)
 
 Set Warnings "-notation-overridden".
-From Bonak.Lib Require Import HSet Equiv Univalence.
+From Bonak.Lib Require Import Logic HSet Equiv Univalence.
+
 From Bonak.Category Require Import Category HSetCat.
-Require Export Bonak.Presheaf.Dgn.Roundtrip.
+From Bonak.Presheaf.Dgn Require Export Roundtrip.
 
 Definition pshDgnEquivFunctor (A: HSet):
   Equiv (νDgnSetPresentation A) (Functor (Op (νShape A)) HSetCat) :=

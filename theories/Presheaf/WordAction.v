@@ -13,7 +13,7 @@
     at the raised level; it need not be the top face of that structure. *)
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import HSet Notation LeSProp NatLemmas.
+From Bonak.Lib Require Import Nat Tactics HSet.
 
 From Bonak.Presheaf Require Import νSemiShape.
 From Bonak.Presheaf Require Export FaceStructure.

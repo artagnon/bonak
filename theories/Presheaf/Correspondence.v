@@ -1,8 +1,8 @@
 (** The equivalence between face presentations and set-valued functors. *)
 
 Set Warnings "-notation-overridden".
-From Bonak.Lib Require Import HSet.
-From Bonak.Lib Require Import Equiv Univalence.
+From Bonak.Lib Require Import Logic HSet Equiv Univalence.
+
 From Bonak.Category Require Import Category HSetCat CategoryEq.
 From Bonak.Presheaf Require Import νSemiShape.
 From Bonak.Presheaf Require Export Roundtrip.

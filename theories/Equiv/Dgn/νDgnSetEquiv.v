@@ -1,11 +1,11 @@
 (** Equality of degeneracy layers and of coherent towers of prefixes. *)
 
+Set Warnings "-notation-overridden".
+From Bonak.Lib Require Import Nat Tactics SigT HSet Funext Limit.
 Import Logic.EqNotations.
 
-Set Warnings "-notation-overridden".
-From Stdlib Require Import Logic.FunctionalExtensionality.
-From Bonak Require Import SigT HSet LeSProp Notation RewLemmas Funext
-  νSet.Layer Equiv.Dgn.PresheafRoundtrip Limit.
+From Bonak.νSet Require Import Layer.
+From Bonak.Equiv.Dgn Require Import PresheafRoundtrip.
 
 Set Primitive Projections.
 Set Printing Projections.

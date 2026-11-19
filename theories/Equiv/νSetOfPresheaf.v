@@ -9,10 +9,12 @@
     proof irrelevance removes dependence on the bound witnesses. *)
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT RewLemmas HSet LeSProp Notation νSet.Layer
-  νSet Face Presheaf.Presentation Equiv.PresheafEquiv Limit.
+From Bonak.Lib Require Import Nat Tactics SigT HSet Limit.
+From Bonak.νSet Require Import Lemmas Layer νSet.
 
-From Bonak.νSet Require Import νSet.
+From Bonak Require Import Face.
+From Bonak.Presheaf Require Import Presentation.
+From Bonak.Equiv Require Import PresheafEquiv.
 
 Set Primitive Projections.
 Set Printing Projections.

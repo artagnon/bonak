@@ -1,11 +1,11 @@
 (** The normal-form action and restriction to generators are inverse. *)
 
 Set Warnings "-notation-overridden".
-From Bonak.Lib Require Import HSet SigT Notation LeSProp Funext.
+From Bonak.Lib Require Import Nat Tactics HSet Funext.
+
 From Bonak.Category Require Import Category CategoryEq HSetCat.
 From Bonak.Presheaf Require Import WordAction Roundtrip.
-Require Export Bonak.Presheaf.Dgn.Functor.
-From Stdlib Require Import Logic.FunctionalExtensionality.
+From Bonak.Presheaf.Dgn Require Export Functor.
 Set Primitive Projections.
 Set Printing Projections.
 

@@ -1,11 +1,14 @@
 (** Cells, faces, and degeneracy maps read from the combined tower. *)
 
+Set Warnings "-notation-overridden".
+From Bonak.Lib Require Import Nat Tactics SigT HSet Limit.
 Import Logic.EqNotations.
 
-Set Warnings "-notation-overridden".
 From Bonak.Presheaf Require Import Presentation.
-From Bonak Require Import SigT HSet LeSProp NatLemmas Notation νSet.Layer
-  νDgnSet Equiv.PresheafOfνSet Equiv.PresheafRoundtrip Equiv.Dgn.PresheafEquiv Limit.
+From Bonak.νSet Require Import Layer.
+From Bonak Require Import νDgnSet.
+From Bonak.Equiv Require Import PresheafOfνSet PresheafRoundtrip.
+From Bonak.Equiv.Dgn Require Import PresheafEquiv.
 
 Set Primitive Projections.
 Set Printing Projections.

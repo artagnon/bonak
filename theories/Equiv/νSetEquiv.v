@@ -11,13 +11,11 @@
     component through the inverse of the equivalence. This is the one place
     where the computation rules of [ua] enter. *)
 
+Set Warnings "-notation-overridden".
+From Bonak.Lib Require Import Nat Tactics Funext HSet Limit Equiv.
 Import Logic.EqNotations.
 
-Set Warnings "-notation-overridden".
-From Stdlib Require Import Logic.FunctionalExtensionality.
-From Bonak Require Import SigT RewLemmas HSet LeSProp Notation Univalence
-  νSet.Layer νSet Limit.
-From Bonak.Lib Require Import Equiv.
+From Bonak.νSet Require Import Layer νSet.
 
 Set Primitive Projections.
 Set Printing Projections.

@@ -10,7 +10,6 @@ bug-reports: "https://github.com/artagnon/bonak/issues"
 dev-repo: "git+https://github.com/artagnon/bonak"
 depends: [
   "rocq-core"   { >= "9.2.0" }
-  "rocq-stdlib"
   "dune"        { >= "3.22.0" }
 ]
 build: [
