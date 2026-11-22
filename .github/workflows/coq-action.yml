@@ -61,10 +61,6 @@ jobs:
     env:
       ROCQ_REPO: "https://github.com/olympichek/rocq.git"
       ROCQ_BRANCH: "master+bonak-patches"
-      # Rocq's stdlib lives in its own repository; this is the revision the
-      # patched branch is developed against.
-      STDLIB_REPO: "https://github.com/rocq-prover/stdlib.git"
-      STDLIB_REV: "5a6422fa68ef252a48a20225aac3a13345666db5"
       OCAML_COMPILER: "5.3"
     steps:
       - uses: "actions/checkout@v4"
@@ -81,22 +77,18 @@ jobs:
         with:
           ocaml-compiler: ${{ env.OCAML_COMPILER }}
           opam-pin: false
-      # The opam switch holding the patched Rocq is cached: rebuilding it from
-      # source costs about five minutes.  The key pins the exact Rocq and
-      # stdlib revisions, so moving either one invalidates the cache.
       - name: "Restore the opam switch"
         id: "switch"
         uses: "actions/cache@v4"
         with:
           path: "_opam"
-          key: "rocq-patched-${{ runner.os }}-ocaml-${{ env.OCAML_COMPILER }}-${{ steps.rocq.outputs.sha }}-${{ env.STDLIB_REV }}"
+          key: "rocq-patched-${{ runner.os }}-ocaml-${{ env.OCAML_COMPILER }}-${{ steps.rocq.outputs.sha }}"
       - name: "Build the patched Rocq"
         if: steps.switch.outputs.cache-hit != 'true'
         run: |
           opam pin add -y -n rocq-runtime "git+$ROCQ_REPO#$ROCQ_BRANCH"
           opam pin add -y -n rocq-core "git+$ROCQ_REPO#$ROCQ_BRANCH"
-          opam pin add -y -n rocq-stdlib "git+$STDLIB_REPO#$STDLIB_REV"
-          opam install -y -j "$(nproc)" rocq-core rocq-stdlib
+          opam install -y -j "$(nproc)" rocq-core
       - name: "Install the remaining dependencies"
         run: opam install -y -j "$(nproc)" ./bonak.opam --deps-only
       - name: "Build"
