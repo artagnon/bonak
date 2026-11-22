@@ -1,12 +1,12 @@
 (** Degeneracy layers over the νSet constructed from a presheaf. *)
 
+Set Warnings "-notation-overridden".
+From Bonak.Lib Require Import Nat Tactics SigT HSet Limit Equiv.
 Import Logic.EqNotations.
 
-Set Warnings "-notation-overridden".
 From Bonak.Presheaf Require Import Presentation.
-From Bonak Require Import SigT HSet LeSProp NatLemmas Notation νSet.Layer
-  Equiv.Dgn.PresheafOfνDgnSet Limit.
-From Bonak.Lib Require Import Equiv.
+From Bonak.νSet Require Import Layer.
+From Bonak.Equiv.Dgn Require Import PresheafOfνDgnSet.
 
 Set Primitive Projections.
 Set Printing Projections.

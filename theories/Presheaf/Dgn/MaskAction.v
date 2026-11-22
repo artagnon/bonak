@@ -1,9 +1,10 @@
 (** The action of coordinate-selection masks by iterated degeneracies. *)
 
 Set Warnings "-notation-overridden".
-From Bonak.Lib Require Import HSet SigT Notation LeSProp NatLemmas.
+From Bonak.Lib Require Import Nat Tactics HSet.
+
 From Bonak.Presheaf Require Import νSemiShape.
-Require Export Bonak.Presheaf.Dgn.Presentation.
+From Bonak.Presheaf.Dgn Require Export Presentation.
 Set Primitive Projections.
 Set Printing Projections.
 
@@ -75,10 +76,10 @@ Proof.
   induction p as [|p IH]; intros m k g f P R x.
   - destruct m as [|m]; [destruct g; reflexivity|destruct g].
   - destruct g as [[[] g]|g].
-    + cbn [wcomp applyMask wskip]. rewrite IH. reflexivity.
+    + cbn [pair wcomp applyMask wskip]. rewrite IH. reflexivity.
     + destruct m as [|m]; [destruct g|].
       destruct f as [[[] f]|f].
-      * cbn [wcomp applyMask wskip].
+      * cbn [pair wcomp applyMask wskip].
         rewrite IH. exact (eq_sym (applyMaskTopDgn g R _)).
       * destruct k as [|k]; [destruct f|].
         exact (IH m k g f (shiftPresheaf P) (shiftDgn R) x).

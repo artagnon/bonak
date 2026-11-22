@@ -1,6 +1,7 @@
 (** Naturality squares and hexagons with alternating mapped paths. *)
 
-From Bonak.Lib Require Import Notation SigT.
+From Bonak.Lib Require Import Logic Tactics SigT.
+Set Universe Polymorphism.
 
 (** Three mapped paths alternate with three connecting paths. The maps
     [f1] and [f2] occur on the left route, and [f3] on the right route. *)
@@ -8,7 +9,7 @@ Definition hexagonal_coherence {A1 A2 A3 B: Type}
   (f1: A1 -> B) (f2: A2 -> B) (f3: A3 -> B)
   {x0 x1: A1} {x2 x3: A2} {x4 x5: A3}
   (p1: x0 = x1) (p2: x2 = x3) (p3: x4 = x5)
-  (h1: f1 x1 = f2 x2) (h2: f1 x0 = f3 x4) (h3: f3 x5 = f2 x3): Prop :=
+  (h1: f1 x1 = f2 x2) (h2: f1 x0 = f3 x4) (h3: f3 x5 = f2 x3): Type :=
   (f_equal f1 p1 • h1) • f_equal f2 p2 = h2 • (f_equal f3 p3 • h3).
 
 (** A filler for every hexagon is equivalent to UIP. For the converse,
@@ -38,7 +39,7 @@ Qed.
     in their common domain. Path actions retain the two composition steps. *)
 Definition square_coherence {A B C D: Type}
   (u: A -> B) (v: A -> C) (f: B -> D) (g: C -> D)
-  (K: forall x, f (u x) = g (v x)) {x y: A} (p: x = y): Prop :=
+  (K: forall x, f (u x) = g (v x)) {x y: A} (p: x = y): Type :=
   f_equal f (f_equal u p) • K y = K x • f_equal g (f_equal v p).
 
 (** The naturality square for a homotopy between two composites:
@@ -73,7 +74,7 @@ Definition hexagonal_coherence_dep {A1 A2 A3 B: Type}
   (q3: rew [P3] p3 in u4 = u5)
   (k1: rew [Q] h1 in F1 x1 u1 = F2 x2 u2)
   (k2: rew [Q] h2 in F1 x0 u0 = F3 x4 u4)
-  (k3: rew [Q] h3 in F3 x5 u5 = F2 x3 u3): Prop :=
+  (k3: rew [Q] h3 in F3 x5 u5 = F2 x3 u3): Type :=
   rew [fun h => rew [Q] h in F1 x0 u0 = F2 x3 u3] H in
     ((sigT_map_eq F1 q1 ⊙ k1) ⊙ sigT_map_eq F2 q2) =
   k2 ⊙ (sigT_map_eq F3 q3 ⊙ k3).
@@ -88,7 +89,7 @@ Definition square_coherence_dep {A B C D: Type}
   (K: forall x, f (u x) = g (v x))
   (HK: forall x a, rew [PD] K x in F (u x) (U x a) = G (v x) (V x a))
   {x y: A} (p: x = y) (H: square_coherence u v f g K p)
-  {a: PA x} {b: PA y} (h: rew [PA] p in a = b): Prop :=
+  {a: PA x} {b: PA y} (h: rew [PA] p in a = b): Type :=
   rew [fun e => rew [PD] e in F (u x) (U x a) = G (v y) (V y b)] H in
     (sigT_map_eq F (sigT_map_eq U h) ⊙ HK y b) =
   HK x a ⊙ sigT_map_eq G (sigT_map_eq V h).
@@ -112,4 +113,99 @@ Proof.
   generalize (g (v x)).
   intros z k w hk.
   now destruct hk, k.
+Defined.
+
+(** Fused transport-chain lemmas for layer coherence proofs
+
+    [rew_cohLayer_hex] equates two chains of three transport steps, whose
+    starting elements are identified by the painting coherence. The three
+    square variants [rew_cohLayer_sq_13], [rew_cohLayer_sq_31], and
+    [rew_cohLayer_sq_22] split the four transport steps between the two
+    sides as 1 = 3, 3 = 1, and 2 = 2, respectively.
+    A call site supplies only the two premises: the painting coherence and
+    the 2-dimensional frame coherence ([UIP] in the HSet development). *)
+
+Lemma rew_cohLayer_hex {T1 T2 T3 X: Type} {P: X -> Type}
+  {S2: T2 -> Type} {S3: T3 -> Type}
+  {rf0: T1 -> X} {rfF: T2 -> X} {rfG: T3 -> X}
+  {F: forall m, S2 m -> P (rfF m)}
+  {G: forall n, S3 n -> P (rfG n)}
+  {d1 d2: T1} {E1: d1 = d2}
+  {m1 m2: T2} {C2: m1 = m2}
+  {n1 n2: T3} {D2: n1 = n2}
+  {C1: rfF m2 = rf0 d1}
+  {D1: rfG n2 = rf0 d2}
+  {K: rfF m1 = rfG n1}
+  {aL: S2 m1} {aR: S3 n1}:
+  rew [P] K in F m1 aL = G n1 aR -> (* painting coherence *)
+  hexagonal_coherence rfF rf0 rfG C2 E1 D2 C1 K D1 ->
+  (* 2-dimensional frame coherence, UIP for HSets *)
+  rew [fun d => P (rf0 d)] E1 in rew [P] C1 in F m2 (rew [S2] C2 in aL)
+  = rew [P] D1 in G n2 (rew [S3] D2 in aR).
+Proof.
+  intros HC Hpath.
+  refine (rew_map P rf0 E1 _ • _).
+  now exact (sigT_square_fill Hpath
+    (sigT_map_eq (Q := P) F (p := C2) (u := aL) eq_refl ⊙ eq_refl)
+    HC (sigT_map_eq (Q := P) G (p := D2) (u := aR) eq_refl ⊙ eq_refl)).
+Defined.
+
+(** The [rew_cohLayer*] lemmas for square-shaped coherences can be considered an
+    instance of the hexagon-shaped one, with 2 arrows trivial. *)
+
+Lemma rew_cohLayer_sq_13 {T1 T3 X: Type} {P: X -> Type} {S3: T3 -> Type}
+  {rf0: T1 -> X} {rfG: T3 -> X}
+  {G: forall n, S3 n -> P (rfG n)}
+  {d1 d2: T1} {E1: d1 = d2}
+  {n1 n2: T3} {D2: n1 = n2}
+  {D1: rfG n2 = rf0 d2}
+  {K: rf0 d1 = rfG n1}
+  {aL: P (rf0 d1)} {aR: S3 n1}:
+  rew [P] K in aL = G n1 aR ->
+  f_equal rf0 E1 = K • (f_equal rfG D2 • D1) ->
+  rew [fun d => P (rf0 d)] E1 in aL
+  = rew [P] D1 in G n2 (rew [S3] D2 in aR).
+Proof.
+  intros HC Hpath.
+  refine (rew_map P rf0 E1 _ • _).
+  now exact (sigT_square_fill (eq_trans_refl_l _ • Hpath) eq_refl
+    HC (sigT_map_eq (Q := P) G (p := D2) (u := aR) eq_refl ⊙ eq_refl)).
+Defined.
+
+Lemma rew_cohLayer_sq_22 {T1 T3 X: Type} {P: X -> Type} {S3: T3 -> Type}
+  {rf0: T1 -> X} {rfG: T3 -> X}
+  {G: forall n, S3 n -> P (rfG n)}
+  {d1 d2: T1} {E1: d1 = d2}
+  {n1 n2: T3} {D2: n1 = n2}
+  {E0: rfG n1 = rf0 d1}
+  {D1: rfG n2 = rf0 d2}
+  {aL: P (rfG n1)} {aR: S3 n1}:
+  aL = G n1 aR ->
+  E0 • f_equal rf0 E1 = f_equal rfG D2 • D1 ->
+  rew [fun d => P (rf0 d)] E1 in rew [P] E0 in aL
+  = rew [P] D1 in G n2 (rew [S3] D2 in aR).
+Proof.
+  intros HC Hpath.
+  refine (rew_map P rf0 E1 _ • _).
+  now exact (sigT_square_fill (Hpath • eq_sym (eq_trans_refl_l _)) eq_refl
+    HC (sigT_map_eq (Q := P) G (p := D2) (u := aR) eq_refl ⊙ eq_refl)).
+Defined.
+
+Lemma rew_cohLayer_sq_31 {T1 T2 X: Type} {P: X -> Type} {S2: T2 -> Type}
+  {rf0: T1 -> X} {rfF: T2 -> X}
+  {F: forall m, S2 m -> P (rfF m)}
+  {d1 d2: T1} {E1: d1 = d2}
+  {m1 m2: T2} {C2: m1 = m2}
+  {C1: rfF m2 = rf0 d1}
+  {D1: rfF m1 = rf0 d2}
+  {aL: S2 m1} {aR: P (rfF m1)}:
+  F m1 aL = aR ->
+  (f_equal rfF C2 • C1) • f_equal rf0 E1 = D1 ->
+  rew [fun d => P (rf0 d)] E1 in rew [P] C1 in F m2 (rew [S2] C2 in aL)
+  = rew [P] D1 in aR.
+Proof.
+  intros HC Hpath.
+  refine (rew_map P rf0 E1 _ • _).
+  now exact (sigT_square_fill (Hpath • eq_sym (eq_trans_refl_l _))
+    (sigT_map_eq (Q := P) F (p := C2) (u := aL) eq_refl ⊙ eq_refl) HC eq_refl).
 Defined.

@@ -13,12 +13,12 @@
     extensionality. *)
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import HSet Notation νSet.Layer Univalence
-  νSet Equiv.Face Presheaf.Presentation Equiv.PresheafEquiv Equiv.νSetOfPresheaf Equiv.PresheafOfνSet
-  Equiv.νSetRoundtrip Equiv.PresheafRoundtrip Limit.
-From Bonak.Lib Require Import Equiv.
+From Bonak.Lib Require Import Logic Univalence Equiv.
 
-From Bonak.νSet Require Import νSet.
+From Bonak.νSet Require Import Layer νSet.
+From Bonak Require Import Face.
+From Bonak.Presheaf Require Import Presentation.
+From Bonak.Equiv Require Import PresheafEquiv νSetOfPresheaf PresheafOfνSet νSetRoundtrip PresheafRoundtrip.
 
 Set Primitive Projections.
 Set Printing Projections.

@@ -1,7 +1,6 @@
-Import Logic.EqNotations.
-
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT HSet Notation RewLemmas.
+From Bonak.Lib Require Import Logic Tactics HSet.
+Import Logic.EqNotations.
 
 Set Primitive Projections.
 Set Printing Projections.

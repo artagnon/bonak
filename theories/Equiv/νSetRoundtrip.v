@@ -13,11 +13,12 @@
     frame; it steps by [νFaceEq], every face of the two frames agreeing. *)
 
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT RewLemmas HSet LeSProp NatLemmas Notation νSet.Layer
-  νSet Equiv.Face Presheaf.Presentation Equiv.νSetOfPresheaf Equiv.PresheafOfνSet Limit.
-From Bonak.Lib Require Import Equiv.
+From Bonak.Lib Require Import Nat Tactics SigT HSet Limit Equiv.
 
-From Bonak.νSet Require Import νSet.
+From Bonak.νSet Require Import Layer νSet.
+From Bonak Require Import Face.
+From Bonak.Presheaf Require Import Presentation.
+From Bonak.Equiv Require Import νSetOfPresheaf PresheafOfνSet.
 
 Set Primitive Projections.
 Set Printing Projections.

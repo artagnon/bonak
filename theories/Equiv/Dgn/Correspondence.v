@@ -3,9 +3,11 @@
     round trips give an equivalence, and univalence gives a type equality. *)
 
 Set Warnings "-notation-overridden".
+From Bonak.Lib Require Import Logic Univalence Equiv.
+
 From Bonak.Presheaf Require Import Presentation.
-From Bonak Require Import SigT νSet.Layer Univalence Equiv.Dgn.νDgnSetRoundtrip.
-From Bonak.Lib Require Import Equiv.
+From Bonak.νSet Require Import Layer.
+From Bonak.Equiv.Dgn Require Import νDgnSetRoundtrip.
 
 Set Primitive Projections.
 Set Printing Projections.

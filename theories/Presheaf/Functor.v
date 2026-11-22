@@ -1,10 +1,10 @@
 (** Translations between face presentations and set-valued functors. *)
 
 Set Warnings "-notation-overridden".
-From Bonak.Lib Require Import HSet Notation LeSProp.
+From Bonak.Lib Require Import Nat Tactics HSet Funext.
+
 From Bonak.Category Require Import Category HSetCat CategoryEq.
 From Bonak.Presheaf Require Import νSemiShape WordAction.
-From Stdlib Require Import Logic.FunctionalExtensionality.
 From Bonak.Presheaf Require Export Presentation.
 
 Set Primitive Projections.

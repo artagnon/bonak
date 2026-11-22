@@ -13,10 +13,9 @@
     "Homotopy Type Theory: Univalent Foundations of Mathematics", 2013);
     numbered references below are to it. *)
 
-Import Logic.EqNotations.
-
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT HSet Notation RewLemmas.
+From Bonak.Lib Require Import Logic Tactics SigT.
+Import Logic.EqNotations.
 
 Set Primitive Projections.
 Set Printing Projections.
@@ -183,50 +182,3 @@ Definition rewEquiv {A: Type} (P: A -> Type) {x y: A} (e: x = y):
 Definition eqvInj {A B: Type} (e: Equiv A B) {x y: A} (q: e x = e y):
   x = y :=
   eq_sym (retEq e x) • (f_equal (invEq e) q • retEq e y).
-
-(** All path types in HSets are propositions, so an equivalence between
-    them needs only the two maps *)
-
-Definition pathEquiv {A: HSet} {x y x' y': A}
-  (f: x = y -> x' = y') (g: x' = y' -> x = y):
-  Equiv (x = y) (x' = y') :=
-  qinvEquiv f g (fun p => A.(UIP)) (fun q => A.(UIP)).
-
-Definition pathEquiv2 {A B: HSet} {x y: A} {x' y': B}
-  (f: x = y -> x' = y') (g: x' = y' -> x = y):
-  Equiv (x = y) (x' = y') :=
-  qinvEquiv f g (fun p => A.(UIP)) (fun q => B.(UIP)).
-
-(** The based-pair space over a fixed point of an HSet contracts onto the
-    fibre *)
-
-Definition baseContract {FrB: HSet} (E: FrB -> HSet) (D: FrB):
-  Equiv {t: {D0: FrB &T E D0} &T D = t.1} (E D).
-Proof.
-  unshelve refine (qinvEquiv
-    (fun x => rew [fun D0 => E D0] (eq_sym x.2) in x.1.2)
-    (fun c => ((D; c); eq_refl)) _ _).
-  - intros ((D0, c0), e). cbn in e. now destruct e.
-  - intros c. now reflexivity.
-Defined.
-
-(** The contraction of a candidate total space: pairs of a point [D] of an
-    HSet with a cell whose canonical image is identified with [D] project
-    equivalently onto the cells (the fibres are singletons; [UIP] of the
-    HSet collapses the identification component). *)
-
-Lemma fillerContract {A B: HSet} (F: A -> B)
-  (x: {D: B &T {d': A &T D = F d'}}):
-  ((F x.2.1; (x.2.1; eq_refl)): {D: B &T {d': A &T D = F d'}}) = x.
-Proof.
-  destruct x as (D, (d', e)). cbn.
-  refine (eq_existT_curried (eq_sym e) _).
-  etransitivity.
-  { now exact (rew_sigT_fst_const (eq_sym e) d' eq_refl). }
-  now exact (f_equal (fun h => (d'; h)) (B.(UIP))).
-Qed.
-
-Definition fillerEquiv {A B: HSet} (F: A -> B):
-  Equiv {D: B &T {d': A &T D = F d'}} A :=
-  qinvEquiv (fun x => x.2.1) (fun a => (F a; (a; eq_refl)))
-    (fillerContract F) (fun a => eq_refl).

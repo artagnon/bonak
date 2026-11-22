@@ -2,7 +2,8 @@
     exchange law. No truncation of the levels is assumed. *)
 
 Set Warnings "-notation-overridden".
-From Bonak.Lib Require Import HSet Notation LeSProp.
+From Bonak.Lib Require Import Nat HSet.
+
 Set Primitive Projections.
 Set Printing Projections.
 

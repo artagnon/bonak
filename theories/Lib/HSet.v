@@ -1,12 +1,7 @@
-(** This file defines HSet and provides unit, sigT and forall on HSet *)
-
-From Stdlib Require Import Logic.FunctionalExtensionality.
-From Stdlib Require Import Logic.Eqdep_dec. (* UIP_refl_unit *)
+Set Warnings "-notation-overridden".
+From Bonak.Lib Require Import Logic Tactics Funext SigT EqDec Equiv Univalence.
 
 Import Logic.EqNotations.
-
-Set Warnings "-notation-overridden".
-From Bonak Require Import SigT.
 
 Set Primitive Projections.
 Set Printing Projections.
@@ -116,7 +111,7 @@ Notation "'hforall' x .. y , P" :=
 
 Definition eq_hprop_UIP {A: Type} (h: forall x y: A, x = y) {x y: A}
   (p q: x = y): p = q :=
-  eq_proofs_unicity_on (fun y => or_introl (h x y)) p q.
+  eq_proofs_unicity_on (fun y => inl (h x y)) p q.
 
 Definition hEq {A: HSet} (x y: A): HSet := {|
   Dom := x = y;
@@ -170,3 +165,94 @@ Defined.
 
 Definition prodSet (X Y: HSet): HSet :=
   {| Dom := X * Y; UIP := prodUIP |}.
+
+
+(** All path types in HSets are propositions, so an equivalence between
+    them needs only the two maps *)
+
+Definition pathEquiv {A: HSet} {x y x' y': A}
+  (f: x = y -> x' = y') (g: x' = y' -> x = y):
+  Equiv (x = y) (x' = y') :=
+  qinvEquiv f g (fun p => A.(UIP)) (fun q => A.(UIP)).
+
+Definition pathEquiv2 {A B: HSet} {x y: A} {x' y': B}
+  (f: x = y -> x' = y') (g: x' = y' -> x = y):
+  Equiv (x = y) (x' = y') :=
+  qinvEquiv f g (fun p => A.(UIP)) (fun q => B.(UIP)).
+
+(** The based-pair space over a fixed point of an HSet contracts onto the
+    fibre *)
+
+Definition baseContract {FrB: HSet} (E: FrB -> HSet) (D: FrB):
+  Equiv {t: {D0: FrB &T E D0} &T D = t.1} (E D).
+Proof.
+  unshelve refine (qinvEquiv
+    (fun x => rew [fun D0 => E D0] (eq_sym x.2) in x.1.2)
+    (fun c => ((D; c); eq_refl)) _ _).
+  - intros ((D0, c0), e). cbn in e. now destruct e.
+  - intros c. now reflexivity.
+Defined.
+
+(** The contraction of a candidate total space: pairs of a point [D] of an
+    HSet with a cell whose canonical image is identified with [D] project
+    equivalently onto the cells (the fibres are singletons; [UIP] of the
+    HSet collapses the identification component). *)
+
+Lemma fillerContract {A B: HSet} (F: A -> B)
+  (x: {D: B &T {d': A &T D = F d'}}):
+  ((F x.2.1; (x.2.1; eq_refl)): {D: B &T {d': A &T D = F d'}}) = x.
+Proof.
+  destruct x as (D, (d', e)). cbn.
+  refine (eq_existT_curried (eq_sym e) _).
+  etransitivity.
+  { now exact (rew_sigT_fst_const (eq_sym e) d' eq_refl). }
+  now exact (f_equal (fun h => (d'; h)) (B.(UIP))).
+Qed.
+
+Definition fillerEquiv {A B: HSet} (F: A -> B):
+  Equiv {D: B &T {d': A &T D = F d'}} A :=
+  qinvEquiv (fun x => x.2.1) (fun a => (F a; (a; eq_refl)))
+    (fillerContract F) (fun a => eq_refl).
+
+(** Equality of HSets from equivalence of their carriers.
+
+    From univalence, [hsetEq] turns an equivalence of the carriers of two HSets
+    into an equality of the HSets: the [Dom] path comes from univalence, and the
+    [UIP] field is proof-irrelevant ([eq_hprop_UIP]); functional
+    extensionality proves equality of the transported fields. *)
+
+Definition hsetEqIntro (h1 h2: HSet) (p: h1.(Dom) = h2.(Dom)): h1 = h2.
+Proof.
+  destruct h1 as [d1 u1], h2 as [d2 u2]; cbn in p; destruct p.
+  apply (f_equal (fun u => {| Dom := d1; UIP := u |})).
+  apply functional_extensionality_dep_good; intro x.
+  apply functional_extensionality_dep_good; intro y.
+  apply functional_extensionality_dep_good; intro a.
+  apply functional_extensionality_dep_good; intro b.
+  now apply (eq_hprop_UIP (u1 x y)).
+Defined.
+
+Definition hsetEq {h1 h2: HSet} (e: Equiv h1 h2): h1 = h2 :=
+  hsetEqIntro h1 h2 (ua e).
+
+Lemma hsetEqIntroRew (h1 h2: HSet) (p: h1.(Dom) = h2.(Dom)) (x: h1):
+  rew [Dom] (hsetEqIntro h1 h2 p) in x = rew [fun T: Type => T] p in x.
+Proof.
+  destruct h1 as [d1 u1], h2 as [d2 u2]; cbn in p; destruct p; cbn.
+  rewrite <- (rew_map Dom (fun u => {| Dom := d1; UIP := u |})).
+  now apply rew_const.
+Qed.
+
+Lemma hsetEqRew {h1 h2: HSet} (e: Equiv h1 h2) (x: h1):
+  rew [Dom] (hsetEq e) in x = e x.
+Proof.
+  unfold hsetEq. rewrite hsetEqIntroRew. now apply uaRew.
+Qed.
+
+Lemma hsetEqRewSym {h1 h2: HSet} (e: Equiv h1 h2) (x: h2):
+  rew [Dom] (eq_sym (hsetEq e)) in x = invEq e x.
+Proof.
+  apply (eqvInj e).
+  now exact (eq_sym (hsetEqRew e _)
+    • (rew_sym_cancel_r (P := Dom) (hsetEq e) x • eq_sym (secEq e x))).
+Qed.

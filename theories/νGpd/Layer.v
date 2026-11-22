@@ -1,7 +1,9 @@
+Set Warnings "-notation-overridden".
+From Bonak.Lib Require Import Logic Tactics SigT HSet HGpd.
 Import Logic.EqNotations.
 
-Set Warnings "-notation-overridden".
-From Bonak Require Import SigT HSet νGpd.HGpd Notation RewLemmas CohShapes νGpd.Pasting.
+From Bonak.νSet Require Import Lemmas.
+From Bonak.νGpd Require Import Pasting.
 
 Set Primitive Projections.
 Set Printing Projections.

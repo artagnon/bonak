@@ -6,7 +6,8 @@
     and [k] variable positions. *)
 
 Set Warnings "-notation-overridden".
-From Bonak.Lib Require Import HSet SigT Notation NatLemmas.
+From Bonak.Lib Require Import Nat HSet.
+
 From Bonak.Category Require Import Category.
 From Bonak.Presheaf Require Export νSemiShape.
 Set Primitive Projections.
@@ -108,21 +109,21 @@ Proof.
   - destruct g as [[a g]|g], d as [[[] d]|d].
     + exact (IH k l n g f d).
     + destruct n as [|n]; [destruct d|].
-      cbn [wcomp cross wskip wkeep shapeConst shapeSandwich].
+      cbn [pair wcomp cross wskip wkeep shapeConst shapeSandwich].
       rewrite IH. reflexivity.
     + destruct k as [|k]; [destruct g|].
       destruct f as [[a f]|f].
-      * cbn [wcomp cross wskip wkeep shapeDrop shapeSandwich].
+      * cbn [pair wcomp cross wskip wkeep shapeDrop shapeSandwich].
         exact (IH k l n g f d).
       * destruct l as [|l]; [destruct f|].
-        cbn [wcomp cross wskip wkeep shapeDrop shapeSandwich wid].
+        cbn [pair wcomp cross wskip wkeep shapeDrop shapeSandwich wid].
         rewrite IH. reflexivity.
     + destruct k as [|k], n as [|n]; try destruct g; try destruct d.
       destruct f as [[a f]|f].
-      * cbn [wcomp cross wskip wkeep shapeKeep shapeConst shapeSandwich].
+      * cbn [pair wcomp cross wskip wkeep shapeKeep shapeConst shapeSandwich].
         rewrite IH. reflexivity.
       * destruct l as [|l]; [destruct f|].
-        cbn [wcomp cross wskip wkeep shapeKeep shapeSandwich wid].
+        cbn [pair wcomp cross wskip wkeep shapeKeep shapeSandwich wid].
         rewrite IH. reflexivity.
 Qed.
 
@@ -141,20 +142,20 @@ Proof.
     + exact (IH k n l f d e).
     + destruct n as [|n]; [destruct d|].
       destruct e as [[[] e]|e].
-      * cbn [wcomp cross wskip wkeep shapeConst shapeSandwich].
+      * cbn [pair wcomp cross wskip wkeep shapeConst shapeSandwich].
         exact (IH k n l f d e).
       * destruct l as [|l]; [destruct e|].
-        cbn [wcomp cross wskip wkeep shapeConst shapeSandwich wid].
+        cbn [pair wcomp cross wskip wkeep shapeConst shapeSandwich wid].
         rewrite IH. reflexivity.
     + destruct k as [|k]; [destruct f|].
-      cbn [wcomp cross wskip wkeep shapeDrop shapeSandwich].
+      cbn [pair wcomp cross wskip wkeep shapeDrop shapeSandwich].
       rewrite IH. reflexivity.
     + destruct k as [|k], n as [|n]; try destruct f; try destruct d.
       destruct e as [[[] e]|e].
-      * cbn [wcomp cross wskip wkeep shapeKeep shapeDrop shapeSandwich].
+      * cbn [pair wcomp cross wskip wkeep shapeKeep shapeDrop shapeSandwich].
         rewrite IH. reflexivity.
       * destruct l as [|l]; [destruct e|].
-        cbn [wcomp cross wskip wkeep shapeKeep shapeSandwich wid].
+        cbn [pair wcomp cross wskip wkeep shapeKeep shapeSandwich wid].
         rewrite IH. reflexivity.
 Qed.
 

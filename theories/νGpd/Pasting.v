@@ -1,11 +1,11 @@
 (** Pasting path comparisons, squares, and layer-coherence cells,
     with their dependent lifts. *)
 
+Set Warnings "-notation-overridden".
+From Bonak.Lib Require Import Logic Tactics SigT.
 Import Logic.EqNotations.
 
-Set Warnings "-notation-overridden".
-From Bonak Require Import SigT Notation RewLemmas.
-From Bonak.Lib Require Export CohShapes.
+From Bonak.νSet Require Export Lemmas.
 
 (** Whiskering composes each boundary of a 2-cell with a fixed path.
     Composition is written in traversal order. *)

@@ -1,5 +1,8 @@
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT Notation RewLemmas CohShapes νGpd.Pasting.
+From Bonak.Lib Require Import Logic Tactics SigT.
+
+From Bonak.νSet Require Import Lemmas.
+From Bonak.νGpd Require Import Pasting.
 
 Set Keyed Unification.
 

@@ -1,6 +1,6 @@
 Set Warnings "-notation-overridden".
-From Bonak Require Import SigT νSet.Layer RewLemmas HSet Notation LeSProp
-  Limit.
+From Bonak.Lib Require Import Nat Tactics SigT HSet Limit.
+From Bonak.νSet Require Import Lemmas Layer.
 
 Set Primitive Projections.
 Set Printing Projections.
